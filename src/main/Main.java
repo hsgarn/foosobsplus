@@ -60,12 +60,12 @@ public class Main {
 	private Table 				table 				= new Table(obsInterface, settings);
 	private Team 				team1 				= new Team(obsInterface, settings, 1);
 	private Team 				team2 				= new Team(obsInterface, settings, 2);
-	private Match 				match				= new Match(team1, team2, settings);
+	private Match 				match				= new Match(obsInterface, settings, team1, team2);
 	private Stats 				stats 				= new Stats();
 	
 	////// Create a TimeClock to be the Timer \\\\\\
 	
-	private TimeClock 			timeClock 			= new TimeClock();
+	private TimeClock 			timeClock 			= new TimeClock(obsInterface, settings);
 	
 	////// Create the View Panels to Display (mVc) \\\\\\
 	

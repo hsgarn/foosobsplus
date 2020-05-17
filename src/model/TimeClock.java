@@ -22,15 +22,25 @@ package model;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.Timer;
+
+import main.OBSInterface;
 
 public class TimeClock {
 	private int nbrOfSeconds;
 	private int timeRemaining;
 	private Timer timer;
+	private String timerInUse;
+	private OBSInterface obsInterface;
+	private Settings settings;
 	
-	public TimeClock() {
+	public TimeClock(OBSInterface obsInterface, Settings settings) {
+		
+		this.obsInterface = obsInterface;
+		this.settings = settings;
+		
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				timeRemaining--;
@@ -44,6 +54,13 @@ public class TimeClock {
 
 		timer = new Timer(100, action);
 		timer.setInitialDelay(0);
+	}
+	public String getTimerInUse() {
+		return timerInUse;
+	}
+	public void setTimerInUse(String timerInUse) {
+		this.timerInUse = timerInUse;
+		writeTimerInUse();
 	}
 	public void setTimer(int nbrOfSeconds) {
 		this.nbrOfSeconds = nbrOfSeconds;
@@ -59,5 +76,11 @@ public class TimeClock {
 	public void addTimeClockTimerListener(ActionListener alAction) {
 		timer.addActionListener(alAction);
 	}
-
+	private void writeTimerInUse() {
+		try {
+			obsInterface.setContents(settings.getTimerInUseFileName(), getTimerInUse());
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
 }

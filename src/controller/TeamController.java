@@ -430,7 +430,7 @@ public class TeamController {
 				team2.clearAll();
 				displayAll();
 			}
-			match.setLastScored(0);
+			match.clearAll();
 			switchPanel.setLastScored(lastScoredStrings[match.getLastScored()]);
 		}
 	}
@@ -476,7 +476,11 @@ public class TeamController {
 	public void switchSides() {
 		Team tmp = team1;
 		team1 = team2;
+		team1.setTeamNbr(1);
 		team2 = tmp;
+		team2.setTeamNbr(2);
+		team1.writeAll();
+		team2.writeAll();
 		match.switchLastScored();
 		displayAll();
 	}
@@ -584,6 +588,8 @@ public class TeamController {
 		resetGameCounts();
 		resetTimeOuts();
 		resetResetWarns();
+		team1.writeAll();
+		team2.writeAll();
 	}
 	public void displayAll() {
 		String teamName1 = team1.getTeamName();

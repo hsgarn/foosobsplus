@@ -27,9 +27,9 @@ import main.OBSInterface;
 
 public class Team {
 
-	private String teamName;
-	private String forwardName;
-	private String goalieName;
+	private String teamName = "";
+	private String forwardName = "";
+	private String goalieName = "";
 	private int score = 0;
 	private int gameCount = 0;
 	private int timeOutCount;
@@ -44,8 +44,11 @@ public class Team {
 		this.settings = settings;
 		this.teamNbr = teamNbr;
 		resetTimeOuts();
+		writeTimeOuts();
 	}
-	
+	public void setTeamNbr(int teamNbr) {
+		this.teamNbr = teamNbr;
+	}
 	public int getScore() {
 		return score;
 	}
@@ -137,9 +140,11 @@ public class Team {
 	}
 	public void setReset(boolean state) {
 		resetState = state;
+		writeReset();
 	}
 	public void setWarn(boolean state) {
 		warnState = state;
+		writeWarn();
 	}
 	public String[] switchPositions() {
 		String[] names = new String[2];
@@ -180,11 +185,7 @@ public class Team {
 		score = 0;
 		gameCount = 0;
 		resetTimeOuts();
-		writeTeamName();
-		writeForwardName();
-		writeGoalieName();
-		writeScore();
-		writeGameCount();
+		writeAll();
 	}
 	public void resetTimeOuts() {
 		if(settings.getShowTimeOutsUsed() == 1) {
@@ -194,6 +195,9 @@ public class Team {
 		}
 		writeTimeOuts();
 	}
+	
+	////// Writes to Files \\\\\\
+	
     private void writeTeamName() {
 		try {
 			if (teamNbr==1) { 
@@ -298,5 +302,15 @@ public class Team {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+	}
+	public void writeAll() {
+		writeTeamName();
+		writeForwardName();
+		writeGoalieName();
+		writeScore();
+		writeGameCount();
+		writeReset();
+		writeWarn();
+		writeTimeOuts();
 	}
 }

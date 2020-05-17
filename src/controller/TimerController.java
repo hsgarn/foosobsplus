@@ -97,7 +97,8 @@ public class TimerController {
 	
 	private void startShotTimer() {
 		int count = settings.getShotTime() * 10;
-		timerPanel.updateTimerInUse("Shot Timer");
+		timeClock.setTimerInUse("Shot Timer");
+		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
 		timerPanel.setTimerDisplayColor(Color.GREEN);
 		timerWindowFrame.setTimerDisplayColor(Color.GREEN);
 		timerPanel.updateTimerDisplay(count);
@@ -105,7 +106,8 @@ public class TimerController {
 	}
 	private void startPassTimer() {
 		int count = settings.getPassTime() * 10;
-		timerPanel.updateTimerInUse("Pass Timer");
+		timeClock.setTimerInUse("Pass Timer");
+		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
 		timerPanel.setTimerDisplayColor(Color.GREEN);
 		timerWindowFrame.setTimerDisplayColor(Color.GREEN);
 		timerPanel.updateTimerDisplay(count);
@@ -113,7 +115,8 @@ public class TimerController {
 	}
 	private void startTimeOutTimer() {
 		int count = settings.getTimeOutTime() * 10;
-		timerPanel.updateTimerInUse("Time Out Timer");
+		timeClock.setTimerInUse("Time Out Timer");
+		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
 		timerPanel.setTimerDisplayColor(Color.GREEN);
 		timerWindowFrame.setTimerDisplayColor(Color.GREEN);
 		timerPanel.updateTimerDisplay(count);
@@ -121,7 +124,8 @@ public class TimerController {
 	}
 	public void startGameTimer() {
 		int count = settings.getGameTime() * 10;
-		timerPanel.updateTimerInUse("Game Timer");
+		timeClock.setTimerInUse("Game Timer");
+		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
 		timerPanel.setTimerDisplayColor(Color.GREEN);
 		timerWindowFrame.setTimerDisplayColor(Color.GREEN);
 		timerPanel.updateTimerDisplay(count);
@@ -129,14 +133,16 @@ public class TimerController {
 	}
 	private void startRecallTimer() {
 		int count = settings.getRecallTime() * 600;
-		timerPanel.updateTimerInUse("Recall Timer");
+		timeClock.setTimerInUse("Recall Timer");
+		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
 		timerPanel.setTimerDisplayColor(Color.GREEN);
 		timerWindowFrame.setTimerDisplayColor(Color.GREEN);
 		timerPanel.updateTimerDisplay(count);
 		timeClock.setTimer(count);
 	}
 	public void resetTimer() {
-		timerPanel.updateTimerInUse("Timer Reset");
+		timeClock.setTimerInUse("Timer Reset");
+		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
 		timerPanel.setTimerDisplayColor(Color.GREEN);
 		timerWindowFrame.setTimerDisplayColor(Color.GREEN);
 		timeClock.setTimer(0);

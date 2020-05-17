@@ -20,20 +20,28 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package model;
 
+import java.io.IOException;
+
+import main.OBSInterface;
+
 public class Match {
 	
 	private Team team1;
 	private Team team2;
 	private Settings settings;
+	private OBSInterface obsInterface;
 	private int lastScored; // team number of the last team to score in this match
+	private String[] lastScoredStrings = {"     Last Scored     ", "<--- Last Scored     ", "     Last Scored --->"};
 	
-	public Match(Team team1, Team team2, Settings settings) {
+	public Match(OBSInterface obsInterface, Settings settings, Team team1, Team team2) {
 		this.team1 = team1;
 		this.team2 = team2;
 		this.settings = settings;
+		this.obsInterface = obsInterface;
 	}
 	public void setLastScored(int lastScored) {
 		this.lastScored = lastScored;
+		writeLastScored();
 	}
 	public int getLastScored() {
 		return lastScored;
@@ -49,9 +57,13 @@ public class Match {
 		default:
 			break;
 		}
+		writeLastScored();
 	}
 	public void clearAll() {
 		lastScored = 0;
+		writeLastScored();
+		clearMatchWinner();
+		clearMeatball();
 	}
 	public int incrementScore(int teamNbr) {
 		// return 0 if no winner
@@ -80,21 +92,51 @@ public class Match {
 				winState = 1;
 			}
 		}
-		if(matchWon) winState = 2;
+		if(matchWon) {
+			winState = 2;
+		} else {
+			clearMatchWinner();
+		};
+		checkMeatball();
 		return winState;
 	}
 	public boolean incrementGameCount(Team team) {
 		team.incrementGameCount();
 		boolean matchWon = checkForMatchWin(team);
 		if(matchWon) {
+			clearMeatball();
 			if (settings.getAnnounceWinner()==1) {
-//				writeMatchWinner(settings.getWinnerPrefix() + team.getTeamName() + settings.getWinnerSuffix());
+				writeMatchWinner(settings.getWinnerPrefix() + team.getTeamName() + settings.getWinnerSuffix());
 			}
 			resetScores();
 			resetGameCounts();
+		} else {
+			clearMatchWinner();
 		}
 		return matchWon;
 		
+	}
+	private void checkMeatball() {
+		int points1 = team1.getScore();
+		int points2 = team2.getScore();
+		int gameCount1 = team1.getGameCount();
+		int gameCount2 = team2.getGameCount();
+		if (settings.getAnnounceMeatball() == 1) {
+			if (points1 == points2) {
+				int meatballPoint = settings.getPointsToWin() - 1;
+				if (settings.getWinBy() < 2) {
+					if (points1 == meatballPoint) {
+						if (gameCount1 == gameCount2) {
+							if (gameCount1 == settings.getGamesToWin()-1) {
+								writeMeatball();
+								return;
+							}
+						}
+					}
+				}
+			}
+		}
+		clearMeatball();
 	}
 	private boolean checkForWin(int score1, int score2) {
 		int pointsToWin = settings.getPointsToWin();
@@ -102,7 +144,10 @@ public class Match {
 		int winBy = settings.getWinBy();
 		if (settings.getAutoIncrementGame()==1) {
 			if (score1 >= maxWin || (score1 >= pointsToWin && score1 >= score2 + winBy)) {
+				clearMeatball();
 				return true;
+			} else {
+				clearMatchWinner();
 			}
 		}
 		return false;
@@ -131,5 +176,40 @@ public class Match {
 		team1.setWarn(false);
 		team2.setReset(false);
 		team2.setWarn(false);
+	}
+	private void writeLastScored() {
+		try {
+			obsInterface.setContents(settings.getLastScoredFileName(), lastScoredStrings[lastScored]);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+	private void writeMatchWinner(String theContents) {
+		try {
+			obsInterface.setContents(settings.getMatchWinnerFileName(), theContents);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	private void clearMatchWinner() {
+		try {
+			obsInterface.setContents(settings.getMatchWinnerFileName(), "");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	private void writeMeatball() {
+		try {
+			obsInterface.setContents(settings.getMeatballFileName(), settings.getMeatball());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	private void clearMeatball() {
+		try {
+			obsInterface.setContents(settings.getMeatballFileName(), "");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
