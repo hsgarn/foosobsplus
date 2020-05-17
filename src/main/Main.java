@@ -57,9 +57,9 @@ public class Main {
 
 	////// Generate the Data Models (Mvc) \\\\\\
 	
-	private Table 				table 				= new Table();
-	private Team 				team1 				= new Team(settings);
-	private Team 				team2 				= new Team(settings);
+	private Table 				table 				= new Table(obsInterface, settings);
+	private Team 				team1 				= new Team(obsInterface, settings, 1);
+	private Team 				team2 				= new Team(obsInterface, settings, 2);
 	private Match 				match				= new Match(team1, team2, settings);
 	private Stats 				stats 				= new Stats();
 	

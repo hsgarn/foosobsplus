@@ -20,11 +20,22 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package model;
 
+import java.io.IOException;
+
+import main.OBSInterface;
+
 public class Table {
 	
 	private String tournamentName;
 	private String eventName;
 	private String tableName;
+	private OBSInterface obsInterface;
+	private Settings settings;
+	
+	public Table(OBSInterface obsInterface, Settings settings) {
+		this.obsInterface = obsInterface;
+		this.settings = settings;
+	}
 	
 	public String getTournamentName() {
 		return tournamentName;
@@ -37,16 +48,41 @@ public class Table {
 	}
 	public void setTournamentName(String tournamentName) {
 		this.tournamentName = tournamentName;
+		writeTournamentName();
 	}
 	public void setEventName(String eventName) {
 		this.eventName = eventName;
+		writeEventName();
 	}
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
+//		writeTableName();
 	}
 	public void clearAll() {
 		tournamentName = "";
 		eventName = "";
 		tableName = "";
 	}
+	private void writeTournamentName() {
+    	try {
+    		obsInterface.setContents(settings.getTournamentFileName(), getTournamentName());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+    private void writeEventName() {
+		try {
+    		obsInterface.setContents(settings.getEventFileName(), getEventName());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+ /*   private void writeTableName() {
+		try {
+    		obsInterface.setContents(settings.getTableFileName(), getTableName());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    */
 }

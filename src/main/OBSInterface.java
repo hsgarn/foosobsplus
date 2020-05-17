@@ -30,7 +30,7 @@ import java.io.IOException;
 public class OBSInterface {
 	
 	private String txtFilePath = "c:" + File.separator + "Temp";
-	private String tableName;
+	private String tableName="T1";/// fix this
 	private String fileName;
 	private String theFileName;
 	

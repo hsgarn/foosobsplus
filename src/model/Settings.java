@@ -1025,7 +1025,7 @@ public class Settings {
 		configProps.setProperty("SettingsHotKey", this.getSettingsHotKey());
 
 		OutputStream outputStream = new FileOutputStream(configFile);
-		configProps.store(outputStream, "FoosOSB settings");
+		configProps.store(outputStream, "FoosOBSPlus settings");
 		outputStream.close();
 	}
 }
