@@ -31,7 +31,6 @@ public class Match {
 	private Settings settings;
 	private OBSInterface obsInterface;
 	private int lastScored; // team number of the last team to score in this match
-	private String[] lastScoredStrings = {"     Last Scored     ", "<--- Last Scored     ", "     Last Scored --->"};
 	
 	public Match(OBSInterface obsInterface, Settings settings, Team team1, Team team2) {
 		this.team1 = team1;
@@ -42,6 +41,17 @@ public class Match {
 	public void setLastScored(int lastScored) {
 		this.lastScored = lastScored;
 		writeLastScored();
+	}
+	public void setLastScored(String lastScoredtxt) {
+		if (lastScoredtxt.equals(settings.getLastScoredStrings()[2])) {
+			lastScored = 2;
+		} else {
+			if (lastScoredtxt.equals(settings.getLastScoredStrings()[1])) {
+				lastScored = 1;
+			} else {
+				lastScored = 0;
+			}
+		}
 	}
 	public int getLastScored() {
 		return lastScored;
@@ -179,7 +189,7 @@ public class Match {
 	}
 	private void writeLastScored() {
 		try {
-			obsInterface.setContents(settings.getLastScoredFileName(), lastScoredStrings[lastScored]);
+			obsInterface.setContents(settings.getLastScoredFileName(), settings.getLastScoredStrings()[lastScored]);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}

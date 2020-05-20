@@ -45,6 +45,7 @@ public class TablePanel extends JPanel {
 	private JTextField txtTournamentName;
 	private JTextField txtEventName;
 	private JTextField txtTableName;
+	private JButton btnLoad;
 	private JButton btnSet;
 	private JButton btnClear;
 	
@@ -61,6 +62,7 @@ public class TablePanel extends JPanel {
 		txtTournamentName = new JTextField(30);
 		txtEventName = new JTextField(30);
 		txtTableName = new JTextField(10);
+		btnLoad = new JButton("Load");
 		btnSet = new JButton("Set");
 		btnClear = new JButton("Clear");
 		
@@ -70,7 +72,6 @@ public class TablePanel extends JPanel {
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
-		
 	}
 
 	public void layoutComponents() {
@@ -137,20 +138,26 @@ public class TablePanel extends JPanel {
 		
 		/////// Set & Clear buttons ////////
 		gc.gridy++;
-		gc.weightx = 1;
+		gc.weightx = 0;
 		gc.weighty = 1;
-
-		gc.gridx = 0;
-		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = new Insets(10, 10, 10, 10);
-		add(btnSet, gc);
 		
-		gc.gridx = 1;
+		gc.gridx = 0;
 		gc.insets = new Insets(10, 10, 10, 10);
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(btnClear, gc);
+
+		gc.gridx = 1;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.LINE_START;
+		gc.insets = new Insets(10, 10, 10, 10);
+		add(btnLoad, gc);
+		
+		gc.gridx = 2;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.LINE_START;
+		gc.insets = new Insets(10, 10, 10, 10);
+		add(btnSet, gc);
 	}		
 
 	////// Listeners  //////
@@ -183,6 +190,12 @@ public class TablePanel extends JPanel {
 	}	
 	public void addClearListener(ActionListener listenForBtnClear) {
 		btnClear.addActionListener(listenForBtnClear);
+	}
+	public void addLoadListener(ActionListener listenForBtnLoad) {
+		btnLoad.addActionListener(listenForBtnLoad);
+	}
+	public void addSetListener(ActionListener listenForBtnSet) {
+		btnSet.addActionListener(listenForBtnSet);
 	}
 				
 	////// Utility Methods //////

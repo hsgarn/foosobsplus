@@ -26,26 +26,28 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 import javax.swing.JTextField;
 
+import main.OBSInterface;
 import model.Match;
+import model.Settings;
 import model.Table;
-import view.SwitchPanel;
 import view.TablePanel;
 
 public class TableController {
+	private Settings settings;
+	private OBSInterface obsInterface;
 	private Table table;
-	private Match match;
 	private TablePanel tablePanel;
-	private SwitchPanel switchPanel;
-	private String[] lastScoredStrings = {"     Last Scored     ", "<--- Last Scored     ", "     Last Scored --->"};
-
-	public TableController(Table table, Match match, TablePanel tablePanel, SwitchPanel switchPanel) {
+	private TeamController teamController;
+	public TableController(OBSInterface obsInterface, Settings settings, Table table, Match match, TablePanel tablePanel, TeamController teamController) {
+		this.settings = settings;
+		this.obsInterface = obsInterface;
 		this.table = table;
-		this.match = match;
 		this.tablePanel = tablePanel;
-		this.switchPanel = switchPanel;
+		this.teamController = teamController;
 		
 		////// Table Panel Listener Methods //////
 
@@ -59,6 +61,8 @@ public class TableController {
 		this.tablePanel.addTableNameFocusListener(new TableNameFocusListener());
 		this.tablePanel.addTableNameMouseListener(new TableNameMouseListener());
 		this.tablePanel.addClearListener(new ClearListener());
+		this.tablePanel.addLoadListener(new LoadListener());
+		this.tablePanel.addSetListener(new SetListener());
 	}
 	
 	////// Table Panel Listener Objects //////
@@ -109,6 +113,7 @@ public class TableController {
 		public void actionPerformed(ActionEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			String tableName = txt.getText();
+			obsInterface.setTableName(tableName);
 			table.setTableName(tableName);
 			tablePanel.updateTableName(tableName);
 		}
@@ -117,6 +122,7 @@ public class TableController {
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			String tableName = txt.getText();
+			obsInterface.setTableName(tableName);
 			table.setTableName(tableName);
 			tablePanel.updateTableName(tableName);
 		}
@@ -130,15 +136,33 @@ public class TableController {
 		public void actionPerformed(ActionEvent e) {
 			table.clearAll();
 			tablePanel.clearAllFields();
-			match.setLastScored(0);
-			switchPanel.setLastScored(lastScoredStrings[match.getLastScored()]);
 		}
 	}
-	
-	////// Utility Methods \\\\\\
-	
-	public void clearLastScored(int lastScored) {
-		match.setLastScored(lastScored);
+	private class LoadListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			String tableName = table.getTableName();
+			obsInterface.setTableName(tableName);
+			fetchAll(table.getTableName());
+			teamController.fetchAll();
+		}
 	}
-	
+	private class SetListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			obsInterface.setTableName(table.getTableName());
+			table.writeAll();
+			teamController.writeAll();
+		}
+	}
+	public void fetchAll(String tableName) {
+		try {
+			table.setTournamentName(obsInterface.getContents(settings.getTournamentFileName()));
+			tablePanel.updateTournamentName(table.getTournamentName());
+			table.setEventName(obsInterface.getContents(settings.getEventFileName()));
+			tablePanel.updateEventName(table.getEventName());
+			table.setTableName(tableName);
+			tablePanel.updateTableName(table.getTableName());
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
 }

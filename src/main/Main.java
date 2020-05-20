@@ -35,12 +35,11 @@ import model.Stats;
 import model.Table;
 import model.Team;
 import model.TimeClock;
-import view.FileNamesPanel;
-import view.HotKeysPanel;
+import view.FileNamesFrame;
+import view.HotKeysFrame;
 import view.MainFrame;
 import view.ResetPanel;
-import view.SetLookAndFeel;
-import view.SettingsPanel;
+import view.SettingsFrame;
 import view.StatsDisplayPanel;
 import view.StatsEntryPanel;
 import view.SwitchPanel;
@@ -52,8 +51,7 @@ import view.TimerWindowFrame;
 public class Main {
 	
 	private Settings			settings			= new Settings();
-	public OBSInterface 		obsInterface 		= new OBSInterface();
-	SetLookAndFeel				setLookAndFeel		= new SetLookAndFeel();
+	public OBSInterface 		obsInterface 		= new OBSInterface(settings);
 
 	////// Generate the Data Models (Mvc) \\\\\\
 	
@@ -77,32 +75,37 @@ public class Main {
 	private SwitchPanel 		switchPanel 		= new SwitchPanel();
 	private ResetPanel 			resetPanel 			= new ResetPanel();
 	private StatsDisplayPanel 	statsDisplayPanel 	= new StatsDisplayPanel();
-	private SettingsPanel		settingsPanel		= new SettingsPanel(settings);
-	private HotKeysPanel		hotKeysPanel		= new HotKeysPanel(settings);
-	private FileNamesPanel		fileNamesPanel		= new FileNamesPanel(settings, obsInterface);
 
-	////// Set up Timer Window \\\\\\
+	////// Set up Timer and Settings Windows \\\\\\
 	
-	private TimerWindowFrame timerWindowFrame = new TimerWindowFrame();
+	private TimerWindowFrame 	timerWindowFrame 	= new TimerWindowFrame();
+	private SettingsFrame 		settingsFrame 		= new SettingsFrame(settings);
+	private HotKeysFrame 		hotKeysFrame 		= new HotKeysFrame(settings);
+	private FileNamesFrame		fileNamesFrame		= new FileNamesFrame(settings, obsInterface);
 	
 	////// Display the View Panels on a JFrame \\\\\\
 	
 	private MainFrame mainFrame = new MainFrame(tablePanel, timerPanel, teamPanel1, teamPanel2, statsEntryPanel, 
-												switchPanel, resetPanel, statsDisplayPanel, settingsPanel, hotKeysPanel, 
-												fileNamesPanel, settings, obsInterface);
+												switchPanel, resetPanel, statsDisplayPanel, settingsFrame, hotKeysFrame, 
+												fileNamesFrame);
 
 	////// Build and Start the Controllers (mvC) \\\\\\
 	
 	MainController 		mainController 		= new MainController(mainFrame, timerWindowFrame);
 	TimerController 	timerController 	= new TimerController(timerPanel, timerWindowFrame, timeClock, settings);
-	TableController 	tableController 	= new TableController(table, match, tablePanel, switchPanel);
-	TeamController 		teamController 		= new TeamController(team1, team2, match, teamPanel1, teamPanel2, switchPanel, timerController);
+	TeamController 		teamController 		= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, timerController);
+	TableController 	tableController 	= new TableController(obsInterface, settings, table, match, tablePanel, teamController);
 	StatsController 	statsController 	= new StatsController(stats, statsEntryPanel, teamController);
 	SwitchController 	switchController 	= new SwitchController(switchPanel, teamController);
 	ResetController 	resetController 	= new ResetController(resetPanel, teamController);
 	
 	public Main() throws IOException {
-		obsInterface.setTableName("T1");
 		obsInterface.setFilePath(settings.getDatapath());
+		obsInterface.setTableName(settings.getTableName());
+		fetchAll(settings.getTableName());
+	}
+	private void fetchAll(String tableNbr) {
+		tableController.fetchAll(tableNbr);
+		teamController.fetchAll();
 	}
 }

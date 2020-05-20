@@ -31,6 +31,7 @@ import java.util.Properties;
 
 public class Settings {
 	
+	private String tableName;
 	private String datapath;
 	private int pointsToWin;
 	private int maxWin;
@@ -45,6 +46,7 @@ public class Settings {
 	private String team1LastScored;
 	private String team2LastScored;
 	private String clearLastScored;
+	private String[] lastScoredStrings = new String[3];
 	private int shotTime;
 	private int passTime;
 	private int timeOutTime;
@@ -56,6 +58,7 @@ public class Settings {
 	private String logoImageURL;
 	private String logoLinkURI;
 
+	private String tableFileName;
 	private String team1NameFileName;
 	private String team1ForwardFileName;
 	private String team1GoalieFileName;
@@ -135,6 +138,7 @@ public class Settings {
 	public Settings() throws IOException {
 		defaultProps = new Properties();
 		// sets default properties
+		defaultProps.setProperty("TableName", "");
 		defaultProps.setProperty("datapath", "c:" + File.separator + "temp");
 		defaultProps.setProperty("PointsToWin", "5");
 		defaultProps.setProperty("MaxWin", "8");
@@ -161,6 +165,8 @@ public class Settings {
 		defaultProps.setProperty("LogoImageURL", "/imgs/MidsouthFoosballLogo4.png");
 		defaultProps.setProperty("LogoLinkURI", "https://www.facebook.com/midsouthfoosball");
 
+		
+		defaultProps.setProperty("TableFileName", "tablename.txt");
 		defaultProps.setProperty("Team1NameFileName", "team1name.txt");
 		defaultProps.setProperty("Team1ForwardFileName", "team1forward.txt");
 		defaultProps.setProperty("Team1GoalieFileName", "team1goalie.txt");
@@ -238,6 +244,7 @@ public class Settings {
 		loadFromConfig();
 	}
 	
+	public String getTableName() {return tableName;}
 	public String getDatapath() {return configProps.getProperty("datapath");}
 	public int getPointsToWin() {return pointsToWin;}
 	public int getMaxWin() {return maxWin;}
@@ -253,6 +260,12 @@ public class Settings {
 	public String getTeam1LastScored() {return team1LastScored;}
 	public String getTeam2LastScored() {return team2LastScored;}
 	public String getClearLastScored() {return clearLastScored;}
+	public String[] getLastScoredStrings() {
+		lastScoredStrings[0] = getClearLastScored();
+		lastScoredStrings[1] = getTeam1LastScored();
+		lastScoredStrings[2] = getTeam2LastScored();
+		return lastScoredStrings;
+	}
 	public int getShotTime() {return shotTime;}
 	public int getPassTime() {return passTime;}
 	public int getTimeOutTime() {return timeOutTime;}
@@ -263,6 +276,7 @@ public class Settings {
 	public String getLogoImageURL() {return logoImageURL;}
 	public String getLogoLinkURI() {return logoLinkURI;}
 
+	public String getTableFileName() {return tableFileName;}
 	public String getTeam1NameFileName() {return team1NameFileName;}
 	public String getTeam1ForwardFileName() {return team1ForwardFileName;}
 	public String getTeam1GoalieFileName() {return team1GoalieFileName;}
@@ -335,6 +349,10 @@ public class Settings {
 	public String getSaveAllHotKey() {return saveAllHotKey;}
 	public String getSettingsHotKey() {return settingsHotKey;}
 	
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+		configProps.setProperty("TableName", this.tableName);
+	}
 	public void setDatapath(String datapath) {
 		this.datapath = datapath;
 		configProps.setProperty("datapath", this.datapath);
@@ -432,6 +450,10 @@ public class Settings {
 		configProps.setProperty("LogoLinkURI", this.logoLinkURI);
 	}
 
+	public void setTableFileName(String tableFileName) {
+		this.tableFileName = tableFileName;
+		configProps.setProperty("TableFileName", this.tableFileName);
+	}
 	public void setTeam1NameFileName(String team1NameFileName) {
 		this.team1NameFileName = team1NameFileName;
 		configProps.setProperty("Team1NameFileName", this.team1NameFileName);
@@ -738,6 +760,7 @@ public class Settings {
 	public String getDefaultLogoImageURL() {return defaultProps.getProperty("LogoImageURL");}
 	public String getDefaultLogoLinkURI() {return defaultProps.getProperty("LogoLinkURI");}
 	
+	public String getDefaultTableFileName() {return defaultProps.getProperty("TableFileName");}
 	public String getDefaultTeam1NameFileName() {return defaultProps.getProperty("Team1NameFileName");}
 	public String getDefaultTeam1ForwardFileName() {return defaultProps.getProperty("Team1ForwardFileName");}
 	public String getDefaultTeam1GoalieFileName() {return defaultProps.getProperty("Team1GoalieFileName");}
@@ -822,6 +845,7 @@ public class Settings {
 			saveToConfig();
 		}
 		
+		tableName = configProps.getProperty("TableName");
 		datapath = configProps.getProperty("datapath");
 		pointsToWin = Integer.parseInt(configProps.getProperty("PointsToWin"));
 		maxWin = Integer.parseInt(configProps.getProperty("MaxWin"));
@@ -853,6 +877,7 @@ public class Settings {
 			logoLinkURI = this.getDefaultLogoLinkURI();
 		};
 
+		tableFileName = configProps.getProperty("TableFileName");
 		team1NameFileName = configProps.getProperty("Team1NameFileName");
 		team1ForwardFileName = configProps.getProperty("Team1ForwardFileName");
 		team1GoalieFileName = configProps.getProperty("Team1GoalieFileName");
@@ -927,6 +952,7 @@ public class Settings {
 	}
 	
 	public void saveToConfig() throws IOException {
+		configProps.setProperty("TableName", this.getTableName());
 		configProps.setProperty("datapath", this.getDatapath());
 		configProps.setProperty("PointsToWin", Integer.toString(this.getPointsToWin()));
 		configProps.setProperty("MaxWin", Integer.toString(this.getMaxWin()));
@@ -952,6 +978,7 @@ public class Settings {
 //		configProps.setProperty("LogoImageURL", this.getLogoImageURL());
 //		configProps.setProperty("LogoLinkURI", this.getLogoLinkURI());
 
+		configProps.setProperty("TableFileName", this.getTableFileName());
 		configProps.setProperty("Team1NameFileName", this.getTeam1NameFileName());
 		configProps.setProperty("Team1ForwardFileName", this.getTeam1ForwardFileName());
 		configProps.setProperty("Team1GoalieFileName", this.getTeam1GoalieFileName());

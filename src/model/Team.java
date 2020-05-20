@@ -43,8 +43,6 @@ public class Team {
 		this.obsInterface = obsInterface;
 		this.settings = settings;
 		this.teamNbr = teamNbr;
-		resetTimeOuts();
-		writeTimeOuts();
 	}
 	public void setTeamNbr(int teamNbr) {
 		this.teamNbr = teamNbr;
@@ -57,8 +55,11 @@ public class Team {
 		writeScore();
 	}
 	public void setScore(String score) {
-		setScore(Integer.parseInt(score));
-		writeScore();
+		if(score=="") {
+			setScore(0);
+		} else {
+			setScore(Integer.parseInt(score));
+		}
 	}
 	public int incrementScore() {
 		score++;
@@ -78,8 +79,11 @@ public class Team {
 		writeGameCount();
 	}
 	public void setGameCount(String gameCount) {
-		this.gameCount = Integer.parseInt(gameCount);
-		writeGameCount();
+		if(gameCount=="") {
+			setGameCount(0);
+		} else {
+			setGameCount(Integer.parseInt(gameCount));
+		}
 	}
 	public int incrementGameCount() {
 		gameCount++;
@@ -99,8 +103,11 @@ public class Team {
 		writeTimeOuts();
 	}
 	public void setTimeOutCount(String timeOutCount) {
-		this.timeOutCount = Integer.parseInt(timeOutCount);
-		writeTimeOuts();
+		if(timeOutCount=="") {
+			setTimeOutCount(0);
+		} else {
+			setTimeOutCount(Integer.parseInt(timeOutCount));
+		}
 	}
 	public int callTimeOut() {
 		if(settings.getShowTimeOutsUsed() == 1) {

@@ -78,7 +78,6 @@ public class TimerPanel extends JPanel {
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
-
 	}
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());

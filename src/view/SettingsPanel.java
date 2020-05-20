@@ -296,115 +296,115 @@ public class SettingsPanel extends JPanel {
 		add(btnRestoreDefaults, "cell 3 18,alignx center");
 	}
 
-	private void restoreDefaults(Settings foosObsSettings) {
-		txtPointsToWin.setText(Integer.toString(foosObsSettings.getDefaultPointsToWin()));
-		txtShotTime.setText(Integer.toString(foosObsSettings.getDefaultShotTime()));
-		txtMaxWin.setText(Integer.toString(foosObsSettings.getDefaultMaxWin()));
-		txtPassTime.setText(Integer.toString(foosObsSettings.getDefaultPassTime()));
-		txtWinBy.setText(Integer.toString(foosObsSettings.getDefaultWinBy()));
-		txtTimeOutTime.setText(Integer.toString(foosObsSettings.getDefaultTimeOutTime()));
-		txtGamesToWin.setText(Integer.toString(foosObsSettings.getDefaultGamesToWin()));
-		txtGameTime.setText(Integer.toString(foosObsSettings.getDefaultGameTime()));
-		txtMaxTimeOuts.setText(Integer.toString(foosObsSettings.getDefaultMaxTimeOuts()));
-		txtRecallTime.setText(Integer.toString(foosObsSettings.getDefaultRecallTime()));
-		if (Integer.toString(foosObsSettings.getDefaultAutoIncrementGame()).equals("1")) {
+	private void restoreDefaults(Settings settings) {
+		txtPointsToWin.setText(Integer.toString(settings.getDefaultPointsToWin()));
+		txtShotTime.setText(Integer.toString(settings.getDefaultShotTime()));
+		txtMaxWin.setText(Integer.toString(settings.getDefaultMaxWin()));
+		txtPassTime.setText(Integer.toString(settings.getDefaultPassTime()));
+		txtWinBy.setText(Integer.toString(settings.getDefaultWinBy()));
+		txtTimeOutTime.setText(Integer.toString(settings.getDefaultTimeOutTime()));
+		txtGamesToWin.setText(Integer.toString(settings.getDefaultGamesToWin()));
+		txtGameTime.setText(Integer.toString(settings.getDefaultGameTime()));
+		txtMaxTimeOuts.setText(Integer.toString(settings.getDefaultMaxTimeOuts()));
+		txtRecallTime.setText(Integer.toString(settings.getDefaultRecallTime()));
+		if (Integer.toString(settings.getDefaultAutoIncrementGame()).equals("1")) {
 			chckbxAutoIncrementGame.setSelected(true);
 		} else {
 			chckbxAutoIncrementGame.setSelected(false);
 		}
-		if (Integer.toString(foosObsSettings.getDefaultAnnounceWinner()).equals("1")) {
+		if (Integer.toString(settings.getDefaultAnnounceWinner()).equals("1")) {
 			chckbxAnnounceWinner.setSelected(true);
 		} else {
 			chckbxAnnounceWinner.setSelected(false);
 		}
-		txtWinnerPrefix.setText(foosObsSettings.getDefaultWinnerPrefix());
-		txtWinnerSuffix.setText(foosObsSettings.getDefaultWinnerSuffix());
-		if (Integer.toString(foosObsSettings.getDefaultAnnounceMeatball()).equals("1")) {
+		txtWinnerPrefix.setText(settings.getDefaultWinnerPrefix());
+		txtWinnerSuffix.setText(settings.getDefaultWinnerSuffix());
+		if (Integer.toString(settings.getDefaultAnnounceMeatball()).equals("1")) {
 			chckbxAnnounceMeatball.setSelected(true);
 		} else {
 			chckbxAnnounceMeatball.setSelected(false);
 		}
-		txtMeatball.setText(foosObsSettings.getDefaultMeatball());
-		if (Integer.toString(foosObsSettings.getDefaultShowTimeOutsUsed()).equals("1")) {
+		txtMeatball.setText(settings.getDefaultMeatball());
+		if (Integer.toString(settings.getDefaultShowTimeOutsUsed()).equals("1")) {
 			chckbxShowTimeOutsUsed.setSelected(true);
 		} else {
 			chckbxShowTimeOutsUsed.setSelected(false);
 		}
-		if (Integer.toString(foosObsSettings.getDefaultAutoCapNames()).equals("1")) {
+		if (Integer.toString(settings.getDefaultAutoCapNames()).equals("1")) {
 			chckbxAutoCapNames.setSelected(true);
 		} else {
 			chckbxAutoCapNames.setSelected(false);
 		}
-		txtTeam1LastScored.setText(foosObsSettings.getDefaultTeam1LastScored());
-		txtTeam2LastScored.setText(foosObsSettings.getDefaultTeam2LastScored());
-		txtClearLastScored.setText(foosObsSettings.getDefaultClearLastScored());
+		txtTeam1LastScored.setText(settings.getDefaultTeam1LastScored());
+		txtTeam2LastScored.setText(settings.getDefaultTeam2LastScored());
+		txtClearLastScored.setText(settings.getDefaultClearLastScored());
 	}
 	
-	private void saveSettings(Settings foosObsSettings) {
+	private void saveSettings(Settings settings) {
     	if (isValidInteger(txtPointsToWin.getText())) {
-			foosObsSettings.setPointsToWin(Integer.parseInt(txtPointsToWin.getText()));
+			settings.setPointsToWin(Integer.parseInt(txtPointsToWin.getText()));
     	}
     	if (isValidInteger(txtMaxWin.getText())) {
-			foosObsSettings.setMaxWin(Integer.parseInt(txtMaxWin.getText()));
+			settings.setMaxWin(Integer.parseInt(txtMaxWin.getText()));
     	}
     	if (isValidInteger(txtWinBy.getText())) {
-		foosObsSettings.setWinBy(Integer.parseInt(txtWinBy.getText()));
+		settings.setWinBy(Integer.parseInt(txtWinBy.getText()));
     	}
     	if (isValidInteger(txtGamesToWin.getText())) {
-		foosObsSettings.setGamesToWin(Integer.parseInt(txtGamesToWin.getText()));
+		settings.setGamesToWin(Integer.parseInt(txtGamesToWin.getText()));
     	}
     	if (isValidInteger(txtMaxTimeOuts.getText())) {
-    		foosObsSettings.setMaxTimeOuts(Integer.parseInt(txtMaxTimeOuts.getText()));
+    		settings.setMaxTimeOuts(Integer.parseInt(txtMaxTimeOuts.getText()));
     	}
 		if (chckbxAutoIncrementGame.isSelected()) {
-			foosObsSettings.setAutoIncrementGame(1);
+			settings.setAutoIncrementGame(1);
 		} else {
-			foosObsSettings.setAutoIncrementGame(0);
+			settings.setAutoIncrementGame(0);
 		}
 		if (chckbxAnnounceWinner.isSelected()) {
-			foosObsSettings.setAnnounceWinner(1);
+			settings.setAnnounceWinner(1);
 		} else {
-			foosObsSettings.setAnnounceWinner(0);
+			settings.setAnnounceWinner(0);
 		}
 		if (chckbxAnnounceMeatball.isSelected()) {
-			foosObsSettings.setAnnounceMeatball(1);
+			settings.setAnnounceMeatball(1);
 		} else {
-			foosObsSettings.setAnnounceMeatball(0);
+			settings.setAnnounceMeatball(0);
 		}
-		foosObsSettings.setMeatball(txtMeatball.getText());
-		foosObsSettings.setWinnerPrefix(txtWinnerPrefix.getText());
-		foosObsSettings.setWinnerSuffix(txtWinnerSuffix.getText());
-		foosObsSettings.setTeam1LastScored(txtTeam1LastScored.getText());
-		foosObsSettings.setTeam2LastScored(txtTeam2LastScored.getText());
-		foosObsSettings.setClearLastScored(txtClearLastScored.getText());
+		settings.setMeatball(txtMeatball.getText());
+		settings.setWinnerPrefix(txtWinnerPrefix.getText());
+		settings.setWinnerSuffix(txtWinnerSuffix.getText());
+		settings.setTeam1LastScored(txtTeam1LastScored.getText());
+		settings.setTeam2LastScored(txtTeam2LastScored.getText());
+		settings.setClearLastScored(txtClearLastScored.getText());
 
 		if (isValidInteger(txtShotTime.getText())) {
-    		foosObsSettings.setShotTime(Integer.parseInt(txtShotTime.getText()));
+    		settings.setShotTime(Integer.parseInt(txtShotTime.getText()));
     	}
     	if (isValidInteger(txtPassTime.getText())) {
-    		foosObsSettings.setPassTime(Integer.parseInt(txtPassTime.getText()));
+    		settings.setPassTime(Integer.parseInt(txtPassTime.getText()));
     	}
     	if (isValidInteger(txtTimeOutTime.getText())) {
-    		foosObsSettings.setTimeOutTime(Integer.parseInt(txtTimeOutTime.getText()));
+    		settings.setTimeOutTime(Integer.parseInt(txtTimeOutTime.getText()));
     	}
     	if (isValidInteger(txtGameTime.getText())) {
-    		foosObsSettings.setGameTime(Integer.parseInt(txtGameTime.getText()));
+    		settings.setGameTime(Integer.parseInt(txtGameTime.getText()));
     	}
     	if (isValidInteger(txtRecallTime.getText())) {
-    		foosObsSettings.setRecallTime(Integer.parseInt(txtRecallTime.getText()));
+    		settings.setRecallTime(Integer.parseInt(txtRecallTime.getText()));
     	}
 		if (chckbxShowTimeOutsUsed.isSelected()) {
-			foosObsSettings.setShowTimeOutsUsed(1);
+			settings.setShowTimeOutsUsed(1);
 		} else {
-			foosObsSettings.setShowTimeOutsUsed(0);
+			settings.setShowTimeOutsUsed(0);
 		}
 		if (chckbxAutoCapNames.isSelected()) {
-			foosObsSettings.setAutoCapNames(1);
+			settings.setAutoCapNames(1);
 		} else {
-			foosObsSettings.setAutoCapNames(0);
+			settings.setAutoCapNames(0);
 		}
 		try {
-			foosObsSettings.saveToConfig();
+			settings.saveToConfig();
 		} catch (IOException ex) {
 			System.out.print("Error saving properties file: " + ex.getMessage());		
 		}

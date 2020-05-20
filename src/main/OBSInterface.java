@@ -27,17 +27,26 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import model.Settings;
+
 public class OBSInterface {
 	
-	private String txtFilePath = "c:" + File.separator + "Temp";
-	private String tableName="T1";/// fix this
+	private String txtFilePath="";
+	private String tableName="";
 	private String fileName;
 	private String theFileName;
 	
-	public OBSInterface() {
-//		System.out.println("OBSInterface engaged");
+	public OBSInterface(Settings settings) {
+		txtFilePath = settings.getDatapath();
+		File checkDir = new File(txtFilePath);
+		if (!checkDir.exists()) {
+//			System.out.println("DirectoryDoesNotExist: " + txtFilePath);
+			if (!checkDir.mkdir()) {
+				System.out.println("Could not create directory " + txtFilePath);
+			}
+		}
 	}
-	
+
 	public void setFilePath(String filePath) {
 		this.txtFilePath = filePath;
 	}
@@ -54,13 +63,21 @@ public class OBSInterface {
 		} else {
 			fileName = tableName + "_" + whichFile;
 		}
+		File checkFile = new File(txtFilePath + File.separator + fileName);
+		if (!checkFile.exists()) {
+//			System.out.println("FileDoesNotExist: " + txtFilePath + File.separator + fileName);
+			if(!checkFile.createNewFile()) {
+				System.out.println("Could not create file: " + txtFilePath + File.separator + fileName);
+			}
+		}
 		BufferedWriter writer = new BufferedWriter(new FileWriter(txtFilePath + File.separator + fileName));
+		if(theContents==null) theContents="";
 		writer.write(theContents);
 		writer.close();
 	}
 
 	public String getContents(String whichFile) throws IOException {
-		String theContents = null;
+		String theContents = "";
 		if (tableName.isEmpty()) {
 			theFileName = txtFilePath + File.separator + whichFile;
 		} else {
@@ -68,7 +85,7 @@ public class OBSInterface {
 		}
 		File theFile = new File(theFileName); 
 		if (!theFile.exists()) {
-			theContents = null;
+			theContents = "";
 		} else {
 			try {
 				BufferedReader br = new BufferedReader(new FileReader(theFileName));

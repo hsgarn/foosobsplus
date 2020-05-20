@@ -26,17 +26,22 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
+import main.OBSInterface;
 import model.Match;
+import model.Settings;
 import model.Team;
 import view.SwitchPanel;
 import view.TeamPanel;
 
 public class TeamController {
+	private OBSInterface obsInterface;
+	private Settings settings;
 	private Team team1;
 	private Team team2;
 	private Match match;
@@ -44,9 +49,10 @@ public class TeamController {
 	private TeamPanel team2Panel;
 	private SwitchPanel switchPanel;
 	private TimerController timerController;
-	private String[] lastScoredStrings = {"     Last Scored     ", "<--- Last Scored     ", "     Last Scored --->"};
 	
-	public TeamController(Team team1, Team team2, Match match, TeamPanel team1Panel, TeamPanel team2Panel, SwitchPanel switchPanel, TimerController timerController) {
+	public TeamController(OBSInterface obsInterface, Settings settings, Team team1, Team team2, Match match, TeamPanel team1Panel, TeamPanel team2Panel, SwitchPanel switchPanel, TimerController timerController) {
+		this.obsInterface = obsInterface;
+		this.settings = settings;
 		this.team1 = team1;
 		this.team2 = team2;
 		this.match = match;
@@ -107,6 +113,9 @@ public class TeamController {
 		this.team2Panel.addWarnListener(new WarnListener());
 		this.team1Panel.addClearAllListener(new ClearAllListener());
 		this.team2Panel.addClearAllListener(new ClearAllListener());
+
+//		resetTimeOuts();
+
 	}
 	
 	////// Team Panel Listener Objects //////
@@ -374,11 +383,6 @@ public class TeamController {
 			JButton btn = (JButton) e.getSource();
 			String name = btn.getName();
 			callTimeOut(name);
-			if(name.equals("Team 1")) {
-				team1Panel.updateTimeOutCount(team1.getTimeOutCount());
-			} else {
-				team2Panel.updateTimeOutCount(team2.getTimeOutCount());
-			};
 		}
 	}
 	private class TimeOutCountDecreaseListener implements ActionListener{
@@ -386,11 +390,6 @@ public class TeamController {
 			JButton btn = (JButton) e.getSource();
 			String name = btn.getName();
 			restoreTimeOut(name);
-			if(name.equals("Team 1")) {
-				team1Panel.updateTimeOutCount(team1.getTimeOutCount());
-			} else {
-				team2Panel.updateTimeOutCount(team2.getTimeOutCount());
-			}
 		}
 	}
 	private class ResetListener implements ActionListener{
@@ -431,7 +430,7 @@ public class TeamController {
 				displayAll();
 			}
 			match.clearAll();
-			switchPanel.setLastScored(lastScoredStrings[match.getLastScored()]);
+			switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
 		}
 	}
 
@@ -452,7 +451,7 @@ public class TeamController {
 		} else {
 			winState = match.incrementScore(2);
 		};
-		switchPanel.setLastScored(lastScoredStrings[match.getLastScored()]);
+		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
 		timerController.resetTimer();
 		if(winState==1) {timerController.startGameTimer();}
 		displayAll();
@@ -539,7 +538,7 @@ public class TeamController {
 		team2.clearAll();
 		match.clearAll();
 		displayAll();
-		switchPanel.setLastScored(lastScoredStrings[0]);
+		switchPanel.setLastScored(settings.getLastScoredStrings()[0]);
 	}
 	public void resetNames() {
 		team1.setTeamName("");
@@ -610,20 +609,68 @@ public class TeamController {
 		boolean isWarn2 = team2.getWarn();
 		team1Panel.displayAllFields(teamName1, forwardName1, goalieName1, score1, gameCount1, timeOutCount1, isReset1, isWarn1);
 		team2Panel.displayAllFields(teamName2, forwardName2, goalieName2, score2, gameCount2, timeOutCount2, isReset2, isWarn2);
-		switchPanel.setLastScored(lastScoredStrings[match.getLastScored()]);
+		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
 	}
 	public void callTimeOut(String txt) {
 		if(txt.equals("Team 1")) {
 			team1.callTimeOut();
+			team1Panel.updateTimeOutCount(team1.getTimeOutCount());
 		} else {
 			team2.callTimeOut();
+			team2Panel.updateTimeOutCount(team2.getTimeOutCount());
 		}
 	}
 	public void restoreTimeOut(String txt) {
 		if(txt.equals("Team 1")) {
 			team1.restoreTimeOut();
+			team1Panel.updateTimeOutCount(team1.getTimeOutCount());
 		} else {
 			team2.restoreTimeOut();
+			team2Panel.updateTimeOutCount(team2.getTimeOutCount());
 		}
+	}
+	public void fetchAll() {
+		try {
+			team1.setTeamName(obsInterface.getContents(settings.getTeam1NameFileName()));
+			team2.setTeamName(obsInterface.getContents(settings.getTeam2NameFileName()));
+			team1.setForwardName(obsInterface.getContents(settings.getTeam1ForwardFileName()));
+			team2.setForwardName(obsInterface.getContents(settings.getTeam2ForwardFileName()));
+			team1.setGoalieName(obsInterface.getContents(settings.getTeam1GoalieFileName()));
+			team2.setGoalieName(obsInterface.getContents(settings.getTeam2GoalieFileName()));
+			team1.setScore(obsInterface.getContents(settings.getScore1FileName()));
+			team2.setScore(obsInterface.getContents(settings.getScore2FileName()));
+			team1.setGameCount(obsInterface.getContents(settings.getGameCount1FileName()));
+			team2.setGameCount(obsInterface.getContents(settings.getGameCount2FileName()));
+			team1.setTimeOutCount(obsInterface.getContents(settings.getTimeOut1FileName()));
+			team2.setTimeOutCount(obsInterface.getContents(settings.getTimeOut2FileName()));
+			team1.setReset(obsInterface.getContents(settings.getReset1FileName())!=null);
+			team2.setReset(obsInterface.getContents(settings.getReset2FileName())!=null);
+			team1.setWarn(obsInterface.getContents(settings.getWarn1FileName())!=null);
+			team2.setWarn(obsInterface.getContents(settings.getWarn2FileName())!=null);
+			match.setLastScored(obsInterface.getContents(settings.getLastScoredFileName()));
+			team1Panel.updateTeamName(team1.getTeamName());
+			team2Panel.updateTeamName(team2.getTeamName());
+			team1Panel.updateForwardName(team1.getForwardName());
+			team2Panel.updateForwardName(team2.getForwardName());
+			team1Panel.updateGoalieName(team1.getGoalieName());
+			team2Panel.updateGoalieName(team2.getGoalieName());
+			team1Panel.updateScore(team1.getScore());
+			team2Panel.updateScore(team2.getScore());
+			team1Panel.updateGameCount(team1.getGameCount());
+			team2Panel.updateGameCount(team2.getGameCount());
+			team1Panel.updateTimeOutCount(team1.getTimeOutCount());
+			team2Panel.updateTimeOutCount(team2.getTimeOutCount());
+			team1Panel.updateReset(team1.getReset());
+			team2Panel.updateReset(team2.getReset());
+			team1Panel.updateWarn(team1.getWarn());
+			team2Panel.updateWarn(team2.getWarn());
+			switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	public void writeAll() {
+		team1.writeAll();
+		team2.writeAll();
 	}
 }

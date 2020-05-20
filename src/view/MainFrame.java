@@ -40,9 +40,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-import main.OBSInterface;
-import model.Settings;
-
 @SuppressWarnings("serial")
 public final class MainFrame extends JFrame {
 	
@@ -54,17 +51,15 @@ public final class MainFrame extends JFrame {
 	private TimerPanel timerPanel;
 	private StatsEntryPanel statsEntryPanel;
 	private StatsDisplayPanel statsDisplayPanel;
-	public SettingsPanel settingsPanel;
-	public HotKeysPanel hotKeysPanel;
-	public FileNamesPanel fileNamesPanel;
-	private Settings settings;
+	public SettingsFrame settingsFrame;
+	public HotKeysFrame hotKeysFrame;
+	public FileNamesFrame fileNamesFrame;
 	private JCheckBoxMenuItem viewTimerWindow;
 	private JCheckBoxMenuItem viewAlwaysOnTop;
-	private OBSInterface obsInterface;
 	
 	public MainFrame(TablePanel tablePanel, TimerPanel timerPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
-			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, SettingsPanel settingsPanel, HotKeysPanel hotKeysPanel,
-			FileNamesPanel fileNamesPanel, Settings settings, OBSInterface obsInterface) {
+			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, SettingsFrame settingsFrame, HotKeysFrame hotKeysFrame,
+			FileNamesFrame fileNamesFrame) {
 
 		super("FoosOBSPlus");
 
@@ -76,11 +71,9 @@ public final class MainFrame extends JFrame {
 		this.switchPanel = switchPanel;
 		this.resetPanel = resetPanel;
 		this.statsDisplayPanel = statsDisplayPanel;
-		this.settingsPanel = settingsPanel;
-		this.hotKeysPanel = hotKeysPanel;
-		this.fileNamesPanel = fileNamesPanel;
-		this.settings = settings;
-		this.obsInterface = obsInterface;
+		this.settingsFrame = settingsFrame;
+		this.hotKeysFrame = hotKeysFrame;
+		this.fileNamesFrame = fileNamesFrame;
 		
 		 viewTimerWindow = new JCheckBoxMenuItem("Timer Window");
 		 viewAlwaysOnTop = new JCheckBoxMenuItem("Always on Top");
@@ -151,64 +144,19 @@ public final class MainFrame extends JFrame {
 		
 		settingsParamItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				JFrame settingsFrame = new JFrame("FoosOBSPlus Parameter Settings");
-				settingsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				
-				SettingsPanel sp;
-				try {
-					settingsFrame.setAlwaysOnTop(true);
-					sp = new SettingsPanel(settings);
-					sp.setPreferredSize(new Dimension(650, 450));
-
-					settingsFrame.getContentPane().add(sp);
-					settingsFrame.pack();
-					settingsFrame.setVisible(true);
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				settingsFrame.setVisible(true);
 			}
-		});
+			});
 
 		settingsHotKeyItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				JFrame settingsFrame = new JFrame("FoosOBSPlus Hot Key Settings");
-				settingsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				
-				HotKeysPanel hkp;
-				try {
-					settingsFrame.setAlwaysOnTop(true);
-					hkp = new HotKeysPanel(settings);
-					hkp.setPreferredSize(new Dimension(800, 550));
-
-					settingsFrame.getContentPane().add(hkp);
-					settingsFrame.pack();
-					settingsFrame.setVisible(true);
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				hotKeysFrame.setVisible(true);
 			}
 		});
 
 		settingsFileItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				JFrame settingsFrame = new JFrame("FoosOBSPlus File Name Settings");
-				settingsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				
-				FileNamesPanel fnp;
-				try {
-					settingsFrame.setAlwaysOnTop(true);
-					fnp = new FileNamesPanel(settings, obsInterface);
-					fnp.setPreferredSize(new Dimension(600, 500));
-
-					settingsFrame.getContentPane().add(fnp);
-					settingsFrame.pack();
-					settingsFrame.setVisible(true);
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				fileNamesFrame.setVisible(true);
 			}
 		});
 

@@ -68,7 +68,6 @@ public class TeamPanel extends JPanel {
 		initializeTeamPanel(teamNbr);
 		
 		layoutComponents();
-		
 	}
 
 	private void initializeTeamPanel(int teamNbr) {
