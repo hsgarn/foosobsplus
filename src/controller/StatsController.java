@@ -56,6 +56,8 @@ public class StatsController {
 			statsEntryPanel.updateCode("");
 			statsEntryPanel.updateCodeHistory(code);
 			parseCode(code);
+			if (stats.getTeam1Scored()) teamController.incrementScore("Team 1");
+			if (stats.getTeam2Scored()) teamController.incrementScore("Team 2");
 		}
 	}
 	private class ClearListener implements ActionListener{
