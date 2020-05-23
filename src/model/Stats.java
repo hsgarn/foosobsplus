@@ -26,6 +26,7 @@ public class Stats {
 	private String code = "";
 	private DefaultListModel<String> codeHistory;
 	private String previousCode = "";
+	private String command = "";
 	private char previousTeam;
 	private char previousPosition;
 	private char previousAction;
@@ -42,6 +43,7 @@ public class Stats {
 	private boolean isShot;
 	private boolean isPass;
 	private boolean isClear;
+	private boolean isDrop;
 	private boolean isFiveRod;
 	private boolean isTwoRod;
 	private boolean isThreeRod;
@@ -54,6 +56,9 @@ public class Stats {
 	private boolean isTeam2;
 	private boolean team1Scored;
 	private boolean team2Scored;
+	private boolean isCommand;
+	private boolean isPassComplete;
+	private boolean isClearComplete;
 	
 	private char breakChar = new Character('B');
 	private char goalChar = new Character('G');
@@ -66,6 +71,8 @@ public class Stats {
 	private char threeRodChar = new Character('3');
 	private char team1Char = new Character('Y');
 	private char team2Char = new Character('B');
+	private char commandChar = new Character('X');
+	private char dropChar = new Character('D');
 	
 	private int team1PassAttempts = 0;
 	private int team1PassCompletes = 0;
@@ -101,7 +108,9 @@ public class Stats {
 	}
 	public void addCodeToHistory(String code) {
 		codeHistory.addElement(code);
-		previousCode = code;
+		if (!isCommand) {
+			previousCode = code;
+		}
 	}
 	public boolean getTeam1Scored() {
 		return team1Scored;
@@ -109,9 +118,19 @@ public class Stats {
 	public boolean getTeam2Scored() {
 		return team2Scored;
 	}
+	public boolean getIsCommand() {
+		return isCommand;
+	}
+	public String getCommand() {
+		return command;
+	}
 	private void processCode(String code, String previousCode) {
 		parseCode(previousCode, code);
-		showParsed();
+		if(isCommand) {
+			command=code.substring(1,code.length());
+//			parseCommand(command);
+			return;
+		}
 		team1Scored=false;
 		team2Scored=false;
 		if(isTeamScored) {
@@ -123,9 +142,18 @@ public class Stats {
 				}
 			}
 		}
+		if(isShot) shotLogic();
+		if(isPass) passLogic();
+		if(isClear) clearLogic();
+		if(isDrop) dropLogic();
+		
+		showParsed();
 	}
 	private void parseCode(String previousCode, String code) {
 		if (code.length() < 3) return;
+		currentTeam = code.charAt(0);
+		isCommand = currentTeam==commandChar;
+		if(isCommand) return;
 		if (previousCode.length()>0) {
 			previousTeam = previousCode.charAt(0);
 			previousPosition = previousCode.charAt(1);
@@ -134,7 +162,6 @@ public class Stats {
 				previousModifier = previousCode.charAt(3);
 			}
 		}
-		currentTeam = code.charAt(0);
 		isTeam1 = currentTeam==team1Char;
 		isTeam2 = currentTeam==team2Char;
 		currentPosition = code.charAt(1);
@@ -150,6 +177,7 @@ public class Stats {
 		isPass = currentAction==passChar;
 		isShot = currentAction==shotChar;
 		isClear = currentAction==clearChar;
+		isDrop = currentAction==dropChar;
 		isFiveRod = currentPosition==fiveRodChar;
 		isTwoRod = currentPosition==twoRodChar;
 		isThreeRod = currentPosition==threeRodChar;
@@ -159,35 +187,132 @@ public class Stats {
 		
 		isForwardDirection = isSameTeam && !isSameRod && ((isFiveRod && wasTwoRod) || (isThreeRod && (wasFiveRod || wasTwoRod)));
 
+		isPassComplete = isPass && isSameTeam && !isSameRod && isForwardDirection;
+		isClearComplete = isClear && !isSameRod && (isSameTeam || (!isSameTeam && (isFiveRod || isTwoRod)));
+
+	}
+	private void parseCommand(String command) {
+//		System.out.println("Command: " + command);
+	}
+	private void clearLogic() {
+		if(isClearComplete) {
+			if(isSameTeam) {
+				if(isTeam1) {
+					team1ClearAttempts++;
+					team1ClearCompletes++;
+				} else {
+					team2ClearAttempts++;
+					team2ClearCompletes++;
+				}
+			} else {
+				if(isTeam1) {
+					team2ClearAttempts++;
+					team2ClearCompletes++;
+				} else {
+					team1ClearAttempts++;
+					team1ClearCompletes++;
+				}
+			}
+		} else {
+			if(isSameTeam) {
+				if(isTeam1) {
+					team1ClearAttempts++;
+				} else {
+					team2ClearAttempts++;
+				}
+			} else {
+				if(isTeam1) {
+					team2ClearAttempts++;
+				} else {
+					team1ClearAttempts++;
+				}
+			}
+		}
+	}
+	private void dropLogic() {
+		if(isTwoRod && wasTwoRod && !isSameTeam) {
+			if(isTeam1) {
+				team2ClearAttempts++;
+				team2ClearCompletes++;
+			} else {
+				team1ClearAttempts++;
+				team1ClearCompletes++;
+			}
+		}
+	}
+	private void passLogic() {
+		if(isPassComplete) {
+			if(isTeam1) {
+				team1PassAttempts++;
+				team1PassCompletes++;
+			} else {
+				team2PassAttempts++;
+				team2PassCompletes++;
+			}
+		} else {
+			if(isSameTeam) {
+				if(isTeam1) {
+					team1PassAttempts++;
+				} else {
+					team2PassAttempts++;
+				}
+			} else {
+				if(isTeam1) {
+					team2PassAttempts++;
+				} else {
+					team1PassAttempts++;
+				}
+			}
+		}
+	}
+	private void shotLogic() {
+		if(isTeamScored) {
+			if(team1Scored) {
+				team1ShotAttempts++;
+				team1ShotCompletes++;
+			} else {
+				team2ShotAttempts++;
+				team2ShotCompletes++;
+			}
+		} else {
+			if(isSameTeam) {
+				if(isTeam1) {
+					team1ShotAttempts++;
+				} else {
+					team2ShotAttempts++;
+				}
+			} else {
+				if(isTeam1) {
+					team2ShotAttempts++;
+				} else {
+					team1ShotAttempts++;
+				}
+			}
+		}
 	}
 	private void showParsed() {
 		if (!isShowParsed) return;
-		System.out.println("Previous Code: " + previousCode);
-		System.out.println("Previous Team: " + previousTeam);
-		System.out.println("Previous Pos.: " + previousPosition);
-		System.out.println("Previous Act.: " + previousAction);
-		System.out.println("Previous Mod.: " + previousModifier);
-		System.out.println(" Current Code: " + code);
-		System.out.println(" Current Team: " + currentTeam);
-		System.out.println(" Current Pos.: " + currentPosition);
-		System.out.println(" Current Act.: " + currentAction);
-		System.out.println(" Current Mod.: " + currentModifier);
-		System.out.println(" Is Team 1: " + isTeam1);
-		System.out.println(" Is Team 2: " + isTeam2);
-		System.out.println(" Is Same Team: " + isSameTeam);
-		System.out.println(" Is Same Rod : " + isSameRod);
+		System.out.println("----------------------------------------");
+		System.out.println("Previous Code: " + previousCode + "   Current Code: " + code);
+		System.out.println("Previous Team: " + previousTeam + "     Current Team: " + currentTeam);
+		System.out.println("Previous Pos.: " + previousPosition + "     Current Pos.: " + currentPosition);
+		System.out.println("Previous Act.: " + previousAction + "     Current Act.: " + currentAction);
+		System.out.println("Previous Mod.: " + previousModifier + "     Current Mod.: " + currentModifier);
+		System.out.println("team1Scored: " + team1Scored + "   team2Scored: " + team2Scored);
+		System.out.println("Is Team 1: " + isTeam1 + "      Is Team 2: " + isTeam2);
+		System.out.println(" Is Same Team: " + isSameTeam + "   Is Same Rod: " + isSameRod);
 		System.out.println(" Is Team Scored: " + isTeamScored);
 		System.out.println(" Is Lucky Break: " + isLuckyBreak);
 		System.out.println(" Is Penalty: " + isPenalty);
-		System.out.println(" Is Pass: " + isPass);
-		System.out.println(" Is Shot: " + isShot);
+		System.out.println(" Is Pass: " + isPass + "      Is Shot: " + isShot);
 		System.out.println(" Is Clear: " + isClear);
 		System.out.println(" Is forward direction: " + isForwardDirection);
-	}
-	private void team1Scored() {
-		// increase score for team1
-	}
-	private void team2Scored() {
-		// increase score for team2
+		System.out.println("Team1PassAttempts: " + team1PassAttempts + "  Completes: " + team1PassCompletes);
+		System.out.println("Team2PassAttempts: " + team2PassAttempts + "  Completes: " + team2PassCompletes);
+		System.out.println("Team1ShotAttempts: " + team1ShotAttempts + "  Completes: " + team1ShotCompletes);
+		System.out.println("Team2ShotAttempts: " + team2ShotAttempts + "  Completes: " + team2ShotCompletes);
+		System.out.println("Team1ClearAttempts: " + team1ClearAttempts + "  Completes: " + team1ClearCompletes);
+		System.out.println("Team2ClearAttempts: " + team2ClearAttempts + "  Completes: " + team2ClearCompletes);
+		
 	}
 }

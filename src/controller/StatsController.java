@@ -25,6 +25,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JTextField;
 
+import commands.*;
 import model.Stats;
 import view.StatsEntryPanel;
 
@@ -32,6 +33,7 @@ public class StatsController {
 	private Stats stats;
 	private StatsEntryPanel statsEntryPanel;
 	private TeamController teamController;
+	private CommandSwitch mySwitch;
 	
 	public StatsController(Stats stats, StatsEntryPanel statsEntryPanel, TeamController teamController) {
 		this.stats = stats;
@@ -43,6 +45,7 @@ public class StatsController {
 		this.statsEntryPanel.addCodeListener(new CodeListener());
 		this.statsEntryPanel.addClearListener(new ClearListener());
 		
+		loadCommands();
 	}
 	
 	////// Stats Entry Panel Listener Objects //////
@@ -55,7 +58,7 @@ public class StatsController {
 			stats.addCodeToHistory(code);
 			statsEntryPanel.updateCode("");
 			statsEntryPanel.updateCodeHistory(code);
-			parseCode(code);
+			if (stats.getIsCommand()) processCommand(stats.getCommand());
 			if (stats.getTeam1Scored()) teamController.incrementScore("Team 1");
 			if (stats.getTeam2Scored()) teamController.incrementScore("Team 2");
 		}
@@ -69,65 +72,61 @@ public class StatsController {
 
 	////// Utility Methods //////
 	
-	private void parseCode(String code) {
-		switch (code) {
-			case "Y3Y":
-				teamController.incrementScore("Team 1");
-				break;
-			case "Y5S":
-				teamController.incrementScore("Team 1");
-				break;
-			case "Y2S":
-				teamController.incrementScore("Team 1");
-				break;
-			case "YST":
-				teamController.incrementScore("Team 1");
-				break;
-			case "YSL":
-				teamController.incrementScore("Team 1");
-				break;
-			case "B3Y":
-				teamController.incrementScore("Team 2");
-				break;
-			case "B5S":
-				teamController.incrementScore("Team 2");
-				break;
-			case "B2S":
-				teamController.incrementScore("Team 2");
-				break;
-			case "BST":
-				teamController.incrementScore("Team 2");
-				break;
-			case "BSL":
-				teamController.incrementScore("Team 2");
-				break;
-			case "Y5T":
-				teamController.callTimeOut("Team 1");
-				break;
-			case "Y3T":
-				teamController.callTimeOut("Team 1");
-				break;
-			case "Y2T":
-				teamController.callTimeOut("Team 1");
-				break;
-			case "TOY":
-				teamController.callTimeOut("Team 1");
-				break;
-			case "B5T":
-				teamController.callTimeOut("Team 2");
-				break;
-			case "B3T":
-				teamController.callTimeOut("Team 2");
-				break;
-			case "B2T":
-				teamController.callTimeOut("Team 2");
-				break;
-			case "TOB":
-				teamController.callTimeOut("Team 2");
-				break;
-			default:
-				break;
-		}
-		
+	private void processCommand(String command) {
+		mySwitch.execute(command);
+		return;
+	}
+	private void loadCommands() {
+		Command sst = new SSTCommand(teamController);
+		Command spt = new SPTCommand(teamController);
+		Command sgt = new SGTCommand(teamController);
+		Command stt = new STTCommand(teamController);
+		Command srt = new SRTCommand(teamController);
+		Command prt = new PRTCommand(teamController);
+		Command ist1 = new IST1Command(teamController);
+		Command ist2 = new IST2Command(teamController);
+		Command dst1 = new DST1Command(teamController);
+		Command dst2 = new DST2Command(teamController);
+		Command igt1 = new IGT1Command(teamController);
+		Command igt2 = new IGT2Command(teamController);
+		Command dgt1 = new DGT1Command(teamController);
+		Command dgt2 = new DGT2Command(teamController);
+		Command utt1 = new UTT1Command(teamController);
+		Command utt2 = new UTT2Command(teamController);
+		Command rtt1 = new RTT1Command(teamController);
+		Command rtt2 = new RTT2Command(teamController);
+		Command prt1 = new PRT1Command(teamController);
+		Command prt2 = new PRT2Command(teamController);
+		Command pwt1 = new PWT1Command(teamController);
+		Command pwt2 = new PWT2Command(teamController);
+		Command pss = new PSSCommand(teamController);
+		Command xpt1 = new XPT1Command(teamController);
+		Command xpt2 = new XPT2Command(teamController);
+		mySwitch = new CommandSwitch();
+		mySwitch.register("SST", sst);
+		mySwitch.register("SPT", spt);
+		mySwitch.register("SGT", sgt);
+		mySwitch.register("STT", stt);
+		mySwitch.register("SRT", srt);
+		mySwitch.register("PRT", prt);
+		mySwitch.register("IST1", ist1);
+		mySwitch.register("IST2", ist2);
+		mySwitch.register("DST1", dst1);
+		mySwitch.register("DST2", dst2);
+		mySwitch.register("IGT1", igt1);
+		mySwitch.register("IGT2", igt2);
+		mySwitch.register("DGT1", dgt1);
+		mySwitch.register("DGT2", dgt2);
+		mySwitch.register("UTT1", utt1);
+		mySwitch.register("UTT2", utt2);
+		mySwitch.register("RTT1", rtt1);
+		mySwitch.register("RTT2", rtt2);
+		mySwitch.register("PRT1", prt1);
+		mySwitch.register("PRT2", prt2);
+		mySwitch.register("PWT1", pwt1);
+		mySwitch.register("PWT2", pwt2);
+		mySwitch.register("PSS", pss);
+		mySwitch.register("XPT1", xpt1);
+		mySwitch.register("XPT2", xpt2);
 	}
 }

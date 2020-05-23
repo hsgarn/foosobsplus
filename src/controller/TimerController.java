@@ -95,7 +95,7 @@ public class TimerController {
 	
 	////// Utility Methodss //////
 	
-	private void startShotTimer() {
+	public void startShotTimer() {
 		int count = settings.getShotTime() * 10;
 		timeClock.setTimerInUse("Shot Timer");
 		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
@@ -104,7 +104,7 @@ public class TimerController {
 		timerPanel.updateTimerDisplay(count);
 		timeClock.setTimer(count);
 	}
-	private void startPassTimer() {
+	public void startPassTimer() {
 		int count = settings.getPassTime() * 10;
 		timeClock.setTimerInUse("Pass Timer");
 		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
@@ -113,7 +113,7 @@ public class TimerController {
 		timerPanel.updateTimerDisplay(count);
 		timeClock.setTimer(count);
 	}
-	private void startTimeOutTimer() {
+	public void startTimeOutTimer() {
 		int count = settings.getTimeOutTime() * 10;
 		timeClock.setTimerInUse("Time Out Timer");
 		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
@@ -131,7 +131,7 @@ public class TimerController {
 		timerPanel.updateTimerDisplay(count);
 		timeClock.setTimer(count);
 	}
-	private void startRecallTimer() {
+	public void startRecallTimer() {
 		int count = settings.getRecallTime() * 600;
 		timeClock.setTimerInUse("Recall Timer");
 		timerPanel.updateTimerInUse(timeClock.getTimerInUse());

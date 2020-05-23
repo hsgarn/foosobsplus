@@ -249,17 +249,7 @@ public class TeamController {
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String name = btn.getName();
-			if(name.equals("Team 1")) {
-				String[] names = team1.switchPositions();
-				String forwardName = names[0];
-				String goalieName = names[1];
-				team1Panel.updateNames(forwardName, goalieName);
-			} else {
-				String[] names = team2.switchPositions();
-				String forwardName = names[0];
-				String goalieName = names[1];
-				team2Panel.updateNames(forwardName, goalieName);
-			};
+			switchPositions(name);
 		}
 	}
 	private class ScoreListener implements ActionListener{
@@ -444,6 +434,19 @@ public class TeamController {
 			return "0";
 		}
 	}
+	public void switchPositions(String name) {
+		if(name.equals("Team 1")) {
+			String[] names = team1.switchPositions();
+			String forwardName = names[0];
+			String goalieName = names[1];
+			team1Panel.updateNames(forwardName, goalieName);
+		} else {
+			String[] names = team2.switchPositions();
+			String forwardName = names[0];
+			String goalieName = names[1];
+			team2Panel.updateNames(forwardName, goalieName);
+		}
+	};
 	public void incrementScore(String name) {
 		int winState = 0;
 		if(name.equals("Team 1")) {
@@ -452,8 +455,8 @@ public class TeamController {
 			winState = match.incrementScore(2);
 		};
 		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
-		timerController.resetTimer();
-		if(winState==1) {timerController.startGameTimer();}
+		resetTimer();
+		if(winState==1) {startGameTimer();}
 		displayAll();
 	}
 	public void decrementScore(String name) {
@@ -463,6 +466,24 @@ public class TeamController {
 			team2Panel.updateScore(team2.decrementScore());
 		}
 	}
+	public void resetTimer() {
+		timerController.resetTimer();
+	}
+	public void startGameTimer() {
+		timerController.startGameTimer();
+	}
+	public void startShotTimer() {
+		timerController.startShotTimer();
+	}
+	public void startPassTimer() {
+		timerController.startPassTimer();
+	}
+	public void startTimeOutTimer() {
+		timerController.startTimeOutTimer();
+	}
+	public void startRecallTimer() {
+		timerController.startRecallTimer();
+	}
 	public void incrementGameCount(String name) {
 		if(name.equals("Team 1")) {
 			match.incrementGameCount(team1);
@@ -471,6 +492,15 @@ public class TeamController {
 			match.incrementGameCount(team2);
 			team2Panel.updateGameCount(team2.getGameCount());
 		};
+	}
+	public void decrementGameCount(String name) {
+		if(name.equals("Team 1")) {
+			team1.decrementGameCount();
+			team1Panel.updateGameCount(team1.getGameCount());
+		} else {
+			team2.decrementGameCount();
+			team2Panel.updateGameCount(team2.getGameCount());
+		}
 	}
 	public void switchSides() {
 		Team tmp = team1;
@@ -627,6 +657,42 @@ public class TeamController {
 		} else {
 			team2.restoreTimeOut();
 			team2Panel.updateTimeOutCount(team2.getTimeOutCount());
+		}
+	}
+	public void toggleReset(String txt) {
+		if(txt.equals("Team 1")) {
+			team1.setReset(!team1.getReset());
+			team1Panel.updateReset(team1.getReset());
+		} else {
+			team2.setReset(!team2.getReset());
+			team2Panel.updateReset(team2.getReset());
+		}
+	}
+	public void toggleWarn(String txt) {
+		if(txt.equals("Team 1")) {
+			team1.setWarn(!team1.getWarn());
+			team1Panel.updateWarn(team1.getWarn());
+		} else {
+			team2.setWarn(!team2.getWarn());
+			team2Panel.updateWarn(team2.getWarn());
+		}
+	}
+	public void setReset(String txt, boolean state) {
+		if(txt.equals("Team 1")) {
+			team1.setReset(state);
+			team1Panel.updateReset(team1.getReset());
+		} else {
+			team2.setReset(state);
+			team2Panel.updateReset(team2.getReset());
+		}
+	}
+	public void setWarn(String txt, boolean state) {
+		if(txt.equals("Team 1")) {
+			team1.setWarn(state);
+			team1Panel.updateWarn(team1.getWarn());
+		} else {
+			team2.setWarn(state);
+			team2Panel.updateWarn(team2.getWarn());
 		}
 	}
 	public void fetchAll() {
