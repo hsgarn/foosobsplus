@@ -25,19 +25,47 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JTextField;
 
-import commands.*;
+import commands.Command;
+import commands.CommandSwitch;
+import commands.DGT1Command;
+import commands.DGT2Command;
+import commands.DST1Command;
+import commands.DST2Command;
+import commands.IGT1Command;
+import commands.IGT2Command;
+import commands.IST1Command;
+import commands.IST2Command;
+import commands.PRT1Command;
+import commands.PRT2Command;
+import commands.PRTCommand;
+import commands.PSSCommand;
+import commands.PWT1Command;
+import commands.PWT2Command;
+import commands.RTT1Command;
+import commands.RTT2Command;
+import commands.SGTCommand;
+import commands.SPTCommand;
+import commands.SSTCommand;
+import commands.STTCommand;
+import commands.UTT1Command;
+import commands.UTT2Command;
+import commands.XPT1Command;
+import commands.XPT2Command;
 import model.Stats;
+import view.StatsDisplayPanel;
 import view.StatsEntryPanel;
 
 public class StatsController {
 	private Stats stats;
 	private StatsEntryPanel statsEntryPanel;
+	private StatsDisplayPanel statsDisplayPanel;
 	private TeamController teamController;
 	private CommandSwitch mySwitch;
 	
-	public StatsController(Stats stats, StatsEntryPanel statsEntryPanel, TeamController teamController) {
+	public StatsController(Stats stats, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, TeamController teamController) {
 		this.stats = stats;
 		this.statsEntryPanel = statsEntryPanel;
+		this.statsDisplayPanel = statsDisplayPanel;
 		this.teamController = teamController;
 
 		////// Stats Entry Panel Listeners Methods //////
@@ -61,6 +89,7 @@ public class StatsController {
 			if (stats.getIsCommand()) processCommand(stats.getCommand());
 			if (stats.getTeam1Scored()) teamController.incrementScore("Team 1");
 			if (stats.getTeam2Scored()) teamController.incrementScore("Team 2");
+			displayAllStats();
 		}
 	}
 	private class ClearListener implements ActionListener{
@@ -128,5 +157,13 @@ public class StatsController {
 		mySwitch.register("PSS", pss);
 		mySwitch.register("XPT1", xpt1);
 		mySwitch.register("XPT2", xpt2);
+	}
+	public void displayAllStats() {
+		statsDisplayPanel.updateTeam1PassStats(stats.getTeam1PassCompletes(),stats.getTeam1PassAttempts());
+		statsDisplayPanel.updateTeam2PassStats(stats.getTeam2PassCompletes(),stats.getTeam2PassAttempts());
+		statsDisplayPanel.updateTeam1ShotStats(stats.getTeam1ShotCompletes(),stats.getTeam1ShotAttempts());
+		statsDisplayPanel.updateTeam2ShotStats(stats.getTeam2ShotCompletes(),stats.getTeam2ShotAttempts());
+		statsDisplayPanel.updateTeam1ClearStats(stats.getTeam1ClearCompletes(),stats.getTeam1ClearAttempts());
+		statsDisplayPanel.updateTeam2ClearStats(stats.getTeam2ClearCompletes(),stats.getTeam2ClearAttempts());
 	}
 }

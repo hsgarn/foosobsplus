@@ -56,8 +56,8 @@ public class Main {
 	////// Generate the Data Models (Mvc) \\\\\\
 	
 	private Table 				table 				= new Table(obsInterface, settings);
-	private Team 				team1 				= new Team(obsInterface, settings, 1);
-	private Team 				team2 				= new Team(obsInterface, settings, 2);
+	private Team 				team1 				= new Team(obsInterface, settings, 1, settings.getSide1Color());
+	private Team 				team2 				= new Team(obsInterface, settings, 2, settings.getSide2Color());
 	private Match 				match				= new Match(obsInterface, settings, team1, team2);
 	private Stats 				stats 				= new Stats();
 	
@@ -69,8 +69,8 @@ public class Main {
 	
 	private TablePanel 			tablePanel 			= new TablePanel();
 	private TimerPanel 			timerPanel 			= new TimerPanel();
-	private TeamPanel 			teamPanel1 			= new TeamPanel(1);
-	private TeamPanel 			teamPanel2 			= new TeamPanel(2);
+	private TeamPanel 			teamPanel1 			= new TeamPanel(1, settings.getSide1Color());
+	private TeamPanel 			teamPanel2 			= new TeamPanel(2, settings.getSide2Color());
 	private StatsEntryPanel 	statsEntryPanel 	= new StatsEntryPanel();
 	private SwitchPanel 		switchPanel 		= new SwitchPanel();
 	private ResetPanel 			resetPanel 			= new ResetPanel();
@@ -95,7 +95,7 @@ public class Main {
 	TimerController 	timerController 	= new TimerController(timerPanel, timerWindowFrame, timeClock, settings);
 	TeamController 		teamController 		= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, timerController);
 	TableController 	tableController 	= new TableController(obsInterface, settings, table, match, tablePanel, teamController);
-	StatsController 	statsController 	= new StatsController(stats, statsEntryPanel, teamController);
+	StatsController 	statsController 	= new StatsController(stats, statsEntryPanel, statsDisplayPanel, teamController);
 	SwitchController 	switchController 	= new SwitchController(switchPanel, teamController);
 	ResetController 	resetController 	= new ResetController(resetPanel, teamController);
 	

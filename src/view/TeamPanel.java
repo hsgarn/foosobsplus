@@ -63,14 +63,16 @@ public class TeamPanel extends JPanel {
 	private JToggleButton btnWarn;
 	private JButton btnClear;
 	
-	public TeamPanel(int teamNbr) {
+	public TeamPanel(int teamNbr, String teamColor) {
 
-		initializeTeamPanel(teamNbr);
+		initializeTeamPanel(teamNbr, teamColor);
 		
 		layoutComponents();
+		
+//		setTitle("check it out");
 	}
 
-	private void initializeTeamPanel(int teamNbr) {
+	private void initializeTeamPanel(int teamNbr, String teamColor) {
 		Dimension dim = getPreferredSize();
 		dim.width = 350;
 		dim.height = 50;
@@ -118,7 +120,7 @@ public class TeamPanel extends JPanel {
 		btnClear = new JButton("Clear");
 		btnClear.setName("Team " + Integer.toString(teamNbr));
 
-		Border innerBorder = BorderFactory.createTitledBorder("Team " + teamNbr + " Information");
+		Border innerBorder = BorderFactory.createTitledBorder("Team " + teamNbr + " Information (" + teamColor + " side)");
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
 		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
@@ -454,5 +456,13 @@ public class TeamPanel extends JPanel {
 		updateTimeOutCount(timeOutCount);
 		btnReset.setSelected(isReset);
 		btnWarn.setSelected(isWarn);
+	}
+	
+	////// Utility Methods \\\\\\
+	
+	public void setTitle(String title) {
+			TitledBorder border = BorderFactory.createTitledBorder(title);
+			border.setTitleJustification(TitledBorder.CENTER);
+			this.setBorder(border);
 	}
 }

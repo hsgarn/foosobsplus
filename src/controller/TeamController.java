@@ -456,7 +456,7 @@ public class TeamController {
 		};
 		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
 		resetTimer();
-		if(winState==1) {startGameTimer();}
+		if(winState==1) startGameTimer();
 		displayAll();
 	}
 	public void decrementScore(String name) {
@@ -464,6 +464,45 @@ public class TeamController {
 			team1Panel.updateScore(team1.decrementScore());
 		} else {
 			team2Panel.updateScore(team2.decrementScore());
+		}
+	}
+	public void incrementGameCount(String name) {
+		boolean matchWon = false;
+		if(name.equals("Team 1")) {
+			matchWon = match.incrementGameCount(team1);
+			team1Panel.updateGameCount(team1.getGameCount());
+		} else {
+			matchWon = match.incrementGameCount(team2);
+			team2Panel.updateGameCount(team2.getGameCount());
+		};
+		if(!matchWon) startGameTimer();
+	}
+	public void decrementGameCount(String name) {
+		if(name.equals("Team 1")) {
+			team1.decrementGameCount();
+			team1Panel.updateGameCount(team1.getGameCount());
+		} else {
+			team2.decrementGameCount();
+			team2Panel.updateGameCount(team2.getGameCount());
+		}
+	}
+	public void callTimeOut(String txt) {
+		if(txt.equals("Team 1")) {
+			team1.callTimeOut();
+			team1Panel.updateTimeOutCount(team1.getTimeOutCount());
+		} else {
+			team2.callTimeOut();
+			team2Panel.updateTimeOutCount(team2.getTimeOutCount());
+		}
+		startTimeOutTimer();
+	}
+	public void restoreTimeOut(String txt) {
+		if(txt.equals("Team 1")) {
+			team1.restoreTimeOut();
+			team1Panel.updateTimeOutCount(team1.getTimeOutCount());
+		} else {
+			team2.restoreTimeOut();
+			team2Panel.updateTimeOutCount(team2.getTimeOutCount());
 		}
 	}
 	public void resetTimer() {
@@ -483,24 +522,6 @@ public class TeamController {
 	}
 	public void startRecallTimer() {
 		timerController.startRecallTimer();
-	}
-	public void incrementGameCount(String name) {
-		if(name.equals("Team 1")) {
-			match.incrementGameCount(team1);
-			team1Panel.updateGameCount(team1.getGameCount());
-		} else {
-			match.incrementGameCount(team2);
-			team2Panel.updateGameCount(team2.getGameCount());
-		};
-	}
-	public void decrementGameCount(String name) {
-		if(name.equals("Team 1")) {
-			team1.decrementGameCount();
-			team1Panel.updateGameCount(team1.getGameCount());
-		} else {
-			team2.decrementGameCount();
-			team2Panel.updateGameCount(team2.getGameCount());
-		}
 	}
 	public void switchSides() {
 		Team tmp = team1;
@@ -640,24 +661,6 @@ public class TeamController {
 		team1Panel.displayAllFields(teamName1, forwardName1, goalieName1, score1, gameCount1, timeOutCount1, isReset1, isWarn1);
 		team2Panel.displayAllFields(teamName2, forwardName2, goalieName2, score2, gameCount2, timeOutCount2, isReset2, isWarn2);
 		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
-	}
-	public void callTimeOut(String txt) {
-		if(txt.equals("Team 1")) {
-			team1.callTimeOut();
-			team1Panel.updateTimeOutCount(team1.getTimeOutCount());
-		} else {
-			team2.callTimeOut();
-			team2Panel.updateTimeOutCount(team2.getTimeOutCount());
-		}
-	}
-	public void restoreTimeOut(String txt) {
-		if(txt.equals("Team 1")) {
-			team1.restoreTimeOut();
-			team1Panel.updateTimeOutCount(team1.getTimeOutCount());
-		} else {
-			team2.restoreTimeOut();
-			team2Panel.updateTimeOutCount(team2.getTimeOutCount());
-		}
 	}
 	public void toggleReset(String txt) {
 		if(txt.equals("Team 1")) {

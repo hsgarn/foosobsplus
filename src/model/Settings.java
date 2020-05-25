@@ -47,6 +47,8 @@ public class Settings {
 	private String team2LastScored;
 	private String clearLastScored;
 	private String[] lastScoredStrings = new String[3];
+	private String side1Color;
+	private String side2Color;
 	private int shotTime;
 	private int passTime;
 	private int timeOutTime;
@@ -82,6 +84,8 @@ public class Settings {
 	private String warn1FileName;
 	private String warn2FileName;
 	private String lastScoredFileName;
+	private String side1ColorFileName;
+	private String side2ColorFileName;
 
 	private String tournamentNameClearHotKey;
 	private String eventClearHotKey;
@@ -154,6 +158,8 @@ public class Settings {
 		defaultProps.setProperty("Team1LastScored", "<--- Last Scored");
 		defaultProps.setProperty("Team2LastScored", "Last Scored --->");
 		defaultProps.setProperty("ClearLastScored", "Last Scored");
+		defaultProps.setProperty("Side1Color", "Yellow");
+		defaultProps.setProperty("Side2Color", "Black");
 		defaultProps.setProperty("NameSeparator","/");
 		defaultProps.setProperty("ShotTime", "15");
 		defaultProps.setProperty("PassTime", "10");
@@ -190,6 +196,8 @@ public class Settings {
 		defaultProps.setProperty("Warn1FileName", "warn1.txt");
 		defaultProps.setProperty("Warn2FileName", "warn2.txt");
 		defaultProps.setProperty("LastScoredFileName","lastscored.txt");
+		defaultProps.setProperty("Side1ColorFileName","side1color.txt");
+		defaultProps.setProperty("Side2ColorFileName","side2color.txt");
 		
 		defaultProps.setProperty("TournamentNameClearHotKey", "");
 		defaultProps.setProperty("EventClearHotKey", "");
@@ -266,6 +274,8 @@ public class Settings {
 		lastScoredStrings[2] = getTeam2LastScored();
 		return lastScoredStrings;
 	}
+	public String getSide1Color() {return side1Color;}
+	public String getSide2Color() {return side2Color;}
 	public int getShotTime() {return shotTime;}
 	public int getPassTime() {return passTime;}
 	public int getTimeOutTime() {return timeOutTime;}
@@ -300,6 +310,8 @@ public class Settings {
 	public String getWarn1FileName() {return warn1FileName;}
 	public String getWarn2FileName() {return warn2FileName;}
 	public String getLastScoredFileName() {return lastScoredFileName;}
+	public String getSide1ColorFileName() {return side1ColorFileName;}
+	public String getSide2ColorFileName() {return side2ColorFileName;}
 
 	public String getTournamentNameClearHotKey() {return tournamentNameClearHotKey;}
 	public String getEventClearHotKey() {return eventClearHotKey;}
@@ -413,6 +425,14 @@ public class Settings {
 		this.clearLastScored = clearLastScored;
 		configProps.setProperty("ClearLastScored", this.clearLastScored);
 	}
+	public void setSide1Color(String side1Color) {
+		this.side1Color = side1Color;
+		configProps.setProperty("Side1Color", this.side1Color);
+	}
+	public void setSide2Color(String side2Color) {
+		this.side2Color = side2Color;
+		configProps.setProperty("Side2Color", this.side2Color);
+	}
 	public void setShotTime(int shotTime) {
 		this.shotTime = shotTime;
 		configProps.setProperty("ShotTime", Integer.toString(this.shotTime));
@@ -449,7 +469,6 @@ public class Settings {
 		this.logoLinkURI = logoLinkURI;
 		configProps.setProperty("LogoLinkURI", this.logoLinkURI);
 	}
-
 	public void setTableFileName(String tableFileName) {
 		this.tableFileName = tableFileName;
 		configProps.setProperty("TableFileName", this.tableFileName);
@@ -545,6 +564,14 @@ public class Settings {
 	public void setLastScoredFileName(String lastScoredFileName) {
 		this.lastScoredFileName = lastScoredFileName;
 		configProps.setProperty("LastScoredFileName", this.lastScoredFileName);
+	}
+	public void setSide1ColorFileName(String side1ColorFileName) {
+		this.side1ColorFileName = side1ColorFileName;
+		configProps.setProperty("Side1ColorFileName", this.side1ColorFileName);
+	}
+	public void setSide2ColorFileName(String side2ColorFileName) {
+		this.side2ColorFileName = side2ColorFileName;
+		configProps.setProperty("Side2ColorFileName", this.side2ColorFileName);
 	}
 	public void setTournamentNameClearHotKey(String tournamentNameClearHotKey) {
 		this.tournamentNameClearHotKey = tournamentNameClearHotKey;
@@ -749,6 +776,8 @@ public class Settings {
 	public String getDefaultTeam1LastScored() {return defaultProps.getProperty("Team1LastScored");}
 	public String getDefaultTeam2LastScored() {return defaultProps.getProperty("Team2LastScored");}
 	public String getDefaultClearLastScored() {return defaultProps.getProperty("ClearLastScored");}
+	public String getDefaultSide1Color() {return defaultProps.getProperty("Side1Color");}
+	public String getDefaultSide2Color() {return defaultProps.getProperty("Side2Color");}
 	public String getDefaultNameSeparator() {return defaultProps.getProperty("NameSeparator");}
 	public int getDefaultShotTime() {return Integer.parseInt(defaultProps.getProperty("ShotTime"));}
 	public int getDefaultPassTime() {return Integer.parseInt(defaultProps.getProperty("PassTime"));}
@@ -784,6 +813,8 @@ public class Settings {
 	public String getDefaultWarn1FileName() {return defaultProps.getProperty("Warn1FileName");}
 	public String getDefaultWarn2FileName() {return defaultProps.getProperty("Warn2FileName");}
 	public String getDefaultLastScoredFileName() {return defaultProps.getProperty("LastScoredFileName");}
+	public String getDefaultSide1ColorFileName() {return defaultProps.getProperty("Side1ColorFileName");}
+	public String getDefaultSide2ColorFileName() {return defaultProps.getProperty("Side2ColorFileName");}
 
 	public String getDefaultTournamentNameClearHotKey() {return defaultProps.getProperty("TournamentNameClearHotKey");}
 	public String getDefaultEventClearHotKey() {return defaultProps.getProperty("EventClearHotKey");}
@@ -861,6 +892,8 @@ public class Settings {
 		team1LastScored = configProps.getProperty("Team1LastScored");
 		team2LastScored = configProps.getProperty("Team2LastScored");
 		clearLastScored = configProps.getProperty("ClearLastScored");
+		side1Color = configProps.getProperty("Side1Color");
+		side2Color = configProps.getProperty("Side2Color");
 		shotTime = Integer.parseInt(configProps.getProperty("ShotTime"));
 		passTime = Integer.parseInt(configProps.getProperty("PassTime"));
 		timeOutTime = Integer.parseInt(configProps.getProperty("TimeOutTime"));
@@ -901,6 +934,8 @@ public class Settings {
 		warn1FileName = configProps.getProperty("Warn1FileName");
 		warn2FileName = configProps.getProperty("Warn2FileName");
 		lastScoredFileName = configProps.getProperty("LastScoredFileName");
+		side1ColorFileName = configProps.getProperty("Side1ColorFileName");
+		side2ColorFileName = configProps.getProperty("Side2ColorFileName");
 		
 		tournamentNameClearHotKey = configProps.getProperty("TournamentNameClearHotKey");
 		eventClearHotKey = configProps.getProperty("EventClearHotKey");
@@ -968,6 +1003,8 @@ public class Settings {
 		configProps.setProperty("Team1LastScored", getTeam1LastScored());
 		configProps.setProperty("Team2LastScored", getTeam2LastScored());
 		configProps.setProperty("ClearLastScored", getClearLastScored());
+		configProps.setProperty("Side1Color", getSide1Color());
+		configProps.setProperty("Side2Color", getSide2Color());
 		configProps.setProperty("ShotTime", Integer.toString(this.getShotTime()));
 		configProps.setProperty("PassTime", Integer.toString(this.getPassTime()));
 		configProps.setProperty("TimeOutTime", Integer.toString(this.getTimeOutTime()));
@@ -1002,7 +1039,8 @@ public class Settings {
 		configProps.setProperty("Warn1FileName", this.getWarn1FileName());
 		configProps.setProperty("Warn2FileName", this.getWarn2FileName());
 		configProps.setProperty("LastScoredFileName", this.getLastScoredFileName());
-
+		configProps.setProperty("Side1ColorFileName", this.getSide1ColorFileName());
+		configProps.setProperty("Side2ColorFileName", this.getSide2ColorFileName());
 		configProps.setProperty("TournamentNameClearHotKey", this.getTournamentNameClearHotKey());
 		configProps.setProperty("EventClearHotKey", this.getEventClearHotKey());
 		configProps.setProperty("Team1ClearHotKey", this.getTeam1ClearHotKey());

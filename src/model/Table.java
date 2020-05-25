@@ -29,6 +29,8 @@ public class Table {
 	private String tournamentName;
 	private String eventName;
 	private String tableName;
+	private String side1Color;
+	private String side2Color;
 	private OBSInterface obsInterface;
 	private Settings settings;
 	
@@ -64,6 +66,22 @@ public class Table {
 			e.printStackTrace();
 		}
 	}
+	public String getSide1Color() {
+		return side1Color;
+	}
+
+	public void setSide1Color(String side1Color) {
+		this.side1Color = side1Color;
+	}
+
+	public String getSide2Color() {
+		return side2Color;
+	}
+
+	public void setSide2Color(String side2Color) {
+		this.side2Color = side2Color;
+	}
+
 	public void clearAll() {
 		tournamentName = "";
 		eventName = "";

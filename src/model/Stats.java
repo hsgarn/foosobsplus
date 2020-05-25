@@ -91,6 +91,70 @@ public class Stats {
 	private int team2ClearAttempts = 0;
 	private int team2ClearCompletes = 0;
 	
+	public int getTeam1PassAttempts() {
+		return team1PassAttempts;
+	}
+
+	public int getTeam1PassCompletes() {
+		return team1PassCompletes;
+	}
+
+	public int getTeam1PassBreaks() {
+		return team1PassBreaks;
+	}
+
+	public int getTeam1ShotAttempts() {
+		return team1ShotAttempts;
+	}
+
+	public int getTeam1ShotCompletes() {
+		return team1ShotCompletes;
+	}
+
+	public int getTeam1ShotBreaks() {
+		return team1ShotBreaks;
+	}
+
+	public int getTeam1ClearAttempts() {
+		return team1ClearAttempts;
+	}
+
+	public int getTeam1ClearCompletes() {
+		return team1ClearCompletes;
+	}
+
+	public int getTeam2PassAttempts() {
+		return team2PassAttempts;
+	}
+
+	public int getTeam2PassCompletes() {
+		return team2PassCompletes;
+	}
+
+	public int getTeam2PassBreaks() {
+		return team2PassBreaks;
+	}
+
+	public int getTeam2ShotAttempts() {
+		return team2ShotAttempts;
+	}
+
+	public int getTeam2ShotCompletes() {
+		return team2ShotCompletes;
+	}
+
+	public int getTeam2ShotBreaks() {
+		return team2ShotBreaks;
+	}
+
+	public int getTeam2ClearAttempts() {
+		return team2ClearAttempts;
+	}
+
+	public int getTeam2ClearCompletes() {
+		return team2ClearCompletes;
+	}
+
 	public Stats() {
 		codeHistory = new DefaultListModel<String>();
 	}
@@ -128,7 +192,6 @@ public class Stats {
 		parseCode(previousCode, code);
 		if(isCommand) {
 			command=code.substring(1,code.length());
-//			parseCommand(command);
 			return;
 		}
 		team1Scored=false;
@@ -190,9 +253,6 @@ public class Stats {
 		isPassComplete = isPass && isSameTeam && !isSameRod && isForwardDirection;
 		isClearComplete = isClear && !isSameRod && (isSameTeam || (!isSameTeam && (isFiveRod || isTwoRod)));
 
-	}
-	private void parseCommand(String command) {
-//		System.out.println("Command: " + command);
 	}
 	private void clearLogic() {
 		if(isClearComplete) {

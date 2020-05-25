@@ -119,7 +119,7 @@ public class Match {
 				writeMatchWinner(settings.getWinnerPrefix() + team.getTeamName() + settings.getWinnerSuffix());
 			}
 			resetScores();
-			resetGameCounts();
+//			resetGameCounts();
 		} else {
 			clearMatchWinner();
 		}

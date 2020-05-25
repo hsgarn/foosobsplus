@@ -62,6 +62,9 @@ public class SettingsPanel extends JPanel {
 	private JTextField txtTeam1LastScored;
 	private JTextField txtTeam2LastScored;
 	private JTextField txtClearLastScored;
+	private JTextField txtSide1Color;
+	private JTextField txtSide2Color;
+	private JButton btnSave;
 
 	public SettingsPanel(Settings settings) throws IOException {
 
@@ -187,6 +190,22 @@ public class SettingsPanel extends JPanel {
 		add(txtClearLastScored, "cell 1 7,growx");
 		txtClearLastScored.setColumns(10);
 		
+		JLabel lblSide1Color = new JLabel("Team 1 Color");
+		add(lblSide1Color, "cell 0 8,alignx trailing");
+		
+		txtSide1Color = new JTextField();
+		txtSide1Color.setText(settings.getSide1Color());
+		add(txtSide1Color, "cell 1 8,growx,aligny top");
+		txtSide1Color.setColumns(10);
+		
+		JLabel lblSide2Color = new JLabel("Team 2 Color");
+		add(lblSide2Color, "cell 2 8,alignx trailing");
+		
+		txtSide2Color = new JTextField();
+		txtSide2Color.setText(settings.getSide2Color());
+		add(txtSide2Color, "cell 3 8,growx");
+		txtSide2Color.setColumns(10);
+		
 		JLabel lblAutoIncrementGame = new JLabel("Auto Increment Game");
 		add(lblAutoIncrementGame, "cell 0 11,alignx right");
 		
@@ -265,7 +284,7 @@ public class SettingsPanel extends JPanel {
 		}
 		add(chckbxAutoCapNames, "cell 1 15");
 
-		JButton btnSave = new JButton("Save");
+		btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveSettings(settings);
@@ -338,6 +357,8 @@ public class SettingsPanel extends JPanel {
 		txtTeam1LastScored.setText(settings.getDefaultTeam1LastScored());
 		txtTeam2LastScored.setText(settings.getDefaultTeam2LastScored());
 		txtClearLastScored.setText(settings.getDefaultClearLastScored());
+		txtSide1Color.setText(settings.getDefaultSide1Color());
+		txtSide2Color.setText(settings.getDefaultSide2Color());
 	}
 	
 	private void saveSettings(Settings settings) {
@@ -377,6 +398,8 @@ public class SettingsPanel extends JPanel {
 		settings.setTeam1LastScored(txtTeam1LastScored.getText());
 		settings.setTeam2LastScored(txtTeam2LastScored.getText());
 		settings.setClearLastScored(txtClearLastScored.getText());
+		settings.setSide1Color(txtSide1Color.getText());
+		settings.setSide2Color(txtSide2Color.getText());
 
 		if (isValidInteger(txtShotTime.getText())) {
     		settings.setShotTime(Integer.parseInt(txtShotTime.getText()));
@@ -406,7 +429,7 @@ public class SettingsPanel extends JPanel {
 		try {
 			settings.saveToConfig();
 		} catch (IOException ex) {
-			System.out.print("Error saving properties file: " + ex.getMessage());		
+			System.out.println("Error saving properties file: " + ex.getMessage());		
 		}
 	}
 
@@ -418,6 +441,4 @@ public class SettingsPanel extends JPanel {
     		return false;
     	}
 	}
-
-	
 }

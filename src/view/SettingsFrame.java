@@ -37,7 +37,7 @@ public class SettingsFrame extends JFrame {
 			System.out.println("Problem loading settings.");
 			e.printStackTrace();
 		}
-		settingsPanel.setPreferredSize(new Dimension(650, 450));
+		settingsPanel.setPreferredSize(new Dimension(650, 500));
 		
 		getContentPane().add(settingsPanel);
 		pack();

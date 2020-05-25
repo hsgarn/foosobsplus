@@ -38,14 +38,30 @@ public class Team {
 	private OBSInterface obsInterface;
 	private Settings settings;
 	private int teamNbr;
+	private String teamColor;
+	private int passAttempts = 0;
+	private int passCompletes = 0;
+	private int passBreaks = 0;
+	private int shotAttempts = 0;
+	private int shotCompletes = 0;
+	private int shotBreaks = 0;
+	private int clearAttempts = 0;
+	private int clearCompletes = 0;
 	
-	public Team(OBSInterface obsInterface, Settings settings, Integer teamNbr) {
+	public Team(OBSInterface obsInterface, Settings settings, Integer teamNbr, String teamColor) {
 		this.obsInterface = obsInterface;
 		this.settings = settings;
 		this.teamNbr = teamNbr;
+		this.teamColor = teamColor;
 	}
 	public void setTeamNbr(int teamNbr) {
 		this.teamNbr = teamNbr;
+	}
+	public String getTeamColor() {
+		return teamColor;
+	}
+	public void setTeamColor(String teamColor) {
+		this.teamColor = teamColor;
 	}
 	public int getScore() {
 		return score;
@@ -201,6 +217,30 @@ public class Team {
 			timeOutCount = settings.getMaxTimeOuts();
 		}
 		writeTimeOuts();
+	}
+	public int getPassAttempts() {
+		return passAttempts;
+	}
+	public int getPassCompletes() {
+		return passCompletes;
+	}
+	public int getPassBreaks() {
+		return passBreaks;
+	}
+	public int getShotAttempts() {
+		return shotAttempts;
+	}
+	public int getShotCompletes() {
+		return shotCompletes;
+	}
+	public int getShotBreaks() {
+		return shotBreaks;
+	}
+	public int getClearAttempts() {
+		return clearAttempts;
+	}
+	public int getClearCompletes() {
+		return clearCompletes;
 	}
 	
 	////// Writes to Files \\\\\\
