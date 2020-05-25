@@ -286,30 +286,72 @@ public class Settings {
 	public String getLogoImageURL() {return logoImageURL;}
 	public String getLogoLinkURI() {return logoLinkURI;}
 
+	public String getTeamNameFileName(int teamNbr) {
+		if(teamNbr==1) {
+			return team1NameFileName;
+		} else {
+			return team2NameFileName;
+		}
+	}
+	public String getTeamForwardFileName(int teamNbr) {
+		if(teamNbr==1) {
+			return team1ForwardFileName;
+		} else {
+			return team2ForwardFileName;
+		}
+	}
+	public String getTeamGoalieFileName(int teamNbr) {
+		if(teamNbr==1) {
+			return team1GoalieFileName;
+		} else {
+			return team2GoalieFileName;
+		}
+	}
+	public String getGameCountFileName(int teamNbr) {
+		if(teamNbr==1) {
+			return gameCount1FileName;
+		} else {
+			return gameCount2FileName;
+		}
+	}
+	public String getScoreFileName(int teamNbr) {
+		if(teamNbr==1) {
+			return score1FileName;
+		} else {
+			return score2FileName;
+		}
+	}
+	public String getTimeOutFileName(int teamNbr) {
+		if(teamNbr==1) {
+			return timeOut1FileName;
+		} else {
+			return timeOut2FileName;
+		}
+	}
+	public String getResetFileName(int teamNbr) {
+		if(teamNbr==1) {
+			return reset1FileName;
+		} else {
+			return reset2FileName;
+		}
+	}
+	public String getWarnFileName(int teamNbr) {
+		if(teamNbr==1) {
+			return warn1FileName;
+		} else {
+			return warn2FileName;
+		}
+	}
+
 	public String getTableFileName() {return tableFileName;}
-	public String getTeam1NameFileName() {return team1NameFileName;}
-	public String getTeam1ForwardFileName() {return team1ForwardFileName;}
-	public String getTeam1GoalieFileName() {return team1GoalieFileName;}
 	public String getTournamentFileName() {return tournamentFileName;}
-	public String getTeam2NameFileName() {return team2NameFileName;}
-	public String getTeam2ForwardFileName() {return team2ForwardFileName;}
-	public String getTeam2GoalieFileName() {return team2GoalieFileName;}
 	public String getEventFileName() {return eventFileName;}
-	public String getGameCount1FileName() {return gameCount1FileName;}
 	public String getTimeRemainingFileName() {return timeRemainingFileName;}
-	public String getGameCount2FileName() {return gameCount2FileName;}
 	public String getTimerInUseFileName() {return timerInUseFileName;}
-	public String getScore1FileName() {return score1FileName;}
 	public String getMatchWinnerFileName() {return matchWinnerFileName;}
 	public String getMeatballFileName() {return meatballFileName;}
-	public String getScore2FileName() {return score2FileName;}
-	public String getTimeOut1FileName() {return timeOut1FileName;}
-	public String getTimeOut2FileName() {return timeOut2FileName;}
-	public String getReset1FileName() {return reset1FileName;}
-	public String getReset2FileName() {return reset2FileName;}
-	public String getWarn1FileName() {return warn1FileName;}
-	public String getWarn2FileName() {return warn2FileName;}
 	public String getLastScoredFileName() {return lastScoredFileName;}
+
 	public String getSide1ColorFileName() {return side1ColorFileName;}
 	public String getSide2ColorFileName() {return side2ColorFileName;}
 
@@ -1016,28 +1058,28 @@ public class Settings {
 //		configProps.setProperty("LogoLinkURI", this.getLogoLinkURI());
 
 		configProps.setProperty("TableFileName", this.getTableFileName());
-		configProps.setProperty("Team1NameFileName", this.getTeam1NameFileName());
-		configProps.setProperty("Team1ForwardFileName", this.getTeam1ForwardFileName());
-		configProps.setProperty("Team1GoalieFileName", this.getTeam1GoalieFileName());
+		configProps.setProperty("Team1NameFileName", this.getTeamNameFileName(1));
+		configProps.setProperty("Team1ForwardFileName", this.getTeamForwardFileName(1));
+		configProps.setProperty("Team1GoalieFileName", this.getTeamGoalieFileName(1));
 		configProps.setProperty("TournamentFileName", this.getTournamentFileName());
-		configProps.setProperty("Team2NameFileName", this.getTeam2NameFileName());
-		configProps.setProperty("Team2ForwardFileName", this.getTeam2ForwardFileName());
-		configProps.setProperty("Team2GoalieFileName", this.getTeam2GoalieFileName());
+		configProps.setProperty("Team2NameFileName", this.getTeamNameFileName(2));
+		configProps.setProperty("Team2ForwardFileName", this.getTeamForwardFileName(2));
+		configProps.setProperty("Team2GoalieFileName", this.getTeamGoalieFileName(2));
 		configProps.setProperty("EventFileName", this.getEventFileName());
-		configProps.setProperty("GameCount1FileName", this.getGameCount1FileName());
+		configProps.setProperty("GameCount1FileName", this.getGameCountFileName(1));
 		configProps.setProperty("TimeRemainingFileName", this.getTimeRemainingFileName());
-		configProps.setProperty("GameCount2FileName", this.getGameCount2FileName());
+		configProps.setProperty("GameCount2FileName", this.getGameCountFileName(2));
 		configProps.setProperty("TimerInUseFileName", this.getTimerInUseFileName());
-		configProps.setProperty("Score1FileName", this.getScore1FileName());
+		configProps.setProperty("Score1FileName", this.getScoreFileName(1));
 		configProps.setProperty("MatchWinnerFileName", this.getMatchWinnerFileName());
 		configProps.setProperty("MeatballFileName", this.getMeatballFileName());
-		configProps.setProperty("Score2FileName", this.getScore2FileName());
-		configProps.setProperty("TimeOut1FileName", this.getTimeOut1FileName());
-		configProps.setProperty("TimeOut2FileName", this.getTimeOut2FileName());
-		configProps.setProperty("Reset1FileName", this.getReset1FileName());
-		configProps.setProperty("Reset2FileName", this.getReset2FileName());
-		configProps.setProperty("Warn1FileName", this.getWarn1FileName());
-		configProps.setProperty("Warn2FileName", this.getWarn2FileName());
+		configProps.setProperty("Score2FileName", this.getScoreFileName(2));
+		configProps.setProperty("TimeOut1FileName", this.getTimeOutFileName(1));
+		configProps.setProperty("TimeOut2FileName", this.getTimeOutFileName(2));
+		configProps.setProperty("Reset1FileName", this.getResetFileName(1));
+		configProps.setProperty("Reset2FileName", this.getResetFileName(2));
+		configProps.setProperty("Warn1FileName", this.getWarnFileName(1));
+		configProps.setProperty("Warn2FileName", this.getWarnFileName(2));
 		configProps.setProperty("LastScoredFileName", this.getLastScoredFileName());
 		configProps.setProperty("Side1ColorFileName", this.getSide1ColorFileName());
 		configProps.setProperty("Side2ColorFileName", this.getSide2ColorFileName());

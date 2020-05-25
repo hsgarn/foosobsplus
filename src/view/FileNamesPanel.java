@@ -154,7 +154,7 @@ public class FileNamesPanel extends JPanel {
 		add(lblTeam1NameFileName, "cell 1 3,alignx trailing");
 
 		txtTeam1NameFileName = new JTextField();
-		txtTeam1NameFileName.setText(settings.getTeam1NameFileName());
+		txtTeam1NameFileName.setText(settings.getTeamNameFileName(1));
 		add(txtTeam1NameFileName, "cell 2 3,alignx left");
 		txtTeam1NameFileName.setColumns(10);
 
@@ -162,7 +162,7 @@ public class FileNamesPanel extends JPanel {
 		add(lblTeam1Forward, "cell 4 3,alignx trailing");
 
 		txtTeam1ForwardFileName = new JTextField();
-		txtTeam1ForwardFileName.setText(settings.getTeam1ForwardFileName());
+		txtTeam1ForwardFileName.setText(settings.getTeamForwardFileName(1));
 		add(txtTeam1ForwardFileName, "cell 5 3,alignx left");
 		txtTeam1ForwardFileName.setColumns(10);
 
@@ -170,7 +170,7 @@ public class FileNamesPanel extends JPanel {
 		add(lblTeam2NameFileName, "cell 1 4,alignx right");
 
 		txtTeam2NameFileName = new JTextField();
-		txtTeam2NameFileName.setText(settings.getTeam2NameFileName());
+		txtTeam2NameFileName.setText(settings.getTeamNameFileName(2));
 		add(txtTeam2NameFileName, "cell 2 4,alignx left");
 		txtTeam2NameFileName.setColumns(10);
 
@@ -178,7 +178,7 @@ public class FileNamesPanel extends JPanel {
 		add(lblTeam1Goalie, "cell 4 4,alignx trailing");
 
 		txtTeam1GoalieFileName = new JTextField();
-		txtTeam1GoalieFileName.setText(settings.getTeam1GoalieFileName());
+		txtTeam1GoalieFileName.setText(settings.getTeamGoalieFileName(1));
 		add(txtTeam1GoalieFileName, "cell 5 4,alignx left");
 		txtTeam1GoalieFileName.setColumns(10);
 
@@ -186,7 +186,7 @@ public class FileNamesPanel extends JPanel {
 		add(lblGameCountFileName, "cell 1 5,alignx right");
 
 		txtGameCount1FileName = new JTextField();
-		txtGameCount1FileName.setText(settings.getGameCount1FileName());
+		txtGameCount1FileName.setText(settings.getGameCountFileName(1));
 		add(txtGameCount1FileName, "cell 2 5,alignx left");
 		txtGameCount1FileName.setColumns(10);
 
@@ -194,7 +194,7 @@ public class FileNamesPanel extends JPanel {
 		add(lblTeam2Forward, "cell 4 5,alignx trailing");
 
 		txtTeam2ForwardFileName = new JTextField();
-		txtTeam2ForwardFileName.setText(settings.getTeam2ForwardFileName());
+		txtTeam2ForwardFileName.setText(settings.getTeamForwardFileName(2));
 		add(txtTeam2ForwardFileName, "cell 5 5,alignx left");
 		txtTeam2ForwardFileName.setColumns(10);
 
@@ -202,7 +202,7 @@ public class FileNamesPanel extends JPanel {
 		add(lblGameCount2FileName, "cell 1 6,alignx right");
 
 		txtGameCount2FileName = new JTextField();
-		txtGameCount2FileName.setText(settings.getGameCount2FileName());
+		txtGameCount2FileName.setText(settings.getGameCountFileName(2));
 		add(txtGameCount2FileName, "cell 2 6,alignx left");
 		txtGameCount2FileName.setColumns(10);
 
@@ -210,7 +210,7 @@ public class FileNamesPanel extends JPanel {
 		add(lblTeam2Name2, "cell 4 6,alignx trailing");
 
 		txtTeam2GoalieFileName = new JTextField();
-		txtTeam2GoalieFileName.setText(settings.getTeam2GoalieFileName());
+		txtTeam2GoalieFileName.setText(settings.getTeamGoalieFileName(2));
 		add(txtTeam2GoalieFileName, "cell 5 6,alignx left");
 		txtTeam2GoalieFileName.setColumns(10);
 
@@ -218,7 +218,7 @@ public class FileNamesPanel extends JPanel {
 		add(lblScore1FileName, "cell 1 7,alignx trailing");
 
 		txtScore1FileName = new JTextField();
-		txtScore1FileName.setText(settings.getScore1FileName());
+		txtScore1FileName.setText(settings.getScoreFileName(1));
 		add(txtScore1FileName, "cell 2 7,alignx left");
 		txtScore1FileName.setColumns(10);
 
@@ -234,7 +234,7 @@ public class FileNamesPanel extends JPanel {
 		add(lblScore2FileName, "cell 1 8,alignx trailing");
 
 		txtScore2FileName = new JTextField();
-		txtScore2FileName.setText(settings.getScore2FileName());
+		txtScore2FileName.setText(settings.getScoreFileName(2));
 		add(txtScore2FileName, "cell 2 8,alignx left");
 		txtScore2FileName.setColumns(10);
 
@@ -250,7 +250,7 @@ public class FileNamesPanel extends JPanel {
 		add(lblTimeOut1FileName, "cell 1 9,alignx trailing");
 
 		txtTimeOut1FileName = new JTextField();
-		txtTimeOut1FileName.setText(settings.getTimeOut1FileName());
+		txtTimeOut1FileName.setText(settings.getTimeOutFileName(1));
 		add(txtTimeOut1FileName, "cell 2 9,alignx left");
 		txtTimeOut1FileName.setColumns(10);
 
@@ -266,7 +266,7 @@ public class FileNamesPanel extends JPanel {
 		add(lblTimeOut2FileName, "cell 1 10,alignx trailing");
 
 		txtTimeOut2FileName = new JTextField();
-		txtTimeOut2FileName.setText(settings.getTimeOut2FileName());
+		txtTimeOut2FileName.setText(settings.getTimeOutFileName(2));
 		add(txtTimeOut2FileName, "cell 2 10,alignx left");
 		txtTimeOut2FileName.setColumns(10);
 
@@ -282,7 +282,7 @@ public class FileNamesPanel extends JPanel {
 		add(lblReset1FileName, "cell 1 11,alignx trailing");
 
 		txtReset1FileName = new JTextField();
-		txtReset1FileName.setText(settings.getReset1FileName());
+		txtReset1FileName.setText(settings.getResetFileName(1));
 		add(txtReset1FileName, "cell 2 11,alignx left");
 		txtReset1FileName.setColumns(10);
 
@@ -298,7 +298,7 @@ public class FileNamesPanel extends JPanel {
 		add(lblReset2FileName, "cell 1 12,alignx trailing");
 
 		txtReset2FileName = new JTextField();
-		txtReset2FileName.setText(settings.getReset2FileName());
+		txtReset2FileName.setText(settings.getResetFileName(2));
 		add(txtReset2FileName, "cell 2 12,alignx left");
 		txtReset2FileName.setColumns(10);
 
@@ -314,7 +314,7 @@ public class FileNamesPanel extends JPanel {
 		add(lblWarn1FileName, "cell 1 13,alignx trailing");
 
 		txtWarn1FileName = new JTextField();
-		txtWarn1FileName.setText(settings.getWarn1FileName());
+		txtWarn1FileName.setText(settings.getWarnFileName(1));
 		add(txtWarn1FileName, "cell 2 13,alignx left");
 		txtWarn1FileName.setColumns(10);
 
@@ -330,7 +330,7 @@ public class FileNamesPanel extends JPanel {
 		add(lblWarn2FileName, "cell 1 14,alignx trailing");
 
 		txtWarn2FileName = new JTextField();
-		txtWarn2FileName.setText(settings.getWarn2FileName());
+		txtWarn2FileName.setText(settings.getWarnFileName(2));
 		add(txtWarn2FileName, "cell 2 14,alignx left");
 		txtWarn2FileName.setColumns(10);
 

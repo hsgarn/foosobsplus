@@ -134,7 +134,6 @@ public class TeamController {
 			}
 		}
 	}
-	
 	private class TeamNameFocusListener extends FocusAdapter{
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
@@ -149,7 +148,6 @@ public class TeamController {
 			}
 		}
 	}
-	
 	private class TeamNameMouseListener extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) {
 			JTextField txt = (JTextField) e.getSource();
@@ -161,7 +159,6 @@ public class TeamController {
 			}
 		}
 	}
-	
 	private class ForwardNameListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JTextField txt = (JTextField) e.getSource();
@@ -176,7 +173,6 @@ public class TeamController {
 			}
 		}
 	}
-	
 	private class ForwardNameFocusListener extends FocusAdapter{
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
@@ -191,7 +187,6 @@ public class TeamController {
 			}
 		}
 	}
-	
 	private class ForwardNameMouseListener extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) {
 			JTextField txt = (JTextField) e.getSource();
@@ -203,7 +198,6 @@ public class TeamController {
 			}
 		}
 	}
-	
 	private class GoalieNameListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JTextField txt = (JTextField) e.getSource();
@@ -218,7 +212,6 @@ public class TeamController {
 			}
 		}
 	}
-	
 	private class GoalieNameFocusListener extends FocusAdapter{
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
@@ -233,7 +226,6 @@ public class TeamController {
 			}
 		}
 	}
-	
 	private class GoalieNameMouseListener extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) {
 			JTextField txt = (JTextField) e.getSource();
@@ -700,22 +692,22 @@ public class TeamController {
 	}
 	public void fetchAll() {
 		try {
-			team1.setTeamName(obsInterface.getContents(settings.getTeam1NameFileName()));
-			team2.setTeamName(obsInterface.getContents(settings.getTeam2NameFileName()));
-			team1.setForwardName(obsInterface.getContents(settings.getTeam1ForwardFileName()));
-			team2.setForwardName(obsInterface.getContents(settings.getTeam2ForwardFileName()));
-			team1.setGoalieName(obsInterface.getContents(settings.getTeam1GoalieFileName()));
-			team2.setGoalieName(obsInterface.getContents(settings.getTeam2GoalieFileName()));
-			team1.setScore(obsInterface.getContents(settings.getScore1FileName()));
-			team2.setScore(obsInterface.getContents(settings.getScore2FileName()));
-			team1.setGameCount(obsInterface.getContents(settings.getGameCount1FileName()));
-			team2.setGameCount(obsInterface.getContents(settings.getGameCount2FileName()));
-			team1.setTimeOutCount(obsInterface.getContents(settings.getTimeOut1FileName()));
-			team2.setTimeOutCount(obsInterface.getContents(settings.getTimeOut2FileName()));
-			team1.setReset(obsInterface.getContents(settings.getReset1FileName())!=null);
-			team2.setReset(obsInterface.getContents(settings.getReset2FileName())!=null);
-			team1.setWarn(obsInterface.getContents(settings.getWarn1FileName())!=null);
-			team2.setWarn(obsInterface.getContents(settings.getWarn2FileName())!=null);
+			team1.setTeamName(obsInterface.getContents(settings.getTeamNameFileName(1)));
+			team2.setTeamName(obsInterface.getContents(settings.getTeamNameFileName(2)));
+			team1.setForwardName(obsInterface.getContents(settings.getTeamForwardFileName(1)));
+			team2.setForwardName(obsInterface.getContents(settings.getTeamForwardFileName(2)));
+			team1.setGoalieName(obsInterface.getContents(settings.getTeamGoalieFileName(1)));
+			team2.setGoalieName(obsInterface.getContents(settings.getTeamGoalieFileName(2)));
+			team1.setScore(obsInterface.getContents(settings.getScoreFileName(1)));
+			team2.setScore(obsInterface.getContents(settings.getScoreFileName(2)));
+			team1.setGameCount(obsInterface.getContents(settings.getGameCountFileName(1)));
+			team2.setGameCount(obsInterface.getContents(settings.getGameCountFileName(2)));
+			team1.setTimeOutCount(obsInterface.getContents(settings.getTimeOutFileName(1)));
+			team2.setTimeOutCount(obsInterface.getContents(settings.getTimeOutFileName(2)));
+			team1.setReset(obsInterface.getContents(settings.getResetFileName(1))!=null);
+			team2.setReset(obsInterface.getContents(settings.getResetFileName(2))!=null);
+			team1.setWarn(obsInterface.getContents(settings.getWarnFileName(1))!=null);
+			team2.setWarn(obsInterface.getContents(settings.getWarnFileName(2))!=null);
 			match.setLastScored(obsInterface.getContents(settings.getLastScoredFileName()));
 			team1Panel.updateTeamName(team1.getTeamName());
 			team2Panel.updateTeamName(team2.getTeamName());
@@ -741,5 +733,47 @@ public class TeamController {
 	public void writeAll() {
 		team1.writeAll();
 		team2.writeAll();
+	}
+	public int getPassAttempts(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getPassAttempts();
+		} else {
+			return team2.getPassAttempts();
+		}
+	}
+	public int getPassCompletes(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getPassCompletes();
+		} else {
+			return team2.getPassCompletes();
+		}
+	}
+	public int getShotAttempts(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getShotAttempts();
+		} else {
+			return team2.getShotAttempts();
+		}
+	}
+	public int getShotCompletes(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getShotCompletes();
+		} else {
+			return team2.getShotCompletes();
+		}
+	}
+	public int getClearAttempts(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getClearAttempts();
+		} else {
+			return team2.getClearAttempts();
+		}
+	}
+	public int getClearCompletes(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getClearCompletes();
+		} else {
+			return team2.getClearCompletes();
+		}
 	}
 }

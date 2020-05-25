@@ -47,6 +47,16 @@ public class Team {
 	private int shotBreaks = 0;
 	private int clearAttempts = 0;
 	private int clearCompletes = 0;
+	private int[] gameScores;
+	private int aces = 0;
+	private int twoBarPassAttemps = 0;
+	private int twoBarPassCompletes = 0;
+	private int shotsOnGoal = 0;
+	private int threeBarGoals = 0;
+	private int fiveBarGoals = 0;
+	private int twoBarGoals = 0;
+	private int breaks = 0;
+	private int stuffs = 0;
 	
 	public Team(OBSInterface obsInterface, Settings settings, Integer teamNbr, String teamColor) {
 		this.obsInterface = obsInterface;
@@ -243,88 +253,88 @@ public class Team {
 		return clearCompletes;
 	}
 	
+    public int getTwoBarPassAttemps() {
+		return twoBarPassAttemps;
+	}
+	public void setTwoBarPassAttemps(int twoBarPassAttemps) {
+		this.twoBarPassAttemps = twoBarPassAttemps;
+	}
+	public int getTwoBarPassCompletes() {
+		return twoBarPassCompletes;
+	}
+	public void setTwoBarPassCompletes(int twoBarPassCompletes) {
+		this.twoBarPassCompletes = twoBarPassCompletes;
+	}
+	public void setPassAttempts(int passAttempts) {
+		this.passAttempts = passAttempts;
+	}
+	public void setPassCompletes(int passCompletes) {
+		this.passCompletes = passCompletes;
+	}
+	public void setShotAttempts(int shotAttempts) {
+		this.shotAttempts = shotAttempts;
+	}
+	public void setShotCompletes(int shotCompletes) {
+		this.shotCompletes = shotCompletes;
+	}
+	public void setClearAttempts(int clearAttempts) {
+		this.clearAttempts = clearAttempts;
+	}
+	public void setClearCompletes(int clearCompletes) {
+		this.clearCompletes = clearCompletes;
+	}
+
 	////// Writes to Files \\\\\\
 	
-    private void writeTeamName() {
+	private void writeTeamName() {
 		try {
-			if (teamNbr==1) { 
-				obsInterface.setContents(settings.getTeam1NameFileName(), getTeamName());
-			} else {
-	    		obsInterface.setContents(settings.getTeam2NameFileName(), getTeamName());
-			}
+			obsInterface.setContents(settings.getTeamNameFileName(teamNbr), getTeamName());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
     }
     private void writeForwardName() {
 		try {
-			if (teamNbr==1) { 
-				obsInterface.setContents(settings.getTeam1ForwardFileName(), getForwardName());
-			} else {
-				obsInterface.setContents(settings.getTeam2ForwardFileName(), getForwardName());
-			}
+			obsInterface.setContents(settings.getTeamForwardFileName(teamNbr), getForwardName());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
     }
     private void writeGoalieName() {
 		try {
-			if (teamNbr==1) { 
-				obsInterface.setContents(settings.getTeam1GoalieFileName(), getGoalieName());
-			} else {
-				obsInterface.setContents(settings.getTeam2GoalieFileName(), getGoalieName());
-			}
+			obsInterface.setContents(settings.getTeamGoalieFileName(teamNbr), getGoalieName());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
     }
     private void writeScore() {
 		try {
-			if (teamNbr==1) { 
-				obsInterface.setContents(settings.getScore1FileName(), Integer.toString(getScore()));
-			} else {
-				obsInterface.setContents(settings.getScore2FileName(), Integer.toString(getScore()));
-			}
+			obsInterface.setContents(settings.getScoreFileName(teamNbr), Integer.toString(getScore()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
     }
     private void writeGameCount() {
     	try {
-			if (teamNbr==1) { 
-				obsInterface.setContents(settings.getGameCount1FileName(), Integer.toString(getGameCount()));
-			} else {
-				obsInterface.setContents(settings.getGameCount2FileName(), Integer.toString(getGameCount()));
-			}
+			obsInterface.setContents(settings.getGameCountFileName(teamNbr), Integer.toString(getGameCount()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
     }
     private void writeTimeOuts() {
     	try {
-			if (teamNbr==1) { 
-				obsInterface.setContents(settings.getTimeOut1FileName(), Integer.toString(getTimeOutCount()));
-			} else {
-				obsInterface.setContents(settings.getTimeOut2FileName(), Integer.toString(getTimeOutCount()));
-			}
+			obsInterface.setContents(settings.getTimeOutFileName(teamNbr), Integer.toString(getTimeOutCount()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
     }
 	private void writeReset() {
 		try {
-			if (teamNbr==1) { 
-				if(resetState) {
-					obsInterface.setContents(settings.getReset1FileName(), "RESET");
-				} else {
-					obsInterface.setContents(settings.getReset1FileName(), "");
-				}
+			String fn = settings.getResetFileName(teamNbr);
+			if(resetState) {
+				obsInterface.setContents(fn, "RESET");
 			} else {
-				if(resetState) {
-					obsInterface.setContents(settings.getReset2FileName(), "RESET");
-				} else {
-					obsInterface.setContents(settings.getReset2FileName(), "");
-				}
+				obsInterface.setContents(fn, "");
 			}
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -332,19 +342,11 @@ public class Team {
 	}
 	private void writeWarn() {
 		try {
-			if (teamNbr==1) { 
-				if(warnState) {
-					obsInterface.setContents(settings.getWarn1FileName(), "WARNING");
-				} else {
-					obsInterface.setContents(settings.getWarn1FileName(), "");
-				}
+			String fn = settings.getWarnFileName(teamNbr);
+			if(warnState) {
+				obsInterface.setContents(fn, "WARNING");
 			} else {
-				if(warnState) {
-					obsInterface.setContents(settings.getWarn2FileName(), "WARNING");
-				} else {
-					obsInterface.setContents(settings.getWarn2FileName(), "");
-				}
-				
+				obsInterface.setContents(fn, "");
 			}
 		} catch (IOException e1) {
 			e1.printStackTrace();

@@ -22,35 +22,8 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JTextField;
-
-import commands.Command;
-import commands.CommandSwitch;
-import commands.DGT1Command;
-import commands.DGT2Command;
-import commands.DST1Command;
-import commands.DST2Command;
-import commands.IGT1Command;
-import commands.IGT2Command;
-import commands.IST1Command;
-import commands.IST2Command;
-import commands.PRT1Command;
-import commands.PRT2Command;
-import commands.PRTCommand;
-import commands.PSSCommand;
-import commands.PWT1Command;
-import commands.PWT2Command;
-import commands.RTT1Command;
-import commands.RTT2Command;
-import commands.SGTCommand;
-import commands.SPTCommand;
-import commands.SSTCommand;
-import commands.STTCommand;
-import commands.UTT1Command;
-import commands.UTT2Command;
-import commands.XPT1Command;
-import commands.XPT2Command;
+import commands.*;
 import model.Stats;
 import view.StatsDisplayPanel;
 import view.StatsEntryPanel;
@@ -89,6 +62,8 @@ public class StatsController {
 			if (stats.getIsCommand()) processCommand(stats.getCommand());
 			if (stats.getTeam1Scored()) teamController.incrementScore("Team 1");
 			if (stats.getTeam2Scored()) teamController.incrementScore("Team 2");
+			if (stats.getTeam1TimeOut()) teamController.callTimeOut("Team 1");
+			if (stats.getTeam2TimeOut()) teamController.callTimeOut("Team 2");
 			displayAllStats();
 		}
 	}
@@ -159,11 +134,11 @@ public class StatsController {
 		mySwitch.register("XPT2", xpt2);
 	}
 	public void displayAllStats() {
-		statsDisplayPanel.updateTeam1PassStats(stats.getTeam1PassCompletes(),stats.getTeam1PassAttempts());
-		statsDisplayPanel.updateTeam2PassStats(stats.getTeam2PassCompletes(),stats.getTeam2PassAttempts());
-		statsDisplayPanel.updateTeam1ShotStats(stats.getTeam1ShotCompletes(),stats.getTeam1ShotAttempts());
-		statsDisplayPanel.updateTeam2ShotStats(stats.getTeam2ShotCompletes(),stats.getTeam2ShotAttempts());
-		statsDisplayPanel.updateTeam1ClearStats(stats.getTeam1ClearCompletes(),stats.getTeam1ClearAttempts());
-		statsDisplayPanel.updateTeam2ClearStats(stats.getTeam2ClearCompletes(),stats.getTeam2ClearAttempts());
+		statsDisplayPanel.updatePassStats(1, teamController.getPassCompletes(1),teamController.getPassAttempts(1));
+		statsDisplayPanel.updatePassStats(2, teamController.getPassCompletes(2),teamController.getPassAttempts(2));
+		statsDisplayPanel.updateShotStats(1, teamController.getShotCompletes(1),teamController.getShotAttempts(1));
+		statsDisplayPanel.updateShotStats(2, teamController.getShotCompletes(2),teamController.getShotAttempts(2));
+		statsDisplayPanel.updateClearStats(1, teamController.getClearCompletes(1),teamController.getClearAttempts(1));
+		statsDisplayPanel.updateClearStats(2, teamController.getClearCompletes(2),teamController.getClearAttempts(2));
 	}
 }

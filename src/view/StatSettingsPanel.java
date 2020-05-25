@@ -59,7 +59,7 @@ public class StatSettingsPanel extends JPanel {
 		add(lblTeam1NameFileName, "cell 1 1,alignx trailing");
 		
 		txtTeam1NameFileName = new JTextField();
-		txtTeam1NameFileName.setText(settings.getTeam1NameFileName());
+		txtTeam1NameFileName.setText(settings.getTeamNameFileName(1));
 		add(txtTeam1NameFileName, "cell 2 1,alignx left");
 		txtTeam1NameFileName.setColumns(10);
 		

@@ -31,6 +31,8 @@ public class Match {
 	private Settings settings;
 	private OBSInterface obsInterface;
 	private int lastScored; // team number of the last team to score in this match
+	private int matchTime;
+	private int gameTime;
 	
 	public Match(OBSInterface obsInterface, Settings settings, Team team1, Team team2) {
 		this.team1 = team1;

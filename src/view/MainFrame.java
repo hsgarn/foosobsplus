@@ -90,7 +90,7 @@ public final class MainFrame extends JFrame {
 			}
 		});
 
-		setSize(1200,600);
+		setSize(1250,600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}

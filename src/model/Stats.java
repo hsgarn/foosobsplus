@@ -44,6 +44,7 @@ public class Stats {
 	private boolean isPass;
 	private boolean isClear;
 	private boolean isDrop;
+	private boolean isTimeOut;
 	private boolean isFiveRod;
 	private boolean isTwoRod;
 	private boolean isThreeRod;
@@ -56,6 +57,8 @@ public class Stats {
 	private boolean isTeam2;
 	private boolean team1Scored;
 	private boolean team2Scored;
+	private boolean team1TimeOut;
+	private boolean team2TimeOut;
 	private boolean isCommand;
 	private boolean isPassComplete;
 	private boolean isClearComplete;
@@ -66,6 +69,7 @@ public class Stats {
 	private char passChar = new Character('P');
 	private char shotChar = new Character('S');
 	private char clearChar = new Character('C');
+	private char timeOutChar = new Character('T');
 	private char fiveRodChar = new Character('5');
 	private char twoRodChar = new Character('2');
 	private char threeRodChar = new Character('3');
@@ -74,91 +78,15 @@ public class Stats {
 	private char commandChar = new Character('X');
 	private char dropChar = new Character('D');
 	
-	private int team1PassAttempts = 0;
-	private int team1PassCompletes = 0;
-	private int team1PassBreaks = 0;
-	private int team1ShotAttempts = 0;
-	private int team1ShotCompletes = 0;
-	private int team1ShotBreaks = 0;
-	private int team1ClearAttempts = 0;
-	private int team1ClearCompletes = 0;
-	private int team2PassAttempts = 0;
-	private int team2PassCompletes = 0;
-	private int team2PassBreaks = 0;
-	private int team2ShotAttempts = 0;
-	private int team2ShotCompletes = 0;
-	private int team2ShotBreaks = 0;
-	private int team2ClearAttempts = 0;
-	private int team2ClearCompletes = 0;
-	
-	public int getTeam1PassAttempts() {
-		return team1PassAttempts;
-	}
+	private Team team1;
+	private Team team2;
 
-	public int getTeam1PassCompletes() {
-		return team1PassCompletes;
-	}
-
-	public int getTeam1PassBreaks() {
-		return team1PassBreaks;
-	}
-
-	public int getTeam1ShotAttempts() {
-		return team1ShotAttempts;
-	}
-
-	public int getTeam1ShotCompletes() {
-		return team1ShotCompletes;
-	}
-
-	public int getTeam1ShotBreaks() {
-		return team1ShotBreaks;
-	}
-
-	public int getTeam1ClearAttempts() {
-		return team1ClearAttempts;
-	}
-
-	public int getTeam1ClearCompletes() {
-		return team1ClearCompletes;
-	}
-
-	public int getTeam2PassAttempts() {
-		return team2PassAttempts;
-	}
-
-	public int getTeam2PassCompletes() {
-		return team2PassCompletes;
-	}
-
-	public int getTeam2PassBreaks() {
-		return team2PassBreaks;
-	}
-
-	public int getTeam2ShotAttempts() {
-		return team2ShotAttempts;
-	}
-
-	public int getTeam2ShotCompletes() {
-		return team2ShotCompletes;
-	}
-
-	public int getTeam2ShotBreaks() {
-		return team2ShotBreaks;
-	}
-
-	public int getTeam2ClearAttempts() {
-		return team2ClearAttempts;
-	}
-
-	public int getTeam2ClearCompletes() {
-		return team2ClearCompletes;
-	}
-
-	public Stats() {
+	public Stats(Team team1, Team team2) {
 		codeHistory = new DefaultListModel<String>();
+		this.team1 = team1;
+		this.team2 = team2;
 	}
-	
+
 	public String getCode() {
 		return code;
 	}
@@ -181,6 +109,12 @@ public class Stats {
 	}
 	public boolean getTeam2Scored() {
 		return team2Scored;
+	}
+	public boolean getTeam1TimeOut() {
+		return team1TimeOut;
+	}
+	public boolean getTeam2TimeOut() {
+		return team2TimeOut;
 	}
 	public boolean getIsCommand() {
 		return isCommand;
@@ -209,6 +143,7 @@ public class Stats {
 		if(isPass) passLogic();
 		if(isClear) clearLogic();
 		if(isDrop) dropLogic();
+		if(isTimeOut) timeOutLogic();
 		
 		showParsed();
 	}
@@ -241,6 +176,7 @@ public class Stats {
 		isShot = currentAction==shotChar;
 		isClear = currentAction==clearChar;
 		isDrop = currentAction==dropChar;
+		isTimeOut = currentAction==timeOutChar;
 		isFiveRod = currentPosition==fiveRodChar;
 		isTwoRod = currentPosition==twoRodChar;
 		isThreeRod = currentPosition==threeRodChar;
@@ -258,33 +194,33 @@ public class Stats {
 		if(isClearComplete) {
 			if(isSameTeam) {
 				if(isTeam1) {
-					team1ClearAttempts++;
-					team1ClearCompletes++;
+					team1.setClearAttempts(team1.getClearAttempts() + 1);
+					team1.setClearCompletes(team1.getClearCompletes() + 1);
 				} else {
-					team2ClearAttempts++;
-					team2ClearCompletes++;
+					team2.setClearAttempts(team2.getClearAttempts() + 1);
+					team2.setClearCompletes(team2.getClearCompletes() + 1);
 				}
 			} else {
 				if(isTeam1) {
-					team2ClearAttempts++;
-					team2ClearCompletes++;
+					team2.setClearAttempts(team2.getClearAttempts() + 1);
+					team2.setClearCompletes(team2.getClearCompletes() + 1);
 				} else {
-					team1ClearAttempts++;
-					team1ClearCompletes++;
+					team1.setClearAttempts(team1.getClearAttempts() + 1);
+					team1.setClearCompletes(team1.getClearCompletes() + 1);
 				}
 			}
 		} else {
 			if(isSameTeam) {
 				if(isTeam1) {
-					team1ClearAttempts++;
+					team1.setClearAttempts(team1.getClearAttempts() + 1);
 				} else {
-					team2ClearAttempts++;
+					team2.setClearAttempts(team2.getClearAttempts() + 1);
 				}
 			} else {
 				if(isTeam1) {
-					team2ClearAttempts++;
+					team2.setClearAttempts(team2.getClearAttempts() + 1);
 				} else {
-					team1ClearAttempts++;
+					team1.setClearAttempts(team1.getClearAttempts() + 1);
 				}
 			}
 		}
@@ -292,35 +228,44 @@ public class Stats {
 	private void dropLogic() {
 		if(isTwoRod && wasTwoRod && !isSameTeam) {
 			if(isTeam1) {
-				team2ClearAttempts++;
-				team2ClearCompletes++;
+				team2.setClearAttempts(team2.getClearAttempts() + 1);
+				team2.setClearCompletes(team2.getClearCompletes() + 1);
 			} else {
-				team1ClearAttempts++;
-				team1ClearCompletes++;
+				team1.setClearAttempts(team1.getClearAttempts() + 1);
+				team1.setClearCompletes(team1.getClearCompletes() + 1);
 			}
+		}
+	}
+	private void timeOutLogic() {
+		team1TimeOut=false;
+		team2TimeOut=false;
+		if(isTeam1) {
+			team1TimeOut=true;
+		} else {
+			team2TimeOut=true;
 		}
 	}
 	private void passLogic() {
 		if(isPassComplete) {
 			if(isTeam1) {
-				team1PassAttempts++;
-				team1PassCompletes++;
+				team1.setPassAttempts(team1.getPassAttempts() + 1);
+				team1.setPassCompletes(team1.getPassCompletes() + 1);
 			} else {
-				team2PassAttempts++;
-				team2PassCompletes++;
+				team2.setPassAttempts(team2.getPassAttempts() + 1);
+				team2.setPassCompletes(team2.getPassCompletes() + 1);
 			}
 		} else {
 			if(isSameTeam) {
 				if(isTeam1) {
-					team1PassAttempts++;
+					team1.setPassAttempts(team1.getPassAttempts() + 1);
 				} else {
-					team2PassAttempts++;
+					team2.setPassAttempts(team2.getPassAttempts() + 1);
 				}
 			} else {
 				if(isTeam1) {
-					team2PassAttempts++;
+					team2.setPassAttempts(team2.getPassAttempts() + 1);
 				} else {
-					team1PassAttempts++;
+					team1.setPassAttempts(team1.getPassAttempts() + 1);
 				}
 			}
 		}
@@ -328,24 +273,24 @@ public class Stats {
 	private void shotLogic() {
 		if(isTeamScored) {
 			if(team1Scored) {
-				team1ShotAttempts++;
-				team1ShotCompletes++;
+				team1.setShotAttempts(team1.getShotAttempts() + 1);
+				team1.setShotCompletes(team1.getShotCompletes() + 1);
 			} else {
-				team2ShotAttempts++;
-				team2ShotCompletes++;
+				team2.setShotAttempts(team2.getShotAttempts() + 1);
+				team2.setShotCompletes(team2.getShotCompletes() + 1);
 			}
 		} else {
 			if(isSameTeam) {
 				if(isTeam1) {
-					team1ShotAttempts++;
+					team1.setShotAttempts(team1.getShotAttempts() + 1);
 				} else {
-					team2ShotAttempts++;
+					team2.setShotAttempts(team2.getShotAttempts() + 1);
 				}
 			} else {
 				if(isTeam1) {
-					team2ShotAttempts++;
+					team2.setShotAttempts(team2.getShotAttempts() + 1);
 				} else {
-					team1ShotAttempts++;
+					team1.setShotAttempts(team1.getShotAttempts() + 1);
 				}
 			}
 		}
@@ -353,26 +298,26 @@ public class Stats {
 	private void showParsed() {
 		if (!isShowParsed) return;
 		System.out.println("----------------------------------------");
-		System.out.println("Previous Code: " + previousCode + "   Current Code: " + code);
-		System.out.println("Previous Team: " + previousTeam + "     Current Team: " + currentTeam);
-		System.out.println("Previous Pos.: " + previousPosition + "     Current Pos.: " + currentPosition);
-		System.out.println("Previous Act.: " + previousAction + "     Current Act.: " + currentAction);
-		System.out.println("Previous Mod.: " + previousModifier + "     Current Mod.: " + currentModifier);
-		System.out.println("team1Scored: " + team1Scored + "   team2Scored: " + team2Scored);
-		System.out.println("Is Team 1: " + isTeam1 + "      Is Team 2: " + isTeam2);
-		System.out.println(" Is Same Team: " + isSameTeam + "   Is Same Rod: " + isSameRod);
-		System.out.println(" Is Team Scored: " + isTeamScored);
-		System.out.println(" Is Lucky Break: " + isLuckyBreak);
+		System.out.println("Previous Code: " + previousCode + "       Current Code: " + code);
+		System.out.println("Previous Team: " + previousTeam + "         Current Team: " + currentTeam);
+		System.out.println("Previous Pos.: " + previousPosition + "         Current Pos.: " + currentPosition);
+		System.out.println("Previous Act.: " + previousAction + "         Current Act.: " + currentAction);
+		System.out.println("Previous Mod.: " + previousModifier + "         Current Mod.: " + currentModifier);
+		System.out.println("team1Scored: " + team1Scored + "       team2Scored: " + team2Scored);
+		System.out.println("team1TimeOut: " + team1TimeOut + "      team1TimeOut: " + team2TimeOut);
+		System.out.println(" Is Team 1: " + isTeam1 + "         Is Team 2: " + isTeam2);
+		System.out.println(" Is Same Team: " + isSameTeam + "     Is Same Rod: " + isSameRod);
+		System.out.println(" Is Team Scored: " + isTeamScored + "   Is Lucky Break: " + isLuckyBreak);
 		System.out.println(" Is Penalty: " + isPenalty);
-		System.out.println(" Is Pass: " + isPass + "      Is Shot: " + isShot);
-		System.out.println(" Is Clear: " + isClear);
+		System.out.println(" Is Pass: " + isPass + "          Is Shot: " + isShot);
+		System.out.println(" Is Clear: " + isClear + "         Is TimeOut: " + isTimeOut);
 		System.out.println(" Is forward direction: " + isForwardDirection);
-		System.out.println("Team1PassAttempts: " + team1PassAttempts + "  Completes: " + team1PassCompletes);
-		System.out.println("Team2PassAttempts: " + team2PassAttempts + "  Completes: " + team2PassCompletes);
-		System.out.println("Team1ShotAttempts: " + team1ShotAttempts + "  Completes: " + team1ShotCompletes);
-		System.out.println("Team2ShotAttempts: " + team2ShotAttempts + "  Completes: " + team2ShotCompletes);
-		System.out.println("Team1ClearAttempts: " + team1ClearAttempts + "  Completes: " + team1ClearCompletes);
-		System.out.println("Team2ClearAttempts: " + team2ClearAttempts + "  Completes: " + team2ClearCompletes);
+		System.out.println("Team1PassAttempts: " + team1.getPassAttempts() + "  Completes: " + team1.getPassCompletes());
+		System.out.println("Team2PassAttempts: " + team2.getPassAttempts() + "  Completes: " + team2.getPassCompletes());
+		System.out.println("Team1ShotAttempts: " + team1.getShotAttempts() + "  Completes: " + team1.getShotCompletes());
+		System.out.println("Team2ShotAttempts: " + team2.getShotAttempts() + "  Completes: " + team2.getShotCompletes());
+		System.out.println("Team1ClearAttempts: " + team1.getClearAttempts() + "  Completes: " + team1.getClearCompletes());
+		System.out.println("Team2ClearAttempts: " + team2.getClearAttempts() + "  Completes: " + team2.getClearCompletes());
 		
 	}
 }

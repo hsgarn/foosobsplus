@@ -167,6 +167,12 @@ public class StatsEntryPanel extends JPanel {
 	public void addClearListener(ActionListener listenForBtnClear) {
 		btnClear.addActionListener(listenForBtnClear);
 	}
+	public void addUndoListener(ActionListener listenForBtnUndo) {
+		btnUndo.addActionListener(listenForBtnUndo);
+	}
+	public void addRedoListener(ActionListener listenForBtnRedo) {
+		btnRedo.addActionListener(listenForBtnRedo);
+	}
 
 	////// Utility Methods //////
 	

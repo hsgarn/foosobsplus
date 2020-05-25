@@ -59,7 +59,7 @@ public class Main {
 	private Team 				team1 				= new Team(obsInterface, settings, 1, settings.getSide1Color());
 	private Team 				team2 				= new Team(obsInterface, settings, 2, settings.getSide2Color());
 	private Match 				match				= new Match(obsInterface, settings, team1, team2);
-	private Stats 				stats 				= new Stats();
+	private Stats 				stats 				= new Stats(team1, team2);
 	
 	////// Create a TimeClock to be the Timer \\\\\\
 	
