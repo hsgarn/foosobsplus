@@ -301,50 +301,35 @@ public class StatsDisplayPanel extends JPanel {
 
 	////// Utility Methods \\\\\\
 
-	public void updatePassStats(int teamNbr, int successes, int attempts) {
-		float percent = 0;
-		if(attempts > 0) {
-			percent = (float) successes/ (float) attempts;
-			percent = percent * 100f;
-		}
+	public void updatePassStats(int teamNbr, int completes, int attempts, Float percent) {
 		if(teamNbr==1) {
-			lblTeam1PassCompletes.setText(String.format("%-3s",Integer.toString(successes)));
+			lblTeam1PassCompletes.setText(String.format("%-3s",Integer.toString(completes)));
 			lblTeam1PassAttempts.setText(String.format("%-3s",Integer.toString(attempts)));
 			lblTeam1Passing.setText(String.format("%-5s",df.format(percent) + "%"));
 		} else {
-			lblTeam2PassCompletes.setText(String.format("%-3s",Integer.toString(successes)));
+			lblTeam2PassCompletes.setText(String.format("%-3s",Integer.toString(completes)));
 			lblTeam2PassAttempts.setText(String.format("%-3s",Integer.toString(attempts)));
 			lblTeam2Passing.setText(String.format("%-5s",df.format(percent)+"%"));
 		}
 	}
-	public void updateShotStats(int teamNbr, int successes, int attempts) {
-		float percent = 0;
-		if(attempts > 0) {
-			percent = (float) successes/ (float) attempts;
-			percent = percent * 100f;
-		}
+	public void updateShotStats(int teamNbr, int completes, int attempts, Float percent) {
 		if(teamNbr==1) {
-			lblTeam1ShotCompletes.setText(String.format("%-3s",Integer.toString(successes)));
+			lblTeam1ShotCompletes.setText(String.format("%-3s",Integer.toString(completes)));
 			lblTeam1ShotAttempts.setText(String.format("%-3s",Integer.toString(attempts)));
 			lblTeam1Shooting.setText(String.format("%-5s",df.format(percent)+"%"));
 		} else {
-			lblTeam2ShotCompletes.setText(String.format("%-3s",Integer.toString(successes)));
+			lblTeam2ShotCompletes.setText(String.format("%-3s",Integer.toString(completes)));
 			lblTeam2ShotAttempts.setText(String.format("%-3s",Integer.toString(attempts)));
 			lblTeam2Shooting.setText(String.format("%-5s",df.format(percent)+"%"));
 		}
 	}
-	public void updateClearStats(int teamNbr, int successes, int attempts) {
-		float percent = 0;
-		if(attempts > 0) {
-			percent = (float) successes/ (float) attempts;
-			percent = percent * 100f;
-		}
+	public void updateClearStats(int teamNbr, int completes, int attempts, Float percent) {
 		if (teamNbr==1) {
-			lblTeam1ClearCompletes.setText(String.format("%-3s",Integer.toString(successes)));
+			lblTeam1ClearCompletes.setText(String.format("%-3s",Integer.toString(completes)));
 			lblTeam1ClearAttempts.setText(String.format("%-3s",Integer.toString(attempts)));
 			lblTeam1Clearing.setText(String.format("%-5s",df.format(percent)+"%"));
 		} else {
-			lblTeam2ClearCompletes.setText(String.format("%-3s",Integer.toString(successes)));
+			lblTeam2ClearCompletes.setText(String.format("%-3s",Integer.toString(completes)));
 			lblTeam2ClearAttempts.setText(String.format("%-3s",Integer.toString(attempts)));
 			lblTeam2Clearing.setText(String.format("%-5s",df.format(percent)+"%"));
 		}

@@ -114,8 +114,6 @@ public class TeamController {
 		this.team1Panel.addClearAllListener(new ClearAllListener());
 		this.team2Panel.addClearAllListener(new ClearAllListener());
 
-//		resetTimeOuts();
-
 	}
 	
 	////// Team Panel Listener Objects //////
@@ -416,8 +414,8 @@ public class TeamController {
 		}
 	}
 
-	////// Utility Methods //////
-
+	////// Utility Methods \\\\\\
+	
 	private String convertNumbers(String checkString) {
 		try {
 			Integer.parseInt(checkString);
@@ -625,11 +623,16 @@ public class TeamController {
 		team1Panel.updateWarn(team1.getWarn());
 		team2Panel.updateWarn(team2.getWarn());
 	}
+	public void resetStats() {
+		team1.resetStats();
+		team2.resetStats();
+	}
 	public void resetAll() {
 		resetScores();
 		resetGameCounts();
 		resetTimeOuts();
 		resetResetWarns();
+		resetStats();
 		team1.writeAll();
 		team2.writeAll();
 	}
@@ -708,6 +711,24 @@ public class TeamController {
 			team2.setReset(obsInterface.getContents(settings.getResetFileName(2))!=null);
 			team1.setWarn(obsInterface.getContents(settings.getWarnFileName(1))!=null);
 			team2.setWarn(obsInterface.getContents(settings.getWarnFileName(2))!=null);
+			team1.setPassAttempts(obsInterface.getContents(settings.getPassAttemptsFileName(1)));
+			team2.setPassAttempts(obsInterface.getContents(settings.getPassAttemptsFileName(2)));
+			team1.setShotAttempts(obsInterface.getContents(settings.getShotAttemptsFileName(1)));
+			team2.setShotAttempts(obsInterface.getContents(settings.getShotAttemptsFileName(2)));
+			team1.setClearAttempts(obsInterface.getContents(settings.getClearAttemptsFileName(1)));
+			team2.setClearAttempts(obsInterface.getContents(settings.getClearAttemptsFileName(2)));
+			team1.setPassCompletes(obsInterface.getContents(settings.getPassCompletesFileName(1)));
+			team2.setPassCompletes(obsInterface.getContents(settings.getPassCompletesFileName(2)));
+			team1.setShotCompletes(obsInterface.getContents(settings.getShotCompletesFileName(1)));
+			team2.setShotCompletes(obsInterface.getContents(settings.getShotCompletesFileName(2)));
+			team1.setClearCompletes(obsInterface.getContents(settings.getClearCompletesFileName(1)));
+			team2.setClearCompletes(obsInterface.getContents(settings.getClearCompletesFileName(2)));
+			team1.setPassPercent(obsInterface.getContents(settings.getPassPercentFileName(1)));
+			team2.setPassPercent(obsInterface.getContents(settings.getPassPercentFileName(2)));
+			team1.setShotPercent(obsInterface.getContents(settings.getShotPercentFileName(1)));
+			team2.setShotPercent(obsInterface.getContents(settings.getShotPercentFileName(2)));
+			team1.setClearPercent(obsInterface.getContents(settings.getClearPercentFileName(1)));
+			team2.setClearPercent(obsInterface.getContents(settings.getClearPercentFileName(2)));
 			match.setLastScored(obsInterface.getContents(settings.getLastScoredFileName()));
 			team1Panel.updateTeamName(team1.getTeamName());
 			team2Panel.updateTeamName(team2.getTeamName());
@@ -748,6 +769,13 @@ public class TeamController {
 			return team2.getPassCompletes();
 		}
 	}
+	public Float getPassPercent(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getPassPercent();
+		} else {
+			return team2.getPassPercent();
+		}
+	}
 	public int getShotAttempts(int teamNbr) {
 		if (teamNbr==1) {
 			return team1.getShotAttempts();
@@ -762,6 +790,13 @@ public class TeamController {
 			return team2.getShotCompletes();
 		}
 	}
+	public Float getShotPercent(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getShotPercent();
+		} else {
+			return team2.getShotPercent();
+		}
+	}
 	public int getClearAttempts(int teamNbr) {
 		if (teamNbr==1) {
 			return team1.getClearAttempts();
@@ -774,6 +809,13 @@ public class TeamController {
 			return team1.getClearCompletes();
 		} else {
 			return team2.getClearCompletes();
+		}
+	}
+	public Float getClearPercent(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getClearPercent();
+		} else {
+			return team2.getClearPercent();
 		}
 	}
 }

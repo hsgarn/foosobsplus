@@ -22,6 +22,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 package model;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import main.OBSInterface;
 
@@ -42,11 +43,14 @@ public class Team {
 	private int passAttempts = 0;
 	private int passCompletes = 0;
 	private int passBreaks = 0;
+	private Float passPercent = 0f;
 	private int shotAttempts = 0;
 	private int shotCompletes = 0;
+	private Float shotPercent = 0f;
 	private int shotBreaks = 0;
 	private int clearAttempts = 0;
 	private int clearCompletes = 0;
+	private Float clearPercent = 0f;
 	private int[] gameScores;
 	private int aces = 0;
 	private int twoBarPassAttemps = 0;
@@ -57,6 +61,7 @@ public class Team {
 	private int twoBarGoals = 0;
 	private int breaks = 0;
 	private int stuffs = 0;
+	private DecimalFormat df = new DecimalFormat("###.#");
 	
 	public Team(OBSInterface obsInterface, Settings settings, Integer teamNbr, String teamColor) {
 		this.obsInterface = obsInterface;
@@ -179,6 +184,29 @@ public class Team {
 		warnState = state;
 		writeWarn();
 	}
+	public void resetStats() {
+		passAttempts = 0;
+		passCompletes = 0;
+		passBreaks = 0;
+		passPercent = 0f;
+		shotAttempts = 0;
+		shotCompletes = 0;
+		shotPercent = 0f;
+		shotBreaks = 0;
+		clearAttempts = 0;
+		clearCompletes = 0;
+		clearPercent = 0f;
+		aces = 0;
+		twoBarPassAttemps = 0;
+		twoBarPassCompletes = 0;
+		shotsOnGoal = 0;
+		threeBarGoals = 0;
+		fiveBarGoals = 0;
+		twoBarGoals = 0;
+		breaks = 0;
+		stuffs = 0;
+		writeStats();
+	}
 	public String[] switchPositions() {
 		String[] names = new String[2];
 		String tmp = forwardName;
@@ -217,6 +245,26 @@ public class Team {
 		goalieName = "";
 		score = 0;
 		gameCount = 0;
+		passAttempts = 0;
+		passCompletes = 0;
+		passBreaks = 0;
+		passPercent = 0f;
+		shotAttempts = 0;
+		shotCompletes = 0;
+		shotPercent = 0f;
+		shotBreaks = 0;
+		clearAttempts = 0;
+		clearCompletes = 0;
+		clearPercent = 0f;
+		aces = 0;
+		twoBarPassAttemps = 0;
+		twoBarPassCompletes = 0;
+		shotsOnGoal = 0;
+		threeBarGoals = 0;
+		fiveBarGoals = 0;
+		twoBarGoals = 0;
+		breaks = 0;
+		stuffs = 0;
 		resetTimeOuts();
 		writeAll();
 	}
@@ -252,36 +300,126 @@ public class Team {
 	public int getClearCompletes() {
 		return clearCompletes;
 	}
+	public Float getPassPercent() {
+		return passPercent;
+	}
+	public Float getShotPercent() {
+		return shotPercent;
+	}
+	public Float getClearPercent() {
+		return clearPercent;
+	}
 	
     public int getTwoBarPassAttemps() {
 		return twoBarPassAttemps;
 	}
-	public void setTwoBarPassAttemps(int twoBarPassAttemps) {
-		this.twoBarPassAttemps = twoBarPassAttemps;
-	}
 	public int getTwoBarPassCompletes() {
 		return twoBarPassCompletes;
+	}
+	public void setTwoBarPassAttemps(int twoBarPassAttemps) {
+		this.twoBarPassAttemps = twoBarPassAttemps;
 	}
 	public void setTwoBarPassCompletes(int twoBarPassCompletes) {
 		this.twoBarPassCompletes = twoBarPassCompletes;
 	}
 	public void setPassAttempts(int passAttempts) {
 		this.passAttempts = passAttempts;
+		writePassAttempts();
 	}
 	public void setPassCompletes(int passCompletes) {
 		this.passCompletes = passCompletes;
+		writePassCompletes();
+	}
+	public void setPassPercent(Float passPercent) {
+		this.passPercent = passPercent;
+		writePassPercent();
+	}
+	public void setPassAttempts(String passAttempts) {
+		if(passAttempts=="") {
+			setPassAttempts(0);
+		} else {
+			setPassAttempts(Integer.parseInt(passAttempts));
+		}
+	}
+	public void setPassCompletes(String passCompletes) {
+		if(passCompletes=="") {
+			setPassCompletes(0);
+		} else {
+			setPassCompletes(Integer.parseInt(passCompletes));
+		}
+	}
+	public void setPassPercent(String passPercent) {
+		if(passPercent=="") {
+			setPassPercent(0f);
+		} else {
+			setPassPercent(Float.parseFloat(passPercent.replaceAll("[^\\d.]", "")));
+		}
 	}
 	public void setShotAttempts(int shotAttempts) {
 		this.shotAttempts = shotAttempts;
+		writeShotAttempts();
 	}
 	public void setShotCompletes(int shotCompletes) {
 		this.shotCompletes = shotCompletes;
+		writeShotCompletes();
+	}
+	public void setShotPercent(Float shotPercent) {
+		this.shotPercent = shotPercent;
+		writeShotPercent();
+	}
+	public void setShotAttempts(String shotAttempts) {
+		if(shotAttempts=="") {
+			setShotAttempts(0);
+		} else {
+			setShotAttempts(Integer.parseInt(shotAttempts));
+		}
+	}
+	public void setShotCompletes(String shotCompletes) {
+		if(shotCompletes=="") {
+			setShotCompletes(0);
+		} else {
+			setShotCompletes(Integer.parseInt(shotCompletes));
+		}
+	}
+	public void setShotPercent(String shotPercent) {
+		if(shotPercent=="") {
+			setShotPercent(0f);
+		} else {
+			setShotPercent(Float.parseFloat(shotPercent.replaceAll("[^\\d.]", "")));
+		}
 	}
 	public void setClearAttempts(int clearAttempts) {
 		this.clearAttempts = clearAttempts;
+		writeClearAttempts();
 	}
 	public void setClearCompletes(int clearCompletes) {
 		this.clearCompletes = clearCompletes;
+		writeClearCompletes();
+	}
+	public void setClearPercent(Float clearPercent) {
+		this.clearPercent = clearPercent;
+		writeClearPercent();
+	}
+	public void setClearAttempts(String clearAttempts) {
+		if(clearAttempts=="") {
+			setClearAttempts(0);
+		} else {
+			setClearAttempts(Integer.parseInt(clearAttempts));
+		}
+	}
+	public void setClearCompletes(String clearCompletes) {
+		if(clearCompletes=="") {
+			setClearCompletes(0);
+		} else {
+			setClearCompletes(Integer.parseInt(clearCompletes));
+		}
+	}
+	public void setClearPercent(String clearPercent) {
+		if(clearPercent=="") {
+			setClearPercent(0f);
+		} else {
+			setClearPercent(Float.parseFloat(clearPercent.replaceAll("[^\\d.]", "")));
+		}
 	}
 
 	////// Writes to Files \\\\\\
@@ -352,6 +490,80 @@ public class Team {
 			e1.printStackTrace();
 		}
 	}
+    private void writePassAttempts() {
+		try {
+			obsInterface.setContents(settings.getPassAttemptsFileName(teamNbr), Integer.toString(getPassAttempts()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    private void writePassCompletes() {
+		try {
+			obsInterface.setContents(settings.getPassCompletesFileName(teamNbr), Integer.toString(getPassCompletes()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    private void writePassPercent() {
+		try {
+			obsInterface.setContents(settings.getPassPercentFileName(teamNbr), String.format("%-5s",df.format(getPassPercent())+"%"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    private void writeShotAttempts() {
+		try {
+			obsInterface.setContents(settings.getShotAttemptsFileName(teamNbr), Integer.toString(getShotAttempts()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    private void writeShotCompletes() {
+		try {
+			obsInterface.setContents(settings.getShotCompletesFileName(teamNbr), Integer.toString(getShotCompletes()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    private void writeShotPercent() {
+		try {
+			obsInterface.setContents(settings.getShotPercentFileName(teamNbr), String.format("%-5s",df.format(getShotPercent())+"%"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    private void writeClearAttempts() {
+		try {
+			obsInterface.setContents(settings.getClearAttemptsFileName(teamNbr), Integer.toString(getClearAttempts()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    private void writeClearCompletes() {
+		try {
+			obsInterface.setContents(settings.getClearCompletesFileName(teamNbr), Integer.toString(getClearCompletes()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    private void writeClearPercent() {
+		try {
+			obsInterface.setContents(settings.getClearPercentFileName(teamNbr), String.format("%-5s",df.format(getClearPercent())+"%"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    public void writeStats() {
+   		writePassAttempts();
+   		writePassCompletes();
+   		writePassPercent();
+   		writeShotAttempts();
+   		writeShotCompletes();
+   		writeShotPercent();
+   		writeClearAttempts();
+   		writeClearCompletes();
+   		writeClearPercent();
+    }
 	public void writeAll() {
 		writeTeamName();
 		writeForwardName();
@@ -361,5 +573,14 @@ public class Team {
 		writeReset();
 		writeWarn();
 		writeTimeOuts();
+		writePassAttempts();
+		writePassCompletes();
+		writeShotAttempts();
+		writeShotCompletes();
+		writeClearAttempts();
+		writeClearCompletes();
+		writePassPercent();
+		writeShotPercent();
+		writeClearPercent();
 	}
 }

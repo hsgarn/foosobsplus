@@ -97,7 +97,7 @@ public class Main {
 	TableController 	tableController 	= new TableController(obsInterface, settings, table, match, tablePanel, teamController);
 	StatsController 	statsController 	= new StatsController(stats, statsEntryPanel, statsDisplayPanel, teamController);
 	SwitchController 	switchController 	= new SwitchController(switchPanel, teamController);
-	ResetController 	resetController 	= new ResetController(resetPanel, teamController);
+	ResetController 	resetController 	= new ResetController(resetPanel, teamController, statsController);
 	
 	public Main() throws IOException {
 		obsInterface.setFilePath(settings.getDatapath());
@@ -107,5 +107,6 @@ public class Main {
 	private void fetchAll(String tableNbr) {
 		tableController.fetchAll(tableNbr);
 		teamController.fetchAll();
+		statsController.displayAllStats();
 	}
 }

@@ -190,37 +190,71 @@ public class Stats {
 		isClearComplete = isClear && !isSameRod && (isSameTeam || (!isSameTeam && (isFiveRod || isTwoRod)));
 
 	}
+	public Float caclPercent(int attempts, int completes) {
+		float percent = 0;
+		if(attempts > 0) {
+			percent = (float) completes/ (float) attempts;
+			percent = percent * 100f;
+		}
+		return percent;
+	}
 	private void clearLogic() {
+		int attempts = 0;
+		int completes = 0;
 		if(isClearComplete) {
 			if(isSameTeam) {
 				if(isTeam1) {
-					team1.setClearAttempts(team1.getClearAttempts() + 1);
-					team1.setClearCompletes(team1.getClearCompletes() + 1);
+					attempts=team1.getClearAttempts()+1;
+					completes=team1.getClearCompletes()+1;
+					team1.setClearAttempts(attempts);
+					team1.setClearCompletes(completes);
+					team1.setClearPercent(caclPercent(attempts, completes));
 				} else {
-					team2.setClearAttempts(team2.getClearAttempts() + 1);
-					team2.setClearCompletes(team2.getClearCompletes() + 1);
+					attempts=team2.getClearAttempts()+1;
+					completes=team2.getClearCompletes()+1;
+					team2.setClearAttempts(attempts);
+					team2.setClearCompletes(completes);
+					team2.setClearPercent(caclPercent(attempts, completes));
 				}
 			} else {
 				if(isTeam1) {
-					team2.setClearAttempts(team2.getClearAttempts() + 1);
-					team2.setClearCompletes(team2.getClearCompletes() + 1);
+					attempts=team2.getClearAttempts()+1;
+					completes=team2.getClearCompletes()+1;
+					team2.setClearAttempts(attempts);
+					team2.setClearCompletes(completes);
+					team2.setClearPercent(caclPercent(attempts, completes));
 				} else {
-					team1.setClearAttempts(team1.getClearAttempts() + 1);
-					team1.setClearCompletes(team1.getClearCompletes() + 1);
+					attempts=team1.getClearAttempts()+1;
+					completes=team1.getClearCompletes()+1;
+					team1.setClearAttempts(attempts);
+					team1.setClearCompletes(completes);
+					team1.setClearPercent(caclPercent(attempts, completes));
 				}
 			}
 		} else {
 			if(isSameTeam) {
 				if(isTeam1) {
-					team1.setClearAttempts(team1.getClearAttempts() + 1);
-				} else {
-					team2.setClearAttempts(team2.getClearAttempts() + 1);
+					attempts=team1.getClearAttempts()+1;
+					completes=team1.getClearCompletes();
+					team1.setClearAttempts(attempts);
+					team1.setClearPercent(caclPercent(attempts, completes));
+			} else {
+					attempts=team2.getClearAttempts()+1;
+					completes=team2.getClearCompletes();
+					team2.setClearAttempts(attempts);
+					team2.setClearPercent(caclPercent(attempts, completes));
 				}
 			} else {
 				if(isTeam1) {
-					team2.setClearAttempts(team2.getClearAttempts() + 1);
+					attempts=team2.getClearAttempts()+1;
+					completes=team2.getClearCompletes();
+					team2.setClearAttempts(attempts);
+					team2.setClearPercent(caclPercent(attempts, completes));
 				} else {
-					team1.setClearAttempts(team1.getClearAttempts() + 1);
+					attempts=team1.getClearAttempts()+1;
+					completes=team1.getClearCompletes();
+					team1.setClearAttempts(attempts);
+					team1.setClearPercent(caclPercent(attempts, completes));
 				}
 			}
 		}
@@ -246,51 +280,91 @@ public class Stats {
 		}
 	}
 	private void passLogic() {
+		int attempts;
+		int completes;
 		if(isPassComplete) {
 			if(isTeam1) {
-				team1.setPassAttempts(team1.getPassAttempts() + 1);
-				team1.setPassCompletes(team1.getPassCompletes() + 1);
+				attempts=team1.getPassAttempts() + 1;
+				completes=team1.getPassCompletes() + 1;
+				team1.setPassAttempts(attempts);
+				team1.setPassCompletes(completes);
+				team1.setPassPercent(caclPercent(attempts, completes));
 			} else {
-				team2.setPassAttempts(team2.getPassAttempts() + 1);
-				team2.setPassCompletes(team2.getPassCompletes() + 1);
+				attempts=team2.getPassAttempts() + 1;
+				completes=team2.getPassCompletes() + 1;
+				team2.setPassAttempts(attempts);
+				team2.setPassCompletes(completes);
+				team2.setPassPercent(caclPercent(attempts, completes));
 			}
 		} else {
 			if(isSameTeam) {
 				if(isTeam1) {
-					team1.setPassAttempts(team1.getPassAttempts() + 1);
+					attempts=team1.getPassAttempts() + 1;
+					completes=team1.getPassCompletes();
+					team1.setPassAttempts(attempts);
+					team1.setPassPercent(caclPercent(attempts, completes));
 				} else {
-					team2.setPassAttempts(team2.getPassAttempts() + 1);
+					attempts=team2.getPassAttempts() + 1;
+					completes=team2.getPassCompletes();
+					team2.setPassAttempts(attempts);
+					team2.setPassPercent(caclPercent(attempts, completes));
 				}
 			} else {
 				if(isTeam1) {
-					team2.setPassAttempts(team2.getPassAttempts() + 1);
+					attempts=team2.getPassAttempts() + 1;
+					completes=team2.getPassCompletes();
+					team2.setPassAttempts(attempts);
+					team2.setPassPercent(caclPercent(attempts, completes));
 				} else {
-					team1.setPassAttempts(team1.getPassAttempts() + 1);
+					attempts=team1.getPassAttempts() + 1;
+					completes=team1.getPassCompletes();
+					team1.setPassAttempts(attempts);
+					team1.setPassPercent(caclPercent(attempts, completes));
 				}
 			}
 		}
 	}
 	private void shotLogic() {
+		int attempts;
+		int completes;
 		if(isTeamScored) {
 			if(team1Scored) {
-				team1.setShotAttempts(team1.getShotAttempts() + 1);
-				team1.setShotCompletes(team1.getShotCompletes() + 1);
+				attempts=team1.getShotAttempts() + 1;
+				completes=team1.getShotCompletes() + 1;
+				team1.setShotAttempts(attempts);
+				team1.setShotCompletes(completes);
+				team1.setShotPercent(caclPercent(attempts, completes));
 			} else {
-				team2.setShotAttempts(team2.getShotAttempts() + 1);
-				team2.setShotCompletes(team2.getShotCompletes() + 1);
+				attempts=team2.getShotAttempts() + 1;
+				completes=team2.getShotCompletes() + 1;
+				team2.setShotAttempts(attempts);
+				team2.setShotCompletes(completes);
+				team2.setShotPercent(caclPercent(attempts, completes));
 			}
 		} else {
 			if(isSameTeam) {
 				if(isTeam1) {
-					team1.setShotAttempts(team1.getShotAttempts() + 1);
+					attempts=team1.getShotAttempts() + 1;
+					completes=team1.getShotCompletes();
+					team1.setShotAttempts(attempts);
+					team1.setShotPercent(caclPercent(attempts, completes));
 				} else {
-					team2.setShotAttempts(team2.getShotAttempts() + 1);
+					attempts=team2.getShotAttempts() + 1;
+					completes=team2.getShotCompletes();
+					team2.setShotAttempts(attempts);
+					team2.setShotPercent(caclPercent(attempts, completes));
 				}
 			} else {
 				if(isTeam1) {
-					team2.setShotAttempts(team2.getShotAttempts() + 1);
+					attempts=team2.getShotAttempts() + 1;
+					completes=team2.getShotCompletes();
+					team2.setShotAttempts(attempts);
+					team2.setShotPercent(caclPercent(attempts, completes));
 				} else {
-					team1.setShotAttempts(team1.getShotAttempts() + 1);
+					attempts=team1.getShotAttempts() + 1;
+					completes=team1.getShotCompletes();
+					team1.setShotAttempts(attempts);
+					team1.setShotPercent(caclPercent(attempts, completes));
 				}
 			}
 		}
@@ -318,6 +392,6 @@ public class Stats {
 		System.out.println("Team2ShotAttempts: " + team2.getShotAttempts() + "  Completes: " + team2.getShotCompletes());
 		System.out.println("Team1ClearAttempts: " + team1.getClearAttempts() + "  Completes: " + team1.getClearCompletes());
 		System.out.println("Team2ClearAttempts: " + team2.getClearAttempts() + "  Completes: " + team2.getClearCompletes());
-		
+		System.out.println("");
 	}
 }

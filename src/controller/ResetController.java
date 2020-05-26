@@ -28,10 +28,12 @@ import view.ResetPanel;
 public class ResetController {
 	private ResetPanel resetPanel;
 	private TeamController teamController;
+	private StatsController statsController;
 	
-	public ResetController(ResetPanel resetPanel, TeamController teamController) {
+	public ResetController(ResetPanel resetPanel, TeamController teamController, StatsController statsController) {
 		this.resetPanel = resetPanel;
 		this.teamController = teamController;
+		this.statsController = statsController;
 		
 		////// Reset Panel Listener Methods //////
 		
@@ -73,6 +75,7 @@ public class ResetController {
 	private class ResetAllListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			teamController.resetAll();
+			statsController.displayAllStats();
 		}
 	}
 
