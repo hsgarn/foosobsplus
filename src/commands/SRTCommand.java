@@ -1,6 +1,6 @@
-package controller;
+package commands;
 
-import commands.Command;
+import controller.TeamController;
 
 public class SRTCommand implements Command {
 	private TeamController teamController;
