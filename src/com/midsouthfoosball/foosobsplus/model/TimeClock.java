@@ -26,7 +26,7 @@ import java.io.IOException;
 
 import javax.swing.Timer;
 
-import main.OBSInterface;
+import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
 public class TimeClock {
 	private int nbrOfSeconds;

@@ -1,6 +1,6 @@
 package com.midsouthfoosball.foosobsplus.commands;
 
-import controller.TeamController;
+import com.midsouthfoosball.foosobsplus.controller.TeamController;
 
 public class UTT1Command implements Command {
 	private TeamController teamController;

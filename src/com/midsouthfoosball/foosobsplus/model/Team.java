@@ -24,7 +24,7 @@ package com.midsouthfoosball.foosobsplus.model;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
-import main.OBSInterface;
+import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
 public class Team {
 

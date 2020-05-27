@@ -27,7 +27,7 @@ import java.text.DecimalFormat;
 
 import javax.swing.Timer;
 
-import main.OBSInterface;
+import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
 public class GameClock {
 	private Timer timer;

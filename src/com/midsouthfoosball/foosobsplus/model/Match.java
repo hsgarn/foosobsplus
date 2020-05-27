@@ -22,7 +22,7 @@ package com.midsouthfoosball.foosobsplus.model;
 
 import java.io.IOException;
 
-import main.OBSInterface;
+import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
 public class Match {
 	
