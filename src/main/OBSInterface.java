@@ -27,7 +27,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import model.Settings;
+import com.midsouthfoosball.foosobsplus.model.Settings;
 
 public class OBSInterface {
 	

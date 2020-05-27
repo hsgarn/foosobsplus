@@ -30,10 +30,11 @@ import java.io.IOException;
 
 import javax.swing.JTextField;
 
+import com.midsouthfoosball.foosobsplus.model.Match;
+import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.Table;
+
 import main.OBSInterface;
-import model.Match;
-import model.Settings;
-import model.Table;
 import view.TablePanel;
 
 public class TableController {

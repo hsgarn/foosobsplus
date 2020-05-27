@@ -22,11 +22,12 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 import javax.swing.JTextField;
-import commands.*;
-import model.Stats;
+
+import com.midsouthfoosball.foosobsplus.commands.*;
+import com.midsouthfoosball.foosobsplus.model.Stats;
+
 import view.StatsDisplayPanel;
 import view.StatsEntryPanel;
 

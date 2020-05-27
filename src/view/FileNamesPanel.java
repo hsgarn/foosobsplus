@@ -39,8 +39,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import com.midsouthfoosball.foosobsplus.model.Settings;
+
 import main.OBSInterface;
-import model.Settings;
 import net.miginfocom.swing.MigLayout;
 
 public class FileNamesPanel extends JPanel {

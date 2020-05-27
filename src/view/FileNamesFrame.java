@@ -7,8 +7,9 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import com.midsouthfoosball.foosobsplus.model.Settings;
+
 import main.OBSInterface;
-import model.Settings;
 
 @SuppressWarnings("serial")
 public class FileNamesFrame extends JFrame {

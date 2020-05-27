@@ -25,8 +25,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 
-import model.Settings;
-import model.TimeClock;
+import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.TimeClock;
+
 import view.TimerPanel;
 import view.TimerWindowFrame;
 

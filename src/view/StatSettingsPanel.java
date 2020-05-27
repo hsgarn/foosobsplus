@@ -32,7 +32,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import model.Settings;
+import com.midsouthfoosball.foosobsplus.model.Settings;
+
 import net.miginfocom.swing.MigLayout;
 
 public class StatSettingsPanel extends JPanel {

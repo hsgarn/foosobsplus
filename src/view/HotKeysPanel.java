@@ -35,7 +35,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
-import model.Settings;
+import com.midsouthfoosball.foosobsplus.model.Settings;
+
 import net.miginfocom.swing.MigLayout;
 
 public class HotKeysPanel extends JPanel {

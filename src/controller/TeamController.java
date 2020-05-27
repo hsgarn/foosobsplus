@@ -32,10 +32,11 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
+import com.midsouthfoosball.foosobsplus.model.Match;
+import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.Team;
+
 import main.OBSInterface;
-import model.Match;
-import model.Settings;
-import model.Team;
 import view.SwitchPanel;
 import view.TeamPanel;
 

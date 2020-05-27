@@ -22,6 +22,14 @@ package main;
 
 import java.io.IOException;
 
+import com.midsouthfoosball.foosobsplus.model.GameClock;
+import com.midsouthfoosball.foosobsplus.model.Match;
+import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.Stats;
+import com.midsouthfoosball.foosobsplus.model.Table;
+import com.midsouthfoosball.foosobsplus.model.Team;
+import com.midsouthfoosball.foosobsplus.model.TimeClock;
+
 import controller.MainController;
 import controller.ResetController;
 import controller.StatsController;
@@ -29,13 +37,6 @@ import controller.SwitchController;
 import controller.TableController;
 import controller.TeamController;
 import controller.TimerController;
-import model.GameClock;
-import model.Match;
-import model.Settings;
-import model.Stats;
-import model.Table;
-import model.Team;
-import model.TimeClock;
 import view.FileNamesFrame;
 import view.HotKeysFrame;
 import view.MainFrame;
