@@ -37,7 +37,7 @@ public class FileNamesFrame extends JFrame {
 			System.out.println("Problem loading settings.");
 			e.printStackTrace();
 		}
-		fileNamesPanel.setPreferredSize(new Dimension(1100, 500));
+		fileNamesPanel.setPreferredSize(new Dimension(1100, 550));
 		
 		getContentPane().add(fileNamesPanel);
 		pack();

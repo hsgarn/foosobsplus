@@ -84,6 +84,8 @@ public class Settings {
 	private String warn1FileName;
 	private String warn2FileName;
 	private String lastScoredFileName;
+	private String gameTimeFileName;
+	private String matchTimeFileName;
 	private String team1PassAttemptsFileName;
 	private String team2PassAttemptsFileName;
 	private String team1PassCompletesFileName;
@@ -215,6 +217,8 @@ public class Settings {
 		defaultProps.setProperty("Warn1FileName", "warn1.txt");
 		defaultProps.setProperty("Warn2FileName", "warn2.txt");
 		defaultProps.setProperty("LastScoredFileName","lastscored.txt");
+		defaultProps.setProperty("GameTimeFileName", "gametime.txt");
+		defaultProps.setProperty("MatchTimeFileName", "matchtime.txt");
 		defaultProps.setProperty("Team1PassAttemptsFileName", "team1passattempts.txt");
 		defaultProps.setProperty("Team2PassAttemptsFileName", "team2passattempts.txt");
 		defaultProps.setProperty("Team1PassCompletesFileName", "team1passcompletes.txt");
@@ -451,7 +455,8 @@ public class Settings {
 	public String getMatchWinnerFileName() {return matchWinnerFileName;}
 	public String getMeatballFileName() {return meatballFileName;}
 	public String getLastScoredFileName() {return lastScoredFileName;}
-
+	public String getGameTimeFileName() {return gameTimeFileName;}
+	public String getMatchTimeFileName() {return matchTimeFileName;}
 	public String getSide1ColorFileName() {return side1ColorFileName;}
 	public String getSide2ColorFileName() {return side2ColorFileName;}
 
@@ -779,6 +784,14 @@ public class Settings {
 		this.lastScoredFileName = lastScoredFileName;
 		configProps.setProperty("LastScoredFileName", this.lastScoredFileName);
 	}
+	public void setGameTimeFileName(String gameTimeFileName) {
+		this.gameTimeFileName = gameTimeFileName;
+		configProps.setProperty("GameTimeFileName", this.gameTimeFileName);
+	}
+	public void setMatchTimeFileName(String matchTimeFileName) {
+		this.matchTimeFileName = matchTimeFileName;
+		configProps.setProperty("MatchTimeFileName", this.matchTimeFileName);
+	}
 	public void setSide1ColorFileName(String side1ColorFileName) {
 		this.side1ColorFileName = side1ColorFileName;
 		configProps.setProperty("Side1ColorFileName", this.side1ColorFileName);
@@ -987,6 +1000,9 @@ public class Settings {
 	public String getDefaultWinnerPrefix() {return defaultProps.getProperty("WinnerPrefix");}
 	public String getDefaultWinnerSuffix() {return defaultProps.getProperty("WinnerSuffix");}
 	public String getDefaultMeatball() {return defaultProps.getProperty("Meatball");}
+	public String getDefaultTeam1LastScored() {return defaultProps.getProperty("Team1LastScored");}
+	public String getDefaultTeam2LastScored() {return defaultProps.getProperty("Team2LastScored");}
+	public String getDefaultClearLastScored() {return defaultProps.getProperty("ClearLastScored");}
 	public String getDefaultSide1Color() {return defaultProps.getProperty("Side1Color");}
 	public String getDefaultSide2Color() {return defaultProps.getProperty("Side2Color");}
 	public String getDefaultNameSeparator() {return defaultProps.getProperty("NameSeparator");}
@@ -1024,9 +1040,8 @@ public class Settings {
 	public String getDefaultWarn1FileName() {return defaultProps.getProperty("Warn1FileName");}
 	public String getDefaultWarn2FileName() {return defaultProps.getProperty("Warn2FileName");}
 	public String getDefaultLastScoredFileName() {return defaultProps.getProperty("LastScoredFileName");}
-	public String getDefaultTeam1LastScored() {return defaultProps.getProperty("Team1LastScored");}
-	public String getDefaultTeam2LastScored() {return defaultProps.getProperty("Team2LastScored");}
-	public String getDefaultClearLastScored() {return defaultProps.getProperty("ClearLastScored");}
+	public String getDefaultGameTimeFileName() {return defaultProps.getProperty("GameTimeFileName");}
+	public String getDefaultMatchTimeFileName() {return defaultProps.getProperty("MatchTimeFileName");}
 	public String getDefaultTeam1PassAttemptsFileName() {return defaultProps.getProperty("Team1PassAttemptsFileName");}
 	public String getDefaultTeam1PassCompletesFileName() {return defaultProps.getProperty("Team1PassCompletesFileName");}
 	public String getDefaultTeam2PassAttemptsFileName() {return defaultProps.getProperty("Team2PassAttemptsFileName");}
@@ -1166,6 +1181,8 @@ public class Settings {
 		warn1FileName = configProps.getProperty("Warn1FileName");
 		warn2FileName = configProps.getProperty("Warn2FileName");
 		lastScoredFileName = configProps.getProperty("LastScoredFileName");
+		gameTimeFileName = configProps.getProperty("GameTimeFileName");
+		matchTimeFileName = configProps.getProperty("MatchTimeFileName");
 		team1PassAttemptsFileName = configProps.getProperty("Team1PassAttemptsFileName");
 		team1PassCompletesFileName = configProps.getProperty("Team1PassCompletesFileName");
 		team2PassAttemptsFileName = configProps.getProperty("Team2PassAttemptsFileName");
@@ -1289,6 +1306,8 @@ public class Settings {
 		configProps.setProperty("Warn1FileName", this.getWarnFileName(1));
 		configProps.setProperty("Warn2FileName", this.getWarnFileName(2));
 		configProps.setProperty("LastScoredFileName", this.getLastScoredFileName());
+		configProps.setProperty("GameTimeFileName", this.getGameTimeFileName());
+		configProps.setProperty("MatchTimeFileName", this.getMatchTimeFileName());
 		configProps.setProperty("Team1PassAttemptsFileName", this.getPassAttemptsFileName(1));
 		configProps.setProperty("Team1PassCompletesFileName", this.getPassCompletesFileName(1));
 		configProps.setProperty("Team2PassAttemptsFileName", this.getPassAttemptsFileName(2));

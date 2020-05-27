@@ -69,6 +69,8 @@ public class FileNamesPanel extends JPanel {
 	private JTextField txtMatchWinnerFileName;
 	private JTextField txtMeatballFileName;
 	private JTextField txtLastScoredFileName;
+	private JTextField txtGameTimeFileName;
+	private JTextField txtMatchTimeFileName;
 	private JFormattedTextField formattedTxtPath;
 	private JTextField txtTeam1PassAttemptsFileName;
 	private JTextField txtTeam1PassCompletesFileName;
@@ -124,6 +126,8 @@ public class FileNamesPanel extends JPanel {
 		txtWarn1FileName.setText(settings.getDefaultWarn1FileName());
 		txtWarn2FileName.setText(settings.getDefaultWarn2FileName());
 		txtLastScoredFileName.setText(settings.getDefaultLastScoredFileName());
+		txtGameTimeFileName.setText(settings.getDefaultGameTimeFileName());
+		txtMatchTimeFileName.setText(settings.getDefaultMatchTimeFileName());
 		txtTeam1PassAttemptsFileName.setText(settings.getDefaultTeam1PassAttemptsFileName());
 		txtTeam2PassAttemptsFileName.setText(settings.getDefaultTeam2PassAttemptsFileName());
 		txtTeam1ShotAttemptsFileName.setText(settings.getDefaultTeam1ShotAttemptsFileName());
@@ -169,6 +173,8 @@ public class FileNamesPanel extends JPanel {
 		settings.setWarn1FileName(txtWarn1FileName.getText());
 		settings.setWarn2FileName(txtWarn2FileName.getText());
 		settings.setLastScoredFileName(txtLastScoredFileName.getText());
+		settings.setGameTimeFileName(txtGameTimeFileName.getText());
+		settings.setMatchTimeFileName(txtMatchTimeFileName.getText());
 		settings.setTeam1PassAttemptsFileName(txtTeam1PassAttemptsFileName.getText());
 		settings.setTeam2PassAttemptsFileName(txtTeam2PassAttemptsFileName.getText());
 		settings.setTeam1ShotAttemptsFileName(txtTeam1ShotAttemptsFileName.getText());
@@ -195,7 +201,7 @@ public class FileNamesPanel extends JPanel {
 	}
 	public void setLayout(Settings settings) {	
 		setBounds(100, 100, 900, 489);
-		setLayout(new MigLayout("", "[][][174.00,grow][27.00][91.00][grow][][][grow][14.00][][grow]", "[][][][][][][][][][][][][][][][][]"));
+		setLayout(new MigLayout("", "[][][174.00,grow][27.00][91.00][grow][][][grow][14.00][][grow]", "[][][][][][][][][][][][][][][][][][][]"));
 
 		JButton btnSelectPath = new JButton("Select Path");
 		btnSelectPath.addActionListener(new ActionListener() {
@@ -561,8 +567,8 @@ public class FileNamesPanel extends JPanel {
 		add(txtWarn1FileName, "cell 2 13,alignx left");
 		txtWarn1FileName.setColumns(10);
 
-		JLabel lblLastScored = new JLabel("Last Scored:");
-		add(lblLastScored, "cell 4 13,alignx trailing");
+		JLabel lblLastScoredFileName = new JLabel("Last Scored:");
+		add(lblLastScoredFileName, "cell 4 13,alignx trailing");
 
 		txtLastScoredFileName = new JTextField();
 		txtLastScoredFileName.setText(settings.getLastScoredFileName());
@@ -609,7 +615,23 @@ public class FileNamesPanel extends JPanel {
 				win.dispose();
 			}
 		});
-		add(btnSaveFileNames, "cell 2 16,alignx center");
+		
+		JLabel lblGameTimeFileName = new JLabel("Game Time");
+		add(lblGameTimeFileName, "cell 1 15,alignx trailing");
+		
+		txtGameTimeFileName = new JTextField();
+		txtGameTimeFileName.setText(settings.getGameTimeFileName());
+		add(txtGameTimeFileName, "cell 2 15,alignx left");
+		txtGameTimeFileName.setColumns(10);
+		
+		JLabel lblMatchTimeFileName = new JLabel("Match Time");
+		add(lblMatchTimeFileName, "cell 1 16,alignx trailing");
+		
+		txtMatchTimeFileName = new JTextField();
+		txtMatchTimeFileName.setText(settings.getMatchTimeFileName());
+		add(txtMatchTimeFileName, "cell 2 16,alignx left");
+		txtMatchTimeFileName.setColumns(10);
+		add(btnSaveFileNames, "cell 2 18,alignx center");
 
 		JButton btnCancelFileNames = new JButton("Cancel");
 		btnCancelFileNames.addActionListener(new ActionListener() {
@@ -619,7 +641,7 @@ public class FileNamesPanel extends JPanel {
 				win.dispose();
 			}
 		});
-		add(btnCancelFileNames, "cell 4 16,alignx center");
+		add(btnCancelFileNames, "cell 4 18,alignx center");
 
 		JButton btnRestoreDefaults = new JButton("Restore Defaults");
 		btnRestoreDefaults.addActionListener(new ActionListener() {
@@ -627,6 +649,6 @@ public class FileNamesPanel extends JPanel {
 				restoreDefaults(settings);
 			}
 		});
-		add(btnRestoreDefaults, "cell 5 16,alignx center");
+		add(btnRestoreDefaults, "cell 5 18,alignx center");
 	}
 }

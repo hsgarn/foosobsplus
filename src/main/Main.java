@@ -29,6 +29,7 @@ import controller.SwitchController;
 import controller.TableController;
 import controller.TeamController;
 import controller.TimerController;
+import model.GameClock;
 import model.Match;
 import model.Settings;
 import model.Stats;
@@ -64,6 +65,7 @@ public class Main {
 	////// Create a TimeClock to be the Timer \\\\\\
 	
 	private TimeClock 			timeClock 			= new TimeClock(obsInterface, settings);
+	private GameClock           gameClock           = new GameClock(obsInterface, settings);
 	
 	////// Create the View Panels to Display (mVc) \\\\\\
 	
