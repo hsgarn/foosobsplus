@@ -29,6 +29,7 @@ import com.midsouthfoosball.foosobsplus.controller.SwitchController;
 import com.midsouthfoosball.foosobsplus.controller.TableController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
 import com.midsouthfoosball.foosobsplus.controller.TimerController;
+import com.midsouthfoosball.foosobsplus.model.Game;
 import com.midsouthfoosball.foosobsplus.model.GameClock;
 import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.Settings;
@@ -39,6 +40,7 @@ import com.midsouthfoosball.foosobsplus.model.TimeClock;
 import com.midsouthfoosball.foosobsplus.view.FileNamesFrame;
 import com.midsouthfoosball.foosobsplus.view.HotKeysFrame;
 import com.midsouthfoosball.foosobsplus.view.MainFrame;
+import com.midsouthfoosball.foosobsplus.view.MatchPanel;
 import com.midsouthfoosball.foosobsplus.view.ResetPanel;
 import com.midsouthfoosball.foosobsplus.view.SettingsFrame;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
@@ -53,6 +55,8 @@ public class Main {
 	
 	private Settings			settings			= new Settings();
 	public OBSInterface 		obsInterface 		= new OBSInterface(settings);
+	private int 				maxGames			= settings.getGamesToWin() * 2 + 1;
+	public static int			currentGameNbr		= 0;
 
 	////// Generate the Data Models (Mvc) \\\\\\
 	
@@ -60,7 +64,13 @@ public class Main {
 	private Team 				team1 				= new Team(obsInterface, settings, 1, settings.getSide1Color());
 	private Team 				team2 				= new Team(obsInterface, settings, 2, settings.getSide2Color());
 	private Match 				match				= new Match(obsInterface, settings, team1, team2);
-	private Stats 				stats 				= new Stats(team1, team2);
+	private Game				games[]	 			= new Game[] {	new Game(obsInterface, settings, team1, team2, 1, maxGames), 
+																	new Game(obsInterface, settings, team1, team2, 2, maxGames), 
+																	new Game(obsInterface, settings, team1, team2, 3, maxGames), 
+																	new Game(obsInterface, settings, team1, team2, 4, maxGames), 
+																	new Game(obsInterface, settings, team1, team2, 5, maxGames)
+																};
+	private Stats 				stats 				= new Stats(team1, team2, games, match);
 	
 	////// Create a TimeClock to be the Timer \\\\\\
 	
@@ -71,6 +81,7 @@ public class Main {
 	
 	private TablePanel 			tablePanel 			= new TablePanel();
 	private TimerPanel 			timerPanel 			= new TimerPanel();
+	private MatchPanel			matchPanel			= new MatchPanel();
 	private TeamPanel 			teamPanel1 			= new TeamPanel(1, settings.getSide1Color());
 	private TeamPanel 			teamPanel2 			= new TeamPanel(2, settings.getSide2Color());
 	private StatsEntryPanel 	statsEntryPanel 	= new StatsEntryPanel();
@@ -88,7 +99,7 @@ public class Main {
 	////// Display the View Panels on a JFrame \\\\\\
 	
 	private MainFrame mainFrame = new MainFrame(tablePanel, timerPanel, teamPanel1, teamPanel2, statsEntryPanel, 
-												switchPanel, resetPanel, statsDisplayPanel, settingsFrame, hotKeysFrame, 
+												switchPanel, resetPanel, statsDisplayPanel, matchPanel, settingsFrame, hotKeysFrame, 
 												fileNamesFrame);
 
 	////// Build and Start the Controllers (mvC) \\\\\\
@@ -110,5 +121,11 @@ public class Main {
 		tableController.fetchAll(tableNbr);
 		teamController.fetchAll();
 		statsController.displayAllStats();
+	}
+	public int getCurrentGameNbr() {
+		return currentGameNbr;
+	}
+	public static void setCurrentGameNbr(int gameNbr) {
+		currentGameNbr = gameNbr;
 	}
 }

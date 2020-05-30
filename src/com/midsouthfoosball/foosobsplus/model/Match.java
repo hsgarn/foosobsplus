@@ -21,6 +21,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.model;
 
 import java.io.IOException;
+import java.util.Date;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
@@ -31,9 +32,17 @@ public class Match {
 	private Settings settings;
 	private OBSInterface obsInterface;
 	private int lastScored; // team number of the last team to score in this match
-	private int matchTime;
-	private int gameTime;
-	
+	private Date startTime;
+	private Date endTime;
+	private int elapsedTime;
+	private int[] points;
+	private int[] threeBarPoints;
+	private int[] fiveBarPoints;
+	private int[] twoBarPoints;
+	private int[] shotsOnGoal;
+	private int[] breaks;
+	private int[] stuffs;
+	private Game[] games;
 	public Match(OBSInterface obsInterface, Settings settings, Team team1, Team team2) {
 		this.team1 = team1;
 		this.team2 = team2;

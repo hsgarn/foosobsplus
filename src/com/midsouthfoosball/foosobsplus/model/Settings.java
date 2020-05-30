@@ -86,6 +86,8 @@ public class Settings {
 	private String lastScoredFileName;
 	private String gameTimeFileName;
 	private String matchTimeFileName;
+	private String stuffs1FileName;
+	private String stuffs2FileName;
 	private String team1PassAttemptsFileName;
 	private String team2PassAttemptsFileName;
 	private String team1PassCompletesFileName;
@@ -104,6 +106,12 @@ public class Settings {
 	private String team2ShotPercentFileName;
 	private String team1ClearPercentFileName;
 	private String team2ClearPercentFileName;
+	private String team1TwoBarPassAttemptsFileName;
+	private String team2TwoBarPassAttemptsFileName;
+	private String team1TwoBarPassCompletesFileName;
+	private String team2TwoBarPassCompletesFileName;
+	private String team1TwoBarPassPercentFileName;
+	private String team2TwoBarPassPercentFileName;
 	private String side1ColorFileName;
 	private String side2ColorFileName;
 
@@ -219,6 +227,8 @@ public class Settings {
 		defaultProps.setProperty("LastScoredFileName","lastscored.txt");
 		defaultProps.setProperty("GameTimeFileName", "gametime.txt");
 		defaultProps.setProperty("MatchTimeFileName", "matchtime.txt");
+		defaultProps.setProperty("Stuffs1FileName", "stuffs1.txt");
+		defaultProps.setProperty("Stuffs2FileName", "stuffs2.txt");
 		defaultProps.setProperty("Team1PassAttemptsFileName", "team1passattempts.txt");
 		defaultProps.setProperty("Team2PassAttemptsFileName", "team2passattempts.txt");
 		defaultProps.setProperty("Team1PassCompletesFileName", "team1passcompletes.txt");
@@ -237,6 +247,12 @@ public class Settings {
 		defaultProps.setProperty("Team2ShotPercentFileName", "team2shotpercent.txt");
 		defaultProps.setProperty("Team1ClearPercentFileName", "team1clearpercent.txt");
 		defaultProps.setProperty("Team2ClearPercentFileName", "team2clearpercent.txt");
+		defaultProps.setProperty("Team1TwoBarPassAttemptsFileName", "team1twobarpassattempts.txt");
+		defaultProps.setProperty("Team2TwoBarPassAttemptsFileName", "team2twobarpassattempts.txt");
+		defaultProps.setProperty("Team1TwoBarPassCompletesFileName", "team1twobarpasscompletes.txt");
+		defaultProps.setProperty("Team2TwoBarPassCompletesFileName", "team2twobarpasscompletes.txt");
+		defaultProps.setProperty("Team1TwoBarPassPercentFileName", "team1twobarpasspercent.txt");
+		defaultProps.setProperty("Team2TwoBarPassPercentFileName", "team2twobarpasspercent.txt");
 		defaultProps.setProperty("Side1ColorFileName","side1color.txt");
 		defaultProps.setProperty("Side2ColorFileName","side2color.txt");
 		
@@ -446,7 +462,34 @@ public class Settings {
 			return team2ClearPercentFileName;
 		}
 	}
-
+	public String getTwoBarPassAttemptsFileName(int teamNbr) {
+		if(teamNbr==1) {
+			return team1TwoBarPassAttemptsFileName;
+		} else {
+			return team2TwoBarPassAttemptsFileName;
+		}
+	}
+	public String getTwoBarPassCompletesFileName(int teamNbr) {
+		if(teamNbr==1) {
+			return team1TwoBarPassCompletesFileName;
+		} else {
+			return team2TwoBarPassCompletesFileName;
+		}
+	}
+	public String getTwoBarPassPercentFileName(int teamNbr) {
+		if(teamNbr==1) {
+			return team1TwoBarPassPercentFileName;
+		} else {
+			return team2TwoBarPassPercentFileName;
+		}
+	}
+	public String getStuffsFileName(int teamNbr) {
+		if(teamNbr==1) {
+			return stuffs1FileName;
+		} else {
+			return stuffs2FileName;
+		}
+	}
 	public String getTableFileName() {return tableFileName;}
 	public String getTournamentFileName() {return tournamentFileName;}
 	public String getEventFileName() {return eventFileName;}
@@ -644,6 +687,30 @@ public class Settings {
 		this.team2ClearPercentFileName = team2ClearPercentFileName;
 		configProps.setProperty("Team2ClearPercentFileName", this.team2ClearPercentFileName);
 	}
+	public void setTeam1TwoBarPassAttemptsFileName(String team1TwoBarPassAttemptsFileName) {
+		this.team1TwoBarPassAttemptsFileName = team1TwoBarPassAttemptsFileName;
+		configProps.setProperty("Team1TwoBarPassAttemptsFileName", this.team1TwoBarPassAttemptsFileName);
+	}
+	public void setTeam2TwoBarPassAttemptsFileName(String team2TwoBarPassAttemptsFileName) {
+		this.team2TwoBarPassAttemptsFileName = team2TwoBarPassAttemptsFileName;
+		configProps.setProperty("Team2TwoBarPassAttemptsFileName", this.team2TwoBarPassAttemptsFileName);
+	}
+	public void setTeam1TwoBarPassCompletesFileName(String team1TwoBarPassCompletesFileName) {
+		this.team1TwoBarPassCompletesFileName = team1TwoBarPassCompletesFileName;
+		configProps.setProperty("Team1TwoBarPassCompletesFileName", this.team1TwoBarPassCompletesFileName);
+	}
+	public void setTeam2TwoBarPassCompletesFileName(String team2TwoBarPassCompletesFileName) {
+		this.team2TwoBarPassCompletesFileName = team2TwoBarPassCompletesFileName;
+		configProps.setProperty("Team2TwoBarPassCompletesFileName", this.team2TwoBarPassCompletesFileName);
+	}
+	public void setTeam1TwoBarPassPercentFileName(String team1TwoBarPassPercentFileName) {
+		this.team1TwoBarPassPercentFileName = team1TwoBarPassPercentFileName;
+		configProps.setProperty("Team1TwoBarPassPercentFileName", this.team1TwoBarPassPercentFileName);
+	}
+	public void setTeam2TwoBarPassPercentFileName(String team2TwoBarPassPercentFileName) {
+		this.team2TwoBarPassPercentFileName = team2TwoBarPassPercentFileName;
+		configProps.setProperty("Team2TwoBarPassPercentFileName", this.team2TwoBarPassPercentFileName);
+	}
 	public void setSide1Color(String side1Color) {
 		this.side1Color = side1Color;
 		configProps.setProperty("Side1Color", this.side1Color);
@@ -791,6 +858,14 @@ public class Settings {
 	public void setMatchTimeFileName(String matchTimeFileName) {
 		this.matchTimeFileName = matchTimeFileName;
 		configProps.setProperty("MatchTimeFileName", this.matchTimeFileName);
+	}
+	public void setStuffs1FileName(String stuffs1FileName) {
+		this.stuffs1FileName = stuffs1FileName;
+		configProps.setProperty("Stuffs1FIleName", this.stuffs1FileName);
+	}
+	public void setStuffs2FileName(String stuffs2FileName) {
+		this.stuffs2FileName = stuffs2FileName;
+		configProps.setProperty("Stuffs2FIleName", this.stuffs2FileName);
 	}
 	public void setSide1ColorFileName(String side1ColorFileName) {
 		this.side1ColorFileName = side1ColorFileName;
@@ -1042,6 +1117,8 @@ public class Settings {
 	public String getDefaultLastScoredFileName() {return defaultProps.getProperty("LastScoredFileName");}
 	public String getDefaultGameTimeFileName() {return defaultProps.getProperty("GameTimeFileName");}
 	public String getDefaultMatchTimeFileName() {return defaultProps.getProperty("MatchTimeFileName");}
+	public String getDefaultStuffs1FileName() {return defaultProps.getProperty("Stuffs1FileName");}
+	public String getDefaultStuffs2FileName() {return defaultProps.getProperty("Stuffs2FileName");}
 	public String getDefaultTeam1PassAttemptsFileName() {return defaultProps.getProperty("Team1PassAttemptsFileName");}
 	public String getDefaultTeam1PassCompletesFileName() {return defaultProps.getProperty("Team1PassCompletesFileName");}
 	public String getDefaultTeam2PassAttemptsFileName() {return defaultProps.getProperty("Team2PassAttemptsFileName");}
@@ -1062,6 +1139,12 @@ public class Settings {
 	public String getDefaultTeam2ShotPercentFileName() {return defaultProps.getProperty("Team2ShotPercentFileName");}
 	public String getDefaultTeam1ClearPercentFileName() {return defaultProps.getProperty("Team1ClearPercentFileName");}
 	public String getDefaultTeam2ClearPercentFileName() {return defaultProps.getProperty("Team2ClearPercentFileName");}
+	public String getDefaultTeam1TwoBarPassAttemptsFileName() {return defaultProps.getProperty("Team1TwoBarPassAttemptsFileName");}
+	public String getDefaultTeam1TwoBarPassCompletesFileName() {return defaultProps.getProperty("Team1TwoBarPassCompletesFileName");}
+	public String getDefaultTeam2TwoBarPassAttemptsFileName() {return defaultProps.getProperty("Team2TwoBarPassAttemptsFileName");}
+	public String getDefaultTeam2TwoBarPassCompletesFileName() {return defaultProps.getProperty("Team2TwoBarPassCompletesFileName");}
+	public String getDefaultTeam1TwoBarPassPercentFileName() {return defaultProps.getProperty("Team1TwoBarPassPercentFileName");}
+	public String getDefaultTeam2TwoBarPassPercentFileName() {return defaultProps.getProperty("Team2TwoBarPassPercentFileName");}
 
 	public String getDefaultTournamentNameClearHotKey() {return defaultProps.getProperty("TournamentNameClearHotKey");}
 	public String getDefaultEventClearHotKey() {return defaultProps.getProperty("EventClearHotKey");}
@@ -1183,6 +1266,8 @@ public class Settings {
 		lastScoredFileName = configProps.getProperty("LastScoredFileName");
 		gameTimeFileName = configProps.getProperty("GameTimeFileName");
 		matchTimeFileName = configProps.getProperty("MatchTimeFileName");
+		stuffs1FileName = configProps.getProperty("Stuffs1FileName");
+		stuffs2FileName = configProps.getProperty("Stuffs2FileName");
 		team1PassAttemptsFileName = configProps.getProperty("Team1PassAttemptsFileName");
 		team1PassCompletesFileName = configProps.getProperty("Team1PassCompletesFileName");
 		team2PassAttemptsFileName = configProps.getProperty("Team2PassAttemptsFileName");
@@ -1203,6 +1288,12 @@ public class Settings {
 		team2ShotPercentFileName = configProps.getProperty("Team2ShotPercentFileName");
 		team1ClearPercentFileName = configProps.getProperty("Team1ClearPercentFileName");
 		team2ClearPercentFileName = configProps.getProperty("Team2ClearPercentFileName");
+		team1TwoBarPassAttemptsFileName = configProps.getProperty("Team1TwoBarPassAttemptsFileName");
+		team1TwoBarPassCompletesFileName = configProps.getProperty("Team1TwoBarPassCompletesFileName");
+		team2TwoBarPassAttemptsFileName = configProps.getProperty("Team2TwoBarPassAttemptsFileName");
+		team2TwoBarPassCompletesFileName = configProps.getProperty("Team2TwoBarPassCompletesFileName");
+		team1TwoBarPassPercentFileName = configProps.getProperty("Team1TwoBarPassPercentFileName");
+		team2TwoBarPassPercentFileName = configProps.getProperty("Team2TwoBarPassPercentFileName");
 		
 		tournamentNameClearHotKey = configProps.getProperty("TournamentNameClearHotKey");
 		eventClearHotKey = configProps.getProperty("EventClearHotKey");
@@ -1308,6 +1399,8 @@ public class Settings {
 		configProps.setProperty("LastScoredFileName", this.getLastScoredFileName());
 		configProps.setProperty("GameTimeFileName", this.getGameTimeFileName());
 		configProps.setProperty("MatchTimeFileName", this.getMatchTimeFileName());
+		configProps.setProperty("Stuffs1FIleName", this.getStuffsFileName(1));
+		configProps.setProperty("Stuffs2FIleName", this.getStuffsFileName(2));
 		configProps.setProperty("Team1PassAttemptsFileName", this.getPassAttemptsFileName(1));
 		configProps.setProperty("Team1PassCompletesFileName", this.getPassCompletesFileName(1));
 		configProps.setProperty("Team2PassAttemptsFileName", this.getPassAttemptsFileName(2));
@@ -1326,6 +1419,12 @@ public class Settings {
 		configProps.setProperty("Team2ShotPercentFileName", this.getShotPercentFileName(2));
 		configProps.setProperty("Team1ClearPercentFileName", this.getClearPercentFileName(1));
 		configProps.setProperty("Team2ClearPercentFileName", this.getClearPercentFileName(2));
+		configProps.setProperty("Team1TwoBarPassAttemptsFileName", this.getTwoBarPassAttemptsFileName(1));
+		configProps.setProperty("Team1TwoBarPassCompletesFileName", this.getTwoBarPassCompletesFileName(1));
+		configProps.setProperty("Team2TwoBarPassAttemptsFileName", this.getTwoBarPassAttemptsFileName(2));
+		configProps.setProperty("Team2TwoBarPassCompletesFileName", this.getTwoBarPassCompletesFileName(2));
+		configProps.setProperty("Team1TwoBarPassPercentFileName", this.getTwoBarPassPercentFileName(1));
+		configProps.setProperty("Team2TwoBarPassPercentFileName", this.getTwoBarPassPercentFileName(2));
 		configProps.setProperty("Side1ColorFileName", this.getSide1ColorFileName());
 		configProps.setProperty("Side2ColorFileName", this.getSide2ColorFileName());
 		configProps.setProperty("TournamentNameClearHotKey", this.getTournamentNameClearHotKey());

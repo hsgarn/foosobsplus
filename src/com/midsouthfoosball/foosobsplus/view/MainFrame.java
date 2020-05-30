@@ -51,6 +51,7 @@ public final class MainFrame extends JFrame {
 	private TimerPanel timerPanel;
 	private StatsEntryPanel statsEntryPanel;
 	private StatsDisplayPanel statsDisplayPanel;
+	private MatchPanel matchPanel;
 	public SettingsFrame settingsFrame;
 	public HotKeysFrame hotKeysFrame;
 	public FileNamesFrame fileNamesFrame;
@@ -58,7 +59,7 @@ public final class MainFrame extends JFrame {
 	private JCheckBoxMenuItem viewAlwaysOnTop;
 	
 	public MainFrame(TablePanel tablePanel, TimerPanel timerPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
-			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, SettingsFrame settingsFrame, HotKeysFrame hotKeysFrame,
+			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, SettingsFrame settingsFrame, HotKeysFrame hotKeysFrame,
 			FileNamesFrame fileNamesFrame) {
 
 		super("FoosOBSPlus");
@@ -71,6 +72,7 @@ public final class MainFrame extends JFrame {
 		this.switchPanel = switchPanel;
 		this.resetPanel = resetPanel;
 		this.statsDisplayPanel = statsDisplayPanel;
+		this.matchPanel = matchPanel;
 		this.settingsFrame = settingsFrame;
 		this.hotKeysFrame = hotKeysFrame;
 		this.fileNamesFrame = fileNamesFrame;
@@ -90,7 +92,7 @@ public final class MainFrame extends JFrame {
 			}
 		});
 
-		setSize(1250,600);
+		setSize(1300,650);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
@@ -237,10 +239,12 @@ public final class MainFrame extends JFrame {
 		
 		gc.gridx = 1;
 		gc.gridwidth =1;
+		gc.gridheight = 2;
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(timerPanel, gc);
+		gc.gridheight = 1;
 
 		//////// Stats Entry Panel ////////
 		
@@ -249,10 +253,12 @@ public final class MainFrame extends JFrame {
 		
 		gc.gridx = 2;
 		gc.gridwidth =1;
+		gc.gridheight = 2;
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(statsEntryPanel, gc);
+		gc.gridheight = 1;
 		
 		//////// Stats Display Panel ////////
 		
@@ -261,11 +267,27 @@ public final class MainFrame extends JFrame {
 		
 		gc.gridx = 3;
 		gc.gridwidth =1;
+		gc.gridheight = 2;
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(statsDisplayPanel, gc);
+		gc.gridheight = 1;
 		
+		////////// Match Panel  ///////////
+		
+		gc.gridy++;
+
+		gc.weightx = 1;
+		gc.weighty = 1;
+		
+		gc.gridx = 0;
+		gc.gridwidth =1;
+		gc.fill = GridBagConstraints.BOTH;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.insets = new Insets(0, 0, 0, 5);
+		add(matchPanel, gc);
+
 		////////// Team 1 Panel ///////////
 		
 		gc.gridy++;

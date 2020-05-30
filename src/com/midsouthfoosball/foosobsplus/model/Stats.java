@@ -38,7 +38,7 @@ public class Stats {
 	private boolean isSameTeam;
 	private boolean isTeamScored;
 	private boolean isSameRod;
-	private boolean isLuckyBreak;
+	private boolean isBreak;
 	private boolean isPenalty;
 	private boolean isShot;
 	private boolean isPass;
@@ -62,8 +62,10 @@ public class Stats {
 	private boolean isCommand;
 	private boolean isPassComplete;
 	private boolean isClearComplete;
+	private boolean isStuff;
 	
 	private char breakChar = new Character('B');
+	private char stuffChar = new Character('F');
 	private char goalChar = new Character('G');
 	private char penaltyChar = new Character('X');
 	private char passChar = new Character('P');
@@ -80,11 +82,15 @@ public class Stats {
 	
 	private Team team1;
 	private Team team2;
+	private Game[] games;
+	private Match match;
 
-	public Stats(Team team1, Team team2) {
+	public Stats(Team team1, Team team2, Game[] games, Match match) {
 		codeHistory = new DefaultListModel<String>();
 		this.team1 = team1;
 		this.team2 = team2;
+		this.games = games;
+		this.match = match;
 	}
 
 	public String getCode() {
@@ -140,7 +146,10 @@ public class Stats {
 			}
 		}
 		if(isShot) shotLogic();
-		if(isPass) passLogic();
+		if(isPass) {
+			passLogic();
+			if(wasTwoRod) twoBarPassLogic();
+		}
 		if(isClear) clearLogic();
 		if(isDrop) dropLogic();
 		if(isTimeOut) timeOutLogic();
@@ -170,7 +179,8 @@ public class Stats {
 		isSameTeam = previousTeam==currentTeam;
 		isTeamScored = currentPosition==goalChar;
 		isSameRod = isSameTeam && currentPosition==previousPosition;
-		isLuckyBreak = currentModifier==breakChar;
+		isBreak = currentModifier==breakChar;
+		isStuff = currentModifier==stuffChar;
 		isPenalty = currentAction==penaltyChar;
 		isPass = currentAction==passChar;
 		isShot = currentAction==shotChar;
@@ -309,6 +319,13 @@ public class Stats {
 					team2.setPassAttempts(attempts);
 					team2.setPassPercent(caclPercent(attempts, completes));
 				}
+				if(isStuff) {
+					if(isTeam1) {
+						team2.setStuffs(team2.getStuffs() + 1);
+					} else {
+						team1.setStuffs(team1.getStuffs() + 1);
+					}
+				}
 			} else {
 				if(isTeam1) {
 					attempts=team2.getPassAttempts() + 1;
@@ -320,6 +337,51 @@ public class Stats {
 					completes=team1.getPassCompletes();
 					team1.setPassAttempts(attempts);
 					team1.setPassPercent(caclPercent(attempts, completes));
+				}
+			}
+		}
+	}
+	private void twoBarPassLogic() {
+		int attempts;
+		int completes;
+		if(isPassComplete) {
+			if(isTeam1) {
+				attempts=team1.getTwoBarPassAttempts() + 1;
+				completes=team1.getTwoBarPassCompletes() + 1;
+				team1.setTwoBarPassAttempts(attempts);
+				team1.setTwoBarPassCompletes(completes);
+				team1.setTwoBarPassPercent(caclPercent(attempts, completes));
+			} else {
+				attempts=team2.getTwoBarPassAttempts() + 1;
+				completes=team2.getTwoBarPassCompletes() + 1;
+				team2.setTwoBarPassAttempts(attempts);
+				team2.setTwoBarPassCompletes(completes);
+				team2.setTwoBarPassPercent(caclPercent(attempts, completes));
+			}
+		} else {
+			if(isSameTeam) {
+				if(isTeam1) {
+					attempts=team1.getTwoBarPassAttempts() + 1;
+					completes=team1.getTwoBarPassCompletes();
+					team1.setTwoBarPassAttempts(attempts);
+					team1.setTwoBarPassPercent(caclPercent(attempts, completes));
+				} else {
+					attempts=team2.getTwoBarPassAttempts() + 1;
+					completes=team2.getTwoBarPassCompletes();
+					team2.setTwoBarPassAttempts(attempts);
+					team2.setTwoBarPassPercent(caclPercent(attempts, completes));
+				}
+			} else {
+				if(isTeam1) {
+					attempts=team2.getTwoBarPassAttempts() + 1;
+					completes=team2.getTwoBarPassCompletes();
+					team2.setTwoBarPassAttempts(attempts);
+					team2.setTwoBarPassPercent(caclPercent(attempts, completes));
+				} else {
+					attempts=team1.getTwoBarPassAttempts() + 1;
+					completes=team1.getTwoBarPassCompletes();
+					team1.setTwoBarPassAttempts(attempts);
+					team1.setTwoBarPassPercent(caclPercent(attempts, completes));
 				}
 			}
 		}
@@ -340,6 +402,13 @@ public class Stats {
 				team2.setShotAttempts(attempts);
 				team2.setShotCompletes(completes);
 				team2.setShotPercent(caclPercent(attempts, completes));
+			}
+			if(isStuff) {
+				if(team1Scored) {
+					team1.setStuffs(team1.getStuffs() + 1);
+				} else {
+					team2.setStuffs(team2.getStuffs() + 1);
+				}
 			}
 		} else {
 			if(isSameTeam) {
@@ -379,19 +448,25 @@ public class Stats {
 		System.out.println("Previous Mod.: " + previousModifier + "         Current Mod.: " + currentModifier);
 		System.out.println("team1Scored: " + team1Scored + "       team2Scored: " + team2Scored);
 		System.out.println("team1TimeOut: " + team1TimeOut + "      team1TimeOut: " + team2TimeOut);
-		System.out.println(" Is Team 1: " + isTeam1 + "         Is Team 2: " + isTeam2);
-		System.out.println(" Is Same Team: " + isSameTeam + "     Is Same Rod: " + isSameRod);
-		System.out.println(" Is Team Scored: " + isTeamScored + "   Is Lucky Break: " + isLuckyBreak);
-		System.out.println(" Is Penalty: " + isPenalty);
-		System.out.println(" Is Pass: " + isPass + "          Is Shot: " + isShot);
-		System.out.println(" Is Clear: " + isClear + "         Is TimeOut: " + isTimeOut);
-		System.out.println(" Is forward direction: " + isForwardDirection);
+		System.out.println(" IsTeam1: " + isTeam1 + "         IsTeam2: " + isTeam2);
+		System.out.println(" IsSameTeam: " + isSameTeam + "     IsSameRod: " + isSameRod);
+		System.out.println(" IsTeamScored: " + isTeamScored + "   IsBreak: " + isBreak);
+		System.out.println(" IsPenalty: " + isPenalty + "      IsStuff: " + isStuff);
+		System.out.println(" IsPass: " + isPass + "          IsShot: " + isShot);
+		System.out.println(" IsClear: " + isClear + "         IsTimeOut: " + isTimeOut);
+		System.out.println(" IsForwardDirection: " + isForwardDirection);
+		System.out.println(" IsTwoRod: " + isTwoRod + "    wasTwoRod: " + wasTwoRod);
+		System.out.println(" IsFiveRod: " + isFiveRod + "    wasFiveRod: " + wasFiveRod);
+		System.out.println(" IsThreeRod: " + isThreeRod + "    wasThreeRod: " + wasThreeRod);
 		System.out.println("Team1PassAttempts: " + team1.getPassAttempts() + "  Completes: " + team1.getPassCompletes());
 		System.out.println("Team2PassAttempts: " + team2.getPassAttempts() + "  Completes: " + team2.getPassCompletes());
 		System.out.println("Team1ShotAttempts: " + team1.getShotAttempts() + "  Completes: " + team1.getShotCompletes());
 		System.out.println("Team2ShotAttempts: " + team2.getShotAttempts() + "  Completes: " + team2.getShotCompletes());
 		System.out.println("Team1ClearAttempts: " + team1.getClearAttempts() + "  Completes: " + team1.getClearCompletes());
 		System.out.println("Team2ClearAttempts: " + team2.getClearAttempts() + "  Completes: " + team2.getClearCompletes());
+		System.out.println("Team1TwoBarPassAttempts: " + team1.getTwoBarPassAttempts() + "  Completes: " + team1.getTwoBarPassCompletes());
+		System.out.println("Team2TwoBarPassAttempts: " + team2.getTwoBarPassAttempts() + "  Completes: " + team2.getTwoBarPassCompletes());
+		System.out.println("Team1Stuffs: " + team1.getStuffs() + "       Team2Stuffs: " + team2.getStuffs());
 		System.out.println("");
 	}
 }

@@ -53,8 +53,9 @@ public class Team {
 	private Float clearPercent = 0f;
 	private int[] gameScores;
 	private int aces = 0;
-	private int twoBarPassAttemps = 0;
+	private int twoBarPassAttempts = 0;
 	private int twoBarPassCompletes = 0;
+	private Float twoBarPassPercent = 0f;
 	private int shotsOnGoal = 0;
 	private int threeBarGoals = 0;
 	private int fiveBarGoals = 0;
@@ -197,8 +198,9 @@ public class Team {
 		clearCompletes = 0;
 		clearPercent = 0f;
 		aces = 0;
-		twoBarPassAttemps = 0;
+		twoBarPassAttempts = 0;
 		twoBarPassCompletes = 0;
+		twoBarPassPercent = 0f;
 		shotsOnGoal = 0;
 		threeBarGoals = 0;
 		fiveBarGoals = 0;
@@ -257,8 +259,9 @@ public class Team {
 		clearCompletes = 0;
 		clearPercent = 0f;
 		aces = 0;
-		twoBarPassAttemps = 0;
+		twoBarPassAttempts = 0;
 		twoBarPassCompletes = 0;
+		twoBarPassPercent = 0f;
 		shotsOnGoal = 0;
 		threeBarGoals = 0;
 		fiveBarGoals = 0;
@@ -282,6 +285,9 @@ public class Team {
 	public int getPassCompletes() {
 		return passCompletes;
 	}
+	public Float getPassPercent() {
+		return passPercent;
+	}
 	public int getPassBreaks() {
 		return passBreaks;
 	}
@@ -290,6 +296,9 @@ public class Team {
 	}
 	public int getShotCompletes() {
 		return shotCompletes;
+	}
+	public Float getShotPercent() {
+		return shotPercent;
 	}
 	public int getShotBreaks() {
 		return shotBreaks;
@@ -300,28 +309,27 @@ public class Team {
 	public int getClearCompletes() {
 		return clearCompletes;
 	}
-	public Float getPassPercent() {
-		return passPercent;
-	}
-	public Float getShotPercent() {
-		return shotPercent;
-	}
 	public Float getClearPercent() {
 		return clearPercent;
 	}
-	
-    public int getTwoBarPassAttemps() {
-		return twoBarPassAttemps;
+    public int getStuffs() {
+		return stuffs;
+	}
+	public void setStuffs(int stuffs) {
+		this.stuffs = stuffs;
+		writeStuffs();
+	}
+	public int getTwoBarPassAttempts() {
+		return twoBarPassAttempts;
 	}
 	public int getTwoBarPassCompletes() {
 		return twoBarPassCompletes;
 	}
-	public void setTwoBarPassAttemps(int twoBarPassAttemps) {
-		this.twoBarPassAttemps = twoBarPassAttemps;
+	public Float getTwoBarPassPercent() {
+		return twoBarPassPercent;
 	}
-	public void setTwoBarPassCompletes(int twoBarPassCompletes) {
-		this.twoBarPassCompletes = twoBarPassCompletes;
-	}
+
+	
 	public void setPassAttempts(int passAttempts) {
 		this.passAttempts = passAttempts;
 		writePassAttempts();
@@ -334,6 +342,7 @@ public class Team {
 		this.passPercent = passPercent;
 		writePassPercent();
 	}
+
 	public void setPassAttempts(String passAttempts) {
 		if(passAttempts=="") {
 			setPassAttempts(0);
@@ -352,7 +361,7 @@ public class Team {
 		if(passPercent=="") {
 			setPassPercent(0f);
 		} else {
-			setPassPercent(Float.parseFloat(passPercent.replaceAll("[^\\d.]", "")));
+			setPassPercent(Float.parseFloat(passPercent.replaceAll("[^\\d.]", ""))); // only get numbers - drop the % sign
 		}
 	}
 	public void setShotAttempts(int shotAttempts) {
@@ -385,7 +394,7 @@ public class Team {
 		if(shotPercent=="") {
 			setShotPercent(0f);
 		} else {
-			setShotPercent(Float.parseFloat(shotPercent.replaceAll("[^\\d.]", "")));
+			setShotPercent(Float.parseFloat(shotPercent.replaceAll("[^\\d.]", ""))); // only get numbers - drop the % sign
 		}
 	}
 	public void setClearAttempts(int clearAttempts) {
@@ -418,7 +427,41 @@ public class Team {
 		if(clearPercent=="") {
 			setClearPercent(0f);
 		} else {
-			setClearPercent(Float.parseFloat(clearPercent.replaceAll("[^\\d.]", "")));
+			setClearPercent(Float.parseFloat(clearPercent.replaceAll("[^\\d.]", ""))); // only get numbers - drop the % sign
+		}
+	}
+
+	public void setTwoBarPassAttempts(int twoBarPassAttempts) {
+		this.twoBarPassAttempts = twoBarPassAttempts;
+		writeTwoBarPassAttempts();
+	}
+	public void setTwoBarPassCompletes(int twoBarPassCompletes) {
+		this.twoBarPassCompletes = twoBarPassCompletes;
+		writeTwoBarPassCompletes();
+	}
+	public void setTwoBarPassPercent(Float twoBarPassPercent) {
+		this.twoBarPassPercent = twoBarPassPercent;
+		writeTwoBarPassPercent();
+	}
+	public void setTwoBarPassAttempts(String twoBarPassAttempts) {
+		if(twoBarPassAttempts=="") {
+			setTwoBarPassAttempts(0);
+		} else {
+			setTwoBarPassAttempts(Integer.parseInt(twoBarPassAttempts));
+		}
+	}
+	public void setTwoBarPassCompletes(String twoBarPassCompletes) {
+		if(twoBarPassCompletes=="") {
+			setTwoBarPassCompletes(0);
+		} else {
+			setTwoBarPassCompletes(Integer.parseInt(twoBarPassCompletes));
+		}
+	}
+	public void setTwoBarPassPercent(String twoBarPassPercent) {
+		if(twoBarPassPercent=="") {
+			setTwoBarPassPercent(0f);
+		} else {
+			setTwoBarPassPercent(Float.parseFloat(twoBarPassPercent.replaceAll("[^\\d.]", ""))); // only get numbers - drop the % sign
 		}
 	}
 
@@ -490,6 +533,13 @@ public class Team {
 			e1.printStackTrace();
 		}
 	}
+	private void writeStuffs() {
+		try {
+			obsInterface.setContents(settings.getStuffsFileName(teamNbr), Integer.toString(getStuffs()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
     private void writePassAttempts() {
 		try {
 			obsInterface.setContents(settings.getPassAttemptsFileName(teamNbr), Integer.toString(getPassAttempts()));
@@ -553,7 +603,28 @@ public class Team {
 			e.printStackTrace();
 		}
     }
-    public void writeStats() {
+    private void writeTwoBarPassAttempts() {
+		try {
+			obsInterface.setContents(settings.getTwoBarPassAttemptsFileName(teamNbr), Integer.toString(getTwoBarPassAttempts()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    private void writeTwoBarPassCompletes() {
+		try {
+			obsInterface.setContents(settings.getTwoBarPassCompletesFileName(teamNbr), Integer.toString(getTwoBarPassCompletes()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    private void writeTwoBarPassPercent() {
+		try {
+			obsInterface.setContents(settings.getTwoBarPassPercentFileName(teamNbr), String.format("%-5s",df.format(getTwoBarPassPercent())+"%"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+   public void writeStats() {
    		writePassAttempts();
    		writePassCompletes();
    		writePassPercent();
@@ -563,6 +634,10 @@ public class Team {
    		writeClearAttempts();
    		writeClearCompletes();
    		writeClearPercent();
+   		writeTwoBarPassAttempts();
+   		writeTwoBarPassCompletes();
+   		writeTwoBarPassPercent();
+   		writeStuffs();
     }
 	public void writeAll() {
 		writeTeamName();
@@ -573,14 +648,6 @@ public class Team {
 		writeReset();
 		writeWarn();
 		writeTimeOuts();
-		writePassAttempts();
-		writePassCompletes();
-		writeShotAttempts();
-		writeShotCompletes();
-		writeClearAttempts();
-		writeClearCompletes();
-		writePassPercent();
-		writeShotPercent();
-		writeClearPercent();
+		writeStats();
 	}
 }

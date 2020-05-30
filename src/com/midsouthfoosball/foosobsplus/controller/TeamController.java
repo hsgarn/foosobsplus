@@ -729,6 +729,12 @@ public class TeamController {
 			team2.setShotPercent(obsInterface.getContents(settings.getShotPercentFileName(2)));
 			team1.setClearPercent(obsInterface.getContents(settings.getClearPercentFileName(1)));
 			team2.setClearPercent(obsInterface.getContents(settings.getClearPercentFileName(2)));
+			team1.setTwoBarPassAttempts(obsInterface.getContents(settings.getTwoBarPassAttemptsFileName(1)));
+			team2.setTwoBarPassAttempts(obsInterface.getContents(settings.getTwoBarPassAttemptsFileName(2)));
+			team1.setTwoBarPassCompletes(obsInterface.getContents(settings.getTwoBarPassCompletesFileName(1)));
+			team2.setTwoBarPassCompletes(obsInterface.getContents(settings.getTwoBarPassCompletesFileName(2)));
+			team1.setTwoBarPassPercent(obsInterface.getContents(settings.getTwoBarPassPercentFileName(1)));
+			team2.setTwoBarPassPercent(obsInterface.getContents(settings.getTwoBarPassPercentFileName(2)));
 			match.setLastScored(obsInterface.getContents(settings.getLastScoredFileName()));
 			team1Panel.updateTeamName(team1.getTeamName());
 			team2Panel.updateTeamName(team2.getTeamName());
@@ -816,6 +822,27 @@ public class TeamController {
 			return team1.getClearPercent();
 		} else {
 			return team2.getClearPercent();
+		}
+	}
+	public int getTwoBarPassAttempts(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getTwoBarPassAttempts();
+		} else {
+			return team2.getTwoBarPassAttempts();
+		}
+	}
+	public int getTwoBarPassCompletes(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getTwoBarPassCompletes();
+		} else {
+			return team2.getTwoBarPassCompletes();
+		}
+	}
+	public Float getTwoBarPassPercent(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getTwoBarPassPercent();
+		} else {
+			return team2.getTwoBarPassPercent();
 		}
 	}
 }
