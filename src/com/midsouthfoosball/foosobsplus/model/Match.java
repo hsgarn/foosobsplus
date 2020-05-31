@@ -32,8 +32,8 @@ public class Match {
 	private Settings settings;
 	private OBSInterface obsInterface;
 	private int lastScored; // team number of the last team to score in this match
-	private Date startTime;
-	private Date endTime;
+	private String startTime;
+	private String endTime;
 	private int elapsedTime;
 	private int[] points;
 	private int[] threeBarPoints;
@@ -197,6 +197,12 @@ public class Match {
 		team1.setWarn(false);
 		team2.setReset(false);
 		team2.setWarn(false);
+	}
+	public String getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
 	}
 	private void writeLastScored() {
 		try {

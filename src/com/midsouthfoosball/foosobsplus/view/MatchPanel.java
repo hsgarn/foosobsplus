@@ -121,4 +121,10 @@ public class MatchPanel extends JPanel {
 		btnStartMatch.addActionListener(listenForBtnStartMatch);
 	}
 
+	public void updateElapsedTime(String elapsedTime) {
+		lblElapsedTime.setText(elapsedTime);
+	}
+	public void updateStartTime(String startTime) {
+		lblStartTime.setText(startTime);
+	}
 }

@@ -122,7 +122,6 @@ public class GameClock {
 		}
 	}
 	private void writeMatchTime() {
-		System.out.println("Match Timer: " + getMatchTime());
 		try {
 			obsInterface.setContents(settings.getMatchTimeFileName(), getMatchTime());
 		} catch (IOException e1) {

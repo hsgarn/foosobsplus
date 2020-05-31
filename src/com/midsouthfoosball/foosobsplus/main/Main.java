@@ -23,6 +23,7 @@ package com.midsouthfoosball.foosobsplus.main;
 import java.io.IOException;
 
 import com.midsouthfoosball.foosobsplus.controller.MainController;
+import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.ResetController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.SwitchController;
@@ -111,6 +112,7 @@ public class Main {
 	StatsController 	statsController 	= new StatsController(stats, statsEntryPanel, statsDisplayPanel, teamController);
 	SwitchController 	switchController 	= new SwitchController(switchPanel, teamController);
 	ResetController 	resetController 	= new ResetController(resetPanel, teamController, statsController);
+	MatchController     matchController     = new MatchController(obsInterface, settings, match, gameClock, matchPanel, teamController, statsController);
 	
 	public Main() throws IOException {
 		obsInterface.setFilePath(settings.getDatapath());
