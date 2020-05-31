@@ -137,13 +137,7 @@ public class Stats {
 		team1Scored=false;
 		team2Scored=false;
 		if(isTeamScored) {
-			if(isTeam1) {
-				team2Scored=true;
-			} else {
-				if(isTeam2) {
-					team1Scored=true;
-				}
-			}
+			scoringLogic();
 		}
 		if(isShot) shotLogic();
 		if(isPass) {
@@ -152,6 +146,7 @@ public class Stats {
 		}
 		if(isClear) clearLogic();
 		if(isDrop) dropLogic();
+		if(isBreak) breakLogic();
 		if(isTimeOut) timeOutLogic();
 		
 		showParsed();
@@ -180,7 +175,7 @@ public class Stats {
 		isTeamScored = currentPosition==goalChar;
 		isSameRod = isSameTeam && currentPosition==previousPosition;
 		isBreak = currentModifier==breakChar;
-		isStuff = currentModifier==stuffChar;
+		isStuff = currentModifier==stuffChar && isSameTeam;
 		isPenalty = currentAction==penaltyChar;
 		isPass = currentAction==passChar;
 		isShot = currentAction==shotChar;
@@ -207,6 +202,38 @@ public class Stats {
 			percent = percent * 100f;
 		}
 		return percent;
+	}
+	private void scoringLogic() {
+		if(isTeam1) {
+			team2Scored=true;
+			team2.setScoring(team2.getScoring()+1);
+		} else {
+			if(isTeam2) {
+				team1Scored=true;
+				team1.setScoring(team1.getScoring()+1);
+			}
+		}
+		if(!isSameTeam) {
+			if(wasThreeRod) {
+				if(team1Scored) {
+					team1.setThreeBarScoring(team1.getThreeBarScoring()+1);
+				} else {
+					team2.setThreeBarScoring(team2.getThreeBarScoring()+1);
+				}
+			} else if(wasFiveRod) {
+				if(team1Scored) {
+					team1.setFiveBarScoring(team1.getFiveBarScoring()+1);
+				} else {
+					team2.setFiveBarScoring(team2.getFiveBarScoring()+1);
+				}
+			} else if(wasTwoRod) {
+				if(team1Scored) {
+					team1.setTwoBarScoring(team1.getTwoBarScoring()+1);
+				} else {
+					team2.setTwoBarScoring(team2.getTwoBarScoring()+1);
+				}
+			}
+		}
 	}
 	private void clearLogic() {
 		int attempts = 0;
@@ -277,6 +304,21 @@ public class Stats {
 			} else {
 				team1.setClearAttempts(team1.getClearAttempts() + 1);
 				team1.setClearCompletes(team1.getClearCompletes() + 1);
+			}
+		}
+	}
+	private void breakLogic() {
+		if(isTeamScored) {
+			if(team1Scored) {
+				team1.setBreaks(team1.getBreaks() + 1);
+			} else {
+				team2.setBreaks(team2.getBreaks() + 1);
+			}
+		} else {
+			if(isTeam1) {
+				team1.setBreaks(team1.getBreaks() + 1);
+			} else {
+				team2.setBreaks(team2.getBreaks() + 1);
 			}
 		}
 	}
@@ -467,6 +509,8 @@ public class Stats {
 		System.out.println("Team1TwoBarPassAttempts: " + team1.getTwoBarPassAttempts() + "  Completes: " + team1.getTwoBarPassCompletes());
 		System.out.println("Team2TwoBarPassAttempts: " + team2.getTwoBarPassAttempts() + "  Completes: " + team2.getTwoBarPassCompletes());
 		System.out.println("Team1Stuffs: " + team1.getStuffs() + "       Team2Stuffs: " + team2.getStuffs());
+		System.out.println("Team1Breaks: " + team1.getBreaks() + "       Team2Breaks: " + team2.getBreaks());
+//		System.out.println("Team1Errors: " + team1.getErrors() + "       Team2Errors: " + team2.getErrors());
 		System.out.println("");
 	}
 }

@@ -735,6 +735,18 @@ public class TeamController {
 			team2.setTwoBarPassCompletes(obsInterface.getContents(settings.getTwoBarPassCompletesFileName(2)));
 			team1.setTwoBarPassPercent(obsInterface.getContents(settings.getTwoBarPassPercentFileName(1)));
 			team2.setTwoBarPassPercent(obsInterface.getContents(settings.getTwoBarPassPercentFileName(2)));
+			team1.setScoring(obsInterface.getContents(settings.getScoringFileName(1)));
+			team2.setScoring(obsInterface.getContents(settings.getScoringFileName(2)));
+			team1.setThreeBarScoring(obsInterface.getContents(settings.getThreeBarScoringFileName(1)));
+			team2.setThreeBarScoring(obsInterface.getContents(settings.getThreeBarScoringFileName(2)));
+			team1.setFiveBarScoring(obsInterface.getContents(settings.getFiveBarScoringFileName(1)));
+			team2.setFiveBarScoring(obsInterface.getContents(settings.getFiveBarScoringFileName(2)));
+			team1.setTwoBarScoring(obsInterface.getContents(settings.getTwoBarScoringFileName(1)));
+			team2.setTwoBarScoring(obsInterface.getContents(settings.getTwoBarScoringFileName(2)));
+			team1.setStuffs(obsInterface.getContents(settings.getStuffsFileName(1)));
+			team2.setStuffs(obsInterface.getContents(settings.getStuffsFileName(2)));
+			team1.setBreaks(obsInterface.getContents(settings.getBreaksFileName(1)));
+			team2.setBreaks(obsInterface.getContents(settings.getBreaksFileName(2)));
 			match.setLastScored(obsInterface.getContents(settings.getLastScoredFileName()));
 			team1Panel.updateTeamName(team1.getTeamName());
 			team2Panel.updateTeamName(team2.getTeamName());
@@ -843,6 +855,48 @@ public class TeamController {
 			return team1.getTwoBarPassPercent();
 		} else {
 			return team2.getTwoBarPassPercent();
+		}
+	}
+	public int getScoring(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getScoring();
+		} else {
+			return team2.getScoring();
+		}
+	}
+	public int getThreeBarScoring(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getThreeBarScoring();
+		} else {
+			return team2.getThreeBarScoring();
+		}
+	}
+	public int getFiveBarScoring(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getFiveBarScoring();
+		} else {
+			return team2.getFiveBarScoring();
+		}
+	}
+	public int getTwoBarScoring(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getTwoBarScoring();
+		} else {
+			return team2.getTwoBarScoring();
+		}
+	}
+	public int getStuffs(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getStuffs();
+		} else {
+			return team2.getStuffs();
+		}
+	}
+	public int getBreaks(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getBreaks();
+		} else {
+			return team2.getBreaks();
 		}
 	}
 }

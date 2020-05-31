@@ -74,6 +74,8 @@ public class FileNamesPanel extends JPanel {
 	private JTextField txtMatchTimeFileName;
 	private JTextField txtStuffs1FileName;
 	private JTextField txtStuffs2FileName;
+	private JTextField txtBreaks1FileName;
+	private JTextField txtBreaks2FileName;
 	private JFormattedTextField formattedTxtPath;
 	private JTextField txtTeam1PassAttemptsFileName;
 	private JTextField txtTeam1PassCompletesFileName;
@@ -93,12 +95,20 @@ public class FileNamesPanel extends JPanel {
 	private JTextField txtTeam2ShotPercentFileName;
 	private JTextField txtTeam1ClearPercentFileName;
 	private JTextField txtTeam2ClearPercentFileName;
-	OBSInterface obsInterface;
-	private String defaultFilePath = "c:\\temp";
 	private JTextField txtTeam1TwoBarPassAttemptsFileName;
-	private JTextField Team1TwoBarPassCompletesFileName;
+	private JTextField txtTeam1TwoBarPassCompletesFileName;
 	private JTextField txtTeam2TwoBarPassAttemptsFileName;
 	private JTextField txtTeam2TwoBarPassCompletesFileName;
+	private JTextField txtTeam1ScoringFileName;
+	private JTextField txtTeam2ScoringFileName;
+	private JTextField txtTeam1ThreeBarScoringFileName;
+	private JTextField txtTeam2ThreeBarScoringFileName;
+	private JTextField txtTeam1FiveBarScoringFileName;
+	private JTextField txtTeam2FiveBarScoringFileName;
+	private JTextField txtTeam1TwoBarScoringFileName;
+	private JTextField txtTeam2TwoBarScoringFileName;
+	OBSInterface obsInterface;
+	private String defaultFilePath = "c:\\temp";
 
 	// Create the Panel.
 
@@ -137,6 +147,8 @@ public class FileNamesPanel extends JPanel {
 		txtMatchTimeFileName.setText(settings.getDefaultMatchTimeFileName());
 		txtStuffs1FileName.setText(settings.getDefaultStuffs1FileName());
 		txtStuffs2FileName.setText(settings.getDefaultStuffs2FileName());
+		txtBreaks1FileName.setText(settings.getDefaultBreaks1FileName());
+		txtBreaks2FileName.setText(settings.getDefaultBreaks2FileName());
 		txtTeam1PassAttemptsFileName.setText(settings.getDefaultTeam1PassAttemptsFileName());
 		txtTeam2PassAttemptsFileName.setText(settings.getDefaultTeam2PassAttemptsFileName());
 		txtTeam1ShotAttemptsFileName.setText(settings.getDefaultTeam1ShotAttemptsFileName());
@@ -155,6 +167,14 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2ShotPercentFileName.setText(settings.getDefaultTeam2ShotPercentFileName());
 		txtTeam1ClearPercentFileName.setText(settings.getDefaultTeam1ClearPercentFileName());
 		txtTeam2ClearPercentFileName.setText(settings.getDefaultTeam2ClearPercentFileName());
+		txtTeam1ScoringFileName.setText(settings.getDefaultTeam1ScoringFileName());
+		txtTeam2ScoringFileName.setText(settings.getDefaultTeam2ScoringFileName());
+		txtTeam1ThreeBarScoringFileName.setText(settings.getDefaultTeam1ThreeBarScoringFileName());
+		txtTeam2ThreeBarScoringFileName.setText(settings.getDefaultTeam2ThreeBarScoringFileName());
+		txtTeam1FiveBarScoringFileName.setText(settings.getDefaultTeam1FiveBarScoringFileName());
+		txtTeam2FiveBarScoringFileName.setText(settings.getDefaultTeam2FiveBarScoringFileName());
+		txtTeam1TwoBarScoringFileName.setText(settings.getDefaultTeam1TwoBarScoringFileName());
+		txtTeam2TwoBarScoringFileName.setText(settings.getDefaultTeam2TwoBarScoringFileName());
 	}
 
 	private void saveSettings(Settings settings) {
@@ -185,6 +205,8 @@ public class FileNamesPanel extends JPanel {
 		settings.setMatchTimeFileName(txtMatchTimeFileName.getText());
 		settings.setStuffs1FileName(txtStuffs1FileName.getText());
 		settings.setStuffs2FileName(txtStuffs2FileName.getText());
+		settings.setBreaks1FileName(txtBreaks1FileName.getText());
+		settings.setBreaks2FileName(txtBreaks2FileName.getText());
 		settings.setTeam1PassAttemptsFileName(txtTeam1PassAttemptsFileName.getText());
 		settings.setTeam2PassAttemptsFileName(txtTeam2PassAttemptsFileName.getText());
 		settings.setTeam1ShotAttemptsFileName(txtTeam1ShotAttemptsFileName.getText());
@@ -203,6 +225,14 @@ public class FileNamesPanel extends JPanel {
 		settings.setTeam2ShotPercentFileName(txtTeam2ShotPercentFileName.getText());
 		settings.setTeam1ClearPercentFileName(txtTeam1ClearPercentFileName.getText());
 		settings.setTeam2ClearPercentFileName(txtTeam2ClearPercentFileName.getText());
+		settings.setTeam1ScoringFileName(txtTeam1ScoringFileName.getText());
+		settings.setTeam2ScoringFileName(txtTeam2ScoringFileName.getText());
+		settings.setTeam1ThreeBarScoringFileName(txtTeam1ThreeBarScoringFileName.getText());
+		settings.setTeam2ThreeBarScoringFileName(txtTeam2ThreeBarScoringFileName.getText());
+		settings.setTeam1FiveBarScoringFileName(txtTeam1FiveBarScoringFileName.getText());
+		settings.setTeam2FiveBarScoringFileName(txtTeam2FiveBarScoringFileName.getText());
+		settings.setTeam1TwoBarScoringFileName(txtTeam1TwoBarScoringFileName.getText());
+		settings.setTeam2TwoBarScoringFileName(txtTeam2TwoBarScoringFileName.getText());
 		try {
 			settings.saveToConfig();
 		} catch (IOException ex) {
@@ -504,6 +534,14 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2ShotAttemptsFileName.setText(settings.getShotAttemptsFileName(2));
 		add(txtTeam2ShotAttemptsFileName, "cell 8 8,alignx left");
 		txtTeam2ShotAttemptsFileName.setColumns(20);
+		
+		JLabel lblTeam1ScoringFileName = new JLabel("Team 1 Scoring");
+		add(lblTeam1ScoringFileName, "cell 10 8,alignx trailing");
+		
+		txtTeam1ScoringFileName = new JTextField();
+		txtTeam1ScoringFileName.setText(settings.getScoringFileName(1));
+		add(txtTeam1ScoringFileName, "cell 11 8,alignx left");
+		txtTeam1ScoringFileName.setColumns(10);
 
 		JLabel lblTimeOut2FileName = new JLabel("Time Out 2:");
 		add(lblTimeOut2FileName, "cell 1 9,alignx trailing");
@@ -528,6 +566,14 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2ShotCompletesFileName.setText(settings.getShotCompletesFileName(2));
 		add(txtTeam2ShotCompletesFileName, "cell 8 9,alignx left");
 		txtTeam2ShotCompletesFileName.setColumns(20);
+		
+		JLabel lblTeam2ScoringFileName = new JLabel("Team 2 Scoring");
+		add(lblTeam2ScoringFileName, "cell 10 9,alignx trailing");
+		
+		txtTeam2ScoringFileName = new JTextField();
+		txtTeam2ScoringFileName.setText(settings.getScoringFileName(2));
+		add(txtTeam2ScoringFileName, "cell 11 9,alignx left");
+		txtTeam2ScoringFileName.setColumns(10);
 
 		JLabel lblReset1FileName = new JLabel("Reset 1:");
 		add(lblReset1FileName, "cell 1 10,alignx trailing");
@@ -552,6 +598,14 @@ public class FileNamesPanel extends JPanel {
 		txtTeam1ClearAttemptsFileName.setText(settings.getClearAttemptsFileName(1));
 		add(txtTeam1ClearAttemptsFileName, "cell 8 10,alignx left");
 		txtTeam1ClearAttemptsFileName.setColumns(20);
+		
+		JLabel lblTeam1ThreeBarScoringFileName = new JLabel("Team 1 3-Bar Scoring");
+		add(lblTeam1ThreeBarScoringFileName, "cell 10 10,alignx right");
+		
+		txtTeam1ThreeBarScoringFileName = new JTextField();
+		txtTeam1ThreeBarScoringFileName.setText(settings.getThreeBarScoringFileName(1));
+		add(txtTeam1ThreeBarScoringFileName, "cell 11 10,alignx left");
+		txtTeam1ThreeBarScoringFileName.setColumns(10);
 
 		JLabel lblReset2FileName = new JLabel("Reset 2:");
 		add(lblReset2FileName, "cell 1 11,alignx trailing");
@@ -576,6 +630,14 @@ public class FileNamesPanel extends JPanel {
 		txtTeam1ClearCompletesFileName.setText(settings.getClearCompletesFileName(1));
 		add(txtTeam1ClearCompletesFileName, "cell 8 11,alignx left");
 		txtTeam1ClearCompletesFileName.setColumns(20);
+		
+		JLabel lblTeam2ThreeBarScoringFileName = new JLabel("Team 2 3-Bar Scoring");
+		add(lblTeam2ThreeBarScoringFileName, "cell 10 11,alignx right");
+		
+		txtTeam2ThreeBarScoringFileName = new JTextField();
+		txtTeam2ThreeBarScoringFileName.setText(settings.getThreeBarScoringFileName(2));
+		add(txtTeam2ThreeBarScoringFileName, "cell 11 11,alignx left");
+		txtTeam2ThreeBarScoringFileName.setColumns(10);
 
 		JLabel lblWarn1FileName = new JLabel("Warn 1:");
 		add(lblWarn1FileName, "cell 1 12,alignx trailing");
@@ -600,6 +662,14 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2ClearAttemptsFileName.setText(settings.getClearAttemptsFileName(2));
 		add(txtTeam2ClearAttemptsFileName, "cell 8 12,alignx left");
 		txtTeam2ClearAttemptsFileName.setColumns(20);
+		
+		JLabel lblTeambar = new JLabel("Team 1 5-Bar Scoring");
+		add(lblTeambar, "cell 10 12,alignx trailing");
+		
+		txtTeam1FiveBarScoringFileName = new JTextField();
+		txtTeam1FiveBarScoringFileName.setText(settings.getFiveBarScoringFileName(1));
+		add(txtTeam1FiveBarScoringFileName, "cell 11 12,alignx left");
+		txtTeam1FiveBarScoringFileName.setColumns(10);
 
 		JLabel lblWarn2FileName = new JLabel("Warn 2:");
 		add(lblWarn2FileName, "cell 1 13,alignx trailing");
@@ -633,6 +703,15 @@ public class FileNamesPanel extends JPanel {
 				win.dispose();
 			}
 		});
+		add(btnSaveFileNames, "cell 2 19,alignx center");
+		
+		JLabel lblTeambar_1 = new JLabel("Team 2 5-Bar Scoring");
+		add(lblTeambar_1, "cell 10 13,alignx trailing");
+		
+		txtTeam2FiveBarScoringFileName = new JTextField();
+		txtTeam2FiveBarScoringFileName.setText(settings.getFiveBarScoringFileName(2));
+		add(txtTeam2FiveBarScoringFileName, "cell 11 13,alignx left");
+		txtTeam2FiveBarScoringFileName.setColumns(10);
 		
 		JLabel lblGameTimeFileName = new JLabel("Game Time");
 		add(lblGameTimeFileName, "cell 1 14,alignx trailing");
@@ -658,6 +737,14 @@ public class FileNamesPanel extends JPanel {
 		txtTeam1TwoBarPassAttemptsFileName.setColumns(20);
 		add(txtTeam1TwoBarPassAttemptsFileName, "cell 8 14,alignx left");
 		
+		JLabel lblTeam1TwoBarScoringFileName = new JLabel("Team 1 2-Bar Scoring");
+		add(lblTeam1TwoBarScoringFileName, "cell 10 14,alignx trailing");
+		
+		txtTeam1TwoBarScoringFileName = new JTextField();
+		txtTeam1TwoBarScoringFileName.setText(settings.getTwoBarScoringFileName(1));
+		add(txtTeam1TwoBarScoringFileName, "cell 11 14,alignx left");
+		txtTeam1TwoBarScoringFileName.setColumns(10);
+		
 		JLabel lblMatchTimeFileName = new JLabel("Match Time");
 		add(lblMatchTimeFileName, "cell 1 15,alignx trailing");
 		
@@ -666,13 +753,37 @@ public class FileNamesPanel extends JPanel {
 		add(txtMatchTimeFileName, "cell 2 15,alignx left");
 		txtMatchTimeFileName.setColumns(10);
 		
+		JLabel lblBreaks1FileName = new JLabel("Breaks 1");
+		add(lblBreaks1FileName, "cell 4 15,alignx trailing");
+		
+		txtBreaks1FileName = new JTextField();
+		txtBreaks1FileName.setText(settings.getBreaksFileName(1));
+		add(txtBreaks1FileName, "cell 5 15,alignx left");
+		txtBreaks1FileName.setColumns(10);
+		
 		JLabel lblTeam1TwoBarPassCompletesFileName = new JLabel("Team 1 2-Bar Pass Completes");
 		add(lblTeam1TwoBarPassCompletesFileName, "cell 7 15,alignx right");
 		
-		Team1TwoBarPassCompletesFileName = new JTextField();
-		Team1TwoBarPassCompletesFileName.setText(settings.getTwoBarPassCompletesFileName(1));
-		Team1TwoBarPassCompletesFileName.setColumns(20);
-		add(Team1TwoBarPassCompletesFileName, "cell 8 15,alignx left");
+		txtTeam1TwoBarPassCompletesFileName = new JTextField();
+		txtTeam1TwoBarPassCompletesFileName.setText(settings.getTwoBarPassCompletesFileName(1));
+		txtTeam1TwoBarPassCompletesFileName.setColumns(20);
+		add(txtTeam1TwoBarPassCompletesFileName, "cell 8 15,alignx left");
+		
+		JLabel lblTeam2TwoBarScoringFileName = new JLabel("Team 2 2-Bar Scoring");
+		add(lblTeam2TwoBarScoringFileName, "cell 10 15,alignx trailing");
+		
+		txtTeam2TwoBarScoringFileName = new JTextField();
+		txtTeam2TwoBarScoringFileName.setText(settings.getTwoBarScoringFileName(2));
+		add(txtTeam2TwoBarScoringFileName, "cell 11 15,alignx left");
+		txtTeam2TwoBarScoringFileName.setColumns(10);
+		
+		JLabel lblBreaks2FileName = new JLabel("Breaks 2");
+		add(lblBreaks2FileName, "cell 4 16,alignx trailing");
+		
+		txtBreaks2FileName = new JTextField();
+		txtBreaks2FileName.setText(settings.getBreaksFileName(2));
+		add(txtBreaks2FileName, "cell 5 16,alignx left");
+		txtBreaks2FileName.setColumns(10);
 		
 		JLabel lblTeam2TwoBarPassAttemptsFileName_1_1 = new JLabel("Team 2 2-Bar Pass Attempts");
 		add(lblTeam2TwoBarPassAttemptsFileName_1_1, "cell 7 16,alignx trailing");
@@ -689,7 +800,6 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2TwoBarPassCompletesFileName.setText(settings.getTwoBarPassCompletesFileName(2));
 		txtTeam2TwoBarPassCompletesFileName.setColumns(20);
 		add(txtTeam2TwoBarPassCompletesFileName, "cell 8 17,alignx left");
-		add(btnSaveFileNames, "cell 2 19,alignx center");
 
 		JButton btnCancelFileNames = new JButton("Cancel");
 		btnCancelFileNames.addActionListener(new ActionListener() {

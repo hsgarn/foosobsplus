@@ -144,5 +144,17 @@ public class StatsController {
 		statsDisplayPanel.updateClearStats(2, teamController.getClearCompletes(2),teamController.getClearAttempts(2),teamController.getClearPercent(2));
 		statsDisplayPanel.updateTwoBarPassStats(1, teamController.getTwoBarPassCompletes(1),teamController.getTwoBarPassAttempts(1),teamController.getTwoBarPassPercent(1));
 		statsDisplayPanel.updateTwoBarPassStats(2, teamController.getTwoBarPassCompletes(2),teamController.getTwoBarPassAttempts(2),teamController.getTwoBarPassPercent(2));
+		statsDisplayPanel.updateScoring(1, teamController.getScoring(1));
+		statsDisplayPanel.updateScoring(2, teamController.getScoring(2));
+		statsDisplayPanel.updateThreeBarScoring(1, teamController.getThreeBarScoring(1));
+		statsDisplayPanel.updateThreeBarScoring(2, teamController.getThreeBarScoring(2));
+		statsDisplayPanel.updateFiveBarScoring(1, teamController.getFiveBarScoring(1));
+		statsDisplayPanel.updateFiveBarScoring(2, teamController.getFiveBarScoring(2));
+		statsDisplayPanel.updateTwoBarScoring(1, teamController.getTwoBarScoring(1));
+		statsDisplayPanel.updateTwoBarScoring(2, teamController.getTwoBarScoring(2));
+		statsDisplayPanel.updateStuffs(1,  teamController.getStuffs(1));
+		statsDisplayPanel.updateStuffs(2,  teamController.getStuffs(2));
+		statsDisplayPanel.updateBreaks(1,  teamController.getBreaks(1));
+		statsDisplayPanel.updateBreaks(2,  teamController.getBreaks(2));
 	}
 }

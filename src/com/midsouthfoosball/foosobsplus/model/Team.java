@@ -57,9 +57,10 @@ public class Team {
 	private int twoBarPassCompletes = 0;
 	private Float twoBarPassPercent = 0f;
 	private int shotsOnGoal = 0;
-	private int threeBarGoals = 0;
-	private int fiveBarGoals = 0;
-	private int twoBarGoals = 0;
+	private int scoring = 0;
+	private int threeBarScoring = 0;
+	private int fiveBarScoring = 0;
+	private int twoBarScoring = 0;
 	private int breaks = 0;
 	private int stuffs = 0;
 	private DecimalFormat df = new DecimalFormat("###.#");
@@ -202,9 +203,10 @@ public class Team {
 		twoBarPassCompletes = 0;
 		twoBarPassPercent = 0f;
 		shotsOnGoal = 0;
-		threeBarGoals = 0;
-		fiveBarGoals = 0;
-		twoBarGoals = 0;
+		scoring = 0;
+		threeBarScoring = 0;
+		fiveBarScoring = 0;
+		twoBarScoring = 0;
 		breaks = 0;
 		stuffs = 0;
 		writeStats();
@@ -263,9 +265,9 @@ public class Team {
 		twoBarPassCompletes = 0;
 		twoBarPassPercent = 0f;
 		shotsOnGoal = 0;
-		threeBarGoals = 0;
-		fiveBarGoals = 0;
-		twoBarGoals = 0;
+		threeBarScoring = 0;
+		fiveBarScoring = 0;
+		twoBarScoring = 0;
 		breaks = 0;
 		stuffs = 0;
 		resetTimeOuts();
@@ -312,13 +314,6 @@ public class Team {
 	public Float getClearPercent() {
 		return clearPercent;
 	}
-    public int getStuffs() {
-		return stuffs;
-	}
-	public void setStuffs(int stuffs) {
-		this.stuffs = stuffs;
-		writeStuffs();
-	}
 	public int getTwoBarPassAttempts() {
 		return twoBarPassAttempts;
 	}
@@ -328,7 +323,24 @@ public class Team {
 	public Float getTwoBarPassPercent() {
 		return twoBarPassPercent;
 	}
-
+	public int getScoring() {
+		return scoring;
+	}
+	public int getThreeBarScoring() {
+		return threeBarScoring;
+	}
+	public int getFiveBarScoring() {
+		return fiveBarScoring;
+	}
+	public int getTwoBarScoring() {
+		return twoBarScoring;
+	}
+    public int getStuffs() {
+		return stuffs;
+	}
+    public int getBreaks() {
+    	return breaks;
+    }
 	
 	public void setPassAttempts(int passAttempts) {
 		this.passAttempts = passAttempts;
@@ -464,6 +476,72 @@ public class Team {
 			setTwoBarPassPercent(Float.parseFloat(twoBarPassPercent.replaceAll("[^\\d.]", ""))); // only get numbers - drop the % sign
 		}
 	}
+	public void setScoring(int scores) {
+		this.scoring = scores;
+		writeScoring();
+	}
+	public void setThreeBarScoring(int scores) {
+		this.threeBarScoring = scores;
+		writeThreeBarScoring();
+	}
+	public void setFiveBarScoring(int scores) {
+		this.fiveBarScoring = scores;
+		writeFiveBarScoring();
+	}
+	public void setTwoBarScoring(int scores) {
+		this.twoBarScoring = scores;
+		writeTwoBarScoring();
+	}
+	public void setStuffs(int stuffs) {
+		this.stuffs = stuffs;
+		writeStuffs();
+	}
+	public void setScoring(String scoring) {
+		if(scoring=="") {
+			setScoring(0);
+		} else {
+			setScoring(Integer.parseInt(scoring));
+		}
+	}
+	public void setThreeBarScoring(String scoring) {
+		if(scoring=="") {
+			setThreeBarScoring(0);
+		} else {
+			setThreeBarScoring(Integer.parseInt(scoring));
+		}
+	}
+	public void setFiveBarScoring(String scoring) {
+		if(scoring=="") {
+			setFiveBarScoring(0);
+		} else {
+			setFiveBarScoring(Integer.parseInt(scoring));
+		}
+	}
+	public void setTwoBarScoring(String scoring) {
+		if(scoring=="") {
+			setTwoBarScoring(0);
+		} else {
+			setTwoBarScoring(Integer.parseInt(scoring));
+		}
+	}
+	public void setStuffs(String stuffs) {
+		if(stuffs=="") {
+			setStuffs(0);
+		} else {
+			setStuffs(Integer.parseInt(stuffs));
+		}
+	}
+	public void setBreaks(int breaks) {
+		this.breaks = breaks;
+		writeBreaks();
+	}
+	public void setBreaks(String breaks) {
+		if(breaks=="") {
+			setBreaks(0);
+		} else {
+			setBreaks(Integer.parseInt(breaks));
+		}
+	}
 
 	////// Writes to Files \\\\\\
 	
@@ -531,13 +609,6 @@ public class Team {
 			}
 		} catch (IOException e1) {
 			e1.printStackTrace();
-		}
-	}
-	private void writeStuffs() {
-		try {
-			obsInterface.setContents(settings.getStuffsFileName(teamNbr), Integer.toString(getStuffs()));
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
     private void writePassAttempts() {
@@ -624,6 +695,48 @@ public class Team {
 			e.printStackTrace();
 		}
     }
+	private void writeScoring() {
+		try {
+			obsInterface.setContents(settings.getScoringFileName(teamNbr), Integer.toString(getScoring()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	private void writeThreeBarScoring() {
+		try {
+			obsInterface.setContents(settings.getThreeBarScoringFileName(teamNbr), Integer.toString(getThreeBarScoring()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	private void writeFiveBarScoring() {
+		try {
+			obsInterface.setContents(settings.getFiveBarScoringFileName(teamNbr), Integer.toString(getFiveBarScoring()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	private void writeTwoBarScoring() {
+		try {
+			obsInterface.setContents(settings.getTwoBarScoringFileName(teamNbr), Integer.toString(getTwoBarScoring()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	private void writeStuffs() {
+		try {
+			obsInterface.setContents(settings.getStuffsFileName(teamNbr), Integer.toString(getStuffs()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	private void writeBreaks() {
+		try {
+			obsInterface.setContents(settings.getBreaksFileName(teamNbr), Integer.toString(getBreaks()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
    public void writeStats() {
    		writePassAttempts();
    		writePassCompletes();
@@ -637,7 +750,12 @@ public class Team {
    		writeTwoBarPassAttempts();
    		writeTwoBarPassCompletes();
    		writeTwoBarPassPercent();
+   		writeScoring();
+   		writeThreeBarScoring();
+   		writeFiveBarScoring();
+   		writeTwoBarScoring();
    		writeStuffs();
+   		writeBreaks();
     }
 	public void writeAll() {
 		writeTeamName();

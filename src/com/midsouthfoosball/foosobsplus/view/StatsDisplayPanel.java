@@ -40,9 +40,9 @@ public class StatsDisplayPanel extends JPanel {
 	private JLabel lblTwoBarPassing;
 	private JLabel lblShotsOnGoal;
 	private JLabel lblScoring;
-	private JLabel lblThreeBarScores;
-	private JLabel lblFiveBarScores;
-	private JLabel lblTwoBarScores;
+	private JLabel lblThreeBarScoring;
+	private JLabel lblFiveBarScoring;
+	private JLabel lblTwoBarScoring;
 	private JLabel lblBreaks;
 	private JLabel lblStuffs;
 	private JLabel lblTeam1PassAttempts;
@@ -59,9 +59,9 @@ public class StatsDisplayPanel extends JPanel {
 	private JLabel lblTeam1TwoBarPassing;
 	private JLabel lblTeam1ShotsOnGoal;
 	private JLabel lblTeam1Scoring;
-	private JLabel lblTeam1ThreeBarScores;
-	private JLabel lblTeam1FiveBarScores;
-	private JLabel lblTeam1TwoBarScores;
+	private JLabel lblTeam1ThreeBarScoring;
+	private JLabel lblTeam1FiveBarScoring;
+	private JLabel lblTeam1TwoBarScoring;
 	private JLabel lblTeam1Breaks;
 	private JLabel lblTeam1Stuffs;
 	private JLabel lblTeam2PassAttempts;
@@ -78,9 +78,9 @@ public class StatsDisplayPanel extends JPanel {
 	private JLabel lblTeam2TwoBarPassing;
 	private JLabel lblTeam2ShotsOnGoal;
 	private JLabel lblTeam2Scoring;
-	private JLabel lblTeam2ThreeBarScores;
-	private JLabel lblTeam2FiveBarScores;
-	private JLabel lblTeam2TwoBarScores;
+	private JLabel lblTeam2ThreeBarScoring;
+	private JLabel lblTeam2FiveBarScoring;
+	private JLabel lblTeam2TwoBarScoring;
 	private JLabel lblTeam2Breaks;
 	private JLabel lblTeam2Stuffs;
 	private DecimalFormat df = new DecimalFormat("###.#");
@@ -97,9 +97,9 @@ public class StatsDisplayPanel extends JPanel {
 		lblTwoBarPassing = new JLabel("2-Bar Passing");
 		lblShotsOnGoal = new JLabel("Shots On Goal");
 		lblScoring = new JLabel("Scoring");
-		lblThreeBarScores = new JLabel("3-Bar");
-		lblFiveBarScores = new JLabel("5-Bar");
-		lblTwoBarScores = new JLabel("2-Bar");
+		lblThreeBarScoring = new JLabel("3-Bar");
+		lblFiveBarScoring = new JLabel("5-Bar");
+		lblTwoBarScoring = new JLabel("2-Bar");
 		lblBreaks = new JLabel("Breaks");
 		lblStuffs = new JLabel("Stuffs");
 		lblTeam1PassAttempts = new JLabel(String.format("%-3s","0"));
@@ -116,9 +116,9 @@ public class StatsDisplayPanel extends JPanel {
 		lblTeam1TwoBarPassing = new JLabel(String.format("%-5s","0%"));
 		lblTeam1ShotsOnGoal = new JLabel(String.format("%-3s","0"));
 		lblTeam1Scoring = new JLabel(String.format("%-3s","0"));
-		lblTeam1ThreeBarScores = new JLabel(String.format("%-3s","0"));
-		lblTeam1FiveBarScores = new JLabel(String.format("%-3s","0"));
-		lblTeam1TwoBarScores = new JLabel(String.format("%-3s","0"));
+		lblTeam1ThreeBarScoring = new JLabel(String.format("%-3s","0"));
+		lblTeam1FiveBarScoring = new JLabel(String.format("%-3s","0"));
+		lblTeam1TwoBarScoring = new JLabel(String.format("%-3s","0"));
 		lblTeam1Breaks = new JLabel(String.format("%-3s","0"));
 		lblTeam1Stuffs = new JLabel(String.format("%-3s","0"));
 		lblTeam2PassAttempts = new JLabel(String.format("%-3s","0"));
@@ -135,9 +135,9 @@ public class StatsDisplayPanel extends JPanel {
 		lblTeam2TwoBarPassing = new JLabel(String.format("%-5s","0%"));
 		lblTeam2ShotsOnGoal = new JLabel(String.format("%-3s","0"));
 		lblTeam2Scoring = new JLabel(String.format("%-3s","0"));
-		lblTeam2ThreeBarScores = new JLabel(String.format("%-3s","0"));
-		lblTeam2FiveBarScores = new JLabel(String.format("%-3s","0"));
-		lblTeam2TwoBarScores = new JLabel(String.format("%-3s","0"));
+		lblTeam2ThreeBarScoring = new JLabel(String.format("%-3s","0"));
+		lblTeam2FiveBarScoring = new JLabel(String.format("%-3s","0"));
+		lblTeam2TwoBarScoring = new JLabel(String.format("%-3s","0"));
 		lblTeam2Breaks = new JLabel(String.format("%-3s","0"));
 		lblTeam2Stuffs = new JLabel(String.format("%-3s","0"));
 		
@@ -485,7 +485,7 @@ public class StatsDisplayPanel extends JPanel {
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(lblTeam2Scoring, gc);
 		
-		/////// ThreeBarScores Row \\\\\\
+		/////// ThreeBarScoring Row \\\\\\
 
 		gc.gridy++;
 
@@ -496,7 +496,7 @@ public class StatsDisplayPanel extends JPanel {
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
-		add(lblTeam1ThreeBarScores, gc);
+		add(lblTeam1ThreeBarScoring, gc);
 
 		gc.weightx = 1;
 		gc.weighty = 1;
@@ -505,7 +505,7 @@ public class StatsDisplayPanel extends JPanel {
 		gc.fill = GridBagConstraints.CENTER;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
-		add(lblThreeBarScores, gc);
+		add(lblThreeBarScoring, gc);
 
 		gc.weightx = 1;
 		gc.weighty = 1;
@@ -514,9 +514,9 @@ public class StatsDisplayPanel extends JPanel {
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
-		add(lblTeam2ThreeBarScores, gc);
+		add(lblTeam2ThreeBarScoring, gc);
 		
-		/////// FiveBarScores Row \\\\\\
+		/////// FiveBarScoring Row \\\\\\
 
 		gc.gridy++;
 
@@ -527,7 +527,7 @@ public class StatsDisplayPanel extends JPanel {
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
-		add(lblTeam1FiveBarScores, gc);
+		add(lblTeam1FiveBarScoring, gc);
 
 		gc.weightx = 1;
 		gc.weighty = 1;
@@ -536,7 +536,7 @@ public class StatsDisplayPanel extends JPanel {
 		gc.fill = GridBagConstraints.CENTER;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
-		add(lblFiveBarScores, gc);
+		add(lblFiveBarScoring, gc);
 
 		gc.weightx = 1;
 		gc.weighty = 1;
@@ -545,9 +545,9 @@ public class StatsDisplayPanel extends JPanel {
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
-		add(lblTeam2FiveBarScores, gc);
+		add(lblTeam2FiveBarScoring, gc);
 		
-		/////// TwoBarScores Row \\\\\\
+		/////// TwoBarScoring Row \\\\\\
 
 		gc.gridy++;
 
@@ -558,7 +558,7 @@ public class StatsDisplayPanel extends JPanel {
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
-		add(lblTeam1TwoBarScores, gc);
+		add(lblTeam1TwoBarScoring, gc);
 
 		gc.weightx = 1;
 		gc.weighty = 1;
@@ -567,7 +567,7 @@ public class StatsDisplayPanel extends JPanel {
 		gc.fill = GridBagConstraints.CENTER;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
-		add(lblTwoBarScores, gc);
+		add(lblTwoBarScoring, gc);
 
 		gc.weightx = 1;
 		gc.weighty = 1;
@@ -576,7 +576,7 @@ public class StatsDisplayPanel extends JPanel {
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
-		add(lblTeam2TwoBarScores, gc);
+		add(lblTeam2TwoBarScoring, gc);
 		
 		/////// Breaks Row \\\\\\
 
@@ -686,6 +686,48 @@ public class StatsDisplayPanel extends JPanel {
 			lblTeam2TwoBarPassCompletes.setText(String.format("%-3s",Integer.toString(completes)));
 			lblTeam2TwoBarPassAttempts.setText(String.format("%-3s",Integer.toString(attempts)));
 			lblTeam2TwoBarPassing.setText(String.format("%-5s",df.format(percent)+"%"));
+		}
+	}
+	public void updateScoring(int teamNbr, int scores) {
+		if(teamNbr==1) {
+			lblTeam1Scoring.setText(String.format("%-3s", Integer.toString(scores)));
+		} else {
+			lblTeam2Scoring.setText(String.format("%-3s", Integer.toString(scores)));
+		}
+	}
+	public void updateThreeBarScoring(int teamNbr, int scores) {
+		if(teamNbr==1) {
+			lblTeam1ThreeBarScoring.setText(String.format("%-3s", Integer.toString(scores)));
+		} else {
+			lblTeam2ThreeBarScoring.setText(String.format("%-3s", Integer.toString(scores)));
+		}
+	}
+	public void updateFiveBarScoring(int teamNbr, int scores) {
+		if(teamNbr==1) {
+			lblTeam1FiveBarScoring.setText(String.format("%-3s", Integer.toString(scores)));
+		} else {
+			lblTeam2FiveBarScoring.setText(String.format("%-3s", Integer.toString(scores)));
+		}
+	}
+	public void updateTwoBarScoring(int teamNbr, int scores) {
+		if(teamNbr==1) {
+			lblTeam1TwoBarScoring.setText(String.format("%-3s", Integer.toString(scores)));
+		} else {
+			lblTeam2TwoBarScoring.setText(String.format("%-3s", Integer.toString(scores)));
+		}
+	}
+	public void updateStuffs(int teamNbr, int stuffs) {
+		if(teamNbr==1) {
+			lblTeam1Stuffs.setText(String.format("%-3s", Integer.toString(stuffs)));
+		} else {
+			lblTeam2Stuffs.setText(String.format("%-3s", Integer.toString(stuffs)));
+		}
+	}
+	public void updateBreaks(int teamNbr, int breaks) {
+		if(teamNbr==1) {
+			lblTeam1Breaks.setText(String.format("%-3s", Integer.toString(breaks)));
+		} else {
+			lblTeam2Breaks.setText(String.format("%-3s", Integer.toString(breaks)));
 		}
 	}
 }
