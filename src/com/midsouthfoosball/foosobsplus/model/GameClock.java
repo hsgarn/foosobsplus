@@ -114,7 +114,6 @@ public class GameClock {
 		timer.addActionListener(alAction);
 	}
 	private void writeGameTime() {
-		System.out.println("Game Timer: " + getGameTime());
 		try {
 			obsInterface.setContents(settings.getGameTimeFileName(), getGameTime());
 		} catch (IOException e1) {

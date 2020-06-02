@@ -37,6 +37,8 @@ import javax.swing.JToggleButton;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
+import com.midsouthfoosball.foosobsplus.model.Settings;
+
 @SuppressWarnings("serial")
 public class TeamPanel extends JPanel {
 	
@@ -62,8 +64,11 @@ public class TeamPanel extends JPanel {
 	private JToggleButton btnReset;
 	private JToggleButton btnWarn;
 	private JButton btnClear;
+	private Settings settings;
 	
-	public TeamPanel(int teamNbr, String teamColor) {
+	public TeamPanel(int teamNbr, String teamColor, Settings settings) {
+		
+		this.settings = settings;
 
 		initializeTeamPanel(teamNbr, teamColor);
 		
@@ -119,12 +124,49 @@ public class TeamPanel extends JPanel {
 		btnWarn.setName("Team " + Integer.toString(teamNbr));
 		btnClear = new JButton("Clear");
 		btnClear.setName("Team " + Integer.toString(teamNbr));
+		
+		setMnemonics(teamNbr);
 
 		Border innerBorder = BorderFactory.createTitledBorder("Team " + teamNbr + " Information (" + teamColor + " side)");
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
 		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 
+	}
+	private void setMnemonics(int teamNbr) {
+		if (teamNbr == 1) {
+			if(settings.getTeam1ClearHotKey().isEmpty()) {
+				btnClear.setMnemonic(-1);
+			} else {
+				btnClear.setMnemonic(settings.getTeam1ClearHotKey().charAt(0));
+			};
+			if(settings.getTeam1SwitchPositionsHotKey().isEmpty()) {
+				btnSwitchPositions.setMnemonic(-1);
+			} else {
+				btnSwitchPositions.setMnemonic(settings.getTeam1SwitchPositionsHotKey().charAt(0));
+			};
+			if(settings.getScore1PlusHotKey().isEmpty()) {
+				btnScoreIncrease.setMnemonic(-1);
+			} else {
+				btnScoreIncrease.setMnemonic(settings.getScore1PlusHotKey().charAt(0));
+			};
+		} else {
+			if(settings.getTeam2ClearHotKey().isEmpty()) {
+				btnClear.setMnemonic(-1);
+			} else {
+				btnClear.setMnemonic(settings.getTeam2ClearHotKey().charAt(0));
+			};
+			if(settings.getTeam2SwitchPositionsHotKey().isEmpty()) {
+				btnSwitchPositions.setMnemonic(-1);
+			} else {
+				btnSwitchPositions.setMnemonic(settings.getTeam2SwitchPositionsHotKey().charAt(0));
+			};
+			if(settings.getScore2PlusHotKey().isEmpty()) {
+				btnScoreIncrease.setMnemonic(-1);
+			} else {
+				btnScoreIncrease.setMnemonic(settings.getScore2PlusHotKey().charAt(0));
+			};
+		}
 	}
 	private void layoutComponents() {
 		setLayout(new GridBagLayout());

@@ -27,6 +27,7 @@ import javax.swing.JTextField;
 
 import com.midsouthfoosball.foosobsplus.commands.*;
 import com.midsouthfoosball.foosobsplus.model.Stats;
+import com.midsouthfoosball.foosobsplus.model.Team;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
 
@@ -35,13 +36,15 @@ public class StatsController {
 	private StatsEntryPanel statsEntryPanel;
 	private StatsDisplayPanel statsDisplayPanel;
 	private TeamController teamController;
+	private MatchController matchController;
 	private CommandSwitch mySwitch;
 	
-	public StatsController(Stats stats, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, TeamController teamController) {
+	public StatsController(Stats stats, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, TeamController teamController, MatchController matchController) {
 		this.stats = stats;
 		this.statsEntryPanel = statsEntryPanel;
 		this.statsDisplayPanel = statsDisplayPanel;
 		this.teamController = teamController;
+		this.matchController = matchController;
 
 		////// Stats Entry Panel Listeners Methods //////
 
@@ -61,11 +64,20 @@ public class StatsController {
 			stats.addCodeToHistory(code);
 			statsEntryPanel.updateCode("");
 			statsEntryPanel.updateCodeHistory(code);
-			if (stats.getIsCommand()) processCommand(stats.getCommand());
-			if (stats.getTeam1Scored()) teamController.incrementScore("Team 1");
-			if (stats.getTeam2Scored()) teamController.incrementScore("Team 2");
-			if (stats.getTeam1TimeOut()) teamController.callTimeOut("Team 1");
-			if (stats.getTeam2TimeOut()) teamController.callTimeOut("Team 2");
+			if (stats.getIsCommand()) {
+				processCommand(stats.getCommand());
+			} else {
+				if (stats.getTeam1Scored()) teamController.incrementScore("Team 1");
+				if (stats.getTeam2Scored()) teamController.incrementScore("Team 2");
+				if (stats.getTeam1TimeOut()) {
+					teamController.callTimeOut("Team 1");
+				} else if (stats.getTeam2TimeOut()) {
+					teamController.callTimeOut("Team 2");
+				} else {
+					if (stats.isThreeRod()||stats.isTwoRod()) teamController.startShotTimer();
+					if (stats.isFiveRod()) teamController.startPassTimer();
+				}
+			}
 			displayAllStats();
 		}
 	}
@@ -77,12 +89,13 @@ public class StatsController {
 	}
 
 	////// Utility Methods \\\\\\
-	
+
 	private void processCommand(String command) {
 		mySwitch.execute(command);
 		return;
 	}
 	private void loadCommands() {
+		Command psm = new PSMCommand(matchController);
 		Command sst = new SSTCommand(teamController);
 		Command spt = new SPTCommand(teamController);
 		Command sgt = new SGTCommand(teamController);
@@ -109,6 +122,7 @@ public class StatsController {
 		Command xpt1 = new XPT1Command(teamController);
 		Command xpt2 = new XPT2Command(teamController);
 		mySwitch = new CommandSwitch();
+		mySwitch.register("PSM", psm);
 		mySwitch.register("SST", sst);
 		mySwitch.register("SPT", spt);
 		mySwitch.register("SGT", sgt);

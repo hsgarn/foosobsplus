@@ -82,9 +82,9 @@ public class Main {
 	
 	private TablePanel 			tablePanel 			= new TablePanel();
 	private TimerPanel 			timerPanel 			= new TimerPanel();
-	private MatchPanel			matchPanel			= new MatchPanel();
-	private TeamPanel 			teamPanel1 			= new TeamPanel(1, settings.getSide1Color());
-	private TeamPanel 			teamPanel2 			= new TeamPanel(2, settings.getSide2Color());
+	private MatchPanel			matchPanel			= new MatchPanel(settings);
+	private TeamPanel 			teamPanel1 			= new TeamPanel(1, settings.getSide1Color(), settings);
+	private TeamPanel 			teamPanel2 			= new TeamPanel(2, settings.getSide2Color(), settings);
 	private StatsEntryPanel 	statsEntryPanel 	= new StatsEntryPanel();
 	private SwitchPanel 		switchPanel 		= new SwitchPanel();
 	private ResetPanel 			resetPanel 			= new ResetPanel();
@@ -109,10 +109,10 @@ public class Main {
 	TimerController 	timerController 	= new TimerController(timerPanel, timerWindowFrame, timeClock, settings);
 	TeamController 		teamController 		= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, timerController);
 	TableController 	tableController 	= new TableController(obsInterface, settings, table, match, tablePanel, teamController);
-	StatsController 	statsController 	= new StatsController(stats, statsEntryPanel, statsDisplayPanel, teamController);
-	SwitchController 	switchController 	= new SwitchController(switchPanel, teamController);
+	MatchController     matchController     = new MatchController(obsInterface, settings, match, stats, gameClock, matchPanel, statsEntryPanel, statsDisplayPanel, teamController);
+	StatsController 	statsController 	= new StatsController(stats, statsEntryPanel, statsDisplayPanel, teamController, matchController);
+	SwitchController 	switchController 	= new SwitchController(switchPanel, teamController, statsController);
 	ResetController 	resetController 	= new ResetController(resetPanel, teamController, statsController);
-	MatchController     matchController     = new MatchController(obsInterface, settings, match, gameClock, matchPanel, teamController, statsController);
 	
 	public Main() throws IOException {
 		obsInterface.setFilePath(settings.getDatapath());

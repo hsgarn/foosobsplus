@@ -33,6 +33,8 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
+import com.midsouthfoosball.foosobsplus.model.Settings;
+
 @SuppressWarnings("serial")
 public class MatchPanel extends JPanel {
 	
@@ -41,9 +43,12 @@ public class MatchPanel extends JPanel {
 	private JLabel lblElapsedTimeLabel;
 	private JLabel lblStartTime;
 	private JLabel lblElapsedTime;
+	private Settings settings;
 	
-	public MatchPanel() {
+	public MatchPanel(Settings settings) {
 
+		this.settings = settings;
+		
 		Dimension dim = getPreferredSize();
 		dim.width = 350;
 		dim.height = 50;
@@ -78,6 +83,11 @@ public class MatchPanel extends JPanel {
 		gc.fill = GridBagConstraints.VERTICAL;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(5, 5, 5, 5);
+		if(settings.getStartMatchHotKey().isEmpty()) {
+			btnStartMatch.setMnemonic(-1);
+		} else {
+			btnStartMatch.setMnemonic(settings.getStartMatchHotKey().charAt(0));
+		};
 		add(btnStartMatch, gc);
 		gc.gridheight = 1;
 		

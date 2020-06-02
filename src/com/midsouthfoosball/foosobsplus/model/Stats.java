@@ -128,6 +128,17 @@ public class Stats {
 	public String getCommand() {
 		return command;
 	}
+	public boolean isFiveRod() {
+		return isFiveRod;
+	}
+
+	public boolean isTwoRod() {
+		return isTwoRod;
+	}
+
+	public boolean isThreeRod() {
+		return isThreeRod;
+	}
 	private void processCode(String code, String previousCode) {
 		parseCode(previousCode, code);
 		if(isCommand) {
@@ -152,6 +163,7 @@ public class Stats {
 		showParsed();
 	}
 	private void parseCode(String previousCode, String code) {
+		resetFlags();
 		if (code.length() < 3) return;
 		currentTeam = code.charAt(0);
 		isCommand = currentTeam==commandChar;
@@ -195,6 +207,34 @@ public class Stats {
 		isClearComplete = isClear && !isSameRod && (isSameTeam || (!isSameTeam && (isFiveRod || isTwoRod)));
 
 	}
+private void resetFlags() {
+	isTeam1 = false;
+	isTeam2 = false;
+	isSameTeam = false;
+	isTeamScored = false;
+	isSameRod = false;
+	isBreak = false;
+	isStuff = false;
+	isPenalty = false;
+	isPass = false;
+	isShot = false;
+	isClear = false;
+	isDrop = false;
+	isTimeOut = false;
+	isFiveRod = false;
+	isTwoRod = false;
+	isThreeRod = false;
+	wasFiveRod = false;
+	wasTwoRod = false;
+	wasThreeRod = false;
+	isForwardDirection = false;
+	isPassComplete = false;
+	isClearComplete = false;
+	team1Scored = false;
+	team2Scored = false;
+	team1TimeOut = false;
+	team2TimeOut = false;
+}
 	public Float caclPercent(int attempts, int completes) {
 		float percent = 0;
 		if(attempts > 0) {

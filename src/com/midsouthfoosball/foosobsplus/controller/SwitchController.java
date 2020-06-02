@@ -29,10 +29,12 @@ public class SwitchController {
 	
 	private SwitchPanel switchPanel;
 	private TeamController teamController;
+	private StatsController statsController;
 	
-	public SwitchController(SwitchPanel switchPanel, TeamController teamController) {
+	public SwitchController(SwitchPanel switchPanel, TeamController teamController, StatsController statsController) {
 		this.switchPanel = switchPanel;
 		this.teamController = teamController;
+		this.statsController = statsController;
 		
 		////// Switch Panel Listener Methods //////
 		
@@ -51,6 +53,7 @@ public class SwitchController {
 	private class SwitchSidesListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			teamController.switchSides();
+			statsController.displayAllStats();
 		}
 	}
 	private class SwitchTeamsListener implements ActionListener{
