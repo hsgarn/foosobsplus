@@ -150,6 +150,41 @@ public class TeamPanel extends JPanel {
 			} else {
 				btnScoreIncrease.setMnemonic(settings.getScore1PlusHotKey().charAt(0));
 			};
+			if(settings.getScore1MinusHotKey().isEmpty()) {
+				btnScoreDecrease.setMnemonic(-1);
+			} else {
+				btnScoreDecrease.setMnemonic(settings.getScore1MinusHotKey().charAt(0));
+			};
+			if(settings.getGameCount1PlusHotKey().isEmpty()) {
+				btnGameCountIncrease.setMnemonic(-1);
+			} else {
+				btnGameCountIncrease.setMnemonic(settings.getGameCount1PlusHotKey().charAt(0));
+			};
+			if(settings.getGameCount1MinusHotKey().isEmpty()) {
+				btnGameCountDecrease.setMnemonic(-1);
+			} else {
+				btnGameCountDecrease.setMnemonic(settings.getGameCount1MinusHotKey().charAt(0));
+			};
+			if(settings.getTimeOut1PlusHotKey().isEmpty()) {
+				btnTimeOutCountIncrease.setMnemonic(-1);
+			} else {
+				btnTimeOutCountIncrease.setMnemonic(settings.getTimeOut1PlusHotKey().charAt(0));
+			};
+			if(settings.getTimeOut1MinusHotKey().isEmpty()) {
+				btnTimeOutCountDecrease.setMnemonic(-1);
+			} else {
+				btnTimeOutCountDecrease.setMnemonic(settings.getTimeOut1MinusHotKey().charAt(0));
+			};
+			if(settings.getReset1HotKey().isEmpty()) {
+				btnReset.setMnemonic(-1);
+			} else {
+				btnReset.setMnemonic(settings.getReset1HotKey().charAt(0));
+			};
+			if(settings.getWarn1HotKey().isEmpty()) {
+				btnWarn.setMnemonic(-1);
+			} else {
+				btnWarn.setMnemonic(settings.getWarn1HotKey().charAt(0));
+			};
 		} else {
 			if(settings.getTeam2ClearHotKey().isEmpty()) {
 				btnClear.setMnemonic(-1);
@@ -165,6 +200,41 @@ public class TeamPanel extends JPanel {
 				btnScoreIncrease.setMnemonic(-1);
 			} else {
 				btnScoreIncrease.setMnemonic(settings.getScore2PlusHotKey().charAt(0));
+			};
+			if(settings.getScore2MinusHotKey().isEmpty()) {
+				btnScoreDecrease.setMnemonic(-1);
+			} else {
+				btnScoreDecrease.setMnemonic(settings.getScore2MinusHotKey().charAt(0));
+			};
+			if(settings.getGameCount2PlusHotKey().isEmpty()) {
+				btnGameCountIncrease.setMnemonic(-1);
+			} else {
+				btnGameCountIncrease.setMnemonic(settings.getGameCount2PlusHotKey().charAt(0));
+			};
+			if(settings.getGameCount2MinusHotKey().isEmpty()) {
+				btnGameCountDecrease.setMnemonic(-1);
+			} else {
+				btnGameCountDecrease.setMnemonic(settings.getGameCount2MinusHotKey().charAt(0));
+			};
+			if(settings.getTimeOut2PlusHotKey().isEmpty()) {
+				btnTimeOutCountIncrease.setMnemonic(-2);
+			} else {
+				btnTimeOutCountIncrease.setMnemonic(settings.getTimeOut2PlusHotKey().charAt(0));
+			};
+			if(settings.getTimeOut2MinusHotKey().isEmpty()) {
+				btnTimeOutCountDecrease.setMnemonic(-2);
+			} else {
+				btnTimeOutCountDecrease.setMnemonic(settings.getTimeOut2MinusHotKey().charAt(0));
+			};
+			if(settings.getReset2HotKey().isEmpty()) {
+				btnReset.setMnemonic(-2);
+			} else {
+				btnReset.setMnemonic(settings.getReset2HotKey().charAt(0));
+			};
+			if(settings.getWarn2HotKey().isEmpty()) {
+				btnWarn.setMnemonic(-2);
+			} else {
+				btnWarn.setMnemonic(settings.getWarn2HotKey().charAt(0));
 			};
 		}
 	}

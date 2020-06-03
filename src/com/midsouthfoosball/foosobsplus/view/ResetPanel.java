@@ -32,6 +32,8 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
+import com.midsouthfoosball.foosobsplus.model.Settings;
+
 @SuppressWarnings("serial")
 public class ResetPanel extends JPanel {
 	private JButton btnResetNames;
@@ -40,8 +42,12 @@ public class ResetPanel extends JPanel {
 	private JButton btnResetTimeOuts;
 	private JButton btnResetResetWarns;
 	private JButton btnResetAll;
+	private Settings settings;
 
-	public ResetPanel() {
+	public ResetPanel(Settings settings) {
+		
+		this.settings = settings;
+		
 		Dimension dim = getPreferredSize();
 		dim.width = 350;
 		dim.height = 50;
@@ -53,6 +59,8 @@ public class ResetPanel extends JPanel {
 		btnResetTimeOuts = new JButton("Reset Time Outs");
 		btnResetResetWarns = new JButton("Reset Reset/Warns");
 		btnResetAll = new JButton("Reset All");
+
+		setMnemonics();
 
 		Border innerBorder = BorderFactory.createTitledBorder("Reset Panel");
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
@@ -139,6 +147,38 @@ public class ResetPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(btnResetAll, gc);
+	}
+	private void setMnemonics() {
+		if(settings.getResetNamesHotKey().isEmpty()) {
+			btnResetNames.setMnemonic(-1);
+		} else {
+			btnResetNames.setMnemonic(settings.getResetNamesHotKey().charAt(0));
+		};
+		if(settings.getResetScoresHotKey().isEmpty()) {
+			btnResetScores.setMnemonic(-1);
+		} else {
+			btnResetScores.setMnemonic(settings.getResetScoresHotKey().charAt(0));
+		};
+		if(settings.getResetGameCountsHotKey().isEmpty()) {
+			btnResetGameCounts.setMnemonic(-1);
+		} else {
+			btnResetGameCounts.setMnemonic(settings.getResetGameCountsHotKey().charAt(0));
+		};
+		if(settings.getResetTimeOutsHotKey().isEmpty()) {
+			btnResetTimeOuts.setMnemonic(-1);
+		} else {
+			btnResetTimeOuts.setMnemonic(settings.getResetTimeOutsHotKey().charAt(0));
+		};
+		if(settings.getResetResetWarnHotKey().isEmpty()) {
+			btnResetResetWarns.setMnemonic(-1);
+		} else {
+			btnResetResetWarns.setMnemonic(settings.getResetResetWarnHotKey().charAt(0));
+		};
+		if(settings.getResetAllHotKey().isEmpty()) {
+			btnResetAll.setMnemonic(-1);
+		} else {
+			btnResetAll.setMnemonic(settings.getResetAllHotKey().charAt(0));
+		};
 	}
 	////// Listeners //////
 	public void addResetNamesListener(ActionListener listenForBtnResetNames) {

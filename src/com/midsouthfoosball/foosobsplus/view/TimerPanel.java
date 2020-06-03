@@ -34,6 +34,8 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
+import com.midsouthfoosball.foosobsplus.model.Settings;
+
 @SuppressWarnings("serial")
 public class TimerPanel extends JPanel {
 	private JLabel lblTimerDisplay;
@@ -49,8 +51,11 @@ public class TimerPanel extends JPanel {
 	private JButton btnTimeOutTimer;
 	private JButton btnRecallTimer;
 	private JButton btnResetTimer;
+	private Settings settings;
 
-	public TimerPanel() {
+	public TimerPanel(Settings settings) {
+		
+		this.settings = settings;
 		Dimension dim = getPreferredSize();
 		dim.width = 350;
 		dim.height = 50;
@@ -72,6 +77,8 @@ public class TimerPanel extends JPanel {
 		btnRecallTimer = new JButton("Start");
 		btnResetTimer = new JButton("Reset Timer");
 
+		setMnemonics();
+		
 		Border innerBorder = BorderFactory.createTitledBorder("Timer Panel");
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
 		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
@@ -227,6 +234,38 @@ public class TimerPanel extends JPanel {
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(btnResetTimer, gc);
 		gc.gridwidth = 1;
+	}
+	private void setMnemonics() {
+		if(settings.getShotTimerHotKey().isEmpty()) {
+			btnShotTimer.setMnemonic(-1);
+		} else {
+			btnShotTimer.setMnemonic(settings.getShotTimerHotKey().charAt(0));
+		};
+		if(settings.getPassTimerHotKey().isEmpty()) {
+			btnPassTimer.setMnemonic(-1);
+		} else {
+			btnPassTimer.setMnemonic(settings.getPassTimerHotKey().charAt(0));
+		};
+		if(settings.getTimeOutTimerHotKey().isEmpty()) {
+			btnTimeOutTimer.setMnemonic(-1);
+		} else {
+			btnTimeOutTimer.setMnemonic(settings.getTimeOutTimerHotKey().charAt(0));
+		};
+		if(settings.getGameTimerHotKey().isEmpty()) {
+			btnGameTimer.setMnemonic(-1);
+		} else {
+			btnGameTimer.setMnemonic(settings.getGameTimerHotKey().charAt(0));
+		};
+		if(settings.getRecallTimerHotKey().isEmpty()) {
+			btnRecallTimer.setMnemonic(-1);
+		} else {
+			btnRecallTimer.setMnemonic(settings.getRecallTimerHotKey().charAt(0));
+		};
+		if(settings.getResetTimersHotKey().isEmpty()) {
+			btnResetTimer.setMnemonic(-1);
+		} else {
+			btnResetTimer.setMnemonic(settings.getResetTimersHotKey().charAt(0));
+		};
 	}
 	////// Listeners  //////
 	public void addShotTimerListener(ActionListener listenForBtnShotTimer) {

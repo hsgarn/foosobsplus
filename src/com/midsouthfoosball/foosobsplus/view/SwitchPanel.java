@@ -25,12 +25,15 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+
+import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
 public class SwitchPanel extends JPanel {
@@ -43,8 +46,12 @@ public class SwitchPanel extends JPanel {
 	private JButton btnSwitchResetWarns;
 	private JButton btnClearAll;
 	private JLabel lblLastScored;
+	private Settings settings;
 
-	public SwitchPanel() {
+	public SwitchPanel(Settings settings) {
+		
+		this.settings = settings;
+		
 		Dimension dim = getPreferredSize();
 		dim.width = 350;
 		dim.height = 50;
@@ -59,6 +66,8 @@ public class SwitchPanel extends JPanel {
 		btnClearAll = new JButton("Clear All");
 		lblLastScored = new JLabel("     Last Scored     ");
 		lblLastScored.setBorder(BorderFactory.createLoweredBevelBorder());
+		
+		setMnemonics();
 
 		Border innerBorder = BorderFactory.createTitledBorder("Switch Panel");
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
@@ -169,8 +178,46 @@ public class SwitchPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(lblLastScored, gc);
-}
-	
+	}
+
+	private void setMnemonics() {
+		if(settings.getSwitchSidesHotKey().isEmpty()) {
+			btnSwitchSides.setMnemonic(-1);
+		} else {
+			btnSwitchSides.setMnemonic(settings.getSwitchSidesHotKey().charAt(0));
+		};
+		if(settings.getSwitchTeamsHotKey().isEmpty()) {
+			btnSwitchTeams.setMnemonic(-1);
+		} else {
+			btnSwitchTeams.setMnemonic(settings.getSwitchTeamsHotKey().charAt(0));
+		};
+		if(settings.getSwitchScoresHotKey().isEmpty()) {
+			btnSwitchScores.setMnemonic(-1);
+		} else {
+			btnSwitchScores.setMnemonic(settings.getSwitchScoresHotKey().charAt(0));
+		};
+		if(settings.getSwitchGameCountsHotKey().isEmpty()) {
+			btnSwitchGameCounts.setMnemonic(-1);
+		} else {
+			btnSwitchGameCounts.setMnemonic(settings.getSwitchGameCountsHotKey().charAt(0));
+		};
+		if(settings.getSwitchTimeOutsHotKey().isEmpty()) {
+			btnSwitchTimeOuts.setMnemonic(-1);
+		} else {
+			btnSwitchTimeOuts.setMnemonic(settings.getSwitchTimeOutsHotKey().charAt(0));
+		};
+		if(settings.getSwitchResetWarnsHotKey().isEmpty()) {
+			btnSwitchResetWarns.setMnemonic(-1);
+		} else {
+			btnSwitchResetWarns.setMnemonic(settings.getSwitchResetWarnsHotKey().charAt(0));
+		};
+		if(settings.getClearAllHotKey().isEmpty()) {
+			btnClearAll.setMnemonic(-1);
+		} else {
+			btnClearAll.setMnemonic(settings.getClearAllHotKey().charAt(0));
+		};
+	}
+
 	////// Listeners \\\\\\
 	
 	public void addSwitchSidesListener(ActionListener listenForBtnSwitchSides) {

@@ -347,6 +347,8 @@ public class HotKeysPanel extends JPanel {
 		add(lblResetNamesHotKey, "cell 6 8,alignx trailing");
 		
 		txtResetNamesHotKey = new JTextField();
+		txtResetNamesHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtResetNamesHotKey.setText(settings.getResetNamesHotKey());
 		add(txtResetNamesHotKey, "cell 7 8,alignx left");
 		txtResetNamesHotKey.setColumns(10);
 		
@@ -550,6 +552,7 @@ public class HotKeysPanel extends JPanel {
 		txtWarn2HotKey.setText(settings.getDefaultWarn2HotKey());
 		txtSwitchResetWarnsHotKey.setText(settings.getDefaultSwitchResetWarnsHotKey());
 		txtSwitchSidesHotKey.setText(settings.getDefaultSwitchPositionsHotKey());
+		txtResetNamesHotKey.setText(settings.getDefaultResetNamesHotKey());
 		txtResetGameCountsHotKey.setText(settings.getDefaultResetGameCountsHotKey());
 		txtResetScoresHotKey.setText(settings.getDefaultResetScoresHotKey());
 		txtResetTimeOutsHotKey.setText(settings.getDefaultResetTimeOutsHotKey());
@@ -592,6 +595,7 @@ public class HotKeysPanel extends JPanel {
 		settings.setWarn2HotKey(txtWarn2HotKey.getText());
 		settings.setSwitchResetWarnsHotKey(txtSwitchResetWarnsHotKey.getText());
 		settings.setSwitchSidesHotKey(txtSwitchSidesHotKey.getText());
+		settings.setResetNamesHotKey(txtResetNamesHotKey.getText());
 		settings.setResetGameCountsHotKey(txtResetGameCountsHotKey.getText());
 		settings.setResetScoresHotKey(txtResetScoresHotKey.getText());
 		settings.setResetTimeOutsHotKey(txtResetTimeOutsHotKey.getText());

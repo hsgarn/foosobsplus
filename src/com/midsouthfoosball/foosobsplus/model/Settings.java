@@ -152,6 +152,7 @@ public class Settings {
 	private String warn2HotKey;
 	private String switchResetWarnsHotKey;
 	private String switchSidesHotKey;
+	private String resetNamesHotKey;
 	private String resetGameCountsHotKey;
 	private String resetScoresHotKey;
 	private String resetTimeOutsHotKey;
@@ -295,6 +296,7 @@ public class Settings {
 		defaultProps.setProperty("Warn2HotKey", ".");
 		defaultProps.setProperty("SwitchResetWarnsHotKey", "");
 		defaultProps.setProperty("SwitchSidesHotKey", "w");
+		defaultProps.setProperty("ResetNamesHotKey", "");
 		defaultProps.setProperty("ResetGameCountsHotKey", "7");
 		defaultProps.setProperty("ResetScoresHotKey", "3");
 		defaultProps.setProperty("ResetTimeOutsHotKey", "-");
@@ -569,6 +571,7 @@ public class Settings {
 	public String getWarn2HotKey() {return warn2HotKey;}
 	public String getSwitchResetWarnsHotKey() {return switchResetWarnsHotKey;}
 	public String getSwitchSidesHotKey() {return switchSidesHotKey;}
+	public String getResetNamesHotKey() {return resetNamesHotKey;}
 	public String getResetGameCountsHotKey() {return resetGameCountsHotKey;}
 	public String getResetScoresHotKey() {return resetScoresHotKey;}
 	public String getResetTimeOutsHotKey() {return resetTimeOutsHotKey;}
@@ -1055,6 +1058,10 @@ public class Settings {
 		this.switchSidesHotKey = switchSidesHotKey;
 		configProps.setProperty("SwitchSidesHotKey", this.switchSidesHotKey);
 	}
+	public void setResetNamesHotKey(String resetNamesHotKey) {
+		this.resetNamesHotKey = resetNamesHotKey;
+		configProps.setProperty("ResetNamesHotKey", this.resetNamesHotKey);
+	}
 	public void setResetGameCountsHotKey(String resetGameCountsHotKey) {
 		this.resetGameCountsHotKey = resetGameCountsHotKey;
 		configProps.setProperty("ResetGameCountsHotKey", this.resetGameCountsHotKey);
@@ -1223,6 +1230,7 @@ public class Settings {
 	public String getDefaultWarn2HotKey() {return defaultProps.getProperty("Warn2HotKey");}
 	public String getDefaultSwitchResetWarnsHotKey() {return defaultProps.getProperty("SwitchResetWarnsHotKey");}
 	public String getDefaultSwitchPositionsHotKey() {return defaultProps.getProperty("SwitchSidesHotKey");}
+	public String getDefaultResetNamesHotKey() {return defaultProps.getProperty("resetNamesHotKey");}
 	public String getDefaultResetGameCountsHotKey() {return defaultProps.getProperty("ResetGameCountsHotKey");}
 	public String getDefaultResetScoresHotKey() {return defaultProps.getProperty("ResetScoresHotKey");}
 	public String getDefaultResetTimeOutsHotKey() {return defaultProps.getProperty("ResetTimeOutsHotKey");}
@@ -1374,6 +1382,7 @@ public class Settings {
 		warn2HotKey = configProps.getProperty("Warn2HotKey");
 		switchResetWarnsHotKey = configProps.getProperty("SwitchResetWarnsHotKey");
 		switchSidesHotKey = configProps.getProperty("SwitchSidesHotKey");
+		resetNamesHotKey = configProps.getProperty("ResetNamesHotKey");
 		resetGameCountsHotKey = configProps.getProperty("ResetGameCountsHotKey");
 		resetScoresHotKey = configProps.getProperty("ResetScoresHotKey");
 		resetTimeOutsHotKey = configProps.getProperty("ResetTimeOutsHotKey");
@@ -1509,6 +1518,7 @@ public class Settings {
 		configProps.setProperty("Warn2HotKey", this.getWarn2HotKey());
 		configProps.setProperty("SwitchResetWarnsHotKey", this.getSwitchResetWarnsHotKey());
 		configProps.setProperty("SwitchSidesHotKey", this.getSwitchSidesHotKey());
+		configProps.setProperty("ResetNamesHotKey", this.getResetNamesHotKey());
 		configProps.setProperty("ResetGameCountsHotKey", this.getResetGameCountsHotKey());
 		configProps.setProperty("ResetScoresHotKey", this.getResetScoresHotKey());
 		configProps.setProperty("ResetTimeOutsHotKey", this.getResetTimeOutsHotKey());

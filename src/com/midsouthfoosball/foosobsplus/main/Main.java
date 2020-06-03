@@ -81,13 +81,13 @@ public class Main {
 	////// Create the View Panels to Display (mVc) \\\\\\
 	
 	private TablePanel 			tablePanel 			= new TablePanel();
-	private TimerPanel 			timerPanel 			= new TimerPanel();
+	private TimerPanel 			timerPanel 			= new TimerPanel(settings);
 	private MatchPanel			matchPanel			= new MatchPanel(settings);
 	private TeamPanel 			teamPanel1 			= new TeamPanel(1, settings.getSide1Color(), settings);
 	private TeamPanel 			teamPanel2 			= new TeamPanel(2, settings.getSide2Color(), settings);
 	private StatsEntryPanel 	statsEntryPanel 	= new StatsEntryPanel();
-	private SwitchPanel 		switchPanel 		= new SwitchPanel();
-	private ResetPanel 			resetPanel 			= new ResetPanel();
+	private SwitchPanel 		switchPanel 		= new SwitchPanel(settings);
+	private ResetPanel 			resetPanel 			= new ResetPanel(settings);
 	private StatsDisplayPanel 	statsDisplayPanel 	= new StatsDisplayPanel();
 
 	////// Set up Timer and Settings Windows \\\\\\
