@@ -144,6 +144,8 @@ public class Main {
 		fetchAll(settings.getTableName());
 		this.hotKeysPanel.addSaveListener(new HotKeysSaveListener());
 		this.settingsPanel.addSaveListener(new SettingsSaveListener());
+		this.statsEntryPanel.addUndoListener(new StatsEntryUndoListener());
+		this.statsEntryPanel.addRedoListener(new StatsEntryRedoListener());
 	}
 	private void fetchAll(String tableNbr) {
 		tableController.fetchAll(tableNbr);
@@ -178,6 +180,16 @@ public class Main {
 			win.dispose();
 			teamPanel1.setTitle();
 			teamPanel2.setTitle();
+		}
+	}
+	private class StatsEntryUndoListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("Undo Clicked!");
+		}
+	}
+	private class StatsEntryRedoListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("Redo Clicked!");
 		}
 	}
 }

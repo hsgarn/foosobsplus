@@ -357,9 +357,13 @@ public final class MainFrame extends JFrame {
 	public SettingsPanel getSettingsPanel() {
 		return settingsFrame.getSettingsPanel();
 	}
-	public void packFrames() {
+	public StatsEntryPanel getStatsEntryPanel() {
+		return statsEntryPanel;
+	}
+/*	public void packFrames() {
 		SwingUtilities.updateComponentTreeUI(this);
 		this.pack();
 	}
+*/
 }
 
