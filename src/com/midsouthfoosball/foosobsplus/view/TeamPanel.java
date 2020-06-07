@@ -580,6 +580,9 @@ public class TeamPanel extends JPanel {
 		border.setTitleJustification(TitledBorder.CENTER);
 		this.setBorder(border);
 	}
+	public void updateMnemonics() {
+		setMnemonics(teamNbr);
+	}
 	public void setTitle() {
 		setTitle(buildTitle());
 	}

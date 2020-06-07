@@ -180,6 +180,9 @@ public class ResetPanel extends JPanel {
 			btnResetAll.setMnemonic(settings.getResetAllHotKey().charAt(0));
 		};
 	}
+	public void updateMnemonics() {
+		setMnemonics();
+	}
 	////// Listeners //////
 	public void addResetNamesListener(ActionListener listenForBtnResetNames) {
 		btnResetNames.addActionListener(listenForBtnResetNames);

@@ -26,7 +26,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -159,12 +158,16 @@ public class Main {
 	}
 	private class HotKeysSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			hotKeysPanel.saveSettings(settings);
 			JComponent comp = (JComponent) e.getSource();
-			JOptionPane.showMessageDialog(comp, "Changed HotKeys will take affect once program is restarted.");
 			Window win = SwingUtilities.getWindowAncestor(comp);
 			win.dispose();
-//			matchPanel.updateMnemonics();
-//			mainFrame.packFrames();
+			matchPanel.updateMnemonics();
+			teamPanel1.updateMnemonics();
+			teamPanel2.updateMnemonics();
+			timerPanel.updateMnemonics();
+			switchPanel.updateMnemonics();
+			resetPanel.updateMnemonics();
 		}
 	}
 	private class SettingsSaveListener implements ActionListener {

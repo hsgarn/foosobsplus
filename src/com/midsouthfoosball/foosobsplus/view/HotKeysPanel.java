@@ -484,13 +484,6 @@ public class HotKeysPanel extends JPanel {
 		add(txtSwitchGameCountsHotKey, "cell 1 14,alignx left");
 		txtSwitchGameCountsHotKey.setColumns(10);
 		
-		btnSave = new JButton("Save");
-		btnSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveSettings(settings);
-			}
-		});
-		
 		JLabel lblSwitchTimeOutsHotKey = new JLabel("Switch Time Outs");
 		add(lblSwitchTimeOutsHotKey, "cell 3 14,alignx trailing");
 		
@@ -499,6 +492,8 @@ public class HotKeysPanel extends JPanel {
 		txtSwitchTimeOutsHotKey.setText(settings.getSwitchTimeOutsHotKey());
 		add(txtSwitchTimeOutsHotKey, "cell 4 14,alignx left");
 		txtSwitchTimeOutsHotKey.setColumns(10);
+		
+		btnSave = new JButton("Save");
 		add(btnSave, "cell 3 16,alignx center");
 		
 		JButton btnCancel = new JButton("Cancel");
@@ -563,7 +558,7 @@ public class HotKeysPanel extends JPanel {
 		txtResetTimersHotKey.setText(settings.getDefaultResetTimersHotKey());
 	}
 	
-	private void saveSettings(Settings settings) {
+	public void saveSettings(Settings settings) {
 		settings.setStartMatchHotKey(txtStartMatchHotKey.getText());
 		settings.setTeam1ClearHotKey(txtTeam1ClearHotKey.getText());
 		settings.setTeam1SwitchPositionsHotKey(txtTeam1SwitchPositionsHotKey.getText());

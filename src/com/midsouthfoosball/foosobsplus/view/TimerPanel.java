@@ -307,5 +307,7 @@ public class TimerPanel extends JPanel {
 	public void updateTimerInUse(String timerName) {
 		lblTimerInUse.setText(timerName);
 	}
-
+	public void updateMnemonics() {
+		setMnemonics();
+	}
 }

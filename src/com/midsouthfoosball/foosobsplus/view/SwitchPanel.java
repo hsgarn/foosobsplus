@@ -247,5 +247,8 @@ public class SwitchPanel extends JPanel {
 	public void setLastScored(String txt) {
 		lblLastScored.setText(txt);
 	}
+	public void updateMnemonics() {
+		setMnemonics();
+	}
 
 }
