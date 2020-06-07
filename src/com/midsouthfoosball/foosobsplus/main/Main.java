@@ -20,7 +20,16 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.main;
 
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
+
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 import com.midsouthfoosball.foosobsplus.controller.MainController;
 import com.midsouthfoosball.foosobsplus.controller.MatchController;
@@ -40,10 +49,12 @@ import com.midsouthfoosball.foosobsplus.model.Team;
 import com.midsouthfoosball.foosobsplus.model.TimeClock;
 import com.midsouthfoosball.foosobsplus.view.FileNamesFrame;
 import com.midsouthfoosball.foosobsplus.view.HotKeysFrame;
+import com.midsouthfoosball.foosobsplus.view.HotKeysPanel;
 import com.midsouthfoosball.foosobsplus.view.MainFrame;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
 import com.midsouthfoosball.foosobsplus.view.ResetPanel;
 import com.midsouthfoosball.foosobsplus.view.SettingsFrame;
+import com.midsouthfoosball.foosobsplus.view.SettingsPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
@@ -53,6 +64,18 @@ import com.midsouthfoosball.foosobsplus.view.TimerPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
 
 public class Main {
+	{
+		try {
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
+					UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("Can't set look and feel.");
+		}
+	}
 	
 	private Settings			settings			= new Settings();
 	public OBSInterface 		obsInterface 		= new OBSInterface(settings);
@@ -94,7 +117,9 @@ public class Main {
 	
 	private TimerWindowFrame 	timerWindowFrame 	= new TimerWindowFrame();
 	private SettingsFrame 		settingsFrame 		= new SettingsFrame(settings);
+	private SettingsPanel		settingsPanel		= settingsFrame.getSettingsPanel();
 	private HotKeysFrame 		hotKeysFrame 		= new HotKeysFrame(settings);
+	private HotKeysPanel 		hotKeysPanel		= hotKeysFrame.getHotKeysPanel();
 	private FileNamesFrame		fileNamesFrame		= new FileNamesFrame(settings, obsInterface);
 	
 	////// Display the View Panels on a JFrame \\\\\\
@@ -118,6 +143,8 @@ public class Main {
 		obsInterface.setFilePath(settings.getDatapath());
 		obsInterface.setTableName(settings.getTableName());
 		fetchAll(settings.getTableName());
+		this.hotKeysPanel.addSaveListener(new HotKeysSaveListener());
+		this.settingsPanel.addSaveListener(new SettingsSaveListener());
 	}
 	private void fetchAll(String tableNbr) {
 		tableController.fetchAll(tableNbr);
@@ -129,5 +156,25 @@ public class Main {
 	}
 	public static void setCurrentGameNbr(int gameNbr) {
 		currentGameNbr = gameNbr;
+	}
+	private class HotKeysSaveListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			JComponent comp = (JComponent) e.getSource();
+			JOptionPane.showMessageDialog(comp, "Changed HotKeys will take affect once program is restarted.");
+			Window win = SwingUtilities.getWindowAncestor(comp);
+			win.dispose();
+//			matchPanel.updateMnemonics();
+//			mainFrame.packFrames();
+		}
+	}
+	private class SettingsSaveListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			settingsPanel.saveSettings(settings);
+			JComponent comp = (JComponent) e.getSource();
+			Window win = SwingUtilities.getWindowAncestor(comp);
+			win.dispose();
+			teamPanel1.setTitle();
+			teamPanel2.setTitle();
+		}
 	}
 }

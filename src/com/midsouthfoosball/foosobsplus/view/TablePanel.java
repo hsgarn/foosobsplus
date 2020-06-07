@@ -53,7 +53,7 @@ public class TablePanel extends JPanel {
 
 		Dimension dim = getPreferredSize();
 		dim.width = 350;
-		dim.height = 50;
+		dim.height = 100;
 		setPreferredSize(dim);
 		
 		lblTournamentName = new JLabel("Tournament Name: ");

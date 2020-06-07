@@ -51,7 +51,7 @@ public class MatchPanel extends JPanel {
 		
 		Dimension dim = getPreferredSize();
 		dim.width = 350;
-		dim.height = 50;
+		dim.height = 100;
 		setPreferredSize(dim);
 		
 		btnStartMatch = new JButton("Start Match");
@@ -59,6 +59,8 @@ public class MatchPanel extends JPanel {
 		lblElapsedTimeLabel = new JLabel("Elapsed Time:");
 		lblStartTime = new JLabel("00:00:00");
 		lblElapsedTime = new JLabel("00:00:00");
+
+		setMnemonics();
 		
 		Border innerBorder = BorderFactory.createTitledBorder("Match Information");
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
@@ -83,11 +85,6 @@ public class MatchPanel extends JPanel {
 		gc.fill = GridBagConstraints.VERTICAL;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(5, 5, 5, 5);
-		if(settings.getStartMatchHotKey().isEmpty()) {
-			btnStartMatch.setMnemonic(-1);
-		} else {
-			btnStartMatch.setMnemonic(settings.getStartMatchHotKey().charAt(0));
-		};
 		add(btnStartMatch, gc);
 		gc.gridheight = 1;
 		
@@ -136,5 +133,17 @@ public class MatchPanel extends JPanel {
 	}
 	public void updateStartTime(String startTime) {
 		lblStartTime.setText(startTime);
+	}
+	
+	////// Utility Methods \\\\\\
+	private void setMnemonics() {
+		if(settings.getStartMatchHotKey().isEmpty()) {
+			btnStartMatch.setMnemonic(-1);
+		} else {
+			btnStartMatch.setMnemonic(settings.getStartMatchHotKey().charAt(0));
+		};
+	}
+	public void updateMnemonics() {
+		setMnemonics();
 	}
 }

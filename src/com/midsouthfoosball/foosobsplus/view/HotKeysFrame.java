@@ -2,10 +2,7 @@ package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Dimension;
 import java.io.IOException;
-
 import javax.swing.JFrame;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
@@ -16,17 +13,6 @@ public class HotKeysFrame extends JFrame {
 	
 	public HotKeysFrame(Settings settings) {
 		super("FoosOBSPlus Hot Key Settings");
-		
-		try {
-			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
-		} catch (Exception e) {
-			System.out.println("Can't set look and feel.");
-		}
 		
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
@@ -40,5 +26,8 @@ public class HotKeysFrame extends JFrame {
 		
 		getContentPane().add(hotKeysPanel);
 		pack();
+	}
+	public HotKeysPanel getHotKeysPanel() {
+		return hotKeysPanel;
 	}
 }

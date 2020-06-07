@@ -45,7 +45,7 @@ public class ResetController {
 		this.resetPanel.addResetAllListener(new ResetAllListener());
 	}
 
-	////// Reset Panel Lisetner Objects //////
+	////// Reset Panel Listener Objects //////
 	
 	private class ResetNamesListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {

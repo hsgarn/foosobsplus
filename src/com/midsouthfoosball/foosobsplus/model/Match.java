@@ -21,7 +21,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.model;
 
 import java.io.IOException;
-import java.util.Date;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 

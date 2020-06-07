@@ -286,24 +286,26 @@ public class SettingsPanel extends JPanel {
 		add(chckbxAutoCapNames, "cell 1 15");
 
 		btnSave = new JButton("Save");
-		btnSave.addActionListener(new ActionListener() {
+/*		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveSettings(settings);
-				JComponent comp = (JComponent) e.getSource();
-				Window win = SwingUtilities.getWindowAncestor(comp);
-				win.dispose();
+//				JComponent comp = (JComponent) e.getSource();
+//				Window win = SwingUtilities.getWindowAncestor(comp);
+//				win.dispose();
 			}
 		});
+*/
 		add(btnSave, "cell 1 18,alignx center");
 
 		JButton btnCancel = new JButton("Cancel");
-		btnCancel.addActionListener(new ActionListener() {
+/*		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JComponent comp = (JComponent) e.getSource();
 				Window win = SwingUtilities.getWindowAncestor(comp);
 				win.dispose();
 			}
 		});
+*/
 		add(btnCancel, "cell 2 18,alignx center");
 		
 		JButton btnRestoreDefaults = new JButton("Restore Defaults");
@@ -362,7 +364,7 @@ public class SettingsPanel extends JPanel {
 		txtSide2Color.setText(settings.getDefaultSide2Color());
 	}
 	
-	private void saveSettings(Settings settings) {
+	public void saveSettings(Settings settings) {
     	if (isValidInteger(txtPointsToWin.getText())) {
 			settings.setPointsToWin(Integer.parseInt(txtPointsToWin.getText()));
     	}
@@ -441,5 +443,10 @@ public class SettingsPanel extends JPanel {
     	} catch (NumberFormatException e) {
     		return false;
     	}
+	}
+	
+	////// Listeners \\\\\\
+	public void addSaveListener(ActionListener listenForBtnSave) {
+		btnSave.addActionListener(listenForBtnSave);
 	}
 }

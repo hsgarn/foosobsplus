@@ -73,7 +73,7 @@ public class MatchController {
 	}
 	private String getCurrentTime() {
 		Date date = new Date();
-		SimpleDateFormat formatter = new SimpleDateFormat("HH;mm:ss");
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
 		return formatter.format(date);
 	}
 	public void startMatch() {

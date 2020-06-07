@@ -39,6 +39,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 @SuppressWarnings("serial")
 public final class MainFrame extends JFrame {
@@ -92,7 +93,7 @@ public final class MainFrame extends JFrame {
 			}
 		});
 
-		setSize(1300,650);
+		setSize(1300,700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
@@ -216,17 +217,18 @@ public final class MainFrame extends JFrame {
 	
 	private void layoutComponents() {
 		GridBagConstraints gc = new GridBagConstraints();
-		gc.gridy = 0;
+		gc.gridy = -1;
 
 		//////// Table Panel ////////
 		
 		gc.gridy++;
 
-		gc.weightx = 1;
-		gc.weighty = 1;
+		gc.weightx = .5;
+		gc.weighty = .5;
 		
 		gc.gridx = 0;
-		gc.gridwidth =1;
+		gc.gridwidth = 1;
+		gc.gridheight = 1;
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
@@ -234,8 +236,8 @@ public final class MainFrame extends JFrame {
 		
 		//////// Timer Panel ////////
 		
-		gc.weightx = 1;
-		gc.weighty = 1;
+		gc.weightx = .5;
+		gc.weighty = .5;
 		
 		gc.gridx = 1;
 		gc.gridwidth =1;
@@ -244,12 +246,11 @@ public final class MainFrame extends JFrame {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(timerPanel, gc);
-		gc.gridheight = 1;
 
 		//////// Stats Entry Panel ////////
 		
-		gc.weightx = 1;
-		gc.weighty = 1;
+		gc.weightx = .5;
+		gc.weighty = .5;
 		
 		gc.gridx = 2;
 		gc.gridwidth =1;
@@ -262,8 +263,8 @@ public final class MainFrame extends JFrame {
 		
 		//////// Stats Display Panel ////////
 		
-		gc.weightx = 1;
-		gc.weighty = 1;
+		gc.weightx = .5;
+		gc.weighty = .5;
 		
 		gc.gridx = 3;
 		gc.gridwidth =1;
@@ -272,17 +273,17 @@ public final class MainFrame extends JFrame {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(statsDisplayPanel, gc);
-		gc.gridheight = 1;
 		
 		////////// Match Panel  ///////////
 		
 		gc.gridy++;
 
-		gc.weightx = 1;
-		gc.weighty = 1;
+		gc.weightx = .5;
+		gc.weighty = .5;
 		
 		gc.gridx = 0;
 		gc.gridwidth =1;
+		gc.gridheight = 1;
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
@@ -292,11 +293,12 @@ public final class MainFrame extends JFrame {
 		
 		gc.gridy++;
 
-		gc.weightx = 1;
-		gc.weighty = 1;
+		gc.weightx = .5;
+		gc.weighty = .5;
 		
 		gc.gridx = 0;
 		gc.gridwidth =1;
+		gc.gridheight = 1;
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
@@ -304,11 +306,12 @@ public final class MainFrame extends JFrame {
 		
 		////////// Switch Panel ///////////
 
-		gc.weightx = 1;
-		gc.weighty = 1;
+		gc.weightx = .5;
+		gc.weighty = .5;
 		
 		gc.gridx = 1;
 		gc.gridwidth =1;
+		gc.gridheight = 1;
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
@@ -316,11 +319,12 @@ public final class MainFrame extends JFrame {
 
 		//////// Team 2 Panel ////////
 
-		gc.weightx = 1;
-		gc.weighty = 1;
+		gc.weightx = .5;
+		gc.weighty = .5;
 		
 		gc.gridx = 2;
 		gc.gridwidth =1;
+		gc.gridheight = 1;
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
@@ -328,11 +332,12 @@ public final class MainFrame extends JFrame {
 
 		//////// Reset Panel ////////
 
-		gc.weightx = 1;
-		gc.weighty = 1;
+		gc.weightx = .5;
+		gc.weighty = .5;
 		
 		gc.gridx = 3;
 		gc.gridwidth =1;
+		gc.gridheight = 1;
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
@@ -343,6 +348,18 @@ public final class MainFrame extends JFrame {
 	
 	public void addTimerWindowListener(ActionListener listenForChkBoxTimerWindow) {
 		viewTimerWindow.addActionListener(listenForChkBoxTimerWindow);
+	}
+	
+	///// Utility Methods \\\\\\
+	public HotKeysPanel getHotKeysPanel() {
+		return hotKeysFrame.getHotKeysPanel();
+	}
+	public SettingsPanel getSettingsPanel() {
+		return settingsFrame.getSettingsPanel();
+	}
+	public void packFrames() {
+		SwingUtilities.updateComponentTreeUI(this);
+		this.pack();
 	}
 }
 

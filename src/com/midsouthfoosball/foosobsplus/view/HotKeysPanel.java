@@ -29,7 +29,6 @@ import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -82,6 +81,7 @@ public class HotKeysPanel extends JPanel {
 	private JTextField txtRecallTimerHotKey;
 	private JTextField txtResetTimersHotKey;
 	private JTextField txtResetNamesHotKey;
+	private JButton btnSave;
 
 	public HotKeysPanel(Settings settings) throws IOException {
 		setLayout(new MigLayout("", "[][grow][10.00][][grow][10.00][][grow][10.00][][grow]", "[][][][][][][][][][][][][][][][][]"));
@@ -484,14 +484,10 @@ public class HotKeysPanel extends JPanel {
 		add(txtSwitchGameCountsHotKey, "cell 1 14,alignx left");
 		txtSwitchGameCountsHotKey.setColumns(10);
 		
-		JButton btnSave = new JButton("Save");
+		btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveSettings(settings);
-				JComponent comp = (JComponent) e.getSource();
-				JOptionPane.showMessageDialog(comp, "Changed HotKeys will take affect once program is restarted.");
-				Window win = SwingUtilities.getWindowAncestor(comp);
-				win.dispose();
 			}
 		});
 		
@@ -613,5 +609,9 @@ public class HotKeysPanel extends JPanel {
 		} catch (IOException ex) {
 			System.out.print("Error saving properties file: " + ex.getMessage());		
 		}
+	}
+	////// Listeners \\\\\\
+	public void addSaveListener(ActionListener listenForBtnSave) {
+		btnSave.addActionListener(listenForBtnSave);
 	}
 }
