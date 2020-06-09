@@ -76,6 +76,8 @@ public class Main {
 		}
 	}
 	
+	////// Settings and OBSInterface setup \\\\\\
+	
 	private Settings			settings			= new Settings();
 	public OBSInterface 		obsInterface 		= new OBSInterface(settings);
 	private int 				maxGames			= settings.getGamesToWin() * 2 + 1;
@@ -134,7 +136,7 @@ public class Main {
 	TeamController 		teamController 		= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, timerController);
 	TableController 	tableController 	= new TableController(obsInterface, settings, table, match, tablePanel, teamController);
 	MatchController     matchController     = new MatchController(obsInterface, settings, match, stats, gameClock, matchPanel, statsEntryPanel, statsDisplayPanel, teamController);
-	StatsController 	statsController 	= new StatsController(stats, statsEntryPanel, statsDisplayPanel, teamController, matchController);
+	StatsController 	statsController 	= new StatsController(stats, match, team1, team2, statsEntryPanel, statsDisplayPanel, teamController, matchController);
 	SwitchController 	switchController 	= new SwitchController(switchPanel, teamController, statsController);
 	ResetController 	resetController 	= new ResetController(resetPanel, teamController, statsController);
 	
@@ -185,11 +187,17 @@ public class Main {
 	private class StatsEntryUndoListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Undo Clicked!");
+			statsController.undo();
+			teamController.displayAll();
+			System.out.println("Undo Finished!");
 		}
 	}
 	private class StatsEntryRedoListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Redo Clicked!");
+			statsController.redo();
+			teamController.displayAll();
+			System.out.println("Redo Finished!");
 		}
 	}
 }

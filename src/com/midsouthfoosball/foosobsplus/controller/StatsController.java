@@ -22,25 +22,42 @@ package com.midsouthfoosball.foosobsplus.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Stack;
 
 import javax.swing.JTextField;
 
-import com.midsouthfoosball.foosobsplus.commands.*;
+import com.midsouthfoosball.foosobsplus.commands.Command;
+import com.midsouthfoosball.foosobsplus.commands.CommandSwitch;
+import com.midsouthfoosball.foosobsplus.commands.DGT1Command;
+import com.midsouthfoosball.foosobsplus.commands.IGT1Command;
+import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.Stats;
 import com.midsouthfoosball.foosobsplus.model.Team;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
 
 public class StatsController {
+
+	////// undo/redo setup \\\\\\
+	
+	private int undoRedoPointer = -1;
+	private Stack<Command> commandStack = new Stack<>();
+	
 	private Stats stats;
+	private Match match;
+	private Team team1;
+	private Team team2;
 	private StatsEntryPanel statsEntryPanel;
 	private StatsDisplayPanel statsDisplayPanel;
 	private TeamController teamController;
 	private MatchController matchController;
 	private CommandSwitch mySwitch;
 	
-	public StatsController(Stats stats, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, TeamController teamController, MatchController matchController) {
+	public StatsController(Stats stats, Match match, Team team1, Team team2, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, TeamController teamController, MatchController matchController) {
 		this.stats = stats;
+		this.match = match;
+		this.team1 = team1;
+		this.team2 = team2;
 		this.statsEntryPanel = statsEntryPanel;
 		this.statsDisplayPanel = statsDisplayPanel;
 		this.teamController = teamController;
@@ -90,39 +107,36 @@ public class StatsController {
 
 	////// Utility Methods \\\\\\
 
-	private void processCommand(String command) {
-		mySwitch.execute(command);
-		return;
-	}
 	private void loadCommands() {
-		Command psm = new PSMCommand(matchController);
-		Command sst = new SSTCommand(teamController);
-		Command spt = new SPTCommand(teamController);
-		Command sgt = new SGTCommand(teamController);
-		Command stt = new STTCommand(teamController);
-		Command srt = new SRTCommand(teamController);
-		Command prt = new PRTCommand(teamController);
-		Command ist1 = new IST1Command(teamController);
-		Command ist2 = new IST2Command(teamController);
-		Command dst1 = new DST1Command(teamController);
-		Command dst2 = new DST2Command(teamController);
-		Command igt1 = new IGT1Command(teamController);
-		Command igt2 = new IGT2Command(teamController);
-		Command dgt1 = new DGT1Command(teamController);
-		Command dgt2 = new DGT2Command(teamController);
-		Command utt1 = new UTT1Command(teamController);
-		Command utt2 = new UTT2Command(teamController);
-		Command rtt1 = new RTT1Command(teamController);
-		Command rtt2 = new RTT2Command(teamController);
-		Command prt1 = new PRT1Command(teamController);
-		Command prt2 = new PRT2Command(teamController);
-		Command pwt1 = new PWT1Command(teamController);
-		Command pwt2 = new PWT2Command(teamController);
-		Command pss = new PSSCommand(teamController);
-		Command xpt1 = new XPT1Command(teamController);
-		Command xpt2 = new XPT2Command(teamController);
+/*		Command psm = new PSMCommand(matchController);
+		Command sst = new SSTCommand(teamController, match);
+		Command spt = new SPTCommand(teamController, match);
+		Command sgt = new SGTCommand(teamController, match);
+		Command stt = new STTCommand(teamController, match);
+		Command srt = new SRTCommand(teamController, match);
+		Command prt = new PRTCommand(teamController, match);
+		Command ist1 = new IST1Command(teamController, match);
+		Command ist2 = new IST2Command(teamController, match);
+		Command dst1 = new DST1Command(teamController, match);
+		Command dst2 = new DST2Command(teamController, match);
+		Command igt1 = new IGT1Command(teamController, match);
+		Command igt2 = new IGT2Command(teamController, match);
+		Command dgt1 = new DGT1Command(teamController, match);
+		Command dgt2 = new DGT2Command(teamController, match);
+		Command utt1 = new UTT1Command(teamController, match);
+		Command utt2 = new UTT2Command(teamController, match);
+		Command rtt1 = new RTT1Command(teamController, match);
+		Command rtt2 = new RTT2Command(teamController, match);
+		Command prt1 = new PRT1Command(teamController, match);
+		Command prt2 = new PRT2Command(teamController, match);
+		Command pwt1 = new PWT1Command(teamController, match);
+		Command pwt2 = new PWT2Command(teamController, match);
+		Command pss = new PSSCommand(teamController, match);
+		Command xpt1 = new XPT1Command(teamController, match);
+		Command xpt2 = new XPT2Command(teamController, match);
+*/
 		mySwitch = new CommandSwitch();
-		mySwitch.register("PSM", psm);
+/*		mySwitch.register("PSM", psm);
 		mySwitch.register("SST", sst);
 		mySwitch.register("SPT", spt);
 		mySwitch.register("SGT", sgt);
@@ -148,6 +162,7 @@ public class StatsController {
 		mySwitch.register("PSS", pss);
 		mySwitch.register("XPT1", xpt1);
 		mySwitch.register("XPT2", xpt2);
+*/
 	}
 	public void displayAllStats() {
 		statsDisplayPanel.updatePassStats(1, teamController.getPassCompletes(1),teamController.getPassAttempts(1),teamController.getPassPercent(1));
@@ -170,5 +185,63 @@ public class StatsController {
 		statsDisplayPanel.updateStuffs(2,  teamController.getStuffs(2));
 		statsDisplayPanel.updateBreaks(1,  teamController.getBreaks(1));
 		statsDisplayPanel.updateBreaks(2,  teamController.getBreaks(2));
+	}
+	private void processCommand(String command) {
+//		mySwitch.execute(command);
+		System.out.println("command: " + command);
+		if (command.equals("IGT1")) insertIGT1Command();
+		if (command.equals("DGT1")) insertDGT1Command();
+		return;
+	}
+	private void insertIGT1Command() {
+		System.out.println("In insertIGT1Command");
+		System.out.println("  UndoRedoPointer: " + undoRedoPointer);
+		deleteElementsAfterPointer(undoRedoPointer);
+		Command command = new IGT1Command(teamController, match, team1, team2);
+		System.out.println("  IGT1Command: " + command);
+		command.execute();
+		commandStack.push(command);
+		undoRedoPointer++;
+		System.out.println("  UndoRedoPointer: " + undoRedoPointer);
+	}
+	private void insertDGT1Command() {
+		System.out.println("In insertDGT1Command");
+		System.out.println("  UndoRedoPointer: " + undoRedoPointer);
+		deleteElementsAfterPointer(undoRedoPointer);
+		Command command = new DGT1Command(teamController, match, team1, team2);
+		System.out.println("  DGT1Command: " + command);
+		command.execute();
+		commandStack.push(command);
+		undoRedoPointer++;
+		System.out.println("  UndoRedoPointer: " + undoRedoPointer);
+	}
+	public void undo()
+	{
+		if(undoRedoPointer < 0) return;
+		System.out.println("Undo: pulling from position: " + undoRedoPointer);
+	    Command command = commandStack.get(undoRedoPointer);
+		System.out.println("in Undo: Command: " + command);
+	    command.unExecute();
+	    undoRedoPointer--;
+		System.out.println("in Undo: UndoRedoPointer: " + undoRedoPointer);
+	}
+
+	public void redo()
+	{
+	    if(undoRedoPointer == commandStack.size() - 1)
+	        return;
+	    undoRedoPointer++;
+		System.out.println("in Redo: UndoRedoPointer: " + undoRedoPointer);
+	    Command command = commandStack.get(undoRedoPointer);
+		System.out.println("in Redo: Command: " + command);
+	    command.execute();
+	}
+	private void deleteElementsAfterPointer(int undoRedoPointer)
+	{
+	    if (commandStack.size()<1) return;
+	    for(int i = commandStack.size()-1; i > undoRedoPointer; i--)
+	    {
+	        commandStack.remove(i);
+	    }
 	}
 }
