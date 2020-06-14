@@ -20,70 +20,75 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.model;
 
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+
 import javax.swing.DefaultListModel;
 
-public class Stats {
-	private String code = "";
+public class Stats implements Serializable {
+	private static final long serialVersionUID = -3545984674770731270L;
+	private transient String code = "";
 	private DefaultListModel<String> codeHistory;
 	private String previousCode = "";
-	private String command = "";
-	private char previousTeam;
-	private char previousPosition;
-	private char previousAction;
-	private char previousModifier;
-	private char currentTeam;
-	private char currentPosition;
-	private char currentAction;
-	private char currentModifier;
-	private boolean isSameTeam;
-	private boolean isTeamScored;
-	private boolean isSameRod;
-	private boolean isBreak;
-	private boolean isPenalty;
-	private boolean isShot;
-	private boolean isPass;
-	private boolean isClear;
-	private boolean isDrop;
-	private boolean isTimeOut;
-	private boolean isFiveRod;
-	private boolean isTwoRod;
-	private boolean isThreeRod;
-	private boolean wasFiveRod;
-	private boolean wasTwoRod;
-	private boolean wasThreeRod;
-	private boolean isForwardDirection;
-	private boolean isShowParsed = true;
-	private boolean isTeam1;
-	private boolean isTeam2;
-	private boolean team1Scored;
-	private boolean team2Scored;
-	private boolean team1TimeOut;
-	private boolean team2TimeOut;
-	private boolean isCommand;
-	private boolean isPassComplete;
-	private boolean isClearComplete;
-	private boolean isStuff;
+	private transient String command = "";
+	private transient char previousTeam;
+	private transient char previousPosition;
+	private transient char previousAction;
+	private transient char previousModifier;
+	private transient char currentTeam;
+	private transient char currentPosition;
+	private transient char currentAction;
+	private transient char currentModifier;
+	private transient boolean isSameTeam;
+	private transient boolean isTeamScored;
+	private transient boolean isSameRod;
+	private transient boolean isBreak;
+	private transient boolean isPenalty;
+	private transient boolean isShot;
+	private transient boolean isPass;
+	private transient boolean isClear;
+	private transient boolean isDrop;
+	private transient boolean isTimeOut;
+	private transient boolean isFiveRod;
+	private transient boolean isTwoRod;
+	private transient boolean isThreeRod;
+	private transient boolean wasFiveRod;
+	private transient boolean wasTwoRod;
+	private transient boolean wasThreeRod;
+	private transient boolean isForwardDirection;
+	private transient boolean isShowParsed = true;
+	private transient boolean isTeam1;
+	private transient boolean isTeam2;
+	private transient boolean team1Scored;
+	private transient boolean team2Scored;
+	private transient boolean team1TimeOut;
+	private transient boolean team2TimeOut;
+	private transient boolean isCommand;
+	private transient boolean isPassComplete;
+	private transient boolean isClearComplete;
+	private transient boolean isStuff;
 	
-	private char breakChar = new Character('B');
-	private char stuffChar = new Character('F');
-	private char goalChar = new Character('G');
-	private char penaltyChar = new Character('X');
-	private char passChar = new Character('P');
-	private char shotChar = new Character('S');
-	private char clearChar = new Character('C');
-	private char timeOutChar = new Character('T');
-	private char fiveRodChar = new Character('5');
-	private char twoRodChar = new Character('2');
-	private char threeRodChar = new Character('3');
-	private char team1Char = new Character('Y');
-	private char team2Char = new Character('B');
-	private char commandChar = new Character('X');
-	private char dropChar = new Character('D');
+	private transient char breakChar = new Character('B');
+	private transient char stuffChar = new Character('F');
+	private transient char goalChar = new Character('G');
+	private transient char penaltyChar = new Character('X');
+	private transient char passChar = new Character('P');
+	private transient char shotChar = new Character('S');
+	private transient char clearChar = new Character('C');
+	private transient char timeOutChar = new Character('T');
+	private transient char fiveRodChar = new Character('5');
+	private transient char twoRodChar = new Character('2');
+	private transient char threeRodChar = new Character('3');
+	private transient char team1Char = new Character('Y');
+	private transient char team2Char = new Character('B');
+	private transient char commandChar = new Character('X');
+	private transient char dropChar = new Character('D');
 	
-	private Team team1;
-	private Team team2;
-	private Game[] games;
-	private Match match;
+	private transient Team team1;
+	private transient Team team2;
+	private transient Game[] games;
+	private transient Match match;
 
 	public Stats(Team team1, Team team2, Game[] games, Match match) {
 		codeHistory = new DefaultListModel<String>();
@@ -110,6 +115,9 @@ public class Stats {
 			previousCode = code;
 		}
 	}
+	public String getLastCode() {
+		return codeHistory.lastElement();
+	}
 	public boolean getTeam1Scored() {
 		return team1Scored;
 	}
@@ -128,17 +136,32 @@ public class Stats {
 	public String getCommand() {
 		return command;
 	}
-	public boolean isFiveRod() {
+	public boolean getIsFiveRod() {
 		return isFiveRod;
 	}
 
-	public boolean isTwoRod() {
+	public boolean getIsTwoRod() {
 		return isTwoRod;
 	}
 
-	public boolean isThreeRod() {
+	public boolean getIsThreeRod() {
 		return isThreeRod;
 	}
+	public DefaultListModel<String> getCodeHistory() {
+		return codeHistory;
+	}
+
+	public String getPreviousCode() {
+		return previousCode;
+	}
+	public void setCodeHistory(DefaultListModel<String> codeHistory) {
+		this.codeHistory = codeHistory;
+	}
+
+	public void setPreviousCode(String previousCode) {
+		this.previousCode = previousCode;
+	}
+
 	private void processCode(String code, String previousCode) {
 		parseCode(previousCode, code);
 		if(isCommand) {
@@ -553,4 +576,19 @@ private void resetFlags() {
 //		System.out.println("Team1Errors: " + team1.getErrors() + "       Team2Errors: " + team2.getErrors());
 		System.out.println("");
 	}
+	public void restoreState(byte[] serializedObject) {
+
+		Stats tempStats = null;
+		try {
+			byte b[] = serializedObject;
+			ByteArrayInputStream bi = new ByteArrayInputStream(b);
+			ObjectInputStream si = new ObjectInputStream(bi);
+			tempStats = (Stats) si.readObject();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		this.setCodeHistory(tempStats.getCodeHistory());
+		this.setPreviousCode(tempStats.getPreviousCode());
+	}
 }
+

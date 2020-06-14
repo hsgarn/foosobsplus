@@ -21,13 +21,17 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.model;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.text.DecimalFormat;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
-public class Team {
+public class Team implements Serializable {
 
+	private static final long serialVersionUID = 6807215509861474745L;
 	private String teamName = "";
 	private String forwardName = "";
 	private String goalieName = "";
@@ -36,8 +40,8 @@ public class Team {
 	private int timeOutCount;
 	private boolean resetState = false;
 	private boolean warnState = false;
-	private OBSInterface obsInterface;
-	private Settings settings;
+	private transient OBSInterface obsInterface;
+	private transient Settings settings;
 	private int teamNbr;
 	private String teamColor;
 	private int passAttempts = 0;
@@ -51,7 +55,6 @@ public class Team {
 	private int clearAttempts = 0;
 	private int clearCompletes = 0;
 	private Float clearPercent = 0f;
-	private int[] gameScores;
 	private int aces = 0;
 	private int twoBarPassAttempts = 0;
 	private int twoBarPassCompletes = 0;
@@ -70,6 +73,9 @@ public class Team {
 		this.settings = settings;
 		this.teamNbr = teamNbr;
 		this.teamColor = teamColor;
+	}
+	public int getTeamNbr() {
+		return teamNbr;
 	}
 	public void setTeamNbr(int teamNbr) {
 		this.teamNbr = teamNbr;
@@ -376,6 +382,17 @@ public class Team {
 			setPassPercent(Float.parseFloat(passPercent.replaceAll("[^\\d.]", ""))); // only get numbers - drop the % sign
 		}
 	}
+	public void setPassBreaks(int passBreaks) {
+		this.passBreaks = passBreaks;
+		writePassBreaks();
+	}
+	public void setPassBreaks(String passBreaks) {
+		if(passBreaks=="") {
+			setPassBreaks(0);
+		} else {
+			setPassBreaks(Integer.parseInt(passBreaks));
+		}
+	}
 	public void setShotAttempts(int shotAttempts) {
 		this.shotAttempts = shotAttempts;
 		writeShotAttempts();
@@ -632,6 +649,13 @@ public class Team {
 			e.printStackTrace();
 		}
     }
+    private void writePassBreaks() {
+//    	try {
+//   		obsInterface.setContents(settings.getPassBreaksFileName(teamNbr), Integer.toString(getPassBreaks()));
+//    	} catch (IOException e) {
+//    		e.printStackTrace();
+//    	}
+    }
     private void writeShotAttempts() {
 		try {
 			obsInterface.setContents(settings.getShotAttemptsFileName(teamNbr), Integer.toString(getShotAttempts()));
@@ -767,5 +791,50 @@ public class Team {
 		writeWarn();
 		writeTimeOuts();
 		writeStats();
+	}
+	public void restoreState(byte[] serializedObject) {
+
+		Team tempTeam = null;
+		try {
+			byte b[] = serializedObject;
+			ByteArrayInputStream bi = new ByteArrayInputStream(b);
+			ObjectInputStream si = new ObjectInputStream(bi);
+			tempTeam = (Team) si.readObject();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		this.setTeamNbr(tempTeam.getTeamNbr());
+		this.setTeamName(tempTeam.getTeamName());
+		this.setForwardName(tempTeam.getForwardName());
+		this.setGoalieName(tempTeam.getGoalieName());
+		this.setScore(tempTeam.getScore());
+		this.setGameCount(tempTeam.getGameCount());
+		System.out.println("GameCount: " + this.gameCount);
+		this.setTimeOutCount(tempTeam.getTimeOutCount());
+		this.setReset(tempTeam.getReset());
+		this.setWarn(tempTeam.getWarn());
+		this.setTeamColor(tempTeam.getTeamColor());
+		this.setPassAttempts(tempTeam.getPassAttempts());
+		this.setPassCompletes(tempTeam.getPassCompletes());
+		this.setPassBreaks(tempTeam.getPassBreaks());
+		this.setPassPercent(tempTeam.getPassPercent());
+		this.setShotAttempts(tempTeam.getShotAttempts());
+		this.setShotCompletes(tempTeam.getShotCompletes());
+		this.setShotPercent(tempTeam.getShotPercent());
+//		this.setShotBreaks(tempTeam.getShotBreaks());
+		this.setClearAttempts(tempTeam.getClearAttempts());
+		this.setClearCompletes(tempTeam.getClearCompletes());
+		this.setClearPercent(tempTeam.getClearPercent());
+//		this.setAces(tempTeam.getAces());
+		this.setTwoBarPassAttempts(tempTeam.getTwoBarPassAttempts());
+		this.setTwoBarPassCompletes(tempTeam.getTwoBarPassCompletes());
+		this.setTwoBarPassPercent(tempTeam.getTwoBarPassPercent());
+//		this.setShotsOnGoal(tempTeam.getShotsOnGoal());
+		this.setScoring(tempTeam.getScoring());
+		this.setThreeBarScoring(tempTeam.getThreeBarScoring());
+		this.setFiveBarScoring(tempTeam.getFiveBarScoring());
+		this.setTwoBarScoring(tempTeam.getTwoBarScoring());
+		this.setBreaks(tempTeam.getBreaks());
+		this.setStuffs(tempTeam.getStuffs());
 	}
 }

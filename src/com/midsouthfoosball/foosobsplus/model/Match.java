@@ -20,28 +20,33 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.model;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
-public class Match {
+public class Match implements Serializable {
 	
-	private Team team1;
-	private Team team2;
-	private Settings settings;
-	private OBSInterface obsInterface;
+	private static final long serialVersionUID = -3958726389588837391L;
+	private transient Team team1;
+	private transient Team team2;
+	private transient Settings settings;
+	private transient OBSInterface obsInterface;
 	private int lastScored; // team number of the last team to score in this match
-	private String startTime;
-	private String endTime;
-	private int elapsedTime;
-	private int[] points;
-	private int[] threeBarPoints;
-	private int[] fiveBarPoints;
-	private int[] twoBarPoints;
-	private int[] shotsOnGoal;
-	private int[] breaks;
-	private int[] stuffs;
-	private Game[] games;
+	private transient String startTime;
+	private transient String endTime;
+	private transient int elapsedTime;
+	private transient int[] points;
+	private transient int[] threeBarPoints;
+	private transient int[] fiveBarPoints;
+	private transient int[] twoBarPoints;
+	private transient int[] shotsOnGoal;
+	private transient int[] breaks;
+	private transient int[] stuffs;
+	private transient Game[] games;
+
 	public Match(OBSInterface obsInterface, Settings settings, Team team1, Team team2) {
 		this.team1 = team1;
 		this.team2 = team2;
@@ -237,5 +242,18 @@ public class Match {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	public void restoreState(byte[] serializedObject) {
+
+		Match tempMatch = null;
+		try {
+			byte b[] = serializedObject;
+			ByteArrayInputStream bi = new ByteArrayInputStream(b);
+			ObjectInputStream si = new ObjectInputStream(bi);
+			tempMatch = (Match) si.readObject();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		this.setLastScored(tempMatch.getLastScored());
 	}
 }
