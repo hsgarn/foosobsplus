@@ -107,6 +107,8 @@ public class FileNamesPanel extends JPanel {
 	private JTextField txtTeam2FiveBarScoringFileName;
 	private JTextField txtTeam1TwoBarScoringFileName;
 	private JTextField txtTeam2TwoBarScoringFileName;
+	private JTextField txtTeam1SOGFileName;
+	private JTextField txtTeam2SOGFileName;
 	OBSInterface obsInterface;
 	private String defaultFilePath = "c:\\temp";
 
@@ -175,6 +177,8 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2FiveBarScoringFileName.setText(settings.getDefaultTeam2FiveBarScoringFileName());
 		txtTeam1TwoBarScoringFileName.setText(settings.getDefaultTeam1TwoBarScoringFileName());
 		txtTeam2TwoBarScoringFileName.setText(settings.getDefaultTeam2TwoBarScoringFileName());
+		txtTeam1SOGFileName.setText(settings.getDefaultTeam1SOGFileName());
+		txtTeam2SOGFileName.setText(settings.getDefaultTeam2SOGFileName());
 	}
 
 	private void saveSettings(Settings settings) {
@@ -233,6 +237,8 @@ public class FileNamesPanel extends JPanel {
 		settings.setTeam2FiveBarScoringFileName(txtTeam2FiveBarScoringFileName.getText());
 		settings.setTeam1TwoBarScoringFileName(txtTeam1TwoBarScoringFileName.getText());
 		settings.setTeam2TwoBarScoringFileName(txtTeam2TwoBarScoringFileName.getText());
+		settings.setTeam1SOGFileName(txtTeam1SOGFileName.getText());
+		settings.setTeam2SOGFileName(txtTeam2SOGFileName.getText());
 		try {
 			settings.saveToConfig();
 		} catch (IOException ex) {
@@ -320,7 +326,7 @@ public class FileNamesPanel extends JPanel {
 		add(lblFileNameCol4, "cell 11 1");
 
 		JLabel lblTeam1NameFileName = new JLabel("Team 1:");
-		add(lblTeam1NameFileName, "cell 1 2,alignx trailing");
+		add(lblTeam1NameFileName, "cell 1 2,alignx right");
 
 		txtTeam1NameFileName = new JTextField();
 		txtTeam1NameFileName.setText(settings.getTeamNameFileName(1));
@@ -328,7 +334,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam1NameFileName.setColumns(10);
 
 		JLabel lblTeam1Forward = new JLabel("Team 1 Forward");
-		add(lblTeam1Forward, "cell 4 2,alignx trailing");
+		add(lblTeam1Forward, "cell 4 2,alignx right");
 
 		txtTeam1ForwardFileName = new JTextField();
 		txtTeam1ForwardFileName.setText(settings.getTeamForwardFileName(1));
@@ -360,7 +366,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2NameFileName.setColumns(10);
 
 		JLabel lblTeam1Goalie = new JLabel("Team 1 Goalie");
-		add(lblTeam1Goalie, "cell 4 3,alignx trailing");
+		add(lblTeam1Goalie, "cell 4 3,alignx right");
 
 		txtTeam1GoalieFileName = new JTextField();
 		txtTeam1GoalieFileName.setText(settings.getTeamGoalieFileName(1));
@@ -368,7 +374,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam1GoalieFileName.setColumns(10);
 		
 		JLabel lblTeam1PassCompletesFileName = new JLabel("Team 1 Pass Completes");
-		add(lblTeam1PassCompletesFileName, "cell 7 3,alignx trailing");
+		add(lblTeam1PassCompletesFileName, "cell 7 3,alignx right");
 		
 		txtTeam1PassCompletesFileName = new JTextField();
 		txtTeam1PassCompletesFileName.setText(settings.getPassCompletesFileName(1));
@@ -376,7 +382,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam1PassCompletesFileName.setColumns(20);
 		
 		JLabel lblTeam2PassPercentFileName = new JLabel("Team 2 Pass Percent");
-		add(lblTeam2PassPercentFileName, "cell 10 3,alignx trailing");
+		add(lblTeam2PassPercentFileName, "cell 10 3,alignx right");
 		
 		txtTeam2PassPercentFileName = new JTextField();
 		txtTeam2PassPercentFileName.setText(settings.getPassPercentFileName(2));
@@ -392,7 +398,7 @@ public class FileNamesPanel extends JPanel {
 		txtGameCount1FileName.setColumns(10);
 
 		JLabel lblTeam2Forward = new JLabel("Team 2 Forward");
-		add(lblTeam2Forward, "cell 4 4,alignx trailing");
+		add(lblTeam2Forward, "cell 4 4,alignx right");
 
 		txtTeam2ForwardFileName = new JTextField();
 		txtTeam2ForwardFileName.setText(settings.getTeamForwardFileName(2));
@@ -408,7 +414,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2PassAttemptsFileName.setColumns(20);
 		
 		JLabel lblTeam1ShotPercentFileName = new JLabel("Team 1 Shot Percent");
-		add(lblTeam1ShotPercentFileName, "cell 10 4,alignx trailing");
+		add(lblTeam1ShotPercentFileName, "cell 10 4,alignx right");
 		
 		txtTeam1ShotPercentFileName = new JTextField();
 		txtTeam1ShotPercentFileName.setText(settings.getShotPercentFileName(1));
@@ -424,7 +430,7 @@ public class FileNamesPanel extends JPanel {
 		txtGameCount2FileName.setColumns(10);
 
 		JLabel lblTeam2Name2 = new JLabel("Team 2 Goalie");
-		add(lblTeam2Name2, "cell 4 5,alignx trailing");
+		add(lblTeam2Name2, "cell 4 5,alignx right");
 
 		txtTeam2GoalieFileName = new JTextField();
 		txtTeam2GoalieFileName.setText(settings.getTeamGoalieFileName(2));
@@ -432,7 +438,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2GoalieFileName.setColumns(10);
 
 		JLabel lblTeam2PassCompletesFileName = new JLabel("Team 2 Pass Completes");
-		add(lblTeam2PassCompletesFileName, "cell 7 5,alignx trailing");
+		add(lblTeam2PassCompletesFileName, "cell 7 5,alignx right");
 		
 		txtTeam2PassCompletesFileName = new JTextField();
 		txtTeam2PassCompletesFileName.setText(settings.getPassCompletesFileName(2));
@@ -440,7 +446,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2PassCompletesFileName.setColumns(20);
 		
 		JLabel lblTeam2ShotPercentFileName = new JLabel("Team 2 Shot Percent");
-		add(lblTeam2ShotPercentFileName, "cell 10 5,alignx trailing");
+		add(lblTeam2ShotPercentFileName, "cell 10 5,alignx right");
 		
 		txtTeam2ShotPercentFileName = new JTextField();
 		txtTeam2ShotPercentFileName.setText(settings.getShotPercentFileName(2));
@@ -448,7 +454,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2ShotPercentFileName.setColumns(20);
 
 		JLabel lblScore1FileName = new JLabel("Score 1:");
-		add(lblScore1FileName, "cell 1 6,alignx trailing");
+		add(lblScore1FileName, "cell 1 6,alignx right");
 
 		txtScore1FileName = new JTextField();
 		txtScore1FileName.setText(settings.getScoreFileName(1));
@@ -472,7 +478,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam1ShotAttemptsFileName.setColumns(20);
 		
 		JLabel lblTeam1ClearPercentFileName = new JLabel("Team 1 Clear Percent");
-		add(lblTeam1ClearPercentFileName, "cell 10 6,alignx trailing");
+		add(lblTeam1ClearPercentFileName, "cell 10 6,alignx right");
 		
 		txtTeam1ClearPercentFileName = new JTextField();
 		txtTeam1ClearPercentFileName.setText(settings.getClearPercentFileName(1));
@@ -480,7 +486,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam1ClearPercentFileName.setColumns(20);
 
 		JLabel lblScore2FileName = new JLabel("Score 2:");
-		add(lblScore2FileName, "cell 1 7,alignx trailing");
+		add(lblScore2FileName, "cell 1 7,alignx right");
 
 		txtScore2FileName = new JTextField();
 		txtScore2FileName.setText(settings.getScoreFileName(2));
@@ -488,7 +494,7 @@ public class FileNamesPanel extends JPanel {
 		txtScore2FileName.setColumns(10);
 
 		JLabel lblEventFileName = new JLabel("Event:");
-		add(lblEventFileName, "cell 4 7,alignx trailing");
+		add(lblEventFileName, "cell 4 7,alignx right");
 
 		txtEventFileName = new JTextField();
 		txtEventFileName.setText(settings.getEventFileName());
@@ -496,7 +502,7 @@ public class FileNamesPanel extends JPanel {
 		txtEventFileName.setColumns(10);
 
 		JLabel lblTeam1ShotCompletesFileName = new JLabel("Team 1 Shot Completes");
-		add(lblTeam1ShotCompletesFileName, "cell 7 7,alignx trailing");
+		add(lblTeam1ShotCompletesFileName, "cell 7 7,alignx right");
 		
 		txtTeam1ShotCompletesFileName = new JTextField();
 		txtTeam1ShotCompletesFileName.setText(settings.getShotCompletesFileName(1));
@@ -504,7 +510,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam1ShotCompletesFileName.setColumns(20);
 		
 		JLabel lblTeam2ClearPercentFileName = new JLabel("Team 2 Clear Percent");
-		add(lblTeam2ClearPercentFileName, "cell 10 7,alignx trailing");
+		add(lblTeam2ClearPercentFileName, "cell 10 7,alignx right");
 		
 		txtTeam2ClearPercentFileName = new JTextField();
 		txtTeam2ClearPercentFileName.setText(settings.getClearPercentFileName(2));
@@ -512,7 +518,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2ClearPercentFileName.setColumns(20);
 
 		JLabel lblTimeOut1FileName = new JLabel("Time Out 1:");
-		add(lblTimeOut1FileName, "cell 1 8,alignx trailing");
+		add(lblTimeOut1FileName, "cell 1 8,alignx right");
 
 		txtTimeOut1FileName = new JTextField();
 		txtTimeOut1FileName.setText(settings.getTimeOutFileName(1));
@@ -520,7 +526,7 @@ public class FileNamesPanel extends JPanel {
 		txtTimeOut1FileName.setColumns(10);
 
 		JLabel lblTimeRemainingFileName = new JLabel("Time Remaining:");
-		add(lblTimeRemainingFileName, "cell 4 8,alignx trailing");
+		add(lblTimeRemainingFileName, "cell 4 8,alignx right");
 
 		txtTimeRemainingFileName = new JTextField();
 		txtTimeRemainingFileName.setText(settings.getTimeRemainingFileName());
@@ -536,7 +542,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2ShotAttemptsFileName.setColumns(20);
 		
 		JLabel lblTeam1ScoringFileName = new JLabel("Team 1 Scoring");
-		add(lblTeam1ScoringFileName, "cell 10 8,alignx trailing");
+		add(lblTeam1ScoringFileName, "cell 10 8,alignx right");
 		
 		txtTeam1ScoringFileName = new JTextField();
 		txtTeam1ScoringFileName.setText(settings.getScoringFileName(1));
@@ -544,7 +550,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam1ScoringFileName.setColumns(10);
 
 		JLabel lblTimeOut2FileName = new JLabel("Time Out 2:");
-		add(lblTimeOut2FileName, "cell 1 9,alignx trailing");
+		add(lblTimeOut2FileName, "cell 1 9,alignx right");
 
 		txtTimeOut2FileName = new JTextField();
 		txtTimeOut2FileName.setText(settings.getTimeOutFileName(2));
@@ -552,7 +558,7 @@ public class FileNamesPanel extends JPanel {
 		txtTimeOut2FileName.setColumns(10);
 
 		JLabel lblTimerFileName = new JLabel("Timer:");
-		add(lblTimerFileName, "cell 4 9,alignx trailing");
+		add(lblTimerFileName, "cell 4 9,alignx right");
 
 		txtTimerInUseFileName = new JTextField();
 		txtTimerInUseFileName.setText(settings.getTimerInUseFileName());
@@ -560,7 +566,7 @@ public class FileNamesPanel extends JPanel {
 		txtTimerInUseFileName.setColumns(10);
 
 		JLabel lblTeam2ShotCompletesFileName = new JLabel("Team 2 Shot Completes");
-		add(lblTeam2ShotCompletesFileName, "cell 7 9,alignx trailing");
+		add(lblTeam2ShotCompletesFileName, "cell 7 9,alignx right");
 		
 		txtTeam2ShotCompletesFileName = new JTextField();
 		txtTeam2ShotCompletesFileName.setText(settings.getShotCompletesFileName(2));
@@ -568,7 +574,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2ShotCompletesFileName.setColumns(20);
 		
 		JLabel lblTeam2ScoringFileName = new JLabel("Team 2 Scoring");
-		add(lblTeam2ScoringFileName, "cell 10 9,alignx trailing");
+		add(lblTeam2ScoringFileName, "cell 10 9,alignx right");
 		
 		txtTeam2ScoringFileName = new JTextField();
 		txtTeam2ScoringFileName.setText(settings.getScoringFileName(2));
@@ -576,7 +582,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2ScoringFileName.setColumns(10);
 
 		JLabel lblReset1FileName = new JLabel("Reset 1:");
-		add(lblReset1FileName, "cell 1 10,alignx trailing");
+		add(lblReset1FileName, "cell 1 10,alignx right");
 
 		txtReset1FileName = new JTextField();
 		txtReset1FileName.setText(settings.getResetFileName(1));
@@ -584,7 +590,7 @@ public class FileNamesPanel extends JPanel {
 		txtReset1FileName.setColumns(10);
 
 		JLabel lblMatchWinnerFileName = new JLabel("Match Winner:");
-		add(lblMatchWinnerFileName, "cell 4 10,alignx trailing");
+		add(lblMatchWinnerFileName, "cell 4 10,alignx right");
 
 		txtMatchWinnerFileName = new JTextField();
 		txtMatchWinnerFileName.setText(settings.getMatchWinnerFileName());
@@ -608,7 +614,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam1ThreeBarScoringFileName.setColumns(10);
 
 		JLabel lblReset2FileName = new JLabel("Reset 2:");
-		add(lblReset2FileName, "cell 1 11,alignx trailing");
+		add(lblReset2FileName, "cell 1 11,alignx right");
 
 		txtReset2FileName = new JTextField();
 		txtReset2FileName.setText(settings.getResetFileName(2));
@@ -616,7 +622,7 @@ public class FileNamesPanel extends JPanel {
 		txtReset2FileName.setColumns(10);
 
 		JLabel lblMeatball = new JLabel("Meatball:");
-		add(lblMeatball, "cell 4 11,alignx trailing");
+		add(lblMeatball, "cell 4 11,alignx right");
 
 		txtMeatballFileName = new JTextField();
 		txtMeatballFileName.setText(settings.getMeatballFileName());
@@ -624,7 +630,7 @@ public class FileNamesPanel extends JPanel {
 		txtMeatballFileName.setColumns(10);
 
 		JLabel lblTeam1ClearCompletesFileName = new JLabel("Team 1 Clear Completes");
-		add(lblTeam1ClearCompletesFileName, "cell 7 11,alignx trailing");
+		add(lblTeam1ClearCompletesFileName, "cell 7 11,alignx right");
 		
 		txtTeam1ClearCompletesFileName = new JTextField();
 		txtTeam1ClearCompletesFileName.setText(settings.getClearCompletesFileName(1));
@@ -640,7 +646,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2ThreeBarScoringFileName.setColumns(10);
 
 		JLabel lblWarn1FileName = new JLabel("Warn 1:");
-		add(lblWarn1FileName, "cell 1 12,alignx trailing");
+		add(lblWarn1FileName, "cell 1 12,alignx right");
 
 		txtWarn1FileName = new JTextField();
 		txtWarn1FileName.setText(settings.getWarnFileName(1));
@@ -648,7 +654,7 @@ public class FileNamesPanel extends JPanel {
 		txtWarn1FileName.setColumns(10);
 
 		JLabel lblLastScoredFileName = new JLabel("Last Scored:");
-		add(lblLastScoredFileName, "cell 4 12,alignx trailing");
+		add(lblLastScoredFileName, "cell 4 12,alignx right");
 
 		txtLastScoredFileName = new JTextField();
 		txtLastScoredFileName.setText(settings.getLastScoredFileName());
@@ -664,7 +670,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2ClearAttemptsFileName.setColumns(20);
 		
 		JLabel lblTeambar = new JLabel("Team 1 5-Bar Scoring");
-		add(lblTeambar, "cell 10 12,alignx trailing");
+		add(lblTeambar, "cell 10 12,alignx right");
 		
 		txtTeam1FiveBarScoringFileName = new JTextField();
 		txtTeam1FiveBarScoringFileName.setText(settings.getFiveBarScoringFileName(1));
@@ -672,7 +678,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam1FiveBarScoringFileName.setColumns(10);
 
 		JLabel lblWarn2FileName = new JLabel("Warn 2:");
-		add(lblWarn2FileName, "cell 1 13,alignx trailing");
+		add(lblWarn2FileName, "cell 1 13,alignx right");
 
 		txtWarn2FileName = new JTextField();
 		txtWarn2FileName.setText(settings.getWarnFileName(2));
@@ -680,7 +686,7 @@ public class FileNamesPanel extends JPanel {
 		txtWarn2FileName.setColumns(10);
 		
 		JLabel lblStuffs1FileName = new JLabel("Stuffs 1");
-		add(lblStuffs1FileName, "cell 4 13,alignx trailing");
+		add(lblStuffs1FileName, "cell 4 13,alignx right");
 		
 		txtStuffs1FileName = new JTextField();
 		txtStuffs1FileName.setText(settings.getStuffsFileName(1));
@@ -688,7 +694,7 @@ public class FileNamesPanel extends JPanel {
 		txtStuffs1FileName.setColumns(10);
 
 		JLabel lblTeam2ClearCompletesFileName = new JLabel("Team 2 Clear Completes");
-		add(lblTeam2ClearCompletesFileName, "cell 7 13,alignx trailing");
+		add(lblTeam2ClearCompletesFileName, "cell 7 13,alignx right");
 		
 		txtTeam2ClearCompletesFileName = new JTextField();
 		txtTeam2ClearCompletesFileName.setText(settings.getClearCompletesFileName(2));		add(txtTeam2ClearCompletesFileName, "cell 8 13,alignx left");
@@ -703,10 +709,26 @@ public class FileNamesPanel extends JPanel {
 				win.dispose();
 			}
 		});
+		
+		JLabel lblTeam1SOG = new JLabel("Team 1 Shots On Goal");
+		add(lblTeam1SOG, "cell 10 16,alignx trailing");
+		
+		txtTeam1SOGFileName = new JTextField();
+		txtTeam1SOGFileName.setText(settings.getSOGFileName(1));
+		add(txtTeam1SOGFileName, "cell 11 16,alignx left");
+		txtTeam1SOGFileName.setColumns(10);
+		
+		JLabel lblTeam2SOG = new JLabel("Team 2 Shots On Goal");
+		add(lblTeam2SOG, "cell 10 17,alignx trailing");
+		
+		txtTeam2SOGFileName = new JTextField();
+		txtTeam2SOGFileName.setText(settings.getSOGFileName(2));
+		add(txtTeam2SOGFileName, "cell 11 17,alignx left");
+		txtTeam2SOGFileName.setColumns(10);
 		add(btnSaveFileNames, "cell 2 19,alignx center");
 		
 		JLabel lblTeambar_1 = new JLabel("Team 2 5-Bar Scoring");
-		add(lblTeambar_1, "cell 10 13,alignx trailing");
+		add(lblTeambar_1, "cell 10 13,alignx right");
 		
 		txtTeam2FiveBarScoringFileName = new JTextField();
 		txtTeam2FiveBarScoringFileName.setText(settings.getFiveBarScoringFileName(2));
@@ -714,7 +736,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2FiveBarScoringFileName.setColumns(10);
 		
 		JLabel lblGameTimeFileName = new JLabel("Game Time");
-		add(lblGameTimeFileName, "cell 1 14,alignx trailing");
+		add(lblGameTimeFileName, "cell 1 14,alignx right");
 		
 		txtGameTimeFileName = new JTextField();
 		txtGameTimeFileName.setText(settings.getGameTimeFileName());
@@ -722,7 +744,7 @@ public class FileNamesPanel extends JPanel {
 		txtGameTimeFileName.setColumns(10);
 		
 		JLabel lblStuffs2FileName = new JLabel("Stuffs 2");
-		add(lblStuffs2FileName, "cell 4 14,alignx trailing");
+		add(lblStuffs2FileName, "cell 4 14,alignx right");
 		
 		txtStuffs2FileName = new JTextField();
 		txtStuffs2FileName.setText(settings.getStuffsFileName(2));
@@ -730,7 +752,7 @@ public class FileNamesPanel extends JPanel {
 		txtStuffs2FileName.setColumns(10);
 		
 		JLabel lblTeam1TwoBarPassAttemptsFileName_1 = new JLabel("Team 1 2-Bar Pass Attempts");
-		add(lblTeam1TwoBarPassAttemptsFileName_1, "cell 7 14,alignx trailing");
+		add(lblTeam1TwoBarPassAttemptsFileName_1, "cell 7 14,alignx right");
 		
 		txtTeam1TwoBarPassAttemptsFileName = new JTextField();
 		txtTeam1TwoBarPassAttemptsFileName.setText(settings.getTwoBarPassAttemptsFileName(1));
@@ -738,7 +760,7 @@ public class FileNamesPanel extends JPanel {
 		add(txtTeam1TwoBarPassAttemptsFileName, "cell 8 14,alignx left");
 		
 		JLabel lblTeam1TwoBarScoringFileName = new JLabel("Team 1 2-Bar Scoring");
-		add(lblTeam1TwoBarScoringFileName, "cell 10 14,alignx trailing");
+		add(lblTeam1TwoBarScoringFileName, "cell 10 14,alignx right");
 		
 		txtTeam1TwoBarScoringFileName = new JTextField();
 		txtTeam1TwoBarScoringFileName.setText(settings.getTwoBarScoringFileName(1));
@@ -746,7 +768,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam1TwoBarScoringFileName.setColumns(10);
 		
 		JLabel lblMatchTimeFileName = new JLabel("Match Time");
-		add(lblMatchTimeFileName, "cell 1 15,alignx trailing");
+		add(lblMatchTimeFileName, "cell 1 15,alignx right");
 		
 		txtMatchTimeFileName = new JTextField();
 		txtMatchTimeFileName.setText(settings.getMatchTimeFileName());
@@ -754,7 +776,7 @@ public class FileNamesPanel extends JPanel {
 		txtMatchTimeFileName.setColumns(10);
 		
 		JLabel lblBreaks1FileName = new JLabel("Breaks 1");
-		add(lblBreaks1FileName, "cell 4 15,alignx trailing");
+		add(lblBreaks1FileName, "cell 4 15,alignx right");
 		
 		txtBreaks1FileName = new JTextField();
 		txtBreaks1FileName.setText(settings.getBreaksFileName(1));
@@ -770,7 +792,7 @@ public class FileNamesPanel extends JPanel {
 		add(txtTeam1TwoBarPassCompletesFileName, "cell 8 15,alignx left");
 		
 		JLabel lblTeam2TwoBarScoringFileName = new JLabel("Team 2 2-Bar Scoring");
-		add(lblTeam2TwoBarScoringFileName, "cell 10 15,alignx trailing");
+		add(lblTeam2TwoBarScoringFileName, "cell 10 15,alignx right");
 		
 		txtTeam2TwoBarScoringFileName = new JTextField();
 		txtTeam2TwoBarScoringFileName.setText(settings.getTwoBarScoringFileName(2));
@@ -778,7 +800,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2TwoBarScoringFileName.setColumns(10);
 		
 		JLabel lblBreaks2FileName = new JLabel("Breaks 2");
-		add(lblBreaks2FileName, "cell 4 16,alignx trailing");
+		add(lblBreaks2FileName, "cell 4 16,alignx right");
 		
 		txtBreaks2FileName = new JTextField();
 		txtBreaks2FileName.setText(settings.getBreaksFileName(2));
@@ -786,7 +808,7 @@ public class FileNamesPanel extends JPanel {
 		txtBreaks2FileName.setColumns(10);
 		
 		JLabel lblTeam2TwoBarPassAttemptsFileName_1_1 = new JLabel("Team 2 2-Bar Pass Attempts");
-		add(lblTeam2TwoBarPassAttemptsFileName_1_1, "cell 7 16,alignx trailing");
+		add(lblTeam2TwoBarPassAttemptsFileName_1_1, "cell 7 16,alignx right");
 		
 		txtTeam2TwoBarPassAttemptsFileName = new JTextField();
 		txtTeam2TwoBarPassAttemptsFileName.setText(settings.getTwoBarPassAttemptsFileName(2));
@@ -794,7 +816,7 @@ public class FileNamesPanel extends JPanel {
 		add(txtTeam2TwoBarPassAttemptsFileName, "cell 8 16,alignx left");
 		
 		JLabel lblTeam2TwoBarPassCompletesFileName = new JLabel("Team 2 2-Bar Pass Completes");
-		add(lblTeam2TwoBarPassCompletesFileName, "cell 7 17,alignx trailing");
+		add(lblTeam2TwoBarPassCompletesFileName, "cell 7 17,alignx right");
 		
 		txtTeam2TwoBarPassCompletesFileName = new JTextField();
 		txtTeam2TwoBarPassCompletesFileName.setText(settings.getTwoBarPassCompletesFileName(2));

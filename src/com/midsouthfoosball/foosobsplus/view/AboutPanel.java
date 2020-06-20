@@ -20,19 +20,23 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.view;
 
+import java.awt.Image;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import net.miginfocom.swing.MigLayout;
-import javax.swing.JTextArea;
 
 public class AboutPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
 	public AboutPanel(JFrame aboutFrame) {
-		setLayout(new MigLayout("", "[127.00][50.00:87.00,grow,left]", "[][][][][grow]"));
+		setLayout(new MigLayout("", "[127.00][50.00:87.00,grow,left]", "[][][][][grow][]"));
 		
 		JLabel lblProgram = new JLabel("Program:");
 		add(lblProgram, "cell 0 0,alignx right");
@@ -64,6 +68,12 @@ public class AboutPanel extends JPanel {
 		JTextArea txtrPermissionIsHereby = new JTextArea();
 		txtrPermissionIsHereby.setText("Permission is hereby granted, free of charge, to any person obtaining a copy \r\nof this software and associated documentation files (the \"Software\"), to deal \r\nin the Software without restriction, including without limitation the rights \r\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell \r\ncopies of the Software, and to permit persons to whom the Software is \r\nfurnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in \r\nall copies or substantial portions of the Software.\r\n\r\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR \r\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, \r\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL \r\nTHE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR \r\nOTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, \r\nARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR \r\nOTHER DEALINGS IN THE SOFTWARE.");
 		add(txtrPermissionIsHereby, "cell 1 4,grow");
+
+		ImageIcon img = new ImageIcon(this.getClass().getResource("FoosBallTableAnimation.gif"));;
+		img.setImage(img.getImage().getScaledInstance(100, 100,  Image.SCALE_DEFAULT));
+		Icon imgIcon = img;
+		JLabel lblIcon = new JLabel(imgIcon);
+		add(lblIcon, "cell 1 5,alignx center");
 
 	}
 

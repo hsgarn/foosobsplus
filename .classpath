@@ -16,9 +16,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="jackson-annotations-2.11.0.jar"/>
-	<classpathentry kind="lib" path="jackson-core-2.11.0.jar"/>
-	<classpathentry kind="lib" path="jackson-databind-2.11.0.jar"/>
 	<classpathentry kind="lib" path="miglayout15-swing.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
