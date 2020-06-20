@@ -28,10 +28,10 @@ import javax.swing.DefaultListModel;
 
 public class Stats implements Serializable {
 	private static final long serialVersionUID = -3545984674770731270L;
-	private transient String code = "";
+	private String code = "";
 	private DefaultListModel<String> codeHistory;
 	private String previousCode = "";
-	private transient String command = "";
+	private String command = "";
 	private transient char previousTeam;
 	private transient char previousPosition;
 	private transient char previousAction;
@@ -57,7 +57,7 @@ public class Stats implements Serializable {
 	private transient boolean wasTwoRod;
 	private transient boolean wasThreeRod;
 	private transient boolean isForwardDirection;
-	private transient boolean isShowParsed = true;
+	private transient boolean isShowParsed = false;
 	private transient boolean isTeam1;
 	private transient boolean isTeam2;
 	private transient boolean team1Scored;
@@ -100,10 +100,6 @@ public class Stats implements Serializable {
 
 	public String getCode() {
 		return code;
-	}
-	public void setCode(String code) {
-		this.code = code;
-		processCode(code, previousCode);
 	}
 	public void clearAll() {
 		code = "";
@@ -162,6 +158,10 @@ public class Stats implements Serializable {
 		this.previousCode = previousCode;
 	}
 
+	public void setCode(String code) {
+		this.code = code;
+		processCode(code, previousCode);
+	}
 	private void processCode(String code, String previousCode) {
 		parseCode(previousCode, code);
 		if(isCommand) {
@@ -543,7 +543,7 @@ private void resetFlags() {
 			}
 		}
 	}
-	private void showParsed() {
+	public void showParsed() {
 		if (!isShowParsed) return;
 		System.out.println("----------------------------------------");
 		System.out.println("Previous Code: " + previousCode + "       Current Code: " + code);

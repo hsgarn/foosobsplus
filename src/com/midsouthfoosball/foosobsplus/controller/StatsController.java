@@ -20,12 +20,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.controller;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import com.midsouthfoosball.foosobsplus.model.Stats;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
-import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
 
 public class StatsController {
 
@@ -33,30 +29,13 @@ public class StatsController {
 	
 	
 	private Stats stats;
-	private StatsEntryPanel statsEntryPanel;
 	private StatsDisplayPanel statsDisplayPanel;
 	private TeamController teamController;
 	
-	public StatsController(Stats stats, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, TeamController teamController) {
+	public StatsController(Stats stats, StatsDisplayPanel statsDisplayPanel, TeamController teamController) {
 		this.stats = stats;
-		this.statsEntryPanel = statsEntryPanel;
 		this.statsDisplayPanel = statsDisplayPanel;
 		this.teamController = teamController;
-
-		////// Stats Entry Panel Listeners Methods //////
-
-		this.statsEntryPanel.addClearListener(new ClearListener());
-		
-
-	}
-	
-	////// Stats Entry Panel Listener Objects //////
-
-	private class ClearListener implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			stats.clearAll();
-			statsEntryPanel.clearAll();
-		}
 	}
 
 	////// Utility Methods \\\\\\

@@ -84,6 +84,7 @@ public class SwitchController {
 	private class ClearAllListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			teamController.clearAll();
+			statsController.displayAllStats();
 		}
 	}
 }

@@ -26,72 +26,17 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Stack;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import com.midsouthfoosball.foosobsplus.commands.Command;
-import com.midsouthfoosball.foosobsplus.commands.CommandSwitch;
-import com.midsouthfoosball.foosobsplus.commands.DGT1Command;
-import com.midsouthfoosball.foosobsplus.commands.DGT2Command;
-import com.midsouthfoosball.foosobsplus.commands.DST1Command;
-import com.midsouthfoosball.foosobsplus.commands.DST2Command;
-import com.midsouthfoosball.foosobsplus.commands.IGT1Command;
-import com.midsouthfoosball.foosobsplus.commands.IGT2Command;
-import com.midsouthfoosball.foosobsplus.commands.IST1Command;
-import com.midsouthfoosball.foosobsplus.commands.IST2Command;
-import com.midsouthfoosball.foosobsplus.commands.Memento;
-import com.midsouthfoosball.foosobsplus.commands.PRT1Command;
-import com.midsouthfoosball.foosobsplus.commands.PRT2Command;
-import com.midsouthfoosball.foosobsplus.commands.PRTCommand;
-import com.midsouthfoosball.foosobsplus.commands.PSMCommand;
-import com.midsouthfoosball.foosobsplus.commands.PSSCommand;
-import com.midsouthfoosball.foosobsplus.commands.PWT1Command;
-import com.midsouthfoosball.foosobsplus.commands.PWT2Command;
-import com.midsouthfoosball.foosobsplus.commands.RTT1Command;
-import com.midsouthfoosball.foosobsplus.commands.RTT2Command;
-import com.midsouthfoosball.foosobsplus.commands.SGTCommand;
-import com.midsouthfoosball.foosobsplus.commands.SPTCommand;
-import com.midsouthfoosball.foosobsplus.commands.SRTCommand;
-import com.midsouthfoosball.foosobsplus.commands.SSTCommand;
-import com.midsouthfoosball.foosobsplus.commands.STTCommand;
-import com.midsouthfoosball.foosobsplus.commands.UTT1Command;
-import com.midsouthfoosball.foosobsplus.commands.UTT2Command;
-import com.midsouthfoosball.foosobsplus.commands.XPT1Command;
-import com.midsouthfoosball.foosobsplus.commands.XPT2Command;
-import com.midsouthfoosball.foosobsplus.controller.MainController;
-import com.midsouthfoosball.foosobsplus.controller.MatchController;
-import com.midsouthfoosball.foosobsplus.controller.ResetController;
-import com.midsouthfoosball.foosobsplus.controller.StatsController;
-import com.midsouthfoosball.foosobsplus.controller.SwitchController;
-import com.midsouthfoosball.foosobsplus.controller.TableController;
-import com.midsouthfoosball.foosobsplus.controller.TeamController;
-import com.midsouthfoosball.foosobsplus.controller.TimerController;
-import com.midsouthfoosball.foosobsplus.model.Game;
-import com.midsouthfoosball.foosobsplus.model.GameClock;
-import com.midsouthfoosball.foosobsplus.model.Match;
-import com.midsouthfoosball.foosobsplus.model.Settings;
-import com.midsouthfoosball.foosobsplus.model.Stats;
-import com.midsouthfoosball.foosobsplus.model.Table;
-import com.midsouthfoosball.foosobsplus.model.Team;
-import com.midsouthfoosball.foosobsplus.model.TimeClock;
-import com.midsouthfoosball.foosobsplus.view.FileNamesFrame;
-import com.midsouthfoosball.foosobsplus.view.HotKeysFrame;
-import com.midsouthfoosball.foosobsplus.view.HotKeysPanel;
-import com.midsouthfoosball.foosobsplus.view.MainFrame;
-import com.midsouthfoosball.foosobsplus.view.MatchPanel;
-import com.midsouthfoosball.foosobsplus.view.ResetPanel;
-import com.midsouthfoosball.foosobsplus.view.SettingsFrame;
-import com.midsouthfoosball.foosobsplus.view.SettingsPanel;
-import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
-import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
-import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
-import com.midsouthfoosball.foosobsplus.view.TablePanel;
-import com.midsouthfoosball.foosobsplus.view.TeamPanel;
-import com.midsouthfoosball.foosobsplus.view.TimerPanel;
-import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
+import com.midsouthfoosball.foosobsplus.commands.*;
+import com.midsouthfoosball.foosobsplus.controller.*;
+import com.midsouthfoosball.foosobsplus.model.*;
+import com.midsouthfoosball.foosobsplus.view.*;
 
 public class Main {
 	{
@@ -122,6 +67,7 @@ public class Main {
 	private Stack<Memento> mementoStackTeam2 = new Stack<>();
 	private Stack<Memento> mementoStackStats = new Stack<>();
 	private Stack<Memento> mementoStackMatch = new Stack<>();
+	private Stack<String> codeStack = new Stack<>();
 	private CommandSwitch mySwitch;
 
 	////// Generate the Data Models (Mvc) \\\\\\
@@ -177,7 +123,7 @@ public class Main {
 	TeamController 		teamController 		= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, timerController);
 	TableController 	tableController 	= new TableController(obsInterface, settings, table, match, tablePanel, teamController);
 	MatchController     matchController     = new MatchController(obsInterface, settings, match, stats, gameClock, matchPanel, statsEntryPanel, statsDisplayPanel, teamController);
-	StatsController 	statsController 	= new StatsController(stats, statsEntryPanel, statsDisplayPanel, teamController);
+	StatsController 	statsController 	= new StatsController(stats, statsDisplayPanel, teamController);
 	SwitchController 	switchController 	= new SwitchController(switchPanel, teamController, statsController);
 	ResetController 	resetController 	= new ResetController(resetPanel, teamController, statsController);
 
@@ -190,18 +136,21 @@ public class Main {
 		this.statsEntryPanel.addUndoListener(new StatsEntryUndoListener());
 		this.statsEntryPanel.addRedoListener(new StatsEntryRedoListener());
 		this.statsEntryPanel.addCodeListener(new CodeListener());
+		this.teamPanel1.addClearAllListener(new TeamClearAllListener());
+		this.teamPanel2.addClearAllListener(new TeamClearAllListener());
+		this.statsEntryPanel.addStatsClearListener(new StatsClearListener());
 		loadCommands();
-	}
-	private void fetchAll(String tableNbr) {
-		tableController.fetchAll(tableNbr);
-		teamController.fetchAll();
-		statsController.displayAllStats();
 	}
 	public int getCurrentGameNbr() {
 		return currentGameNbr;
 	}
 	public static void setCurrentGameNbr(int gameNbr) {
 		currentGameNbr = gameNbr;
+	}
+	private void fetchAll(String tableNbr) {
+		tableController.fetchAll(tableNbr);
+		teamController.fetchAll();
+		statsController.displayAllStats();
 	}
 	private class HotKeysSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
@@ -231,56 +180,77 @@ public class Main {
 		public void actionPerformed(ActionEvent e) {
 			undo();
 			teamController.displayAll();
+			statsController.displayAllStats();
 		}
 	}
 	private class StatsEntryRedoListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			redo();
 			teamController.displayAll();
-		}
-	}
-	private class CodeListener implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			JTextField txt = (JTextField) e.getSource();
-			String code = txt.getText().toUpperCase();
-			stats.setCode(code);
-			stats.addCodeToHistory(code);
-			statsEntryPanel.updateCode("");
-			statsEntryPanel.updateCodeHistory(code);
-			if (stats.getIsCommand()) {
-				processCommand(stats.getCommand());
-			} else {
-				if (stats.getTeam1Scored()) teamController.incrementScore("Team 1");
-				if (stats.getTeam2Scored()) teamController.incrementScore("Team 2");
-				if (stats.getTeam1TimeOut()) {
-					teamController.callTimeOut("Team 1");
-				} else if (stats.getTeam2TimeOut()) {
-					teamController.callTimeOut("Team 2");
-				} else {
-					if (stats.getIsThreeRod()||stats.getIsTwoRod()) teamController.startShotTimer();
-					if (stats.getIsFiveRod()) teamController.startPassTimer();
-				}
-			}
 			statsController.displayAllStats();
 		}
 	}
-	private void processCommand(String command) {
+	private class StatsClearListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			stats.clearAll();
+			statsEntryPanel.clearAll();
+			undoRedoPointer = 0;
+		}
+	}
+	private class CodeListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			Boolean isRedo = false;
+			JTextField txt = (JTextField) e.getSource();
+			String code = txt.getText().toUpperCase();
+			processCode(code, isRedo);
+		}
+	}
+	public void processCode(String code, Boolean isRedo) {
+		if (!isRedo) { 
+			makeMementos();
+			codeStack.push(code);
+		}
+	stats.setCode(code);
+	stats.addCodeToHistory(code);
+	statsEntryPanel.updateCode("");
+	statsEntryPanel.updateCodeHistory(code);
+	if (stats.getIsCommand()) {
+		if (!isRedo) { 
+			commandStack.push(mySwitch.execute(stats.getCommand()));
+			undoRedoPointer++;
+		}
+	} else {
+		if (!isRedo) { 
+			commandStack.push(mySwitch.execute("code"));
+			undoRedoPointer++;
+		}
+		if (stats.getTeam1Scored()) teamController.incrementScore("Team 1");
+		if (stats.getTeam2Scored()) teamController.incrementScore("Team 2");
+		if (stats.getTeam1TimeOut()) {
+			teamController.callTimeOut("Team 1");
+		} else if (stats.getTeam2TimeOut()) {
+			teamController.callTimeOut("Team 2");
+		} else {
+			if (stats.getIsThreeRod()||stats.getIsTwoRod()) teamController.startShotTimer();
+			if (stats.getIsFiveRod()) teamController.startPassTimer();
+		}
+	}
+	statsController.displayAllStats();
+	}
+	private void makeMementos() {
 		deleteElementsAfterPointer(undoRedoPointer);
 		mementoStackTeam1.push(saveState(team1));
 		mementoStackTeam2.push(saveState(team2));
 		mementoStackStats.push(saveState(stats));
 		mementoStackMatch.push(saveState(match));
-		commandStack.push(mySwitch.execute(command));
-		undoRedoPointer++;
-		return;
 	}
 	private Memento saveState(Object object) {
 		Memento memento = new Memento(object);
 		return memento;
 	}
-	public void undo()
-	{
+	public void undo() 	{
 		if(undoRedoPointer < 0) return;
+		codeStack.get(undoRedoPointer);
 	    commandStack.get(undoRedoPointer);
 	    Memento mementoTeam1 = mementoStackTeam1.get(undoRedoPointer);
 	    team1.restoreState(mementoTeam1.getState());
@@ -292,38 +262,34 @@ public class Main {
 	    match.restoreState(mementoMatch.getState());
 	    undoRedoPointer--;
 	    statsEntryPanel.removeCodeHistory();
+	    stats.showParsed();
 	}
-
-	public void redo()
-	{
-	    if(undoRedoPointer == commandStack.size() - 1)
-	        return;
+ 	public void redo() 	{
+ 		char commandChar = new Character('X');
+ 		Boolean isRedo = true;
+ 		String tempCode;
+ 		Boolean isCommand = false;
+	    if(undoRedoPointer == commandStack.size() - 1)  return;
 	    undoRedoPointer++;
-	    Command command = commandStack.get(undoRedoPointer);
-	    command.execute();
-	    statsEntryPanel.updateCodeHistory(command.getCode());
+	    tempCode = codeStack.get(undoRedoPointer);
+	    isCommand = tempCode.charAt(0)==commandChar;
+	    if(isCommand) {
+		    Command command = commandStack.get(undoRedoPointer);
+	    	command.execute();
+		    statsEntryPanel.updateCodeHistory(tempCode);
+	    } else {
+	    	processCode(tempCode,isRedo);
+	    }
 	}
-	private void deleteElementsAfterPointer(int undoRedoPointer)
-	{
+	private void deleteElementsAfterPointer(int undoRedoPointer) {
 	    if (commandStack.size() >= 1)  {
 		    for(int i = commandStack.size()-1; i > undoRedoPointer; i--)
 		    {
 		        commandStack.remove(i);
-		    }
-		    for(int i = mementoStackTeam1.size()-1; i > undoRedoPointer; i--)
-		    {
+		        codeStack.remove(i);
 		        mementoStackTeam1.remove(i);
-		    }
-		    for(int i = mementoStackTeam2.size()-1; i > undoRedoPointer; i--)
-		    {
 		        mementoStackTeam2.remove(i);
-		    }
-		    for(int i = mementoStackStats.size()-1; i > undoRedoPointer; i--)
-		    {
 		        mementoStackStats.remove(i);
-		    }
-		    for(int i = mementoStackMatch.size()-1; i > undoRedoPointer; i--)
-		    {
 		        mementoStackMatch.remove(i);
 		    }
 	    }
@@ -355,6 +321,7 @@ public class Main {
 		Command pss = new PSSCommand(statsController, teamController);
 		Command xpt1 = new XPT1Command(statsController, teamController);
 		Command xpt2 = new XPT2Command(statsController, teamController);
+		Command codeCommand = new CodeCommand(statsController);
 
 		mySwitch = new CommandSwitch();
 		mySwitch.register("PSM", psm);
@@ -383,6 +350,22 @@ public class Main {
 		mySwitch.register("PSS", pss);
 		mySwitch.register("XPT1", xpt1);
 		mySwitch.register("XPT2", xpt2);
-
+		mySwitch.register("code", codeCommand);
+	}
+	private class TeamClearAllListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			JButton btn = (JButton) e.getSource();
+			String name = btn.getName();
+			if(name.equals("Team 1")) {
+				team1.clearAll();
+				teamController.displayAll();
+			} else {
+				team2.clearAll();
+				teamController.displayAll();
+			}
+			match.clearAll();
+			switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
+			statsController.displayAllStats();
+		}
 	}
 }

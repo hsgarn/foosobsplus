@@ -111,9 +111,6 @@ public class TeamController {
 		this.team2Panel.addResetListener(new ResetListener());
 		this.team1Panel.addWarnListener(new WarnListener());
 		this.team2Panel.addWarnListener(new WarnListener());
-		this.team1Panel.addClearAllListener(new ClearAllListener());
-		this.team2Panel.addClearAllListener(new ClearAllListener());
-
 	}
 	
 	////// Team Panel Listener Objects //////
@@ -396,21 +393,6 @@ public class TeamController {
 				team2.setWarn(btn.isSelected());
 				team2Panel.updateWarn(team2.getWarn());
 			}
-		}
-	}
-	private class ClearAllListener implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			JButton btn = (JButton) e.getSource();
-			String name = btn.getName();
-			if(name.equals("Team 1")) {
-				team1.clearAll();
-				displayAll();
-			} else {
-				team2.clearAll();
-				displayAll();
-			}
-			match.clearAll();
-			switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
 		}
 	}
 

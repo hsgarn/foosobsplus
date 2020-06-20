@@ -164,7 +164,7 @@ public class StatsEntryPanel extends JPanel {
 	public void addCodeListener(ActionListener listenForTxtCode) {
 		txtCode.addActionListener(listenForTxtCode);
 	}
-	public void addClearListener(ActionListener listenForBtnClear) {
+	public void addStatsClearListener(ActionListener listenForBtnClear) {
 		btnClear.addActionListener(listenForBtnClear);
 	}
 	public void addUndoListener(ActionListener listenForBtnUndo) {

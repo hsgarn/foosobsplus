@@ -271,6 +271,7 @@ public class Team implements Serializable {
 		twoBarPassCompletes = 0;
 		twoBarPassPercent = 0f;
 		shotsOnGoal = 0;
+		scoring = 0;
 		threeBarScoring = 0;
 		fiveBarScoring = 0;
 		twoBarScoring = 0;
@@ -360,7 +361,6 @@ public class Team implements Serializable {
 		this.passPercent = passPercent;
 		writePassPercent();
 	}
-
 	public void setPassAttempts(String passAttempts) {
 		if(passAttempts=="") {
 			setPassAttempts(0);
@@ -459,7 +459,6 @@ public class Team implements Serializable {
 			setClearPercent(Float.parseFloat(clearPercent.replaceAll("[^\\d.]", ""))); // only get numbers - drop the % sign
 		}
 	}
-
 	public void setTwoBarPassAttempts(int twoBarPassAttempts) {
 		this.twoBarPassAttempts = twoBarPassAttempts;
 		writeTwoBarPassAttempts();
@@ -809,7 +808,6 @@ public class Team implements Serializable {
 		this.setGoalieName(tempTeam.getGoalieName());
 		this.setScore(tempTeam.getScore());
 		this.setGameCount(tempTeam.getGameCount());
-		System.out.println("GameCount: " + this.gameCount);
 		this.setTimeOutCount(tempTeam.getTimeOutCount());
 		this.setReset(tempTeam.getReset());
 		this.setWarn(tempTeam.getWarn());
