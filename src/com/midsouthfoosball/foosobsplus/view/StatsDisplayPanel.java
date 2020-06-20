@@ -716,6 +716,13 @@ public class StatsDisplayPanel extends JPanel {
 			lblTeam2TwoBarScoring.setText(String.format("%-3s", Integer.toString(scores)));
 		}
 	}
+	public void updateShotsOnGoal(int teamNbr, int sog) {
+		if(teamNbr==1) {
+			lblTeam1ShotsOnGoal.setText(String.format("%-3s", Integer.toString(sog)));
+		} else {
+			lblTeam2ShotsOnGoal.setText(String.format("%-3s", Integer.toString(sog)));
+		}
+	}
 	public void updateStuffs(int teamNbr, int stuffs) {
 		if(teamNbr==1) {
 			lblTeam1Stuffs.setText(String.format("%-3s", Integer.toString(stuffs)));

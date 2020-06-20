@@ -725,6 +725,8 @@ public class TeamController {
 			team2.setFiveBarScoring(obsInterface.getContents(settings.getFiveBarScoringFileName(2)));
 			team1.setTwoBarScoring(obsInterface.getContents(settings.getTwoBarScoringFileName(1)));
 			team2.setTwoBarScoring(obsInterface.getContents(settings.getTwoBarScoringFileName(2)));
+			team1.setShotsOnGoal(obsInterface.getContents(settings.getSOGFileName(1)));
+			team2.setShotsOnGoal(obsInterface.getContents(settings.getSOGFileName(2)));
 			team1.setStuffs(obsInterface.getContents(settings.getStuffsFileName(1)));
 			team2.setStuffs(obsInterface.getContents(settings.getStuffsFileName(2)));
 			team1.setBreaks(obsInterface.getContents(settings.getBreaksFileName(1)));
@@ -865,6 +867,13 @@ public class TeamController {
 			return team1.getTwoBarScoring();
 		} else {
 			return team2.getTwoBarScoring();
+		}
+	}
+	public int getShotsOnGoal(int teamNbr) {
+		if (teamNbr==1) {
+			return team1.getShotsOnGoal();
+		} else {
+			return team2.getShotsOnGoal();
 		}
 	}
 	public int getStuffs(int teamNbr) {

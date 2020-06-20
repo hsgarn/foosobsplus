@@ -25,18 +25,14 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 import com.midsouthfoosball.foosobsplus.model.GameClock;
 import com.midsouthfoosball.foosobsplus.model.Match;
-import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.Stats;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
 
 public class MatchController {
-	private Settings settings;
-	private OBSInterface obsInterface;
 	private Match match;
 	private Stats stats;
 	private GameClock gameClock;
@@ -44,9 +40,7 @@ public class MatchController {
 	private StatsEntryPanel statsEntryPanel;
 	private StatsDisplayPanel statsDisplayPanel;
 	private TeamController teamController;
-	public MatchController(OBSInterface obsInterface, Settings settings, Match match, Stats stats, GameClock gameClock, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, TeamController teamController) {
-		this.settings = settings;
-		this.obsInterface = obsInterface;
+	public MatchController(Match match, Stats stats, GameClock gameClock, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, TeamController teamController) {
 		this.match = match;
 		this.stats = stats;
 		this.gameClock = gameClock;
@@ -108,6 +102,8 @@ public class MatchController {
 		statsDisplayPanel.updateStuffs(2,  teamController.getStuffs(2));
 		statsDisplayPanel.updateBreaks(1,  teamController.getBreaks(1));
 		statsDisplayPanel.updateBreaks(2,  teamController.getBreaks(2));
+		statsDisplayPanel.updateShotsOnGoal(1, teamController.getShotsOnGoal(1));
+		statsDisplayPanel.updateShotsOnGoal(2, teamController.getShotsOnGoal(2));
 	}
 
 }

@@ -122,7 +122,7 @@ public class Main {
 	TimerController 	timerController 	= new TimerController(timerPanel, timerWindowFrame, timeClock, settings);
 	TeamController 		teamController 		= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, timerController);
 	TableController 	tableController 	= new TableController(obsInterface, settings, table, match, tablePanel, teamController);
-	MatchController     matchController     = new MatchController(obsInterface, settings, match, stats, gameClock, matchPanel, statsEntryPanel, statsDisplayPanel, teamController);
+	MatchController     matchController     = new MatchController(match, stats, gameClock, matchPanel, statsEntryPanel, statsDisplayPanel, teamController);
 	StatsController 	statsController 	= new StatsController(stats, statsDisplayPanel, teamController);
 	SwitchController 	switchController 	= new SwitchController(switchPanel, teamController, statsController);
 	ResetController 	resetController 	= new ResetController(resetPanel, teamController, statsController);

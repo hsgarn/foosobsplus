@@ -65,5 +65,7 @@ public class StatsController {
 		statsDisplayPanel.updateStuffs(2,  teamController.getStuffs(2));
 		statsDisplayPanel.updateBreaks(1,  teamController.getBreaks(1));
 		statsDisplayPanel.updateBreaks(2,  teamController.getBreaks(2));
+		statsDisplayPanel.updateShotsOnGoal(1, teamController.getShotsOnGoal(1));
+		statsDisplayPanel.updateShotsOnGoal(2, teamController.getShotsOnGoal(2));
 	}
 }

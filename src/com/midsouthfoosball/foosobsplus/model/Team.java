@@ -192,6 +192,20 @@ public class Team implements Serializable {
 		warnState = state;
 		writeWarn();
 	}
+	public int getShotsOnGoal() {
+		return shotsOnGoal;
+	}
+	public void setShotsOnGoal(int shotsOnGoal) {
+		writeShotsOnGoal();
+		this.shotsOnGoal = shotsOnGoal;
+	}
+	public void setShotsOnGoal(String shotsOnGoal) {
+		if(shotsOnGoal=="") {
+			setShotsOnGoal(0);
+		} else {
+			setShotsOnGoal(Integer.parseInt(shotsOnGoal));
+		}
+	}
 	public void resetStats() {
 		passAttempts = 0;
 		passCompletes = 0;
@@ -746,6 +760,13 @@ public class Team implements Serializable {
 			e.printStackTrace();
 		}
 	}
+	   private void writeShotsOnGoal() {
+	    	try {
+				obsInterface.setContents(settings.getSOGFileName(teamNbr), Integer.toString(getShotsOnGoal()));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	    }
 	private void writeStuffs() {
 		try {
 			obsInterface.setContents(settings.getStuffsFileName(teamNbr), Integer.toString(getStuffs()));
@@ -777,6 +798,7 @@ public class Team implements Serializable {
    		writeThreeBarScoring();
    		writeFiveBarScoring();
    		writeTwoBarScoring();
+   		writeShotsOnGoal();
    		writeStuffs();
    		writeBreaks();
     }
@@ -827,7 +849,7 @@ public class Team implements Serializable {
 		this.setTwoBarPassAttempts(tempTeam.getTwoBarPassAttempts());
 		this.setTwoBarPassCompletes(tempTeam.getTwoBarPassCompletes());
 		this.setTwoBarPassPercent(tempTeam.getTwoBarPassPercent());
-//		this.setShotsOnGoal(tempTeam.getShotsOnGoal());
+		this.setShotsOnGoal(tempTeam.getShotsOnGoal());
 		this.setScoring(tempTeam.getScoring());
 		this.setThreeBarScoring(tempTeam.getThreeBarScoring());
 		this.setFiveBarScoring(tempTeam.getFiveBarScoring());
