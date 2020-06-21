@@ -122,8 +122,8 @@ public class Settings {
 	private String team2FiveBarScoringFileName;
 	private String team1TwoBarScoringFileName;
 	private String team2TwoBarScoringFileName;
-	private String team1SOGFileName;
-	private String team2SOGFileName;
+	private String team1ShotsOnGoalFileName;
+	private String team2ShotsOnGoalFileName;
 	private String side1ColorFileName;
 	private String side2ColorFileName;
 
@@ -268,8 +268,8 @@ public class Settings {
 		defaultProps.setProperty("Team2FiveBarScoringFileName", "team2fivebarscoring.txt");
 		defaultProps.setProperty("Team1TwoBarScoringFileName", "team1twobarscoring.txt");
 		defaultProps.setProperty("Team2TwoBarScoringFileName", "team2twobarscoring.txt");
-		defaultProps.setProperty("Team1SOGFileName", "team1sog.txt");
-		defaultProps.setProperty("Team2SOGFileName", "team2sog.txt");
+		defaultProps.setProperty("Team1ShotsOnGoalFileName", "team1shotsongoal.txt");
+		defaultProps.setProperty("Team2ShotsOnGoalFileName", "team2shotsongoal.txt");
 		defaultProps.setProperty("Side1ColorFileName","side1color.txt");
 		defaultProps.setProperty("Side2ColorFileName","side2color.txt");
 		
@@ -521,11 +521,11 @@ public class Settings {
 			return team2TwoBarScoringFileName;
 		}
 	}
-	public String getSOGFileName(int teamNbr) {
+	public String getShotsOnGoalFileName(int teamNbr) {
 		if(teamNbr==1) {
-			return team1SOGFileName;
+			return team1ShotsOnGoalFileName;
 		} else {
-			return team2SOGFileName;
+			return team2ShotsOnGoalFileName;
 		}
 	}
 	public String getStuffsFileName(int teamNbr) {
@@ -789,13 +789,13 @@ public class Settings {
 		this.team2TwoBarScoringFileName = team2TwoBarScoringFileName;
 		configProps.setProperty("Team2TwoBarScoringFileName", this.team2TwoBarScoringFileName);
 	}
-	public void setTeam1SOGFileName(String team1SOGFileName) {
-		this.team1SOGFileName = team1SOGFileName;
-		configProps.setProperty("Team1SOGFileName", this.team1SOGFileName);
+	public void setTeam1ShotsOnGoalFileName(String team1ShotsOnGoalFileName) {
+		this.team1ShotsOnGoalFileName = team1ShotsOnGoalFileName;
+		configProps.setProperty("Team1ShotsOnGoalFileName", this.team1ShotsOnGoalFileName);
 	}
-	public void setTeam2SOGFileName(String team2SOGFileName) {
-		this.team2SOGFileName = team2SOGFileName;
-		configProps.setProperty("Team2SOGFileName", this.team2SOGFileName);
+	public void setTeam2ShotsOnGoalFileName(String team2ShotsOnGoalFileName) {
+		this.team2ShotsOnGoalFileName = team2ShotsOnGoalFileName;
+		configProps.setProperty("Team2ShotsOnGoalFileName", this.team2ShotsOnGoalFileName);
 	}
 	public void setSide1Color(String side1Color) {
 		this.side1Color = side1Color;
@@ -1221,8 +1221,8 @@ public class Settings {
 	public String getDefaultTeam2FiveBarScoringFileName() {return defaultProps.getProperty("Team2FiveBarScoringFileName");}
 	public String getDefaultTeam1TwoBarScoringFileName() {return defaultProps.getProperty("Team1TwoBarScoringFileName");}	
 	public String getDefaultTeam2TwoBarScoringFileName() {return defaultProps.getProperty("Team2TwoBarScoringFileName");}	
-	public String getDefaultTeam1SOGFileName() {return defaultProps.getProperty("Team1SOGFileName");}
-	public String getDefaultTeam2SOGFileName() {return defaultProps.getProperty("Team2SOGFileName");}
+	public String getDefaultTeam1ShotsOnGoalFileName() {return defaultProps.getProperty("Team1ShotsOnGoalFileName");}
+	public String getDefaultTeam2ShotsOnGoalFileName() {return defaultProps.getProperty("Team2ShotsOnGoalFileName");}
 
 	public String getDefaultStartMatchHotKey() {return defaultProps.getProperty("StartMatchHotKey");}
 	public String getDefaultTeam1ClearHotKey() {return defaultProps.getProperty("Team1ClearHotKey");}
@@ -1375,8 +1375,8 @@ public class Settings {
 		team2FiveBarScoringFileName = configProps.getProperty("Team2FiveBarScoringFileName");
 		team1TwoBarScoringFileName = configProps.getProperty("Team1TwoBarScoringFileName");
 		team2TwoBarScoringFileName = configProps.getProperty("Team2TwoBarScoringFileName");
-		team1SOGFileName = configProps.getProperty("Team1SOGFileName");
-		team2SOGFileName = configProps.getProperty("Team2SOGFileName");
+		team1ShotsOnGoalFileName = configProps.getProperty("Team1ShotsOnGoalFileName");
+		team2ShotsOnGoalFileName = configProps.getProperty("Team2ShotsOnGoalFileName");
 		
 		startMatchHotKey = configProps.getProperty("StartMatchHotKey");
 		team1ClearHotKey = configProps.getProperty("Team1ClearHotKey");
@@ -1511,8 +1511,8 @@ public class Settings {
 		configProps.setProperty("Team2FiveBarScoringFileName", this.getFiveBarScoringFileName(2));
 		configProps.setProperty("Team1TwoBarScoringFileName", this.getTwoBarScoringFileName(1));
 		configProps.setProperty("Team2TwoBarScoringFileName", this.getTwoBarScoringFileName(2));
-		configProps.setProperty("Team1SOGFileName", this.getSOGFileName(1));
-		configProps.setProperty("Team2SOGFileName", this.getSOGFileName(2));
+		configProps.setProperty("Team1ShotsOnGoalFileName", this.getShotsOnGoalFileName(1));
+		configProps.setProperty("Team2ShotsOnGoalFileName", this.getShotsOnGoalFileName(2));
 		configProps.setProperty("Side1ColorFileName", this.getSide1ColorFileName());
 		configProps.setProperty("Side2ColorFileName", this.getSide2ColorFileName());
 

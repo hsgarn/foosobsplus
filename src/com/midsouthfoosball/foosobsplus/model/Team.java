@@ -55,7 +55,7 @@ public class Team implements Serializable {
 	private int clearAttempts = 0;
 	private int clearCompletes = 0;
 	private Float clearPercent = 0f;
-	private int aces = 0;
+//	private int aces = 0;
 	private int twoBarPassAttempts = 0;
 	private int twoBarPassCompletes = 0;
 	private Float twoBarPassPercent = 0f;
@@ -196,8 +196,8 @@ public class Team implements Serializable {
 		return shotsOnGoal;
 	}
 	public void setShotsOnGoal(int shotsOnGoal) {
-		writeShotsOnGoal();
 		this.shotsOnGoal = shotsOnGoal;
+		writeShotsOnGoal();
 	}
 	public void setShotsOnGoal(String shotsOnGoal) {
 		if(shotsOnGoal=="") {
@@ -218,7 +218,7 @@ public class Team implements Serializable {
 		clearAttempts = 0;
 		clearCompletes = 0;
 		clearPercent = 0f;
-		aces = 0;
+//		aces = 0;
 		twoBarPassAttempts = 0;
 		twoBarPassCompletes = 0;
 		twoBarPassPercent = 0f;
@@ -280,7 +280,7 @@ public class Team implements Serializable {
 		clearAttempts = 0;
 		clearCompletes = 0;
 		clearPercent = 0f;
-		aces = 0;
+//		aces = 0;
 		twoBarPassAttempts = 0;
 		twoBarPassCompletes = 0;
 		twoBarPassPercent = 0f;
@@ -762,7 +762,7 @@ public class Team implements Serializable {
 	}
 	   private void writeShotsOnGoal() {
 	    	try {
-				obsInterface.setContents(settings.getSOGFileName(teamNbr), Integer.toString(getShotsOnGoal()));
+				obsInterface.setContents(settings.getShotsOnGoalFileName(teamNbr), Integer.toString(getShotsOnGoal()));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -725,8 +725,8 @@ public class TeamController {
 			team2.setFiveBarScoring(obsInterface.getContents(settings.getFiveBarScoringFileName(2)));
 			team1.setTwoBarScoring(obsInterface.getContents(settings.getTwoBarScoringFileName(1)));
 			team2.setTwoBarScoring(obsInterface.getContents(settings.getTwoBarScoringFileName(2)));
-			team1.setShotsOnGoal(obsInterface.getContents(settings.getSOGFileName(1)));
-			team2.setShotsOnGoal(obsInterface.getContents(settings.getSOGFileName(2)));
+			team1.setShotsOnGoal(obsInterface.getContents(settings.getShotsOnGoalFileName(1)));
+			team2.setShotsOnGoal(obsInterface.getContents(settings.getShotsOnGoalFileName(2)));
 			team1.setStuffs(obsInterface.getContents(settings.getStuffsFileName(1)));
 			team2.setStuffs(obsInterface.getContents(settings.getStuffsFileName(2)));
 			team1.setBreaks(obsInterface.getContents(settings.getBreaksFileName(1)));

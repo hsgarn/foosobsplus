@@ -107,8 +107,8 @@ public class FileNamesPanel extends JPanel {
 	private JTextField txtTeam2FiveBarScoringFileName;
 	private JTextField txtTeam1TwoBarScoringFileName;
 	private JTextField txtTeam2TwoBarScoringFileName;
-	private JTextField txtTeam1SOGFileName;
-	private JTextField txtTeam2SOGFileName;
+	private JTextField txtTeam1ShotsOnGoalFileName;
+	private JTextField txtTeam2ShotsOnGoalFileName;
 	OBSInterface obsInterface;
 	private String defaultFilePath = "c:\\temp";
 
@@ -177,8 +177,8 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2FiveBarScoringFileName.setText(settings.getDefaultTeam2FiveBarScoringFileName());
 		txtTeam1TwoBarScoringFileName.setText(settings.getDefaultTeam1TwoBarScoringFileName());
 		txtTeam2TwoBarScoringFileName.setText(settings.getDefaultTeam2TwoBarScoringFileName());
-		txtTeam1SOGFileName.setText(settings.getDefaultTeam1SOGFileName());
-		txtTeam2SOGFileName.setText(settings.getDefaultTeam2SOGFileName());
+		txtTeam1ShotsOnGoalFileName.setText(settings.getDefaultTeam1ShotsOnGoalFileName());
+		txtTeam2ShotsOnGoalFileName.setText(settings.getDefaultTeam2ShotsOnGoalFileName());
 	}
 
 	private void saveSettings(Settings settings) {
@@ -237,8 +237,8 @@ public class FileNamesPanel extends JPanel {
 		settings.setTeam2FiveBarScoringFileName(txtTeam2FiveBarScoringFileName.getText());
 		settings.setTeam1TwoBarScoringFileName(txtTeam1TwoBarScoringFileName.getText());
 		settings.setTeam2TwoBarScoringFileName(txtTeam2TwoBarScoringFileName.getText());
-		settings.setTeam1SOGFileName(txtTeam1SOGFileName.getText());
-		settings.setTeam2SOGFileName(txtTeam2SOGFileName.getText());
+		settings.setTeam1ShotsOnGoalFileName(txtTeam1ShotsOnGoalFileName.getText());
+		settings.setTeam2ShotsOnGoalFileName(txtTeam2ShotsOnGoalFileName.getText());
 		try {
 			settings.saveToConfig();
 		} catch (IOException ex) {
@@ -713,18 +713,18 @@ public class FileNamesPanel extends JPanel {
 		JLabel lblTeam1SOG = new JLabel("Team 1 Shots On Goal");
 		add(lblTeam1SOG, "cell 10 16,alignx trailing");
 		
-		txtTeam1SOGFileName = new JTextField();
-		txtTeam1SOGFileName.setText(settings.getSOGFileName(1));
-		add(txtTeam1SOGFileName, "cell 11 16,alignx left");
-		txtTeam1SOGFileName.setColumns(10);
+		txtTeam1ShotsOnGoalFileName = new JTextField();
+		txtTeam1ShotsOnGoalFileName.setText(settings.getShotsOnGoalFileName(1));
+		add(txtTeam1ShotsOnGoalFileName, "cell 11 16,alignx left");
+		txtTeam1ShotsOnGoalFileName.setColumns(10);
 		
 		JLabel lblTeam2SOG = new JLabel("Team 2 Shots On Goal");
 		add(lblTeam2SOG, "cell 10 17,alignx trailing");
 		
-		txtTeam2SOGFileName = new JTextField();
-		txtTeam2SOGFileName.setText(settings.getSOGFileName(2));
-		add(txtTeam2SOGFileName, "cell 11 17,alignx left");
-		txtTeam2SOGFileName.setColumns(10);
+		txtTeam2ShotsOnGoalFileName = new JTextField();
+		txtTeam2ShotsOnGoalFileName.setText(settings.getShotsOnGoalFileName(2));
+		add(txtTeam2ShotsOnGoalFileName, "cell 11 17,alignx left");
+		txtTeam2ShotsOnGoalFileName.setColumns(10);
 		add(btnSaveFileNames, "cell 2 19,alignx center");
 		
 		JLabel lblTeambar_1 = new JLabel("Team 2 5-Bar Scoring");

@@ -20,8 +20,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.model;
 
-import java.util.Date;
-
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
 public class Game {
@@ -29,16 +27,16 @@ public class Game {
 	private Team team2;
 	private Settings settings;
 	private OBSInterface obsInterface;
-	private Date startTime;
-	private Date endTime;
-	private int elapsedTime;
-	private int[] points; 
-	private int[] threeBarPoints;
-	private int[] fiveBarPoints;
-	private int[] twoBarPoints;
-	private int[] shotsOnGoal;
-	private int[] breaks;
-	private int[] stuffs;
+//	private Date startTime;
+//	private Date endTime;
+//	private int elapsedTime;
+//	private int[] points; 
+//	private int[] threeBarPoints;
+//	private int[] fiveBarPoints;
+//	private int[] twoBarPoints;
+//	private int[] shotsOnGoal;
+//	private int[] breaks;
+//	private int[] stuffs;
 	private int number; // Game Number
 	private int maxGames;
 	
@@ -49,6 +47,7 @@ public class Game {
 		this.obsInterface = obsInterface;
 		this.number = number;
 		this.maxGames = maxGames;
+//		System.out.println("objects: " + this.obsInterface + this.settings + this.team1 + this.team2 + this.number + this.maxGames);
 	}
 
 }

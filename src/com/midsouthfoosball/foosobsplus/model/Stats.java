@@ -68,7 +68,7 @@ public class Stats implements Serializable {
 	private transient boolean isPassComplete;
 	private transient boolean isClearComplete;
 	private transient boolean isStuff;
-	private transient boolean isSOG;
+	private transient boolean isShotOnGoal;
 	
 	private transient char breakChar = new Character('B');
 	private transient char stuffChar = new Character('F');
@@ -97,6 +97,8 @@ public class Stats implements Serializable {
 		this.team2 = team2;
 		this.games = games;
 		this.match = match;
+//		System.out.println("games: " + this.games);
+//		System.out.println("match: " + this.match);
 	}
 
 	public String getCode() {
@@ -176,7 +178,7 @@ public class Stats implements Serializable {
 		}
 		if(isShot) {
 			shotLogic();
-			if(isSOG) sogLogic();
+			if(isShotOnGoal) shotsOnGoalLogic();
 		}
 		if(isPass) {
 			passLogic();
@@ -232,7 +234,7 @@ public class Stats implements Serializable {
 
 		isPassComplete = isPass && isSameTeam && !isSameRod && isForwardDirection;
 		isClearComplete = isClear && !isSameRod && (isSameTeam || (!isSameTeam && (isFiveRod || isTwoRod)));
-		isSOG = isShot && previousPosition==twoRodChar;
+		isShotOnGoal = isShot && previousPosition==twoRodChar;
 
 	}
 private void resetFlags() {
@@ -262,7 +264,7 @@ private void resetFlags() {
 	team2Scored = false;
 	team1TimeOut = false;
 	team2TimeOut = false;
-	isSOG = false;
+	isShotOnGoal = false;
 }
 	public Float caclPercent(int attempts, int completes) {
 		float percent = 0;
@@ -549,33 +551,33 @@ private void resetFlags() {
 			}
 		}
 	}
-	private void sogLogic() {
-		int sog;
+	private void shotsOnGoalLogic() {
+		int shotsOnGoal;
 		if(isTeamScored) {
 			if(team1Scored) {
-				sog = team1.getShotsOnGoal() + 1;
-				team1.setShotsOnGoal(sog);
+				shotsOnGoal = team1.getShotsOnGoal() + 1;
+				team1.setShotsOnGoal(shotsOnGoal);
 			} else {
-				sog = team2.getShotsOnGoal() + 1;
-				team2.setShotsOnGoal(sog);
+				shotsOnGoal = team2.getShotsOnGoal() + 1;
+				team2.setShotsOnGoal(shotsOnGoal);
 			}
 		} else {
 			if(isSameTeam) {
 				if(isTeam1) {
-					sog = team1.getShotsOnGoal() + 1;
-					team1.setShotsOnGoal(sog);
+					shotsOnGoal = team1.getShotsOnGoal() + 1;
+					team1.setShotsOnGoal(shotsOnGoal);
 				} else {
-					sog = team2.getShotsOnGoal() + 1;
-					team2.setShotsOnGoal(sog);
+					shotsOnGoal = team2.getShotsOnGoal() + 1;
+					team2.setShotsOnGoal(shotsOnGoal);
 					
 				}
 			} else {
 				if(isTeam1) {
-					sog = team2.getShotsOnGoal() + 1;
-					team2.setShotsOnGoal(sog);
+					shotsOnGoal = team2.getShotsOnGoal() + 1;
+					team2.setShotsOnGoal(shotsOnGoal);
 				} else {
-					sog = team1.getShotsOnGoal() + 1;
-					team1.setShotsOnGoal(sog);
+					shotsOnGoal = team1.getShotsOnGoal() + 1;
+					team1.setShotsOnGoal(shotsOnGoal);
 				}
 			}
 		}
@@ -600,7 +602,7 @@ private void resetFlags() {
 		System.out.println(" IsTwoRod: " + isTwoRod + "    wasTwoRod: " + wasTwoRod);
 		System.out.println(" IsFiveRod: " + isFiveRod + "    wasFiveRod: " + wasFiveRod);
 		System.out.println(" IsThreeRod: " + isThreeRod + "    wasThreeRod: " + wasThreeRod);
-		System.out.println(" IsSOG: "  + isSOG);
+		System.out.println(" IsShotOnGoal: "  + isShotOnGoal);
 		System.out.println("Team1PassAttempts: " + team1.getPassAttempts() + "  Completes: " + team1.getPassCompletes());
 		System.out.println("Team2PassAttempts: " + team2.getPassAttempts() + "  Completes: " + team2.getPassCompletes());
 		System.out.println("Team1ShotAttempts: " + team1.getShotAttempts() + "  Completes: " + team1.getShotCompletes());
@@ -631,4 +633,3 @@ private void resetFlags() {
 		this.setPreviousCode(tempStats.getPreviousCode());
 	}
 }
-

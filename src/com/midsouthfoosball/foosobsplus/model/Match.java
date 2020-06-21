@@ -36,16 +36,16 @@ public class Match implements Serializable {
 	private transient OBSInterface obsInterface;
 	private int lastScored; // team number of the last team to score in this match
 	private transient String startTime;
-	private transient String endTime;
-	private transient int elapsedTime;
-	private transient int[] points;
-	private transient int[] threeBarPoints;
-	private transient int[] fiveBarPoints;
-	private transient int[] twoBarPoints;
-	private transient int[] shotsOnGoal;
-	private transient int[] breaks;
-	private transient int[] stuffs;
-	private transient Game[] games;
+//	private transient String endTime;
+//	private transient int elapsedTime;
+//	private transient int[] points;
+//	private transient int[] threeBarPoints;
+//	private transient int[] fiveBarPoints;
+//	private transient int[] twoBarPoints;
+//	private transient int[] shotsOnGoal;
+//	private transient int[] breaks;
+//	private transient int[] stuffs;
+//	private transient Game[] games;
 
 	public Match(OBSInterface obsInterface, Settings settings, Team team1, Team team2) {
 		this.team1 = team1;
@@ -188,10 +188,10 @@ public class Match implements Serializable {
 		team1.setScore(0);
 		team2.setScore(0);
 	}
-	private void resetGameCounts() {
-		team1.setGameCount(0);
-		team2.setGameCount(0);
-	}
+//	private void resetGameCounts() {
+//		team1.setGameCount(0);
+//		team2.setGameCount(0);
+//	}
 	private void resetTimeOuts() {
 		team1.resetTimeOuts();
 		team2.resetTimeOuts();

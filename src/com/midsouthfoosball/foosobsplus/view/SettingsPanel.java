@@ -21,16 +21,19 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Font;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
@@ -283,26 +286,16 @@ public class SettingsPanel extends JPanel {
 		add(chckbxAutoCapNames, "cell 1 15");
 
 		btnSave = new JButton("Save");
-/*		btnSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveSettings(settings);
-//				JComponent comp = (JComponent) e.getSource();
-//				Window win = SwingUtilities.getWindowAncestor(comp);
-//				win.dispose();
-			}
-		});
-*/
 		add(btnSave, "cell 1 18,alignx center");
 
 		JButton btnCancel = new JButton("Cancel");
-/*		btnCancel.addActionListener(new ActionListener() {
+		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JComponent comp = (JComponent) e.getSource();
 				Window win = SwingUtilities.getWindowAncestor(comp);
 				win.dispose();
 			}
 		});
-*/
 		add(btnCancel, "cell 2 18,alignx center");
 		
 		JButton btnRestoreDefaults = new JButton("Restore Defaults");
