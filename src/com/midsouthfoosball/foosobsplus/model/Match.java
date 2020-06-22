@@ -84,6 +84,11 @@ public class Match implements Serializable {
 		}
 		writeLastScored();
 	}
+	public void switchTeams() {
+		Team tmp = team1;
+		team1 = team2;
+		team2 = tmp;
+	}
 	public void clearAll() {
 		lastScored = 0;
 		writeLastScored();

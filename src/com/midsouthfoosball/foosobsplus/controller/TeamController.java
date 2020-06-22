@@ -498,12 +498,13 @@ public class TeamController {
 	public void switchSides() {
 		Team tmp = team1;
 		team1 = team2;
-		team1.setTeamNbr(1);
 		team2 = tmp;
+		team1.setTeamNbr(1);
 		team2.setTeamNbr(2);
 		team1.writeAll();
 		team2.writeAll();
 		match.switchLastScored();
+		match.switchTeams();
 		displayAll();
 	}
 	public void switchTeams() {
