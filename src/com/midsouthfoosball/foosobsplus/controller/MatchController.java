@@ -49,17 +49,11 @@ public class MatchController {
 		this.statsDisplayPanel = statsDisplayPanel;
 		this.teamController = teamController;
 
-		this.matchPanel.addStartMatchListener(new StartMatchListener());
 		this.gameClock.addGameClockTimerListener(new GameClockTimerListener());
 	}
 	
 	////// Match Panel Listener Objects \\\\\\
 
-	private class StartMatchListener implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			startMatch();
-		}
-	}
 	private class GameClockTimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			matchPanel.updateElapsedTime(gameClock.getMatchTime());

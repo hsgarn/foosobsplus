@@ -45,48 +45,12 @@ public class TimerController {
 		this.timeClock = timeClock;
 		this.settings = settings;
 		
-		////// Timer Panel Listener Methods //////
+		////// Timer Listener Methods //////
 	
-		this.timerPanel.addShotTimerListener(new ShotTimerListener());
-		this.timerPanel.addPassTimerListener(new PassTimerListener());
-		this.timerPanel.addTimeOutTimerListener(new TimeOutTimerListener());
-		this.timerPanel.addGameTimerListener(new GameTimerListener());
-		this.timerPanel.addRecallTimerListener(new RecallTimerListener());
-		this.timerPanel.addResetTimerListener(new ResetTimerListener());
 		this.timeClock.addTimeClockTimerListener(alAction);
 	}
 	
 	
-	private class ShotTimerListener implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			startShotTimer();
-		}
-	}
-	private class PassTimerListener implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			startPassTimer();
-		}
-	}
-	private class TimeOutTimerListener implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			startTimeOutTimer();
-		}
-	}
-	private class GameTimerListener implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			startGameTimer();
-		}
-	}
-	private class RecallTimerListener implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			startRecallTimer();
-		}
-	}
-	private class ResetTimerListener implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			resetTimer();
-		}
-	}
 	ActionListener alAction = new ActionListener() {
 		public void actionPerformed(ActionEvent event) {
 			updateTimerDisplay();

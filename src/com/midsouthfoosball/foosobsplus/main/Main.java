@@ -29,6 +29,7 @@ import java.util.Stack;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -124,8 +125,6 @@ public class Main {
 	TableController 	tableController 	= new TableController(obsInterface, settings, table, match, tablePanel, teamController);
 	MatchController     matchController     = new MatchController(match, stats, gameClock, matchPanel, statsEntryPanel, statsDisplayPanel, teamController);
 	StatsController 	statsController 	= new StatsController(stats, statsDisplayPanel, teamController);
-	SwitchController 	switchController 	= new SwitchController(switchPanel, teamController, statsController);
-	ResetController 	resetController 	= new ResetController(resetPanel, teamController, statsController);
 
 	public Main() throws IOException {
 		obsInterface.setFilePath(settings.getDatapath());
@@ -139,6 +138,44 @@ public class Main {
 		this.teamPanel1.addClearAllListener(new TeamClearAllListener());
 		this.teamPanel2.addClearAllListener(new TeamClearAllListener());
 		this.statsEntryPanel.addStatsClearListener(new StatsClearListener());
+		this.teamPanel1.addScoreIncreaseListener(new ScoreIncreaseListener());
+		this.teamPanel2.addScoreIncreaseListener(new ScoreIncreaseListener());
+		this.teamPanel1.addScoreDecreaseListener(new ScoreDecreaseListener());
+		this.teamPanel2.addScoreDecreaseListener(new ScoreDecreaseListener());
+		this.teamPanel1.addGameCountIncreaseListener(new GameCountIncreaseListener());
+		this.teamPanel2.addGameCountIncreaseListener(new GameCountIncreaseListener());
+		this.teamPanel1.addGameCountDecreaseListener(new GameCountDecreaseListener());
+		this.teamPanel2.addGameCountDecreaseListener(new GameCountDecreaseListener());
+		this.teamPanel1.addTimeOutCountIncreaseListener(new TimeOutCountIncreaseListener());
+		this.teamPanel2.addTimeOutCountIncreaseListener(new TimeOutCountIncreaseListener());
+		this.teamPanel1.addTimeOutCountDecreaseListener(new TimeOutCountDecreaseListener());
+		this.teamPanel2.addTimeOutCountDecreaseListener(new TimeOutCountDecreaseListener());
+		this.teamPanel1.addResetListener(new ResetListener());
+		this.teamPanel2.addResetListener(new ResetListener());
+		this.teamPanel1.addWarnListener(new WarnListener());
+		this.teamPanel2.addWarnListener(new WarnListener());
+		this.teamPanel1.addSwitchPositionsListener(new SwitchPositionsListener());
+		this.teamPanel2.addSwitchPositionsListener(new SwitchPositionsListener());
+		this.switchPanel.addSwitchSidesListener(new SwitchSidesListener());
+		this.timerPanel.addShotTimerListener(new ShotTimerListener());
+		this.timerPanel.addPassTimerListener(new PassTimerListener());
+		this.timerPanel.addTimeOutTimerListener(new TimeOutTimerListener());
+		this.timerPanel.addGameTimerListener(new GameTimerListener());
+		this.timerPanel.addRecallTimerListener(new RecallTimerListener());
+		this.timerPanel.addResetTimerListener(new ResetTimerListener());
+		this.matchPanel.addStartMatchListener(new StartMatchListener());
+		this.switchPanel.addSwitchTeamsListener(new SwitchTeamsListener());
+		this.switchPanel.addSwitchScoresListener(new SwitchScoresListener());
+		this.switchPanel.addSwitchGameCountsListener(new SwitchGameCountsListener());
+		this.switchPanel.addSwitchTimeOutsListener(new SwitchTimeOutsListener());
+		this.switchPanel.addSwitchResetWarnsListener(new SwitchResetWarnsListener());
+		this.switchPanel.addClearAllListener(new ClearAllListener());
+		this.resetPanel.addResetNamesListener(new ResetNamesListener());
+		this.resetPanel.addResetScoresListener(new ResetScoresListener());
+		this.resetPanel.addResetGameCountsListener(new ResetGameCountsListener());
+		this.resetPanel.addResetTimeOutsListener(new ResetTimeOutsListener());
+		this.resetPanel.addResetResetWarnsListener(new ResetResetWarnsListener());
+		this.resetPanel.addResetAllListener(new ResetAllListener());
 		loadCommands();
 	}
 	public int getCurrentGameNbr() {
@@ -176,6 +213,210 @@ public class Main {
 			teamPanel2.setTitle();
 		}
 	}
+	private class ScoreIncreaseListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			JButton btn = (JButton) e.getSource();
+			String name = btn.getName();
+			if(name.equals("Team 1")) {
+				processCode("XIST1",false);
+			} else {
+				processCode("XIST2",false);
+			}
+		}
+	}
+	private class ScoreDecreaseListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			JButton btn = (JButton) e.getSource();
+			String name = btn.getName();
+			if(name.equals("Team 1")) {
+				processCode("XDST1",false);
+			} else {
+				processCode("XDST2",false);
+			}
+		}
+	}
+	private class GameCountIncreaseListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			JButton btn = (JButton) e.getSource();
+			String name = btn.getName();
+			if(name.equals("Team 1")) {
+				processCode("XIGT1",false);
+			} else {
+				processCode("XIGT2",false);
+			}
+		}
+	}
+	private class GameCountDecreaseListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			JButton btn = (JButton) e.getSource();
+			String name = btn.getName();
+			if(name.equals("Team 1")) {
+				processCode("XDGT1",false);
+			} else {
+				processCode("XDGT2",false);
+			}
+		}
+	}
+	private class TimeOutCountIncreaseListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			JButton btn = (JButton) e.getSource();
+			String name = btn.getName();
+			if(name.equals("Team 1")) {
+				processCode("XUTT1",false);
+			} else {
+				processCode("XUTT2",false);
+			}
+		}
+	}
+	private class TimeOutCountDecreaseListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			JButton btn = (JButton) e.getSource();
+			String name = btn.getName();
+			if(name.equals("Team 1")) {
+				processCode("XRTT1",false);
+			} else {
+				processCode("XRTT2",false);
+			}
+		}
+	}
+	private class ResetListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			JToggleButton btn = (JToggleButton) e.getSource();
+			String name = btn.getName();
+			if(name.equals("Team 1")) {
+				processCode("XPRT1",false);
+			} else {
+				processCode("XPRT2",false);
+			}
+		}
+	}
+	private class WarnListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			JToggleButton btn = (JToggleButton) e.getSource();
+			String name = btn.getName();
+			if(name.equals("Team 1")) {
+				processCode("XPWT1",false);
+			} else {
+				processCode("XPWT2",false);
+			}
+		}
+	}
+	private class SwitchPositionsListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			JButton btn = (JButton) e.getSource();
+			String name = btn.getName();
+			if(name.equals("Team 1")) {
+				processCode("XXPT1",false);
+			} else {
+				processCode("XXPT2",false);
+			}
+		}
+	}
+	private class SwitchSidesListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPSS",false);
+		}
+	}
+	private class ShotTimerListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XSST",false);
+		}
+	}
+	private class PassTimerListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XSPT",false);
+		}
+	}
+	private class TimeOutTimerListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XSTT",false);
+		}
+	}
+	private class GameTimerListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XSGT",false);
+		}
+	}
+	private class RecallTimerListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XSRT",false);
+		}
+	}
+	private class ResetTimerListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPRT",false);
+		}
+	}
+	private class StartMatchListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPSM",false);
+		}
+	}
+	private class SwitchTeamsListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPST",false);
+		}
+	}
+	private class SwitchScoresListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPSSC",false);
+		}
+	}
+	private class SwitchGameCountsListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPSG",false);
+		}
+	}
+	private class SwitchTimeOutsListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPSTO",false);
+		}
+	}
+	private class SwitchResetWarnsListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPSR",false);
+		}
+	}
+	private class ClearAllListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPCA",false);
+		}
+	}
+	private class ResetNamesListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPRN",false);
+		}
+	}
+	private class ResetScoresListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPRS",false);
+		}
+	}
+	private class ResetGameCountsListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPRG",false);
+		}
+	}
+	private class ResetTimeOutsListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPRTO",false);
+		}
+	}
+	private class ResetResetWarnsListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPRR",false);
+		}
+	}
+	private class ResetAllListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPRA",false);
+			statsController.displayAllStats();
+		}
+	}
+
+	
+	
+	
 	private class StatsEntryUndoListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			undo();
@@ -321,6 +562,20 @@ public class Main {
 		Command pss = new PSSCommand(statsController, teamController);
 		Command xpt1 = new XPT1Command(statsController, teamController);
 		Command xpt2 = new XPT2Command(statsController, teamController);
+		Command pst = new PSTCommand(statsController, teamController);
+		Command pssc = new PSSCCommand(statsController, teamController);
+		Command psg = new PSGCommand(statsController, teamController);
+		Command psto = new PSTOCommand(statsController, teamController);
+		Command psr = new PSRCommand(statsController, teamController);
+		Command pca = new PCACommand(statsController, teamController);
+		Command pct1 = new PCT1Command(statsController, teamController, team1, match, switchPanel, settings);
+		Command pct2 = new PCT2Command(statsController, teamController, team2, match, switchPanel, settings);
+		Command prn= new PRNCommand(statsController, teamController);
+		Command prs = new PRSCommand(statsController, teamController);
+		Command prg = new PRGCommand(statsController, teamController);
+		Command prto = new PRTOCommand(statsController, teamController);
+		Command prr = new PRRCommand(statsController, teamController);
+		Command pra = new PRACommand(statsController, teamController);
 		Command codeCommand = new CodeCommand(statsController);
 
 		mySwitch = new CommandSwitch();
@@ -350,6 +605,20 @@ public class Main {
 		mySwitch.register("PSS", pss);
 		mySwitch.register("XPT1", xpt1);
 		mySwitch.register("XPT2", xpt2);
+		mySwitch.register("PST", pst);
+		mySwitch.register("PSSC", pssc);
+		mySwitch.register("PSG", psg);
+		mySwitch.register("PSTO", psto);
+		mySwitch.register("PSR", psr);
+		mySwitch.register("PCA", pca);
+		mySwitch.register("PCT1", pct1);
+		mySwitch.register("PCT2", pct2);
+		mySwitch.register("PRN", prn);
+		mySwitch.register("PRS", prs);
+		mySwitch.register("PRG", prg);
+		mySwitch.register("PRTO", prto);
+		mySwitch.register("PRR", prr);
+		mySwitch.register("PRA", pra);
 		mySwitch.register("code", codeCommand);
 	}
 	private class TeamClearAllListener implements ActionListener {
@@ -357,15 +626,10 @@ public class Main {
 			JButton btn = (JButton) e.getSource();
 			String name = btn.getName();
 			if(name.equals("Team 1")) {
-				team1.clearAll();
-				teamController.displayAll();
+				processCode("XPCT1",false);
 			} else {
-				team2.clearAll();
-				teamController.displayAll();
+				processCode("XPCT2",false);
 			}
-			match.clearAll();
-			switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
-			statsController.displayAllStats();
 		}
 	}
 }
