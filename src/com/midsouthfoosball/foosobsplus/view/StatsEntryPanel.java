@@ -182,6 +182,9 @@ public class StatsEntryPanel extends JPanel {
 	public void updateCodeHistory(String code) {
 		mdlCodeHistory.addElement(code);
 	}
+	public void errorCodeHistory() {
+		mdlCodeHistory.set(mdlCodeHistory.getSize()-1, mdlCodeHistory.getElementAt(mdlCodeHistory.getSize()-1) + "<Unknown");
+	}
 	public void removeCodeHistory() {
 		mdlCodeHistory.removeElement(mdlCodeHistory.lastElement());
 	}

@@ -20,6 +20,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.view;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -49,6 +50,7 @@ public class TeamPanel extends JPanel {
 	private JLabel lblScore;
 	private JLabel lblGameCount;
 	private JLabel lblTimeOutCount;
+	private JLabel lblLastScoredTime;
 	private JTextField txtTeamName;
 	private JTextField txtForwardName;
 	private JTextField txtGoalieName;
@@ -124,6 +126,10 @@ public class TeamPanel extends JPanel {
 		btnTimeOutCountIncrease.setName("Team " + Integer.toString(teamNbr));
 		btnReset = new JToggleButton("Reset");
 		btnReset.setName("Team " + Integer.toString(teamNbr));
+		lblLastScoredTime = new JLabel("0");
+		lblLastScoredTime.setName("Team " + Integer.toString(teamNbr));
+		lblLastScoredTime.setOpaque(true);
+		lblLastScoredTime.setBackground(Color.CYAN);
 		btnWarn = new JToggleButton(" Warn ");
 		btnWarn.setName("Team " + Integer.toString(teamNbr));
 		btnClear = new JButton("Clear");
@@ -418,6 +424,12 @@ public class TeamPanel extends JPanel {
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
 		add(btnReset, gc);
+
+		gc.gridx = 1;
+		gc.insets = new Insets(10, 0, 10, 0);
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.CENTER;
+		add(lblLastScoredTime, gc);
 		
 		gc.gridx = 2;
 		gc.insets = new Insets(10, 0, 10, 0);
@@ -580,6 +592,23 @@ public class TeamPanel extends JPanel {
 		border.setTitleJustification(TitledBorder.CENTER);
 		this.setBorder(border);
 	}
+
+	public void updateLastScoredTime(int timeElapsed) {
+		lblLastScoredTime.setText(Integer.toString(timeElapsed));
+	}
+	public void updateLastScoredTime(String timeElapsed) {
+		lblLastScoredTime.setText(timeElapsed);
+	}
+	public String getLastScoredTimeText() {
+		return lblLastScoredTime.getText();
+	}
+	public Color getLastScoredTimeColor() {
+		return lblLastScoredTime.getBackground();
+	}
+	public void setLastScoredTimeColor(Color color) {
+		lblLastScoredTime.setBackground(color);
+	}
+
 	public void updateMnemonics() {
 		setMnemonics(teamNbr);
 	}

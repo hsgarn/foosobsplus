@@ -11,10 +11,11 @@ public class CommandSwitch {
 	
 	public Command execute(String commandName) {
 		Command command = commandMap.get(commandName);
-		if (command == null) {
-			throw new IllegalStateException("no command registered for " + commandName);
+		if (command != null) {
+//			throw new IllegalStateException("no command registered for " + commandName);
+//		}
+			command.execute();
 		}
-		command.execute();
 		return command;
 	}
 

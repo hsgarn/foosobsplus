@@ -28,12 +28,12 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 @SuppressWarnings("serial")
-public class TimerWindowFrame extends JFrame {
+public class LastScored1WindowFrame extends JFrame {
 	
-	private TimerWindowPanel timerWindowPanel;
+	private LastScored1WindowPanel lastScored1WindowPanel;
 
-	public TimerWindowFrame() {
-		super("FoosOBSPlus Timer Window");
+	public LastScored1WindowFrame() {
+		super("FoosOBSPlus Team 1 Last Scored Timer Window");
 		try {
 		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		        if ("Nimbus".equals(info.getName())) {
@@ -48,16 +48,16 @@ public class TimerWindowFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setAlwaysOnTop(true);
 		
-		timerWindowPanel = new TimerWindowPanel("0",Color.GREEN);
-		timerWindowPanel.setPreferredSize(new Dimension(256, 70));
+		lastScored1WindowPanel = new LastScored1WindowPanel("0",Color.CYAN);
+		lastScored1WindowPanel.setPreferredSize(new Dimension(256, 70));
 
-		getContentPane().add(timerWindowPanel);
+		getContentPane().add(lastScored1WindowPanel);
 		pack();
 	}
 	public void setTimerDisplay(String timeToDisplay) {
-		timerWindowPanel.setTimerWindowText(timeToDisplay);
+		lastScored1WindowPanel.setWindowText(timeToDisplay);
 	}
 	public void setTimerDisplayColor(Color colorToDisplay) {
-		timerWindowPanel.setTimerWindowColor(colorToDisplay);
+		lastScored1WindowPanel.setWindowColor(colorToDisplay);
 	}
 }

@@ -89,6 +89,8 @@ public class Main {
 	
 	private TimeClock 			timeClock 			= new TimeClock(obsInterface, settings);
 	private GameClock           gameClock           = new GameClock(obsInterface, settings);
+	private LastScoredClock1     lastScoredClock1    = new LastScoredClock1(obsInterface, settings);
+	private LastScoredClock2     lastScoredClock2    = new LastScoredClock2(obsInterface, settings);
 	
 	////// Create the View Panels to Display (mVc) \\\\\\
 	
@@ -105,6 +107,8 @@ public class Main {
 	////// Set up Timer and Settings Windows \\\\\\
 	
 	private TimerWindowFrame 	timerWindowFrame 	= new TimerWindowFrame();
+	private LastScored1WindowFrame lastScored1WindowFrame = new LastScored1WindowFrame();
+	private LastScored2WindowFrame lastScored2WindowFrame = new LastScored2WindowFrame();
 	private SettingsFrame 		settingsFrame 		= new SettingsFrame(settings);
 	private SettingsPanel		settingsPanel		= settingsFrame.getSettingsPanel();
 	private HotKeysFrame 		hotKeysFrame 		= new HotKeysFrame(settings);
@@ -119,9 +123,9 @@ public class Main {
 
 	////// Build and Start the Controllers (mvC) \\\\\\
 	
-	MainController 		mainController 		= new MainController(mainFrame, timerWindowFrame);
-	TimerController 	timerController 	= new TimerController(timerPanel, timerWindowFrame, timeClock, settings);
-	TeamController 		teamController 		= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, timerController);
+	MainController 		mainController 		= new MainController(mainFrame, timerWindowFrame, lastScored1WindowFrame, lastScored2WindowFrame);
+	TimerController 	timerController 	= new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock);
+	TeamController 		teamController 		= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, timerController, lastScoredClock1, lastScoredClock2);
 	TableController 	tableController 	= new TableController(obsInterface, settings, table, match, tablePanel, teamController);
 	MatchController     matchController     = new MatchController(match, stats, gameClock, matchPanel, statsEntryPanel, statsDisplayPanel, teamController);
 	StatsController 	statsController 	= new StatsController(stats, statsDisplayPanel, teamController);
@@ -413,7 +417,17 @@ public class Main {
 			statsController.displayAllStats();
 		}
 	}
-
+	private class TeamClearAllListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			JButton btn = (JButton) e.getSource();
+			String name = btn.getName();
+			if(name.equals("Team 1")) {
+				processCode("XPCT1",false);
+			} else {
+				processCode("XPCT2",false);
+			}
+		}
+	}
 	
 	
 	
@@ -435,7 +449,7 @@ public class Main {
 		public void actionPerformed(ActionEvent e) {
 			stats.clearAll();
 			statsEntryPanel.clearAll();
-			undoRedoPointer = 0;
+			undoRedoPointer = -1;
 		}
 	}
 	private class CodeListener implements ActionListener {
@@ -447,36 +461,43 @@ public class Main {
 		}
 	}
 	public void processCode(String code, Boolean isRedo) {
+		Command commandStatus;
 		if (!isRedo) { 
 			makeMementos();
 			codeStack.push(code);
 		}
-	stats.setCode(code);
-	stats.addCodeToHistory(code);
-	statsEntryPanel.updateCode("");
-	statsEntryPanel.updateCodeHistory(code);
-	if (stats.getIsCommand()) {
-		if (!isRedo) { 
-			commandStack.push(mySwitch.execute(stats.getCommand()));
-			undoRedoPointer++;
-		}
-	} else {
-		if (!isRedo) { 
-			commandStack.push(mySwitch.execute("code"));
-			undoRedoPointer++;
-		}
-		if (stats.getTeam1Scored()) teamController.incrementScore("Team 1");
-		if (stats.getTeam2Scored()) teamController.incrementScore("Team 2");
-		if (stats.getTeam1TimeOut()) {
-			teamController.callTimeOut("Team 1");
-		} else if (stats.getTeam2TimeOut()) {
-			teamController.callTimeOut("Team 2");
+		stats.setCode(code);
+		stats.addCodeToHistory(code);
+		statsEntryPanel.updateCode("");
+		statsEntryPanel.updateCodeHistory(code);
+		if (stats.getIsCommand()) {
+			if (!isRedo) { 
+				commandStatus = commandStack.push(mySwitch.execute(stats.getCommand()));
+				if (commandStatus == null) {
+					statsEntryPanel.errorCodeHistory();;
+				}
+				undoRedoPointer++;
+			}
 		} else {
-			if (stats.getIsThreeRod()||stats.getIsTwoRod()) teamController.startShotTimer();
-			if (stats.getIsFiveRod()) teamController.startPassTimer();
+			if (!isRedo) { 
+				commandStatus = commandStack.push(mySwitch.execute("code"));
+				if (commandStatus == null) {
+					statsEntryPanel.errorCodeHistory();;
+				}
+				undoRedoPointer++;
+			}
+			if (stats.getTeam1Scored()) teamController.incrementScore("Team 1");
+			if (stats.getTeam2Scored()) teamController.incrementScore("Team 2");
+			if (stats.getTeam1TimeOut()) {
+				teamController.callTimeOut("Team 1");
+			} else if (stats.getTeam2TimeOut()) {
+				teamController.callTimeOut("Team 2");
+			} else {
+				if (stats.getIsThreeRod()||stats.getIsTwoRod()) teamController.startShotTimer();
+				if (stats.getIsFiveRod()) teamController.startPassTimer();
+			}
 		}
-	}
-	statsController.displayAllStats();
+		statsController.displayAllStats();
 	}
 	private void makeMementos() {
 		deleteElementsAfterPointer(undoRedoPointer);
@@ -516,8 +537,12 @@ public class Main {
 	    isCommand = tempCode.charAt(0)==commandChar;
 	    if(isCommand) {
 		    Command command = commandStack.get(undoRedoPointer);
-	    	command.execute();
-		    statsEntryPanel.updateCodeHistory(tempCode);
+		    if (command != null) {
+		    	command.execute();
+			    statsEntryPanel.updateCodeHistory(tempCode);
+		    } else {
+		    	statsEntryPanel.updateCodeHistory(tempCode + "<Unknown");
+	    	}
 	    } else {
 	    	processCode(tempCode,isRedo);
 	    }
@@ -620,16 +645,5 @@ public class Main {
 		mySwitch.register("PRR", prr);
 		mySwitch.register("PRA", pra);
 		mySwitch.register("code", codeCommand);
-	}
-	private class TeamClearAllListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			JButton btn = (JButton) e.getSource();
-			String name = btn.getName();
-			if(name.equals("Team 1")) {
-				processCode("XPCT1",false);
-			} else {
-				processCode("XPCT2",false);
-			}
-		}
 	}
 }

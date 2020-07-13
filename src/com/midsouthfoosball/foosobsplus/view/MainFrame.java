@@ -57,6 +57,8 @@ public final class MainFrame extends JFrame {
 	public FileNamesFrame fileNamesFrame;
 	private JCheckBoxMenuItem viewTimerWindow;
 	private JCheckBoxMenuItem viewAlwaysOnTop;
+	private JCheckBoxMenuItem viewLastScored1Window;
+	private JCheckBoxMenuItem viewLastScored2Window;
 	
 	public MainFrame(TablePanel tablePanel, TimerPanel timerPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
 			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, SettingsFrame settingsFrame, HotKeysFrame hotKeysFrame,
@@ -77,8 +79,10 @@ public final class MainFrame extends JFrame {
 		this.hotKeysFrame = hotKeysFrame;
 		this.fileNamesFrame = fileNamesFrame;
 		
-		 viewTimerWindow = new JCheckBoxMenuItem("Timer Window");
-		 viewAlwaysOnTop = new JCheckBoxMenuItem("Always on Top");
+		viewLastScored2Window = new JCheckBoxMenuItem("Team 2 Last Scored Window");
+		viewLastScored1Window = new JCheckBoxMenuItem("Team 1 Last Scored Window");
+		viewTimerWindow = new JCheckBoxMenuItem("Timer Window");
+		viewAlwaysOnTop = new JCheckBoxMenuItem("Always on Top");
 				
 		setLayout(new GridBagLayout());
 		
@@ -124,6 +128,8 @@ public final class MainFrame extends JFrame {
 		
 		viewMenu.add(viewAlwaysOnTop);
 		viewMenu.add(viewTimerWindow);
+		viewMenu.add(viewLastScored1Window);
+		viewMenu.add(viewLastScored2Window);
 
 		JMenu helpMenu = new JMenu("Help");
 		JMenuItem helpPage = new JMenuItem("FoosOBSPlus Help");
@@ -347,6 +353,12 @@ public final class MainFrame extends JFrame {
 	
 	public void addTimerWindowListener(ActionListener listenForChkBoxTimerWindow) {
 		viewTimerWindow.addActionListener(listenForChkBoxTimerWindow);
+	}
+	public void addLastScored1WindowListener(ActionListener listenForChkBoxLastScored1Window) {
+		viewLastScored1Window.addActionListener(listenForChkBoxLastScored1Window);
+	}
+	public void addLastScored2WindowListener(ActionListener listenForChkBoxLastScored2Window) {
+		viewLastScored2Window.addActionListener(listenForChkBoxLastScored2Window);
 	}
 	
 	///// Utility Methods \\\\\\

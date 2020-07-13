@@ -89,7 +89,7 @@ public class SwitchPanel extends JPanel {
 		gc.weightx = 1;
 		gc.weighty = 0.5;
 		
-		gc.gridx = 0;
+		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
@@ -101,7 +101,7 @@ public class SwitchPanel extends JPanel {
 		gc.weightx = 1;
 		gc.weighty = 0.1;
 		
-		gc.gridx = 0;
+		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
@@ -113,7 +113,7 @@ public class SwitchPanel extends JPanel {
 		gc.weightx = 1;
 		gc.weighty = 0.1;
 		
-		gc.gridx = 0;
+		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
@@ -125,7 +125,7 @@ public class SwitchPanel extends JPanel {
 		gc.weightx = 1;
 		gc.weighty = 0.1;
 		
-		gc.gridx = 0;
+		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
@@ -137,7 +137,7 @@ public class SwitchPanel extends JPanel {
 		gc.weightx = 1;
 		gc.weighty = 0.1;
 		
-		gc.gridx = 0;
+		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
@@ -149,7 +149,7 @@ public class SwitchPanel extends JPanel {
 		gc.weightx = 1;
 		gc.weighty = 0.1;
 		
-		gc.gridx = 0;
+		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
@@ -161,7 +161,7 @@ public class SwitchPanel extends JPanel {
 		gc.weightx = 1;
 		gc.weighty = .5;
 		
-		gc.gridx = 0;
+		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
@@ -173,7 +173,7 @@ public class SwitchPanel extends JPanel {
 		gc.weightx = 1;
 		gc.weighty = 1;
 		
-		gc.gridx = 0;
+		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);

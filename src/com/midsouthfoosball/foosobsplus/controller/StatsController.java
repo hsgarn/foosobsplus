@@ -25,9 +25,6 @@ import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 
 public class StatsController {
 
-	////// undo/redo setup \\\\\\
-	
-	
 	private Stats stats;
 	private StatsDisplayPanel statsDisplayPanel;
 	private TeamController teamController;

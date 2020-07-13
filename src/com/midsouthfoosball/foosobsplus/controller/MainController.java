@@ -22,20 +22,29 @@ package com.midsouthfoosball.foosobsplus.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JCheckBoxMenuItem;
 
+import com.midsouthfoosball.foosobsplus.view.LastScored1WindowFrame;
+import com.midsouthfoosball.foosobsplus.view.LastScored2WindowFrame;
 import com.midsouthfoosball.foosobsplus.view.MainFrame;
 import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
 
 public class MainController {
 	private MainFrame mainFrame;
 	private TimerWindowFrame timerWindowFrame;
+	private LastScored1WindowFrame lastScored1WindowFrame;
+	private LastScored2WindowFrame lastScored2WindowFrame;
 	
-	public MainController(MainFrame mainFrame, TimerWindowFrame timerWindowFrame) {
+	public MainController(MainFrame mainFrame, TimerWindowFrame timerWindowFrame, LastScored1WindowFrame lastScored1WindowFrame, LastScored2WindowFrame lastScored2WindowFrame) {
 		this.mainFrame = mainFrame;
 		this.timerWindowFrame = timerWindowFrame;
+		this.lastScored1WindowFrame = lastScored1WindowFrame;
+		this.lastScored2WindowFrame = lastScored2WindowFrame;
 		
 		this.mainFrame.addTimerWindowListener(new TimerWindowListener());
+		this.mainFrame.addLastScored1WindowListener(new LastScored1WindowListener());
+		this.mainFrame.addLastScored2WindowListener(new LastScored2WindowListener());
 	}
 
 	////// MainFrame Listener Objects //////
@@ -44,6 +53,18 @@ public class MainController {
 		public void actionPerformed(ActionEvent ae) {
 			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
 			timerWindowFrame.setVisible(box.isSelected());
+		}
+	}
+	private class LastScored1WindowListener implements ActionListener {
+		public void actionPerformed(ActionEvent ae) {
+			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
+			lastScored1WindowFrame.setVisible(box.isSelected());
+		}
+	}
+	private class LastScored2WindowListener implements ActionListener {
+		public void actionPerformed(ActionEvent ae) {
+			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
+			lastScored2WindowFrame.setVisible(box.isSelected());
 		}
 	}
 }

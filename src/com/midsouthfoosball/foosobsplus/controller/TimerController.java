@@ -23,27 +23,31 @@ package com.midsouthfoosball.foosobsplus.controller;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Arrays;
 
+import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.TimeClock;
 import com.midsouthfoosball.foosobsplus.view.TimerPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
 
 public class TimerController {
+	private OBSInterface obsInterface;
+	private Settings settings;
 	private TimerPanel timerPanel;
 	private TimerWindowFrame timerWindowFrame;
 	private TimeClock timeClock;
-	private Settings settings;
 	private int displayWidth = 9;
 	private int prefixWidth;
 	private int suffixWidth = 3;
 	
-	public TimerController(TimerPanel timerPanel, TimerWindowFrame timerWindowFrame, TimeClock timeClock, Settings settings) {
+	public TimerController(OBSInterface obsInterface, Settings settings, TimerPanel timerPanel, TimerWindowFrame timerWindowFrame, TimeClock timeClock) {
+		this.obsInterface = obsInterface;
+		this.settings = settings;
 		this.timerPanel = timerPanel;
 		this.timerWindowFrame = timerWindowFrame;
 		this.timeClock = timeClock;
-		this.settings = settings;
 		
 		////// Timer Listener Methods //////
 	
@@ -144,6 +148,14 @@ public class TimerController {
 		    Arrays.fill(c2, ' ');
 		    timerPanel.updateTimerDisplay(String.valueOf(c1) + timeLeft + String.valueOf(c2));
 		    timerWindowFrame.setTimerDisplay(String.valueOf(c1) + timeLeft + String.valueOf(c2));
+		}
+		writeTimeRemaining();
+	}
+	private void writeTimeRemaining() {
+		try {
+			obsInterface.setContents(settings.getTimeRemainingFileName(), timerPanel.getTimerDisplayText());
+		} catch (IOException e2) {
+			e2.printStackTrace();
 		}
 	}
 }
