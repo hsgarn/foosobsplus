@@ -92,7 +92,7 @@ public class TablePanel extends JPanel {
 		add(lblTournamentName, gc);
 		
 		gc.gridx = 1;
-		gc.gridwidth = 1;
+		gc.gridwidth = 2;
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		gc.insets = new Insets(5, 5, 5, 5);
 		gc.anchor = GridBagConstraints.LINE_START;
@@ -142,6 +142,7 @@ public class TablePanel extends JPanel {
 		gc.weighty = 1;
 		
 		gc.gridx = 0;
+		gc.gridwidth = 1;
 		gc.insets = new Insets(10, 10, 10, 10);
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_START;
