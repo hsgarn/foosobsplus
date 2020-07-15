@@ -273,6 +273,7 @@ public class Settings {
 		defaultProps.setProperty("Side1ColorFileName","side1color.txt");
 		defaultProps.setProperty("Side2ColorFileName","side2color.txt");
 		
+		defaultProps.setProperty("StartMatchHotKey", "");
 		defaultProps.setProperty("TournamentNameClearHotKey", "");
 		defaultProps.setProperty("Team1ClearHotKey", "");
 		defaultProps.setProperty("Team1SwitchPositionsHotKey", "t");
@@ -289,6 +290,7 @@ public class Settings {
 		defaultProps.setProperty("Score2MinusHotKey", "");
 		defaultProps.setProperty("Score2PlusHotKey", "2");
 		defaultProps.setProperty("SwitchScoresHotKey", "");
+		defaultProps.setProperty("SwitchGameCountsHotKey", "");
 		defaultProps.setProperty("TimeOut1MinusHotKey", "");
 		defaultProps.setProperty("TimeOut1PlusHotKey", "9");
 		defaultProps.setProperty("TimeOut2MinusHotKey", "");
@@ -315,7 +317,6 @@ public class Settings {
 		defaultProps.setProperty("ResetTimersHotKey", "r");
 
 		configProps = new Properties(defaultProps);
-		
 		loadFromConfig();
 	}
 	
@@ -1273,6 +1274,7 @@ public class Settings {
 			inputStream.close();
 		} catch (FileNotFoundException e) {
 			configFile.createNewFile();
+			configProps = defaultProps;
 			loadFromConfig();
 			saveToConfig();
 		}

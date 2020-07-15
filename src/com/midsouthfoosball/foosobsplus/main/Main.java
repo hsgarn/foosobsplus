@@ -89,8 +89,8 @@ public class Main {
 	
 	private TimeClock 			timeClock 			= new TimeClock(obsInterface, settings);
 	private GameClock           gameClock           = new GameClock(obsInterface, settings);
-	private LastScoredClock1     lastScoredClock1    = new LastScoredClock1(obsInterface, settings);
-	private LastScoredClock2     lastScoredClock2    = new LastScoredClock2(obsInterface, settings);
+	private LastScoredClock1    lastScoredClock1    = new LastScoredClock1(obsInterface, settings);
+	private LastScoredClock2    lastScoredClock2    = new LastScoredClock2(obsInterface, settings);
 	
 	////// Create the View Panels to Display (mVc) \\\\\\
 	
@@ -106,14 +106,14 @@ public class Main {
 
 	////// Set up Timer and Settings Windows \\\\\\
 	
-	private TimerWindowFrame 	timerWindowFrame 	= new TimerWindowFrame();
-	private LastScored1WindowFrame lastScored1WindowFrame = new LastScored1WindowFrame();
-	private LastScored2WindowFrame lastScored2WindowFrame = new LastScored2WindowFrame();
-	private SettingsFrame 		settingsFrame 		= new SettingsFrame(settings);
-	private SettingsPanel		settingsPanel		= settingsFrame.getSettingsPanel();
-	private HotKeysFrame 		hotKeysFrame 		= new HotKeysFrame(settings);
-	private HotKeysPanel 		hotKeysPanel		= hotKeysFrame.getHotKeysPanel();
-	private FileNamesFrame		fileNamesFrame		= new FileNamesFrame(settings, obsInterface);
+	private TimerWindowFrame 		timerWindowFrame 		= new TimerWindowFrame();
+	private LastScored1WindowFrame 	lastScored1WindowFrame 	= new LastScored1WindowFrame();
+	private LastScored2WindowFrame 	lastScored2WindowFrame 	= new LastScored2WindowFrame();
+	private SettingsFrame 			settingsFrame 			= new SettingsFrame(settings);
+	private SettingsPanel			settingsPanel			= settingsFrame.getSettingsPanel();
+	private HotKeysFrame 			hotKeysFrame 			= new HotKeysFrame(settings);
+	private HotKeysPanel 			hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
+	private FileNamesFrame			fileNamesFrame			= new FileNamesFrame(settings, obsInterface);
 	
 	////// Display the View Panels on a JFrame \\\\\\
 	
