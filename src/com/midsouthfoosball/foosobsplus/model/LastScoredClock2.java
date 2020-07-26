@@ -79,8 +79,16 @@ public class LastScoredClock2 {
 		lastScoredTimerRunning=true;
 		writeLastScoredTime();
 	}
-	public void stoplastScoredTimer() {
+	public void stopLastScoredTimer() {
 		lastScoredTimerRunning=false;
+	}
+	public void pauseLastScoredTimer() {
+		if(lastScoredTimerRunning==true) {
+			lastScoredTimerRunning=false;
+		}
+		else {
+			lastScoredTimerRunning=true;
+		}
 	}
 	public void addLastScoredClockTimerListener(ActionListener alAction) {
 		timer.addActionListener(alAction);

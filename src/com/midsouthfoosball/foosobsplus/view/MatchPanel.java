@@ -39,6 +39,7 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 public class MatchPanel extends JPanel {
 	
 	private JButton btnStartMatch;
+	private JButton btnPauseMatch;
 	private JLabel lblStartTimeLabel;
 	private JLabel lblElapsedTimeLabel;
 	private JLabel lblStartTime;
@@ -55,6 +56,7 @@ public class MatchPanel extends JPanel {
 		setPreferredSize(dim);
 		
 		btnStartMatch = new JButton("Start Match");
+		btnPauseMatch = new JButton("Pause Match");
 		lblStartTimeLabel = new JLabel("Start Time:");
 		lblElapsedTimeLabel = new JLabel("Elapsed Time:");
 		lblStartTime = new JLabel("00:00:00");
@@ -81,7 +83,7 @@ public class MatchPanel extends JPanel {
 		gc.weighty = 1;
 
 		gc.gridx = 0;
-		gc.gridheight =2 ;
+		gc.gridheight =1 ;
 		gc.fill = GridBagConstraints.VERTICAL;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(5, 5, 5, 5);
@@ -104,6 +106,14 @@ public class MatchPanel extends JPanel {
 
 		////////  Elapsed Time ////////
 		gc.gridy++;
+		gc.gridx = 0;
+		gc.gridheight =1 ;
+		gc.fill = GridBagConstraints.VERTICAL;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.insets = new Insets(5, 5, 5, 5);
+		add(btnPauseMatch, gc);
+		gc.gridheight = 1;
+		
 		gc.weightx = 1;
 		gc.weighty = 1;
 
@@ -126,6 +136,9 @@ public class MatchPanel extends JPanel {
 	////// Listeners  //////
 	public void addStartMatchListener(ActionListener listenForBtnStartMatch) {
 		btnStartMatch.addActionListener(listenForBtnStartMatch);
+	}
+	public void addPauseMatchListener(ActionListener listenForBtnPauseMatch) {
+		btnPauseMatch.addActionListener(listenForBtnPauseMatch);
 	}
 
 	public void updateElapsedTime(String elapsedTime) {

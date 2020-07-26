@@ -22,15 +22,19 @@ package com.midsouthfoosball.foosobsplus.model;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.text.DecimalFormat;
 
 import javax.swing.Timer;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
-public class GameClock {
-	private Timer timer;
+public class GameClock implements Serializable {
+	private static final long serialVersionUID = -4482700813986069170L;
+	private transient Timer timer;
 	private int gameSeconds;
 	private int gameMinutes;
 	private int gameHours;
@@ -39,9 +43,9 @@ public class GameClock {
 	private int matchMinutes;
 	private int matchHours;
 	private boolean matchTimerRunning;
-	private OBSInterface obsInterface;
-	private Settings settings;
-	private DecimalFormat df = new DecimalFormat("00");
+	private transient OBSInterface obsInterface;
+	private transient Settings settings;
+	private transient DecimalFormat df = new DecimalFormat("00");
  
 	
 	public GameClock(OBSInterface obsInterface, Settings settings) {
@@ -81,6 +85,79 @@ public class GameClock {
 		timer.setInitialDelay(1000);
 		timer.start();
 	}
+
+	public Timer getTimer() {
+		return timer;
+	}
+
+	public void setTimer(Timer timer) {
+		this.timer = timer;
+	}
+
+	public int getGameSeconds() {
+		return gameSeconds;
+	}
+
+	public void setGameSeconds(int gameSeconds) {
+		this.gameSeconds = gameSeconds;
+	}
+
+	public int getGameMinutes() {
+		return gameMinutes;
+	}
+
+	public void setGameMinutes(int gameMinutes) {
+		this.gameMinutes = gameMinutes;
+	}
+
+	public int getGameHours() {
+		return gameHours;
+	}
+
+	public void setGameHours(int gameHours) {
+		this.gameHours = gameHours;
+	}
+
+	public boolean isGameTimerRunning() {
+		return gameTimerRunning;
+	}
+
+	public void setGameTimerRunning(boolean gameTimerRunning) {
+		this.gameTimerRunning = gameTimerRunning;
+	}
+
+	public int getMatchSeconds() {
+		return matchSeconds;
+	}
+
+	public void setMatchSeconds(int matchSeconds) {
+		this.matchSeconds = matchSeconds;
+	}
+
+	public int getMatchMinutes() {
+		return matchMinutes;
+	}
+
+	public void setMatchMinutes(int matchMinutes) {
+		this.matchMinutes = matchMinutes;
+	}
+
+	public int getMatchHours() {
+		return matchHours;
+	}
+
+	public void setMatchHours(int matchHours) {
+		this.matchHours = matchHours;
+	}
+
+	public boolean isMatchTimerRunning() {
+		return matchTimerRunning;
+	}
+
+	public void setMatchTimerRunning(boolean matchTimerRunning) {
+		this.matchTimerRunning = matchTimerRunning;
+	}
+
 	public void restartGameTimer() {
 		timer.restart();
 	}
@@ -100,6 +177,14 @@ public class GameClock {
 	public void stopGameTimer() {
 		gameTimerRunning=false;
 	}
+	public void pauseGameTimer() {
+		if(gameTimerRunning== true) { 
+			gameTimerRunning= false;
+		}
+		else {
+			gameTimerRunning = true;
+		}
+	}
 	public void startMatchTimer() {
 		matchSeconds=0;
 		matchMinutes=0;
@@ -110,7 +195,14 @@ public class GameClock {
 	public void stopMatchTimer() {
 		matchTimerRunning=false;
 	}
-	public void addGameClockTimerListener(ActionListener alAction) {
+	public void pauseMatchTimer() {
+		if(matchTimerRunning==true) { 
+			matchTimerRunning= false;
+		}
+		else {
+			matchTimerRunning = true;
+		}		
+	}	public void addGameClockTimerListener(ActionListener alAction) {
 		timer.addActionListener(alAction);
 	}
 	private void writeGameTime() {
@@ -126,5 +218,24 @@ public class GameClock {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+	}
+	public void restoreState(byte[] serializedObject) {
+		GameClock tempGameClock = null;
+		try {
+			byte b[] = serializedObject;
+			ByteArrayInputStream bi = new ByteArrayInputStream(b);
+			ObjectInputStream si = new ObjectInputStream(bi);
+			tempGameClock = (GameClock) si.readObject();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		this.setGameSeconds(tempGameClock.getGameSeconds());
+		this.setGameMinutes(tempGameClock.getGameMinutes());
+		this.setGameHours(tempGameClock.getGameHours());
+		this.setGameTimerRunning(tempGameClock.isGameTimerRunning());
+		this.setMatchSeconds(tempGameClock.getMatchSeconds());
+		this.setMatchMinutes(tempGameClock.getMatchMinutes());
+		this.setMatchHours(tempGameClock.getMatchHours());
+		this.setMatchTimerRunning(tempGameClock.isMatchTimerRunning());
 	}
 }

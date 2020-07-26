@@ -24,6 +24,8 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Stack;
 
 import javax.swing.JButton;
@@ -68,6 +70,7 @@ public class Main {
 	private Stack<Memento> mementoStackTeam2 = new Stack<>();
 	private Stack<Memento> mementoStackStats = new Stack<>();
 	private Stack<Memento> mementoStackMatch = new Stack<>();
+	private Stack<Memento> mementoStackGameClock = new Stack<>();
 	private Stack<String> codeStack = new Stack<>();
 	private CommandSwitch mySwitch;
 
@@ -127,7 +130,7 @@ public class Main {
 	TimerController 	timerController 	= new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock);
 	TeamController 		teamController 		= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, timerController, lastScoredClock1, lastScoredClock2);
 	TableController 	tableController 	= new TableController(obsInterface, settings, table, match, tablePanel, teamController);
-	MatchController     matchController     = new MatchController(match, stats, gameClock, matchPanel, statsEntryPanel, statsDisplayPanel, teamController);
+	MatchController     matchController     = new MatchController(match, stats, gameClock, lastScoredClock1, lastScoredClock2, matchPanel, statsEntryPanel, statsDisplayPanel, teamController);
 	StatsController 	statsController 	= new StatsController(stats, statsDisplayPanel, teamController);
 
 	public Main() throws IOException {
@@ -168,6 +171,7 @@ public class Main {
 		this.timerPanel.addRecallTimerListener(new RecallTimerListener());
 		this.timerPanel.addResetTimerListener(new ResetTimerListener());
 		this.matchPanel.addStartMatchListener(new StartMatchListener());
+		this.matchPanel.addPauseMatchListener(new PauseMatchListener());
 		this.switchPanel.addSwitchTeamsListener(new SwitchTeamsListener());
 		this.switchPanel.addSwitchScoresListener(new SwitchScoresListener());
 		this.switchPanel.addSwitchGameCountsListener(new SwitchGameCountsListener());
@@ -356,6 +360,11 @@ public class Main {
 			processCode("XPSM",false);
 		}
 	}
+	private class PauseMatchListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPPM",false);
+		}
+	}
 	private class SwitchTeamsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPST",false);
@@ -428,7 +437,6 @@ public class Main {
 			}
 		}
 	}
-	
 	
 	
 	private class StatsEntryUndoListener implements ActionListener {
@@ -505,6 +513,7 @@ public class Main {
 		mementoStackTeam2.push(saveState(team2));
 		mementoStackStats.push(saveState(stats));
 		mementoStackMatch.push(saveState(match));
+		mementoStackGameClock.push(saveState(gameClock));
 	}
 	private Memento saveState(Object object) {
 		Memento memento = new Memento(object);
@@ -522,6 +531,8 @@ public class Main {
 	    stats.restoreState(mementoStats.getState());
 	    Memento mementoMatch = mementoStackMatch.get(undoRedoPointer);
 	    match.restoreState(mementoMatch.getState());
+	    Memento mementoGameClock = mementoStackGameClock.get(undoRedoPointer);
+	    gameClock.restoreState(mementoGameClock.getState());
 	    undoRedoPointer--;
 	    statsEntryPanel.removeCodeHistory();
 	    stats.showParsed();
@@ -557,11 +568,13 @@ public class Main {
 		        mementoStackTeam2.remove(i);
 		        mementoStackStats.remove(i);
 		        mementoStackMatch.remove(i);
+		        mementoStackGameClock.remove(i);
 		    }
 	    }
     }
 	private void loadCommands() {
 		Command psm = new PSMCommand(statsController, matchController);
+		Command ppm = new PPMCommand(statsController, matchController);
 		Command sst = new SSTCommand(statsController, teamController);
 		Command spt = new SPTCommand(statsController, teamController);
 		Command sgt = new SGTCommand(statsController, teamController);
@@ -605,6 +618,7 @@ public class Main {
 
 		mySwitch = new CommandSwitch();
 		mySwitch.register("PSM", psm);
+		mySwitch.register("PPM", ppm);
 		mySwitch.register("SST", sst);
 		mySwitch.register("SPT", spt);
 		mySwitch.register("SGT", sgt);

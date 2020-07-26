@@ -26,6 +26,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.midsouthfoosball.foosobsplus.model.GameClock;
+import com.midsouthfoosball.foosobsplus.model.LastScoredClock1;
+import com.midsouthfoosball.foosobsplus.model.LastScoredClock2;
 import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.Stats;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
@@ -36,14 +38,19 @@ public class MatchController {
 	private Match match;
 	private Stats stats;
 	private GameClock gameClock;
+	private LastScoredClock1 lastScoredClock1;
+	private LastScoredClock2 lastScoredClock2;
 	private MatchPanel matchPanel;
 	private StatsEntryPanel statsEntryPanel;
 	private StatsDisplayPanel statsDisplayPanel;
 	private TeamController teamController;
-	public MatchController(Match match, Stats stats, GameClock gameClock, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, TeamController teamController) {
+	
+	public MatchController(Match match, Stats stats, GameClock gameClock, LastScoredClock1 lastScoredClock1, LastScoredClock2 lastScoredClock2, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, TeamController teamController) {
 		this.match = match;
 		this.stats = stats;
 		this.gameClock = gameClock;
+		this.lastScoredClock1 = lastScoredClock1;
+		this.lastScoredClock2 = lastScoredClock2;
 		this.matchPanel = matchPanel;
 		this.statsEntryPanel = statsEntryPanel;
 		this.statsDisplayPanel = statsDisplayPanel;
@@ -73,6 +80,12 @@ public class MatchController {
 		matchPanel.updateStartTime(match.getStartTime());
 		stats.clearAll();
 		statsEntryPanel.clearAll();
+	}
+	public void pauseMatch() {
+		gameClock.pauseMatchTimer();
+		gameClock.pauseGameTimer();
+		lastScoredClock1.pauseLastScoredTimer();
+		lastScoredClock2.pauseLastScoredTimer();
 	}
 	
 	public void displayAllStats() {
