@@ -465,7 +465,21 @@ public class Main {
 			Boolean isRedo = false;
 			JTextField txt = (JTextField) e.getSource();
 			String code = txt.getText().toUpperCase();
-			processCode(code, isRedo);
+			if(code.equals("XU")) {
+				undo();
+				teamController.displayAll();
+				statsController.displayAllStats();
+				statsEntryPanel.updateCode(null);
+			} else {
+				if(code.equals("XR")) {
+					redo();
+					teamController.displayAll();
+					statsController.displayAllStats();
+					statsEntryPanel.updateCode(null);
+				} else {
+					processCode(code, isRedo);
+				}
+			}
 		}
 	}
 	public void processCode(String code, Boolean isRedo) {
