@@ -92,8 +92,8 @@ public class Main {
 	
 	private TimeClock 			timeClock 			= new TimeClock(obsInterface, settings);
 	private GameClock           gameClock           = new GameClock(obsInterface, settings);
-	private LastScoredClock1    lastScoredClock1    = new LastScoredClock1(obsInterface, settings);
-	private LastScoredClock2    lastScoredClock2    = new LastScoredClock2(obsInterface, settings);
+	private LastScored1Clock    lastScored1Clock    = new LastScored1Clock(obsInterface, settings);
+	private LastScored2Clock    lastScored2Clock    = new LastScored2Clock(obsInterface, settings);
 	
 	////// Create the View Panels to Display (mVc) \\\\\\
 	
@@ -127,10 +127,10 @@ public class Main {
 	////// Build and Start the Controllers (mvC) \\\\\\
 	
 	MainController 		mainController 		= new MainController(mainFrame, timerWindowFrame, lastScored1WindowFrame, lastScored2WindowFrame);
-	TimerController 	timerController 	= new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock);
-	TeamController 		teamController 		= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, timerController, lastScoredClock1, lastScoredClock2);
+	TimerController 	timerController 	= new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock);
+	TeamController 		teamController 		= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, timerController, lastScored1Clock, lastScored2Clock);
 	TableController 	tableController 	= new TableController(obsInterface, settings, table, match, tablePanel, teamController);
-	MatchController     matchController     = new MatchController(match, stats, gameClock, lastScoredClock1, lastScoredClock2, matchPanel, statsEntryPanel, statsDisplayPanel, teamController);
+	MatchController     matchController     = new MatchController(match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, teamController);
 	StatsController 	statsController 	= new StatsController(stats, statsDisplayPanel, teamController);
 
 	public Main() throws IOException {

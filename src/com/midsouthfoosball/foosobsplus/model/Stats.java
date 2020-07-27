@@ -160,7 +160,9 @@ public class Stats implements Serializable {
 	public void setPreviousCode(String previousCode) {
 		this.previousCode = previousCode;
 	}
-
+	public void setIsCommand(boolean isCommand) {
+		this.isCommand = isCommand;
+	}
 	public void setCode(String code) {
 		this.code = code;
 		processCode(code, previousCode);

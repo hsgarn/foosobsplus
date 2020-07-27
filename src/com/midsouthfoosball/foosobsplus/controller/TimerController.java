@@ -27,8 +27,12 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
+import com.midsouthfoosball.foosobsplus.model.LastScored1Clock;
+import com.midsouthfoosball.foosobsplus.model.LastScored2Clock;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.TimeClock;
+import com.midsouthfoosball.foosobsplus.view.LastScored1WindowFrame;
+import com.midsouthfoosball.foosobsplus.view.LastScored2WindowFrame;
 import com.midsouthfoosball.foosobsplus.view.TimerPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
 
@@ -38,26 +42,46 @@ public class TimerController {
 	private TimerPanel timerPanel;
 	private TimerWindowFrame timerWindowFrame;
 	private TimeClock timeClock;
+	private LastScored1WindowFrame lastScored1WindowFrame;
+	private LastScored1Clock lastScored1Clock;
+	private LastScored2WindowFrame lastScored2WindowFrame;
+	private LastScored2Clock lastScored2Clock;
 	private int displayWidth = 9;
 	private int prefixWidth;
 	private int suffixWidth = 3;
 	
-	public TimerController(OBSInterface obsInterface, Settings settings, TimerPanel timerPanel, TimerWindowFrame timerWindowFrame, TimeClock timeClock) {
+	public TimerController(OBSInterface obsInterface, Settings settings, TimerPanel timerPanel, TimerWindowFrame timerWindowFrame, TimeClock timeClock, LastScored1WindowFrame lastScored1WindowFrame, LastScored1Clock lastScored1Clock, LastScored2WindowFrame lastScored2WindowFrame, LastScored2Clock lastScored2Clock) {
 		this.obsInterface = obsInterface;
 		this.settings = settings;
 		this.timerPanel = timerPanel;
 		this.timerWindowFrame = timerWindowFrame;
 		this.timeClock = timeClock;
+		this.lastScored1WindowFrame = lastScored1WindowFrame;
+		this.lastScored1Clock = lastScored1Clock;
+		this.lastScored2WindowFrame = lastScored2WindowFrame;
+		this.lastScored2Clock = lastScored2Clock;
 		
 		////// Timer Listener Methods //////
 	
-		this.timeClock.addTimeClockTimerListener(alAction);
+		this.timeClock.addTimeClockTimerListener(timeClockListener);
+		this.lastScored1Clock.addLastScoredClockTimerListener(lastScored1ClockListener);
+		this.lastScored2Clock.addLastScoredClockTimerListener(lastScored2ClockListener);
 	}
 	
 	
-	ActionListener alAction = new ActionListener() {
+	ActionListener timeClockListener = new ActionListener() {
 		public void actionPerformed(ActionEvent event) {
 			updateTimerDisplay();
+		}
+	};
+	ActionListener lastScored1ClockListener = new ActionListener() {
+		public void actionPerformed(ActionEvent event) {
+			updateLastScored1Display();
+		}
+	};
+	ActionListener lastScored2ClockListener = new ActionListener() {
+		public void actionPerformed(ActionEvent event) {
+			updateLastScored2Display();
 		}
 	};
 	
@@ -150,6 +174,12 @@ public class TimerController {
 		    timerWindowFrame.setTimerDisplay(String.valueOf(c1) + timeLeft + String.valueOf(c2));
 		}
 		writeTimeRemaining();
+	}
+	private void updateLastScored1Display() {
+		lastScored1WindowFrame.setTimerDisplay(lastScored1Clock.getLastScoredTime());
+	}
+	private void updateLastScored2Display() {
+		lastScored2WindowFrame.setTimerDisplay(lastScored2Clock.getLastScoredTime());
 	}
 	private void writeTimeRemaining() {
 		try {

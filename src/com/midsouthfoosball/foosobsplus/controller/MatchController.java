@@ -26,8 +26,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.midsouthfoosball.foosobsplus.model.GameClock;
-import com.midsouthfoosball.foosobsplus.model.LastScoredClock1;
-import com.midsouthfoosball.foosobsplus.model.LastScoredClock2;
+import com.midsouthfoosball.foosobsplus.model.LastScored1Clock;
+import com.midsouthfoosball.foosobsplus.model.LastScored2Clock;
 import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.Stats;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
@@ -38,19 +38,19 @@ public class MatchController {
 	private Match match;
 	private Stats stats;
 	private GameClock gameClock;
-	private LastScoredClock1 lastScoredClock1;
-	private LastScoredClock2 lastScoredClock2;
+	private LastScored1Clock lastScored1Clock;
+	private LastScored2Clock lastScored2Clock;
 	private MatchPanel matchPanel;
 	private StatsEntryPanel statsEntryPanel;
 	private StatsDisplayPanel statsDisplayPanel;
 	private TeamController teamController;
 	
-	public MatchController(Match match, Stats stats, GameClock gameClock, LastScoredClock1 lastScoredClock1, LastScoredClock2 lastScoredClock2, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, TeamController teamController) {
+	public MatchController(Match match, Stats stats, GameClock gameClock, LastScored1Clock lastScored1Clock, LastScored2Clock lastScored2Clock, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, TeamController teamController) {
 		this.match = match;
 		this.stats = stats;
 		this.gameClock = gameClock;
-		this.lastScoredClock1 = lastScoredClock1;
-		this.lastScoredClock2 = lastScoredClock2;
+		this.lastScored1Clock = lastScored1Clock;
+		this.lastScored2Clock = lastScored2Clock;
 		this.matchPanel = matchPanel;
 		this.statsEntryPanel = statsEntryPanel;
 		this.statsDisplayPanel = statsDisplayPanel;
@@ -78,14 +78,28 @@ public class MatchController {
 		gameClock.startGameTimer();
 		match.setStartTime(getCurrentTime());
 		matchPanel.updateStartTime(match.getStartTime());
+		String tmpCode  = stats.getLastCode();
 		stats.clearAll();
 		statsEntryPanel.clearAll();
+		stats.setIsCommand(true);
+		stats.addCodeToHistory(tmpCode);
+		statsEntryPanel.updateCodeHistory(tmpCode);
+		match.setMatchPaused(false);
+		matchPanel.setPauseLabel("Pause Match");
 	}
 	public void pauseMatch() {
-		gameClock.pauseMatchTimer();
-		gameClock.pauseGameTimer();
-		lastScoredClock1.pauseLastScoredTimer();
-		lastScoredClock2.pauseLastScoredTimer();
+		if(match.isMatchPaused()==true) {
+			match.setMatchPaused(false);
+			matchPanel.setPauseLabel("Unpause Match");
+		} else {
+			match.setMatchPaused(true);
+			matchPanel.setPauseLabel("Pause Match");
+		}
+		boolean pause = match.isMatchPaused();
+		gameClock.pauseMatchTimer(pause);
+		gameClock.pauseGameTimer(pause);
+		lastScored1Clock.pauseLastScoredTimer(pause);
+		lastScored2Clock.pauseLastScoredTimer(pause);
 	}
 	
 	public void displayAllStats() {

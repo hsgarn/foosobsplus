@@ -35,6 +35,7 @@ public class Match implements Serializable {
 	private transient Settings settings;
 	private transient OBSInterface obsInterface;
 	private int lastScored; // team number of the last team to score in this match
+	private boolean isMatchPaused;
 	private transient String startTime;
 //	private transient String endTime;
 //	private transient int elapsedTime;
@@ -84,10 +85,18 @@ public class Match implements Serializable {
 		}
 		writeLastScored();
 	}
+	public boolean isMatchPaused() {
+		return isMatchPaused;
+	}
+	public void setMatchPaused(boolean isMatchPaused) {
+		this.isMatchPaused = isMatchPaused;
+	}
 	public void switchTeams() {
 		Team tmp = team1;
 		team1 = team2;
 		team2 = tmp;
+		team1.setTeamNbr(1);
+		team2.setTeamNbr(2);
 	}
 	public void clearAll() {
 		lastScored = 0;

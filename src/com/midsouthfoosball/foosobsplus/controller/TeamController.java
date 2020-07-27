@@ -31,8 +31,8 @@ import java.io.IOException;
 import javax.swing.JTextField;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
-import com.midsouthfoosball.foosobsplus.model.LastScoredClock1;
-import com.midsouthfoosball.foosobsplus.model.LastScoredClock2;
+import com.midsouthfoosball.foosobsplus.model.LastScored1Clock;
+import com.midsouthfoosball.foosobsplus.model.LastScored2Clock;
 import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.Team;
@@ -49,10 +49,10 @@ public class TeamController {
 	private TeamPanel teamPanel2;
 	private SwitchPanel switchPanel;
 	private TimerController timerController;
-	private LastScoredClock1 lastScoredClock1;
-	private LastScoredClock2 lastScoredClock2;
+	private LastScored1Clock lastScored1Clock;
+	private LastScored2Clock lastScored2Clock;
 	
-	public TeamController(OBSInterface obsInterface, Settings settings, Team team1, Team team2, Match match, TeamPanel teamPanel1, TeamPanel teamPanel2, SwitchPanel switchPanel, TimerController timerController, LastScoredClock1 lastScoredClock1, LastScoredClock2 lastScoredClock2) {
+	public TeamController(OBSInterface obsInterface, Settings settings, Team team1, Team team2, Match match, TeamPanel teamPanel1, TeamPanel teamPanel2, SwitchPanel switchPanel, TimerController timerController, LastScored1Clock lastScored1Clock, LastScored2Clock lastScored2Clock) {
 		this.obsInterface = obsInterface;
 		this.settings = settings;
 		this.team1 = team1;
@@ -62,8 +62,8 @@ public class TeamController {
 		this.teamPanel2 = teamPanel2;
 		this.switchPanel = switchPanel;
 		this.timerController = timerController;
-		this.lastScoredClock1 = lastScoredClock1;
-		this.lastScoredClock2 = lastScoredClock2;
+		this.lastScored1Clock = lastScored1Clock;
+		this.lastScored2Clock = lastScored2Clock;
 		
 		////// Team Panel Listeners Methods //////
 		
@@ -97,8 +97,8 @@ public class TeamController {
 		this.teamPanel2.addTimeOutCountListener(new TimeOutCountListener());
 		this.teamPanel1.addTimeOutCountFocusListener(new TimeOutCountFocusListener());
 		this.teamPanel2.addTimeOutCountFocusListener(new TimeOutCountFocusListener());
-		this.lastScoredClock1.addLastScoredClockTimerListener(new LastScoredClockTimerListener());
-		this.lastScoredClock2.addLastScoredClockTimerListener(new LastScoredClockTimerListener());
+		this.lastScored1Clock.addLastScoredClockTimerListener(new LastScoredClockTimerListener());
+		this.lastScored2Clock.addLastScoredClockTimerListener(new LastScoredClockTimerListener());
 	}
 	
 	////// Team Panel Listener Objects //////
@@ -316,8 +316,8 @@ public class TeamController {
 	////// Utility Methods \\\\\\
 
 	public void updateLastScoredTimes() {
-		String lastScoredTime1 = lastScoredClock1.getLastScoredTime();
-		String lastScoredTime2 = lastScoredClock2.getLastScoredTime();
+		String lastScoredTime1 = lastScored1Clock.getLastScoredTime();
+		String lastScoredTime2 = lastScored2Clock.getLastScoredTime();
 		teamPanel1.updateLastScoredTime(lastScoredTime1);
 		teamPanel2.updateLastScoredTime(lastScoredTime2);
 	}
@@ -346,10 +346,10 @@ public class TeamController {
 		int winState = 0;
 		if(name.equals("Team 1")) {
 			winState = match.incrementScore(1);
-			lastScoredClock1.startLastScoredTimer();
+			lastScored1Clock.startLastScoredTimer();
 		} else {
 			winState = match.incrementScore(2);
-			lastScoredClock2.startLastScoredTimer();
+			lastScored2Clock.startLastScoredTimer();
 		};
 		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
 		resetTimer();
@@ -428,6 +428,15 @@ public class TeamController {
 		team2.setTeamNbr(2);
 		team1.writeAll();
 		team2.writeAll();
+		int tmpSeconds = lastScored1Clock.getLastScoredSeconds();
+		int tmpMinutes = lastScored1Clock.getLastScoredMinutes();
+		int tmpHours = lastScored1Clock.getLastScoredHours();
+		lastScored1Clock.setLastScoredSeconds(lastScored2Clock.getLastScoredSeconds());
+		lastScored1Clock.setLastScoredMinutes(lastScored2Clock.getLastScoredMinutes());
+		lastScored1Clock.setLastScoredHours(lastScored2Clock.getLastScoredHours());
+		lastScored2Clock.setLastScoredSeconds(tmpSeconds);
+		lastScored2Clock.setLastScoredMinutes(tmpMinutes);
+		lastScored2Clock.setLastScoredHours(tmpHours);
 		match.switchLastScored();
 		match.switchTeams();
 		displayAll();
@@ -546,8 +555,8 @@ public class TeamController {
 		team2.writeAll();
 	}
 	private void resetLastScoredClocks() {
-		lastScoredClock1.startLastScoredTimer();
-		lastScoredClock2.startLastScoredTimer();
+		lastScored1Clock.startLastScoredTimer();
+		lastScored2Clock.startLastScoredTimer();
 	}
 	public void displayAll() {
 		String teamName1 = team1.getTeamName();

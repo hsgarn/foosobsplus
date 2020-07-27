@@ -177,13 +177,8 @@ public class GameClock implements Serializable {
 	public void stopGameTimer() {
 		gameTimerRunning=false;
 	}
-	public void pauseGameTimer() {
-		if(gameTimerRunning== true) { 
-			gameTimerRunning= false;
-		}
-		else {
-			gameTimerRunning = true;
-		}
+	public void pauseGameTimer(boolean pause) {
+		gameTimerRunning=pause;
 	}
 	public void startMatchTimer() {
 		matchSeconds=0;
@@ -195,14 +190,10 @@ public class GameClock implements Serializable {
 	public void stopMatchTimer() {
 		matchTimerRunning=false;
 	}
-	public void pauseMatchTimer() {
-		if(matchTimerRunning==true) { 
-			matchTimerRunning= false;
-		}
-		else {
-			matchTimerRunning = true;
-		}		
-	}	public void addGameClockTimerListener(ActionListener alAction) {
+	public void pauseMatchTimer(boolean pause) {
+		matchTimerRunning=pause;
+	}
+	public void addGameClockTimerListener(ActionListener alAction) {
 		timer.addActionListener(alAction);
 	}
 	private void writeGameTime() {

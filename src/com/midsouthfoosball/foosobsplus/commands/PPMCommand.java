@@ -21,24 +21,23 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 package com.midsouthfoosball.foosobsplus.commands;
 
+import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 
-public class CodeCommand implements Command {
+public class PPMCommand implements Command {
 	private StatsController statsController;
-	private String theCode;
+	private MatchController matchController;
 	
-	public CodeCommand(StatsController statsController) {
+	public PPMCommand(StatsController statsController, MatchController matchController) {
 		this.statsController = statsController;
+		this.matchController = matchController;
 	}
 
 	public void execute() {
-		theCode = statsController.getLastCode();
+		matchController.pauseMatch();
 	}
 
 	public String getCode() {
-		return theCode;
+		return statsController.getLastCode();
 	}
-	
-	
-
 }

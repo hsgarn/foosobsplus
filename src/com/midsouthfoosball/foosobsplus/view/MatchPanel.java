@@ -149,6 +149,9 @@ public class MatchPanel extends JPanel {
 	}
 	
 	////// Utility Methods \\\\\\
+	public void setPauseLabel(String labelText) {
+		btnPauseMatch.setText(labelText);
+	}
 	private void setMnemonics() {
 		if(settings.getStartMatchHotKey().isEmpty()) {
 			btnStartMatch.setMnemonic(-1);

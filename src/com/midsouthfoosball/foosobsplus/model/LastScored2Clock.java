@@ -29,7 +29,7 @@ import javax.swing.Timer;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
-public class LastScoredClock1 {
+public class LastScored2Clock {
 
 	private Timer timer;
 	private int lastScoredSeconds;
@@ -40,7 +40,7 @@ public class LastScoredClock1 {
 	private Settings settings;
 	private DecimalFormat df = new DecimalFormat("00");
 	
-	public LastScoredClock1(OBSInterface obsInterface, Settings settings) {
+	public LastScored2Clock(OBSInterface obsInterface, Settings settings) {
 		
 		this.obsInterface = obsInterface;
 		this.settings = settings;
@@ -66,6 +66,30 @@ public class LastScoredClock1 {
 		timer.setInitialDelay(1000);
 		timer.start();
 	}
+	public int getLastScoredSeconds() {
+		return lastScoredSeconds;
+	}
+	public void setLastScoredSeconds(int lastScoredSeconds) {
+		this.lastScoredSeconds = lastScoredSeconds;
+	}
+	public int getLastScoredMinutes() {
+		return lastScoredMinutes;
+	}
+	public void setLastScoredMinutes(int lastScoredMinutes) {
+		this.lastScoredMinutes = lastScoredMinutes;
+	}
+	public int getLastScoredHours() {
+		return lastScoredHours;
+	}
+	public void setLastScoredHours(int lastScoredHours) {
+		this.lastScoredHours = lastScoredHours;
+	}
+	public boolean isLastScoredTimerRunning() {
+		return lastScoredTimerRunning;
+	}
+	public void setLastScoredTimerRunning(boolean lastScoredTimerRunning) {
+		this.lastScoredTimerRunning = lastScoredTimerRunning;
+	}
 	public void restartLastScoredTimer() {
 		timer.restart();
 	}
@@ -82,13 +106,8 @@ public class LastScoredClock1 {
 	public void stopLastScoredTimer() {
 		lastScoredTimerRunning=false;
 	}
-	public void pauseLastScoredTimer() {
-		if(lastScoredTimerRunning==true) {
-			lastScoredTimerRunning=false;
-		}
-		else {
-			lastScoredTimerRunning=true;
-		}
+	public void pauseLastScoredTimer(boolean pause) {
+		lastScoredTimerRunning=pause;
 	}
 	public void addLastScoredClockTimerListener(ActionListener alAction) {
 		timer.addActionListener(alAction);
