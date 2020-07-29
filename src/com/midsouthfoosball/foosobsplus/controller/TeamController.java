@@ -421,11 +421,6 @@ public class TeamController {
 		timerController.startRecallTimer();
 	}
 	public void switchSides() {
-		Team tmp = team1;
-		team1 = team2;
-		team2 = tmp;
-		team1.setTeamNbr(1);
-		team2.setTeamNbr(2);
 		team1.writeAll();
 		team2.writeAll();
 		int tmpSeconds = lastScored1Clock.getLastScoredSeconds();
@@ -438,7 +433,6 @@ public class TeamController {
 		lastScored2Clock.setLastScoredMinutes(tmpMinutes);
 		lastScored2Clock.setLastScoredHours(tmpHours);
 		match.switchLastScored();
-		match.switchTeams();
 		displayAll();
 	}
 	public void switchTeams() {

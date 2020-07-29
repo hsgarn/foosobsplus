@@ -437,7 +437,14 @@ public class Main {
 			}
 		}
 	}
-	
+	public void switchSides() {
+		Memento tmpTeam1 = saveState(team1);
+		Memento tmpTeam2 = saveState(team2);
+		team1.restoreState(tmpTeam2.getState());
+		team2.restoreState(tmpTeam1.getState());
+		team1.setTeamNbr(1);
+		team2.setTeamNbr(2);
+	}
 	
 	private class StatsEntryUndoListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
@@ -611,7 +618,7 @@ public class Main {
 		Command prt2 = new PRT2Command(statsController, teamController);
 		Command pwt1 = new PWT1Command(statsController, teamController);
 		Command pwt2 = new PWT2Command(statsController, teamController);
-		Command pss = new PSSCommand(statsController, teamController);
+		Command pss = new PSSCommand(statsController, teamController, this);
 		Command xpt1 = new XPT1Command(statsController, teamController);
 		Command xpt2 = new XPT2Command(statsController, teamController);
 		Command pst = new PSTCommand(statsController, teamController);

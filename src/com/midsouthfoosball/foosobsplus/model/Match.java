@@ -91,13 +91,15 @@ public class Match implements Serializable {
 	public void setMatchPaused(boolean isMatchPaused) {
 		this.isMatchPaused = isMatchPaused;
 	}
-	public void switchTeams() {
-		Team tmp = team1;
-		team1 = team2;
-		team2 = tmp;
-		team1.setTeamNbr(1);
-		team2.setTeamNbr(2);
-	}
+/*	public void switchTeams() {
+		System.out.println("Match team1:" + team1.getForwardName());
+//		Team tmp = team1;
+//		team1 = team2;
+//		team2 = tmp;
+//		team1.setTeamNbr(1);
+//		team2.setTeamNbr(2);
+		System.out.println("Match team1:" + team1.getForwardName());
+	} */
 	public void clearAll() {
 		lastScored = 0;
 		writeLastScored();

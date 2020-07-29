@@ -134,7 +134,6 @@ public class TeamPanel extends JPanel {
 		btnWarn.setName("Team " + Integer.toString(teamNbr));
 		btnClear = new JButton("Clear");
 		btnClear.setName("Team " + Integer.toString(teamNbr));
-		
 		setMnemonics(teamNbr);
 
 		Border innerBorder = BorderFactory.createTitledBorder(buildTitle());

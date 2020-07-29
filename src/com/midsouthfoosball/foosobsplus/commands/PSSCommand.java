@@ -23,17 +23,21 @@ package com.midsouthfoosball.foosobsplus.commands;
 
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
+import com.midsouthfoosball.foosobsplus.main.Main;
 
 public class PSSCommand implements Command {
 	private StatsController statsController;
 	private TeamController teamController;
+	private Main main;
 	
-	public PSSCommand(StatsController statsController, TeamController teamController) {
+	public PSSCommand(StatsController statsController, TeamController teamController, Main main) {
 		this.statsController = statsController;
 		this.teamController = teamController;
+		this.main = main;
 	}
 	
 	public void execute() {
+		main.switchSides();
 		teamController.switchSides();
 	}
 

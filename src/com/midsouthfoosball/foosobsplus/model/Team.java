@@ -292,6 +292,7 @@ public class Team implements Serializable {
 		breaks = 0;
 		stuffs = 0;
 		resetTimeOuts();
+		resetResetWarns();
 		writeAll();
 	}
 	public void resetTimeOuts() {
@@ -301,6 +302,12 @@ public class Team implements Serializable {
 			timeOutCount = settings.getMaxTimeOuts();
 		}
 		writeTimeOuts();
+	}
+	public void resetResetWarns() {
+		setReset(false);
+		setWarn(false);
+		writeReset();
+		writeWarn();
 	}
 	public int getPassAttempts() {
 		return passAttempts;
