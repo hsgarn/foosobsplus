@@ -96,8 +96,9 @@ public final class MainFrame extends JFrame {
 			}
 		});
 
-		setSize(1300,700);
+		setSize(1350,850);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		pack();
 		setVisible(true);
 	}
 	
@@ -237,6 +238,7 @@ public final class MainFrame extends JFrame {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
+		tablePanel.setPreferredSize(new Dimension(400,200));
 		add(tablePanel, gc);
 		
 		//////// Timer Panel ////////
@@ -250,6 +252,7 @@ public final class MainFrame extends JFrame {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
+		timerPanel.setPreferredSize(new Dimension(250,400));
 		add(timerPanel, gc);
 
 		//////// Stats Entry Panel ////////
@@ -264,6 +267,7 @@ public final class MainFrame extends JFrame {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(statsEntryPanel, gc);
+		statsEntryPanel.setPreferredSize(new Dimension(400,400));
 		gc.gridheight = 1;
 		
 		//////// Stats Display Panel ////////
@@ -277,6 +281,7 @@ public final class MainFrame extends JFrame {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
+		statsDisplayPanel.setPreferredSize(new Dimension(300,400));
 		add(statsDisplayPanel, gc);
 		
 		////////// Match Panel  ///////////
@@ -292,6 +297,7 @@ public final class MainFrame extends JFrame {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
+		matchPanel.setPreferredSize(new Dimension(400,250));
 		add(matchPanel, gc);
 
 		////////// Team 1 Panel ///////////
@@ -307,6 +313,7 @@ public final class MainFrame extends JFrame {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
+		team1Panel.setPreferredSize(new Dimension(400,400));
 		add(team1Panel, gc);
 		
 		////////// Switch Panel ///////////
@@ -320,6 +327,7 @@ public final class MainFrame extends JFrame {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
+		switchPanel.setPreferredSize(new Dimension(250,400));
 		add(switchPanel, gc);
 
 		//////// Team 2 Panel ////////
@@ -333,6 +341,7 @@ public final class MainFrame extends JFrame {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
+		team2Panel.setPreferredSize(new Dimension(400,400));
 		add(team2Panel, gc);
 
 		//////// Reset Panel ////////
@@ -346,6 +355,7 @@ public final class MainFrame extends JFrame {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
+		resetPanel.setPreferredSize(new Dimension(300,400));
 		add(resetPanel, gc);
 	}
 	
@@ -371,10 +381,5 @@ public final class MainFrame extends JFrame {
 	public StatsEntryPanel getStatsEntryPanel() {
 		return statsEntryPanel;
 	}
-/*	public void packFrames() {
-		SwingUtilities.updateComponentTreeUI(this);
-		this.pack();
-	}
-*/
 }
 

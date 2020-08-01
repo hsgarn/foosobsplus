@@ -31,11 +31,13 @@ import java.io.IOException;
 import javax.swing.JTextField;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
+import com.midsouthfoosball.foosobsplus.model.GameClock;
 import com.midsouthfoosball.foosobsplus.model.LastScored1Clock;
 import com.midsouthfoosball.foosobsplus.model.LastScored2Clock;
 import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.Team;
+import com.midsouthfoosball.foosobsplus.view.MatchPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
 import com.midsouthfoosball.foosobsplus.view.TeamPanel;
 
@@ -48,11 +50,13 @@ public class TeamController {
 	private TeamPanel teamPanel1;
 	private TeamPanel teamPanel2;
 	private SwitchPanel switchPanel;
+	private MatchPanel matchPanel;
 	private TimerController timerController;
 	private LastScored1Clock lastScored1Clock;
 	private LastScored2Clock lastScored2Clock;
+	private GameClock gameClock;
 	
-	public TeamController(OBSInterface obsInterface, Settings settings, Team team1, Team team2, Match match, TeamPanel teamPanel1, TeamPanel teamPanel2, SwitchPanel switchPanel, TimerController timerController, LastScored1Clock lastScored1Clock, LastScored2Clock lastScored2Clock) {
+	public TeamController(OBSInterface obsInterface, Settings settings, Team team1, Team team2, Match match, TeamPanel teamPanel1, TeamPanel teamPanel2, SwitchPanel switchPanel, MatchPanel matchPanel, TimerController timerController, LastScored1Clock lastScored1Clock, LastScored2Clock lastScored2Clock, GameClock gameClock) {
 		this.obsInterface = obsInterface;
 		this.settings = settings;
 		this.team1 = team1;
@@ -61,9 +65,11 @@ public class TeamController {
 		this.teamPanel1 = teamPanel1;
 		this.teamPanel2 = teamPanel2;
 		this.switchPanel = switchPanel;
+		this.matchPanel = matchPanel;
 		this.timerController = timerController;
 		this.lastScored1Clock = lastScored1Clock;
 		this.lastScored2Clock = lastScored2Clock;
+		this.gameClock = gameClock;
 		
 		////// Team Panel Listeners Methods //////
 		
@@ -311,8 +317,6 @@ public class TeamController {
 		}
 	}
 	
-	
-	
 	////// Utility Methods \\\\\\
 
 	public void updateLastScoredTimes() {
@@ -345,23 +349,30 @@ public class TeamController {
 	public void incrementScore(String name) {
 		int winState = 0;
 		if(name.equals("Team 1")) {
-			winState = match.incrementScore(1);
+			winState = match.incrementScore(1, gameClock.getGameTime());
 			lastScored1Clock.startLastScoredTimer();
 		} else {
-			winState = match.incrementScore(2);
+			winState = match.incrementScore(2, gameClock.getGameTime());
 			lastScored2Clock.startLastScoredTimer();
 		};
 		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
 		resetTimer();
-		if(winState==1) startGameTimer();
+		if(winState==1) {
+			startGameTimer();
+			gameClock.stopGameTimer();
+		}
 		displayAll();
 	}
 	public void decrementScore(String name) {
 		if(name.equals("Team 1")) {
-			teamPanel1.updateScore(team1.decrementScore());
+			match.decrementScore(1);
+			teamPanel1.updateScore(team1.getScore());
 		} else {
-			teamPanel2.updateScore(team2.decrementScore());
+			match.decrementScore(2);
+			teamPanel2.updateScore(team2.getScore());
 		}
+		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes());	
+		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
 	}
 	public void incrementGameCount(String name) {
 		boolean matchWon = false;
@@ -545,8 +556,13 @@ public class TeamController {
 		resetResetWarns();
 		resetStats();
 		resetLastScoredClocks();
+		resetLastScored();
 		team1.writeAll();
 		team2.writeAll();
+	}
+	private void resetLastScored() {
+		match.setLastScored(0);
+		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
 	}
 	private void resetLastScoredClocks() {
 		lastScored1Clock.startLastScoredTimer();
@@ -572,6 +588,7 @@ public class TeamController {
 		teamPanel1.displayAllFields(teamName1, forwardName1, goalieName1, score1, gameCount1, timeOutCount1, isReset1, isWarn1);
 		teamPanel2.displayAllFields(teamName2, forwardName2, goalieName2, score2, gameCount2, timeOutCount2, isReset2, isWarn2);
 		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
+		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes());	
 	}
 	public void toggleReset(String txt) {
 		if(txt.equals("Team 1")) {

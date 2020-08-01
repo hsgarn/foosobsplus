@@ -128,6 +128,8 @@ public class Settings {
 	private String side2ColorFileName;
 
 	private String startMatchHotKey;
+	private String pauseMatchHotKey;
+	private String startGameHotKey;
 	private String team1ClearHotKey;
 	private String team1SwitchPositionsHotKey;
 	private String team2ClearHotKey;
@@ -274,6 +276,8 @@ public class Settings {
 		defaultProps.setProperty("Side2ColorFileName","side2color.txt");
 		
 		defaultProps.setProperty("StartMatchHotKey", "");
+		defaultProps.setProperty("PauseMatchHotKey", "");
+		defaultProps.setProperty("StartGameHotKey", "");
 		defaultProps.setProperty("TournamentNameClearHotKey", "");
 		defaultProps.setProperty("Team1ClearHotKey", "");
 		defaultProps.setProperty("Team1SwitchPositionsHotKey", "t");
@@ -557,6 +561,8 @@ public class Settings {
 	public String getSide2ColorFileName() {return side2ColorFileName;}
 
 	public String getStartMatchHotKey() {return startMatchHotKey;}
+	public String getPauseMatchHotKey() {return pauseMatchHotKey;}
+	public String getStartGameHotKey() {return startGameHotKey;}
 	public String getTeam1ClearHotKey() {return team1ClearHotKey;}
 	public String getTeam1SwitchPositionsHotKey() {return team1SwitchPositionsHotKey;}
 	public String getTeam2ClearHotKey() {return team2ClearHotKey;}
@@ -974,6 +980,14 @@ public class Settings {
 		this.startMatchHotKey = startMatchHotKey;
 		configProps.setProperty("StartMatchHotKey", this.startMatchHotKey);
 	}
+	public void setPauseMatchHotKey(String pauseMatchHotKey) {
+		this.pauseMatchHotKey = pauseMatchHotKey;
+		configProps.setProperty("PauseMatchHotKey", this.pauseMatchHotKey);
+	}
+	public void setStartGameHotKey(String startGameHotKey) {
+		this.startGameHotKey = startGameHotKey;
+		configProps.setProperty("StartGameHotKey", this.startGameHotKey);
+	}
 	public void setTeam1ClearHotKey(String team1ClearHotKey) {
 		this.team1ClearHotKey = team1ClearHotKey;
 		configProps.setProperty("Team1ClearHotKey", this.team1ClearHotKey);
@@ -1226,6 +1240,8 @@ public class Settings {
 	public String getDefaultTeam2ShotsOnGoalFileName() {return defaultProps.getProperty("Team2ShotsOnGoalFileName");}
 
 	public String getDefaultStartMatchHotKey() {return defaultProps.getProperty("StartMatchHotKey");}
+	public String getDefaultPauseMatchHotKey() {return defaultProps.getProperty("PauseMatchHotKey");}
+	public String getDefaultStartGameHotKey() {return defaultProps.getProperty("StartGameHotKey");}
 	public String getDefaultTeam1ClearHotKey() {return defaultProps.getProperty("Team1ClearHotKey");}
 	public String getDefaultTeam1SwitchPositionsHotKey() {return defaultProps.getProperty("Team1SwitchPositionsHotKey");}
 	public String getDefaultTeam2ClearHotKey() {return defaultProps.getProperty("Team2ClearHotKey");}
@@ -1381,6 +1397,8 @@ public class Settings {
 		team2ShotsOnGoalFileName = configProps.getProperty("Team2ShotsOnGoalFileName");
 		
 		startMatchHotKey = configProps.getProperty("StartMatchHotKey");
+		pauseMatchHotKey = configProps.getProperty("PauseMatchHotKey");
+		startGameHotKey = configProps.getProperty("StartGameHotKey");
 		team1ClearHotKey = configProps.getProperty("Team1ClearHotKey");
 		team1SwitchPositionsHotKey = configProps.getProperty("Team1SwitchPositionsHotKey");
 		team2ClearHotKey = configProps.getProperty("Team2ClearHotKey");
@@ -1519,6 +1537,8 @@ public class Settings {
 		configProps.setProperty("Side2ColorFileName", this.getSide2ColorFileName());
 
 		configProps.setProperty("StartMatchHotKey", this.getStartMatchHotKey());
+		configProps.setProperty("PauseMatchHotKey", this.getPauseMatchHotKey());
+		configProps.setProperty("StartGameHotKey", this.getStartGameHotKey());
 		configProps.setProperty("Team1ClearHotKey", this.getTeam1ClearHotKey());
 		configProps.setProperty("Team1SwitchPositionsHotKey", this.getTeam1SwitchPositionsHotKey());
 		configProps.setProperty("Team2ClearHotKey", this.getTeam2ClearHotKey());

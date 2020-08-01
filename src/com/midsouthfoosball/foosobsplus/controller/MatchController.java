@@ -22,8 +22,6 @@ package com.midsouthfoosball.foosobsplus.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import com.midsouthfoosball.foosobsplus.model.GameClock;
 import com.midsouthfoosball.foosobsplus.model.LastScored1Clock;
@@ -64,28 +62,26 @@ public class MatchController {
 	private class GameClockTimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			matchPanel.updateElapsedTime(gameClock.getMatchTime());
+			matchPanel.updateGameTime(gameClock.getGameTime());
 		}
-	}
-	private String getCurrentTime() {
-		Date date = new Date();
-		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-		return formatter.format(date);
 	}
 	public void startMatch() {
 		teamController.resetAll();
 		displayAllStats();
 		gameClock.startMatchTimer();
 		gameClock.startGameTimer();
-		match.setStartTime(getCurrentTime());
+		match.startMatch();
 		matchPanel.updateStartTime(match.getStartTime());
+		matchPanel.setPauseLabel("Pause Match");
+		matchPanel.setScoresTeam1(match.getScoresTeam1());
+		matchPanel.setScoresTeam2(match.getScoresTeam2());
+		matchPanel.setTimes(match.getTimes());
 		String tmpCode  = stats.getLastCode();
 		stats.clearAll();
 		statsEntryPanel.clearAll();
 		stats.setIsCommand(true);
 		stats.addCodeToHistory(tmpCode);
 		statsEntryPanel.updateCodeHistory(tmpCode);
-		match.setMatchPaused(false);
-		matchPanel.setPauseLabel("Pause Match");
 	}
 	public void pauseMatch() {
 		if(match.isMatchPaused()==true) {
@@ -100,6 +96,10 @@ public class MatchController {
 		gameClock.pauseGameTimer(pause);
 		lastScored1Clock.pauseLastScoredTimer(pause);
 		lastScored2Clock.pauseLastScoredTimer(pause);
+	}
+	public void startGame() {
+		gameClock.startGameTimer();
+		match.startGame();
 	}
 	
 	public void displayAllStats() {

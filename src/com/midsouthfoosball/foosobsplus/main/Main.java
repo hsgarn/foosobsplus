@@ -24,8 +24,6 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Stack;
 
 import javax.swing.JButton;
@@ -36,10 +34,85 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import com.midsouthfoosball.foosobsplus.commands.*;
-import com.midsouthfoosball.foosobsplus.controller.*;
-import com.midsouthfoosball.foosobsplus.model.*;
-import com.midsouthfoosball.foosobsplus.view.*;
+import com.midsouthfoosball.foosobsplus.commands.CodeCommand;
+import com.midsouthfoosball.foosobsplus.commands.Command;
+import com.midsouthfoosball.foosobsplus.commands.CommandSwitch;
+import com.midsouthfoosball.foosobsplus.commands.DGT1Command;
+import com.midsouthfoosball.foosobsplus.commands.DGT2Command;
+import com.midsouthfoosball.foosobsplus.commands.DST1Command;
+import com.midsouthfoosball.foosobsplus.commands.DST2Command;
+import com.midsouthfoosball.foosobsplus.commands.IGT1Command;
+import com.midsouthfoosball.foosobsplus.commands.IGT2Command;
+import com.midsouthfoosball.foosobsplus.commands.IST1Command;
+import com.midsouthfoosball.foosobsplus.commands.IST2Command;
+import com.midsouthfoosball.foosobsplus.commands.Memento;
+import com.midsouthfoosball.foosobsplus.commands.PCACommand;
+import com.midsouthfoosball.foosobsplus.commands.PCT1Command;
+import com.midsouthfoosball.foosobsplus.commands.PCT2Command;
+import com.midsouthfoosball.foosobsplus.commands.PPMCommand;
+import com.midsouthfoosball.foosobsplus.commands.PRACommand;
+import com.midsouthfoosball.foosobsplus.commands.PRGCommand;
+import com.midsouthfoosball.foosobsplus.commands.PRNCommand;
+import com.midsouthfoosball.foosobsplus.commands.PRRCommand;
+import com.midsouthfoosball.foosobsplus.commands.PRSCommand;
+import com.midsouthfoosball.foosobsplus.commands.PRT1Command;
+import com.midsouthfoosball.foosobsplus.commands.PRT2Command;
+import com.midsouthfoosball.foosobsplus.commands.PRTCommand;
+import com.midsouthfoosball.foosobsplus.commands.PRTOCommand;
+import com.midsouthfoosball.foosobsplus.commands.PSGCCommand;
+import com.midsouthfoosball.foosobsplus.commands.PSGCommand;
+import com.midsouthfoosball.foosobsplus.commands.PSMCommand;
+import com.midsouthfoosball.foosobsplus.commands.PSRCommand;
+import com.midsouthfoosball.foosobsplus.commands.PSSCCommand;
+import com.midsouthfoosball.foosobsplus.commands.PSSCommand;
+import com.midsouthfoosball.foosobsplus.commands.PSTCommand;
+import com.midsouthfoosball.foosobsplus.commands.PSTOCommand;
+import com.midsouthfoosball.foosobsplus.commands.PWT1Command;
+import com.midsouthfoosball.foosobsplus.commands.PWT2Command;
+import com.midsouthfoosball.foosobsplus.commands.RTT1Command;
+import com.midsouthfoosball.foosobsplus.commands.RTT2Command;
+import com.midsouthfoosball.foosobsplus.commands.SGTCommand;
+import com.midsouthfoosball.foosobsplus.commands.SPTCommand;
+import com.midsouthfoosball.foosobsplus.commands.SRTCommand;
+import com.midsouthfoosball.foosobsplus.commands.SSTCommand;
+import com.midsouthfoosball.foosobsplus.commands.STTCommand;
+import com.midsouthfoosball.foosobsplus.commands.UTT1Command;
+import com.midsouthfoosball.foosobsplus.commands.UTT2Command;
+import com.midsouthfoosball.foosobsplus.commands.XPT1Command;
+import com.midsouthfoosball.foosobsplus.commands.XPT2Command;
+import com.midsouthfoosball.foosobsplus.controller.MainController;
+import com.midsouthfoosball.foosobsplus.controller.MatchController;
+import com.midsouthfoosball.foosobsplus.controller.StatsController;
+import com.midsouthfoosball.foosobsplus.controller.TableController;
+import com.midsouthfoosball.foosobsplus.controller.TeamController;
+import com.midsouthfoosball.foosobsplus.controller.TimerController;
+import com.midsouthfoosball.foosobsplus.model.Game;
+import com.midsouthfoosball.foosobsplus.model.GameClock;
+import com.midsouthfoosball.foosobsplus.model.LastScored1Clock;
+import com.midsouthfoosball.foosobsplus.model.LastScored2Clock;
+import com.midsouthfoosball.foosobsplus.model.Match;
+import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.Stats;
+import com.midsouthfoosball.foosobsplus.model.Table;
+import com.midsouthfoosball.foosobsplus.model.Team;
+import com.midsouthfoosball.foosobsplus.model.TimeClock;
+import com.midsouthfoosball.foosobsplus.view.FileNamesFrame;
+import com.midsouthfoosball.foosobsplus.view.HotKeysFrame;
+import com.midsouthfoosball.foosobsplus.view.HotKeysPanel;
+import com.midsouthfoosball.foosobsplus.view.LastScored1WindowFrame;
+import com.midsouthfoosball.foosobsplus.view.LastScored2WindowFrame;
+import com.midsouthfoosball.foosobsplus.view.MainFrame;
+import com.midsouthfoosball.foosobsplus.view.MatchPanel;
+import com.midsouthfoosball.foosobsplus.view.ResetPanel;
+import com.midsouthfoosball.foosobsplus.view.SettingsFrame;
+import com.midsouthfoosball.foosobsplus.view.SettingsPanel;
+import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
+import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
+import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
+import com.midsouthfoosball.foosobsplus.view.TablePanel;
+import com.midsouthfoosball.foosobsplus.view.TeamPanel;
+import com.midsouthfoosball.foosobsplus.view.TimerPanel;
+import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
 
 public class Main {
 	{
@@ -128,7 +201,7 @@ public class Main {
 	
 	MainController 		mainController 		= new MainController(mainFrame, timerWindowFrame, lastScored1WindowFrame, lastScored2WindowFrame);
 	TimerController 	timerController 	= new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock);
-	TeamController 		teamController 		= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, timerController, lastScored1Clock, lastScored2Clock);
+	TeamController 		teamController 		= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, matchPanel, timerController, lastScored1Clock, lastScored2Clock, gameClock);
 	TableController 	tableController 	= new TableController(obsInterface, settings, table, match, tablePanel, teamController);
 	MatchController     matchController     = new MatchController(match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, teamController);
 	StatsController 	statsController 	= new StatsController(stats, statsDisplayPanel, teamController);
@@ -172,6 +245,7 @@ public class Main {
 		this.timerPanel.addResetTimerListener(new ResetTimerListener());
 		this.matchPanel.addStartMatchListener(new StartMatchListener());
 		this.matchPanel.addPauseMatchListener(new PauseMatchListener());
+		this.matchPanel.addStartGameListener(new StartGameListener());
 		this.switchPanel.addSwitchTeamsListener(new SwitchTeamsListener());
 		this.switchPanel.addSwitchScoresListener(new SwitchScoresListener());
 		this.switchPanel.addSwitchGameCountsListener(new SwitchGameCountsListener());
@@ -365,6 +439,11 @@ public class Main {
 			processCode("XPPM",false);
 		}
 	}
+	private class StartGameListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPSG",false);
+		}
+	}
 	private class SwitchTeamsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPST",false);
@@ -377,7 +456,7 @@ public class Main {
 	}
 	private class SwitchGameCountsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPSG",false);
+			processCode("XPSGC",false);
 		}
 	}
 	private class SwitchTimeOutsListener implements ActionListener{
@@ -596,6 +675,7 @@ public class Main {
 	private void loadCommands() {
 		Command psm = new PSMCommand(statsController, matchController);
 		Command ppm = new PPMCommand(statsController, matchController);
+		Command psg = new PSGCommand(statsController, matchController);
 		Command sst = new SSTCommand(statsController, teamController);
 		Command spt = new SPTCommand(statsController, teamController);
 		Command sgt = new SGTCommand(statsController, teamController);
@@ -623,7 +703,7 @@ public class Main {
 		Command xpt2 = new XPT2Command(statsController, teamController);
 		Command pst = new PSTCommand(statsController, teamController);
 		Command pssc = new PSSCCommand(statsController, teamController);
-		Command psg = new PSGCommand(statsController, teamController);
+		Command psgc = new PSGCCommand(statsController, teamController);
 		Command psto = new PSTOCommand(statsController, teamController);
 		Command psr = new PSRCommand(statsController, teamController);
 		Command pca = new PCACommand(statsController, teamController);
@@ -640,6 +720,7 @@ public class Main {
 		mySwitch = new CommandSwitch();
 		mySwitch.register("PSM", psm);
 		mySwitch.register("PPM", ppm);
+		mySwitch.register("PSG", psg);
 		mySwitch.register("SST", sst);
 		mySwitch.register("SPT", spt);
 		mySwitch.register("SGT", sgt);
@@ -667,7 +748,7 @@ public class Main {
 		mySwitch.register("XPT2", xpt2);
 		mySwitch.register("PST", pst);
 		mySwitch.register("PSSC", pssc);
-		mySwitch.register("PSG", psg);
+		mySwitch.register("PSG", psgc);
 		mySwitch.register("PSTO", psto);
 		mySwitch.register("PSR", psr);
 		mySwitch.register("PCA", pca);

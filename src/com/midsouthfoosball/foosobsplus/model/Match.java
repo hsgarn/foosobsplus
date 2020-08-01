@@ -24,6 +24,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
@@ -36,7 +38,14 @@ public class Match implements Serializable {
 	private transient OBSInterface obsInterface;
 	private int lastScored; // team number of the last team to score in this match
 	private boolean isMatchPaused;
+	private boolean isGamePaused;
 	private transient String startTime;
+	private int currentGame = 1;
+	private boolean matchWon = false;
+	private int matchWinner = 0;
+	private String[] scoresTeam1 = {"0","0","0","0","0"};
+	private String[] scoresTeam2 = {"0","0","0","0","0"};
+	private String[] times = {"0:00","0:00","0:00","0:00","0:00"};
 //	private transient String endTime;
 //	private transient int elapsedTime;
 //	private transient int[] points;
@@ -53,6 +62,62 @@ public class Match implements Serializable {
 		this.team2 = team2;
 		this.settings = settings;
 		this.obsInterface = obsInterface;
+	}
+	public void startMatch() {
+		setStartTime(getCurrentTime());
+		setMatchPaused(false);
+		setMatchWon(false);
+		setMatchWinner(0);
+		setCurrentGame(1);
+		setLastScored(0);
+		clearScores();
+		clearTimes();
+	}
+	public void startGame() {
+		setGamePaused(false);
+	}
+	private void clearScores() {
+		for (int i = 0; i < 5; i++) {
+			scoresTeam1[i] = "0";
+			scoresTeam2[i] = "0";
+		}
+	}
+	private void clearTimes() {
+		for (int i = 0; i < 5; i++) {
+			times[i] = "0:00";
+		}
+	}
+	public boolean getMatchWon() {
+		return matchWon;
+	}
+	private void setMatchWon(boolean matchWon) {
+		this.matchWon = matchWon;
+	}
+	public int getMatchWinner() {
+		return matchWinner;
+	}
+	private void setMatchWinner(int matchWinner) {
+		this.matchWinner = matchWinner;
+	}
+	public String[] getScoresTeam1() {
+		return scoresTeam1;
+	}
+	public String[] getScoresTeam2() {
+		return scoresTeam2;
+	}
+	public String[] getTimes() {
+		return times;
+	}
+	private String getCurrentTime() {
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+		return formatter.format(date);
+	}
+	public int getCurrentGame() {
+		return currentGame;
+	}
+	public void setCurrentGame(int currentGame) {
+		this.currentGame = currentGame;
 	}
 	public void setLastScored(int lastScored) {
 		this.lastScored = lastScored;
@@ -91,32 +156,59 @@ public class Match implements Serializable {
 	public void setMatchPaused(boolean isMatchPaused) {
 		this.isMatchPaused = isMatchPaused;
 	}
-/*	public void switchTeams() {
-		System.out.println("Match team1:" + team1.getForwardName());
-//		Team tmp = team1;
-//		team1 = team2;
-//		team2 = tmp;
-//		team1.setTeamNbr(1);
-//		team2.setTeamNbr(2);
-		System.out.println("Match team1:" + team1.getForwardName());
-	} */
+	public boolean isGamePaused() {
+		return isGamePaused;
+	}
+	public void setGamePaused(boolean isGamePaused) {
+		this.isGamePaused = isGamePaused;
+	}
 	public void clearAll() {
 		lastScored = 0;
 		writeLastScored();
 		clearMatchWinner();
 		clearMeatball();
 	}
-	public int incrementScore(int teamNbr) {
+	private void setCurrentScoreTeam1 (int score) {
+		scoresTeam1[currentGame-1] = Integer.toString(score);
+	}
+	private void setCurrentScoreTeam2 (int score) {
+		scoresTeam2[currentGame-1] = Integer.toString(score);
+	}
+	private void setCurrentTime (String gameTime) {
+		times[currentGame-1] = gameTime;
+	}
+	public void decrementScore(int teamNbr) {
+		if(teamNbr==1) {
+			team1.decrementScore();
+			setCurrentScoreTeam1(team1.getScore());
+		} else {
+			team2.decrementScore();
+			setCurrentScoreTeam2(team2.getScore());
+		}
+		if (team1.getScore() > 0 && team2.getScore() == 0) {
+			setLastScored(1);
+		} else {
+			if (team2.getScore() > 0 && team1.getScore() == 0) {
+				setLastScored(2);
+			} else {
+				if (team2.getScore() == 0 && team1.getScore() == 0) {
+					setLastScored(0);
+				}
+			}
+		}
+	}
+	public int incrementScore(int teamNbr, String gameTime) {
 		// return 0 if no winner
 		// return 1 if game won
 		// return 2 if match won
 		int winState = 0;
-		boolean matchWon = false;
 		if(teamNbr==1) {
 			team1.incrementScore();
 			setLastScored(1);
+			setCurrentScoreTeam1(team1.getScore());
 			if(checkForWin(team1.getScore(), team2.getScore())) {
 				matchWon = incrementGameCount(team1);
+				if(matchWon) matchWinner=1;
 				resetScores();
 				resetTimeOuts();
 				resetResetWarn();
@@ -125,14 +217,25 @@ public class Match implements Serializable {
 		} else {
 			team2.incrementScore();
 			setLastScored(2);
+			setCurrentScoreTeam2(team2.getScore());
 			if(checkForWin(team2.getScore(), team1.getScore())) {
 				matchWon = incrementGameCount(team2);
+				if(matchWon) matchWinner=2;
 				resetScores();
 				resetTimeOuts();
 				resetResetWarn();
 				winState = 1;
 			}
 		}
+		if (winState>0) {
+			setCurrentTime(gameTime);
+			if (!matchWon) {
+				currentGame++;
+				int maxGameCount = settings.getGamesToWin() * 2 - 1;
+				if (currentGame > maxGameCount) currentGame = maxGameCount;
+			}
+		}
+
 		if(matchWon) {
 			winState = 2;
 		} else {

@@ -21,20 +21,20 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 package com.midsouthfoosball.foosobsplus.commands;
 
-import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
+import com.midsouthfoosball.foosobsplus.controller.TeamController;
 
-public class PSGCommand implements Command {
+public class PSGCCommand implements Command {
 	private StatsController statsController;
-	private MatchController matchController;
+	private TeamController teamController;
 	
-	public PSGCommand(StatsController statsController, MatchController matchController) {
+	public PSGCCommand(StatsController statsController, TeamController teamController) {
 		this.statsController = statsController;
-		this.matchController = matchController;
+		this.teamController = teamController;
 	}
 	
 	public void execute() {
-		matchController.startGame();
+		teamController.switchGameCounts();
 	}
 
 	public String getCode() {
