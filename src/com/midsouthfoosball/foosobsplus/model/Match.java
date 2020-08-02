@@ -45,7 +45,7 @@ public class Match implements Serializable {
 	private int matchWinner = 0;
 	private String[] scoresTeam1 = {"0","0","0","0","0"};
 	private String[] scoresTeam2 = {"0","0","0","0","0"};
-	private String[] times = {"0:00","0:00","0:00","0:00","0:00"};
+	private String[] times = {"00:00:00","00:00:00","00:00:00","00:00:00","00:00:00"};
 //	private transient String endTime;
 //	private transient int elapsedTime;
 //	private transient int[] points;
@@ -84,7 +84,7 @@ public class Match implements Serializable {
 	}
 	private void clearTimes() {
 		for (int i = 0; i < 5; i++) {
-			times[i] = "0:00";
+			times[i] = "00:00:00";
 		}
 	}
 	public boolean getMatchWon() {

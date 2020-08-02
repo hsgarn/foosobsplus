@@ -86,7 +86,6 @@ import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TableController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
 import com.midsouthfoosball.foosobsplus.controller.TimerController;
-import com.midsouthfoosball.foosobsplus.model.Game;
 import com.midsouthfoosball.foosobsplus.model.GameClock;
 import com.midsouthfoosball.foosobsplus.model.LastScored1Clock;
 import com.midsouthfoosball.foosobsplus.model.LastScored2Clock;
@@ -153,13 +152,13 @@ public class Main {
 	private Team 				team1 				= new Team(obsInterface, settings, 1, settings.getSide1Color());
 	private Team 				team2 				= new Team(obsInterface, settings, 2, settings.getSide2Color());
 	private Match 				match				= new Match(obsInterface, settings, team1, team2);
-	private Game				games[]	 			= new Game[] {	new Game(obsInterface, settings, team1, team2, 1, maxGames), 
-																	new Game(obsInterface, settings, team1, team2, 2, maxGames), 
-																	new Game(obsInterface, settings, team1, team2, 3, maxGames), 
-																	new Game(obsInterface, settings, team1, team2, 4, maxGames), 
-																	new Game(obsInterface, settings, team1, team2, 5, maxGames)
-																};
-	private Stats 				stats 				= new Stats(team1, team2, games, match);
+//	private Game				games[]	 			= new Game[] {	new Game(obsInterface, settings, team1, team2, 1, maxGames), 
+//																	new Game(obsInterface, settings, team1, team2, 2, maxGames), 
+//																	new Game(obsInterface, settings, team1, team2, 3, maxGames), 
+//																	new Game(obsInterface, settings, team1, team2, 4, maxGames), 
+//																	new Game(obsInterface, settings, team1, team2, 5, maxGames)
+//																};
+	private Stats 				stats 				= new Stats(team1, team2);
 	
 	////// Create a TimeClock to be the Timer \\\\\\
 	

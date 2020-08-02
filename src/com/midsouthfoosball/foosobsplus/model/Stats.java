@@ -88,17 +88,11 @@ public class Stats implements Serializable {
 	
 	private transient Team team1;
 	private transient Team team2;
-	private transient Game[] games;
-	private transient Match match;
 
-	public Stats(Team team1, Team team2, Game[] games, Match match) {
+	public Stats(Team team1, Team team2) {
 		codeHistory = new DefaultListModel<String>();
 		this.team1 = team1;
 		this.team2 = team2;
-		this.games = games;
-		this.match = match;
-//		System.out.println("games: " + this.games);
-//		System.out.println("match: " + this.match);
 	}
 
 	public String getCode() {

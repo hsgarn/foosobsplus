@@ -20,6 +20,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.view;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -31,9 +33,12 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
@@ -51,6 +56,9 @@ public class MatchPanel extends JPanel {
 	private JLabel lblGameTime;
 	private JTable gameTable;
 	private Settings settings;
+	private int winningScore = 5;
+	private int winningTeam = 0;
+	private int currentGame = 1;
 	
 	public MatchPanel(Settings settings) {
 
@@ -71,11 +79,8 @@ public class MatchPanel extends JPanel {
 		lblElapsedTime = new JLabel("00:00:00");
 		lblGameTime = new JLabel("00:00:00");
 		gameTable = new JTable(new GameTableModel());
-		gameTable.setPreferredScrollableViewportSize(new Dimension(500,70));
-		gameTable.setFillsViewportHeight(true);
-
+		gameTable.setDefaultRenderer(Object.class, new AttributiveCellRenderer());
 		
-
 		setMnemonics();
 		
 		Border innerBorder = BorderFactory.createTitledBorder("Match Information");
@@ -91,7 +96,7 @@ public class MatchPanel extends JPanel {
 				{"Game:","1","2","3","4","5"},
 				{"Team 1:","0","0","0","0","0"},
 				{"Team 2:","0","0","0","0","0"},
-				{"Time:","0:00","0:00","0:00","0:00","0:00"},
+				{"Time:","00:00:00","00:00:00","00:00:00","00:00:00","00:00:00"},
 		};
         public int getColumnCount() {
             return columnNames.length;
@@ -284,11 +289,52 @@ public class MatchPanel extends JPanel {
 			gameTable.setValueAt(times[columnNbr], 3, columnNbr+1);
 		}
 	}
-	public void updateGameTable(String[] scoresTeam1, String[] scoresTeam2, String[] times) {
+	public void updateGameTable(String[] scoresTeam1, String[] scoresTeam2, String[] times, int currentGame, int winningScore) {
+		this.currentGame = currentGame;
+		this.winningScore = winningScore;
 		for (int i = 1; i < 6; ++i) {
 			gameTable.setValueAt(scoresTeam1[i-1], 1, i);
 			gameTable.setValueAt(scoresTeam2[i-1], 2, i);
 			gameTable.setValueAt(times[i-1], 3, i);
 		}
+		gameTable.repaint();
 	}
+    public class AttributiveCellRenderer extends DefaultTableCellRenderer 
+    {
+	  public AttributiveCellRenderer() {
+	    setOpaque(true);
+	  }
+
+	  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
+	  {
+		  String tmp = "";
+		  tmp = (String) value;
+		  setHorizontalAlignment(SwingConstants.RIGHT);
+		  setBackground(UIManager.getColor("Table.background"));
+		  if (row == 0 && column >=1 ) {
+			  setHorizontalAlignment(SwingConstants.CENTER);
+			  if(column == currentGame) {
+				  setBackground(Color.CYAN);
+			  }
+		  }
+		  if (row == 1 && column == 0) {
+			  if (winningTeam == 1) {
+				  setBackground(Color.GREEN);
+			  }
+		  }
+		  if (row == 2 && column == 0) {
+			  if (winningTeam == 2) {
+				  setBackground(Color.GREEN);
+			  }
+		  }
+          if ((row==1 || row==2) && column>= 1 ) {
+          	if ( Integer.parseInt(tmp) >= winningScore) {
+          		setBackground(Color.GREEN);
+          	} 
+          	setHorizontalAlignment(SwingConstants.CENTER);
+          }
+          setText(tmp);
+          return this;
+	  }
+    }
 }
