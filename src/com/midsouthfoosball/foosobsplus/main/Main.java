@@ -277,6 +277,262 @@ public class Main {
 		teamController.fetchAll();
 		statsController.displayAllStats();
 	}
+	public void switchSides() {
+		Memento tmpTeam1 = saveState(team1);
+		Memento tmpTeam2 = saveState(team2);
+		team1.restoreState(tmpTeam2.getState());
+		team2.restoreState(tmpTeam1.getState());
+		team1.setTeamNbr(1);
+		team2.setTeamNbr(2);
+		teamController.switchSides();
+	}
+	
+	private String createMatchId() {
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-dd.HH:mm:ss.SSS");
+		return formatter.format(date);
+	}
+	public void processCode(String code, Boolean isRedo) {
+		Command commandStatus;
+		if (!isRedo) { 
+			makeMementos();
+			codeStack.push(code);
+		}
+		stats.setCode(code);
+		stats.addCodeToHistory(code);
+		statsEntryPanel.updateCode("");
+		statsEntryPanel.updateCodeHistory(code);
+		if (stats.getIsCommand()) {
+			if (!isRedo) { 
+				commandStatus = commandStack.push(mySwitch.execute(stats.getCommand()));
+				if (commandStatus == null) {
+					statsEntryPanel.errorCodeHistory();;
+				}
+				undoRedoPointer++;
+			}
+		} else {
+			if (!isRedo) { 
+				commandStatus = commandStack.push(mySwitch.execute("code"));
+				if (commandStatus == null) {
+					statsEntryPanel.errorCodeHistory();;
+				}
+				undoRedoPointer++;
+			}
+			if (stats.getIsError()) {
+				statsEntryPanel.errorCodeHistory();
+			}
+			if (stats.getTeamScored(1)) matchController.incrementScore(1);
+			if (stats.getTeamScored(2)) matchController.incrementScore(2);
+			if (stats.getTeamTimeOut(1)) {
+				teamController.callTimeOut("Team 1");
+			} else if (stats.getTeamTimeOut(2)) {
+				teamController.callTimeOut("Team 2");
+			} else {
+				if (stats.getIsThreeRod()||stats.getIsTwoRod()) teamController.startShotTimer();
+				if (stats.getIsFiveRod()) teamController.startPassTimer();
+			}
+		}
+		statsController.displayAllStats();
+	}
+	private void makeMementos() {
+		deleteElementsAfterPointer(undoRedoPointer);
+		mementoStackTeam1.push(saveState(team1));
+		mementoStackTeam2.push(saveState(team2));
+		mementoStackStats.push(saveState(stats));
+		mementoStackMatch.push(saveState(match));
+		mementoStackGameClock.push(saveState(gameClock));
+	}
+	private Memento saveState(Object object) {
+		Memento memento = new Memento(object);
+		return memento;
+	}
+	public void undo() 	{
+		if(undoRedoPointer < 0) return;
+		codeStack.get(undoRedoPointer);
+	    commandStack.get(undoRedoPointer);
+	    Memento mementoTeam1 = mementoStackTeam1.get(undoRedoPointer);
+	    team1.restoreState(mementoTeam1.getState());
+	    Memento mementoTeam2 = mementoStackTeam2.get(undoRedoPointer);
+	    team2.restoreState(mementoTeam2.getState());
+	    Memento mementoStats = mementoStackStats.get(undoRedoPointer);
+	    stats.restoreState(mementoStats.getState());
+	    Memento mementoMatch = mementoStackMatch.get(undoRedoPointer);
+	    match.restoreState(mementoMatch.getState());
+	    Memento mementoGameClock = mementoStackGameClock.get(undoRedoPointer);
+	    gameClock.restoreState(mementoGameClock.getState());
+	    undoRedoPointer--;
+	    statsEntryPanel.removeCodeHistory();
+	    stats.showParsed();
+	}
+ 	public void redo() 	{
+ 		char commandChar = new Character('X');
+ 		Boolean isRedo = true;
+ 		String tempCode;
+ 		Boolean isCommand = false;
+	    if(undoRedoPointer == commandStack.size() - 1)  return;
+	    undoRedoPointer++;
+	    tempCode = codeStack.get(undoRedoPointer);
+	    isCommand = tempCode.charAt(0)==commandChar;
+	    if(isCommand) {
+		    Command command = commandStack.get(undoRedoPointer);
+		    if (command != null) {
+		    	command.execute();
+			    statsEntryPanel.updateCodeHistory(tempCode);
+		    } else {
+		    	statsEntryPanel.updateCodeHistory(tempCode + "<Unknown");
+	    	}
+	    } else {
+	    	processCode(tempCode,isRedo);
+	    }
+	}
+	private void deleteElementsAfterPointer(int undoRedoPointer) {
+	    if (commandStack.size() >= 1)  {
+		    for(int i = commandStack.size()-1; i > undoRedoPointer; i--)
+		    {
+		        commandStack.remove(i);
+		        codeStack.remove(i);
+		        mementoStackTeam1.remove(i);
+		        mementoStackTeam2.remove(i);
+		        mementoStackStats.remove(i);
+		        mementoStackMatch.remove(i);
+		        mementoStackGameClock.remove(i);
+		    }
+	    }
+    }
+	private void loadCommands() {
+		Command psm = new PSMCommand(statsController, this);
+		Command ppm = new PPMCommand(statsController, matchController);
+		Command psg = new PSGCommand(statsController, matchController);
+		Command sst = new SSTCommand(statsController, teamController);
+		Command spt = new SPTCommand(statsController, teamController);
+		Command sgt = new SGTCommand(statsController, teamController);
+		Command stt = new STTCommand(statsController, teamController);
+		Command srt = new SRTCommand(statsController, teamController);
+		Command prt = new PRTCommand(statsController, teamController);
+		Command ist1 = new IST1Command(statsController, matchController);
+		Command ist2 = new IST2Command(statsController, matchController);
+		Command dst1 = new DST1Command(statsController, teamController);
+		Command dst2 = new DST2Command(statsController, teamController);
+		Command igt1 = new IGT1Command(statsController, teamController);
+		Command igt2 = new IGT2Command(statsController, teamController);
+		Command dgt1 = new DGT1Command(statsController, teamController);
+		Command dgt2 = new DGT2Command(statsController, teamController);
+		Command utt1 = new UTT1Command(statsController, teamController);
+		Command utt2 = new UTT2Command(statsController, teamController);
+		Command rtt1 = new RTT1Command(statsController, teamController);
+		Command rtt2 = new RTT2Command(statsController, teamController);
+		Command prt1 = new PRT1Command(statsController, teamController);
+		Command prt2 = new PRT2Command(statsController, teamController);
+		Command pwt1 = new PWT1Command(statsController, teamController);
+		Command pwt2 = new PWT2Command(statsController, teamController);
+		Command pss = new PSSCommand(statsController, this);
+		Command xpt1 = new XPT1Command(statsController, teamController);
+		Command xpt2 = new XPT2Command(statsController, teamController);
+		Command pst = new PSTCommand(statsController, teamController);
+		Command pssc = new PSSCCommand(statsController, teamController);
+		Command psgc = new PSGCCommand(statsController, teamController);
+		Command psto = new PSTOCommand(statsController, teamController);
+		Command psr = new PSRCommand(statsController, teamController);
+		Command pca = new PCACommand(statsController, teamController);
+		Command pct1 = new PCT1Command(statsController, teamController, team1, match, switchPanel, settings);
+		Command pct2 = new PCT2Command(statsController, teamController, team2, match, switchPanel, settings);
+		Command prn= new PRNCommand(statsController, teamController);
+		Command prs = new PRSCommand(statsController, teamController);
+		Command prg = new PRGCommand(statsController, teamController);
+		Command prto = new PRTOCommand(statsController, teamController);
+		Command prr = new PRRCommand(statsController, teamController);
+		Command pra = new PRACommand(statsController, teamController);
+		Command codeCommand = new CodeCommand(statsController);
+
+		mySwitch = new CommandSwitch();
+		mySwitch.register("PSM", psm);
+		mySwitch.register("PPM", ppm);
+		mySwitch.register("PSG", psg);
+		mySwitch.register("SST", sst);
+		mySwitch.register("SPT", spt);
+		mySwitch.register("SGT", sgt);
+		mySwitch.register("STT", stt);
+		mySwitch.register("SRT", srt);
+		mySwitch.register("PRT", prt);
+		mySwitch.register("IST1", ist1);
+		mySwitch.register("IST2", ist2);
+		mySwitch.register("DST1", dst1);
+		mySwitch.register("DST2", dst2);
+		mySwitch.register("IGT1", igt1);
+		mySwitch.register("IGT2", igt2);
+		mySwitch.register("DGT1", dgt1);
+		mySwitch.register("DGT2", dgt2);
+		mySwitch.register("UTT1", utt1);
+		mySwitch.register("UTT2", utt2);
+		mySwitch.register("RTT1", rtt1);
+		mySwitch.register("RTT2", rtt2);
+		mySwitch.register("PRT1", prt1);
+		mySwitch.register("PRT2", prt2);
+		mySwitch.register("PWT1", pwt1);
+		mySwitch.register("PWT2", pwt2);
+		mySwitch.register("PSS", pss);
+		mySwitch.register("XPT1", xpt1);
+		mySwitch.register("XPT2", xpt2);
+		mySwitch.register("PST", pst);
+		mySwitch.register("PSSC", pssc);
+		mySwitch.register("PSGC", psgc);
+		mySwitch.register("PSTO", psto);
+		mySwitch.register("PSR", psr);
+		mySwitch.register("PCA", pca);
+		mySwitch.register("PCT1", pct1);
+		mySwitch.register("PCT2", pct2);
+		mySwitch.register("PRN", prn);
+		mySwitch.register("PRS", prs);
+		mySwitch.register("PRG", prg);
+		mySwitch.register("PRTO", prto);
+		mySwitch.register("PRR", prr);
+		mySwitch.register("PRA", pra);
+		mySwitch.register("code", codeCommand);
+	}
+	////// Listeners \\\\\\
+	private class CodeListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			Boolean isRedo = false;
+			JTextField txt = (JTextField) e.getSource();
+			String code = txt.getText().toUpperCase();
+			if(code.equals("XU")) {
+				undo();
+				teamController.displayAll();
+				statsController.displayAllStats();
+				statsEntryPanel.updateCode(null);
+			} else {
+				if(code.equals("XR")) {
+					redo();
+					teamController.displayAll();
+					statsController.displayAllStats();
+					statsEntryPanel.updateCode(null);
+				} else {
+					processCode(code, isRedo);
+				}
+			}
+		}
+	}
+	private class StatsEntryUndoListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			undo();
+			teamController.displayAll();
+			statsController.displayAllStats();
+		}
+	}
+	private class StatsEntryRedoListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			redo();
+			teamController.displayAll();
+			statsController.displayAllStats();
+		}
+	}
+	private class StatsClearListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			stats.clearAll();
+			statsEntryPanel.clearAll();
+			undoRedoPointer = -1;
+		}
+	}
 	private class HotKeysSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			hotKeysPanel.saveSettings(settings);
@@ -521,257 +777,5 @@ public class Main {
 				processCode("XPCT2",false);
 			}
 		}
-	}
-	public void switchSides() {
-		Memento tmpTeam1 = saveState(team1);
-		Memento tmpTeam2 = saveState(team2);
-		team1.restoreState(tmpTeam2.getState());
-		team2.restoreState(tmpTeam1.getState());
-		team1.setTeamNbr(1);
-		team2.setTeamNbr(2);
-		teamController.switchSides();
-	}
-	
-	private String createMatchId() {
-		Date date = new Date();
-		SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-dd.HH:mm:ss.SSS");
-		return formatter.format(date);
-	}
-	private class StatsEntryUndoListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			undo();
-			teamController.displayAll();
-			statsController.displayAllStats();
-		}
-	}
-	private class StatsEntryRedoListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			redo();
-			teamController.displayAll();
-			statsController.displayAllStats();
-		}
-	}
-	private class StatsClearListener implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			stats.clearAll();
-			statsEntryPanel.clearAll();
-			undoRedoPointer = -1;
-		}
-	}
-	private class CodeListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			Boolean isRedo = false;
-			JTextField txt = (JTextField) e.getSource();
-			String code = txt.getText().toUpperCase();
-			if(code.equals("XU")) {
-				undo();
-				teamController.displayAll();
-				statsController.displayAllStats();
-				statsEntryPanel.updateCode(null);
-			} else {
-				if(code.equals("XR")) {
-					redo();
-					teamController.displayAll();
-					statsController.displayAllStats();
-					statsEntryPanel.updateCode(null);
-				} else {
-					processCode(code, isRedo);
-				}
-			}
-		}
-	}
-	public void processCode(String code, Boolean isRedo) {
-		Command commandStatus;
-		if (!isRedo) { 
-			makeMementos();
-			codeStack.push(code);
-		}
-		stats.setCode(code);
-		stats.addCodeToHistory(code);
-		statsEntryPanel.updateCode("");
-		statsEntryPanel.updateCodeHistory(code);
-		if (stats.getIsCommand()) {
-			if (!isRedo) { 
-				commandStatus = commandStack.push(mySwitch.execute(stats.getCommand()));
-				if (commandStatus == null) {
-					statsEntryPanel.errorCodeHistory();;
-				}
-				undoRedoPointer++;
-			}
-		} else {
-			if (!isRedo) { 
-				commandStatus = commandStack.push(mySwitch.execute("code"));
-				if (commandStatus == null) {
-					statsEntryPanel.errorCodeHistory();;
-				}
-				undoRedoPointer++;
-			}
-			if (stats.getTeamScored(1)) matchController.incrementScore(1);
-			if (stats.getTeamScored(2)) matchController.incrementScore(2);
-			if (stats.getTeamTimeOut(1)) {
-				teamController.callTimeOut("Team 1");
-			} else if (stats.getTeamTimeOut(2)) {
-				teamController.callTimeOut("Team 2");
-			} else {
-				if (stats.getIsThreeRod()||stats.getIsTwoRod()) teamController.startShotTimer();
-				if (stats.getIsFiveRod()) teamController.startPassTimer();
-			}
-		}
-		statsController.displayAllStats();
-	}
-	private void makeMementos() {
-		deleteElementsAfterPointer(undoRedoPointer);
-		mementoStackTeam1.push(saveState(team1));
-		mementoStackTeam2.push(saveState(team2));
-		mementoStackStats.push(saveState(stats));
-		mementoStackMatch.push(saveState(match));
-		mementoStackGameClock.push(saveState(gameClock));
-	}
-	private Memento saveState(Object object) {
-		Memento memento = new Memento(object);
-		return memento;
-	}
-	public void undo() 	{
-		if(undoRedoPointer < 0) return;
-		codeStack.get(undoRedoPointer);
-	    commandStack.get(undoRedoPointer);
-	    Memento mementoTeam1 = mementoStackTeam1.get(undoRedoPointer);
-	    team1.restoreState(mementoTeam1.getState());
-	    Memento mementoTeam2 = mementoStackTeam2.get(undoRedoPointer);
-	    team2.restoreState(mementoTeam2.getState());
-	    Memento mementoStats = mementoStackStats.get(undoRedoPointer);
-	    stats.restoreState(mementoStats.getState());
-	    Memento mementoMatch = mementoStackMatch.get(undoRedoPointer);
-	    match.restoreState(mementoMatch.getState());
-	    Memento mementoGameClock = mementoStackGameClock.get(undoRedoPointer);
-	    gameClock.restoreState(mementoGameClock.getState());
-	    undoRedoPointer--;
-	    statsEntryPanel.removeCodeHistory();
-	    stats.showParsed();
-	}
- 	public void redo() 	{
- 		char commandChar = new Character('X');
- 		Boolean isRedo = true;
- 		String tempCode;
- 		Boolean isCommand = false;
-	    if(undoRedoPointer == commandStack.size() - 1)  return;
-	    undoRedoPointer++;
-	    tempCode = codeStack.get(undoRedoPointer);
-	    isCommand = tempCode.charAt(0)==commandChar;
-	    if(isCommand) {
-		    Command command = commandStack.get(undoRedoPointer);
-		    if (command != null) {
-		    	command.execute();
-			    statsEntryPanel.updateCodeHistory(tempCode);
-		    } else {
-		    	statsEntryPanel.updateCodeHistory(tempCode + "<Unknown");
-	    	}
-	    } else {
-	    	processCode(tempCode,isRedo);
-	    }
-	}
-	private void deleteElementsAfterPointer(int undoRedoPointer) {
-	    if (commandStack.size() >= 1)  {
-		    for(int i = commandStack.size()-1; i > undoRedoPointer; i--)
-		    {
-		        commandStack.remove(i);
-		        codeStack.remove(i);
-		        mementoStackTeam1.remove(i);
-		        mementoStackTeam2.remove(i);
-		        mementoStackStats.remove(i);
-		        mementoStackMatch.remove(i);
-		        mementoStackGameClock.remove(i);
-		    }
-	    }
-    }
-	private void loadCommands() {
-		Command psm = new PSMCommand(statsController, this);
-		Command ppm = new PPMCommand(statsController, matchController);
-		Command psg = new PSGCommand(statsController, matchController);
-		Command sst = new SSTCommand(statsController, teamController);
-		Command spt = new SPTCommand(statsController, teamController);
-		Command sgt = new SGTCommand(statsController, teamController);
-		Command stt = new STTCommand(statsController, teamController);
-		Command srt = new SRTCommand(statsController, teamController);
-		Command prt = new PRTCommand(statsController, teamController);
-		Command ist1 = new IST1Command(statsController, matchController);
-		Command ist2 = new IST2Command(statsController, matchController);
-		Command dst1 = new DST1Command(statsController, teamController);
-		Command dst2 = new DST2Command(statsController, teamController);
-		Command igt1 = new IGT1Command(statsController, teamController);
-		Command igt2 = new IGT2Command(statsController, teamController);
-		Command dgt1 = new DGT1Command(statsController, teamController);
-		Command dgt2 = new DGT2Command(statsController, teamController);
-		Command utt1 = new UTT1Command(statsController, teamController);
-		Command utt2 = new UTT2Command(statsController, teamController);
-		Command rtt1 = new RTT1Command(statsController, teamController);
-		Command rtt2 = new RTT2Command(statsController, teamController);
-		Command prt1 = new PRT1Command(statsController, teamController);
-		Command prt2 = new PRT2Command(statsController, teamController);
-		Command pwt1 = new PWT1Command(statsController, teamController);
-		Command pwt2 = new PWT2Command(statsController, teamController);
-		Command pss = new PSSCommand(statsController, this);
-		Command xpt1 = new XPT1Command(statsController, teamController);
-		Command xpt2 = new XPT2Command(statsController, teamController);
-		Command pst = new PSTCommand(statsController, teamController);
-		Command pssc = new PSSCCommand(statsController, teamController);
-		Command psgc = new PSGCCommand(statsController, teamController);
-		Command psto = new PSTOCommand(statsController, teamController);
-		Command psr = new PSRCommand(statsController, teamController);
-		Command pca = new PCACommand(statsController, teamController);
-		Command pct1 = new PCT1Command(statsController, teamController, team1, match, switchPanel, settings);
-		Command pct2 = new PCT2Command(statsController, teamController, team2, match, switchPanel, settings);
-		Command prn= new PRNCommand(statsController, teamController);
-		Command prs = new PRSCommand(statsController, teamController);
-		Command prg = new PRGCommand(statsController, teamController);
-		Command prto = new PRTOCommand(statsController, teamController);
-		Command prr = new PRRCommand(statsController, teamController);
-		Command pra = new PRACommand(statsController, teamController);
-		Command codeCommand = new CodeCommand(statsController);
-
-		mySwitch = new CommandSwitch();
-		mySwitch.register("PSM", psm);
-		mySwitch.register("PPM", ppm);
-		mySwitch.register("PSG", psg);
-		mySwitch.register("SST", sst);
-		mySwitch.register("SPT", spt);
-		mySwitch.register("SGT", sgt);
-		mySwitch.register("STT", stt);
-		mySwitch.register("SRT", srt);
-		mySwitch.register("PRT", prt);
-		mySwitch.register("IST1", ist1);
-		mySwitch.register("IST2", ist2);
-		mySwitch.register("DST1", dst1);
-		mySwitch.register("DST2", dst2);
-		mySwitch.register("IGT1", igt1);
-		mySwitch.register("IGT2", igt2);
-		mySwitch.register("DGT1", dgt1);
-		mySwitch.register("DGT2", dgt2);
-		mySwitch.register("UTT1", utt1);
-		mySwitch.register("UTT2", utt2);
-		mySwitch.register("RTT1", rtt1);
-		mySwitch.register("RTT2", rtt2);
-		mySwitch.register("PRT1", prt1);
-		mySwitch.register("PRT2", prt2);
-		mySwitch.register("PWT1", pwt1);
-		mySwitch.register("PWT2", pwt2);
-		mySwitch.register("PSS", pss);
-		mySwitch.register("XPT1", xpt1);
-		mySwitch.register("XPT2", xpt2);
-		mySwitch.register("PST", pst);
-		mySwitch.register("PSSC", pssc);
-		mySwitch.register("PSGC", psgc);
-		mySwitch.register("PSTO", psto);
-		mySwitch.register("PSR", psr);
-		mySwitch.register("PCA", pca);
-		mySwitch.register("PCT1", pct1);
-		mySwitch.register("PCT2", pct2);
-		mySwitch.register("PRN", prn);
-		mySwitch.register("PRS", prs);
-		mySwitch.register("PRG", prg);
-		mySwitch.register("PRTO", prto);
-		mySwitch.register("PRR", prr);
-		mySwitch.register("PRA", pra);
-		mySwitch.register("code", codeCommand);
 	}
 }

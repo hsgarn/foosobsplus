@@ -53,6 +53,7 @@ public class Stats implements Serializable {
 	private transient boolean isFiveRod;
 	private transient boolean isTwoRod;
 	private transient boolean isThreeRod;
+	private transient boolean isOffTable;
 	private transient boolean wasFiveRod;
 	private transient boolean wasTwoRod;
 	private transient boolean wasThreeRod;
@@ -67,6 +68,8 @@ public class Stats implements Serializable {
 	private transient boolean isClearComplete;
 	private transient boolean isStuff;
 	private transient boolean isShotOnGoal;
+	private transient boolean isError = false;
+	private transient String errorMsg = "";
 	
 	private transient char breakChar = new Character('B');
 	private transient char stuffChar = new Character('F');
@@ -79,10 +82,25 @@ public class Stats implements Serializable {
 	private transient char fiveRodChar = new Character('5');
 	private transient char twoRodChar = new Character('2');
 	private transient char threeRodChar = new Character('3');
+	private transient char offTableChar = new Character('O');
 	private transient char team1Char = new Character('Y');
 	private transient char team2Char = new Character('B');
 	private transient char commandChar = new Character('X');
 	private transient char dropChar = new Character('D');
+	private transient char resetChar = new Character('R');
+	private transient char warnChar = new Character('W');
+	private transient char ballChar = new Character('Y');
+	private transient char errorChar = new Character('E');
+
+	private transient char wallsChar = new Character('W');
+	private transient char spinChar = new Character('S');
+	private transient char jarChar = new Character('J');
+	private transient char distractionChar = new Character('D');
+	private transient char timeOutsOutChar = new Character('T');
+	private transient char illegalPassChar = new Character('P');
+	private transient char technicalChar = new Character('X');
+	private transient char protocolChar = new Character('R');
+	private transient char otherChar = new Character('O');
 	
 	private transient Team team1;
 	private transient Team team2;
@@ -139,6 +157,9 @@ public class Stats implements Serializable {
 	public String getPreviousCode() {
 		return previousCode;
 	}
+	public boolean getIsError() {
+		return isError;
+	}
 	public void setCodeHistory(DefaultListModel<String> codeHistory) {
 		this.codeHistory = codeHistory;
 	}
@@ -180,6 +201,8 @@ public class Stats implements Serializable {
 		showParsed();
 	}
 	private void parseCode(String previousCode, String code) {
+		isError = false;
+		errorMsg = "";
 		resetFlags();
 		if (code.length() < 3) return;
 		currentTeam = code.charAt(0);
@@ -200,6 +223,9 @@ public class Stats implements Serializable {
 		if (code.length() > 3) {
 			currentModifier = code.charAt(3);
 		}
+		if(!validateCode()) {
+			return;
+		};
 		isSameTeam = previousTeam==currentTeam;
 		isTeamScored = currentPosition==goalChar;
 		isSameRod = isSameTeam && currentPosition==previousPosition;
@@ -225,35 +251,89 @@ public class Stats implements Serializable {
 		isShotOnGoal = isShot && previousPosition==twoRodChar;
 
 	}
-private void resetFlags() {
-	isTeam1 = false;
-	isTeam2 = false;
-	isSameTeam = false;
-	isTeamScored = false;
-	isSameRod = false;
-	isBreak = false;
-	isStuff = false;
-	isPenalty = false;
-	isPass = false;
-	isShot = false;
-	isClear = false;
-	isDrop = false;
-	isTimeOut = false;
-	isFiveRod = false;
-	isTwoRod = false;
-	isThreeRod = false;
-	wasFiveRod = false;
-	wasTwoRod = false;
-	wasThreeRod = false;
-	isForwardDirection = false;
-	isPassComplete = false;
-	isClearComplete = false;
-	teamScored[0] = false;
-	teamScored[1] = false;
-	teamTimeOut[0] = false;
-	teamTimeOut[1] = false;
-	isShotOnGoal = false;
-}
+	private boolean validateCode() {
+		isError=false;
+		if(!(isTeam1 || isTeam2)) {
+			isError=true;
+			errorMsg = "Invalid team code: " + currentTeam + ". ";
+		}
+		if (!(	currentPosition==goalChar 		||
+				currentPosition==fiveRodChar 	||
+				currentPosition==twoRodChar 	||
+				currentPosition==threeRodChar 	||
+				currentPosition==offTableChar)
+				) 
+		{
+			isError=true;
+			errorMsg = errorMsg + "Invalid position: " + currentPosition + ". ";
+		}
+		if (!(	currentAction==passChar 	||
+				currentAction==shotChar 	||
+				currentAction==clearChar 	||
+				currentAction==dropChar 	||
+				currentAction==timeOutChar 	||
+				currentAction==resetChar 	||
+				currentAction==warnChar 	||
+				currentAction==penaltyChar 	||
+				currentAction==ballChar 	||
+				currentAction==errorChar)
+				) 
+		{
+			isError=true;
+			errorMsg = errorMsg + "Invalid action: " + currentAction + ". ";
+		}
+		if (code.length() > 3) {
+			if (!(	currentModifier==breakChar	 		||
+					currentModifier==stuffChar 			||
+					currentModifier==wallsChar 			||
+					currentModifier==spinChar 			||
+					currentModifier==jarChar 			||
+					currentModifier==distractionChar 	||
+					currentModifier==timeOutsOutChar 	||
+					currentModifier==illegalPassChar 	||
+					currentModifier==technicalChar 		||
+					currentModifier==protocolChar		||
+					currentModifier==otherChar)
+					) 
+			{
+				isError=true;
+				errorMsg = errorMsg + "Invalid modifier: " + currentModifier + ". ";
+			}
+		}
+		if (isShowParsed) {
+			System.out.println("ErrorMsg: " + errorMsg);
+		}
+		return isError;
+	}
+	private void resetFlags() {
+		isTeam1 = false;
+		isTeam2 = false;
+		isSameTeam = false;
+		isTeamScored = false;
+		isSameRod = false;
+		isBreak = false;
+		isStuff = false;
+		isPenalty = false;
+		isPass = false;
+		isShot = false;
+		isClear = false;
+		isDrop = false;
+		isTimeOut = false;
+		isFiveRod = false;
+		isTwoRod = false;
+		isThreeRod = false;
+		wasFiveRod = false;
+		wasTwoRod = false;
+		wasThreeRod = false;
+		isForwardDirection = false;
+		isPassComplete = false;
+		isClearComplete = false;
+		teamScored[0] = false;
+		teamScored[1] = false;
+		teamTimeOut[0] = false;
+		teamTimeOut[1] = false;
+		isShotOnGoal = false;
+	}
 	public Float caclPercent(int attempts, int completes) {
 		float percent = 0;
 		if(attempts > 0) {

@@ -20,6 +20,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.view;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -27,6 +29,7 @@ import java.awt.Insets;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -34,6 +37,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
@@ -66,6 +70,7 @@ public class StatsEntryPanel extends JPanel {
 		scrCodeHistory = new JScrollPane();
 		scrCodeHistory.setViewportView(lstCodeHistory);
 		lstCodeHistory.setLayoutOrientation(JList.VERTICAL);
+		lstCodeHistory.setCellRenderer(new AttributiveCellRenderer());
 
 		Border innerBorder = BorderFactory.createTitledBorder("Statistics Entry Panel");
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
@@ -73,8 +78,8 @@ public class StatsEntryPanel extends JPanel {
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
-
 	}
+	
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
 		
@@ -156,7 +161,6 @@ public class StatsEntryPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(btnRedo, gc);
-
 	}
 
 	////// Listeners  //////
@@ -180,13 +184,13 @@ public class StatsEntryPanel extends JPanel {
 		txtCode.setText(code);
 	}
 	public void updateCodeHistory(String code) {
-		mdlCodeHistory.addElement(code);
+		mdlCodeHistory.insertElementAt(code, 0);
 	}
 	public void errorCodeHistory() {
-		mdlCodeHistory.set(mdlCodeHistory.getSize()-1, mdlCodeHistory.getElementAt(mdlCodeHistory.getSize()-1) + "<Unknown");
+		mdlCodeHistory.set(0, mdlCodeHistory.firstElement() + "<Invalid");
 	}
 	public void removeCodeHistory() {
-		mdlCodeHistory.removeElement(mdlCodeHistory.lastElement());
+		mdlCodeHistory.removeElement(mdlCodeHistory.firstElement());
 	}
 	public void selectCode() {
 		txtCode.selectAll();
@@ -198,5 +202,25 @@ public class StatsEntryPanel extends JPanel {
 	public String getCode() {
 		return txtCode.getText();
 	}
+    public class AttributiveCellRenderer extends DefaultListCellRenderer 
+    {
+	  public AttributiveCellRenderer() {
+	    setOpaque(true);
+	  }
+
+	  public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) 
+	  {
+		  String tmp = "";
+		  tmp = (String) value;
+		  setBackground(UIManager.getColor("List.background"));
+		  setForeground(UIManager.getColor("List.foreground"));
+		  if (tmp.indexOf("<") != -1) {
+//			  setBackground(Color.RED);
+			  setForeground(Color.RED);
+		  }
+          setText(tmp);
+          return this;
+	  }
+    }
 
 }
