@@ -37,17 +37,77 @@ public class Game {
 //	private int[] shotsOnGoal;
 //	private int[] breaks;
 //	private int[] stuffs;
-	private int number; // Game Number
+	private int gameNumber; // Game Number
 	private int maxGames;
+	private int finalScoreTeam1;
+	private int finalScoreTeam2;
+	private String finalTime;
+	private String matchId;
+
 	
-	public Game(OBSInterface obsInterface, Settings settings,Team team1, Team team2, int number, int maxGames) {
+	public Game(OBSInterface obsInterface, Settings settings,Team team1, Team team2, int gameNumber) {
 		this.team1 = team1;
 		this.team2 = team2;
 		this.settings = settings;
 		this.obsInterface = obsInterface;
-		this.number = number;
+		this.gameNumber = gameNumber;
 		this.maxGames = maxGames;
-//		System.out.println("objects: " + this.obsInterface + this.settings + this.team1 + this.team2 + this.number + this.maxGames);
+		this.matchId = matchId;
+	}
+	public Team getTeam1() {
+		return team1;
+	}
+	public void setTeam1(Team team1) {
+		this.team1 = team1;
+	}
+	public Team getTeam2() {
+		return team2;
+	}
+	public void setTeam2(Team team2) {
+		this.team2 = team2;
+	}
+	public int getGameNumber() {
+		return gameNumber;
+	}
+	public void setGameNumber(int gameNumber) {
+		this.gameNumber = gameNumber;
+	}
+	public int getMaxGames() {
+		return maxGames;
+	}
+	public void setMaxGames(int maxGames) {
+		this.maxGames = maxGames;
+	}
+	public int getFinalScoreTeam1() {
+		return finalScoreTeam1;
+	}
+	public void setFinalScoreTeam1(int finalScoreTeam1) {
+		this.finalScoreTeam1 = finalScoreTeam1;
+	}
+	public int getFinalScoreTeam2() {
+		return finalScoreTeam2;
+	}
+	public void setFinalScoreTeam2(int finalScoreTeam2) {
+		this.finalScoreTeam2 = finalScoreTeam2;
+	}
+	public String getFinalTime() {
+		return finalTime;
+	}
+	public void setFinalTime(String finalTime) {
+		this.finalTime = finalTime;
+	}
+	public String getMatchId() {
+		return matchId;
+	}
+	public void setMatchId(String matchId) {
+		this.matchId = matchId;
+	}
+	public void clearAll() {
+		matchId = "'";
+		maxGames = 0;
+		finalScoreTeam1 = 0;
+		finalScoreTeam2 = 0;
+		finalTime = "";
 	}
 
 }

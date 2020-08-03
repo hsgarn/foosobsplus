@@ -107,7 +107,11 @@ public class LastScored2Clock {
 		lastScoredTimerRunning=false;
 	}
 	public void pauseLastScoredTimer(boolean pause) {
-		lastScoredTimerRunning=pause;
+		if(pause) {
+			lastScoredTimerRunning=false;
+		} else {
+			lastScoredTimerRunning=true;
+		}
 	}
 	public void addLastScoredClockTimerListener(ActionListener alAction) {
 		timer.addActionListener(alAction);

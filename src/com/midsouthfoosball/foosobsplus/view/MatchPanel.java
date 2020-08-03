@@ -56,9 +56,9 @@ public class MatchPanel extends JPanel {
 	private JLabel lblGameTime;
 	private JTable gameTable;
 	private Settings settings;
-	private int winningScore = 5;
-	private int winningTeam = 0;
-	private int currentGame = 1;
+	private int matchWinner = 0;
+	private int currentGameNumber = 1;
+	private int gameWinners[] = {0,0,0,0,0};
 	
 	public MatchPanel(Settings settings) {
 
@@ -289,9 +289,14 @@ public class MatchPanel extends JPanel {
 			gameTable.setValueAt(times[columnNbr], 3, columnNbr+1);
 		}
 	}
-	public void updateGameTable(String[] scoresTeam1, String[] scoresTeam2, String[] times, int currentGame, int winningScore) {
-		this.currentGame = currentGame;
-		this.winningScore = winningScore;
+	public void setGameWinners(int[] gameWinners) {
+		this.gameWinners = gameWinners;
+	}
+	public void setMatchWinner(int matchWinner) {
+		this.matchWinner = matchWinner;
+	}
+	public void updateGameTable(String[] scoresTeam1, String[] scoresTeam2, String[] times, int currentGameNumber) {
+		this.currentGameNumber = currentGameNumber;
 		for (int i = 1; i < 6; ++i) {
 			gameTable.setValueAt(scoresTeam1[i-1], 1, i);
 			gameTable.setValueAt(scoresTeam2[i-1], 2, i);
@@ -313,25 +318,25 @@ public class MatchPanel extends JPanel {
 		  setBackground(UIManager.getColor("Table.background"));
 		  if (row == 0 && column >=1 ) {
 			  setHorizontalAlignment(SwingConstants.CENTER);
-			  if(column == currentGame) {
+			  if(column == currentGameNumber) {
 				  setBackground(Color.CYAN);
 			  }
 		  }
 		  if (row == 1 && column == 0) {
-			  if (winningTeam == 1) {
-				  setBackground(Color.GREEN);
+			  if (matchWinner == 1) {
+				  setBackground(Color.ORANGE);
 			  }
 		  }
 		  if (row == 2 && column == 0) {
-			  if (winningTeam == 2) {
-				  setBackground(Color.GREEN);
+			  if (matchWinner == 2) {
+				  setBackground(Color.ORANGE);
 			  }
 		  }
           if ((row==1 || row==2) && column>= 1 ) {
-          	if ( Integer.parseInt(tmp) >= winningScore) {
-          		setBackground(Color.GREEN);
-          	} 
-          	setHorizontalAlignment(SwingConstants.CENTER);
+        	  if ( gameWinners[column-1] == row) {
+        		  setBackground(Color.GREEN);
+        	  }
+        	  setHorizontalAlignment(SwingConstants.CENTER);
           }
           setText(tmp);
           return this;

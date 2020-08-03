@@ -346,9 +346,9 @@ public class TeamController {
 			teamPanel2.updateNames(forwardName, goalieName);
 		}
 	};
-	public void incrementScore(String name) {
+	public int incrementScore(int teamNumber) {
 		int winState = 0;
-		if(name.equals("Team 1")) {
+		if(teamNumber == 1) {
 			winState = match.incrementScore(1, gameClock.getGameTime());
 			lastScored1Clock.startLastScoredTimer();
 		} else {
@@ -362,6 +362,7 @@ public class TeamController {
 			gameClock.stopGameTimer();
 		}
 		displayAll();
+		return winState;
 	}
 	public void decrementScore(String name) {
 		if(name.equals("Team 1")) {
@@ -371,7 +372,7 @@ public class TeamController {
 			match.decrementScore(2);
 			teamPanel2.updateScore(team2.getScore());
 		}
-		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGame(), settings.getPointsToWin());	
+		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());	
 		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
 	}
 	public void incrementGameCount(String name) {
@@ -588,7 +589,7 @@ public class TeamController {
 		teamPanel1.displayAllFields(teamName1, forwardName1, goalieName1, score1, gameCount1, timeOutCount1, isReset1, isWarn1);
 		teamPanel2.displayAllFields(teamName2, forwardName2, goalieName2, score2, gameCount2, timeOutCount2, isReset2, isWarn2);
 		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
-		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGame(), settings.getPointsToWin());	
+		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
 	}
 	public void toggleReset(String txt) {
 		if(txt.equals("Team 1")) {

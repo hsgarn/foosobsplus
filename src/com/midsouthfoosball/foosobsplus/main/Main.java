@@ -24,6 +24,8 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Stack;
 
 import javax.swing.JButton;
@@ -86,6 +88,7 @@ import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TableController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
 import com.midsouthfoosball.foosobsplus.controller.TimerController;
+import com.midsouthfoosball.foosobsplus.model.Game;
 import com.midsouthfoosball.foosobsplus.model.GameClock;
 import com.midsouthfoosball.foosobsplus.model.LastScored1Clock;
 import com.midsouthfoosball.foosobsplus.model.LastScored2Clock;
@@ -132,7 +135,7 @@ public class Main {
 	private Settings			settings			= new Settings();
 	public OBSInterface 		obsInterface 		= new OBSInterface(settings);
 	private int 				maxGames			= settings.getGamesToWin() * 2 + 1;
-	public static int			currentGameNbr		= 0;
+	public String				matchId				= "";
 
 	////// CommandStack and UndoRedo setup \\\\\\
 	
@@ -152,12 +155,13 @@ public class Main {
 	private Team 				team1 				= new Team(obsInterface, settings, 1, settings.getSide1Color());
 	private Team 				team2 				= new Team(obsInterface, settings, 2, settings.getSide2Color());
 	private Match 				match				= new Match(obsInterface, settings, team1, team2);
-//	private Game				games[]	 			= new Game[] {	new Game(obsInterface, settings, team1, team2, 1, maxGames), 
-//																	new Game(obsInterface, settings, team1, team2, 2, maxGames), 
-//																	new Game(obsInterface, settings, team1, team2, 3, maxGames), 
-//																	new Game(obsInterface, settings, team1, team2, 4, maxGames), 
-//																	new Game(obsInterface, settings, team1, team2, 5, maxGames)
-//																};
+	private Game				games[]	 			= new Game[] {	new Game(obsInterface, settings, team1, team2, 1), 
+																	new Game(obsInterface, settings, team1, team2, 2), 
+																	new Game(obsInterface, settings, team1, team2, 3), 
+																	new Game(obsInterface, settings, team1, team2, 4), 
+																	new Game(obsInterface, settings, team1, team2, 5)
+																};
+
 	private Stats 				stats 				= new Stats(team1, team2);
 	
 	////// Create a TimeClock to be the Timer \\\\\\
@@ -259,12 +263,15 @@ public class Main {
 		this.resetPanel.addResetAllListener(new ResetAllListener());
 		loadCommands();
 	}
-	public int getCurrentGameNbr() {
-		return currentGameNbr;
+	public void startMatch() {
+		matchId = createMatchId();
+		matchController.startMatch(matchId);
+		for(Game game: games) {
+			game.clearAll();
+			game.setMatchId(matchId);
+		}
 	}
-	public static void setCurrentGameNbr(int gameNbr) {
-		currentGameNbr = gameNbr;
-	}
+
 	private void fetchAll(String tableNbr) {
 		tableController.fetchAll(tableNbr);
 		teamController.fetchAll();
@@ -522,8 +529,14 @@ public class Main {
 		team2.restoreState(tmpTeam1.getState());
 		team1.setTeamNbr(1);
 		team2.setTeamNbr(2);
+		teamController.switchSides();
 	}
 	
+	private String createMatchId() {
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-dd.HH:mm:ss.SSS");
+		return formatter.format(date);
+	}
 	private class StatsEntryUndoListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			undo();
@@ -593,11 +606,11 @@ public class Main {
 				}
 				undoRedoPointer++;
 			}
-			if (stats.getTeam1Scored()) teamController.incrementScore("Team 1");
-			if (stats.getTeam2Scored()) teamController.incrementScore("Team 2");
-			if (stats.getTeam1TimeOut()) {
+			if (stats.getTeamScored(1)) matchController.incrementScore(1);
+			if (stats.getTeamScored(2)) matchController.incrementScore(2);
+			if (stats.getTeamTimeOut(1)) {
 				teamController.callTimeOut("Team 1");
-			} else if (stats.getTeam2TimeOut()) {
+			} else if (stats.getTeamTimeOut(2)) {
 				teamController.callTimeOut("Team 2");
 			} else {
 				if (stats.getIsThreeRod()||stats.getIsTwoRod()) teamController.startShotTimer();
@@ -672,7 +685,7 @@ public class Main {
 	    }
     }
 	private void loadCommands() {
-		Command psm = new PSMCommand(statsController, matchController);
+		Command psm = new PSMCommand(statsController, this);
 		Command ppm = new PPMCommand(statsController, matchController);
 		Command psg = new PSGCommand(statsController, matchController);
 		Command sst = new SSTCommand(statsController, teamController);
@@ -681,8 +694,8 @@ public class Main {
 		Command stt = new STTCommand(statsController, teamController);
 		Command srt = new SRTCommand(statsController, teamController);
 		Command prt = new PRTCommand(statsController, teamController);
-		Command ist1 = new IST1Command(statsController, teamController);
-		Command ist2 = new IST2Command(statsController, teamController);
+		Command ist1 = new IST1Command(statsController, matchController);
+		Command ist2 = new IST2Command(statsController, matchController);
 		Command dst1 = new DST1Command(statsController, teamController);
 		Command dst2 = new DST2Command(statsController, teamController);
 		Command igt1 = new IGT1Command(statsController, teamController);
@@ -697,7 +710,7 @@ public class Main {
 		Command prt2 = new PRT2Command(statsController, teamController);
 		Command pwt1 = new PWT1Command(statsController, teamController);
 		Command pwt2 = new PWT2Command(statsController, teamController);
-		Command pss = new PSSCommand(statsController, teamController, this);
+		Command pss = new PSSCommand(statsController, this);
 		Command xpt1 = new XPT1Command(statsController, teamController);
 		Command xpt2 = new XPT2Command(statsController, teamController);
 		Command pst = new PSTCommand(statsController, teamController);
@@ -747,7 +760,7 @@ public class Main {
 		mySwitch.register("XPT2", xpt2);
 		mySwitch.register("PST", pst);
 		mySwitch.register("PSSC", pssc);
-		mySwitch.register("PSG", psgc);
+		mySwitch.register("PSGC", psgc);
 		mySwitch.register("PSTO", psto);
 		mySwitch.register("PSR", psr);
 		mySwitch.register("PCA", pca);

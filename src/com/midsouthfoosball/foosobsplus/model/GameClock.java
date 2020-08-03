@@ -178,7 +178,11 @@ public class GameClock implements Serializable {
 		gameTimerRunning=false;
 	}
 	public void pauseGameTimer(boolean pause) {
-		gameTimerRunning=pause;
+		if (pause) {
+			gameTimerRunning=false;
+		} else {
+			gameTimerRunning=true;
+		}
 	}
 	public void startMatchTimer() {
 		matchSeconds=0;
@@ -191,7 +195,11 @@ public class GameClock implements Serializable {
 		matchTimerRunning=false;
 	}
 	public void pauseMatchTimer(boolean pause) {
-		matchTimerRunning=pause;
+		if (pause) {
+			matchTimerRunning=false;
+		} else {
+			matchTimerRunning=true;
+		}
 	}
 	public void addGameClockTimerListener(ActionListener alAction) {
 		timer.addActionListener(alAction);

@@ -65,17 +65,26 @@ public class MatchController {
 			matchPanel.updateGameTime(gameClock.getGameTime());
 		}
 	}
-	public void startMatch() {
+	public void incrementScore(int teamNumber) {
+		int winState = teamController.incrementScore(teamNumber);
+		if (winState==1) {
+			startGame();
+		}
+		matchPanel.setGameWinners(match.getGameWinners());
+		matchPanel.setMatchWinner(match.getMatchWinner());
+		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
+	}
+	public void startMatch(String matchId) {
 		teamController.resetAll();
 		displayAllStats();
 		gameClock.startMatchTimer();
 		gameClock.startGameTimer();
-		match.startMatch();
+		match.startMatch(matchId);
 		matchPanel.updateStartTime(match.getStartTime());
 		matchPanel.setPauseLabel("Pause Match");
-		matchPanel.setScoresTeam1(match.getScoresTeam1());
-		matchPanel.setScoresTeam2(match.getScoresTeam2());
-		matchPanel.setTimes(match.getTimes());
+		matchPanel.setGameWinners(match.getGameWinners());
+		matchPanel.setMatchWinner(match.getMatchWinner());
+		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
 		String tmpCode  = stats.getLastCode();
 		stats.clearAll();
 		statsEntryPanel.clearAll();
@@ -86,10 +95,10 @@ public class MatchController {
 	public void pauseMatch() {
 		if(match.isMatchPaused()==true) {
 			match.setMatchPaused(false);
-			matchPanel.setPauseLabel("Unpause Match");
+			matchPanel.setPauseLabel("Pause Match");
 		} else {
 			match.setMatchPaused(true);
-			matchPanel.setPauseLabel("Pause Match");
+			matchPanel.setPauseLabel("Unpause Match");
 		}
 		boolean pause = match.isMatchPaused();
 		gameClock.pauseMatchTimer(pause);
@@ -100,6 +109,9 @@ public class MatchController {
 	public void startGame() {
 		gameClock.startGameTimer();
 		match.startGame();
+		matchPanel.setGameWinners(match.getGameWinners());
+		matchPanel.setMatchWinner(match.getMatchWinner());
+		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
 	}
 	
 	public void displayAllStats() {
