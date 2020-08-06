@@ -25,6 +25,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBoxMenuItem;
 
+import com.midsouthfoosball.foosobsplus.view.GameTableWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.LastScored1WindowFrame;
 import com.midsouthfoosball.foosobsplus.view.LastScored2WindowFrame;
 import com.midsouthfoosball.foosobsplus.view.MainFrame;
@@ -35,16 +36,19 @@ public class MainController {
 	private TimerWindowFrame timerWindowFrame;
 	private LastScored1WindowFrame lastScored1WindowFrame;
 	private LastScored2WindowFrame lastScored2WindowFrame;
+	private GameTableWindowFrame gameTableWindowFrame;
 	
-	public MainController(MainFrame mainFrame, TimerWindowFrame timerWindowFrame, LastScored1WindowFrame lastScored1WindowFrame, LastScored2WindowFrame lastScored2WindowFrame) {
+	public MainController(MainFrame mainFrame, TimerWindowFrame timerWindowFrame, LastScored1WindowFrame lastScored1WindowFrame, LastScored2WindowFrame lastScored2WindowFrame, GameTableWindowFrame gameTableWindowFrame) {
 		this.mainFrame = mainFrame;
 		this.timerWindowFrame = timerWindowFrame;
 		this.lastScored1WindowFrame = lastScored1WindowFrame;
 		this.lastScored2WindowFrame = lastScored2WindowFrame;
+		this.gameTableWindowFrame = gameTableWindowFrame;
 		
 		this.mainFrame.addTimerWindowListener(new TimerWindowListener());
 		this.mainFrame.addLastScored1WindowListener(new LastScored1WindowListener());
 		this.mainFrame.addLastScored2WindowListener(new LastScored2WindowListener());
+		this.mainFrame.addGameTableWindowListener(new GameTableWindowListener());
 	}
 
 	////// MainFrame Listener Objects //////
@@ -65,6 +69,12 @@ public class MainController {
 		public void actionPerformed(ActionEvent ae) {
 			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
 			lastScored2WindowFrame.setVisible(box.isSelected());
+		}
+	}
+	private class GameTableWindowListener implements ActionListener {
+		public void actionPerformed(ActionEvent ae) {
+			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
+			gameTableWindowFrame.setVisible(box.isSelected());
 		}
 	}
 }

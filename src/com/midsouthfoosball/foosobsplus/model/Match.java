@@ -44,6 +44,7 @@ public class Match implements Serializable {
 	private int gameWinners[] = {0,0,0,0,0};
 	private boolean matchWon = false;
 	private int matchWinner = 0;
+	private int maxPossibleGames = 5;
 	private String matchId = "";
 	private String[] scoresTeam1 = {"0","0","0","0","0"};
 	private String[] scoresTeam2 = {"0","0","0","0","0"};
@@ -68,6 +69,7 @@ public class Match implements Serializable {
 		setMatchId(matchId);
 		setStartTime(getCurrentTime());
 		setMatchPaused(false);
+		setGamePaused(false);
 		setMatchWon(false);
 		setMatchWinner(0);
 		setCurrentGameNumber(0);
@@ -79,11 +81,13 @@ public class Match implements Serializable {
 	}
 	public void startGame() {
 		setGamePaused(false);
+		setMatchPaused(false);
 		increaseCurrentGameNumber();
 	}
 	private void increaseCurrentGameNumber() {
-		if(!matchWon) {
+		if(!matchWon && (currentGameNumber==0 || checkForGameWinOnly())) {
 			currentGameNumber++;
+			if (currentGameNumber > maxPossibleGames) currentGameNumber = maxPossibleGames;
 		}
 	}
 	public String getMatchId() {
@@ -321,6 +325,20 @@ public class Match implements Serializable {
 			}
 		}
 		return false;
+	}
+	private boolean checkForGameWinOnly() {
+		if (currentGameNumber==0) return false;
+		int score = Integer.parseInt(scoresTeam1[currentGameNumber-1]);
+		int otherScore = Integer.parseInt(scoresTeam2[currentGameNumber-1]);
+		if (otherScore > score) {
+			score = otherScore;
+			otherScore = Integer.parseInt(scoresTeam1[currentGameNumber-1]);
+		}
+		if (score >= settings.getMaxWin() || (score >= settings.getPointsToWin() && score >= otherScore + settings.getWinBy())) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	private boolean checkForMatchWin(Team team) {
 		boolean matchWon = false;

@@ -37,9 +37,9 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.midsouthfoosball.foosobsplus.model.GameTableModel;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
@@ -79,7 +79,7 @@ public class MatchPanel extends JPanel {
 		lblElapsedTime = new JLabel("00:00:00");
 		lblGameTime = new JLabel("00:00:00");
 		gameTable = new JTable(new GameTableModel());
-		gameTable.setDefaultRenderer(Object.class, new AttributiveCellRenderer());
+		gameTable.setDefaultRenderer(Object.class, new GameTableCellRenderer());
 		
 		setMnemonics();
 		
@@ -89,46 +89,6 @@ public class MatchPanel extends JPanel {
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
-	}
-	class GameTableModel extends AbstractTableModel {
-		private String[] columnNames = {"Game:","1","2","3","4","5"};
-		Object[][] data = {
-				{"Game:","1","2","3","4","5"},
-				{"Team 1:","0","0","0","0","0"},
-				{"Team 2:","0","0","0","0","0"},
-				{"Time:","00:00:00","00:00:00","00:00:00","00:00:00","00:00:00"},
-		};
-        public int getColumnCount() {
-            return columnNames.length;
-        }
-
-        public int getRowCount() {
-            return data.length;
-        }
-
-        public String getColumnName(int col) {
-            return columnNames[col];
-        }
-
-        public Object getValueAt(int row, int col) {
-            return data[row][col];
-        }
-
-        public Class<? extends Object> getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
-        }
-
-        public boolean isCellEditable(int row, int col) {
-             if (col > 0) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        public void setValueAt(Object value, int row, int col) {
-            data[row][col] = value;
-            fireTableCellUpdated(row, col);
-        }
 	}
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
@@ -304,9 +264,9 @@ public class MatchPanel extends JPanel {
 		}
 		gameTable.repaint();
 	}
-    public class AttributiveCellRenderer extends DefaultTableCellRenderer 
+    public class GameTableCellRenderer extends DefaultTableCellRenderer 
     {
-	  public AttributiveCellRenderer() {
+	  public GameTableCellRenderer() {
 	    setOpaque(true);
 	  }
 

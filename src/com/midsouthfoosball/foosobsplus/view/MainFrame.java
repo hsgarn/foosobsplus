@@ -40,6 +40,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import com.midsouthfoosball.foosobsplus.main.Main;
+
 @SuppressWarnings("serial")
 public final class MainFrame extends JFrame {
 	
@@ -55,14 +57,17 @@ public final class MainFrame extends JFrame {
 	public SettingsFrame settingsFrame;
 	public HotKeysFrame hotKeysFrame;
 	public FileNamesFrame fileNamesFrame;
+	private Main main;
 	private JCheckBoxMenuItem viewTimerWindow;
 	private JCheckBoxMenuItem viewAlwaysOnTop;
 	private JCheckBoxMenuItem viewLastScored1Window;
 	private JCheckBoxMenuItem viewLastScored2Window;
+	private JCheckBoxMenuItem viewGameTableWindow;
+	private JCheckBoxMenuItem helpShowParsed;
 	
 	public MainFrame(TablePanel tablePanel, TimerPanel timerPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
 			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, SettingsFrame settingsFrame, HotKeysFrame hotKeysFrame,
-			FileNamesFrame fileNamesFrame) {
+			FileNamesFrame fileNamesFrame, Main main) {
 
 		super("FoosOBSPlus");
 
@@ -78,11 +83,14 @@ public final class MainFrame extends JFrame {
 		this.settingsFrame = settingsFrame;
 		this.hotKeysFrame = hotKeysFrame;
 		this.fileNamesFrame = fileNamesFrame;
+		this.main = main;
 		
 		viewLastScored2Window = new JCheckBoxMenuItem("Team 2 Last Scored Window");
 		viewLastScored1Window = new JCheckBoxMenuItem("Team 1 Last Scored Window");
 		viewTimerWindow = new JCheckBoxMenuItem("Timer Window");
+		viewGameTableWindow = new JCheckBoxMenuItem("Game Table Window");
 		viewAlwaysOnTop = new JCheckBoxMenuItem("Always on Top");
+		helpShowParsed = new JCheckBoxMenuItem("Show Parsed");
 				
 		setLayout(new GridBagLayout());
 		
@@ -126,17 +134,18 @@ public final class MainFrame extends JFrame {
 		editMenu.add(settingsMenu);
 		
 		JMenu viewMenu = new JMenu("View");
-		
 		viewMenu.add(viewAlwaysOnTop);
 		viewMenu.add(viewTimerWindow);
 		viewMenu.add(viewLastScored1Window);
 		viewMenu.add(viewLastScored2Window);
+		viewMenu.add(viewGameTableWindow);
 
 		JMenu helpMenu = new JMenu("Help");
 		JMenuItem helpPage = new JMenuItem("FoosOBSPlus Help");
 		JMenuItem helpAbout = new JMenuItem("About");
 		
 		helpMenu.add(helpPage);
+		helpMenu.add(helpShowParsed);
 		helpMenu.addSeparator();
 		helpMenu.add(helpAbout);
 		
@@ -198,6 +207,12 @@ public final class MainFrame extends JFrame {
 				aboutFrame.pack();
 				aboutFrame.setVisible(true);
 			}
+		});
+
+		helpShowParsed.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				main.setIsShowParsed(helpShowParsed.isSelected());
+ 			}
 		});
 
 		exitItem.addActionListener(new ActionListener() {
@@ -369,6 +384,9 @@ public final class MainFrame extends JFrame {
 	}
 	public void addLastScored2WindowListener(ActionListener listenForChkBoxLastScored2Window) {
 		viewLastScored2Window.addActionListener(listenForChkBoxLastScored2Window);
+	}
+	public void addGameTableWindowListener(ActionListener listenForChkBoxGameTableWindow) {
+		viewGameTableWindow.addActionListener(listenForChkBoxGameTableWindow);
 	}
 	
 	///// Utility Methods \\\\\\

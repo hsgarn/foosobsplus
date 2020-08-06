@@ -125,7 +125,10 @@ public class Stats implements Serializable {
 		}
 	}
 	public String getLastCode() {
-		return codeHistory.lastElement();
+		if (codeHistory.getSize() > 0) {
+			return codeHistory.lastElement();
+		}
+		return "";
 	}
 	public boolean getTeamScored(int teamNumber) {
 		return teamScored[teamNumber-1];
@@ -159,6 +162,12 @@ public class Stats implements Serializable {
 	}
 	public boolean getIsError() {
 		return isError;
+	}
+	public void setIsShowParsed(boolean isShowParsed) {
+		this.isShowParsed = isShowParsed;
+	}
+	public boolean getShowParsed() {
+		return isShowParsed;
 	}
 	public void setCodeHistory(DefaultListModel<String> codeHistory) {
 		this.codeHistory = codeHistory;
@@ -204,7 +213,11 @@ public class Stats implements Serializable {
 		isError = false;
 		errorMsg = "";
 		resetFlags();
-		if (code.length() < 3) return;
+		if (code.length() < 3) {
+			isError = true;
+			errorMsg = "Invalid code.";
+			return;
+		}
 		currentTeam = code.charAt(0);
 		isCommand = currentTeam==commandChar;
 		if(isCommand) return;
@@ -223,7 +236,8 @@ public class Stats implements Serializable {
 		if (code.length() > 3) {
 			currentModifier = code.charAt(3);
 		}
-		if(!validateCode()) {
+		validateCode();
+		if (isError) {
 			return;
 		};
 		isSameTeam = previousTeam==currentTeam;
@@ -251,7 +265,7 @@ public class Stats implements Serializable {
 		isShotOnGoal = isShot && previousPosition==twoRodChar;
 
 	}
-	private boolean validateCode() {
+	private void validateCode() {
 		isError=false;
 		if(!(isTeam1 || isTeam2)) {
 			isError=true;
@@ -303,7 +317,7 @@ public class Stats implements Serializable {
 		if (isShowParsed) {
 			System.out.println("ErrorMsg: " + errorMsg);
 		}
-		return isError;
+//		return isError;
 	}
 	private void resetFlags() {
 		isTeam1 = false;

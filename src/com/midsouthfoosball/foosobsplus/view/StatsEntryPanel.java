@@ -187,10 +187,12 @@ public class StatsEntryPanel extends JPanel {
 		mdlCodeHistory.insertElementAt(code, 0);
 	}
 	public void errorCodeHistory() {
-		mdlCodeHistory.set(0, mdlCodeHistory.firstElement() + "<Invalid");
+		mdlCodeHistory.set(0, mdlCodeHistory.firstElement() + "<Invalid>");
 	}
 	public void removeCodeHistory() {
-		mdlCodeHistory.removeElement(mdlCodeHistory.firstElement());
+		if (mdlCodeHistory.getSize() > 0) {
+			mdlCodeHistory.removeElement(mdlCodeHistory.firstElement());
+		}
 	}
 	public void selectCode() {
 		txtCode.selectAll();
@@ -215,7 +217,6 @@ public class StatsEntryPanel extends JPanel {
 		  setBackground(UIManager.getColor("List.background"));
 		  setForeground(UIManager.getColor("List.foreground"));
 		  if (tmp.indexOf("<") != -1) {
-//			  setBackground(Color.RED);
 			  setForeground(Color.RED);
 		  }
           setText(tmp);

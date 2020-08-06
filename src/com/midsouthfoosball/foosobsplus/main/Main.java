@@ -99,6 +99,7 @@ import com.midsouthfoosball.foosobsplus.model.Table;
 import com.midsouthfoosball.foosobsplus.model.Team;
 import com.midsouthfoosball.foosobsplus.model.TimeClock;
 import com.midsouthfoosball.foosobsplus.view.FileNamesFrame;
+import com.midsouthfoosball.foosobsplus.view.GameTableWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.HotKeysFrame;
 import com.midsouthfoosball.foosobsplus.view.HotKeysPanel;
 import com.midsouthfoosball.foosobsplus.view.LastScored1WindowFrame;
@@ -134,7 +135,7 @@ public class Main {
 	
 	private Settings			settings			= new Settings();
 	public OBSInterface 		obsInterface 		= new OBSInterface(settings);
-	private int 				maxGames			= settings.getGamesToWin() * 2 + 1;
+//	private int 				maxGames			= settings.getGamesToWin() * 2 + 1;
 	public String				matchId				= "";
 
 	////// CommandStack and UndoRedo setup \\\\\\
@@ -193,16 +194,17 @@ public class Main {
 	private HotKeysFrame 			hotKeysFrame 			= new HotKeysFrame(settings);
 	private HotKeysPanel 			hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
 	private FileNamesFrame			fileNamesFrame			= new FileNamesFrame(settings, obsInterface);
+	private GameTableWindowFrame	gameTableWindowFrame	= new GameTableWindowFrame();
 	
 	////// Display the View Panels on a JFrame \\\\\\
 	
 	private MainFrame mainFrame = new MainFrame(tablePanel, timerPanel, teamPanel1, teamPanel2, statsEntryPanel, 
 												switchPanel, resetPanel, statsDisplayPanel, matchPanel, settingsFrame, hotKeysFrame, 
-												fileNamesFrame);
+												fileNamesFrame, this);
 
 	////// Build and Start the Controllers (mvC) \\\\\\
 	
-	MainController 		mainController 		= new MainController(mainFrame, timerWindowFrame, lastScored1WindowFrame, lastScored2WindowFrame);
+	MainController 		mainController 		= new MainController(mainFrame, timerWindowFrame, lastScored1WindowFrame, lastScored2WindowFrame, gameTableWindowFrame);
 	TimerController 	timerController 	= new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock);
 	TeamController 		teamController 		= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, matchPanel, timerController, lastScored1Clock, lastScored2Clock, gameClock);
 	TableController 	tableController 	= new TableController(obsInterface, settings, table, match, tablePanel, teamController);
@@ -286,7 +288,9 @@ public class Main {
 		team2.setTeamNbr(2);
 		teamController.switchSides();
 	}
-	
+	public void setIsShowParsed(boolean isShowParsed) {
+		stats.setIsShowParsed(isShowParsed);
+	}
 	private String createMatchId() {
 		Date date = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-dd.HH:mm:ss.SSS");
