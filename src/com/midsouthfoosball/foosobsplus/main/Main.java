@@ -100,6 +100,7 @@ import com.midsouthfoosball.foosobsplus.model.Team;
 import com.midsouthfoosball.foosobsplus.model.TimeClock;
 import com.midsouthfoosball.foosobsplus.view.FileNamesFrame;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowFrame;
+import com.midsouthfoosball.foosobsplus.view.GameTableWindowPanel;
 import com.midsouthfoosball.foosobsplus.view.HotKeysFrame;
 import com.midsouthfoosball.foosobsplus.view.HotKeysPanel;
 import com.midsouthfoosball.foosobsplus.view.LastScored1WindowFrame;
@@ -194,7 +195,8 @@ public class Main {
 	private HotKeysFrame 			hotKeysFrame 			= new HotKeysFrame(settings);
 	private HotKeysPanel 			hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
 	private FileNamesFrame			fileNamesFrame			= new FileNamesFrame(settings, obsInterface);
-	private GameTableWindowFrame	gameTableWindowFrame	= new GameTableWindowFrame();
+	private GameTableWindowPanel	gameTableWindowPanel	= new GameTableWindowPanel();
+	private GameTableWindowFrame	gameTableWindowFrame	= new GameTableWindowFrame(gameTableWindowPanel);
 	
 	////// Display the View Panels on a JFrame \\\\\\
 	
@@ -208,7 +210,7 @@ public class Main {
 	TimerController 	timerController 	= new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock);
 	TeamController 		teamController 		= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, matchPanel, timerController, lastScored1Clock, lastScored2Clock, gameClock);
 	TableController 	tableController 	= new TableController(obsInterface, settings, table, match, tablePanel, teamController);
-	MatchController     matchController     = new MatchController(match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, teamController);
+	MatchController     matchController     = new MatchController(match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, gameTableWindowPanel, teamController);
 	StatsController 	statsController 	= new StatsController(stats, statsDisplayPanel, teamController);
 
 	public Main() throws IOException {
@@ -222,6 +224,9 @@ public class Main {
 		this.statsEntryPanel.addCodeListener(new CodeListener());
 		this.teamPanel1.addClearAllListener(new TeamClearAllListener());
 		this.teamPanel2.addClearAllListener(new TeamClearAllListener());
+		this.tablePanel.addClearListener(new TableClearAllListener());
+		this.tablePanel.addLoadListener(new TableLoadListener());
+		this.tablePanel.addSetListener(new TableSetListener());
 		this.statsEntryPanel.addStatsClearListener(new StatsClearListener());
 		this.teamPanel1.addScoreIncreaseListener(new ScoreIncreaseListener());
 		this.teamPanel2.addScoreIncreaseListener(new ScoreIncreaseListener());
@@ -521,6 +526,7 @@ public class Main {
 			undo();
 			teamController.displayAll();
 			statsController.displayAllStats();
+			statsEntryPanel.setFocusOnCode();	
 		}
 	}
 	private class StatsEntryRedoListener implements ActionListener {
@@ -528,6 +534,7 @@ public class Main {
 			redo();
 			teamController.displayAll();
 			statsController.displayAllStats();
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class StatsClearListener implements ActionListener{
@@ -535,6 +542,7 @@ public class Main {
 			stats.clearAll();
 			statsEntryPanel.clearAll();
 			undoRedoPointer = -1;
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class HotKeysSaveListener implements ActionListener {
@@ -570,6 +578,7 @@ public class Main {
 			} else {
 				processCode("XIST2",false);
 			}
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class ScoreDecreaseListener implements ActionListener{
@@ -581,6 +590,7 @@ public class Main {
 			} else {
 				processCode("XDST2",false);
 			}
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class GameCountIncreaseListener implements ActionListener{
@@ -592,6 +602,7 @@ public class Main {
 			} else {
 				processCode("XIGT2",false);
 			}
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class GameCountDecreaseListener implements ActionListener{
@@ -603,6 +614,7 @@ public class Main {
 			} else {
 				processCode("XDGT2",false);
 			}
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class TimeOutCountIncreaseListener implements ActionListener{
@@ -614,6 +626,7 @@ public class Main {
 			} else {
 				processCode("XUTT2",false);
 			}
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class TimeOutCountDecreaseListener implements ActionListener{
@@ -625,6 +638,7 @@ public class Main {
 			} else {
 				processCode("XRTT2",false);
 			}
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class ResetListener implements ActionListener{
@@ -636,6 +650,7 @@ public class Main {
 			} else {
 				processCode("XPRT2",false);
 			}
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class WarnListener implements ActionListener{
@@ -647,6 +662,7 @@ public class Main {
 			} else {
 				processCode("XPWT2",false);
 			}
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class SwitchPositionsListener implements ActionListener{
@@ -658,117 +674,140 @@ public class Main {
 			} else {
 				processCode("XXPT2",false);
 			}
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class SwitchSidesListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSS",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class ShotTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSST",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class PassTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSPT",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class TimeOutTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSTT",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class GameTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSGT",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class RecallTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSRT",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class ResetTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRT",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class StartMatchListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSM",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class PauseMatchListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPPM",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class StartGameListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSG",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class SwitchTeamsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPST",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class SwitchScoresListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSSC",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class SwitchGameCountsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSGC",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class SwitchTimeOutsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSTO",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class SwitchResetWarnsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSR",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class ClearAllListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPCA",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class ResetNamesListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRN",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class ResetScoresListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRS",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class ResetGameCountsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRG",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class ResetTimeOutsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRTO",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class ResetResetWarnsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRR",false);
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class ResetAllListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRA",false);
 			statsController.displayAllStats();
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class TeamClearAllListener implements ActionListener {
@@ -780,6 +819,21 @@ public class Main {
 			} else {
 				processCode("XPCT2",false);
 			}
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
-}
+	private class TableClearAllListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			statsEntryPanel.setFocusOnCode();
+		}
+	}
+	private class TableLoadListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			statsEntryPanel.setFocusOnCode();
+		}
+	}
+	private class TableSetListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			statsEntryPanel.setFocusOnCode();
+		}
+	}}

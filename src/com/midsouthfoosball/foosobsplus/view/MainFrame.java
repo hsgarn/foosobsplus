@@ -29,6 +29,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.event.WindowStateListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -43,7 +44,7 @@ import javax.swing.JOptionPane;
 import com.midsouthfoosball.foosobsplus.main.Main;
 
 @SuppressWarnings("serial")
-public final class MainFrame extends JFrame {
+public final class MainFrame extends JFrame implements WindowListener {
 	
 	private TablePanel tablePanel;
 	private TeamPanel team1Panel;
@@ -104,6 +105,8 @@ public final class MainFrame extends JFrame {
 			}
 		});
 
+		addWindowListener(this);
+		
 		setSize(1350,850);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
@@ -398,6 +401,44 @@ public final class MainFrame extends JFrame {
 	}
 	public StatsEntryPanel getStatsEntryPanel() {
 		return statsEntryPanel;
+	}
+
+	@Override
+	public void windowActivated(WindowEvent arg0) {
+		statsEntryPanel.setFocusOnCode();
+	}
+
+	@Override
+	public void windowClosed(WindowEvent arg0) {
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent arg0) {
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowOpened(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 }
 

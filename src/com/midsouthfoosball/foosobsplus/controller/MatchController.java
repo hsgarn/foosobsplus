@@ -28,6 +28,7 @@ import com.midsouthfoosball.foosobsplus.model.LastScored1Clock;
 import com.midsouthfoosball.foosobsplus.model.LastScored2Clock;
 import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.Stats;
+import com.midsouthfoosball.foosobsplus.view.GameTableWindowPanel;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
@@ -41,9 +42,10 @@ public class MatchController {
 	private MatchPanel matchPanel;
 	private StatsEntryPanel statsEntryPanel;
 	private StatsDisplayPanel statsDisplayPanel;
+	private GameTableWindowPanel gameTableWindowPanel;
 	private TeamController teamController;
 	
-	public MatchController(Match match, Stats stats, GameClock gameClock, LastScored1Clock lastScored1Clock, LastScored2Clock lastScored2Clock, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, TeamController teamController) {
+	public MatchController(Match match, Stats stats, GameClock gameClock, LastScored1Clock lastScored1Clock, LastScored2Clock lastScored2Clock, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, GameTableWindowPanel gameTableWindowPanel, TeamController teamController) {
 		this.match = match;
 		this.stats = stats;
 		this.gameClock = gameClock;
@@ -52,6 +54,7 @@ public class MatchController {
 		this.matchPanel = matchPanel;
 		this.statsEntryPanel = statsEntryPanel;
 		this.statsDisplayPanel = statsDisplayPanel;
+		this.gameTableWindowPanel = gameTableWindowPanel;
 		this.teamController = teamController;
 
 		this.gameClock.addGameClockTimerListener(new GameClockTimerListener());
@@ -62,7 +65,10 @@ public class MatchController {
 	private class GameClockTimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			matchPanel.updateElapsedTime(gameClock.getMatchTime());
-			matchPanel.updateGameTime(gameClock.getGameTime());
+			String time = gameClock.getGameTime();
+			matchPanel.updateGameTime(time);
+			matchPanel.setTime(time);
+			gameTableWindowPanel.setTime(time);
 		}
 	}
 	public void incrementScore(int teamNumber) {
@@ -73,6 +79,9 @@ public class MatchController {
 		matchPanel.setGameWinners(match.getGameWinners());
 		matchPanel.setMatchWinner(match.getMatchWinner());
 		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
+		gameTableWindowPanel.setGameWinners(match.getGameWinners());
+		gameTableWindowPanel.setMatchWinner(match.getMatchWinner());
+		gameTableWindowPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
 	}
 	public void startMatch(String matchId) {
 		teamController.resetAll();
@@ -85,6 +94,9 @@ public class MatchController {
 		matchPanel.setGameWinners(match.getGameWinners());
 		matchPanel.setMatchWinner(match.getMatchWinner());
 		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
+		gameTableWindowPanel.setGameWinners(match.getGameWinners());
+		gameTableWindowPanel.setMatchWinner(match.getMatchWinner());
+		gameTableWindowPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
 		String tmpCode  = stats.getLastCode();
 		stats.clearAll();
 		statsEntryPanel.clearAll();
@@ -112,6 +124,9 @@ public class MatchController {
 		matchPanel.setGameWinners(match.getGameWinners());
 		matchPanel.setMatchWinner(match.getMatchWinner());
 		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
+		gameTableWindowPanel.setGameWinners(match.getGameWinners());
+		gameTableWindowPanel.setMatchWinner(match.getMatchWinner());
+		gameTableWindowPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
 	}
 	
 	public void displayAllStats() {

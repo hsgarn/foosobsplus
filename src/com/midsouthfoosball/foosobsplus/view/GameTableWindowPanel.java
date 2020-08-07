@@ -44,35 +44,22 @@ public class GameTableWindowPanel extends JPanel {
 	 * Create the panel.
 	 */
 	public GameTableWindowPanel() {
-		setLayout(new MigLayout("", "[280.00]", "[67.00]"));
+		setLayout(new MigLayout("", "[400.00]", "[90.00]"));
 
 		gameTable = new JTable(new GameTableModel());
 		gameTable.setDefaultRenderer(Object.class, new GameTableCellRenderer());
+		add(gameTable);
 
-	}
-	
-	
-	
-	public void setScoresTeam1(String[] scoresTeam1) {
-		for (int columnNbr = 0; columnNbr < 5; columnNbr++) {
-			gameTable.setValueAt(scoresTeam1[columnNbr], 1, columnNbr+1);
-		}
-	}
-	public void setScoresTeam2(String[] scoresTeam2) {
-		for (int columnNbr = 0; columnNbr < 5; columnNbr++) {
-			gameTable.setValueAt(scoresTeam2[columnNbr], 2, columnNbr+1);
-		}
-	}
-	public void setTimes(String[] times) {
-		for (int columnNbr = 0; columnNbr < 5; columnNbr++) {
-			gameTable.setValueAt(times[columnNbr], 3, columnNbr+1);
-		}
 	}
 	public void setGameWinners(int[] gameWinners) {
 		this.gameWinners = gameWinners;
 	}
 	public void setMatchWinner(int matchWinner) {
 		this.matchWinner = matchWinner;
+	}
+	public void setTime(String time) {
+		gameTable.setValueAt(time, 3, currentGameNumber);
+		gameTable.repaint();
 	}
 	public void updateGameTable(String[] scoresTeam1, String[] scoresTeam2, String[] times, int currentGameNumber) {
 		this.currentGameNumber = currentGameNumber;

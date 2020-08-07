@@ -223,5 +223,7 @@ public class StatsEntryPanel extends JPanel {
           return this;
 	  }
     }
-
+    public void setFocusOnCode() {
+    	txtCode.requestFocusInWindow();
+    }
 }

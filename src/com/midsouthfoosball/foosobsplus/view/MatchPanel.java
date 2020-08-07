@@ -209,6 +209,10 @@ public class MatchPanel extends JPanel {
 	public void updateGameTime(String gameTime) {
 		lblGameTime.setText(gameTime);
 	}
+	public void setTime(String time) {
+		gameTable.setValueAt(time, 3, currentGameNumber);
+		gameTable.repaint();
+	}
 	
 	////// Utility Methods \\\\\\
 	public void setPauseLabel(String labelText) {
@@ -234,21 +238,7 @@ public class MatchPanel extends JPanel {
 	public void updateMnemonics() {
 		setMnemonics();
 	}
-	public void setScoresTeam1(String[] scoresTeam1) {
-		for (int columnNbr = 0; columnNbr < 5; columnNbr++) {
-			gameTable.setValueAt(scoresTeam1[columnNbr], 1, columnNbr+1);
-		}
-	}
-	public void setScoresTeam2(String[] scoresTeam2) {
-		for (int columnNbr = 0; columnNbr < 5; columnNbr++) {
-			gameTable.setValueAt(scoresTeam2[columnNbr], 2, columnNbr+1);
-		}
-	}
-	public void setTimes(String[] times) {
-		for (int columnNbr = 0; columnNbr < 5; columnNbr++) {
-			gameTable.setValueAt(times[columnNbr], 3, columnNbr+1);
-		}
-	}
+
 	public void setGameWinners(int[] gameWinners) {
 		this.gameWinners = gameWinners;
 	}

@@ -29,9 +29,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 @SuppressWarnings("serial")
 public class GameTableWindowFrame extends JFrame {
 	
-	private GameTableWindowPanel gameTableWindowPanel;
-
-	public GameTableWindowFrame() {
+	public GameTableWindowFrame(GameTableWindowPanel gameTableWindowPanel) {
 		super("FoosOBSPlus Game Table Window");
 		try {
 		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -47,7 +45,6 @@ public class GameTableWindowFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setAlwaysOnTop(true);
 		
-		gameTableWindowPanel = new GameTableWindowPanel();
 		gameTableWindowPanel.setPreferredSize(new Dimension(400, 90));
 
 		getContentPane().add(gameTableWindowPanel);
