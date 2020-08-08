@@ -34,7 +34,7 @@ public class PRT1Command implements Command {
 	}
 	
 	public void execute() {
-		teamController.toggleReset("Team 1");
+		teamController.toggleReset(1);
 	}
 
 	public String getCode() {

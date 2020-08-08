@@ -36,10 +36,10 @@ public class Match implements Serializable {
 	private transient Team team2;
 	private transient Settings settings;
 	private transient OBSInterface obsInterface;
+	private transient String startTime;
 	private int lastScored; // team number of the last team to score in this match
 	private boolean isMatchPaused;
 	private boolean isGamePaused;
-	private transient String startTime;
 	private int currentGameNumber = 1;
 	private int gameWinners[] = {0,0,0,0,0};
 	private boolean matchWon = false;
@@ -64,6 +64,7 @@ public class Match implements Serializable {
 		this.team2 = team2;
 		this.settings = settings;
 		this.obsInterface = obsInterface;
+		this.maxPossibleGames=settings.getGamesToWin()*2-1;
 	}
 	public void startMatch(String matchId) {
 		setMatchId(matchId);
@@ -89,6 +90,15 @@ public class Match implements Serializable {
 			currentGameNumber++;
 			if (currentGameNumber > maxPossibleGames) currentGameNumber = maxPossibleGames;
 		}
+	}
+	public int getMaxPossibleGames() {
+		return maxPossibleGames;
+	}
+	public void setMaxPossibleGames(int maxPossibleGames) {
+		if (maxPossibleGames<=0) {
+			maxPossibleGames = settings.getGamesToWin()*2-1;
+		}
+		this.maxPossibleGames = maxPossibleGames;
 	}
 	public String getMatchId() {
 		return matchId;
@@ -187,6 +197,15 @@ public class Match implements Serializable {
 	}
 	public void setGamePaused(boolean isGamePaused) {
 		this.isGamePaused = isGamePaused;
+	}
+	public void setScoresTeam1(String[] scoresTeam1) {
+		this.scoresTeam1 = scoresTeam1;
+	}
+	public void setScoresTeam2(String[] scoresTeam2) {
+		this.scoresTeam2 = scoresTeam2;
+	}
+	public void setTimes(String[] times) {
+		this.times = times;
 	}
 	public void clearAll() {
 		lastScored = 0;
@@ -418,6 +437,17 @@ public class Match implements Serializable {
 			System.out.println(e);
 		}
 		this.setLastScored(tempMatch.getLastScored());
+		this.setMatchPaused(tempMatch.isMatchPaused());
+		this.setGamePaused(tempMatch.isGamePaused());
+		this.setCurrentGameNumber(tempMatch.getCurrentGameNumber());
+		this.setGameWinners(tempMatch.getGameWinners());
+		this.setMatchWon(tempMatch.getMatchWon());
+		this.setMatchWinner(tempMatch.getMatchWinner());
+		this.setMaxPossibleGames(tempMatch.getMaxPossibleGames());
+		this.setMatchId(tempMatch.getMatchId());
+		this.setScoresTeam1(tempMatch.getScoresTeam1());
+		this.setScoresTeam2(tempMatch.getScoresTeam2());
+		this.setTimes(tempMatch.getTimes());
 	}
 	public void clearGameWinners() {
 		for(int i=0; i<gameWinners.length;i++) {

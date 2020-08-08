@@ -27,13 +27,16 @@ import com.midsouthfoosball.foosobsplus.model.GameClock;
 import com.midsouthfoosball.foosobsplus.model.LastScored1Clock;
 import com.midsouthfoosball.foosobsplus.model.LastScored2Clock;
 import com.midsouthfoosball.foosobsplus.model.Match;
+import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.Stats;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowPanel;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
+import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
 
 public class MatchController {
+	private Settings settings;
 	private Match match;
 	private Stats stats;
 	private GameClock gameClock;
@@ -42,10 +45,12 @@ public class MatchController {
 	private MatchPanel matchPanel;
 	private StatsEntryPanel statsEntryPanel;
 	private StatsDisplayPanel statsDisplayPanel;
+	private SwitchPanel switchPanel;
 	private GameTableWindowPanel gameTableWindowPanel;
 	private TeamController teamController;
 	
-	public MatchController(Match match, Stats stats, GameClock gameClock, LastScored1Clock lastScored1Clock, LastScored2Clock lastScored2Clock, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, GameTableWindowPanel gameTableWindowPanel, TeamController teamController) {
+	public MatchController(Settings settings, Match match, Stats stats, GameClock gameClock, LastScored1Clock lastScored1Clock, LastScored2Clock lastScored2Clock, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, SwitchPanel switchPanel, GameTableWindowPanel gameTableWindowPanel, TeamController teamController) {
+		this.settings = settings;
 		this.match = match;
 		this.stats = stats;
 		this.gameClock = gameClock;
@@ -54,6 +59,7 @@ public class MatchController {
 		this.matchPanel = matchPanel;
 		this.statsEntryPanel = statsEntryPanel;
 		this.statsDisplayPanel = statsDisplayPanel;
+		this.switchPanel = switchPanel;
 		this.gameTableWindowPanel = gameTableWindowPanel;
 		this.teamController = teamController;
 
@@ -76,6 +82,15 @@ public class MatchController {
 		if (winState==1) {
 			startGame();
 		}
+		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
+		updateGameTables();
+	}
+	public void decrementScore(int teamNumber) {
+		teamController.decrementScore(teamNumber);
+		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
+		updateGameTables();
+	}
+	public void updateGameTables() {
 		matchPanel.setGameWinners(match.getGameWinners());
 		matchPanel.setMatchWinner(match.getMatchWinner());
 		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
@@ -89,14 +104,9 @@ public class MatchController {
 		gameClock.startMatchTimer();
 		gameClock.startGameTimer();
 		match.startMatch(matchId);
-		matchPanel.updateStartTime(match.getStartTime());
 		matchPanel.setPauseLabel("Pause Match");
-		matchPanel.setGameWinners(match.getGameWinners());
-		matchPanel.setMatchWinner(match.getMatchWinner());
-		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
-		gameTableWindowPanel.setGameWinners(match.getGameWinners());
-		gameTableWindowPanel.setMatchWinner(match.getMatchWinner());
-		gameTableWindowPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
+		matchPanel.updateStartTime(match.getStartTime());
+		updateGameTables();
 		String tmpCode  = stats.getLastCode();
 		stats.clearAll();
 		statsEntryPanel.clearAll();
@@ -121,12 +131,7 @@ public class MatchController {
 	public void startGame() {
 		gameClock.startGameTimer();
 		match.startGame();
-		matchPanel.setGameWinners(match.getGameWinners());
-		matchPanel.setMatchWinner(match.getMatchWinner());
-		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
-		gameTableWindowPanel.setGameWinners(match.getGameWinners());
-		gameTableWindowPanel.setMatchWinner(match.getMatchWinner());
-		gameTableWindowPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
+		updateGameTables();
 	}
 	
 	public void displayAllStats() {

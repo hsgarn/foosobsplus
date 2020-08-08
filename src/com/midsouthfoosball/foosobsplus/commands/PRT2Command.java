@@ -34,7 +34,7 @@ public class PRT2Command implements Command {
 	}
 	
 	public void execute() {
-		teamController.toggleReset("Team 2");
+		teamController.toggleReset(2);
 	}
 
 	public String getCode() {

@@ -34,7 +34,7 @@ public class IGT2Command implements Command {
 	}
 	
 	public void execute() {
-		teamController.incrementGameCount("Team 2");
+		teamController.incrementGameCount(2);
 	}
 
 	public String getCode() {

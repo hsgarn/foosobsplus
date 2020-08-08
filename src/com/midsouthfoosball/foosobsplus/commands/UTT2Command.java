@@ -34,7 +34,7 @@ public class UTT2Command implements Command {
 	}
 	
 	public void execute() {
-		teamController.callTimeOut("Team 2");
+		teamController.callTimeOut(2);
 	}
 
 	public String getCode() {

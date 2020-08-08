@@ -34,7 +34,7 @@ public class RTT2Command implements Command {
 	}
 	
 	public void execute() {
-		teamController.restoreTimeOut("Team 2");
+		teamController.restoreTimeOut(2);
 	}
 
 	public String getCode() {

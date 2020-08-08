@@ -34,7 +34,7 @@ public class PWT2Command implements Command {
 	}
 	
 	public void execute() {
-		teamController.toggleWarn("Team 2");
+		teamController.toggleWarn(2);
 	}
 
 	public String getCode() {

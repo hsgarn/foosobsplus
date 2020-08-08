@@ -34,7 +34,7 @@ public class DGT1Command implements Command {
 	}
 	
 	public void execute() {
-		teamController.decrementGameCount("Team 1");
+		teamController.decrementGameCount(1);
 	}
 
 	public String getCode() {

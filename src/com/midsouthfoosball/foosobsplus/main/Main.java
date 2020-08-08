@@ -210,7 +210,7 @@ public class Main {
 	TimerController 	timerController 	= new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock);
 	TeamController 		teamController 		= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, matchPanel, timerController, lastScored1Clock, lastScored2Clock, gameClock);
 	TableController 	tableController 	= new TableController(obsInterface, settings, table, match, tablePanel, teamController);
-	MatchController     matchController     = new MatchController(match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, gameTableWindowPanel, teamController);
+	MatchController     matchController     = new MatchController(settings, match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, switchPanel, gameTableWindowPanel, teamController);
 	StatsController 	statsController 	= new StatsController(stats, statsDisplayPanel, teamController);
 
 	public Main() throws IOException {
@@ -333,9 +333,9 @@ public class Main {
 			if (stats.getTeamScored(1)) matchController.incrementScore(1);
 			if (stats.getTeamScored(2)) matchController.incrementScore(2);
 			if (stats.getTeamTimeOut(1)) {
-				teamController.callTimeOut("Team 1");
+				teamController.callTimeOut(1);
 			} else if (stats.getTeamTimeOut(2)) {
-				teamController.callTimeOut("Team 2");
+				teamController.callTimeOut(2);
 			} else {
 				if (stats.getIsThreeRod()||stats.getIsTwoRod()) teamController.startShotTimer();
 				if (stats.getIsFiveRod()) teamController.startPassTimer();
@@ -372,6 +372,10 @@ public class Main {
 	    undoRedoPointer--;
 	    statsEntryPanel.removeCodeHistory();
 	    stats.showParsed();
+		teamController.displayAll();
+		statsController.displayAllStats();
+		statsEntryPanel.setFocusOnCode();	
+		matchController.updateGameTables();
 	}
  	public void redo() 	{
  		char commandChar = new Character('X');
@@ -393,6 +397,9 @@ public class Main {
 	    } else {
 	    	processCode(tempCode,isRedo);
 	    }
+		teamController.displayAll();
+		statsController.displayAllStats();
+		matchController.updateGameTables();
 	}
 	private void deleteElementsAfterPointer(int undoRedoPointer) {
 	    if (commandStack.size() >= 1)  {
@@ -420,8 +427,8 @@ public class Main {
 		Command prt = new PRTCommand(statsController, teamController);
 		Command ist1 = new IST1Command(statsController, matchController);
 		Command ist2 = new IST2Command(statsController, matchController);
-		Command dst1 = new DST1Command(statsController, teamController);
-		Command dst2 = new DST2Command(statsController, teamController);
+		Command dst1 = new DST1Command(statsController, matchController);
+		Command dst2 = new DST2Command(statsController, matchController);
 		Command igt1 = new IGT1Command(statsController, teamController);
 		Command igt2 = new IGT2Command(statsController, teamController);
 		Command dgt1 = new DGT1Command(statsController, teamController);
@@ -506,14 +513,9 @@ public class Main {
 			String code = txt.getText().toUpperCase();
 			if(code.equals("XU")) {
 				undo();
-				teamController.displayAll();
-				statsController.displayAllStats();
-				statsEntryPanel.updateCode(null);
 			} else {
 				if(code.equals("XR")) {
 					redo();
-					teamController.displayAll();
-					statsController.displayAllStats();
 					statsEntryPanel.updateCode(null);
 				} else {
 					processCode(code, isRedo);
@@ -524,17 +526,12 @@ public class Main {
 	private class StatsEntryUndoListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			undo();
-			teamController.displayAll();
-			statsController.displayAllStats();
-			statsEntryPanel.setFocusOnCode();	
 		}
 	}
 	private class StatsEntryRedoListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			redo();
-			teamController.displayAll();
-			statsController.displayAllStats();
-			statsEntryPanel.setFocusOnCode();
+			statsEntryPanel.setFocusOnCode();	
 		}
 	}
 	private class StatsClearListener implements ActionListener{
