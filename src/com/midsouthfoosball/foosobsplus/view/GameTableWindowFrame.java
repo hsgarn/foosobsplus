@@ -45,17 +45,9 @@ public class GameTableWindowFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setAlwaysOnTop(true);
 		
-		gameTableWindowPanel.setPreferredSize(new Dimension(400, 90));
+		gameTableWindowPanel.setPreferredSize(new Dimension(440, 80));
 
 		getContentPane().add(gameTableWindowPanel);
 		pack();
 	}
-/*
- 	public void setTimerDisplay(String timeToDisplay) {
- 		timerWindowPanel.setTimerWindowText(timeToDisplay);
-	}
-	public void setTimerDisplayColor(Color colorToDisplay) {
-		timerWindowPanel.setTimerWindowColor(colorToDisplay);
-	}
-*/
 }

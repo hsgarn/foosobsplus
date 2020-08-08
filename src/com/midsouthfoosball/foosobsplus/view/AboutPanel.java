@@ -47,7 +47,7 @@ public class AboutPanel extends JPanel {
 		JLabel lblVersion = new JLabel("Version:");
 		add(lblVersion, "cell 0 1,alignx right");
 		
-		JLabel lblNewLabel = new JLabel("1.044");
+		JLabel lblNewLabel = new JLabel("1.045");
 		add(lblNewLabel, "cell 1 1");
 		
 		JLabel lblAuthor = new JLabel("Author:");

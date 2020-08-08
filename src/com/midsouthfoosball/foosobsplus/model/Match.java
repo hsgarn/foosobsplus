@@ -106,6 +106,12 @@ public class Match implements Serializable {
 	public void setMatchId(String matchId) {
 		this.matchId = matchId;
 	}
+	public void setTeam1(Team team1) {
+		this.team1 = team1;
+	}
+	public void setTeam2(Team team2) {
+		this.team2 = team2;
+	}
 	private void clearScores() {
 		for (int i = 0; i < 5; i++) {
 			scoresTeam1[i] = "0";
@@ -172,6 +178,12 @@ public class Match implements Serializable {
 	}
 	public int getLastScored() {
 		return lastScored;
+	}
+	public void switchSides() {
+		switchLastScored();
+		String temp[] = scoresTeam1;
+		scoresTeam1 = scoresTeam2;
+		scoresTeam2 = temp;
 	}
 	public void switchLastScored() {
 		switch (lastScored) {

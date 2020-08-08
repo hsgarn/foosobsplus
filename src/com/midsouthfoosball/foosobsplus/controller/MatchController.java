@@ -62,7 +62,6 @@ public class MatchController {
 		this.switchPanel = switchPanel;
 		this.gameTableWindowPanel = gameTableWindowPanel;
 		this.teamController = teamController;
-
 		this.gameClock.addGameClockTimerListener(new GameClockTimerListener());
 	}
 	
@@ -94,9 +93,15 @@ public class MatchController {
 		matchPanel.setGameWinners(match.getGameWinners());
 		matchPanel.setMatchWinner(match.getMatchWinner());
 		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
+		gameTableWindowPanel.setTeams(teamController.getForwardName(1) + " / " + teamController.getGoalieName(1),teamController.getForwardName(2) + " / " + teamController.getGoalieName(2));
 		gameTableWindowPanel.setGameWinners(match.getGameWinners());
 		gameTableWindowPanel.setMatchWinner(match.getMatchWinner());
 		gameTableWindowPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
+	}
+	public void switchSides() {
+		match.switchSides();
+//		match.switchLastScored();
+		updateGameTables();
 	}
 	public void startMatch(String matchId) {
 		teamController.resetAll();
