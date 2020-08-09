@@ -34,6 +34,8 @@ import javax.swing.border.TitledBorder;
 
 @SuppressWarnings("serial")
 public class StatsDisplayPanel extends JPanel {
+	private JLabel lblTeam1;
+	private JLabel lblTeam2;
 	private JLabel lblPassing;
 	private JLabel lblShooting;
 	private JLabel lblClearing;
@@ -91,6 +93,8 @@ public class StatsDisplayPanel extends JPanel {
 		dim.height = 50;
 		setPreferredSize(dim);
 
+		lblTeam1 = new JLabel("Team 1");
+		lblTeam2 = new JLabel("Team 2");
 		lblPassing = new JLabel("Passing");
 		lblShooting = new JLabel("Shooting");
 		lblClearing = new JLabel("Clearing");
@@ -155,6 +159,28 @@ public class StatsDisplayPanel extends JPanel {
 		
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = -1;
+		
+		gc.gridy++;
+		
+		gc.weightx = 1;
+		gc.weighty = 1;
+		
+		gc.gridx = 0;
+		gc.gridwidth = 3;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.LINE_END;
+		gc.insets = new Insets(0, 0, 0, 0);
+		add(lblTeam1, gc);
+
+		gc.weightx = 1;
+		gc.weighty = 1;
+		
+		gc.gridx = 4;
+		gc.gridwidth = 3;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.LINE_START;
+		gc.insets = new Insets(0, 0, 0, 0);
+		add(lblTeam2, gc);
 
 		//////// Passing Row ////////
 		gc.gridy++;
@@ -163,9 +189,10 @@ public class StatsDisplayPanel extends JPanel {
 		gc.weighty = 1;
 		
 		gc.gridx = 0;
+		gc.gridwidth = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1PassCompletes, gc);
 
 		gc.weightx = 1;
@@ -174,7 +201,7 @@ public class StatsDisplayPanel extends JPanel {
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1PassAttempts, gc);
 		
 		gc.weightx = 1;
@@ -183,7 +210,7 @@ public class StatsDisplayPanel extends JPanel {
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1Passing, gc);
 		
 		gc.weightx = 1;
@@ -192,7 +219,7 @@ public class StatsDisplayPanel extends JPanel {
 		gc.gridx++;
 		gc.fill = GridBagConstraints.CENTER;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblPassing, gc);
 
 		gc.weightx = 1;
@@ -201,7 +228,7 @@ public class StatsDisplayPanel extends JPanel {
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2Passing, gc);
 		
 		gc.weightx = 1;
@@ -210,7 +237,7 @@ public class StatsDisplayPanel extends JPanel {
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2PassCompletes, gc);
 
 		gc.weightx = 1;
@@ -219,7 +246,7 @@ public class StatsDisplayPanel extends JPanel {
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2PassAttempts, gc);
 		
 		//////// Shooting Row ////////
@@ -735,6 +762,13 @@ public class StatsDisplayPanel extends JPanel {
 			lblTeam1Breaks.setText(String.format("%-3s", Integer.toString(breaks)));
 		} else {
 			lblTeam2Breaks.setText(String.format("%-3s", Integer.toString(breaks)));
+		}
+	}
+	public void updateTeams(int teamNbr, String name) {
+		if(teamNbr==1) {
+			lblTeam1.setText(name);
+		} else {
+			lblTeam2.setText(name);
 		}
 	}
 }

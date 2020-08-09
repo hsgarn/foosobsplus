@@ -586,17 +586,27 @@ public class Stats implements Serializable {
 		int completes;
 		if(isTeamScored) {
 			if(teamScored[0]) {
-				attempts=team1.getShotAttempts() + 1;
-				completes=team1.getShotCompletes() + 1;
-				team1.setShotAttempts(attempts);
-				team1.setShotCompletes(completes);
-				team1.setShotPercent(caclPercent(attempts, completes));
+				if(isSameTeam) {
+					attempts=team2.getShotAttempts() + 1;
+					team2.setShotAttempts(attempts);
+				} else {
+					attempts=team1.getShotAttempts() + 1;
+					completes=team1.getShotCompletes() + 1;
+					team1.setShotAttempts(attempts);
+					team1.setShotCompletes(completes);
+					team1.setShotPercent(caclPercent(attempts, completes));
+				}
 			} else {
-				attempts=team2.getShotAttempts() + 1;
-				completes=team2.getShotCompletes() + 1;
-				team2.setShotAttempts(attempts);
-				team2.setShotCompletes(completes);
-				team2.setShotPercent(caclPercent(attempts, completes));
+				if(isSameTeam) {
+					attempts=team1.getShotAttempts() + 1;
+					team1.setShotAttempts(attempts);
+				} else {
+					attempts=team2.getShotAttempts() + 1;
+					completes=team2.getShotCompletes() + 1;
+					team2.setShotAttempts(attempts);
+					team2.setShotCompletes(completes);
+					team2.setShotPercent(caclPercent(attempts, completes));
+				}
 			}
 			if(isStuff) {
 				if(teamScored[0]) {

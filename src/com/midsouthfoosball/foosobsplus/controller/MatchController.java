@@ -90,6 +90,8 @@ public class MatchController {
 		updateGameTables();
 	}
 	public void updateGameTables() {
+		statsDisplayPanel.updateTeams(1,teamController.getForwardName(1) + "/" + teamController.getGoalieName(1));
+		statsDisplayPanel.updateTeams(2,teamController.getForwardName(2) + "/" + teamController.getGoalieName(2));
 		matchPanel.setGameWinners(match.getGameWinners());
 		matchPanel.setMatchWinner(match.getMatchWinner());
 		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
@@ -140,6 +142,8 @@ public class MatchController {
 	}
 	
 	public void displayAllStats() {
+		statsDisplayPanel.updateTeams(1,teamController.getForwardName(1) + "/" + teamController.getGoalieName(1));
+		statsDisplayPanel.updateTeams(2,teamController.getForwardName(2) + "/" + teamController.getGoalieName(2));
 		statsDisplayPanel.updatePassStats(1, teamController.getPassCompletes(1),teamController.getPassAttempts(1),teamController.getPassPercent(1));
 		statsDisplayPanel.updatePassStats(2, teamController.getPassCompletes(2),teamController.getPassAttempts(2),teamController.getPassPercent(2));
 		statsDisplayPanel.updateShotStats(1, teamController.getShotCompletes(1),teamController.getShotAttempts(1),teamController.getShotPercent(1));
