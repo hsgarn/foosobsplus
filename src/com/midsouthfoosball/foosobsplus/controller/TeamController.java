@@ -377,12 +377,14 @@ public class TeamController {
 	public void incrementGameCount(int teamNumber) {
 		boolean matchWon = false;
 		matchWon = match.incrementGameCount(teams[teamNumber-1]);
+		match.syncCurrentGameNumber();
 		teamPanels[teamNumber-1].updateGameCount(teams[teamNumber-1].getGameCount());
 		if(!matchWon) startGameTimer();
 		updateGameTables();
 	}
 	public void decrementGameCount(int teamNumber) {
 		teams[teamNumber-1].decrementGameCount();
+		match.syncCurrentGameNumber();
 		teamPanels[teamNumber-1].updateGameCount(teams[teamNumber-1].getGameCount());
 		updateGameTables();
 	}
@@ -582,7 +584,7 @@ public class TeamController {
 		matchPanel.setGameWinners(match.getGameWinners());
 		matchPanel.setMatchWinner(match.getMatchWinner());
 		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
-		gameTableWindowPanel.setTeams(getForwardName(1) + " / " + getGoalieName(1),getForwardName(2) + " / " + getGoalieName(2));
+		gameTableWindowPanel.setTeams(getForwardName(1) + " / " + getGoalieName(1) + ":",getForwardName(2) + " / " + getGoalieName(2) + ":");
 		gameTableWindowPanel.setGameWinners(match.getGameWinners());
 		gameTableWindowPanel.setMatchWinner(match.getMatchWinner());
 		gameTableWindowPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
@@ -669,6 +671,8 @@ public class TeamController {
 			teamPanel1.updateWarn(team1.getWarn());
 			teamPanel2.updateWarn(team2.getWarn());
 			switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
+			match.syncCurrentGameNumber();
+			match.syncGameScores();
 			updateGameTables();
 		} catch (IOException e) {
 			e.printStackTrace();

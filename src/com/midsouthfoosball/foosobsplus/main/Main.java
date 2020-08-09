@@ -136,7 +136,6 @@ public class Main {
 	
 	private Settings			settings			= new Settings();
 	public OBSInterface 		obsInterface 		= new OBSInterface(settings);
-//	private int 				maxGames			= settings.getGamesToWin() * 2 + 1;
 	public String				matchId				= "";
 
 	////// CommandStack and UndoRedo setup \\\\\\
@@ -834,4 +833,14 @@ public class Main {
 		public void actionPerformed(ActionEvent e) {
 			statsEntryPanel.setFocusOnCode();
 		}
-	}}
+	}
+	private void testProcessCodes() {
+		String codes[] = {"XPSM", "Y5D", "Y3P", "BGS", "B5D", "B3P", "YGS" };
+		autoProcessCodes(codes);
+	}
+	private void autoProcessCodes(String[] codes) {
+		for (String code: codes) {
+			processCode(code, false);
+		}
+	}
+}

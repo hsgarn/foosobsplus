@@ -43,7 +43,7 @@ public class GameTableWindowFrame extends JFrame {
 		}
 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setAlwaysOnTop(true);
+//		setAlwaysOnTop(true);
 		
 		gameTableWindowPanel.setPreferredSize(new Dimension(440, 80));
 

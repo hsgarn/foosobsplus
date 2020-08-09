@@ -46,7 +46,7 @@ public class LastScored2WindowFrame extends JFrame {
 		}
 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setAlwaysOnTop(true);
+//		setAlwaysOnTop(true);
 		
 		lastScored2WindowPanel = new LastScored2WindowPanel("0",Color.CYAN);
 		lastScored2WindowPanel.setPreferredSize(new Dimension(256, 70));

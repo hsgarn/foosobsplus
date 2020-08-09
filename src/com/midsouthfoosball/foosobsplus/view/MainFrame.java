@@ -29,7 +29,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.event.WindowStateListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -64,6 +63,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private JCheckBoxMenuItem viewLastScored1Window;
 	private JCheckBoxMenuItem viewLastScored2Window;
 	private JCheckBoxMenuItem viewGameTableWindow;
+	private JCheckBoxMenuItem viewAllWindows;
 	private JCheckBoxMenuItem helpShowParsed;
 	
 	public MainFrame(TablePanel tablePanel, TimerPanel timerPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
@@ -90,6 +90,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewLastScored1Window = new JCheckBoxMenuItem("Team 1 Last Scored Window");
 		viewTimerWindow = new JCheckBoxMenuItem("Timer Window");
 		viewGameTableWindow = new JCheckBoxMenuItem("Game Table Window");
+		viewAllWindows = new JCheckBoxMenuItem("Show All Windows");
 		viewAlwaysOnTop = new JCheckBoxMenuItem("Always on Top");
 		helpShowParsed = new JCheckBoxMenuItem("Show Parsed");
 				
@@ -142,6 +143,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewMenu.add(viewLastScored1Window);
 		viewMenu.add(viewLastScored2Window);
 		viewMenu.add(viewGameTableWindow);
+		viewMenu.add(viewAllWindows);
 
 		JMenu helpMenu = new JMenu("Help");
 		JMenuItem helpPage = new JMenuItem("FoosOBSPlus Help");
@@ -390,6 +392,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 	}
 	public void addGameTableWindowListener(ActionListener listenForChkBoxGameTableWindow) {
 		viewGameTableWindow.addActionListener(listenForChkBoxGameTableWindow);
+	}
+	public void addViewAllWindowsListener(ActionListener listenForChkBoxViewAllWindows) {
+		viewAllWindows.addActionListener(listenForChkBoxViewAllWindows);
 	}
 	
 	///// Utility Methods \\\\\\

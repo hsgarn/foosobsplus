@@ -91,6 +91,13 @@ public class Match implements Serializable {
 			if (currentGameNumber > maxPossibleGames) currentGameNumber = maxPossibleGames;
 		}
 	}
+	public void syncCurrentGameNumber() {
+		currentGameNumber = team1.getGameCount() + team2.getGameCount() + 1;
+	}
+	public void syncGameScores() {
+		scoresTeam1[currentGameNumber-1] = Integer.toString(team1.getScore());
+		scoresTeam2[currentGameNumber-1] = Integer.toString(team2.getScore());
+	}
 	public int getMaxPossibleGames() {
 		return maxPossibleGames;
 	}
@@ -218,6 +225,9 @@ public class Match implements Serializable {
 	}
 	public void setTimes(String[] times) {
 		this.times = times;
+	}
+	public void setGameTime(String time) {
+		times[currentGameNumber-1] = time;
 	}
 	public void clearAll() {
 		lastScored = 0;

@@ -63,6 +63,7 @@ public class MatchController {
 		this.gameTableWindowPanel = gameTableWindowPanel;
 		this.teamController = teamController;
 		this.gameClock.addGameClockTimerListener(new GameClockTimerListener());
+		updateGameTables();
 	}
 	
 	////// Match Panel Listener Objects \\\\\\
@@ -71,6 +72,7 @@ public class MatchController {
 		public void actionPerformed(ActionEvent e) {
 			matchPanel.updateElapsedTime(gameClock.getMatchTime());
 			String time = gameClock.getGameTime();
+			match.setGameTime(time);
 			matchPanel.updateGameTime(time);
 			matchPanel.setTime(time);
 			gameTableWindowPanel.setTime(time);
@@ -80,6 +82,10 @@ public class MatchController {
 		int winState = teamController.incrementScore(teamNumber);
 		if (winState==1) {
 			startGame();
+		}
+		if (winState==2) {
+			gameClock.stopMatchTimer();
+			gameClock.stopGameTimer();
 		}
 		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
 		updateGameTables();
@@ -95,7 +101,7 @@ public class MatchController {
 		matchPanel.setGameWinners(match.getGameWinners());
 		matchPanel.setMatchWinner(match.getMatchWinner());
 		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
-		gameTableWindowPanel.setTeams(teamController.getForwardName(1) + " / " + teamController.getGoalieName(1),teamController.getForwardName(2) + " / " + teamController.getGoalieName(2));
+		gameTableWindowPanel.setTeams(teamController.getForwardName(1) + " / " + teamController.getGoalieName(1) + ":",teamController.getForwardName(2) + " / " + teamController.getGoalieName(2) + ":");
 		gameTableWindowPanel.setGameWinners(match.getGameWinners());
 		gameTableWindowPanel.setMatchWinner(match.getMatchWinner());
 		gameTableWindowPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
@@ -136,6 +142,9 @@ public class MatchController {
 		lastScored2Clock.pauseLastScoredTimer(pause);
 	}
 	public void startGame() {
+		if(match.isMatchPaused()==true) {
+			pauseMatch();
+		}
 		gameClock.startGameTimer();
 		match.startGame();
 		updateGameTables();

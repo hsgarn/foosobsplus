@@ -46,7 +46,7 @@ public class LastScored1WindowFrame extends JFrame {
 		}
 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setAlwaysOnTop(true);
+//		setAlwaysOnTop(true);
 		
 		lastScored1WindowPanel = new LastScored1WindowPanel("0",Color.CYAN);
 		lastScored1WindowPanel.setPreferredSize(new Dimension(256, 70));

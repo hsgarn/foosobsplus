@@ -49,6 +49,7 @@ public class MainController {
 		this.mainFrame.addLastScored1WindowListener(new LastScored1WindowListener());
 		this.mainFrame.addLastScored2WindowListener(new LastScored2WindowListener());
 		this.mainFrame.addGameTableWindowListener(new GameTableWindowListener());
+		this.mainFrame.addViewAllWindowsListener(new ViewAllWindowsListener());
 	}
 
 	////// MainFrame Listener Objects //////
@@ -74,6 +75,15 @@ public class MainController {
 	private class GameTableWindowListener implements ActionListener {
 		public void actionPerformed(ActionEvent ae) {
 			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
+			gameTableWindowFrame.setVisible(box.isSelected());
+		}
+	}
+	private class ViewAllWindowsListener implements ActionListener {
+		public void actionPerformed(ActionEvent ae) {
+			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
+			timerWindowFrame.setVisible(box.isSelected());
+			lastScored1WindowFrame.setVisible(box.isSelected());
+			lastScored2WindowFrame.setVisible(box.isSelected());
 			gameTableWindowFrame.setVisible(box.isSelected());
 		}
 	}

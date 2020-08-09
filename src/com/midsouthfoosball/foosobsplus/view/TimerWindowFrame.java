@@ -46,7 +46,7 @@ public class TimerWindowFrame extends JFrame {
 		}
 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setAlwaysOnTop(true);
+//		setAlwaysOnTop(true);
 		
 		timerWindowPanel = new TimerWindowPanel("0",Color.GREEN);
 		timerWindowPanel.setPreferredSize(new Dimension(256, 70));
