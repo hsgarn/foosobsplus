@@ -78,6 +78,8 @@ public class Match implements Serializable {
 		clearScores();
 		clearTimes();
 		clearGameWinners();
+		clearMatchWinner();
+		clearMeatball();
 		startGame();
 	}
 	public void startGame() {
