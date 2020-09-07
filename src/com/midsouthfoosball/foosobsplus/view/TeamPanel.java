@@ -77,8 +77,6 @@ public class TeamPanel extends JPanel {
 		initializeTeamPanel(teamNbr, teamColor);
 		
 		layoutComponents();
-		
-//		setTitle("check it out");
 	}
 
 	private void initializeTeamPanel(int teamNbr, String teamColor) {

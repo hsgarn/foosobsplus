@@ -39,6 +39,7 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.Team;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowPanel;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
+import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
 import com.midsouthfoosball.foosobsplus.view.TeamPanel;
 
@@ -53,6 +54,7 @@ public class TeamController {
 	private SwitchPanel switchPanel;
 	private MatchPanel matchPanel;
 	private GameTableWindowPanel gameTableWindowPanel;
+	private StatsDisplayPanel statsDisplayPanel;
 	private TimerController timerController;
 	private LastScored1Clock lastScored1Clock;
 	private LastScored2Clock lastScored2Clock;
@@ -60,7 +62,7 @@ public class TeamController {
 	private Team teams[] = new Team[] {	null,null};
 	private TeamPanel teamPanels[] = new TeamPanel[] {null,null};
 	
-	public TeamController(OBSInterface obsInterface, Settings settings, Team team1, Team team2, Match match, TeamPanel teamPanel1, TeamPanel teamPanel2, SwitchPanel switchPanel, MatchPanel matchPanel, GameTableWindowPanel gameTableWindowPanel, TimerController timerController, LastScored1Clock lastScored1Clock, LastScored2Clock lastScored2Clock, GameClock gameClock) {
+	public TeamController(OBSInterface obsInterface, Settings settings, Team team1, Team team2, Match match, TeamPanel teamPanel1, TeamPanel teamPanel2, SwitchPanel switchPanel, MatchPanel matchPanel, GameTableWindowPanel gameTableWindowPanel, StatsDisplayPanel statsDisplayPanel, TimerController timerController, LastScored1Clock lastScored1Clock, LastScored2Clock lastScored2Clock, GameClock gameClock) {
 		this.obsInterface = obsInterface;
 		this.settings = settings;
 		this.team1 = team1;
@@ -71,6 +73,7 @@ public class TeamController {
 		this.switchPanel = switchPanel;
 		this.matchPanel = matchPanel;
 		this.gameTableWindowPanel = gameTableWindowPanel;
+		this.statsDisplayPanel = statsDisplayPanel;
 		this.timerController = timerController;
 		this.lastScored1Clock = lastScored1Clock;
 		this.lastScored2Clock = lastScored2Clock;
@@ -129,6 +132,7 @@ public class TeamController {
 			}
 			teams[teamNumber-1].setTeamName(teamName);
 			teamPanels[teamNumber-1].updateTeamName(teamName);
+			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
 		}
 	}
 
@@ -143,6 +147,7 @@ public class TeamController {
 			}
 			teams[teamNumber-1].setTeamName(teamName);
 			teamPanels[teamNumber-1].updateTeamName(teamName);
+			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
 		}
 	}
 	private class TeamNameMouseListener extends MouseAdapter{
@@ -167,6 +172,7 @@ public class TeamController {
 			}
 			teams[teamNumber-1].setForwardName(forwardName);
 			teamPanels[teamNumber-1].updateForwardName(forwardName);
+			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
 			updateGameTables();
 		}
 	}
@@ -181,6 +187,7 @@ public class TeamController {
 			}
 			teams[teamNumber-1].setForwardName(forwardName);
 			teamPanels[teamNumber-1].updateForwardName(forwardName);
+			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
 			updateGameTables();
 		}
 	}
@@ -193,6 +200,7 @@ public class TeamController {
 				teamNumber = 1;
 			}
 			teamPanels[teamNumber-1].selectForwardName();
+			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
 			updateGameTables();
 		}
 	}
@@ -207,6 +215,7 @@ public class TeamController {
 			}
 			teams[teamNumber-1].setGoalieName(goalieName);
 			teamPanels[teamNumber-1].updateGoalieName(goalieName);
+			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
 			updateGameTables();
 		}
 	}
@@ -221,6 +230,7 @@ public class TeamController {
 			}
 			teams[teamNumber-1].setGoalieName(goalieName);
 			teamPanels[teamNumber-1].updateGoalieName(goalieName);
+			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
 			updateGameTables();
 		}
 	}
@@ -233,7 +243,7 @@ public class TeamController {
 				teamNumber = 1;
 			}
 			teamPanels[teamNumber-1].selectGoalieName();
-			updateGameTables();
+//			updateGameTables();
 		}
 	}
 	private class ScoreListener implements ActionListener{
@@ -744,5 +754,8 @@ public class TeamController {
 	}
 	public String getGoalieName(int teamNumber) {
 		return teams[teamNumber-1].getGoalieName();
+	}
+	public String getTeamName(int teamNumber) {
+		return teams[teamNumber-1].getTeamName();
 	}
 }

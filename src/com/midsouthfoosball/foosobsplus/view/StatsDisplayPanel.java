@@ -34,8 +34,10 @@ import javax.swing.border.TitledBorder;
 
 @SuppressWarnings("serial")
 public class StatsDisplayPanel extends JPanel {
-	private JLabel lblTeam1;
-	private JLabel lblTeam2;
+	private JLabel lblTeamName1;
+	private JLabel lblTeamName2;
+	private JLabel lblPlayerNames1;
+	private JLabel lblPlayerNames2;
 	private JLabel lblPassing;
 	private JLabel lblShooting;
 	private JLabel lblClearing;
@@ -93,8 +95,10 @@ public class StatsDisplayPanel extends JPanel {
 		dim.height = 50;
 		setPreferredSize(dim);
 
-		lblTeam1 = new JLabel("Team 1");
-		lblTeam2 = new JLabel("Team 2");
+		lblTeamName1 = new JLabel("Team Name 1");
+		lblTeamName2 = new JLabel("Team Name 2");
+		lblPlayerNames1 = new JLabel("Team 1");
+		lblPlayerNames2 = new JLabel("Team 2");
 		lblPassing = new JLabel("Passing");
 		lblShooting = new JLabel("Shooting");
 		lblClearing = new JLabel("Clearing");
@@ -168,9 +172,9 @@ public class StatsDisplayPanel extends JPanel {
 		gc.gridx = 0;
 		gc.gridwidth = 3;
 		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.LINE_END;
+		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		add(lblTeam1, gc);
+		add(lblTeamName1, gc);
 
 		gc.weightx = 1;
 		gc.weighty = 1;
@@ -178,9 +182,33 @@ public class StatsDisplayPanel extends JPanel {
 		gc.gridx = 4;
 		gc.gridwidth = 3;
 		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.LINE_START;
+		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		add(lblTeam2, gc);
+		add(lblTeamName2, gc);
+
+		//////// Player Names ////////
+		
+		gc.gridy++;
+		
+		gc.weightx = 1;
+		gc.weighty = 1;
+		
+		gc.gridx = 0;
+		gc.gridwidth = 3;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.insets = new Insets(0, 0, 0, 0);
+		add(lblPlayerNames1, gc);
+
+		gc.weightx = 1;
+		gc.weighty = 1;
+		
+		gc.gridx = 4;
+		gc.gridwidth = 3;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.insets = new Insets(0, 0, 0, 0);
+		add(lblPlayerNames2, gc);
 
 		//////// Passing Row ////////
 		gc.gridy++;
@@ -764,11 +792,13 @@ public class StatsDisplayPanel extends JPanel {
 			lblTeam2Breaks.setText(String.format("%-3s", Integer.toString(breaks)));
 		}
 	}
-	public void updateTeams(int teamNbr, String name) {
+	public void updateTeams(int teamNbr, String name, String teamName) {
 		if(teamNbr==1) {
-			lblTeam1.setText(name);
+			lblTeamName1.setText(teamName);
+			lblPlayerNames1.setText(name);
 		} else {
-			lblTeam2.setText(name);
+			lblTeamName2.setText(teamName);
+			lblPlayerNames2.setText(name);
 		}
 	}
 }
