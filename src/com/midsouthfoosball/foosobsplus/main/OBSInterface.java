@@ -22,10 +22,12 @@ package com.midsouthfoosball.foosobsplus.main;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
@@ -35,14 +37,16 @@ public class OBSInterface {
 	private String tableName="";
 	private String fileName;
 	private String theFileName;
+	private String separator = FileSystems.getDefault().getSeparator();
 	
 	public OBSInterface(Settings settings) {
 		txtFilePath = settings.getDatapath();
-		File checkDir = new File(txtFilePath);
-		if (!checkDir.exists()) {
-//			System.out.println("DirectoryDoesNotExist: " + txtFilePath);
-			if (!checkDir.mkdir()) {
+		if(!Files.exists(Paths.get(txtFilePath))) {
+			try {
+				Files.createDirectory(Paths.get(txtFilePath));
+			} catch (IOException e) {
 				System.out.println("Could not create directory " + txtFilePath);
+				System.out.println(e.getClass().getSimpleName() + " - " + e.getMessage());
 			}
 		}
 	}
@@ -63,37 +67,33 @@ public class OBSInterface {
 		} else {
 			fileName = tableName + "_" + whichFile;
 		}
-		File checkFile = new File(txtFilePath + File.separator + fileName);
-		if (!checkFile.exists()) {
-//			System.out.println("FileDoesNotExist: " + txtFilePath + File.separator + fileName);
-			if(!checkFile.createNewFile()) {
-				System.out.println("Could not create file: " + txtFilePath + File.separator + fileName);
+		String fileNamePlusPath = txtFilePath + separator + fileName;
+		if(!Files.exists(Paths.get(fileNamePlusPath))) {
+			try {
+				Files.createFile(Paths.get(fileNamePlusPath));
+			} catch (IOException e) {
+				System.out.println("Could not create file " + fileNamePlusPath);
+				System.out.println(e.getClass().getSimpleName() + " - " + e.getMessage());
 			}
 		}
-		BufferedWriter writer = new BufferedWriter(new FileWriter(txtFilePath + File.separator + fileName));
-		if(theContents==null) theContents="";
-		writer.write(theContents);
-		writer.close();
+		try(BufferedWriter writer = new BufferedWriter(new FileWriter(fileNamePlusPath))) {
+			if(theContents==null) theContents="";
+			writer.write(theContents);
+		}
 	}
 
 	public String getContents(String whichFile) throws IOException {
 		String theContents = "";
 		if (tableName.isEmpty()) {
-			theFileName = txtFilePath + File.separator + whichFile;
+			theFileName = txtFilePath + separator + whichFile;
 		} else {
-			theFileName = txtFilePath + File.separator + tableName + "_" + whichFile;
+			theFileName = txtFilePath + separator + tableName + "_" + whichFile;
 		}
-		File theFile = new File(theFileName); 
-		if (!theFile.exists()) {
+		if(!Files.exists(Paths.get(theFileName))) {
 			theContents = "";
 		} else {
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(theFileName));
+			try(BufferedReader br = new BufferedReader(new FileReader(theFileName))) {
 				theContents = br.readLine();
-				br.close();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				System.out.print("io exception!");
 			}
 		}
 		return theContents;

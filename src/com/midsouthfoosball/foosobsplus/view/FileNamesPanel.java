@@ -27,8 +27,9 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -264,10 +265,12 @@ public class FileNamesPanel extends JPanel {
 						formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
 					} else {
 						String directoryName = chooser.getSelectedFile().getAbsolutePath();
-
-						File directory = new File(directoryName);
-						if (!directory.exists()) {
-							directory.mkdirs();
+						if(!Files.exists(Paths.get(directoryName))) {
+							try {
+								Files.createDirectory(Paths.get(directoryName));
+							} catch (IOException e1) {
+								System.out.println("Unable to create directory; " + e1.getMessage());
+							}
 						}
 						formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
 					}

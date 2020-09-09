@@ -20,17 +20,18 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.model;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 public class Settings {
 	
+	private String separator = FileSystems.getDefault().getSeparator();
 	private String tableName;
 	private String datapath;
 	private int pointsToWin;
@@ -172,7 +173,8 @@ public class Settings {
 	private Properties defaultProps;
 	
 	public Properties configProps;
-	private File configFile = new File("config.properties");
+	private String configFileName = "config.properties";
+//	private File configFile = new File("config.properties");
 
 	//////////////////////////////////////////////////////
 	
@@ -180,7 +182,7 @@ public class Settings {
 		defaultProps = new Properties();
 		// sets default properties
 		defaultProps.setProperty("TableName", "");
-		defaultProps.setProperty("datapath", "c:" + File.separator + "temp");
+		defaultProps.setProperty("datapath", "c:" + separator + "temp");
 		defaultProps.setProperty("PointsToWin", "5");
 		defaultProps.setProperty("MaxWin", "8");
 		defaultProps.setProperty("WinBy", "1");
@@ -1285,16 +1287,15 @@ public class Settings {
 	public void loadFromConfig() throws IOException {
 
 		try {
-			InputStream inputStream = new FileInputStream(configFile);
-			configProps.load(inputStream);
-			inputStream.close();
+			try(InputStream inputStream = Files.newInputStream(Paths.get(configFileName))) {
+				configProps.load(inputStream);
+			} 
 		} catch (FileNotFoundException e) {
-			configFile.createNewFile();
+			Files.createFile(Paths.get(configFileName));
 			configProps = defaultProps;
 			loadFromConfig();
 			saveToConfig();
 		}
-		
 		tableName = configProps.getProperty("TableName");
 		datapath = configProps.getProperty("datapath");
 		pointsToWin = Integer.parseInt(configProps.getProperty("PointsToWin"));
@@ -1579,8 +1580,8 @@ public class Settings {
 		configProps.setProperty("RecallTimerHotKey", this.getRecallTimerHotKey());
 		configProps.setProperty("ResetTimersHotKey", this.getResetTimersHotKey());
 
-		OutputStream outputStream = new FileOutputStream(configFile);
-		configProps.store(outputStream, "FoosOBSPlus settings");
-		outputStream.close();
+		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configFileName))) {
+			configProps.store(outputStream, "FoosOBSPlus settings");
+		}
 	}
 }
