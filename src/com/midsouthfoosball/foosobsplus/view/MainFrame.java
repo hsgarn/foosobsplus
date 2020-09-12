@@ -54,7 +54,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private StatsEntryPanel statsEntryPanel;
 	private StatsDisplayPanel statsDisplayPanel;
 	private MatchPanel matchPanel;
-	public SettingsFrame settingsFrame;
+	public ParametersFrame parametersFrame;
 	public HotKeysFrame hotKeysFrame;
 	public FileNamesFrame fileNamesFrame;
 	private Main main;
@@ -67,7 +67,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private JCheckBoxMenuItem helpShowParsed;
 	
 	public MainFrame(TablePanel tablePanel, TimerPanel timerPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
-			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, SettingsFrame settingsFrame, HotKeysFrame hotKeysFrame,
+			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,
 			FileNamesFrame fileNamesFrame, Main main) {
 
 		super("FoosOBSPlus");
@@ -81,7 +81,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		this.resetPanel = resetPanel;
 		this.statsDisplayPanel = statsDisplayPanel;
 		this.matchPanel = matchPanel;
-		this.settingsFrame = settingsFrame;
+		this.parametersFrame = parametersFrame;
 		this.hotKeysFrame = hotKeysFrame;
 		this.fileNamesFrame = fileNamesFrame;
 		this.main = main;
@@ -167,7 +167,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		
 		settingsParamItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				settingsFrame.setVisible(true);
+				parametersFrame.setVisible(true);
 			}
 			});
 
@@ -401,8 +401,8 @@ public final class MainFrame extends JFrame implements WindowListener {
 	public HotKeysPanel getHotKeysPanel() {
 		return hotKeysFrame.getHotKeysPanel();
 	}
-	public SettingsPanel getSettingsPanel() {
-		return settingsFrame.getSettingsPanel();
+	public ParametersPanel getSettingsPanel() {
+		return parametersFrame.getSettingsPanel();
 	}
 	public StatsEntryPanel getStatsEntryPanel() {
 		return statsEntryPanel;

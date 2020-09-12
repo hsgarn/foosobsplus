@@ -39,7 +39,7 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 
 import net.miginfocom.swing.MigLayout;
 
-public class SettingsPanel extends JPanel {
+public class ParametersPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField txtPointsToWin;
@@ -67,7 +67,7 @@ public class SettingsPanel extends JPanel {
 	private JTextField txtSide2Color;
 	private JButton btnSave;
 
-	public SettingsPanel(Settings settings) throws IOException {
+	public ParametersPanel(Settings settings) throws IOException {
 
 		setLayout(new MigLayout("", "[119.00][50.00:87.00,grow,left][78.00,grow][grow][]", "[][][][][][][][][][][][][][][][][][][]"));
 		

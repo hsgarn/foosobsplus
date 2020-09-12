@@ -108,8 +108,8 @@ import com.midsouthfoosball.foosobsplus.view.LastScored2WindowFrame;
 import com.midsouthfoosball.foosobsplus.view.MainFrame;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
 import com.midsouthfoosball.foosobsplus.view.ResetPanel;
-import com.midsouthfoosball.foosobsplus.view.SettingsFrame;
-import com.midsouthfoosball.foosobsplus.view.SettingsPanel;
+import com.midsouthfoosball.foosobsplus.view.ParametersFrame;
+import com.midsouthfoosball.foosobsplus.view.ParametersPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
@@ -189,8 +189,8 @@ public class Main {
 	private TimerWindowFrame 		timerWindowFrame 		= new TimerWindowFrame();
 	private LastScored1WindowFrame 	lastScored1WindowFrame 	= new LastScored1WindowFrame();
 	private LastScored2WindowFrame 	lastScored2WindowFrame 	= new LastScored2WindowFrame();
-	private SettingsFrame 			settingsFrame 			= new SettingsFrame(settings);
-	private SettingsPanel			settingsPanel			= settingsFrame.getSettingsPanel();
+	private ParametersFrame 		parametersFrame 		= new ParametersFrame(settings);
+	private ParametersPanel			parametersPanel			= parametersFrame.getSettingsPanel();
 	private HotKeysFrame 			hotKeysFrame 			= new HotKeysFrame(settings);
 	private HotKeysPanel 			hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
 	private FileNamesFrame			fileNamesFrame			= new FileNamesFrame(settings, obsInterface);
@@ -200,7 +200,7 @@ public class Main {
 	////// Display the View Panels on a JFrame \\\\\\
 	
 	private MainFrame mainFrame = new MainFrame(tablePanel, timerPanel, teamPanel1, teamPanel2, statsEntryPanel, 
-												switchPanel, resetPanel, statsDisplayPanel, matchPanel, settingsFrame, hotKeysFrame, 
+												switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, 
 												fileNamesFrame, this);
 
 	////// Build and Start the Controllers (mvC) \\\\\\
@@ -217,7 +217,7 @@ public class Main {
 		obsInterface.setTableName(settings.getTableName());
 		fetchAll(settings.getTableName());
 		this.hotKeysPanel.addSaveListener(new HotKeysSaveListener());
-		this.settingsPanel.addSaveListener(new SettingsSaveListener());
+		this.parametersPanel.addSaveListener(new SettingsSaveListener());
 		this.statsEntryPanel.addUndoListener(new StatsEntryUndoListener());
 		this.statsEntryPanel.addRedoListener(new StatsEntryRedoListener());
 		this.statsEntryPanel.addCodeListener(new CodeListener());
@@ -558,7 +558,7 @@ public class Main {
 	}
 	private class SettingsSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			settingsPanel.saveSettings(settings);
+			parametersPanel.saveSettings(settings);
 			JComponent comp = (JComponent) e.getSource();
 			Window win = SwingUtilities.getWindowAncestor(comp);
 			win.dispose();

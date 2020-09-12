@@ -7,28 +7,28 @@ import javax.swing.JFrame;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
-public class SettingsFrame extends JFrame {
+public class ParametersFrame extends JFrame {
 	
-	private SettingsPanel settingsPanel;
+	private ParametersPanel parametersPanel;
 	
-	public SettingsFrame(Settings settings) {
+	public ParametersFrame(Settings settings) {
 		super("FoosOBSPlus Parameter Settings");
 
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
 		
 		try {
-			settingsPanel = new SettingsPanel(settings);
+			parametersPanel = new ParametersPanel(settings);
 		} catch (IOException e) {
 			System.out.println("Problem loading settings.");
 			e.printStackTrace();
 		}
-		settingsPanel.setPreferredSize(new Dimension(650, 500));
+		parametersPanel.setPreferredSize(new Dimension(650, 500));
 		
-		getContentPane().add(settingsPanel);
+		getContentPane().add(parametersPanel);
 		pack();
 	}
-	public SettingsPanel getSettingsPanel() {
-		return settingsPanel;
+	public ParametersPanel getSettingsPanel() {
+		return parametersPanel;
 	}
 }
