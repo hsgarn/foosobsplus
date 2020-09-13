@@ -46,9 +46,9 @@ public class Match implements Serializable {
 	private int matchWinner = 0;
 	private int maxPossibleGames = 5;
 	private String matchId = "";
-	private String[] scoresTeam1 = {"0","0","0","0","0"};
-	private String[] scoresTeam2 = {"0","0","0","0","0"};
-	private String[] times = {"00:00:00","00:00:00","00:00:00","00:00:00","00:00:00"};
+	private String[] scoresTeam1 = {"0","0","0","0","0","0","0"};
+	private String[] scoresTeam2 = {"0","0","0","0","0","0","0"};
+	private String[] times = {"00:00:00","00:00:00","00:00:00","00:00:00","00:00:00","00:00:00","00:00:00"};
 //	private transient String endTime;
 //	private transient int elapsedTime;
 //	private transient int[] points;

@@ -29,11 +29,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -118,8 +125,12 @@ public final class MainFrame extends JFrame implements WindowListener {
 		JMenuBar menuBar = new JMenuBar();
 		
 		JMenu fileMenu = new JMenu("File");
+		JMenuItem exportItem = new JMenuItem("Export Stats");
+		JMenuItem importItem = new JMenuItem("Import Stats");
 		JMenuItem exitItem = new JMenuItem("Exit");
 		
+		fileMenu.add(importItem);
+		fileMenu.add(exportItem);
 		fileMenu.addSeparator();
 		fileMenu.add(exitItem);
 		
@@ -237,10 +248,66 @@ public final class MainFrame extends JFrame implements WindowListener {
 			}
 		});
 		
-		return menuBar;
+		importItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				final JFileChooser chooser = new JFileChooser();
+				chooser.setDialogTitle("Select file to import:");
+				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				chooser.setAcceptAllFileFilterUsed(true);
+
+				int returnVal = chooser.showOpenDialog(MainFrame.this);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					String fileNameAndPath = chooser.getSelectedFile().toString();
+					importStatsFile(fileNameAndPath);
+				} else {
+					System.out.println("Cancelled by user");
+				}
+
+			}
+		});
 		
+		exportItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				final JFileChooser chooser = new JFileChooser();
+				chooser.setDialogTitle("Select file to export:");
+				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				chooser.setAcceptAllFileFilterUsed(true);
+
+				int returnVal = chooser.showOpenDialog(MainFrame.this);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					String fileNameAndPath = chooser.getSelectedFile().toString();
+					exportStatsFile(fileNameAndPath);
+				} else {
+					System.out.println("Cancelled by user");
+				}
+
+			}
+		});
+		return menuBar;
 	}
 	
+	private void importStatsFile(String file) {
+		List<String> lines = Collections.emptyList();
+		try {lines = Files.readAllLines(Paths.get(file)); }
+		catch (IOException e) {
+			System.out.println("Error reading file " + file);
+			e.printStackTrace();
+		}
+		lines.forEach(line -> main.processCode(line.toUpperCase(), false));
+	}
+	
+	private void exportStatsFile(String file) {
+		List<String> codes = main.getCodeHistory();
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+			for(String code:codes) {
+				bw.write(code);
+				bw.newLine();
+			}
+		} catch (IOException e) {
+			System.out.println("Error writing file " + file);
+			e.printStackTrace();
+		}
+	}
 	private void layoutComponents() {
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = -1;
@@ -415,7 +482,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 
 	@Override
 	public void windowClosed(WindowEvent arg0) {
-		
 	}
 
 	@Override
@@ -424,26 +490,18 @@ public final class MainFrame extends JFrame implements WindowListener {
 
 	@Override
 	public void windowDeactivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void windowIconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void windowOpened(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 }
 

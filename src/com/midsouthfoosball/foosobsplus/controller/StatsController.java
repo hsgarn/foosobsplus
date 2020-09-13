@@ -40,7 +40,7 @@ public class StatsController {
 	public String getLastCode() {
 		return stats.getLastCode();
 	}
-
+	
 	public void displayAllStats() {
 		statsDisplayPanel.updateTeams(1,teamController.getForwardName(1) + "/" + teamController.getGoalieName(1),teamController.getTeamName(1));
 		statsDisplayPanel.updateTeams(2,teamController.getForwardName(2) + "/" + teamController.getGoalieName(2),teamController.getTeamName(2));

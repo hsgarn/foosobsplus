@@ -26,6 +26,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Stack;
 
 import javax.swing.JButton;
@@ -843,4 +844,9 @@ public class Main {
 			processCode(code, false);
 		}
 	}
+	public List<String> getCodeHistory() {
+		List<String> codes = stats.getCodeHistoryAsList();
+		return codes;
+	}
+
 }

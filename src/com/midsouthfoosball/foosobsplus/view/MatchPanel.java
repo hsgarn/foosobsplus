@@ -58,7 +58,7 @@ public class MatchPanel extends JPanel {
 	private Settings settings;
 	private int matchWinner = 0;
 	private int currentGameNumber = 1;
-	private int gameWinners[] = {0,0,0,0,0};
+	private int gameWinners[] = {0,0,0,0,0,0,0};
 	
 	public MatchPanel(Settings settings) {
 

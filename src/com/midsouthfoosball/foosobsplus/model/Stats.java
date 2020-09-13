@@ -23,6 +23,8 @@ package com.midsouthfoosball.foosobsplus.model;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 
@@ -54,6 +56,7 @@ public class Stats implements Serializable {
 	private transient boolean isTwoRod;
 	private transient boolean isThreeRod;
 	private transient boolean isOffTable;
+	private transient boolean isDeadBall;
 	private transient boolean wasFiveRod;
 	private transient boolean wasTwoRod;
 	private transient boolean wasThreeRod;
@@ -83,6 +86,7 @@ public class Stats implements Serializable {
 	private transient char twoRodChar = new Character('2');
 	private transient char threeRodChar = new Character('3');
 	private transient char offTableChar = new Character('O');
+	private transient char deadBallChar = new Character('D');
 	private transient char team1Char = new Character('Y');
 	private transient char team2Char = new Character('B');
 	private transient char commandChar = new Character('X');
@@ -130,6 +134,13 @@ public class Stats implements Serializable {
 		}
 		return "";
 	}
+	public List<String> getCodeHistoryAsList() {
+		List<String> codes = new ArrayList<String>();
+		for (int i = 0; i < codeHistory.size(); i++) {
+			codes.add(codeHistory.getElementAt(i).toString());
+		}
+		return codes;
+	}
 	public boolean getTeamScored(int teamNumber) {
 		return teamScored[teamNumber-1];
 	}
@@ -152,6 +163,12 @@ public class Stats implements Serializable {
 
 	public boolean getIsThreeRod() {
 		return isThreeRod;
+	}
+	public boolean getIsOffTable() {
+		return isOffTable;
+	}
+	public boolean getIsDeadBall() {
+		return isDeadBall;
 	}
 	public DefaultListModel<String> getCodeHistory() {
 		return codeHistory;
@@ -254,6 +271,8 @@ public class Stats implements Serializable {
 		isFiveRod = currentPosition==fiveRodChar;
 		isTwoRod = currentPosition==twoRodChar;
 		isThreeRod = currentPosition==threeRodChar;
+		isOffTable = currentPosition==offTableChar;
+		isDeadBall = currentPosition==deadBallChar;
 		wasFiveRod = previousPosition==fiveRodChar;
 		wasTwoRod = previousPosition==twoRodChar;
 		wasThreeRod = previousPosition==threeRodChar;
@@ -275,7 +294,8 @@ public class Stats implements Serializable {
 				currentPosition==fiveRodChar 	||
 				currentPosition==twoRodChar 	||
 				currentPosition==threeRodChar 	||
-				currentPosition==offTableChar)
+				currentPosition==offTableChar   ||
+				currentPosition==deadBallChar)
 				) 
 		{
 			isError=true;
@@ -336,6 +356,8 @@ public class Stats implements Serializable {
 		isFiveRod = false;
 		isTwoRod = false;
 		isThreeRod = false;
+		isOffTable = false;
+		isDeadBall = false;
 		wasFiveRod = false;
 		wasTwoRod = false;
 		wasThreeRod = false;
@@ -694,7 +716,8 @@ public class Stats implements Serializable {
 		System.out.println(" IsTwoRod: " + isTwoRod + "    wasTwoRod: " + wasTwoRod);
 		System.out.println(" IsFiveRod: " + isFiveRod + "    wasFiveRod: " + wasFiveRod);
 		System.out.println(" IsThreeRod: " + isThreeRod + "    wasThreeRod: " + wasThreeRod);
-		System.out.println(" IsShotOnGoal: "  + isShotOnGoal);
+		System.out.println(" IsShotOnGoal: "  + isShotOnGoal + "    isOffTable: " + isOffTable);
+		System.out.println(" IsDeadBall: " + isDeadBall);
 		System.out.println("Team1PassAttempts: " + team1.getPassAttempts() + "  Completes: " + team1.getPassCompletes());
 		System.out.println("Team2PassAttempts: " + team2.getPassAttempts() + "  Completes: " + team2.getPassCompletes());
 		System.out.println("Team1ShotAttempts: " + team1.getShotAttempts() + "  Completes: " + team1.getShotCompletes());
