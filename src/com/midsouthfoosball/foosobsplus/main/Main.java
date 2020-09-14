@@ -271,11 +271,15 @@ public class Main {
 		loadCommands();
 	}
 	public void startMatch() {
-		matchId = createMatchId();
-		matchController.startMatch(matchId);
-		for(Game game: games) {
-			game.clearAll();
-			game.setMatchId(matchId);
+		if(match.isMatchStarted()) {
+			matchController.endMatch();
+		} else {
+			matchId = createMatchId();
+			matchController.startMatch(matchId);
+			for(Game game: games) {
+				game.clearAll();
+				game.setMatchId(matchId);
+			}
 		}
 	}
 

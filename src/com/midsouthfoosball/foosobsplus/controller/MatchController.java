@@ -112,6 +112,8 @@ public class MatchController {
 		updateGameTables();
 	}
 	public void startMatch(String matchId) {
+		match.setMatchStarted(true);
+		matchPanel.setStartMatchLabel("End Match");
 		teamController.resetAll();
 		displayAllStats();
 		gameClock.startMatchTimer();
@@ -127,19 +129,34 @@ public class MatchController {
 		stats.addCodeToHistory(tmpCode);
 		statsEntryPanel.updateCodeHistory(tmpCode);
 	}
+	public void endMatch() {
+		match.setMatchStarted(false);
+		matchPanel.setStartMatchLabel("Start Match");
+		gameClock.pauseGameTimer(true);
+		gameClock.pauseMatchTimer(true);
+		lastScored1Clock.pauseLastScoredTimer(true);
+		lastScored2Clock.pauseLastScoredTimer(true);
+	}
 	public void pauseMatch() {
 		if(match.isMatchPaused()==true) {
 			match.setMatchPaused(false);
 			matchPanel.setPauseLabel("Pause Match");
+			boolean pause = match.isMatchPaused();
+			gameClock.pauseMatchTimer(pause);
+			gameClock.pauseGameTimer(pause);
+			lastScored1Clock.pauseLastScoredTimer(pause);
+			lastScored2Clock.pauseLastScoredTimer(pause);
 		} else {
-			match.setMatchPaused(true);
-			matchPanel.setPauseLabel("Unpause Match");
+			if(match.isMatchStarted()) {
+				match.setMatchPaused(true);
+				matchPanel.setPauseLabel("Unpause Match");
+				boolean pause = match.isMatchPaused();
+				gameClock.pauseMatchTimer(pause);
+				gameClock.pauseGameTimer(pause);
+				lastScored1Clock.pauseLastScoredTimer(pause);
+				lastScored2Clock.pauseLastScoredTimer(pause);
+			}
 		}
-		boolean pause = match.isMatchPaused();
-		gameClock.pauseMatchTimer(pause);
-		gameClock.pauseGameTimer(pause);
-		lastScored1Clock.pauseLastScoredTimer(pause);
-		lastScored2Clock.pauseLastScoredTimer(pause);
 	}
 	public void startGame() {
 		if(match.isMatchPaused()==true) {

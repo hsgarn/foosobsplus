@@ -46,6 +46,7 @@ public class Match implements Serializable {
 	private int matchWinner = 0;
 	private int maxPossibleGames = 5;
 	private String matchId = "";
+	private boolean isMatchStarted = false;
 	private String[] scoresTeam1 = {"0","0","0","0","0","0","0"};
 	private String[] scoresTeam2 = {"0","0","0","0","0","0","0"};
 	private String[] times = {"00:00:00","00:00:00","00:00:00","00:00:00","00:00:00","00:00:00","00:00:00"};
@@ -114,6 +115,12 @@ public class Match implements Serializable {
 	}
 	public void setMatchId(String matchId) {
 		this.matchId = matchId;
+	}
+	public boolean isMatchStarted() {
+		return isMatchStarted;
+	}
+	public void setMatchStarted(boolean isMatchStarted) {
+		this.isMatchStarted = isMatchStarted;
 	}
 	public void setTeam1(Team team1) {
 		this.team1 = team1;
