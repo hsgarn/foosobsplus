@@ -31,6 +31,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import com.midsouthfoosball.foosobsplus.model.GameTableModel;
+import com.midsouthfoosball.foosobsplus.model.Settings;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -39,24 +40,24 @@ public class GameTableWindowPanel extends JPanel {
 	private JTable gameTable;
 	private int matchWinner = 0;
 	private int currentGameNumber = 1;
-	private int gameWinners[] = {0,0,0,0,0};
+	private int gameWinners[] = {0,0,0,0,0,0,0,0,0,0,0,0};
+	private int maxGameCount = 5;
 
 	/**
 	 * Create the panel.
 	 */
-	public GameTableWindowPanel() {
+	public GameTableWindowPanel(Settings settings) {
+		this.maxGameCount = settings.getGamesToWin()*2-1;
 		setLayout(new MigLayout("", "[430.00]", "[80.00]"));
-
-		gameTable = new JTable(new GameTableModel());
+		gameWinners = new int[maxGameCount];
+		gameTable = new JTable(new GameTableModel(maxGameCount));
 		gameTable.setDefaultRenderer(Object.class, new GameTableCellRenderer());
 		TableColumnModel gameTableColumnModel = gameTable.getColumnModel();
 		
 		gameTableColumnModel.getColumn(0).setPreferredWidth(130);
-		gameTableColumnModel.getColumn(1).setPreferredWidth(60);
-		gameTableColumnModel.getColumn(2).setPreferredWidth(60);
-		gameTableColumnModel.getColumn(3).setPreferredWidth(60);
-		gameTableColumnModel.getColumn(4).setPreferredWidth(60);
-		gameTableColumnModel.getColumn(5).setPreferredWidth(60);
+		for(int i=1;i <= maxGameCount; i++) {
+			gameTableColumnModel.getColumn(i).setPreferredWidth((int) (300/maxGameCount));
+		}
 		add(gameTable);
 
 	}
@@ -76,22 +77,18 @@ public class GameTableWindowPanel extends JPanel {
 	}
 	public void updateGameTable(String[] scoresTeam1, String[] scoresTeam2, String[] times, int currentGameNumber) {
 		this.currentGameNumber = currentGameNumber;
-		for (int i = 1; i < 6; ++i) {
+		for (int i = 1; i <= maxGameCount; ++i) {
 			gameTable.setValueAt(scoresTeam1[i-1], 1, i);
 			gameTable.setValueAt(scoresTeam2[i-1], 2, i);
 			gameTable.setValueAt(times[i-1], 3, i);
 		}
 		gameTable.repaint();
 	}
-
-	
-	
 	public class GameTableCellRenderer extends DefaultTableCellRenderer 
     {
 	  public GameTableCellRenderer() {
 	    setOpaque(true);
 	  }
-
 	  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
 	  {
 		  String tmp = "";
@@ -124,10 +121,10 @@ public class GameTableWindowPanel extends JPanel {
         	  }
         	  setHorizontalAlignment(SwingConstants.CENTER);
           }
+          ////// Center time cells \\\\\\
           if (row==3 && column>=1) setHorizontalAlignment(SwingConstants.CENTER);
           setText(tmp);
           return this;
 	  }
     }
-
 }

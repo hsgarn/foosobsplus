@@ -58,11 +58,13 @@ public class MatchPanel extends JPanel {
 	private Settings settings;
 	private int matchWinner = 0;
 	private int currentGameNumber = 1;
-	private int gameWinners[] = {0,0,0,0,0,0,0};
+	private int gameWinners[] = {0,0,0,0,0,0,0,0,0,0,0,0};
+	private int maxGameCount;
 	
 	public MatchPanel(Settings settings) {
 
 		this.settings = settings;
+		this.maxGameCount = settings.getGamesToWin()*2-1; 
 		
 		Dimension dim = getPreferredSize();
 		dim.width = 550;
@@ -78,7 +80,7 @@ public class MatchPanel extends JPanel {
 		lblStartTime = new JLabel("00:00:00");
 		lblElapsedTime = new JLabel("00:00:00");
 		lblGameTime = new JLabel("00:00:00");
-		gameTable = new JTable(new GameTableModel());
+		gameTable = new JTable(new GameTableModel(maxGameCount));
 		gameTable.setDefaultRenderer(Object.class, new GameTableCellRenderer());
 		
 		setMnemonics();
@@ -250,47 +252,52 @@ public class MatchPanel extends JPanel {
 	}
 	public void updateGameTable(String[] scoresTeam1, String[] scoresTeam2, String[] times, int currentGameNumber) {
 		this.currentGameNumber = currentGameNumber;
-		for (int i = 1; i < 6; ++i) {
+		for (int i = 1; i <= maxGameCount; ++i) {
 			gameTable.setValueAt(scoresTeam1[i-1], 1, i);
 			gameTable.setValueAt(scoresTeam2[i-1], 2, i);
 			gameTable.setValueAt(times[i-1], 3, i);
 		}
 		gameTable.repaint();
 	}
-    public class GameTableCellRenderer extends DefaultTableCellRenderer 
+	public class GameTableCellRenderer extends DefaultTableCellRenderer 
     {
 	  public GameTableCellRenderer() {
 	    setOpaque(true);
 	  }
-
 	  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
 	  {
 		  String tmp = "";
 		  tmp = (String) value;
 		  setHorizontalAlignment(SwingConstants.RIGHT);
 		  setBackground(UIManager.getColor("Table.background"));
+		  ////// Center game number columns and make current game number column CYAN \\\\\\
 		  if (row == 0 && column >=1 ) {
 			  setHorizontalAlignment(SwingConstants.CENTER);
 			  if(column == currentGameNumber) {
+				  setBackground(Color.YELLOW);
+			  }
+		  }
+		  ////// Set team1 name cell to Orange if they won the match \\\\\\
+		  if (row == 1 && column == 0) {
+			  if (matchWinner == 1) {
+				  setBackground(Color.GREEN);
+			  }
+		  }
+		  ////// Set team2 name cell to Orange if they won the match \\\\\\
+		  if (row == 2 && column == 0) {
+			  if (matchWinner == 2) {
 				  setBackground(Color.CYAN);
 			  }
 		  }
-		  if (row == 1 && column == 0) {
-			  if (matchWinner == 1) {
-				  setBackground(Color.ORANGE);
-			  }
-		  }
-		  if (row == 2 && column == 0) {
-			  if (matchWinner == 2) {
-				  setBackground(Color.ORANGE);
-			  }
-		  }
-          if ((row==1 || row==2) && column>= 1 ) {
+		  ////// Set score cells to center alignment and winning scores to Green \\\\\\
+		  if ((row==1 || row==2) && column>= 1 ) {
         	  if ( gameWinners[column-1] == row) {
-        		  setBackground(Color.GREEN);
+        		  setBackground(Color.CYAN);
         	  }
         	  setHorizontalAlignment(SwingConstants.CENTER);
           }
+          ////// Center time cells \\\\\\
+          if (row==3 && column>=1) setHorizontalAlignment(SwingConstants.CENTER);
           setText(tmp);
           return this;
 	  }

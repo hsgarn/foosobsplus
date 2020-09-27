@@ -195,7 +195,7 @@ public class Main {
 	private HotKeysFrame 			hotKeysFrame 			= new HotKeysFrame(settings);
 	private HotKeysPanel 			hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
 	private FileNamesFrame			fileNamesFrame			= new FileNamesFrame(settings, obsInterface);
-	private GameTableWindowPanel	gameTableWindowPanel	= new GameTableWindowPanel();
+	private GameTableWindowPanel	gameTableWindowPanel	= new GameTableWindowPanel(settings);
 	private GameTableWindowFrame	gameTableWindowFrame	= new GameTableWindowFrame(gameTableWindowPanel);
 	
 	////// Display the View Panels on a JFrame \\\\\\
