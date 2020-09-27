@@ -41,15 +41,16 @@ public class Match implements Serializable {
 	private boolean isMatchPaused;
 	private boolean isGamePaused;
 	private int currentGameNumber = 1;
-	private int gameWinners[] = {0,0,0,0,0};
 	private boolean matchWon = false;
 	private int matchWinner = 0;
-	private int maxPossibleGames = 5;
+	private int maxGameCount = 5;
 	private String matchId = "";
 	private boolean isMatchStarted = false;
-	private String[] scoresTeam1 = {"0","0","0","0","0","0","0"};
-	private String[] scoresTeam2 = {"0","0","0","0","0","0","0"};
-	private String[] times = {"00:00:00","00:00:00","00:00:00","00:00:00","00:00:00","00:00:00","00:00:00"};
+	private int maxGamesToShow = 12;
+	private int gameWinners[]; // = {0,0,0,0,0,0,0,0,0,0,0,0};
+	private String[] scoresTeam1; // = {"0","0","0","0","0","0","0"};
+	private String[] scoresTeam2; // = {"0","0","0","0","0","0","0"};
+	private String[] times; // = {"00:00:00","00:00:00","00:00:00","00:00:00","00:00:00","00:00:00","00:00:00"};
 //	private transient String endTime;
 //	private transient int elapsedTime;
 //	private transient int[] points;
@@ -65,7 +66,17 @@ public class Match implements Serializable {
 		this.team2 = team2;
 		this.settings = settings;
 		this.obsInterface = obsInterface;
-		this.maxPossibleGames=settings.getGamesToWin()*2-1;
+		this.maxGameCount=settings.getGamesToWin()*2-1;
+		this.gameWinners  = new int[maxGamesToShow];
+		this.scoresTeam1 = new String[maxGamesToShow];
+		this.scoresTeam2 = new String[maxGamesToShow];
+		this.times = new String[maxGamesToShow];
+		for(int i=0;i < maxGamesToShow; i++) {
+			this.gameWinners[i] = 0;
+			this.scoresTeam1[i] = "0";
+			this.scoresTeam2[i] = "0";
+			this.times[i] = "00:00:00";
+		}
 	}
 	public void startMatch(String matchId) {
 		setMatchId(matchId);
@@ -91,7 +102,7 @@ public class Match implements Serializable {
 	private void increaseCurrentGameNumber() {
 		if(!matchWon && (currentGameNumber==0 || checkForGameWinOnly())) {
 			currentGameNumber++;
-			if (currentGameNumber > maxPossibleGames) currentGameNumber = maxPossibleGames;
+			if (currentGameNumber > maxGameCount) currentGameNumber = maxGameCount;
 		}
 	}
 	public void syncCurrentGameNumber() {
@@ -102,13 +113,13 @@ public class Match implements Serializable {
 		scoresTeam2[currentGameNumber-1] = Integer.toString(team2.getScore());
 	}
 	public int getMaxPossibleGames() {
-		return maxPossibleGames;
+		return maxGameCount;
 	}
 	public void setMaxPossibleGames(int maxPossibleGames) {
 		if (maxPossibleGames<=0) {
 			maxPossibleGames = settings.getGamesToWin()*2-1;
 		}
-		this.maxPossibleGames = maxPossibleGames;
+		this.maxGameCount = maxPossibleGames;
 	}
 	public String getMatchId() {
 		return matchId;
@@ -129,13 +140,13 @@ public class Match implements Serializable {
 		this.team2 = team2;
 	}
 	private void clearScores() {
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < maxGameCount; i++) {
 			scoresTeam1[i] = "0";
 			scoresTeam2[i] = "0";
 		}
 	}
 	private void clearTimes() {
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < maxGameCount; i++) {
 			times[i] = "00:00:00";
 		}
 	}

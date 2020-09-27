@@ -25,6 +25,7 @@ import javax.swing.table.AbstractTableModel;
 @SuppressWarnings("serial")
 public class GameTableModel extends AbstractTableModel {
 	static int defaultMaxGameCount = 5;
+	static int maxGamesToShow = 12;
 	private String[] columnNames;
 	private Object[][] data;
 	public GameTableModel() {

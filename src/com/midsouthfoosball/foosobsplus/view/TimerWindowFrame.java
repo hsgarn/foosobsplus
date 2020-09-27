@@ -22,6 +22,9 @@ package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -32,7 +35,7 @@ public class TimerWindowFrame extends JFrame {
 	
 	private TimerWindowPanel timerWindowPanel;
 
-	public TimerWindowFrame() {
+	public TimerWindowFrame(MainFrame mainFrame) {
 		super("FoosOBSPlus Timer Window");
 		try {
 		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -45,13 +48,14 @@ public class TimerWindowFrame extends JFrame {
 		    System.out.println("Can't set look and feel.");
 		}
 
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 //		setAlwaysOnTop(true);
 		
 		timerWindowPanel = new TimerWindowPanel("0",Color.GREEN);
 		timerWindowPanel.setPreferredSize(new Dimension(256, 70));
 
 		getContentPane().add(timerWindowPanel);
+		setLocation(0,0);
 		pack();
 	}
 	public void setTimerDisplay(String timeToDisplay) {
@@ -60,4 +64,9 @@ public class TimerWindowFrame extends JFrame {
 	public void setTimerDisplayColor(Color colorToDisplay) {
 		timerWindowPanel.setTimerWindowColor(colorToDisplay);
 	}
+	////// Listeners \\\\\\
+	public void addTimerWindowClosedListener(WindowListener listenForTimerWindowClose) {
+		this.addWindowListener(listenForTimerWindowClose);
+	}
+
 }

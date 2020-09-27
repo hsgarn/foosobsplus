@@ -21,6 +21,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Dimension;
+import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -29,7 +30,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 @SuppressWarnings("serial")
 public class GameTableWindowFrame extends JFrame {
 	
-	public GameTableWindowFrame(GameTableWindowPanel gameTableWindowPanel) {
+	public GameTableWindowFrame(GameTableWindowPanel gameTableWindowPanel, MainFrame mainFrame) {
 		super("FoosOBSPlus Game Table Window");
 		try {
 		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -42,12 +43,18 @@ public class GameTableWindowFrame extends JFrame {
 		    System.out.println("Can't set look and feel.");
 		}
 
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 //		setAlwaysOnTop(true);
 		
 		gameTableWindowPanel.setPreferredSize(new Dimension(440, 80));
 
 		getContentPane().add(gameTableWindowPanel);
+		setLocation(513,0);
 		pack();
+	}
+	
+	////// Listeners \\\\\\
+	public void addGameTableWindowClosedListener(WindowListener listenForGameTableWindowClose) {
+		this.addWindowListener(listenForGameTableWindowClose);
 	}
 }

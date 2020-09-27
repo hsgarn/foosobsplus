@@ -58,7 +58,7 @@ public class MatchPanel extends JPanel {
 	private Settings settings;
 	private int matchWinner = 0;
 	private int currentGameNumber = 1;
-	private int gameWinners[] = {0,0,0,0,0,0,0,0,0,0,0,0};
+	private int gameWinners[] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
 	private int maxGameCount;
 	
 	public MatchPanel(Settings settings) {
@@ -91,6 +91,10 @@ public class MatchPanel extends JPanel {
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
+	}
+	public void createNewGameTable() {
+		gameTable = new JTable(new GameTableModel(settings.getGamesToWin()*2-1));
+		gameTable.setDefaultRenderer(Object.class, new GameTableCellRenderer());
 	}
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
@@ -270,26 +274,26 @@ public class MatchPanel extends JPanel {
 		  tmp = (String) value;
 		  setHorizontalAlignment(SwingConstants.RIGHT);
 		  setBackground(UIManager.getColor("Table.background"));
-		  ////// Center game number columns and make current game number column CYAN \\\\\\
+		  ////// Center game number columns and highlight current game number column \\\\\\
 		  if (row == 0 && column >=1 ) {
 			  setHorizontalAlignment(SwingConstants.CENTER);
 			  if(column == currentGameNumber) {
-				  setBackground(Color.YELLOW);
+				  setBackground(Color.LIGHT_GRAY);
 			  }
 		  }
-		  ////// Set team1 name cell to Orange if they won the match \\\\\\
+		  ////// Highlight team1 name cell if they won the match \\\\\\
 		  if (row == 1 && column == 0) {
 			  if (matchWinner == 1) {
 				  setBackground(Color.GREEN);
 			  }
 		  }
-		  ////// Set team2 name cell to Orange if they won the match \\\\\\
+		  ////// Highlight team2 name cell if they won the match \\\\\\
 		  if (row == 2 && column == 0) {
 			  if (matchWinner == 2) {
-				  setBackground(Color.CYAN);
+				  setBackground(Color.GREEN);
 			  }
 		  }
-		  ////// Set score cells to center alignment and winning scores to Green \\\\\\
+		  ////// Set score cells to center alignment and highlight winning scores \\\\\\
 		  if ((row==1 || row==2) && column>= 1 ) {
         	  if ( gameWinners[column-1] == row) {
         		  setBackground(Color.CYAN);

@@ -22,6 +22,7 @@ package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -32,7 +33,7 @@ public class LastScored2WindowFrame extends JFrame {
 	
 	private LastScored2WindowPanel lastScored2WindowPanel;
 
-	public LastScored2WindowFrame() {
+	public LastScored2WindowFrame(MainFrame mainFrame) {
 		super("FoosOBSPlus Team 2 Last Scored Timer Window");
 		try {
 		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -45,13 +46,14 @@ public class LastScored2WindowFrame extends JFrame {
 		    System.out.println("Can't set look and feel.");
 		}
 
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 //		setAlwaysOnTop(true);
 		
 		lastScored2WindowPanel = new LastScored2WindowPanel("0",Color.CYAN);
 		lastScored2WindowPanel.setPreferredSize(new Dimension(256, 70));
 
 		getContentPane().add(lastScored2WindowPanel);
+		setLocation(954,0);
 		pack();
 	}
 	public void setTimerDisplay(String timeToDisplay) {
@@ -59,5 +61,9 @@ public class LastScored2WindowFrame extends JFrame {
 	}
 	public void setTimerDisplayColor(Color colorToDisplay) {
 		lastScored2WindowPanel.setWindowColor(colorToDisplay);
+	}
+	////// Listeners \\\\\\
+	public void addLastScored2WindowClosedListener(WindowListener listenForLastScored2WindowClose) {
+		this.addWindowListener(listenForLastScored2WindowClose);
 	}
 }

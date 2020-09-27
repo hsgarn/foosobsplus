@@ -22,6 +22,10 @@ package com.midsouthfoosball.foosobsplus.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JCheckBoxMenuItem;
 
@@ -50,41 +54,161 @@ public class MainController {
 		this.mainFrame.addLastScored2WindowListener(new LastScored2WindowListener());
 		this.mainFrame.addGameTableWindowListener(new GameTableWindowListener());
 		this.mainFrame.addViewAllWindowsListener(new ViewAllWindowsListener());
+		this.mainFrame.addViewTimerWindowItemListener(new TimerWindowViewItemListener());
+		this.mainFrame.addLastScored1WindowItemListener(new LastScored1ViewItemListener());
+		this.mainFrame.addLastScored2WindowItemListener(new LastScored2ViewItemListener());
+		this.mainFrame.addGameTableWindowItemListener(new GameTableViewItemListener());
+		this.timerWindowFrame.addTimerWindowClosedListener(new TimerWindowCloseListener());
+		this.lastScored1WindowFrame.addLastScored1WindowClosedListener(new LastScored1WindowCloseListener());
+		this.lastScored2WindowFrame.addLastScored2WindowClosedListener(new LastScored2WindowCloseListener());
+		this.gameTableWindowFrame.addGameTableWindowClosedListener(new GameTableWindowCloseListener());
 	}
 
 	////// MainFrame Listener Objects //////
+	private class TimerWindowCloseListener implements WindowListener {
+		public void windowClosed(WindowEvent we) {
+			mainFrame.setTimerWindowSelected(false);
+		}
+		public void windowActivated(WindowEvent e) {
+		}
+		public void windowClosing(WindowEvent e) {
+		}
+		public void windowDeactivated(WindowEvent e) {
+		}
+		public void windowDeiconified(WindowEvent e) {
+		}
+		public void windowIconified(WindowEvent e) {
+		}
+		public void windowOpened(WindowEvent e) {
+		}
+	}
+	private class LastScored1WindowCloseListener implements WindowListener {
+		public void windowClosed(WindowEvent we) {
+			mainFrame.setLastScored1WindowSelected(false);
+		}
+		public void windowActivated(WindowEvent e) {
+		}
+		public void windowClosing(WindowEvent e) {
+		}
+		public void windowDeactivated(WindowEvent e) {
+		}
+		public void windowDeiconified(WindowEvent e) {
+		}
+		public void windowIconified(WindowEvent e) {
+		}
+		public void windowOpened(WindowEvent e) {
+		}
+	}
+	private class LastScored2WindowCloseListener implements WindowListener {
+		public void windowClosed(WindowEvent we) {
+			mainFrame.setLastScored2WindowSelected(false);
+		}
+		public void windowActivated(WindowEvent e) {
+		}
+		public void windowClosing(WindowEvent e) {
+		}
+		public void windowDeactivated(WindowEvent e) {
+		}
+		public void windowDeiconified(WindowEvent e) {
+		}
+		public void windowIconified(WindowEvent e) {
+		}
+		public void windowOpened(WindowEvent e) {
+		}
+	}
+	private class GameTableWindowCloseListener implements WindowListener {
+		public void windowClosed(WindowEvent we) {
+			mainFrame.setGameTableWindowSelected(false);
+		}
+		public void windowActivated(WindowEvent arg0) {
+		}
+		public void windowClosing(WindowEvent arg0) {
+		}
+		public void windowDeactivated(WindowEvent arg0) {
+		}
+		public void windowDeiconified(WindowEvent arg0) {
+		}
+		public void windowIconified(WindowEvent arg0) {
+		}
+		public void windowOpened(WindowEvent arg0) {
+		}
+	}
+	
+	private class TimerWindowViewItemListener implements ItemListener {
+		public void itemStateChanged(ItemEvent e) {
+			checkForAllOff();
+		}
+	}
+	private class LastScored1ViewItemListener implements ItemListener {
+		public void itemStateChanged(ItemEvent e) {
+			checkForAllOff();
+		}
+	}
+	private class LastScored2ViewItemListener implements ItemListener {
+		public void itemStateChanged(ItemEvent e) {
+			checkForAllOff();
+		}
+	}
+	private class GameTableViewItemListener implements ItemListener {
+		public void itemStateChanged(ItemEvent e) {
+			checkForAllOff();
+		}
+	}
 	
 	private class TimerWindowListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
 			timerWindowFrame.setVisible(box.isSelected());
+			checkForAllOff();
 		}
 	}
 	private class LastScored1WindowListener implements ActionListener {
 		public void actionPerformed(ActionEvent ae) {
 			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
 			lastScored1WindowFrame.setVisible(box.isSelected());
+			checkForAllOff();
 		}
 	}
 	private class LastScored2WindowListener implements ActionListener {
 		public void actionPerformed(ActionEvent ae) {
 			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
 			lastScored2WindowFrame.setVisible(box.isSelected());
+			checkForAllOff();
 		}
 	}
 	private class GameTableWindowListener implements ActionListener {
 		public void actionPerformed(ActionEvent ae) {
 			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
 			gameTableWindowFrame.setVisible(box.isSelected());
+			checkForAllOff();
 		}
 	}
 	private class ViewAllWindowsListener implements ActionListener {
 		public void actionPerformed(ActionEvent ae) {
 			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
-			timerWindowFrame.setVisible(box.isSelected());
-			lastScored1WindowFrame.setVisible(box.isSelected());
-			lastScored2WindowFrame.setVisible(box.isSelected());
-			gameTableWindowFrame.setVisible(box.isSelected());
+			boolean state = box.isSelected();
+			timerWindowFrame.setVisible(state);
+			lastScored1WindowFrame.setVisible(state);
+			lastScored2WindowFrame.setVisible(state);
+			gameTableWindowFrame.setVisible(state);
+			mainFrame.setGameTableWindowSelected(state);
+			mainFrame.setTimerWindowSelected(state);
+			mainFrame.setLastScored1WindowSelected(state);
+			mainFrame.setLastScored2WindowSelected(state);
 		}
 	}
+	private void checkForAllOff() {
+		if (mainFrame.getAllWindowsSelected() 
+				&& !mainFrame.getGameTableWindowSelected() 
+				&& !mainFrame.getTimerWindowSelected() 
+				&& !mainFrame.getLastScored1WindowSelected() 
+				&& !mainFrame.getLastScored2WindowSelected()) {
+			mainFrame.setAllWindowsSelected(false);
+		}
+	}
+//	private class TimerWindowViewCheckBoxListner implements ItemListener {
+//		public void viewTimerWindowItemStateChanged(ItemEvent ie) {
+//			checkForAllOff();
+//		}
+//	}
 }

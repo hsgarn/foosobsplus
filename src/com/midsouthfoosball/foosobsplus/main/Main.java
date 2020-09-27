@@ -108,9 +108,9 @@ import com.midsouthfoosball.foosobsplus.view.LastScored1WindowFrame;
 import com.midsouthfoosball.foosobsplus.view.LastScored2WindowFrame;
 import com.midsouthfoosball.foosobsplus.view.MainFrame;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
-import com.midsouthfoosball.foosobsplus.view.ResetPanel;
 import com.midsouthfoosball.foosobsplus.view.ParametersFrame;
 import com.midsouthfoosball.foosobsplus.view.ParametersPanel;
+import com.midsouthfoosball.foosobsplus.view.ResetPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
@@ -187,22 +187,25 @@ public class Main {
 
 	////// Set up Timer and Settings Windows \\\\\\
 	
-	private TimerWindowFrame 		timerWindowFrame 		= new TimerWindowFrame();
-	private LastScored1WindowFrame 	lastScored1WindowFrame 	= new LastScored1WindowFrame();
-	private LastScored2WindowFrame 	lastScored2WindowFrame 	= new LastScored2WindowFrame();
 	private ParametersFrame 		parametersFrame 		= new ParametersFrame(settings);
 	private ParametersPanel			parametersPanel			= parametersFrame.getSettingsPanel();
 	private HotKeysFrame 			hotKeysFrame 			= new HotKeysFrame(settings);
 	private HotKeysPanel 			hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
 	private FileNamesFrame			fileNamesFrame			= new FileNamesFrame(settings, obsInterface);
-	private GameTableWindowPanel	gameTableWindowPanel	= new GameTableWindowPanel(settings);
-	private GameTableWindowFrame	gameTableWindowFrame	= new GameTableWindowFrame(gameTableWindowPanel);
 	
 	////// Display the View Panels on a JFrame \\\\\\
 	
 	private MainFrame mainFrame = new MainFrame(tablePanel, timerPanel, teamPanel1, teamPanel2, statsEntryPanel, 
 												switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, 
 												fileNamesFrame, this);
+
+	////// Set up independent Windows \\\\\\
+	
+	private GameTableWindowPanel	gameTableWindowPanel	= new GameTableWindowPanel(settings);
+	private GameTableWindowFrame	gameTableWindowFrame	= new GameTableWindowFrame(gameTableWindowPanel, mainFrame);
+	private TimerWindowFrame 		timerWindowFrame 		= new TimerWindowFrame(mainFrame);
+	private LastScored1WindowFrame 	lastScored1WindowFrame 	= new LastScored1WindowFrame(mainFrame);
+	private LastScored2WindowFrame 	lastScored2WindowFrame 	= new LastScored2WindowFrame(mainFrame);
 
 	////// Build and Start the Controllers (mvC) \\\\\\
 	
@@ -839,15 +842,15 @@ public class Main {
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
-	private void testProcessCodes() {
-		String codes[] = {"XPSM", "Y5D", "Y3P", "BGS", "B5D", "B3P", "YGS" };
-		autoProcessCodes(codes);
-	}
-	private void autoProcessCodes(String[] codes) {
-		for (String code: codes) {
-			processCode(code, false);
-		}
-	}
+//	private void testProcessCodes() {
+//		String codes[] = {"XPSM", "Y5D", "Y3P", "BGS", "B5D", "B3P", "YGS" };
+//		autoProcessCodes(codes);
+//	}
+//	private void autoProcessCodes(String[] codes) {
+//		for (String code: codes) {
+//			processCode(code, false);
+//		}
+//	}
 	public List<String> getCodeHistory() {
 		List<String> codes = stats.getCodeHistoryAsList();
 		return codes;

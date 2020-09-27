@@ -26,6 +26,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -100,7 +101,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewAllWindows = new JCheckBoxMenuItem("Show All Windows");
 		viewAlwaysOnTop = new JCheckBoxMenuItem("Always on Top");
 		helpShowParsed = new JCheckBoxMenuItem("Show Parsed");
-				
+		
 		setLayout(new GridBagLayout());
 		
 		setJMenuBar(createMenuBar());
@@ -113,7 +114,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 			}
 		});
 
-		addWindowListener(this);
+//		addWindowListener(this); //not sure why this is here
 		
 		setSize(1350,850);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -308,6 +309,36 @@ public final class MainFrame extends JFrame implements WindowListener {
 			e.printStackTrace();
 		}
 	}
+	public boolean getGameTableWindowSelected() {
+		return viewGameTableWindow.isSelected();
+	}
+	public boolean getTimerWindowSelected() {
+		return viewTimerWindow.isSelected();
+	}
+	public boolean getLastScored1WindowSelected() { 
+		return viewLastScored1Window.isSelected();
+	}
+	public boolean getLastScored2WindowSelected() { 
+		return viewLastScored2Window.isSelected();
+	}
+	public boolean getAllWindowsSelected() {
+		return viewAllWindows.isSelected();
+	}
+	public void setGameTableWindowSelected(Boolean state) {
+		viewGameTableWindow.setSelected(state);
+	}
+	public void setTimerWindowSelected(Boolean state) {
+		viewTimerWindow.setSelected(state);
+	}
+	public void setLastScored1WindowSelected(Boolean state) { 
+		viewLastScored1Window.setSelected(state);
+	}
+	public void setLastScored2WindowSelected(Boolean state) {
+		viewLastScored2Window.setSelected(state);
+	}
+	public void setAllWindowsSelected(Boolean state) {
+		viewAllWindows.setSelected(state);
+	}
 	private void layoutComponents() {
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = -1;
@@ -463,6 +494,18 @@ public final class MainFrame extends JFrame implements WindowListener {
 	public void addViewAllWindowsListener(ActionListener listenForChkBoxViewAllWindows) {
 		viewAllWindows.addActionListener(listenForChkBoxViewAllWindows);
 	}
+	public void addViewTimerWindowItemListener(ItemListener listenForViewTimerWindowItem) {
+		viewTimerWindow.addItemListener(listenForViewTimerWindowItem);
+	}
+	public void addLastScored1WindowItemListener(ItemListener listenForLastScored1WindowItem) {
+		viewLastScored1Window.addItemListener(listenForLastScored1WindowItem);
+	}
+	public void addLastScored2WindowItemListener(ItemListener listenForLastScored2WindowItem) {
+		viewLastScored2Window.addItemListener(listenForLastScored2WindowItem);
+	}
+	public void addGameTableWindowItemListener(ItemListener listenForGameTableWindowItem) {
+		viewGameTableWindow.addItemListener(listenForGameTableWindowItem);
+	}
 	
 	///// Utility Methods \\\\\\
 	public HotKeysPanel getHotKeysPanel() {
@@ -479,27 +522,21 @@ public final class MainFrame extends JFrame implements WindowListener {
 	public void windowActivated(WindowEvent arg0) {
 		statsEntryPanel.setFocusOnCode();
 	}
-
 	@Override
 	public void windowClosed(WindowEvent arg0) {
 	}
-
 	@Override
 	public void windowClosing(WindowEvent arg0) {
 	}
-
 	@Override
 	public void windowDeactivated(WindowEvent arg0) {
 	}
-
 	@Override
 	public void windowDeiconified(WindowEvent arg0) {
 	}
-
 	@Override
 	public void windowIconified(WindowEvent arg0) {
 	}
-
 	@Override
 	public void windowOpened(WindowEvent arg0) {
 	}
