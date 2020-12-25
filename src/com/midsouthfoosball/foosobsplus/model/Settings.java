@@ -170,6 +170,8 @@ public class Settings {
 	private String gameTimerHotKey;
 	private String recallTimerHotKey;
 	private String resetTimersHotKey;
+	private String undoHotKey;
+	private String redoHotKey;
 	private Properties defaultProps;
 	
 	public Properties configProps;
@@ -321,6 +323,8 @@ public class Settings {
 		defaultProps.setProperty("GameTimerHotKey", "g");
 		defaultProps.setProperty("RecallTimerHotKey", "c");
 		defaultProps.setProperty("ResetTimersHotKey", "r");
+		defaultProps.setProperty("UndoHotKey", "u");
+		defaultProps.setProperty("RedoHotKey", "d");
 
 		configProps = new Properties(defaultProps);
 		loadFromConfig();
@@ -604,6 +608,8 @@ public class Settings {
 	public String getGameTimerHotKey() {return gameTimerHotKey;}
 	public String getRecallTimerHotKey() {return recallTimerHotKey;}
 	public String getResetTimersHotKey() {return resetTimersHotKey;}
+	public String getUndoHotKey() {return undoHotKey;}
+	public String getRedoHotKey() {return redoHotKey;}
 	
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
@@ -1146,6 +1152,14 @@ public class Settings {
 		this.resetTimersHotKey = resetTimersHotKey;
 		configProps.setProperty("ResetTimersHotKey", this.resetTimersHotKey);
 	}
+	public void setUndoHotKey(String undoHotKey) {
+		this.undoHotKey = undoHotKey;
+		configProps.setProperty("UndoHotKey", this.undoHotKey);
+	}
+	public void setRedoHotKey(String redoHotKey) {
+		this.redoHotKey = redoHotKey;
+		configProps.setProperty("RedoHotKey", this.redoHotKey);
+	}
 	
 	public int getDefaultPointsToWin() {return Integer.parseInt(defaultProps.getProperty("PointsToWin"));}
 	public int getDefaultMaxWin() {return Integer.parseInt(defaultProps.getProperty("MaxWin"));}
@@ -1283,6 +1297,8 @@ public class Settings {
 	public String getDefaultGameTimerHotKey() {return defaultProps.getProperty("GameTimerHotKey");}
 	public String getDefaultRecallTimerHotKey() {return defaultProps.getProperty("RecallTimerHotKey");}
 	public String getDefaultResetTimersHotKey() {return defaultProps.getProperty("ResetTimersHotKey");}
+	public String getDefaultUndoHotKey() {return defaultProps.getProperty("UndoHotKey");}
+	public String getDefaultRedoHotKey() {return defaultProps.getProperty("RedoHotKey");}
 	
 	public void loadFromConfig() throws IOException {
 
@@ -1439,6 +1455,8 @@ public class Settings {
 		gameTimerHotKey = configProps.getProperty("GameTimerHotKey");
 		recallTimerHotKey = configProps.getProperty("RecallTimerHotKey");
 		resetTimersHotKey = configProps.getProperty("ResetTimersHotKey");
+		undoHotKey = configProps.getProperty("UndoHotKey");
+		redoHotKey = configProps.getProperty("RedoHotKey");
 	}
 	
 	public void saveToConfig() throws IOException {
@@ -1579,6 +1597,8 @@ public class Settings {
 		configProps.setProperty("GameTimerHotKey", this.getGameTimerHotKey());
 		configProps.setProperty("RecallTimerHotKey", this.getRecallTimerHotKey());
 		configProps.setProperty("ResetTimersHotKey", this.getResetTimersHotKey());
+		configProps.setProperty("UndoHotKey", this.getUndoHotKey());
+		configProps.setProperty("RedoHotKey", this.getRedoHotKey());
 
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configFileName))) {
 			configProps.store(outputStream, "FoosOBSPlus settings");

@@ -41,6 +41,8 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
+import com.midsouthfoosball.foosobsplus.model.Settings;
+
 @SuppressWarnings("serial")
 public class StatsEntryPanel extends JPanel {
 	private JLabel lblCode;
@@ -52,8 +54,10 @@ public class StatsEntryPanel extends JPanel {
 	private JButton btnRedo;
 	private JButton btnClear;
 	private JScrollPane scrCodeHistory;
+	private Settings settings;
 
-	public StatsEntryPanel() {
+	public StatsEntryPanel(Settings settings) {
+		this.settings = settings;
 		Dimension dim = getPreferredSize();
 		dim.width = 350;
 		dim.height = 50;
@@ -72,6 +76,8 @@ public class StatsEntryPanel extends JPanel {
 		lstCodeHistory.setLayoutOrientation(JList.VERTICAL);
 		lstCodeHistory.setCellRenderer(new AttributiveCellRenderer());
 
+		setMnemonics();
+		
 		Border innerBorder = BorderFactory.createTitledBorder("Statistics Entry Panel");
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
 		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
@@ -79,7 +85,6 @@ public class StatsEntryPanel extends JPanel {
 		
 		layoutComponents();
 	}
-	
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
 		
@@ -162,9 +167,19 @@ public class StatsEntryPanel extends JPanel {
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(btnRedo, gc);
 	}
-
+	private void setMnemonics() {
+		if(settings.getUndoHotKey().isEmpty()) {
+			btnUndo.setMnemonic(-1);
+		} else {
+			btnUndo.setMnemonic(settings.getUndoHotKey().charAt(0));
+		};
+		if(settings.getRedoHotKey().isEmpty()) {
+			btnRedo.setMnemonic(-1);
+		} else {
+			btnRedo.setMnemonic(settings.getRedoHotKey().charAt(0));
+		};
+}
 	////// Listeners  //////
-	
 	public void addCodeListener(ActionListener listenForTxtCode) {
 		txtCode.addActionListener(listenForTxtCode);
 	}
@@ -180,6 +195,9 @@ public class StatsEntryPanel extends JPanel {
 
 	////// Utility Methods //////
 	
+	public void updateMnemonics() {
+		setMnemonics();
+	}
 	public void updateCode(String code) {
 		txtCode.setText(code);
 	}

@@ -180,7 +180,7 @@ public class Main {
 	private MatchPanel			matchPanel			= new MatchPanel(settings);
 	private TeamPanel 			teamPanel1 			= new TeamPanel(1, settings.getSide1Color(), settings);
 	private TeamPanel 			teamPanel2 			= new TeamPanel(2, settings.getSide2Color(), settings);
-	private StatsEntryPanel 	statsEntryPanel 	= new StatsEntryPanel();
+	private StatsEntryPanel 	statsEntryPanel 	= new StatsEntryPanel(settings);
 	private SwitchPanel 		switchPanel 		= new SwitchPanel(settings);
 	private ResetPanel 			resetPanel 			= new ResetPanel(settings);
 	private StatsDisplayPanel 	statsDisplayPanel 	= new StatsDisplayPanel();
@@ -562,6 +562,7 @@ public class Main {
 			timerPanel.updateMnemonics();
 			switchPanel.updateMnemonics();
 			resetPanel.updateMnemonics();
+			statsEntryPanel.updateMnemonics();
 		}
 	}
 	private class SettingsSaveListener implements ActionListener {

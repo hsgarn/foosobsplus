@@ -83,6 +83,8 @@ public class HotKeysPanel extends JPanel {
 	private JTextField txtRecallTimerHotKey;
 	private JTextField txtResetTimersHotKey;
 	private JTextField txtResetNamesHotKey;
+	private JTextField txtUndoHotKey;
+	private JTextField txtRedoHotKey;
 	private JButton btnSave;
 
 	public HotKeysPanel(Settings settings) throws IOException {
@@ -372,6 +374,15 @@ public class HotKeysPanel extends JPanel {
 		add(txtResetNamesHotKey, "cell 7 10,alignx left");
 		txtResetNamesHotKey.setColumns(10);
 		
+		JLabel lblUndoHotKey = new JLabel("Undo");
+		add(lblUndoHotKey, "cell 9 10,alignx trailing");
+		
+		txtUndoHotKey = new JTextField();
+		txtUndoHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtUndoHotKey.setText(settings.getUndoHotKey());
+		add(txtUndoHotKey, "cell 10 10,alignx left");
+		txtUndoHotKey.setColumns(10);
+		
 		JLabel lblGameCounts = new JLabel("Game Counts:");
 		add(lblGameCounts, "cell 0 11,alignx right");
 		
@@ -386,6 +397,15 @@ public class HotKeysPanel extends JPanel {
 		txtResetScoresHotKey.setText(settings.getResetScoresHotKey());
 		add(txtResetScoresHotKey, "cell 7 11,alignx left");
 		txtResetScoresHotKey.setColumns(10);
+		
+		JLabel lblRedoHotKey = new JLabel("Redo");
+		add(lblRedoHotKey, "cell 9 11,alignx trailing");
+		
+		txtRedoHotKey = new JTextField();
+		txtRedoHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtRedoHotKey.setText(settings.getRedoHotKey());
+		add(txtRedoHotKey, "cell 10 11,alignx left");
+		txtRedoHotKey.setColumns(10);
 		
 		JLabel lblGameCount1MinusHotKey = new JLabel("- (Team 1)");
 		add(lblGameCount1MinusHotKey, "cell 0 12,alignx trailing");
@@ -578,6 +598,8 @@ public class HotKeysPanel extends JPanel {
 		txtGameTimerHotKey.setText(settings.getDefaultGameTimerHotKey());
 		txtRecallTimerHotKey.setText(settings.getDefaultRecallTimerHotKey());
 		txtResetTimersHotKey.setText(settings.getDefaultResetTimersHotKey());
+		txtUndoHotKey.setText(settings.getDefaultUndoHotKey());
+		txtRedoHotKey.setText(settings.getDefaultRedoHotKey());
 	}
 	
 	public void saveSettings(Settings settings) {
@@ -623,6 +645,8 @@ public class HotKeysPanel extends JPanel {
 		settings.setGameTimerHotKey(txtGameTimerHotKey.getText());
 		settings.setRecallTimerHotKey(txtRecallTimerHotKey.getText());
 		settings.setResetTimersHotKey(txtResetTimersHotKey.getText());
+		settings.setUndoHotKey(txtUndoHotKey.getText());
+		settings.setRedoHotKey(txtRedoHotKey.getText());
 		try {
 			settings.saveToConfig();
 		} catch (IOException ex) {
