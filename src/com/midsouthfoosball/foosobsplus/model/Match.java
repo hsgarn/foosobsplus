@@ -107,6 +107,7 @@ public class Match implements Serializable {
 	}
 	public void syncCurrentGameNumber() {
 		currentGameNumber = team1.getGameCount() + team2.getGameCount() + 1;
+		if (currentGameNumber > maxGameCount) currentGameNumber = maxGameCount;
 	}
 	public void syncGameScores() {
 		scoresTeam1[currentGameNumber-1] = Integer.toString(team1.getScore());
@@ -318,13 +319,13 @@ public class Match implements Serializable {
 		}
 		if (winState>0) {
 			setCurrentTime(gameTime);
-/*
+//the below if statement was commented out.  remove this comment if you haven't noticed any issues.
  			if (!matchWon) {
  				currentGameNumber++;
 				int maxGameCount = settings.getGamesToWin() * 2 - 1;
 				if (currentGameNumber > maxGameCount) currentGameNumber = maxGameCount;
 			}
-*/
+
 		}
 
 		if(matchWon) {
@@ -338,10 +339,20 @@ public class Match implements Serializable {
 	public boolean incrementGameCount(Team team) {
 		team.incrementGameCount();
 		boolean matchWon = checkForMatchWin(team);
+		String name;
 		if(matchWon) {
 			clearMeatball();
 			if (settings.getAnnounceWinner()==1) {
-				writeMatchWinner(settings.getWinnerPrefix() + team.getTeamName() + settings.getWinnerSuffix());
+				if (team.getTeamName() == null || team.getTeamName().isEmpty()) {
+					if (team.getGoalieName().isEmpty()) {
+						name = team.getForwardName();
+					} else {
+						name = team.getForwardName() + ", " + team.getGoalieName();
+					}
+				} else {
+					name = team.getTeamName();
+				}
+				writeMatchWinner(settings.getWinnerPrefix() + name + settings.getWinnerSuffix());
 			}
 			resetScores();
 //			resetGameCounts();
@@ -357,16 +368,12 @@ public class Match implements Serializable {
 		int gameCount1 = team1.getGameCount();
 		int gameCount2 = team2.getGameCount();
 		if (settings.getAnnounceMeatball() == 1) {
-			if (points1 == points2) {
+			if (points1 == points2 && gameCount1 == gameCount2  && settings.getWinBy() < 2) {
 				int meatballPoint = settings.getPointsToWin() - 1;
-				if (settings.getWinBy() < 2) {
-					if (points1 == meatballPoint) {
-						if (gameCount1 == gameCount2) {
-							if (gameCount1 == settings.getGamesToWin()-1) {
-								writeMeatball();
-								return;
-							}
-						}
+				if (points1 == meatballPoint) {
+					if (gameCount1 == settings.getGamesToWin() - 1) {
+						writeMeatball();
+						return;
 					}
 				}
 			}
@@ -377,8 +384,12 @@ public class Match implements Serializable {
 		int pointsToWin = settings.getPointsToWin();
 		int maxWin = settings.getMaxWin();
 		int winBy = settings.getWinBy();
+		int winByFinalOnly = settings.getWinByFinalOnly();
 		if (settings.getAutoIncrementGame()==1) {
-			if (score1 >= maxWin || (score1 >= pointsToWin && score1 >= score2 + winBy)) {
+			if (score1 >= maxWin || 
+					((score1 >= pointsToWin) && 
+							((score1 >= score2 + winBy) || ((winByFinalOnly==1) && currentGameNumber != maxGameCount)) )) 
+			{
 				clearMeatball();
 				return true;
 			} else {

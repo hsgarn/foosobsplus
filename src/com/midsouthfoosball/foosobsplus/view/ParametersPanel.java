@@ -60,6 +60,7 @@ public class ParametersPanel extends JPanel {
 	private JTextField txtMeatball;
 	private JCheckBox chckbxShowTimeOutsUsed;
 	private JCheckBox chckbxAutoCapNames;
+	private JCheckBox chckbxWinByFinalOnly;
 	private JTextField txtTeam1LastScored;
 	private JTextField txtTeam2LastScored;
 	private JTextField txtClearLastScored;
@@ -69,7 +70,7 @@ public class ParametersPanel extends JPanel {
 
 	public ParametersPanel(Settings settings) throws IOException {
 
-		setLayout(new MigLayout("", "[119.00][50.00:87.00,grow,left][78.00,grow][grow][]", "[][][][][][][][][][][][][][][][][][][]"));
+		setLayout(new MigLayout("", "[119.00][50.00:87.00,grow,left][78.00,grow][grow][]", "[][][][][][][][][][][][][][][][][][][][][]"));
 		
 		JLabel lblParameter = new JLabel("Parameter");
 		lblParameter.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -284,9 +285,20 @@ public class ParametersPanel extends JPanel {
 			chckbxAutoCapNames.setSelected(false);
 		}
 		add(chckbxAutoCapNames, "cell 1 15");
+		
+		JLabel lblWinByFinalOnly = new JLabel("Win By in Final Game Only");
+		add(lblWinByFinalOnly, "cell 0 16,alignx right");
+		
+		chckbxWinByFinalOnly = new JCheckBox("");
+		if (Integer.toString(settings.getWinByFinalOnly()).equals("1")) {
+			chckbxWinByFinalOnly.setSelected(true);
+		} else {
+			chckbxWinByFinalOnly.setSelected(false);
+		}
+		add(chckbxWinByFinalOnly, "cell 1 16");
 
 		btnSave = new JButton("Save");
-		add(btnSave, "cell 1 18,alignx center");
+		add(btnSave, "cell 1 20,alignx center");
 
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
@@ -296,7 +308,7 @@ public class ParametersPanel extends JPanel {
 				win.dispose();
 			}
 		});
-		add(btnCancel, "cell 2 18,alignx center");
+		add(btnCancel, "cell 2 20,alignx center");
 		
 		JButton btnRestoreDefaults = new JButton("Restore Defaults");
 		btnRestoreDefaults.addActionListener(new ActionListener() {
@@ -305,7 +317,7 @@ public class ParametersPanel extends JPanel {
 			}
 		});
 		btnRestoreDefaults.setHorizontalAlignment(SwingConstants.RIGHT);
-		add(btnRestoreDefaults, "cell 3 18,alignx center");
+		add(btnRestoreDefaults, "cell 3 20,alignx center");
 	}
 
 	private void restoreDefaults(Settings settings) {
@@ -346,6 +358,11 @@ public class ParametersPanel extends JPanel {
 			chckbxAutoCapNames.setSelected(true);
 		} else {
 			chckbxAutoCapNames.setSelected(false);
+		}
+		if (Integer.toString(settings.getDefaultWinByFinalOnly()).equals("1")) {
+			chckbxWinByFinalOnly.setSelected(true);
+		} else {
+			chckbxWinByFinalOnly.setSelected(false);
 		}
 		txtTeam1LastScored.setText(settings.getDefaultTeam1LastScored());
 		txtTeam2LastScored.setText(settings.getDefaultTeam2LastScored());
@@ -418,6 +435,11 @@ public class ParametersPanel extends JPanel {
 			settings.setAutoCapNames(1);
 		} else {
 			settings.setAutoCapNames(0);
+		}
+		if (chckbxWinByFinalOnly.isSelected()) {
+			settings.setWinByFinalOnly(1);
+		} else {
+			settings.setWinByFinalOnly(0);
 		}
 		try {
 			settings.saveToConfig();

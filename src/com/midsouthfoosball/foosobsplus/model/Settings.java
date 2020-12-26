@@ -58,6 +58,7 @@ public class Settings {
 	private String meatball;
 	private int showTimeOutsUsed;
 	private int autoCapNames;
+	private int winByFinalOnly;
 	private String logoImageURL;
 	private String logoLinkURI;
 
@@ -209,6 +210,7 @@ public class Settings {
 		defaultProps.setProperty("RecallTime", "10");
 		defaultProps.setProperty("ShowTimeOutsUsed", "1");
 		defaultProps.setProperty("AutoCapNames",  "1");
+		defaultProps.setProperty("WinByFinalOnly", "1");
 		defaultProps.setProperty("LogoImageURL", "/imgs/MidsouthFoosballLogo4.png");
 		defaultProps.setProperty("LogoLinkURI", "https://www.facebook.com/midsouthfoosball");
 
@@ -361,6 +363,7 @@ public class Settings {
 	public int getRecallTime() {return recallTime;}
 	public int getShowTimeOutsUsed() {return showTimeOutsUsed;}
 	public int getAutoCapNames() {return autoCapNames;}
+	public int getWinByFinalOnly() {return winByFinalOnly;}
 	public String getLogoImageURL() {return logoImageURL;}
 	public String getLogoLinkURI() {return logoLinkURI;}
 
@@ -848,6 +851,10 @@ public class Settings {
 		this.autoCapNames = autoCapNames;
 		configProps.setProperty("AutoCapNames", Integer.toString(this.autoCapNames));
 	}
+	public void setWinByFinalOnly(int winByFinalOnly) {
+		this.winByFinalOnly = winByFinalOnly;
+		configProps.setProperty("WinByFinalOnly", Integer.toString(this.winByFinalOnly));
+	}
 	public void setLogoImageURL(String logoImageURL) {
 		this.logoImageURL = logoImageURL;
 		configProps.setProperty("LogoImageURL", this.logoImageURL);
@@ -1185,6 +1192,7 @@ public class Settings {
 	public int getDefaultRecallTime() {return Integer.parseInt(defaultProps.getProperty("RecallTime"));}
 	public int getDefaultShowTimeOutsUsed() {return Integer.parseInt(defaultProps.getProperty("ShowTimeOutsUsed"));}
 	public int getDefaultAutoCapNames() {return Integer.parseInt(defaultProps.getProperty("AutoCapNames"));}
+	public int getDefaultWinByFinalOnly() {return Integer.parseInt(defaultProps.getProperty("WinByFinalOnly"));}
 	public String getDefaultLogoImageURL() {return defaultProps.getProperty("LogoImageURL");}
 	public String getDefaultLogoLinkURI() {return defaultProps.getProperty("LogoLinkURI");}
 	
@@ -1337,6 +1345,7 @@ public class Settings {
 		recallTime = Integer.parseInt(configProps.getProperty("RecallTime"));
 		showTimeOutsUsed = Integer.parseInt(configProps.getProperty("ShowTimeOutsUsed"));
 		autoCapNames = Integer.parseInt(configProps.getProperty("AutoCapNames"));
+		winByFinalOnly = Integer.parseInt(configProps.getProperty("WinByFinalOnly"));
 		logoImageURL = configProps.getProperty("LogoImageURL");
 		if (logoImageURL.isEmpty()) {
 			logoImageURL = this.getDefaultLogoImageURL();
@@ -1485,6 +1494,7 @@ public class Settings {
 		configProps.setProperty("RecallTime", Integer.toString(this.getRecallTime()));
 		configProps.setProperty("ShowTimeOutsUsed", Integer.toString(this.getShowTimeOutsUsed()));
 		configProps.setProperty("AutoCapNames", Integer.toString(this.getAutoCapNames()));
+		configProps.setProperty("WinByFinalOnly", Integer.toString(this.getWinByFinalOnly()));
 //		configProps.setProperty("LogoImageURL", this.getLogoImageURL());
 //		configProps.setProperty("LogoLinkURI", this.getLogoLinkURI());
 
