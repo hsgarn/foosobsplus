@@ -31,7 +31,7 @@ This is the number of points required to win a game.  This is only used if the A
 The Max Win parameter is only used when the Win By parameter is greater than 1.  If a team has to win by more than 1 point, then Max Win is the maximum score a team can get and at that point it does not matter if they won by more than 1 point.
 
 #### Win By
-The Win By parameter is used to force a team to win by a specified number of points.  Default is 1 which means that a team only has to win by 1 point (normal game behavior).  Setting the parameter to 2 would require that a team win by two points.  If a team reaches the Points to Win value without being ahead by the Win By value, then the game continues until either a team wins by the Win By margin, or the Max Win value is reached.
+The Win By parameter is used to force a team to win by a specified number of points.  Default is 1 which means that a team only has to win by 1 point (normal game behavior).  Setting the parameter to 2 would require that a team win by two points.  If a team reaches the Points to Win value without being ahead by the Win By value, then the game continues until either a team wins by the Win By margin, or the Max Win value is reached.  Note: If Win By in Final Game Only is checked, then the Win By points are only considered in the last game of the match (prior games are win by 1).
 
 #### Games to Win
 The Games to Win parameter is used to determine when a match is won.  Specify the number of games required to win the match.  Default is 2 for a 2 out of 3 match.  Use 3 for a 3 out of 5 match. etc.
@@ -89,6 +89,9 @@ When checked, the program will put the number of time outs used for each team in
 
 #### Auto Capitalize Names
 When checked, the program will automatically capitalize the first letter of each team's player's names.  If not checked, the team names are left as entered.
+
+#### Win By in Final Game Only
+When checked, a team must win by the margin in Win By parameter in the final game of the match only.  The prior games will be win by 1 point.  When unchecked, a team must always win by the margin in the Win By field in every game.
 
 ### FileNames
 FoosOBSPlus writes out most of it's data to text files so that it can be read by programs such as OBS Studio and displayed in a live video stream.  The names of these files are configurable if the default names do not suit you.  FoosOBSPlus also allows you to run more than one table at a time.  It does this by prefixing each file with the table name.  To get to the filenames configuration, click on Edit, then Settings, then File Names:
