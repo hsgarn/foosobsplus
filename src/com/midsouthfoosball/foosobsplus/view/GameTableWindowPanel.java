@@ -42,11 +42,13 @@ public class GameTableWindowPanel extends JPanel {
 	private int currentGameNumber = 1;
 	private int gameWinners[] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
 	private int maxGameCount = 5;
+	private Settings settings;
 
 	/**
 	 * Create the panel.
 	 */
 	public GameTableWindowPanel(Settings settings) {
+		this.settings = settings;
 		this.maxGameCount = settings.getGamesToWin()*2-1;
 		setLayout(new MigLayout("", "[430.00]", "[80.00]"));
 		gameWinners = new int[maxGameCount];
@@ -59,7 +61,6 @@ public class GameTableWindowPanel extends JPanel {
 			gameTableColumnModel.getColumn(i).setPreferredWidth((int) (300/maxGameCount));
 		}
 		add(gameTable);
-
 	}
 	public void setTeams(String name1, String name2) {
 		gameTable.setValueAt(name1, 1, 0);
@@ -72,7 +73,10 @@ public class GameTableWindowPanel extends JPanel {
 		this.matchWinner = matchWinner;
 	}
 	public void setTime(String time) {
-		gameTable.setValueAt(time, 3, currentGameNumber);
+		int gameNumber = currentGameNumber;
+		int maxGameNumber = settings.getGamesToWin()*2-1;
+		if (gameNumber > maxGameNumber) gameNumber = maxGameNumber;
+		gameTable.setValueAt(time, 3, gameNumber);
 		gameTable.repaint();
 	}
 	public void updateGameTable(String[] scoresTeam1, String[] scoresTeam2, String[] times, int currentGameNumber) {
@@ -83,6 +87,11 @@ public class GameTableWindowPanel extends JPanel {
 			gameTable.setValueAt(times[i-1], 3, i);
 		}
 		gameTable.repaint();
+	}
+	public void resizeGameTable() {
+		GameTableModel tableModel = new GameTableModel(settings.getGamesToWin()*2-1);
+		gameTable.setModel(tableModel);
+		maxGameCount = settings.getGamesToWin()*2-1;
 	}
 	public class GameTableCellRenderer extends DefaultTableCellRenderer 
     {

@@ -339,20 +339,31 @@ public class Match implements Serializable {
 	public boolean incrementGameCount(Team team) {
 		team.incrementGameCount();
 		boolean matchWon = checkForMatchWin(team);
-		String name;
+		String name = null;
 		if(matchWon) {
 			clearMeatball();
 			if (settings.getAnnounceWinner()==1) {
+				boolean skipMatchWinnerDisplay = false;
 				if (team.getTeamName() == null || team.getTeamName().isEmpty()) {
-					if (team.getGoalieName().isEmpty()) {
-						name = team.getForwardName();
+					if (team.getGoalieName() == null || team.getGoalieName().isEmpty()) {
+						if (team.getForwardName() == null || team.getForwardName().isEmpty()) {
+							skipMatchWinnerDisplay = true;
+						} else {
+							name = team.getForwardName();
+						}
 					} else {
-						name = team.getForwardName() + ", " + team.getGoalieName();
+						if (team.getForwardName() == null || team.getForwardName().isEmpty()) {
+							name = team.getGoalieName();
+						} else {
+							name = team.getForwardName() + ", " + team.getGoalieName();
+						}
 					}
 				} else {
 					name = team.getTeamName();
 				}
-				writeMatchWinner(settings.getWinnerPrefix() + name + settings.getWinnerSuffix());
+				if (!skipMatchWinnerDisplay) {
+					writeMatchWinner(settings.getWinnerPrefix() + name + settings.getWinnerSuffix());
+				}
 			}
 			resetScores();
 //			resetGameCounts();

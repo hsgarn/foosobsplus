@@ -92,9 +92,11 @@ public class MatchPanel extends JPanel {
 		
 		layoutComponents();
 	}
-	public void createNewGameTable() {
-		gameTable = new JTable(new GameTableModel(settings.getGamesToWin()*2-1));
-		gameTable.setDefaultRenderer(Object.class, new GameTableCellRenderer());
+	public void resizeGameTable() {
+		GameTableModel tableModel = new GameTableModel(settings.getGamesToWin()*2-1);
+		gameTable.setModel(tableModel);
+		maxGameCount = settings.getGamesToWin()*2-1;
+		return;
 	}
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
@@ -216,7 +218,10 @@ public class MatchPanel extends JPanel {
 		lblGameTime.setText(gameTime);
 	}
 	public void setTime(String time) {
-		gameTable.setValueAt(time, 3, currentGameNumber);
+		int gameNumber = currentGameNumber;
+		int maxGameNumber = settings.getGamesToWin()*2-1;
+		if (gameNumber > maxGameNumber) gameNumber = maxGameNumber;
+		gameTable.setValueAt(time, 3, gameNumber);
 		gameTable.repaint();
 	}
 	

@@ -567,7 +567,13 @@ public class Main {
 	}
 	private class SettingsSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			int oldGamesToWin = settings.getGamesToWin();
 			parametersPanel.saveSettings(settings);
+			int newGamesToWin = settings.getGamesToWin();
+			if (oldGamesToWin != newGamesToWin) {
+				matchPanel.resizeGameTable();
+				gameTableWindowPanel.resizeGameTable();
+			}
 			JComponent comp = (JComponent) e.getSource();
 			Window win = SwingUtilities.getWindowAncestor(comp);
 			win.dispose();

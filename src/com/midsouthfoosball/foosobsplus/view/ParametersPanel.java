@@ -30,6 +30,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -67,6 +68,9 @@ public class ParametersPanel extends JPanel {
 	private JTextField txtSide1Color;
 	private JTextField txtSide2Color;
 	private JButton btnSave;
+	private JButton btnCancel;
+	private JButton btnRestoreDefaults;
+	private final Integer maxGamesToWin = 6;
 
 	public ParametersPanel(Settings settings) throws IOException {
 
@@ -300,7 +304,7 @@ public class ParametersPanel extends JPanel {
 		btnSave = new JButton("Save");
 		add(btnSave, "cell 1 20,alignx center");
 
-		JButton btnCancel = new JButton("Cancel");
+		btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JComponent comp = (JComponent) e.getSource();
@@ -310,7 +314,7 @@ public class ParametersPanel extends JPanel {
 		});
 		add(btnCancel, "cell 2 20,alignx center");
 		
-		JButton btnRestoreDefaults = new JButton("Restore Defaults");
+		btnRestoreDefaults = new JButton("Restore Defaults");
 		btnRestoreDefaults.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				restoreDefaults(settings);
@@ -319,7 +323,7 @@ public class ParametersPanel extends JPanel {
 		btnRestoreDefaults.setHorizontalAlignment(SwingConstants.RIGHT);
 		add(btnRestoreDefaults, "cell 3 20,alignx center");
 	}
-
+	
 	private void restoreDefaults(Settings settings) {
 		txtPointsToWin.setText(Integer.toString(settings.getDefaultPointsToWin()));
 		txtShotTime.setText(Integer.toString(settings.getDefaultShotTime()));
@@ -327,7 +331,9 @@ public class ParametersPanel extends JPanel {
 		txtPassTime.setText(Integer.toString(settings.getDefaultPassTime()));
 		txtWinBy.setText(Integer.toString(settings.getDefaultWinBy()));
 		txtTimeOutTime.setText(Integer.toString(settings.getDefaultTimeOutTime()));
-		txtGamesToWin.setText(Integer.toString(settings.getDefaultGamesToWin()));
+		Integer checkValue = settings.getDefaultGamesToWin();
+		if (checkValue > maxGamesToWin) checkValue = maxGamesToWin;
+		txtGamesToWin.setText(Integer.toString(checkValue));
 		txtGameTime.setText(Integer.toString(settings.getDefaultGameTime()));
 		txtMaxTimeOuts.setText(Integer.toString(settings.getDefaultMaxTimeOuts()));
 		txtRecallTime.setText(Integer.toString(settings.getDefaultRecallTime()));
@@ -382,7 +388,13 @@ public class ParametersPanel extends JPanel {
 		settings.setWinBy(Integer.parseInt(txtWinBy.getText()));
     	}
     	if (isValidInteger(txtGamesToWin.getText())) {
-		settings.setGamesToWin(Integer.parseInt(txtGamesToWin.getText()));
+    		Integer checkValue = Integer.parseInt(txtGamesToWin.getText());
+    		if (checkValue > maxGamesToWin) {
+    			checkValue = maxGamesToWin;
+    			JOptionPane.showMessageDialog(null,"Games To Win can not exceed " + maxGamesToWin + ". Setting to " + maxGamesToWin + ".");
+    		}
+    		txtGamesToWin.setText(Integer.toString(checkValue));
+    		settings.setGamesToWin(Integer.parseInt(txtGamesToWin.getText()));
     	}
     	if (isValidInteger(txtMaxTimeOuts.getText())) {
     		settings.setMaxTimeOuts(Integer.parseInt(txtMaxTimeOuts.getText()));
