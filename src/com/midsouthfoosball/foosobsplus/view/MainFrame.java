@@ -198,7 +198,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		helpPage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				try {
-					URI helpURI = new URI("https://github.com/hsgarn/foosOBSPlus");
+					URI helpURI = new URI("https://github.com/hsgarn/foosOBSPlus#foosOBSPlus");
 					try {
 						java.awt.Desktop.getDesktop().browse(helpURI);
 					} catch (IOException ex) {

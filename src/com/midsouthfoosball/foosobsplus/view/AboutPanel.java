@@ -34,6 +34,7 @@ import net.miginfocom.swing.MigLayout;
 public class AboutPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+	private static final String versionNumber = "1.059";
 
 	public AboutPanel(JFrame aboutFrame) {
 		setLayout(new MigLayout("", "[127.00][50.00:87.00,grow,left]", "[][][][][grow][]"));
@@ -47,7 +48,7 @@ public class AboutPanel extends JPanel {
 		JLabel lblVersion = new JLabel("Version:");
 		add(lblVersion, "cell 0 1,alignx right");
 		
-		JLabel lblNewLabel = new JLabel("1.058");
+		JLabel lblNewLabel = new JLabel(versionNumber);
 		add(lblNewLabel, "cell 1 1");
 		
 		JLabel lblAuthor = new JLabel("Author:");

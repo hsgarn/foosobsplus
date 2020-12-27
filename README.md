@@ -447,5 +447,144 @@ Click the cancel button to discard any hot keye changes made.
 #### Restore Defaults
 Click the Restore Defaults button to restore the default hot keys.
 
-
-
+## Revision History
+v1.059 12/26/2020<br/>
+Add revision history to help page<br/>
+Set help page to specifically start at #FoosOBSPlus<br/>
+<br/>
+v1.058 12/26/2020<br/>
+Issue #17 Change help to call foosOBSPlus repository page instead of foosOBS repository page<br/>
+Update announce match winner on help page.<br/>
+<br/>
+v1.057 12/26/2020<br/>
+Issue #12 Changing Games To Win parameter should reload Match Panel and GameTableWindowPanel<br/>
+Cap "Games to Win" at 6.<br/>
+Fix bug if no names set and announce match winner triggered.<br/>
+<br/>
+v1.056 12/25/2020<br/>
+Issue #13 If gamecounts loaded from file are too high, program errors.<br/>
+Issue #16 Add Win by Final Game Only parameter and logic<br/>
+Issue #15 For showing Match Winner, show Team Name if populated, otherwise, show player names.<br/>
+<br/>
+v1.055 12/24/2020<br/>
+Issue #14 Add hotkeys for undo and redo buttons<br/>
+<br/>
+v1.054 9/27/2020<br/>
+Change colors game table panel and window<br/>
+Allow closing of view windows and keep view menu selection checkmarks in sync<br/>
+Open independent windows side by side instead of on top of each other.<br/>
+<br/>
+v1.053 9/27/2020<br/>
+Issue #11 Limit game table window to number of possible games based on parameters<br/>
+Change highlight colors for match panel to see if new colors grow on me<br/>
+<br/>
+v1.052 9/13/2020<br/>
+Toggle start match button label between Start Match and End Match.<br/>
+<br/>
+v1.051 9/13/2020<br/>
+Added Import Stats and Export Stats options to the File Menu.<br/>
+Implement isOffTable flag and add isDeadBall flag<br/>
+<br/>
+v1.050 9/12/2020<br/>
+Refactored SettingsFrame and SettingsPanel to ParametersFrame and ParametersPanel for naming consistency.<br/>
+<br/>
+v1.050 9/9/2020 <br/>
+Use try with resources in settings and OBSInterface<br/>
+Refactor to use java.nio.file in place of java.io.file<br/>
+<br/>
+v1.049 9/7/2020<br/>
+Add team name to Stats Display Window<br/>
+Update stats display window when team name or player names change<br/>
+<br/>
+v1.048 9/7/2020<br/>
+Issue #9 Start Match needs to clear match winner & meatball<br/>
+<br/>
+v1.047<br/>
+Start game button should unpause match<br/>
+Timer and Game Table windows no longer always on top<br/>
+Increase/decrease game counts should update game table<br/>
+Sync game table currentgamenumber with team game counts.<br/>
+Main.autoProcessCodes created to parse codes in a string array.<br/>
+MatchWon needs to Stop match and game timers<br/>
+Game timer in game table window is briefly getting set to 0 when score increased.<br/>
+Add ViewAllWindows checkbox menu item<br/>
+<br/>
+v1.046<br/>
+A shot that goes in own team's goal should increase shot attempts for that team and not change stats for other team except scoring<br/>
+Add names to statsdisplaypanel<br/>
+<br/>
+v1.045<br/>
+Add fwd,goalie names to Game Table Window Panel<br/>
+Update game tables when name or score related data changes<br/>
+<br/>
+v1.044<br/>
+Decrease score needs to update game table panel<br/>
+Refactored team1/team2 to teams[] in teamController<br/>
+Undo needs to repaint gametables<br/>
+<br/>
+v1.043<br/>
+Get Game Table Window displaying properly<br/>
+Update Game Table times realtime<br/>
+focus back to Code after any button pressed and when window activated<br/>
+<br/>
+v1.042<br/>
+Start on Game Table Window<br/>
+Redo for Start Match bug - Run program. Press Start Match button.  Push Undo then press redo.  Throws exception.<br/>
+Undo for Start Match bug - Run program. Incrase score team1.  Press Start Match button.  Push Undo. Push Undo again. Throws exception.<br/>
+Add ShowParsed to menu bar<br/>
+Fix bug in stats.parseCode<br/>
+<br/>
+v1.041<br/>
+Issue #1 Show Invalid stat code in red<br/>
+Issue #4 Better Stat History Window (last command always shows)<br/>
+<br/>
+v1.040<br/>
+gametable now is told when games and match are won<br/>
+Refactored team1Scored->teamScored[], team1TimeOut->teamTimeOut[]<br/>
+Start Game button restarts game timer and advances current game number<br/>
+Issue #8 Pause Match button ignores first press after Start Match Button bug<br/>
+<br/>
+v1.039<br/>
+Set alignment and background colors on game table<br/>
+<br/>
+v1.038<br/>
+Game Tracking 5-2,5-3,4-5,3-5,8-7<br/>
+Add Start Game button<br/>
+Add startGame to hotkeys screen<br/>
+Add pauseMatch to hotkeys screen<br/>
+<br/>
+v1.037<br/>
+Issue #5 Switch Sides messes up clear buttons<br/>
+Issue #6 Switch Panel clear all button needs to clear reset/warns<br/>
+<br/>
+v1.036<br/>
+Fix xpundo/xpredo - made it xu and xr.<br/>
+<br/>
+v1.035<br/>
+Issue #7 Pause button alternates between Pause/Unpaused Match<br/>
+Animate Last Scored Timer Windows<br/>
+Start Match now clears history but leaves itself there.<br/>
+Switch Sides now switches last scored times<br/>
+Add copyright message to Command objects<br/>
+<br/>
+v1.034<br/>
+Issue #7 Match Time Pause/Restart button (Partial. need to fix timers getting out of sync if score increased while paused)<br/>
+<br/>
+v1.033<br/>
+Issue #3 Increase Tournament, Event, Table Name field widths<br/>
+<br/>
+v1.032<br/>
+Issue #2 Handle start up without config file present<br/>
+<br/>
+v1.03 & v1.031<br/>
+Time since last score - each team:<br/>
+	a. Create Timers (Done)<br/>
+	b. Display times and start/reset on score (Done)<br/>
+	c. Write times to files - not wanting to do this - concerns of speed/io issues - but can let filename control whether writes or not (empty - do not write)<br/>
+	d. Add filesnames in files settings screen<br/>
+	e. Add window for each timer??? (Done)<br/>
+Handle Invalid Stat command<br/>
+Fix clear stats entry - will error if undo after clear<br/>
+Write Time Remaining??? Could be used in place of the timer window but would be very slow.  Leaning towards no on this one. (And yet I did it - but can blank out time remaining file name to prevent writing)<br/>
+Closing the timer window needs to uncheck the menuitem TimerWindow or force do nothing on close which is the option I took.<br/>
+<br/>
