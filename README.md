@@ -73,7 +73,7 @@ This is the number of minutes a player may be on recall before forfeiting the ma
 When checked, the game count for the team that just scored will be automatically incremented when their score is incremented and reaches the number of points required to win a game.
 
 #### Announce Winner checkbox
-When checked, the Match Winner file will be populated with the winning team name (prefixed by the Winner Prefix parameter and suffixed by the Winner Suffix parameter) when the game count for a team reaches the Games to Win parameter value.  Use the Reset Scores or Reset All buttons to clear the Match Winner file for the next match.
+When checked, the Match Winner file will be populated with the winning team name (prefixed by the Winner Prefix parameter and suffixed by the Winner Suffix parameter) when the game count for a team reaches the Games to Win parameter value.  Use the Start Match, Reset Scores or Reset All buttons to clear the Match Winner file for the next match.  Team names will be used if they are populated, otherwise the Forward and Goalie names display.  If team name, forward and goalie fields are all empty, then the match winner will not be displayed.
 
 #### Winner Prefix
 Text to be displayed in front of the winning teams name when the match is won.  The default is Match Winner:.
