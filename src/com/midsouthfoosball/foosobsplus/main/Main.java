@@ -175,7 +175,7 @@ public class Main {
 	
 	////// Create the View Panels to Display (mVc) \\\\\\
 	
-	private TablePanel 			tablePanel 			= new TablePanel();
+	private TablePanel 			tablePanel 			= new TablePanel(settings);
 	private TimerPanel 			timerPanel 			= new TimerPanel(settings);
 	private MatchPanel			matchPanel			= new MatchPanel(settings);
 	private TeamPanel 			teamPanel1 			= new TeamPanel(1, settings.getSide1Color(), settings);
@@ -183,7 +183,7 @@ public class Main {
 	private StatsEntryPanel 	statsEntryPanel 	= new StatsEntryPanel(settings);
 	private SwitchPanel 		switchPanel 		= new SwitchPanel(settings);
 	private ResetPanel 			resetPanel 			= new ResetPanel(settings);
-	private StatsDisplayPanel 	statsDisplayPanel 	= new StatsDisplayPanel();
+	private StatsDisplayPanel 	statsDisplayPanel 	= new StatsDisplayPanel(settings);
 
 	////// Set up Timer and Settings Windows \\\\\\
 	
@@ -568,17 +568,31 @@ public class Main {
 	private class SettingsSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			int oldGamesToWin = settings.getGamesToWin();
+			String oldGameType = settings.getGameType();
 			parametersPanel.saveSettings(settings);
 			int newGamesToWin = settings.getGamesToWin();
+			String newGameType = settings.getGameType();
 			if (oldGamesToWin != newGamesToWin) {
 				matchPanel.resizeGameTable();
 				gameTableWindowPanel.resizeGameTable();
 			}
+			if (!oldGameType.equals(newGameType)) {
+				teamPanel1.changeGameType();
+				teamPanel2.changeGameType();
+				switchPanel.changeGameType();
+				resetPanel.changeGameType();
+				matchPanel.changeGameType();
+				tablePanel.changeGameType();
+				timerPanel.changeGameType();
+				statsEntryPanel.changeGameType();
+				statsDisplayPanel.changeGameType();
+			} else {
+				teamPanel1.setTitle();
+				teamPanel2.setTitle();
+			}
 			JComponent comp = (JComponent) e.getSource();
 			Window win = SwingUtilities.getWindowAncestor(comp);
 			win.dispose();
-			teamPanel1.setTitle();
-			teamPanel2.setTitle();
 		}
 	}
 	private class ScoreIncreaseListener implements ActionListener{

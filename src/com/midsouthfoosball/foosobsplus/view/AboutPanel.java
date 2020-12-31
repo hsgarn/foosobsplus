@@ -34,47 +34,47 @@ import net.miginfocom.swing.MigLayout;
 public class AboutPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private static final String versionNumber = "1.059";
+	private static final String versionNumber = "1.060"; //$NON-NLS-1$
 
 	public AboutPanel(JFrame aboutFrame) {
-		setLayout(new MigLayout("", "[127.00][50.00:87.00,grow,left]", "[][][][][grow][]"));
+		setLayout(new MigLayout("", "[127.00][50.00:87.00,grow,left]", "[][][][][grow][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		
-		JLabel lblProgram = new JLabel("Program:");
-		add(lblProgram, "cell 0 0,alignx right");
+		JLabel lblProgram = new JLabel(Messages.getString("AboutPanel.Program")); //$NON-NLS-1$
+		add(lblProgram, "cell 0 0,alignx right"); //$NON-NLS-1$
 		
-		JLabel lblProgramValue = new JLabel("FoosOBSPlus");
-		add(lblProgramValue, "cell 1 0");
+		JLabel lblProgramValue = new JLabel("FoosOBSPlus"); //$NON-NLS-1$
+		add(lblProgramValue, "cell 1 0"); //$NON-NLS-1$
 		
-		JLabel lblVersion = new JLabel("Version:");
-		add(lblVersion, "cell 0 1,alignx right");
+		JLabel lblVersion = new JLabel(Messages.getString("AboutPanel.Version")); //$NON-NLS-1$
+		add(lblVersion, "cell 0 1,alignx right"); //$NON-NLS-1$
 		
 		JLabel lblNewLabel = new JLabel(versionNumber);
-		add(lblNewLabel, "cell 1 1");
+		add(lblNewLabel, "cell 1 1"); //$NON-NLS-1$
 		
-		JLabel lblAuthor = new JLabel("Author:");
-		add(lblAuthor, "cell 0 2,alignx right");
+		JLabel lblAuthor = new JLabel(Messages.getString("AboutPanel.Author")); //$NON-NLS-1$
+		add(lblAuthor, "cell 0 2,alignx right"); //$NON-NLS-1$
 		
-		JLabel lblAuthorValue = new JLabel("Hugh Garner");
-		add(lblAuthorValue, "cell 1 2");
+		JLabel lblAuthorValue = new JLabel("Hugh Garner"); //$NON-NLS-1$
+		add(lblAuthorValue, "cell 1 2"); //$NON-NLS-1$
 		
-		JLabel lblCopyright = new JLabel("Copyright \u00A9");
-		add(lblCopyright, "cell 0 3,alignx right");
+		JLabel lblCopyright = new JLabel(Messages.getString("AboutPanel.Copyright")); //$NON-NLS-1$
+		add(lblCopyright, "cell 0 3,alignx right"); //$NON-NLS-1$
 		
-		JLabel lblCopyrightValue = new JLabel("2020 Hugh Garner");
-		add(lblCopyrightValue, "cell 1 3");
+		JLabel lblCopyrightValue = new JLabel("2020 Hugh Garner"); //$NON-NLS-1$
+		add(lblCopyrightValue, "cell 1 3"); //$NON-NLS-1$
 		
-		JLabel lblLicense = new JLabel("License:");
-		add(lblLicense, "cell 0 4,alignx right");
+		JLabel lblLicense = new JLabel(Messages.getString("AboutPanel.License")); //$NON-NLS-1$
+		add(lblLicense, "cell 0 4,alignx right"); //$NON-NLS-1$
 		
 		JTextArea txtrPermissionIsHereby = new JTextArea();
-		txtrPermissionIsHereby.setText("Permission is hereby granted, free of charge, to any person obtaining a copy \r\nof this software and associated documentation files (the \"Software\"), to deal \r\nin the Software without restriction, including without limitation the rights \r\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell \r\ncopies of the Software, and to permit persons to whom the Software is \r\nfurnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in \r\nall copies or substantial portions of the Software.\r\n\r\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR \r\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, \r\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL \r\nTHE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR \r\nOTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, \r\nARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR \r\nOTHER DEALINGS IN THE SOFTWARE.");
-		add(txtrPermissionIsHereby, "cell 1 4,grow");
+		txtrPermissionIsHereby.setText(Messages.getString("AboutPanel.LicenseText")); //$NON-NLS-1$
+		add(txtrPermissionIsHereby, "cell 1 4,grow"); //$NON-NLS-1$
 
-		ImageIcon img = new ImageIcon(this.getClass().getResource("FoosBallTableAnimation.gif"));;
+		ImageIcon img = new ImageIcon(this.getClass().getResource("FoosBallTableAnimation.gif"));; //$NON-NLS-1$
 		img.setImage(img.getImage().getScaledInstance(100, 100,  Image.SCALE_DEFAULT));
 		Icon imgIcon = img;
 		JLabel lblIcon = new JLabel(imgIcon);
-		add(lblIcon, "cell 1 5,alignx center");
+		add(lblIcon, "cell 1 5,alignx center"); //$NON-NLS-1$
 
 	}
 

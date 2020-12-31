@@ -100,7 +100,7 @@ public class Match implements Serializable {
 		increaseCurrentGameNumber();
 	}
 	private void increaseCurrentGameNumber() {
-		if(!matchWon && (currentGameNumber==0 || checkForGameWinOnly())) {
+		if(/*!matchWon &&*/ (currentGameNumber==0 || checkForGameWinOnly())) {
 			currentGameNumber++;
 			if (currentGameNumber > maxGameCount) currentGameNumber = maxGameCount;
 		}
@@ -320,11 +320,11 @@ public class Match implements Serializable {
 		if (winState>0) {
 			setCurrentTime(gameTime);
 //the below if statement was commented out.  remove this comment if you haven't noticed any issues.
- 			if (!matchWon) {
+/* 			if (!matchWon) {*/
  				currentGameNumber++;
 				int maxGameCount = settings.getGamesToWin() * 2 - 1;
 				if (currentGameNumber > maxGameCount) currentGameNumber = maxGameCount;
-			}
+/*			}*/
 
 		}
 

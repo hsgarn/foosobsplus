@@ -43,6 +43,7 @@ public class ResetPanel extends JPanel {
 	private JButton btnResetResetWarns;
 	private JButton btnResetAll;
 	private Settings settings;
+	private Border innerBorder;
 
 	public ResetPanel(Settings settings) {
 		
@@ -53,16 +54,16 @@ public class ResetPanel extends JPanel {
 		dim.height = 50;
 		setPreferredSize(dim);
 		
-		btnResetNames = new JButton("Reset Names");
-		btnResetScores = new JButton("Reset Scores");
-		btnResetGameCounts = new JButton("Reset Game Counts");
-		btnResetTimeOuts = new JButton("Reset Time Outs");
-		btnResetResetWarns = new JButton("Reset Reset/Warns");
-		btnResetAll = new JButton("Reset All");
+		btnResetNames = new JButton(Messages.getString("ResetPanel.ResetNames", settings.getGameType())); //$NON-NLS-1$
+		btnResetScores = new JButton(Messages.getString("ResetPanel.ResetScores", settings.getGameType())); //$NON-NLS-1$
+		btnResetGameCounts = new JButton(Messages.getString("ResetPanel.ResetGameCounts", settings.getGameType())); //$NON-NLS-1$
+		btnResetTimeOuts = new JButton(Messages.getString("ResetPanel.ResetTimeOuts", settings.getGameType())); //$NON-NLS-1$
+		btnResetResetWarns = new JButton(Messages.getString("ResetPanel.ResetResetWarns", settings.getGameType())); //$NON-NLS-1$
+		btnResetAll = new JButton(Messages.getString("ResetPanel.ResetAll", settings.getGameType())); //$NON-NLS-1$
 
 		setMnemonics();
 
-		Border innerBorder = BorderFactory.createTitledBorder("Reset Panel");
+		innerBorder = BorderFactory.createTitledBorder(buildTitle()); //$NON-NLS-1$
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
 		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
@@ -70,6 +71,17 @@ public class ResetPanel extends JPanel {
 		layoutComponents();
 
 	}
+	
+	public void changeGameType() {
+		btnResetNames.setText(Messages.getString("ResetPanel.ResetNames", settings.getGameType())); //$NON-NLS-1$
+		btnResetScores.setText(Messages.getString("ResetPanel.ResetScores", settings.getGameType())); //$NON-NLS-1$
+		btnResetGameCounts.setText(Messages.getString("ResetPanel.ResetGameCounts", settings.getGameType())); //$NON-NLS-1$
+		btnResetTimeOuts.setText(Messages.getString("ResetPanel.ResetTimeOuts", settings.getGameType())); //$NON-NLS-1$
+		btnResetResetWarns.setText(Messages.getString("ResetPanel.ResetResetWarns", settings.getGameType())); //$NON-NLS-1$
+		btnResetAll.setText(Messages.getString("ResetPanel.ResetAll", settings.getGameType())); //$NON-NLS-1$
+		setTitle();
+	}
+	
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
 		
@@ -202,4 +214,18 @@ public class ResetPanel extends JPanel {
 	public void addResetAllListener(ActionListener listenForBtnResetAll) {
 		btnResetAll.addActionListener(listenForBtnResetAll);
 	}
+	
+	////// Utility Methods \\\\\\
+	
+	public void setTitle() {
+		String title=buildTitle();
+		TitledBorder border = BorderFactory.createTitledBorder(title);
+		border.setTitleJustification(TitledBorder.CENTER);
+		this.setBorder(border);
+	}
+
+	private String buildTitle() {
+		return Messages.getString("ResetPanel.ResetPanel", settings.getGameType()); //$NON-NLS-1$
+	}
+
 }

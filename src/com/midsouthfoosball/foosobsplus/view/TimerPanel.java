@@ -52,6 +52,7 @@ public class TimerPanel extends JPanel {
 	private JButton btnRecallTimer;
 	private JButton btnResetTimer;
 	private Settings settings;
+	private Border innerBorder;
 
 	public TimerPanel(Settings settings) {
 		
@@ -61,30 +62,45 @@ public class TimerPanel extends JPanel {
 		dim.height = 50;
 		setPreferredSize(dim);
 		
-		lblTimerDisplay = new JLabel("0.0");
+		lblTimerDisplay = new JLabel("0.0"); //$NON-NLS-1$
 		lblTimerDisplay.setOpaque(true);
 		lblTimerDisplay.setBackground(Color.GREEN);
-		lblTimerInUse = new JLabel("Timer Reset");
-		lblShotTimer = new JLabel("Shot Timer (2 & 3 row)");
-		lblPassTimer = new JLabel("Pass Timer (5 row)");
-		lblTimeOutTimer = new JLabel("Time Out Timer");
-		lblGameTimer = new JLabel("Game Timer");
-		lblRecallTimer = new JLabel("Recall Timer");
-		btnShotTimer = new JButton("Start");
-		btnPassTimer = new JButton("Start");
-		btnTimeOutTimer = new JButton("Start");
-		btnGameTimer = new JButton("Start");
-		btnRecallTimer = new JButton("Start");
-		btnResetTimer = new JButton("Reset Timer");
+		lblTimerInUse = new JLabel(Messages.getString("TimerPanel.TimerReset", settings.getGameType())); //$NON-NLS-1$
+		lblShotTimer = new JLabel(Messages.getString("TimerPanel.ShotTimer", settings.getGameType())); //$NON-NLS-1$
+		lblPassTimer = new JLabel(Messages.getString("TimerPanel.PassTimer", settings.getGameType())); //$NON-NLS-1$
+		lblTimeOutTimer = new JLabel(Messages.getString("TimerPanel.TimeOutTimer", settings.getGameType())); //$NON-NLS-1$
+		lblGameTimer = new JLabel(Messages.getString("TimerPanel.GameTimer", settings.getGameType())); //$NON-NLS-1$
+		lblRecallTimer = new JLabel(Messages.getString("TimerPanel.RecallTimer", settings.getGameType())); //$NON-NLS-1$
+		btnShotTimer = new JButton(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
+		btnPassTimer = new JButton(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
+		btnTimeOutTimer = new JButton(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
+		btnGameTimer = new JButton(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
+		btnRecallTimer = new JButton(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
+		btnResetTimer = new JButton(Messages.getString("TimerPanel.Reset", settings.getGameType())); //$NON-NLS-1$
 
 		setMnemonics();
 		
-		Border innerBorder = BorderFactory.createTitledBorder("Timer Panel");
+		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
 		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
+	}
+	public void changeGameType() {
+		lblTimerInUse.setText(Messages.getString("TimerPanel.TimerReset", settings.getGameType())); //$NON-NLS-1$
+		lblShotTimer.setText(Messages.getString("TimerPanel.ShotTimer", settings.getGameType())); //$NON-NLS-1$
+		lblPassTimer.setText(Messages.getString("TimerPanel.PassTimer", settings.getGameType())); //$NON-NLS-1$
+		lblTimeOutTimer.setText(Messages.getString("TimerPanel.TimeOutTimer", settings.getGameType())); //$NON-NLS-1$
+		lblGameTimer.setText(Messages.getString("TimerPanel.GameTimer", settings.getGameType())); //$NON-NLS-1$
+		lblRecallTimer.setText(Messages.getString("TimerPanel.RecallTimer", settings.getGameType())); //$NON-NLS-1$
+		btnShotTimer.setText(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
+		btnPassTimer.setText(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
+		btnTimeOutTimer.setText(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
+		btnGameTimer.setText(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
+		btnRecallTimer.setText(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
+		btnResetTimer.setText(Messages.getString("TimerPanel.Reset", settings.getGameType())); //$NON-NLS-1$
+		setTitle();
 	}
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
@@ -309,5 +325,14 @@ public class TimerPanel extends JPanel {
 	}
 	public void updateMnemonics() {
 		setMnemonics();
+	}
+	public void setTitle() {
+		String title=buildTitle();
+		TitledBorder border = BorderFactory.createTitledBorder(title);
+		border.setTitleJustification(TitledBorder.CENTER);
+		this.setBorder(border);
+	}
+	private String buildTitle() {
+		return Messages.getString("TimerPanel.TimerPanel", settings.getGameType()); //$NON-NLS-1$
 	}
 }

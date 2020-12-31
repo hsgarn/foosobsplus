@@ -39,6 +39,7 @@ import javax.swing.SwingUtilities;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 import net.miginfocom.swing.MigLayout;
+import javax.swing.JComboBox;
 
 public class ParametersPanel extends JPanel {
 
@@ -71,6 +72,9 @@ public class ParametersPanel extends JPanel {
 	private JButton btnCancel;
 	private JButton btnRestoreDefaults;
 	private final Integer maxGamesToWin = 6;
+	private JLabel lblGameType;
+	private JTextField txtGameType;
+	private JComboBox comboBoxGameType;
 
 	public ParametersPanel(Settings settings) throws IOException {
 
@@ -290,6 +294,11 @@ public class ParametersPanel extends JPanel {
 		}
 		add(chckbxAutoCapNames, "cell 1 15");
 		
+		String s1[] = {"Foosball", "Billiards"};
+		comboBoxGameType = new JComboBox<Object>(s1);
+		comboBoxGameType.setEditable(true);
+		add(comboBoxGameType, "cell 3 15,growx");
+		
 		JLabel lblWinByFinalOnly = new JLabel("Win By in Final Game Only");
 		add(lblWinByFinalOnly, "cell 0 16,alignx right");
 		
@@ -300,7 +309,15 @@ public class ParametersPanel extends JPanel {
 			chckbxWinByFinalOnly.setSelected(false);
 		}
 		add(chckbxWinByFinalOnly, "cell 1 16");
-
+		
+		lblGameType = new JLabel("GameType");
+		add(lblGameType, "cell 2 16,alignx trailing,aligny baseline");
+		
+		txtGameType = new JTextField();
+		txtGameType.setText(settings.getGameType());
+		add(txtGameType, "cell 3 16,alignx left");
+		txtGameType.setColumns(10);
+		
 		btnSave = new JButton("Save");
 		add(btnSave, "cell 1 20,alignx center");
 
@@ -325,6 +342,7 @@ public class ParametersPanel extends JPanel {
 	}
 	
 	private void restoreDefaults(Settings settings) {
+		txtGameType.setText(settings.getDefaultGameType());
 		txtPointsToWin.setText(Integer.toString(settings.getDefaultPointsToWin()));
 		txtShotTime.setText(Integer.toString(settings.getDefaultShotTime()));
 		txtMaxWin.setText(Integer.toString(settings.getDefaultMaxWin()));
@@ -378,11 +396,23 @@ public class ParametersPanel extends JPanel {
 	}
 	
 	public void saveSettings(Settings settings) {
+		if (!comboBoxGameType.getSelectedItem().toString().equals(txtGameType.getText())) {
+			txtGameType.setText(comboBoxGameType.getSelectedItem().toString());
+		}
+		settings.setGameType(txtGameType.getText());
     	if (isValidInteger(txtPointsToWin.getText())) {
 			settings.setPointsToWin(Integer.parseInt(txtPointsToWin.getText()));
     	}
     	if (isValidInteger(txtMaxWin.getText())) {
-			settings.setMaxWin(Integer.parseInt(txtMaxWin.getText()));
+    		int maxWin = Integer.parseInt(txtMaxWin.getText());
+    		if (settings.getPointsToWin() > maxWin) {
+    			settings.setMaxWin(settings.getPointsToWin());
+    			txtMaxWin.setText(Integer.toString(settings.getPointsToWin()));
+    		} else {
+    			settings.setMaxWin(Integer.parseInt(txtMaxWin.getText()));
+    		}
+    	} else {
+    		settings.setMaxWin(settings.getPointsToWin());
     	}
     	if (isValidInteger(txtWinBy.getText())) {
 		settings.setWinBy(Integer.parseInt(txtWinBy.getText()));

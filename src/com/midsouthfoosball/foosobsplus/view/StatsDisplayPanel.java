@@ -32,6 +32,8 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
+import com.midsouthfoosball.foosobsplus.model.Settings;
+
 @SuppressWarnings("serial")
 public class StatsDisplayPanel extends JPanel {
 	private JLabel lblTeamName1;
@@ -87,69 +89,72 @@ public class StatsDisplayPanel extends JPanel {
 	private JLabel lblTeam2TwoBarScoring;
 	private JLabel lblTeam2Breaks;
 	private JLabel lblTeam2Stuffs;
-	private DecimalFormat df = new DecimalFormat("###.#");
+	private DecimalFormat df = new DecimalFormat("###.#"); //$NON-NLS-1$
+	private Settings settings;
+	private Border innerBorder;
 
-	public StatsDisplayPanel() {
+	public StatsDisplayPanel(Settings settings) {
+		this.settings = settings;
 		Dimension dim = getPreferredSize();
 		dim.width = 350;
 		dim.height = 50;
 		setPreferredSize(dim);
 
-		lblTeamName1 = new JLabel("Team Name 1");
-		lblTeamName2 = new JLabel("Team Name 2");
-		lblPlayerNames1 = new JLabel("Team 1");
-		lblPlayerNames2 = new JLabel("Team 2");
-		lblPassing = new JLabel("Passing");
-		lblShooting = new JLabel("Shooting");
-		lblClearing = new JLabel("Clearing");
-		lblTwoBarPassing = new JLabel("2-Bar Passing");
-		lblShotsOnGoal = new JLabel("Shots On Goal");
-		lblScoring = new JLabel("Scoring");
-		lblThreeBarScoring = new JLabel("3-Bar");
-		lblFiveBarScoring = new JLabel("5-Bar");
-		lblTwoBarScoring = new JLabel("2-Bar");
-		lblBreaks = new JLabel("Breaks");
-		lblStuffs = new JLabel("Stuffs");
-		lblTeam1PassAttempts = new JLabel(String.format("%-3s","0"));
-		lblTeam1PassCompletes = new JLabel(String.format("%-3s","0"));
-		lblTeam1Passing = new JLabel(String.format("%-5s","0%"));
-		lblTeam1ShotAttempts = new JLabel(String.format("%-3s","0"));
-		lblTeam1ShotCompletes = new JLabel(String.format("%-3s","0"));
-		lblTeam1Shooting = new JLabel(String.format("%-5s","0%"));
-		lblTeam1ClearAttempts = new JLabel(String.format("%-3s","0"));
-		lblTeam1ClearCompletes = new JLabel(String.format("%-3s","0"));
-		lblTeam1Clearing = new JLabel(String.format("%-5s","0%"));
-		lblTeam1TwoBarPassAttempts = new JLabel(String.format("%-3s","0"));
-		lblTeam1TwoBarPassCompletes = new JLabel(String.format("%-3s","0"));
-		lblTeam1TwoBarPassing = new JLabel(String.format("%-5s","0%"));
-		lblTeam1ShotsOnGoal = new JLabel(String.format("%-3s","0"));
-		lblTeam1Scoring = new JLabel(String.format("%-3s","0"));
-		lblTeam1ThreeBarScoring = new JLabel(String.format("%-3s","0"));
-		lblTeam1FiveBarScoring = new JLabel(String.format("%-3s","0"));
-		lblTeam1TwoBarScoring = new JLabel(String.format("%-3s","0"));
-		lblTeam1Breaks = new JLabel(String.format("%-3s","0"));
-		lblTeam1Stuffs = new JLabel(String.format("%-3s","0"));
-		lblTeam2PassAttempts = new JLabel(String.format("%-3s","0"));
-		lblTeam2PassCompletes = new JLabel(String.format("%-3s","0"));
-		lblTeam2Passing = new JLabel(String.format("%-5s","0%"));
-		lblTeam2ShotAttempts = new JLabel(String.format("%-3s","0"));
-		lblTeam2ShotCompletes = new JLabel(String.format("%-3s","0"));
-		lblTeam2Shooting = new JLabel(String.format("%-5s","0%"));
-		lblTeam2ClearAttempts = new JLabel(String.format("%-3s","0"));
-		lblTeam2ClearCompletes = new JLabel(String.format("%-3s","0"));
-		lblTeam2Clearing = new JLabel(String.format("%-5s","0%"));
-		lblTeam2TwoBarPassAttempts = new JLabel(String.format("%-3s","0"));
-		lblTeam2TwoBarPassCompletes = new JLabel(String.format("%-3s","0"));
-		lblTeam2TwoBarPassing = new JLabel(String.format("%-5s","0%"));
-		lblTeam2ShotsOnGoal = new JLabel(String.format("%-3s","0"));
-		lblTeam2Scoring = new JLabel(String.format("%-3s","0"));
-		lblTeam2ThreeBarScoring = new JLabel(String.format("%-3s","0"));
-		lblTeam2FiveBarScoring = new JLabel(String.format("%-3s","0"));
-		lblTeam2TwoBarScoring = new JLabel(String.format("%-3s","0"));
-		lblTeam2Breaks = new JLabel(String.format("%-3s","0"));
-		lblTeam2Stuffs = new JLabel(String.format("%-3s","0"));
+		lblTeamName1 = new JLabel(Messages.getString("StatsDisplayPanel.TeamName1", settings.getGameType())); //$NON-NLS-1$
+		lblTeamName2 = new JLabel(Messages.getString("StatsDisplayPanel.TeamName2", settings.getGameType())); //$NON-NLS-1$
+		lblPlayerNames1 = new JLabel(Messages.getString("StatsDisplayPanel.Team1", settings.getGameType())); //$NON-NLS-1$
+		lblPlayerNames2 = new JLabel(Messages.getString("StatsDisplayPanel.Team2", settings.getGameType())); //$NON-NLS-1$
+		lblPassing = new JLabel(Messages.getString("StatsDisplayPanel.Passing", settings.getGameType())); //$NON-NLS-1$
+		lblShooting = new JLabel(Messages.getString("StatsDisplayPanel.Shooting", settings.getGameType())); //$NON-NLS-1$
+		lblClearing = new JLabel(Messages.getString("StatsDisplayPanel.Clearing", settings.getGameType())); //$NON-NLS-1$
+		lblTwoBarPassing = new JLabel(Messages.getString("StatsDisplayPanel.2BarPassing", settings.getGameType())); //$NON-NLS-1$
+		lblShotsOnGoal = new JLabel(Messages.getString("StatsDisplayPanel.ShotsOnGoal", settings.getGameType())); //$NON-NLS-1$
+		lblScoring = new JLabel(Messages.getString("StatsDisplayPanel.Scoring", settings.getGameType())); //$NON-NLS-1$
+		lblThreeBarScoring = new JLabel(Messages.getString("StatsDisplayPanel.3Bar", settings.getGameType())); //$NON-NLS-1$
+		lblFiveBarScoring = new JLabel(Messages.getString("StatsDisplayPanel.5Bar", settings.getGameType())); //$NON-NLS-1$
+		lblTwoBarScoring = new JLabel(Messages.getString("StatsDisplayPanel.2Bar", settings.getGameType())); //$NON-NLS-1$
+		lblBreaks = new JLabel(Messages.getString("StatsDisplayPanel.Breaks", settings.getGameType())); //$NON-NLS-1$
+		lblStuffs = new JLabel(Messages.getString("StatsDisplayPanel.Stuffs", settings.getGameType())); //$NON-NLS-1$
+		lblTeam1PassAttempts = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1PassCompletes = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1Passing = new JLabel(String.format("%-5s","0%")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1ShotAttempts = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1ShotCompletes = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1Shooting = new JLabel(String.format("%-5s","0%")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1ClearAttempts = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1ClearCompletes = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1Clearing = new JLabel(String.format("%-5s","0%")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1TwoBarPassAttempts = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1TwoBarPassCompletes = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1TwoBarPassing = new JLabel(String.format("%-5s","0%")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1ShotsOnGoal = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1Scoring = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1ThreeBarScoring = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1FiveBarScoring = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1TwoBarScoring = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1Breaks = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1Stuffs = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2PassAttempts = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2PassCompletes = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2Passing = new JLabel(String.format("%-5s","0%")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2ShotAttempts = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2ShotCompletes = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2Shooting = new JLabel(String.format("%-5s","0%")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2ClearAttempts = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2ClearCompletes = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2Clearing = new JLabel(String.format("%-5s","0%")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2TwoBarPassAttempts = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2TwoBarPassCompletes = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2TwoBarPassing = new JLabel(String.format("%-5s","0%")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2ShotsOnGoal = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2Scoring = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2ThreeBarScoring = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2FiveBarScoring = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2TwoBarScoring = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2Breaks = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2Stuffs = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		
-		Border innerBorder = BorderFactory.createTitledBorder("Statistics Display Panel");
+		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
 		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
@@ -157,7 +162,24 @@ public class StatsDisplayPanel extends JPanel {
 		layoutComponents();
 
 	}
-
+	public void changeGameType() {
+		lblTeamName1.setText(Messages.getString("StatsDisplayPanel.TeamName1", settings.getGameType())); //$NON-NLS-1$
+		lblTeamName2.setText(Messages.getString("StatsDisplayPanel.TeamName2", settings.getGameType())); //$NON-NLS-1$
+		lblPlayerNames1.setText(Messages.getString("StatsDisplayPanel.Team1", settings.getGameType())); //$NON-NLS-1$
+		lblPlayerNames2.setText(Messages.getString("StatsDisplayPanel.Team2", settings.getGameType())); //$NON-NLS-1$
+		lblPassing.setText(Messages.getString("StatsDisplayPanel.Passing", settings.getGameType())); //$NON-NLS-1$
+		lblShooting.setText(Messages.getString("StatsDisplayPanel.Shooting", settings.getGameType())); //$NON-NLS-1$
+		lblClearing.setText(Messages.getString("StatsDisplayPanel.Clearing", settings.getGameType())); //$NON-NLS-1$
+		lblTwoBarPassing.setText(Messages.getString("StatsDisplayPanel.2BarPassing", settings.getGameType())); //$NON-NLS-1$
+		lblShotsOnGoal.setText(Messages.getString("StatsDisplayPanel.ShotsOnGoal", settings.getGameType())); //$NON-NLS-1$
+		lblScoring.setText(Messages.getString("StatsDisplayPanel.Scoring", settings.getGameType())); //$NON-NLS-1$
+		lblThreeBarScoring.setText(Messages.getString("StatsDisplayPanel.3Bar", settings.getGameType())); //$NON-NLS-1$
+		lblFiveBarScoring.setText(Messages.getString("StatsDisplayPanel.5Bar", settings.getGameType())); //$NON-NLS-1$
+		lblTwoBarScoring.setText(Messages.getString("StatsDisplayPanel.2Bar", settings.getGameType())); //$NON-NLS-1$
+		lblBreaks.setText(Messages.getString("StatsDisplayPanel.Breaks", settings.getGameType())); //$NON-NLS-1$
+		lblStuffs.setText(Messages.getString("StatsDisplayPanel.Stuffs", settings.getGameType())); //$NON-NLS-1$
+		setTitle();
+	}
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
 		
@@ -701,95 +723,95 @@ public class StatsDisplayPanel extends JPanel {
 
 	public void updatePassStats(int teamNbr, int completes, int attempts, Float percent) {
 		if(teamNbr==1) {
-			lblTeam1PassCompletes.setText(String.format("%-3s",Integer.toString(completes)));
-			lblTeam1PassAttempts.setText(String.format("%-3s",Integer.toString(attempts)));
-			lblTeam1Passing.setText(String.format("%-5s",df.format(percent) + "%"));
+			lblTeam1PassCompletes.setText(String.format("%-3s",Integer.toString(completes))); //$NON-NLS-1$
+			lblTeam1PassAttempts.setText(String.format("%-3s",Integer.toString(attempts))); //$NON-NLS-1$
+			lblTeam1Passing.setText(String.format("%-5s",df.format(percent) + "%")); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
-			lblTeam2PassCompletes.setText(String.format("%-3s",Integer.toString(completes)));
-			lblTeam2PassAttempts.setText(String.format("%-3s",Integer.toString(attempts)));
-			lblTeam2Passing.setText(String.format("%-5s",df.format(percent)+"%"));
+			lblTeam2PassCompletes.setText(String.format("%-3s",Integer.toString(completes))); //$NON-NLS-1$
+			lblTeam2PassAttempts.setText(String.format("%-3s",Integer.toString(attempts))); //$NON-NLS-1$
+			lblTeam2Passing.setText(String.format("%-5s",df.format(percent)+"%")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	public void updateShotStats(int teamNbr, int completes, int attempts, Float percent) {
 		if(teamNbr==1) {
-			lblTeam1ShotCompletes.setText(String.format("%-3s",Integer.toString(completes)));
-			lblTeam1ShotAttempts.setText(String.format("%-3s",Integer.toString(attempts)));
-			lblTeam1Shooting.setText(String.format("%-5s",df.format(percent)+"%"));
+			lblTeam1ShotCompletes.setText(String.format("%-3s",Integer.toString(completes))); //$NON-NLS-1$
+			lblTeam1ShotAttempts.setText(String.format("%-3s",Integer.toString(attempts))); //$NON-NLS-1$
+			lblTeam1Shooting.setText(String.format("%-5s",df.format(percent)+"%")); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
-			lblTeam2ShotCompletes.setText(String.format("%-3s",Integer.toString(completes)));
-			lblTeam2ShotAttempts.setText(String.format("%-3s",Integer.toString(attempts)));
-			lblTeam2Shooting.setText(String.format("%-5s",df.format(percent)+"%"));
+			lblTeam2ShotCompletes.setText(String.format("%-3s",Integer.toString(completes))); //$NON-NLS-1$
+			lblTeam2ShotAttempts.setText(String.format("%-3s",Integer.toString(attempts))); //$NON-NLS-1$
+			lblTeam2Shooting.setText(String.format("%-5s",df.format(percent)+"%")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	public void updateClearStats(int teamNbr, int completes, int attempts, Float percent) {
 		if (teamNbr==1) {
-			lblTeam1ClearCompletes.setText(String.format("%-3s",Integer.toString(completes)));
-			lblTeam1ClearAttempts.setText(String.format("%-3s",Integer.toString(attempts)));
-			lblTeam1Clearing.setText(String.format("%-5s",df.format(percent)+"%"));
+			lblTeam1ClearCompletes.setText(String.format("%-3s",Integer.toString(completes))); //$NON-NLS-1$
+			lblTeam1ClearAttempts.setText(String.format("%-3s",Integer.toString(attempts))); //$NON-NLS-1$
+			lblTeam1Clearing.setText(String.format("%-5s",df.format(percent)+"%")); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
-			lblTeam2ClearCompletes.setText(String.format("%-3s",Integer.toString(completes)));
-			lblTeam2ClearAttempts.setText(String.format("%-3s",Integer.toString(attempts)));
-			lblTeam2Clearing.setText(String.format("%-5s",df.format(percent)+"%"));
+			lblTeam2ClearCompletes.setText(String.format("%-3s",Integer.toString(completes))); //$NON-NLS-1$
+			lblTeam2ClearAttempts.setText(String.format("%-3s",Integer.toString(attempts))); //$NON-NLS-1$
+			lblTeam2Clearing.setText(String.format("%-5s",df.format(percent)+"%")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	public void updateTwoBarPassStats(int teamNbr, int completes, int attempts, Float percent) {
 		if(teamNbr==1) {
-			lblTeam1TwoBarPassCompletes.setText(String.format("%-3s",Integer.toString(completes)));
-			lblTeam1TwoBarPassAttempts.setText(String.format("%-3s",Integer.toString(attempts)));
-			lblTeam1TwoBarPassing.setText(String.format("%-5s",df.format(percent) + "%"));
+			lblTeam1TwoBarPassCompletes.setText(String.format("%-3s",Integer.toString(completes))); //$NON-NLS-1$
+			lblTeam1TwoBarPassAttempts.setText(String.format("%-3s",Integer.toString(attempts))); //$NON-NLS-1$
+			lblTeam1TwoBarPassing.setText(String.format("%-5s",df.format(percent) + "%")); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
-			lblTeam2TwoBarPassCompletes.setText(String.format("%-3s",Integer.toString(completes)));
-			lblTeam2TwoBarPassAttempts.setText(String.format("%-3s",Integer.toString(attempts)));
-			lblTeam2TwoBarPassing.setText(String.format("%-5s",df.format(percent)+"%"));
+			lblTeam2TwoBarPassCompletes.setText(String.format("%-3s",Integer.toString(completes))); //$NON-NLS-1$
+			lblTeam2TwoBarPassAttempts.setText(String.format("%-3s",Integer.toString(attempts))); //$NON-NLS-1$
+			lblTeam2TwoBarPassing.setText(String.format("%-5s",df.format(percent)+"%")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	public void updateScoring(int teamNbr, int scores) {
 		if(teamNbr==1) {
-			lblTeam1Scoring.setText(String.format("%-3s", Integer.toString(scores)));
+			lblTeam1Scoring.setText(String.format("%-3s", Integer.toString(scores))); //$NON-NLS-1$
 		} else {
-			lblTeam2Scoring.setText(String.format("%-3s", Integer.toString(scores)));
+			lblTeam2Scoring.setText(String.format("%-3s", Integer.toString(scores))); //$NON-NLS-1$
 		}
 	}
 	public void updateThreeBarScoring(int teamNbr, int scores) {
 		if(teamNbr==1) {
-			lblTeam1ThreeBarScoring.setText(String.format("%-3s", Integer.toString(scores)));
+			lblTeam1ThreeBarScoring.setText(String.format("%-3s", Integer.toString(scores))); //$NON-NLS-1$
 		} else {
-			lblTeam2ThreeBarScoring.setText(String.format("%-3s", Integer.toString(scores)));
+			lblTeam2ThreeBarScoring.setText(String.format("%-3s", Integer.toString(scores))); //$NON-NLS-1$
 		}
 	}
 	public void updateFiveBarScoring(int teamNbr, int scores) {
 		if(teamNbr==1) {
-			lblTeam1FiveBarScoring.setText(String.format("%-3s", Integer.toString(scores)));
+			lblTeam1FiveBarScoring.setText(String.format("%-3s", Integer.toString(scores))); //$NON-NLS-1$
 		} else {
-			lblTeam2FiveBarScoring.setText(String.format("%-3s", Integer.toString(scores)));
+			lblTeam2FiveBarScoring.setText(String.format("%-3s", Integer.toString(scores))); //$NON-NLS-1$
 		}
 	}
 	public void updateTwoBarScoring(int teamNbr, int scores) {
 		if(teamNbr==1) {
-			lblTeam1TwoBarScoring.setText(String.format("%-3s", Integer.toString(scores)));
+			lblTeam1TwoBarScoring.setText(String.format("%-3s", Integer.toString(scores))); //$NON-NLS-1$
 		} else {
-			lblTeam2TwoBarScoring.setText(String.format("%-3s", Integer.toString(scores)));
+			lblTeam2TwoBarScoring.setText(String.format("%-3s", Integer.toString(scores))); //$NON-NLS-1$
 		}
 	}
 	public void updateShotsOnGoal(int teamNbr, int sog) {
 		if(teamNbr==1) {
-			lblTeam1ShotsOnGoal.setText(String.format("%-3s", Integer.toString(sog)));
+			lblTeam1ShotsOnGoal.setText(String.format("%-3s", Integer.toString(sog))); //$NON-NLS-1$
 		} else {
-			lblTeam2ShotsOnGoal.setText(String.format("%-3s", Integer.toString(sog)));
+			lblTeam2ShotsOnGoal.setText(String.format("%-3s", Integer.toString(sog))); //$NON-NLS-1$
 		}
 	}
 	public void updateStuffs(int teamNbr, int stuffs) {
 		if(teamNbr==1) {
-			lblTeam1Stuffs.setText(String.format("%-3s", Integer.toString(stuffs)));
+			lblTeam1Stuffs.setText(String.format("%-3s", Integer.toString(stuffs))); //$NON-NLS-1$
 		} else {
-			lblTeam2Stuffs.setText(String.format("%-3s", Integer.toString(stuffs)));
+			lblTeam2Stuffs.setText(String.format("%-3s", Integer.toString(stuffs))); //$NON-NLS-1$
 		}
 	}
 	public void updateBreaks(int teamNbr, int breaks) {
 		if(teamNbr==1) {
-			lblTeam1Breaks.setText(String.format("%-3s", Integer.toString(breaks)));
+			lblTeam1Breaks.setText(String.format("%-3s", Integer.toString(breaks))); //$NON-NLS-1$
 		} else {
-			lblTeam2Breaks.setText(String.format("%-3s", Integer.toString(breaks)));
+			lblTeam2Breaks.setText(String.format("%-3s", Integer.toString(breaks))); //$NON-NLS-1$
 		}
 	}
 	public void updateTeams(int teamNbr, String name, String teamName) {
@@ -801,4 +823,14 @@ public class StatsDisplayPanel extends JPanel {
 			lblPlayerNames2.setText(name);
 		}
 	}
+	public void setTitle() {
+		String title=buildTitle();
+		TitledBorder border = BorderFactory.createTitledBorder(title);
+		border.setTitleJustification(TitledBorder.CENTER);
+		this.setBorder(border);
+	}
+	private String buildTitle() {
+		return Messages.getString("StatsDisplayPanel.StatisticsDisplayPanel", settings.getGameType()); //$NON-NLS-1$
+	}
+
 }

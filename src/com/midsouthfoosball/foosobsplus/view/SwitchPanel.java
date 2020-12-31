@@ -47,6 +47,7 @@ public class SwitchPanel extends JPanel {
 	private JButton btnClearAll;
 	private JLabel lblLastScored;
 	private Settings settings;
+	private Border innerBorder;
 
 	public SwitchPanel(Settings settings) {
 		
@@ -57,19 +58,19 @@ public class SwitchPanel extends JPanel {
 		dim.height = 50;
 		setPreferredSize(dim);
 		
-		btnSwitchSides = new JButton("Switch Sides");
-		btnSwitchTeams = new JButton("Switch Teams");
-		btnSwitchScores = new JButton("Switch Scores");
-		btnSwitchGameCounts = new JButton("Switch Game Counts");
-		btnSwitchTimeOuts = new JButton("Switch Time Outs");
-		btnSwitchResetWarns = new JButton("Switch Reset/Warns");
-		btnClearAll = new JButton("Clear All");
-		lblLastScored = new JLabel("     Last Scored     ");
+		btnSwitchSides = new JButton(Messages.getString("SwitchPanel.SwitchSides", settings.getGameType())); //$NON-NLS-1$
+		btnSwitchTeams = new JButton(Messages.getString("SwitchPanel.SwitchTeams", settings.getGameType())); //$NON-NLS-1$
+		btnSwitchScores = new JButton(Messages.getString("SwitchPanel.SwitchScores", settings.getGameType())); //$NON-NLS-1$
+		btnSwitchGameCounts = new JButton(Messages.getString("SwitchPanel.SwitchGameCounts", settings.getGameType())); //$NON-NLS-1$
+		btnSwitchTimeOuts = new JButton(Messages.getString("SwitchPanel.SwitchTimeOuts", settings.getGameType())); //$NON-NLS-1$
+		btnSwitchResetWarns = new JButton(Messages.getString("SwitchPanel.SwitchResetWarns", settings.getGameType())); //$NON-NLS-1$
+		btnClearAll = new JButton(Messages.getString("SwitchPanel.ClearAll", settings.getGameType())); //$NON-NLS-1$
+		lblLastScored = new JLabel(Messages.getString("SwitchPanel.LastScored", settings.getGameType())); //$NON-NLS-1$
 		lblLastScored.setBorder(BorderFactory.createLoweredBevelBorder());
 		
 		setMnemonics();
 
-		Border innerBorder = BorderFactory.createTitledBorder("Switch Panel");
+		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
 		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
@@ -77,6 +78,17 @@ public class SwitchPanel extends JPanel {
 		layoutComponents();
 	}
 	
+	public void changeGameType() {
+		btnSwitchSides.setText(Messages.getString("SwitchPanel.SwitchSides", settings.getGameType())); //$NON-NLS-1$
+		btnSwitchTeams.setText(Messages.getString("SwitchPanel.SwitchTeams", settings.getGameType())); //$NON-NLS-1$
+		btnSwitchScores.setText(Messages.getString("SwitchPanel.SwitchScores", settings.getGameType())); //$NON-NLS-1$
+		btnSwitchGameCounts.setText(Messages.getString("SwitchPanel.SwitchGameCounts", settings.getGameType())); //$NON-NLS-1$
+		btnSwitchTimeOuts.setText(Messages.getString("SwitchPanel.SwitchTimeOuts", settings.getGameType())); //$NON-NLS-1$
+		btnSwitchResetWarns.setText(Messages.getString("SwitchPanel.SwitchResetWarns", settings.getGameType())); //$NON-NLS-1$
+		btnClearAll.setText(Messages.getString("SwitchPanel.ClearAll", settings.getGameType())); //$NON-NLS-1$
+		lblLastScored.setText(Messages.getString("SwitchPanel.LastScored", settings.getGameType())); //$NON-NLS-1$
+		setTitle();
+	}
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
 		
@@ -249,6 +261,16 @@ public class SwitchPanel extends JPanel {
 	}
 	public void updateMnemonics() {
 		setMnemonics();
+	}
+	public void setTitle() {
+		String title=buildTitle();
+		TitledBorder border = BorderFactory.createTitledBorder(title);
+		border.setTitleJustification(TitledBorder.CENTER);
+		this.setBorder(border);
+	}
+
+	private String buildTitle() {
+		return Messages.getString("SwitchPanel.SwitchPanel", settings.getGameType()); //$NON-NLS-1$
 	}
 
 }

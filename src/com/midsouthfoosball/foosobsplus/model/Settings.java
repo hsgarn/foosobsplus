@@ -31,6 +31,7 @@ import java.util.Properties;
 
 public class Settings {
 	
+	private String gameType;
 	private String separator = FileSystems.getDefault().getSeparator();
 	private String tableName;
 	private String datapath;
@@ -184,6 +185,7 @@ public class Settings {
 	public Settings() throws IOException {
 		defaultProps = new Properties();
 		// sets default properties
+		defaultProps.setProperty("GameType", "Foosball");
 		defaultProps.setProperty("TableName", "");
 		defaultProps.setProperty("datapath", "c:" + separator + "temp");
 		defaultProps.setProperty("PointsToWin", "5");
@@ -332,6 +334,7 @@ public class Settings {
 		loadFromConfig();
 	}
 	
+	public String getGameType() {return gameType;}
 	public String getTableName() {return tableName;}
 	public String getDatapath() {return configProps.getProperty("datapath");}
 	public int getPointsToWin() {return pointsToWin;}
@@ -614,6 +617,10 @@ public class Settings {
 	public String getUndoHotKey() {return undoHotKey;}
 	public String getRedoHotKey() {return redoHotKey;}
 	
+	public void setGameType(String gameType) {
+		this.gameType = gameType;
+		configProps.setProperty("GameType", this.gameType);
+	}
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
 		configProps.setProperty("TableName", this.tableName);
@@ -1168,6 +1175,7 @@ public class Settings {
 		configProps.setProperty("RedoHotKey", this.redoHotKey);
 	}
 	
+	public String getDefaultGameType() {return defaultProps.getProperty("GameType");}
 	public int getDefaultPointsToWin() {return Integer.parseInt(defaultProps.getProperty("PointsToWin"));}
 	public int getDefaultMaxWin() {return Integer.parseInt(defaultProps.getProperty("MaxWin"));}
 	public int getDefaultWinBy() {return Integer.parseInt(defaultProps.getProperty("WinBy"));}
@@ -1320,6 +1328,7 @@ public class Settings {
 			loadFromConfig();
 			saveToConfig();
 		}
+		gameType = configProps.getProperty("GameType");
 		tableName = configProps.getProperty("TableName");
 		datapath = configProps.getProperty("datapath");
 		pointsToWin = Integer.parseInt(configProps.getProperty("PointsToWin"));
@@ -1469,6 +1478,7 @@ public class Settings {
 	}
 	
 	public void saveToConfig() throws IOException {
+		configProps.setProperty("GameType", this.getGameType());
 		configProps.setProperty("TableName", this.getTableName());
 		configProps.setProperty("datapath", this.getDatapath());
 		configProps.setProperty("PointsToWin", Integer.toString(this.getPointsToWin()));

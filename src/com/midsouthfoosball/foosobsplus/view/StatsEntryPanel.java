@@ -55,6 +55,7 @@ public class StatsEntryPanel extends JPanel {
 	private JButton btnClear;
 	private JScrollPane scrCodeHistory;
 	private Settings settings;
+	private Border innerBorder;
 
 	public StatsEntryPanel(Settings settings) {
 		this.settings = settings;
@@ -63,14 +64,14 @@ public class StatsEntryPanel extends JPanel {
 		dim.height = 50;
 		setPreferredSize(dim);
 		
-		lblCode = new JLabel("Code:");
-		lblCodeHistory = new JLabel("History:");
+		lblCode = new JLabel(buildTitle());
+		lblCodeHistory = new JLabel(Messages.getString("StatsEntryPanel.History", settings.getGameType())); //$NON-NLS-1$
 		txtCode = new JTextField();
 		mdlCodeHistory = new DefaultListModel<String>();
 		lstCodeHistory = new JList<String>(mdlCodeHistory);
-		btnUndo = new JButton("Undo");
-		btnRedo = new JButton("Redo");
-		btnClear = new JButton("Clear");
+		btnUndo = new JButton(Messages.getString("StatsEntryPanel.Undo", settings.getGameType())); //$NON-NLS-1$
+		btnRedo = new JButton(Messages.getString("StatsEntryPanel.Redo", settings.getGameType())); //$NON-NLS-1$
+		btnClear = new JButton(Messages.getString("StatsEntryPanel.Clear", settings.getGameType())); //$NON-NLS-1$
 		scrCodeHistory = new JScrollPane();
 		scrCodeHistory.setViewportView(lstCodeHistory);
 		lstCodeHistory.setLayoutOrientation(JList.VERTICAL);
@@ -78,12 +79,20 @@ public class StatsEntryPanel extends JPanel {
 
 		setMnemonics();
 		
-		Border innerBorder = BorderFactory.createTitledBorder("Statistics Entry Panel");
+		innerBorder = BorderFactory.createTitledBorder(Messages.getString("StatsEntryPanel.StatisticsEntryPanel", settings.getGameType())); //$NON-NLS-1$
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
 		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
+	}
+	public void changeGameType() {
+		lblCode.setText(buildTitle());
+		lblCodeHistory.setText(Messages.getString("StatsEntryPanel.History", settings.getGameType())); //$NON-NLS-1$
+		btnUndo.setText(Messages.getString("StatsEntryPanel.Undo", settings.getGameType())); //$NON-NLS-1$
+		btnRedo.setText(Messages.getString("StatsEntryPanel.Redo", settings.getGameType())); //$NON-NLS-1$
+		btnClear.setText(Messages.getString("StatsEntryPanel.Clear", settings.getGameType())); //$NON-NLS-1$
+		setTitle();
 	}
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
@@ -205,7 +214,7 @@ public class StatsEntryPanel extends JPanel {
 		mdlCodeHistory.insertElementAt(code, 0);
 	}
 	public void errorCodeHistory() {
-		mdlCodeHistory.set(0, mdlCodeHistory.firstElement() + "<Invalid>");
+		mdlCodeHistory.set(0, mdlCodeHistory.firstElement() + Messages.getString("StatsEntryPanel.Invalid", settings.getGameType())); //$NON-NLS-1$
 	}
 	public void removeCodeHistory() {
 		if (mdlCodeHistory.getSize() > 0) {
@@ -216,7 +225,7 @@ public class StatsEntryPanel extends JPanel {
 		txtCode.selectAll();
 	}
 	public void clearAll() {
-		updateCode("");
+		updateCode(""); //$NON-NLS-1$
 		mdlCodeHistory.clear();
 	}
 	public String getCode() {
@@ -230,11 +239,11 @@ public class StatsEntryPanel extends JPanel {
 
 	  public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) 
 	  {
-		  String tmp = "";
+		  String tmp = ""; //$NON-NLS-1$
 		  tmp = (String) value;
-		  setBackground(UIManager.getColor("List.background"));
-		  setForeground(UIManager.getColor("List.foreground"));
-		  if (tmp.indexOf("<") != -1) {
+		  setBackground(UIManager.getColor("List.background")); //$NON-NLS-1$
+		  setForeground(UIManager.getColor("List.foreground")); //$NON-NLS-1$
+		  if (tmp.indexOf("<") != -1) { //$NON-NLS-1$
 			  setForeground(Color.RED);
 		  }
           setText(tmp);
@@ -244,4 +253,13 @@ public class StatsEntryPanel extends JPanel {
     public void setFocusOnCode() {
     	txtCode.requestFocusInWindow();
     }
+	public void setTitle() {
+		String title=buildTitle();
+		TitledBorder border = BorderFactory.createTitledBorder(title);
+		border.setTitleJustification(TitledBorder.CENTER);
+		this.setBorder(border);
+	}
+	private String buildTitle() {
+		return Messages.getString("StatsEntryPanel.Code", settings.getGameType()); //$NON-NLS-1$
+	}
 }

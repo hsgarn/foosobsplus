@@ -36,6 +36,8 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
+import com.midsouthfoosball.foosobsplus.model.Settings;
+
 @SuppressWarnings("serial")
 public class TablePanel extends JPanel {
 
@@ -48,30 +50,44 @@ public class TablePanel extends JPanel {
 	private JButton btnLoad;
 	private JButton btnSet;
 	private JButton btnClear;
+	private Settings settings;
+	private Border innerBorder;
 	
-	public TablePanel() {
+	public TablePanel(Settings settings) {
+		
+		this.settings = settings;
 
 		Dimension dim = getPreferredSize();
 		dim.width = 400;
 		dim.height = 200;
 		setPreferredSize(dim);
 		
-		lblTournamentName = new JLabel("Tournament Name: ");
-		lblEventName = new JLabel("Event Name: ");
-		lblTableName = new JLabel("Table Name: ");
+		lblTournamentName = new JLabel(Messages.getString("TablePanel.TournamentName", settings.getGameType())); //$NON-NLS-1$
+		lblEventName = new JLabel(Messages.getString("TablePanel.EventName", settings.getGameType())); //$NON-NLS-1$
+		lblTableName = new JLabel(Messages.getString("TablePanel.TableName", settings.getGameType())); //$NON-NLS-1$
 		txtTournamentName = new JTextField(30);
 		txtEventName = new JTextField(30);
 		txtTableName = new JTextField(10);
-		btnLoad = new JButton("Load");
-		btnSet = new JButton("Set");
-		btnClear = new JButton("Clear");
+		btnLoad = new JButton(Messages.getString("TablePanel.Load", settings.getGameType())); //$NON-NLS-1$
+		btnSet = new JButton(Messages.getString("TablePanel.Set", settings.getGameType())); //$NON-NLS-1$
+		btnClear = new JButton(Messages.getString("TablePanel.Clear", settings.getGameType())); //$NON-NLS-1$
 		
-		Border innerBorder = BorderFactory.createTitledBorder("Table Information");
+		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
 		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
+	}
+	
+	public void changeGameType() {
+		lblTournamentName.setText(Messages.getString("TablePanel.TournamentName", settings.getGameType())); //$NON-NLS-1$
+		lblEventName.setText(Messages.getString("TablePanel.EventName", settings.getGameType())); //$NON-NLS-1$
+		lblTableName.setText(Messages.getString("TablePanel.TableName", settings.getGameType())); //$NON-NLS-1$
+		btnLoad.setText(Messages.getString("TablePanel.Load", settings.getGameType())); //$NON-NLS-1$
+		btnSet.setText(Messages.getString("TablePanel.Set", settings.getGameType())); //$NON-NLS-1$
+		btnClear.setText(Messages.getString("TablePanel.Clear", settings.getGameType())); //$NON-NLS-1$
+		setTitle();
 	}
 
 	public void layoutComponents() {
@@ -220,8 +236,18 @@ public class TablePanel extends JPanel {
 		txtTableName.selectAll();
 	}
 	public void clearAllFields() {
-		updateTournamentName("");
-		updateEventName("");
-		updateTableName("");
+		updateTournamentName(""); //$NON-NLS-1$
+		updateEventName(""); //$NON-NLS-1$
+		updateTableName(""); //$NON-NLS-1$
 	}
+	public void setTitle() {
+		String title=buildTitle();
+		TitledBorder border = BorderFactory.createTitledBorder(title);
+		border.setTitleJustification(TitledBorder.CENTER);
+		this.setBorder(border);
+	}
+	private String buildTitle() {
+		return Messages.getString("TablePanel.TableInformation", settings.getGameType()); //$NON-NLS-1$
+	}
+
 }

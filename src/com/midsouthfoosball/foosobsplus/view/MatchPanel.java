@@ -60,6 +60,7 @@ public class MatchPanel extends JPanel {
 	private int currentGameNumber = 1;
 	private int gameWinners[] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
 	private int maxGameCount;
+	private Border innerBorder;
 	
 	public MatchPanel(Settings settings) {
 
@@ -71,26 +72,36 @@ public class MatchPanel extends JPanel {
 		dim.height = 100;
 		setPreferredSize(dim);
 		
-		btnStartMatch = new JButton("Start Match");
-		btnPauseMatch = new JButton("Pause Match");
-		btnStartGame = new JButton("Start Game");
-		lblStartTimeLabel = new JLabel("Start Time:");
-		lblElapsedTimeLabel = new JLabel("Elapsed Time:");
-		lblGameTimeLabel = new JLabel("Game Time:");
-		lblStartTime = new JLabel("00:00:00");
-		lblElapsedTime = new JLabel("00:00:00");
-		lblGameTime = new JLabel("00:00:00");
+		btnStartMatch = new JButton(Messages.getString("MatchPanel.StartMatch", settings.getGameType())); //$NON-NLS-1$
+		btnPauseMatch = new JButton(Messages.getString("MatchPanel.PauseMatch", settings.getGameType())); //$NON-NLS-1$
+		btnStartGame = new JButton(Messages.getString("MatchPanel.StartGame", settings.getGameType())); //$NON-NLS-1$
+		lblStartTimeLabel = new JLabel(Messages.getString("MatchPanel.StartTime", settings.getGameType())); //$NON-NLS-1$
+		lblElapsedTimeLabel = new JLabel(Messages.getString("MatchPanel.ElapsedTime", settings.getGameType())); //$NON-NLS-1$
+		lblGameTimeLabel = new JLabel(Messages.getString("MatchPanel.GameTime", settings.getGameType())); //$NON-NLS-1$
+		lblStartTime = new JLabel("00:00:00"); //$NON-NLS-1$
+		lblElapsedTime = new JLabel("00:00:00"); //$NON-NLS-1$
+		lblGameTime = new JLabel("00:00:00"); //$NON-NLS-1$
 		gameTable = new JTable(new GameTableModel(maxGameCount));
 		gameTable.setDefaultRenderer(Object.class, new GameTableCellRenderer());
 		
 		setMnemonics();
 		
-		Border innerBorder = BorderFactory.createTitledBorder("Match Information");
+		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
 		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
+	}
+	
+	public void changeGameType() {
+		btnStartMatch.setText(Messages.getString("MatchPanel.StartMatch", settings.getGameType())); //$NON-NLS-1$
+		btnPauseMatch.setText(Messages.getString("MatchPanel.PauseMatch", settings.getGameType())); //$NON-NLS-1$
+		btnStartGame.setText(Messages.getString("MatchPanel.StartGame", settings.getGameType())); //$NON-NLS-1$
+		lblStartTimeLabel.setText(Messages.getString("MatchPanel.StartTime", settings.getGameType())); //$NON-NLS-1$
+		lblElapsedTimeLabel.setText(Messages.getString("MatchPanel.ElapsedTime", settings.getGameType())); //$NON-NLS-1$
+		lblGameTimeLabel.setText(Messages.getString("MatchPanel.GameTime", settings.getGameType())); //$NON-NLS-1$
+		setTitle();
 	}
 	public void resizeGameTable() {
 		GameTableModel tableModel = new GameTableModel(settings.getGamesToWin()*2-1);
@@ -275,10 +286,10 @@ public class MatchPanel extends JPanel {
 	  }
 	  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
 	  {
-		  String tmp = "";
+		  String tmp;
 		  tmp = (String) value;
 		  setHorizontalAlignment(SwingConstants.RIGHT);
-		  setBackground(UIManager.getColor("Table.background"));
+		  setBackground(UIManager.getColor("Table.background")); //$NON-NLS-1$
 		  ////// Center game number columns and highlight current game number column \\\\\\
 		  if (row == 0 && column >=1 ) {
 			  setHorizontalAlignment(SwingConstants.CENTER);
@@ -311,4 +322,16 @@ public class MatchPanel extends JPanel {
           return this;
 	  }
     }
+	
+	public void setTitle() {
+		String title=buildTitle();
+		TitledBorder border = BorderFactory.createTitledBorder(title);
+		border.setTitleJustification(TitledBorder.CENTER);
+		this.setBorder(border);
+	}
+
+	private String buildTitle() {
+		return Messages.getString("MatchPanel.MatchInformation", settings.getGameType()); //$NON-NLS-1$
+	}
+
 }

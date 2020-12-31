@@ -68,6 +68,7 @@ public class TeamPanel extends JPanel {
 	private JButton btnClear;
 	private Settings settings;
 	private int teamNbr;
+	private Border innerBorder;
 	
 	public TeamPanel(int teamNbr, String teamColor, Settings settings) {
 		
@@ -87,58 +88,77 @@ public class TeamPanel extends JPanel {
 		dim.height = 50;
 		setPreferredSize(dim);
 		
-		lblTeamName = new JLabel("Team Name: ");
+		lblTeamName = new JLabel(Messages.getString("TeamPanel.TeamName",settings.getGameType())); //$NON-NLS-1$
 		txtTeamName = new JTextField(50);
-		txtTeamName.setName("Team " + Integer.toString(teamNbr));
-		lblForwardName = new JLabel("Forward Name: ");
+		txtTeamName.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
+		lblForwardName = new JLabel(Messages.getString("TeamPanel.ForwardName",settings.getGameType())); //$NON-NLS-1$
 		txtForwardName = new JTextField(50);
-		txtForwardName.setName("Team " + Integer.toString(teamNbr));
-		lblGoalieName = new JLabel("Goalie Name: ");
+		txtForwardName.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
+		lblGoalieName = new JLabel(Messages.getString("TeamPanel.GoalieName",settings.getGameType())); //$NON-NLS-1$
 		txtGoalieName = new JTextField(50);
-		txtGoalieName.setName("Team " + Integer.toString(teamNbr));
-		btnSwitchPositions = new JButton("Switch Positions");
-		btnSwitchPositions.setName("Team " + Integer.toString(teamNbr));
-		lblScore = new JLabel("Score: ");
-		btnScoreDecrease = new JButton("-");
-		btnScoreDecrease.setName("Team " + Integer.toString(teamNbr));
+		txtGoalieName.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
+		btnSwitchPositions = new JButton(Messages.getString("TeamPanel.SwitchPositions",settings.getGameType())); //$NON-NLS-1$
+		btnSwitchPositions.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
+		lblScore = new JLabel(Messages.getString("TeamPanel.Score",settings.getGameType())); //$NON-NLS-1$
+		btnScoreDecrease = new JButton(Messages.getString("TeamPanel.Decrement",settings.getGameType())); //$NON-NLS-1$
+		btnScoreDecrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
 		txtScore = new JTextField(3);
 		txtScore.setHorizontalAlignment(JTextField.CENTER);
-		txtScore.setName("Team " + Integer.toString(teamNbr));
-		btnScoreIncrease = new JButton("+");
-		btnScoreIncrease.setName("Team " + Integer.toString(teamNbr));
-		lblGameCount = new JLabel("Game Count: ");
-		btnGameCountDecrease = new JButton("-");
-		btnGameCountDecrease.setName("Team " + Integer.toString(teamNbr));
+		txtScore.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
+		btnScoreIncrease = new JButton(Messages.getString("TeamPanel.Increment",settings.getGameType())); //$NON-NLS-1$
+		btnScoreIncrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
+		lblGameCount = new JLabel(Messages.getString("TeamPanel.GameCount",settings.getGameType())); //$NON-NLS-1$
+		btnGameCountDecrease = new JButton(Messages.getString("TeamPanel.Decrement",settings.getGameType())); //$NON-NLS-1$
+		btnGameCountDecrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
 		txtGameCount = new JTextField(3);
 		txtGameCount.setHorizontalAlignment(JTextField.CENTER);
-		txtGameCount.setName("Team " + Integer.toString(teamNbr));
-		btnGameCountIncrease = new JButton("+");
-		btnGameCountIncrease.setName("Team " + Integer.toString(teamNbr));
-		lblTimeOutCount = new JLabel("Time Out Count: ");
-		btnTimeOutCountDecrease = new JButton("Return TO");
-		btnTimeOutCountDecrease.setName("Team " + Integer.toString(teamNbr));
+		txtGameCount.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
+		btnGameCountIncrease = new JButton(Messages.getString("TeamPanel.Increment",settings.getGameType())); //$NON-NLS-1$
+		btnGameCountIncrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
+		lblTimeOutCount = new JLabel(Messages.getString("TeamPanel.TimeOutCount",settings.getGameType())); //$NON-NLS-1$
+		btnTimeOutCountDecrease = new JButton(Messages.getString("TeamPanel.ReturnTimeOut",settings.getGameType())); //$NON-NLS-1$
+		btnTimeOutCountDecrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
 		txtTimeOutCount = new JTextField(3);
 		txtTimeOutCount.setHorizontalAlignment(JTextField.CENTER);
-		txtTimeOutCount.setName("Team " + Integer.toString(teamNbr));
-		btnTimeOutCountIncrease = new JButton("Use TO");
-		btnTimeOutCountIncrease.setName("Team " + Integer.toString(teamNbr));
-		btnReset = new JToggleButton("Reset");
-		btnReset.setName("Team " + Integer.toString(teamNbr));
-		lblLastScoredTime = new JLabel("0");
-		lblLastScoredTime.setName("Team " + Integer.toString(teamNbr));
+		txtTimeOutCount.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
+		btnTimeOutCountIncrease = new JButton(Messages.getString("TeamPanel.UseTimeOut",settings.getGameType())); //$NON-NLS-1$
+		btnTimeOutCountIncrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
+		btnReset = new JToggleButton(Messages.getString("TeamPanel.Reset",settings.getGameType())); //$NON-NLS-1$
+		btnReset.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
+		lblLastScoredTime = new JLabel("0"); //$NON-NLS-1$
+		lblLastScoredTime.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
 		lblLastScoredTime.setOpaque(true);
 		lblLastScoredTime.setBackground(Color.CYAN);
-		btnWarn = new JToggleButton(" Warn ");
-		btnWarn.setName("Team " + Integer.toString(teamNbr));
-		btnClear = new JButton("Clear");
-		btnClear.setName("Team " + Integer.toString(teamNbr));
+		btnWarn = new JToggleButton(Messages.getString("TeamPanel.Warn",settings.getGameType())); //$NON-NLS-1$
+		btnWarn.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
+		btnClear = new JButton(Messages.getString("TeamPanel.Clear",settings.getGameType())); //$NON-NLS-1$
+		btnClear.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
 		setMnemonics(teamNbr);
 
-		Border innerBorder = BorderFactory.createTitledBorder(buildTitle());
+		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
 		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 
+	}
+	public void changeGameType() {
+		lblTeamName.setText(Messages.getString("TeamPanel.TeamName",settings.getGameType())); //$NON-NLS-1$
+		lblForwardName.setText(Messages.getString("TeamPanel.ForwardName",settings.getGameType())); //$NON-NLS-1$
+		lblGoalieName.setText(Messages.getString("TeamPanel.GoalieName",settings.getGameType())); //$NON-NLS-1$
+		btnSwitchPositions.setText(Messages.getString("TeamPanel.SwitchPositions",settings.getGameType())); //$NON-NLS-1$
+		lblScore.setText(Messages.getString("TeamPanel.Score",settings.getGameType())); //$NON-NLS-1$
+		btnScoreDecrease.setText(Messages.getString("TeamPanel.Decrement",settings.getGameType())); //$NON-NLS-1$
+		btnScoreIncrease.setText(Messages.getString("TeamPanel.Increment",settings.getGameType())); //$NON-NLS-1$
+		lblGameCount.setText(Messages.getString("TeamPanel.GameCount",settings.getGameType())); //$NON-NLS-1$
+		btnGameCountDecrease.setText(Messages.getString("TeamPanel.Decrement",settings.getGameType())); //$NON-NLS-1$
+		btnGameCountIncrease.setText(Messages.getString("TeamPanel.Increment",settings.getGameType())); //$NON-NLS-1$
+		lblTimeOutCount.setText(Messages.getString("TeamPanel.TimeOutCount",settings.getGameType())); //$NON-NLS-1$
+		btnTimeOutCountDecrease.setText(Messages.getString("TeamPanel.ReturnTimeOut",settings.getGameType())); //$NON-NLS-1$
+		btnTimeOutCountIncrease.setText(Messages.getString("TeamPanel.UseTimeOut",settings.getGameType())); //$NON-NLS-1$
+		btnReset.setText(Messages.getString("TeamPanel.Reset",settings.getGameType())); //$NON-NLS-1$
+		btnWarn.setText(Messages.getString("TeamPanel.Warn",settings.getGameType())); //$NON-NLS-1$
+		btnClear.setText(Messages.getString("TeamPanel.Clear",settings.getGameType())); //$NON-NLS-1$
+		setTitle();
 	}
 	private void setMnemonics(int teamNbr) {
 		if (teamNbr == 1) {
@@ -584,7 +604,8 @@ public class TeamPanel extends JPanel {
 	}
 
 	public void setTitle(String title) {
-		if (title.equals("")) title=buildTitle();
+//		if (title.isEmpty()) title=buildTitle();
+		title=buildTitle();
 		TitledBorder border = BorderFactory.createTitledBorder(title);
 		border.setTitleJustification(TitledBorder.CENTER);
 		this.setBorder(border);
@@ -613,12 +634,12 @@ public class TeamPanel extends JPanel {
 		setTitle(buildTitle());
 	}
 	private String buildTitle() {
-		String theColor = "";
+		String theColor;
 		if (teamNbr==1) {
 			theColor = settings.getSide1Color();
 		} else {
 			theColor = settings.getSide2Color();
 		}
-		return "Team " + teamNbr + " Information (" + theColor + " side)";
+		return Messages.getString("TeamPanel.Team",settings.getGameType()) + teamNbr + Messages.getString("TeamPanel.Information",settings.getGameType()) + theColor + Messages.getString("TeamPanel.Side",settings.getGameType()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }
