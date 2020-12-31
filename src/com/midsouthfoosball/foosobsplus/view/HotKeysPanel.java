@@ -533,10 +533,10 @@ public class HotKeysPanel extends JPanel {
 		add(txtSwitchTimeOutsHotKey, "cell 4 16,alignx left"); //$NON-NLS-1$
 		txtSwitchTimeOutsHotKey.setColumns(10);
 		
-		btnSave = new JButton(Messages.getString("HotKeysPanel.Save")); //$NON-NLS-1$
+		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		add(btnSave, "cell 3 18,alignx center"); //$NON-NLS-1$
 		
-		JButton btnCancel = new JButton(Messages.getString("HotKeysPanel.Cancel")); //$NON-NLS-1$
+		JButton btnCancel = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JComponent comp = (JComponent) e.getSource();
@@ -546,7 +546,7 @@ public class HotKeysPanel extends JPanel {
 		});
 		add(btnCancel, "cell 6 18,alignx center"); //$NON-NLS-1$
 		
-		JButton btnRestoreDefaults = new JButton(Messages.getString("HotKeysPanel.RestoreDefaults")); //$NON-NLS-1$
+		JButton btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
 		btnRestoreDefaults.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				restoreDefaults(settings);
@@ -650,7 +650,7 @@ public class HotKeysPanel extends JPanel {
 		try {
 			settings.saveToConfig();
 		} catch (IOException ex) {
-			System.out.print(Messages.getString("HotKeysPanel.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
+			System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
 		}
 	}
 	////// Listeners \\\\\\

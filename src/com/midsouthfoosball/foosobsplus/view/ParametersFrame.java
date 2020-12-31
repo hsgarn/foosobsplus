@@ -10,9 +10,10 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 public class ParametersFrame extends JFrame {
 	
 	private ParametersPanel parametersPanel;
+	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
 	
 	public ParametersFrame(Settings settings) {
-		super("FoosOBSPlus Parameter Settings");
+		super(programName + " " + Messages.getString("ParametersFrame.ParameterSettings")); //$NON-NLS-1$ //$NON-NLS-2$
 
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
@@ -20,7 +21,7 @@ public class ParametersFrame extends JFrame {
 		try {
 			parametersPanel = new ParametersPanel(settings);
 		} catch (IOException e) {
-			System.out.println("Problem loading settings.");
+			System.out.println(Messages.getString("Errors.LoadSettingsError")); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 		parametersPanel.setPreferredSize(new Dimension(650, 500));

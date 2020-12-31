@@ -42,7 +42,7 @@ public class GameTableWindowFrame extends JFrame {
 		        }
 		    }
 		} catch (Exception e) {
-		    System.out.println(Messages.getString("GameTableWindowFrame.LookAndFeelException")); //$NON-NLS-1$
+		    System.out.println(Messages.getString("Errors.LookAndFeelException")); //$NON-NLS-1$
 		}
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

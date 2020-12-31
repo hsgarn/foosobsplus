@@ -243,7 +243,7 @@ public class FileNamesPanel extends JPanel {
 		try {
 			settings.saveToConfig();
 		} catch (IOException ex) {
-			System.out.print(Messages.getString("FileNamesPanel.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
+			System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
 		}
 	}
 	public void setLayout(Settings settings) {	
@@ -269,7 +269,7 @@ public class FileNamesPanel extends JPanel {
 							try {
 								Files.createDirectory(Paths.get(directoryName));
 							} catch (IOException e1) {
-								System.out.println(Messages.getString("FileNamesPanel.ErrorCreatingDirectory") + e1.getMessage()); //$NON-NLS-1$
+								System.out.println(Messages.getString("Errors.ErrorCreatingDirectory") + e1.getMessage()); //$NON-NLS-1$
 							}
 						}
 						formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
@@ -703,7 +703,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2ClearCompletesFileName.setText(settings.getClearCompletesFileName(2));		add(txtTeam2ClearCompletesFileName, "cell 8 13,alignx left"); //$NON-NLS-1$
 		txtTeam2ClearCompletesFileName.setColumns(20);
 
-		JButton btnSaveFileNames = new JButton(Messages.getString("FileNamesPanel.Save")); //$NON-NLS-1$
+		JButton btnSaveFileNames = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		btnSaveFileNames.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveSettings(settings);
@@ -826,7 +826,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2TwoBarPassCompletesFileName.setColumns(20);
 		add(txtTeam2TwoBarPassCompletesFileName, "cell 8 17,alignx left"); //$NON-NLS-1$
 
-		JButton btnCancelFileNames = new JButton(Messages.getString("FileNamesPanel.Cancel")); //$NON-NLS-1$
+		JButton btnCancelFileNames = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
 		btnCancelFileNames.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JComponent comp = (JComponent) e.getSource();
@@ -836,7 +836,7 @@ public class FileNamesPanel extends JPanel {
 		});
 		add(btnCancelFileNames, "cell 4 19,alignx center"); //$NON-NLS-1$
 
-		JButton btnRestoreDefaults = new JButton(Messages.getString("FileNamesPanel.RestoreDefaults")); //$NON-NLS-1$
+		JButton btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
 		btnRestoreDefaults.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				restoreDefaults(settings);

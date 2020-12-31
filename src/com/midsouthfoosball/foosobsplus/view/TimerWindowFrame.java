@@ -22,8 +22,6 @@ package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
@@ -34,24 +32,24 @@ import javax.swing.UIManager.LookAndFeelInfo;
 public class TimerWindowFrame extends JFrame {
 	
 	private TimerWindowPanel timerWindowPanel;
+	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
 
 	public TimerWindowFrame(MainFrame mainFrame) {
-		super("FoosOBSPlus Timer Window");
+		super(programName + " " + Messages.getString("TimerWindowFrame.TimerWindow")); //$NON-NLS-1$ //$NON-NLS-2$
 		try {
 		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-		        if ("Nimbus".equals(info.getName())) {
+		        if ("Nimbus".equals(info.getName())) { //$NON-NLS-1$
 		            UIManager.setLookAndFeel(info.getClassName());
 		            break;
 		        }
 		    }
 		} catch (Exception e) {
-		    System.out.println("Can't set look and feel.");
+		    System.out.println(Messages.getString("Errors.LookAndFeelException")); //$NON-NLS-1$
 		}
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//		setAlwaysOnTop(true);
 		
-		timerWindowPanel = new TimerWindowPanel("0",Color.GREEN);
+		timerWindowPanel = new TimerWindowPanel("0",Color.GREEN); //$NON-NLS-1$
 		timerWindowPanel.setPreferredSize(new Dimension(256, 70));
 
 		getContentPane().add(timerWindowPanel);

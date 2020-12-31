@@ -203,10 +203,10 @@ public final class MainFrame extends JFrame implements WindowListener {
 					try {
 						java.awt.Desktop.getDesktop().browse(helpURI);
 					} catch (IOException ex) {
-						System.out.print(Messages.getString("MainFrame.URICallingError") + ex.getMessage());		 //$NON-NLS-1$
+						System.out.print(Messages.getString("Errors.URICallingError") + ex.getMessage());		 //$NON-NLS-1$
 					}
 		    	} catch (URISyntaxException ex) {
-					System.out.print(Messages.getString("MainFrame.URISyntaxError") + ex.getMessage());		 //$NON-NLS-1$
+					System.out.print(Messages.getString("Errors.URISyntaxError") + ex.getMessage());		 //$NON-NLS-1$
 				}
 			}
 		});
@@ -292,7 +292,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		List<String> lines = Collections.emptyList();
 		try {lines = Files.readAllLines(Paths.get(file)); }
 		catch (IOException e) {
-			System.out.println(Messages.getString("MainFrame.ReadFileError") + file); //$NON-NLS-1$
+			System.out.println(Messages.getString("Errors.ReadFileError") + file); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 		lines.forEach(line -> main.processCode(line.toUpperCase(), false));
@@ -306,7 +306,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 				bw.newLine();
 			}
 		} catch (IOException e) {
-			System.out.println(Messages.getString("MainFrame.WriteFileError") + file); //$NON-NLS-1$
+			System.out.println(Messages.getString("Errors.WriteFileError") + file); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 	}

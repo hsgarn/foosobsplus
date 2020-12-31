@@ -22,7 +22,7 @@ public class FileNamesFrame extends JFrame {
 		try {
 			fileNamesPanel = new FileNamesPanel(settings, obsInterface);
 		} catch (IOException e) {
-			System.out.println(Messages.getString("FileNamesFrame.LoadSettingsError")); //$NON-NLS-1$
+			System.out.println(Messages.getString("Errors.LoadSettingsError")); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 		fileNamesPanel.setPreferredSize(new Dimension(1100, 650));

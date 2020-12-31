@@ -448,6 +448,10 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.062 12/31/2020<br/>
+Externalize Strings in LastScored1WindowFrame, LastScored2WindowFrame, ParametersFrame, ParametersPanel, TimerWindowFrame<br/>
+Consolidate Error and Global strings<br/>
+<br/>
 v1.061 12/31/2020<br/>
 Externalize Strings in MainFrame, FileNamesFrame, FileNamesPanel, GameTableWindowFrame, HotKeysFrame, HotKeysPanel<br/>
 <br/>

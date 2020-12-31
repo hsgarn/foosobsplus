@@ -32,24 +32,25 @@ import javax.swing.UIManager.LookAndFeelInfo;
 public class LastScored2WindowFrame extends JFrame {
 	
 	private LastScored2WindowPanel lastScored2WindowPanel;
+	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
 
 	public LastScored2WindowFrame(MainFrame mainFrame) {
-		super("FoosOBSPlus Team 2 Last Scored Timer Window");
+		super(programName + " " + Messages.getString("LastScored2WindowFrame.Team2LastScoredTimerWindow")); //$NON-NLS-1$ //$NON-NLS-2$
 		try {
 		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-		        if ("Nimbus".equals(info.getName())) {
+		        if ("Nimbus".equals(info.getName())) { //$NON-NLS-1$
 		            UIManager.setLookAndFeel(info.getClassName());
 		            break;
 		        }
 		    }
 		} catch (Exception e) {
-		    System.out.println("Can't set look and feel.");
+		    System.out.println(Messages.getString("Errors.LookAndFeelException")); //$NON-NLS-1$
 		}
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 //		setAlwaysOnTop(true);
 		
-		lastScored2WindowPanel = new LastScored2WindowPanel("0",Color.CYAN);
+		lastScored2WindowPanel = new LastScored2WindowPanel("0",Color.CYAN); //$NON-NLS-1$
 		lastScored2WindowPanel.setPreferredSize(new Dimension(256, 70));
 
 		getContentPane().add(lastScored2WindowPanel);
