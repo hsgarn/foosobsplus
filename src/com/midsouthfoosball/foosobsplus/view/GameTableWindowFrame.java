@@ -30,17 +30,19 @@ import javax.swing.UIManager.LookAndFeelInfo;
 @SuppressWarnings("serial")
 public class GameTableWindowFrame extends JFrame {
 	
+	private static final String programName = "FoosOBSPlus"; //$NON-NLS-1$
+	
 	public GameTableWindowFrame(GameTableWindowPanel gameTableWindowPanel, MainFrame mainFrame) {
-		super("FoosOBSPlus Game Table Window");
+		super(programName + " " + Messages.getString("GameTableWindowFrame.GameTableWindow")); //$NON-NLS-1$ //$NON-NLS-2$
 		try {
 		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-		        if ("Nimbus".equals(info.getName())) {
+		        if ("Nimbus".equals(info.getName())) { //$NON-NLS-1$
 		            UIManager.setLookAndFeel(info.getClassName());
 		            break;
 		        }
 		    }
 		} catch (Exception e) {
-		    System.out.println("Can't set look and feel.");
+		    System.out.println(Messages.getString("GameTableWindowFrame.LookAndFeelException")); //$NON-NLS-1$
 		}
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

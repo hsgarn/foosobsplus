@@ -73,12 +73,13 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private JCheckBoxMenuItem viewGameTableWindow;
 	private JCheckBoxMenuItem viewAllWindows;
 	private JCheckBoxMenuItem helpShowParsed;
+	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
 	
 	public MainFrame(TablePanel tablePanel, TimerPanel timerPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
 			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,
 			FileNamesFrame fileNamesFrame, Main main) {
 
-		super("FoosOBSPlus");
+		super(programName);
 
 		this.tablePanel = tablePanel;
 		this.timerPanel = timerPanel;
@@ -94,13 +95,13 @@ public final class MainFrame extends JFrame implements WindowListener {
 		this.fileNamesFrame = fileNamesFrame;
 		this.main = main;
 		
-		viewLastScored2Window = new JCheckBoxMenuItem("Team 2 Last Scored Window");
-		viewLastScored1Window = new JCheckBoxMenuItem("Team 1 Last Scored Window");
-		viewTimerWindow = new JCheckBoxMenuItem("Timer Window");
-		viewGameTableWindow = new JCheckBoxMenuItem("Game Table Window");
-		viewAllWindows = new JCheckBoxMenuItem("Show All Windows");
-		viewAlwaysOnTop = new JCheckBoxMenuItem("Always on Top");
-		helpShowParsed = new JCheckBoxMenuItem("Show Parsed");
+		viewLastScored2Window = new JCheckBoxMenuItem(Messages.getString("MainFrame.Team1LastScoredWindow")); //$NON-NLS-1$
+		viewLastScored1Window = new JCheckBoxMenuItem(Messages.getString("MainFrame.Team2LastScoredWindow")); //$NON-NLS-1$
+		viewTimerWindow = new JCheckBoxMenuItem(Messages.getString("MainFrame.TimerWindow")); //$NON-NLS-1$
+		viewGameTableWindow = new JCheckBoxMenuItem(Messages.getString("MainFrame.GameTableWIndow")); //$NON-NLS-1$
+		viewAllWindows = new JCheckBoxMenuItem(Messages.getString("MainFrame.ShowAllWindows")); //$NON-NLS-1$
+		viewAlwaysOnTop = new JCheckBoxMenuItem(Messages.getString("MainFrame.AlwaysOnTop")); //$NON-NLS-1$
+		helpShowParsed = new JCheckBoxMenuItem(Messages.getString("MainFrame.ShowParsed")); //$NON-NLS-1$
 		
 		setLayout(new GridBagLayout());
 		
@@ -125,23 +126,23 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		
-		JMenu fileMenu = new JMenu("File");
-		JMenuItem exportItem = new JMenuItem("Export Stats");
-		JMenuItem importItem = new JMenuItem("Import Stats");
-		JMenuItem exitItem = new JMenuItem("Exit");
+		JMenu fileMenu = new JMenu(Messages.getString("MainFrame.File")); //$NON-NLS-1$
+		JMenuItem exportItem = new JMenuItem(Messages.getString("MainFrame.ExportStats")); //$NON-NLS-1$
+		JMenuItem importItem = new JMenuItem(Messages.getString("MainFrame.ImportStats")); //$NON-NLS-1$
+		JMenuItem exitItem = new JMenuItem(Messages.getString("MainFrame.Exit")); //$NON-NLS-1$
 		
 		fileMenu.add(importItem);
 		fileMenu.add(exportItem);
 		fileMenu.addSeparator();
 		fileMenu.add(exitItem);
 		
-		JMenu editMenu = new JMenu("Edit");
+		JMenu editMenu = new JMenu(Messages.getString("MainFrame.Edit")); //$NON-NLS-1$
 		
-		JMenu settingsMenu = new JMenu("Settings");
-		JMenuItem settingsParamItem = new JMenuItem("Parameters");
-		JMenuItem settingsHotKeyItem = new JMenuItem("Hot Keys");
-		JMenuItem settingsFileItem = new JMenuItem("File Names");
-		JMenuItem settingsStatItem = new JMenuItem("Statistics");
+		JMenu settingsMenu = new JMenu(Messages.getString("MainFrame.Settings")); //$NON-NLS-1$
+		JMenuItem settingsParamItem = new JMenuItem(Messages.getString("MainFrame.Parameters")); //$NON-NLS-1$
+		JMenuItem settingsHotKeyItem = new JMenuItem(Messages.getString("MainFrame.HotKeys")); //$NON-NLS-1$
+		JMenuItem settingsFileItem = new JMenuItem(Messages.getString("MainFrame.FileNames")); //$NON-NLS-1$
+		JMenuItem settingsStatItem = new JMenuItem(Messages.getString("MainFrame.Statistics")); //$NON-NLS-1$
 		
 		settingsMenu.add(settingsParamItem);
 		settingsMenu.add(settingsHotKeyItem);
@@ -149,7 +150,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		settingsMenu.add(settingsStatItem);
 		editMenu.add(settingsMenu);
 		
-		JMenu viewMenu = new JMenu("View");
+		JMenu viewMenu = new JMenu(Messages.getString("MainFrame.View")); //$NON-NLS-1$
 		viewMenu.add(viewAlwaysOnTop);
 		viewMenu.add(viewTimerWindow);
 		viewMenu.add(viewLastScored1Window);
@@ -157,9 +158,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewMenu.add(viewGameTableWindow);
 		viewMenu.add(viewAllWindows);
 
-		JMenu helpMenu = new JMenu("Help");
-		JMenuItem helpPage = new JMenuItem("FoosOBSPlus Help");
-		JMenuItem helpAbout = new JMenuItem("About");
+		JMenu helpMenu = new JMenu(Messages.getString("MainFrame.Help")); //$NON-NLS-1$
+		JMenuItem helpPage = new JMenuItem(programName + " " + Messages.getString("MainFrame.Help")); //$NON-NLS-1$ //$NON-NLS-2$
+		JMenuItem helpAbout = new JMenuItem(Messages.getString("MainFrame.About")); //$NON-NLS-1$
 		
 		helpMenu.add(helpPage);
 		helpMenu.add(helpShowParsed);
@@ -198,21 +199,21 @@ public final class MainFrame extends JFrame implements WindowListener {
 		helpPage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				try {
-					URI helpURI = new URI("https://github.com/hsgarn/foosOBSPlus#foosOBSPlus");
+					URI helpURI = new URI("https://github.com/hsgarn/foosOBSPlus#foosOBSPlus"); //$NON-NLS-1$
 					try {
 						java.awt.Desktop.getDesktop().browse(helpURI);
 					} catch (IOException ex) {
-						System.out.print("Error calling URI: " + ex.getMessage());		
+						System.out.print(Messages.getString("MainFrame.URICallingError") + ex.getMessage());		 //$NON-NLS-1$
 					}
 		    	} catch (URISyntaxException ex) {
-					System.out.print("Error in URI Syntax: " + ex.getMessage());		
+					System.out.print(Messages.getString("MainFrame.URISyntaxError") + ex.getMessage());		 //$NON-NLS-1$
 				}
 			}
 		});
 
 		helpAbout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				JFrame aboutFrame = new JFrame("FoosOBSPlus About");
+				JFrame aboutFrame = new JFrame(programName + " " + Messages.getString("MainFrame.About")); //$NON-NLS-1$ //$NON-NLS-2$
 				aboutFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				
 				AboutPanel ap;
@@ -236,7 +237,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 			public void actionPerformed(ActionEvent ae) {
 
 				int action = JOptionPane.showConfirmDialog(MainFrame.this,
-						"Do you really want to exit the application?", "Confirm Exit", JOptionPane.OK_CANCEL_OPTION);
+						Messages.getString("MainFrame.QuestionExit"), Messages.getString("MainFrame.ConfirmExit"), JOptionPane.OK_CANCEL_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
 				
 				if(action == JOptionPane.OK_OPTION) {
 					WindowListener[] listeners = getWindowListeners();
@@ -252,7 +253,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		importItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				final JFileChooser chooser = new JFileChooser();
-				chooser.setDialogTitle("Select file to import:");
+				chooser.setDialogTitle(Messages.getString("MainFrame.SelectImportFile")); //$NON-NLS-1$
 				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				chooser.setAcceptAllFileFilterUsed(true);
 
@@ -261,7 +262,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 					String fileNameAndPath = chooser.getSelectedFile().toString();
 					importStatsFile(fileNameAndPath);
 				} else {
-					System.out.println("Cancelled by user");
+					System.out.println(Messages.getString("MainFrame.CancelledByUser")); //$NON-NLS-1$
 				}
 
 			}
@@ -270,7 +271,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		exportItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				final JFileChooser chooser = new JFileChooser();
-				chooser.setDialogTitle("Select file to export:");
+				chooser.setDialogTitle(Messages.getString("MainFrame.SelectExportFile")); //$NON-NLS-1$
 				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				chooser.setAcceptAllFileFilterUsed(true);
 
@@ -279,7 +280,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 					String fileNameAndPath = chooser.getSelectedFile().toString();
 					exportStatsFile(fileNameAndPath);
 				} else {
-					System.out.println("Cancelled by user");
+					System.out.println(Messages.getString("MainFrame.CancelledByUser")); //$NON-NLS-1$
 				}
 
 			}
@@ -291,7 +292,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		List<String> lines = Collections.emptyList();
 		try {lines = Files.readAllLines(Paths.get(file)); }
 		catch (IOException e) {
-			System.out.println("Error reading file " + file);
+			System.out.println(Messages.getString("MainFrame.ReadFileError") + file); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 		lines.forEach(line -> main.processCode(line.toUpperCase(), false));
@@ -305,7 +306,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 				bw.newLine();
 			}
 		} catch (IOException e) {
-			System.out.println("Error writing file " + file);
+			System.out.println(Messages.getString("MainFrame.WriteFileError") + file); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 	}

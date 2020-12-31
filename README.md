@@ -448,6 +448,14 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.061 12/31/2020<br/>
+Externalize Strings in MainFrame, FileNamesFrame, FileNamesPanel, GameTableWindowFrame, HotKeysFrame, HotKeysPanel<br/>
+<br/>
+v1.060 12/30/2020<br/>
+Add Game Type<br/>
+Externalize Strings in Table, Timer, Stats Entry, Stats Display, Match, Team, Switch, Reset, About panels<br/>
+Set Max Win points to Points to Win if Points to Win exceeds Max Win points.<br/>
+<br/>
 v1.059 12/26/2020<br/>
 Add revision history to help page<br/>
 Set help page to specifically start at #FoosOBSPlus<br/>
