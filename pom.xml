@@ -16,4 +16,11 @@
       </plugin>
     </plugins>
   </build>
+  <dependencies>
+  	<dependency>
+  		<groupId>net.twasi</groupId>
+  		<artifactId>obs-websocket-java</artifactId>
+  		<version>1.2.0</version>
+  	</dependency>
+  </dependencies>
 </project>

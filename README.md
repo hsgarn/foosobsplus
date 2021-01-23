@@ -448,6 +448,11 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.063 01/22/2021<br/>
+Add OBS Menu option with Connect sub item<br/>
+Add OBSConnectFrame and OBSConnectPanel base classes<br/>
+GameType prompt added in v1.062 release to switch external string context<br/>
+<br/>
 v1.062 12/31/2020<br/>
 Externalize Strings in LastScored1WindowFrame, LastScored2WindowFrame, ParametersFrame, ParametersPanel, TimerWindowFrame<br/>
 Consolidate Error and Global strings<br/>

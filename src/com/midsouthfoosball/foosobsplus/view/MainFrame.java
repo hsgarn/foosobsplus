@@ -62,9 +62,10 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private StatsEntryPanel statsEntryPanel;
 	private StatsDisplayPanel statsDisplayPanel;
 	private MatchPanel matchPanel;
-	public ParametersFrame parametersFrame;
-	public HotKeysFrame hotKeysFrame;
-	public FileNamesFrame fileNamesFrame;
+	private ParametersFrame parametersFrame;
+	private HotKeysFrame hotKeysFrame;
+	private FileNamesFrame fileNamesFrame;
+	private OBSConnectFrame obsConnectFrame;
 	private Main main;
 	private JCheckBoxMenuItem viewTimerWindow;
 	private JCheckBoxMenuItem viewAlwaysOnTop;
@@ -77,7 +78,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	
 	public MainFrame(TablePanel tablePanel, TimerPanel timerPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
 			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,
-			FileNamesFrame fileNamesFrame, Main main) {
+			FileNamesFrame fileNamesFrame, OBSConnectFrame obsConnectFrame, Main main) {
 
 		super(programName);
 
@@ -93,6 +94,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		this.parametersFrame = parametersFrame;
 		this.hotKeysFrame = hotKeysFrame;
 		this.fileNamesFrame = fileNamesFrame;
+		this.obsConnectFrame = obsConnectFrame;
 		this.main = main;
 		
 		viewLastScored2Window = new JCheckBoxMenuItem(Messages.getString("MainFrame.Team1LastScoredWindow")); //$NON-NLS-1$
@@ -150,6 +152,11 @@ public final class MainFrame extends JFrame implements WindowListener {
 		settingsMenu.add(settingsStatItem);
 		editMenu.add(settingsMenu);
 		
+		JMenu obsMenu = new JMenu(Messages.getString("MainFrame.OBS")); //$NON-NLS-1$
+		JMenuItem obsConnectItem = new JMenuItem(Messages.getString("MainFrame.OBSConnect")); //$NON-NLS-1$
+		
+		obsMenu.add(obsConnectItem);
+				
 		JMenu viewMenu = new JMenu(Messages.getString("MainFrame.View")); //$NON-NLS-1$
 		viewMenu.add(viewAlwaysOnTop);
 		viewMenu.add(viewTimerWindow);
@@ -169,6 +176,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		
 		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
+		menuBar.add(obsMenu);
 		menuBar.add(viewMenu);
 		menuBar.add(helpMenu);
 		
@@ -193,6 +201,12 @@ public final class MainFrame extends JFrame implements WindowListener {
 		settingsFileItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				fileNamesFrame.setVisible(true);
+			}
+		});
+
+		obsConnectItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				obsConnectFrame.setVisible(true);
 			}
 		});
 
@@ -517,6 +531,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 	}
 	public StatsEntryPanel getStatsEntryPanel() {
 		return statsEntryPanel;
+	}
+	public OBSConnectPanel getOBSConnectPanel() {
+		return obsConnectFrame.getOBSConnectPanel();
 	}
 
 	@Override

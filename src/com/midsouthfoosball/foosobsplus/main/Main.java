@@ -108,6 +108,8 @@ import com.midsouthfoosball.foosobsplus.view.LastScored1WindowFrame;
 import com.midsouthfoosball.foosobsplus.view.LastScored2WindowFrame;
 import com.midsouthfoosball.foosobsplus.view.MainFrame;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
+import com.midsouthfoosball.foosobsplus.view.OBSConnectFrame;
+import com.midsouthfoosball.foosobsplus.view.OBSConnectPanel;
 import com.midsouthfoosball.foosobsplus.view.ParametersFrame;
 import com.midsouthfoosball.foosobsplus.view.ParametersPanel;
 import com.midsouthfoosball.foosobsplus.view.ResetPanel;
@@ -118,6 +120,7 @@ import com.midsouthfoosball.foosobsplus.view.TablePanel;
 import com.midsouthfoosball.foosobsplus.view.TeamPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
+
 
 public class Main {
 	{
@@ -131,8 +134,28 @@ public class Main {
 		} catch (Exception e) {
 			System.out.println("Can't set look and feel.");
 		}
-	}
-	
+
+//		OBSRemoteController controller = new OBSRemoteController("ws://localhost:4444", false, "1Wbs98");
+//		controller.registerConnectCallback(response -> {System.out.println(response.getObsStudioVersion());});
+//		if (controller.isFailed()) {
+//			System.out.println("It didn't work!!!!");
+//		} else {
+//			System.out.println("Weeeellll Doggie, it worked!");
+//		}
+//		try {
+//			TimeUnit.SECONDS.sleep(1);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		controller.getCurrentScene(message -> {System.out.println("Scene: " + message.getName());});
+//		controller.setCurrentScene("InstantReplayScene", message -> {System.out.println("Scene set, maybe: " + message.getMessageId() + ", " + message.getStatus() + ", " + message.getError());} );
+//		controller.getCurrentScene(message -> {System.out.println("Scene: " + message.getName());});
+//		controller.setCurrentScene("Scene", message -> {System.out.println("Scene set, maybe: " + message.getMessageId() + ", " + message.getStatus() + ", " + message.getError());} );
+//		controller.getCurrentScene(message -> {System.out.println("Scene: " + message.getName());});
+//		controller.setSourceVisibility("Scene", "MakeItWork", false, null);
+
+	}	
 	////// Settings and OBSInterface setup \\\\\\
 	
 	private Settings			settings			= new Settings();
@@ -192,12 +215,14 @@ public class Main {
 	private HotKeysFrame 			hotKeysFrame 			= new HotKeysFrame(settings);
 	private HotKeysPanel 			hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
 	private FileNamesFrame			fileNamesFrame			= new FileNamesFrame(settings, obsInterface);
+	private OBSConnectFrame			obsConnectFrame			= new OBSConnectFrame(settings);
+	private OBSConnectPanel			obsConnectPanel			= obsConnectFrame.getOBSConnectPanel();
 	
 	////// Display the View Panels on a JFrame \\\\\\
 	
 	private MainFrame mainFrame = new MainFrame(tablePanel, timerPanel, teamPanel1, teamPanel2, statsEntryPanel, 
 												switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, 
-												fileNamesFrame, this);
+												fileNamesFrame, obsConnectFrame, this);
 
 	////// Set up independent Windows \\\\\\
 	
