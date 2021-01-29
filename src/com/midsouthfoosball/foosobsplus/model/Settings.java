@@ -31,6 +31,7 @@ import java.util.Properties;
 
 public class Settings {
 	
+// Parameter settings
 	private String gameType;
 	private String separator = FileSystems.getDefault().getSeparator();
 	private String tableName;
@@ -62,7 +63,7 @@ public class Settings {
 	private int winByFinalOnly;
 	private String logoImageURL;
 	private String logoLinkURI;
-
+// Filename settings
 	private String tableFileName;
 	private String team1NameFileName;
 	private String team1ForwardFileName;
@@ -129,7 +130,7 @@ public class Settings {
 	private String team2ShotsOnGoalFileName;
 	private String side1ColorFileName;
 	private String side2ColorFileName;
-
+//Hotkey settings
 	private String startMatchHotKey;
 	private String pauseMatchHotKey;
 	private String startGameHotKey;
@@ -174,6 +175,13 @@ public class Settings {
 	private String resetTimersHotKey;
 	private String undoHotKey;
 	private String redoHotKey;
+// OBS settings
+	private String obsHost;
+	private String obsPort;
+	private String obsPassword;
+	private int obsSavePassword;
+	private int obsAutoLogin;
+// Property Settings
 	private Properties defaultProps;
 	
 	public Properties configProps;
@@ -185,6 +193,7 @@ public class Settings {
 	public Settings() throws IOException {
 		defaultProps = new Properties();
 		// sets default properties
+		// Parameter settings
 		defaultProps.setProperty("GameType", "Foosball");
 		defaultProps.setProperty("TableName", "");
 		defaultProps.setProperty("datapath", "c:" + separator + "temp");
@@ -215,7 +224,7 @@ public class Settings {
 		defaultProps.setProperty("WinByFinalOnly", "1");
 		defaultProps.setProperty("LogoImageURL", "/imgs/MidsouthFoosballLogo4.png");
 		defaultProps.setProperty("LogoLinkURI", "https://www.facebook.com/midsouthfoosball");
-
+		//FileNames
 		defaultProps.setProperty("TableFileName", "tablename.txt");
 		defaultProps.setProperty("Team1NameFileName", "team1name.txt");
 		defaultProps.setProperty("Team1ForwardFileName", "team1forward.txt");
@@ -282,7 +291,7 @@ public class Settings {
 		defaultProps.setProperty("Team2ShotsOnGoalFileName", "team2shotsongoal.txt");
 		defaultProps.setProperty("Side1ColorFileName","side1color.txt");
 		defaultProps.setProperty("Side2ColorFileName","side2color.txt");
-		
+		//HotKeys
 		defaultProps.setProperty("StartMatchHotKey", "");
 		defaultProps.setProperty("PauseMatchHotKey", "");
 		defaultProps.setProperty("StartGameHotKey", "");
@@ -329,11 +338,19 @@ public class Settings {
 		defaultProps.setProperty("ResetTimersHotKey", "r");
 		defaultProps.setProperty("UndoHotKey", "u");
 		defaultProps.setProperty("RedoHotKey", "d");
-
+		//OBS
+		defaultProps.setProperty("OBSHost", "localhost");
+		defaultProps.setProperty("OBSPort", "4444");
+		defaultProps.setProperty("OBSPassword","");
+		defaultProps.setProperty("OBSAutoLogin", "0");
+		defaultProps.setProperty("OBSSavePassword", "0");
+		//Properties
 		configProps = new Properties(defaultProps);
 		loadFromConfig();
 	}
-	
+
+	//Getters
+	//Parameters
 	public String getGameType() {return gameType;}
 	public String getTableName() {return tableName;}
 	public String getDatapath() {return configProps.getProperty("datapath");}
@@ -369,7 +386,7 @@ public class Settings {
 	public int getWinByFinalOnly() {return winByFinalOnly;}
 	public String getLogoImageURL() {return logoImageURL;}
 	public String getLogoLinkURI() {return logoLinkURI;}
-
+	//FileNames
 	public String getTeamNameFileName(int teamNbr) {
 		if(teamNbr==1) {
 			return team1NameFileName;
@@ -571,7 +588,7 @@ public class Settings {
 	public String getMatchTimeFileName() {return matchTimeFileName;}
 	public String getSide1ColorFileName() {return side1ColorFileName;}
 	public String getSide2ColorFileName() {return side2ColorFileName;}
-
+	//HotKeys
 	public String getStartMatchHotKey() {return startMatchHotKey;}
 	public String getPauseMatchHotKey() {return pauseMatchHotKey;}
 	public String getStartGameHotKey() {return startGameHotKey;}
@@ -616,7 +633,14 @@ public class Settings {
 	public String getResetTimersHotKey() {return resetTimersHotKey;}
 	public String getUndoHotKey() {return undoHotKey;}
 	public String getRedoHotKey() {return redoHotKey;}
-	
+	//OBS
+	public String getOBSHost() {return obsHost;}
+	public String getOBSPort() {return obsPort;}
+	public String getOBSPassword() {return obsPassword;}
+	public int getOBSSavePassword() {return obsSavePassword;}
+	public int getOBSAutoLogin() {return obsAutoLogin;}
+//Setters
+	//Parameters
 	public void setGameType(String gameType) {
 		this.gameType = gameType;
 		configProps.setProperty("GameType", this.gameType);
@@ -685,6 +709,7 @@ public class Settings {
 		this.clearLastScored = clearLastScored;
 		configProps.setProperty("ClearLastScored", this.clearLastScored);
 	}
+	//FileNames
 	public void setTeam1PassAttemptsFileName(String team1PassAttemptsFileName) {
 		this.team1PassAttemptsFileName = team1PassAttemptsFileName;
 		configProps.setProperty("Team1PassAttemptsFileName", this.team1PassAttemptsFileName);
@@ -998,6 +1023,7 @@ public class Settings {
 		this.side2ColorFileName = side2ColorFileName;
 		configProps.setProperty("Side2ColorFileName", this.side2ColorFileName);
 	}
+	//HotKeys
 	public void setStartMatchHotKey(String startMatchHotKey) {
 		this.startMatchHotKey = startMatchHotKey;
 		configProps.setProperty("StartMatchHotKey", this.startMatchHotKey);
@@ -1174,7 +1200,27 @@ public class Settings {
 		this.redoHotKey = redoHotKey;
 		configProps.setProperty("RedoHotKey", this.redoHotKey);
 	}
-	
+	//OBS
+	public void setOBSHost(String obsHost) {
+		this.obsHost = obsHost;
+		configProps.setProperty("OBSHost", this.obsHost);
+	}
+	public void setOBSPort(String obsPort) {
+		this.obsPort = obsPort;
+		configProps.setProperty("OBSPort", this.obsPort);
+	}
+	public void setOBSPassword(String obsPassword) {
+		this.obsPassword = obsPassword;
+		configProps.setProperty("OBSPassword", this.obsPassword);
+	}
+	public void setOBSSavePassword(int obsSavePassword) {
+		this.obsSavePassword = obsSavePassword;
+	}
+	public void setOBSAutoLogin(int obsAutoLogin) {
+		this.obsAutoLogin = obsAutoLogin;
+	}
+//Get Defaults
+	//Parameters
 	public String getDefaultGameType() {return defaultProps.getProperty("GameType");}
 	public int getDefaultPointsToWin() {return Integer.parseInt(defaultProps.getProperty("PointsToWin"));}
 	public int getDefaultMaxWin() {return Integer.parseInt(defaultProps.getProperty("MaxWin"));}
@@ -1203,7 +1249,7 @@ public class Settings {
 	public int getDefaultWinByFinalOnly() {return Integer.parseInt(defaultProps.getProperty("WinByFinalOnly"));}
 	public String getDefaultLogoImageURL() {return defaultProps.getProperty("LogoImageURL");}
 	public String getDefaultLogoLinkURI() {return defaultProps.getProperty("LogoLinkURI");}
-	
+	//FileNames
 	public String getDefaultTableFileName() {return defaultProps.getProperty("TableFileName");}
 	public String getDefaultTeam1NameFileName() {return defaultProps.getProperty("Team1NameFileName");}
 	public String getDefaultTeam1ForwardFileName() {return defaultProps.getProperty("Team1ForwardFileName");}
@@ -1270,7 +1316,7 @@ public class Settings {
 	public String getDefaultTeam2TwoBarScoringFileName() {return defaultProps.getProperty("Team2TwoBarScoringFileName");}	
 	public String getDefaultTeam1ShotsOnGoalFileName() {return defaultProps.getProperty("Team1ShotsOnGoalFileName");}
 	public String getDefaultTeam2ShotsOnGoalFileName() {return defaultProps.getProperty("Team2ShotsOnGoalFileName");}
-
+	//HotKeys
 	public String getDefaultStartMatchHotKey() {return defaultProps.getProperty("StartMatchHotKey");}
 	public String getDefaultPauseMatchHotKey() {return defaultProps.getProperty("PauseMatchHotKey");}
 	public String getDefaultStartGameHotKey() {return defaultProps.getProperty("StartGameHotKey");}
@@ -1315,6 +1361,12 @@ public class Settings {
 	public String getDefaultResetTimersHotKey() {return defaultProps.getProperty("ResetTimersHotKey");}
 	public String getDefaultUndoHotKey() {return defaultProps.getProperty("UndoHotKey");}
 	public String getDefaultRedoHotKey() {return defaultProps.getProperty("RedoHotKey");}
+	//OBS
+	public String getDefaultOBSHost() {return defaultProps.getProperty("OBSHost");}
+	public String getDefaultOBSPort() {return defaultProps.getProperty("OBSPort");}
+	public String getDefaultOBSPassword() {return defaultProps.getProperty("OBSPassword");}
+	public int getDefaultOBSAutoLogin() {return Integer.parseInt(defaultProps.getProperty("OBSAutoLogin"));}
+	public int getDefaultOBSSavePassword() {return Integer.parseInt(defaultProps.getProperty("OBSSavePassword"));}
 	
 	public void loadFromConfig() throws IOException {
 
@@ -1328,6 +1380,7 @@ public class Settings {
 			loadFromConfig();
 			saveToConfig();
 		}
+		//Parameters
 		gameType = configProps.getProperty("GameType");
 		tableName = configProps.getProperty("TableName");
 		datapath = configProps.getProperty("datapath");
@@ -1363,7 +1416,7 @@ public class Settings {
 		if (logoLinkURI.isEmpty()) {
 			logoLinkURI = this.getDefaultLogoLinkURI();
 		};
-
+		//FileNames
 		tableFileName = configProps.getProperty("TableFileName");
 		team1NameFileName = configProps.getProperty("Team1NameFileName");
 		team1ForwardFileName = configProps.getProperty("Team1ForwardFileName");
@@ -1430,7 +1483,7 @@ public class Settings {
 		team2TwoBarScoringFileName = configProps.getProperty("Team2TwoBarScoringFileName");
 		team1ShotsOnGoalFileName = configProps.getProperty("Team1ShotsOnGoalFileName");
 		team2ShotsOnGoalFileName = configProps.getProperty("Team2ShotsOnGoalFileName");
-		
+		//HotKeys
 		startMatchHotKey = configProps.getProperty("StartMatchHotKey");
 		pauseMatchHotKey = configProps.getProperty("PauseMatchHotKey");
 		startGameHotKey = configProps.getProperty("StartGameHotKey");
@@ -1475,9 +1528,16 @@ public class Settings {
 		resetTimersHotKey = configProps.getProperty("ResetTimersHotKey");
 		undoHotKey = configProps.getProperty("UndoHotKey");
 		redoHotKey = configProps.getProperty("RedoHotKey");
+		//OBS
+		obsHost = configProps.getProperty("OBSHost");
+		obsPort = configProps.getProperty("OBSPort");
+		obsPassword = configProps.getProperty("OBSPassword");
+		obsAutoLogin = Integer.parseInt(configProps.getProperty("OBSAutoLogin"));
+		obsSavePassword = Integer.parseInt(configProps.getProperty("OBSSavePassword"));
 	}
 	
 	public void saveToConfig() throws IOException {
+		//Parameters
 		configProps.setProperty("GameType", this.getGameType());
 		configProps.setProperty("TableName", this.getTableName());
 		configProps.setProperty("datapath", this.getDatapath());
@@ -1507,7 +1567,7 @@ public class Settings {
 		configProps.setProperty("WinByFinalOnly", Integer.toString(this.getWinByFinalOnly()));
 //		configProps.setProperty("LogoImageURL", this.getLogoImageURL());
 //		configProps.setProperty("LogoLinkURI", this.getLogoLinkURI());
-
+		//FileNames
 		configProps.setProperty("TableFileName", this.getTableFileName());
 		configProps.setProperty("Team1NameFileName", this.getTeamNameFileName(1));
 		configProps.setProperty("Team1ForwardFileName", this.getTeamForwardFileName(1));
@@ -1574,7 +1634,7 @@ public class Settings {
 		configProps.setProperty("Team2ShotsOnGoalFileName", this.getShotsOnGoalFileName(2));
 		configProps.setProperty("Side1ColorFileName", this.getSide1ColorFileName());
 		configProps.setProperty("Side2ColorFileName", this.getSide2ColorFileName());
-
+		//HotKeys
 		configProps.setProperty("StartMatchHotKey", this.getStartMatchHotKey());
 		configProps.setProperty("PauseMatchHotKey", this.getPauseMatchHotKey());
 		configProps.setProperty("StartGameHotKey", this.getStartGameHotKey());
@@ -1619,6 +1679,16 @@ public class Settings {
 		configProps.setProperty("ResetTimersHotKey", this.getResetTimersHotKey());
 		configProps.setProperty("UndoHotKey", this.getUndoHotKey());
 		configProps.setProperty("RedoHotKey", this.getRedoHotKey());
+		//OBS
+		configProps.setProperty("OBSHost", this.getOBSHost());
+		configProps.setProperty("OBSPort", this.getOBSPort());
+		if (this.getOBSSavePassword()==1) {
+			configProps.setProperty("OBSPassword", this.getOBSPassword());
+		} else {
+			configProps.setProperty("OBSPassword", "");
+		}
+		configProps.setProperty("OBSAutoLogin", Integer.toString(this.getOBSAutoLogin()));
+		configProps.setProperty("OBSSavePassword", Integer.toString(this.getOBSSavePassword()));
 
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configFileName))) {
 			configProps.store(outputStream, "FoosOBSPlus settings");

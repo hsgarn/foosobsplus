@@ -448,6 +448,11 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.064 01/28/2021<br/>
+Build OBS Connect screen GUI<br/>
+Implement OBS Connect functionality<br/>
+Enable/Disable connect/disconnect based on OBS Connection<br/>
+<br/>
 v1.063 01/22/2021<br/>
 Add OBS Menu option with Connect sub item<br/>
 Add OBSConnectFrame and OBSConnectPanel base classes<br/>

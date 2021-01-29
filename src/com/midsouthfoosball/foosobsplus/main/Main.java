@@ -94,6 +94,7 @@ import com.midsouthfoosball.foosobsplus.model.GameClock;
 import com.midsouthfoosball.foosobsplus.model.LastScored1Clock;
 import com.midsouthfoosball.foosobsplus.model.LastScored2Clock;
 import com.midsouthfoosball.foosobsplus.model.Match;
+import com.midsouthfoosball.foosobsplus.model.OBS;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.Stats;
 import com.midsouthfoosball.foosobsplus.model.Table;
@@ -121,6 +122,8 @@ import com.midsouthfoosball.foosobsplus.view.TeamPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
 
+import net.twasi.obsremotejava.OBSRemoteController;
+
 
 public class Main {
 	{
@@ -134,30 +137,11 @@ public class Main {
 		} catch (Exception e) {
 			System.out.println("Can't set look and feel.");
 		}
-
-//		OBSRemoteController controller = new OBSRemoteController("ws://localhost:4444", false, "1Wbs98");
-//		controller.registerConnectCallback(response -> {System.out.println(response.getObsStudioVersion());});
-//		if (controller.isFailed()) {
-//			System.out.println("It didn't work!!!!");
-//		} else {
-//			System.out.println("Weeeellll Doggie, it worked!");
-//		}
-//		try {
-//			TimeUnit.SECONDS.sleep(1);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		controller.getCurrentScene(message -> {System.out.println("Scene: " + message.getName());});
-//		controller.setCurrentScene("InstantReplayScene", message -> {System.out.println("Scene set, maybe: " + message.getMessageId() + ", " + message.getStatus() + ", " + message.getError());} );
-//		controller.getCurrentScene(message -> {System.out.println("Scene: " + message.getName());});
-//		controller.setCurrentScene("Scene", message -> {System.out.println("Scene set, maybe: " + message.getMessageId() + ", " + message.getStatus() + ", " + message.getError());} );
-//		controller.getCurrentScene(message -> {System.out.println("Scene: " + message.getName());});
-//		controller.setSourceVisibility("Scene", "MakeItWork", false, null);
-
 	}	
 	////// Settings and OBSInterface setup \\\\\\
 	
+	final OBS obs = OBS.getInstance();
+	private OBSRemoteController controller;
 	private Settings			settings			= new Settings();
 	public OBSInterface 		obsInterface 		= new OBSInterface(settings);
 	public String				matchId				= "";
@@ -244,9 +228,15 @@ public class Main {
 	public Main() throws IOException {
 		obsInterface.setFilePath(settings.getDatapath());
 		obsInterface.setTableName(settings.getTableName());
+		updateOBSDisconnected();
+		if (settings.getOBSAutoLogin()==1) {
+			connectToOBS();
+		}
 		fetchAll(settings.getTableName());
 		this.hotKeysPanel.addSaveListener(new HotKeysSaveListener());
 		this.parametersPanel.addSaveListener(new SettingsSaveListener());
+		this.obsConnectPanel.addConnectListener(new OBSConnectListener());
+		this.obsConnectPanel.addDisconnectListener(new OBSDisconnectListener());
 		this.statsEntryPanel.addUndoListener(new StatsEntryUndoListener());
 		this.statsEntryPanel.addRedoListener(new StatsEntryRedoListener());
 		this.statsEntryPanel.addCodeListener(new CodeListener());
@@ -538,6 +528,33 @@ public class Main {
 		mySwitch.register("PRA", pra);
 		mySwitch.register("code", codeCommand);
 	}
+	public void updateOBSConnected() {
+		obs.setConnected(true);
+		obsConnectPanel.disableConnect();
+	}
+	public void updateOBSDisconnected() {
+		obs.setConnected(false);
+		obsConnectPanel.enableConnect();
+	}
+	public void connectToOBS() {
+		obsConnectPanel.saveSettings(settings);
+		obs.setHost(settings.getOBSHost());
+		obs.setPort(settings.getOBSPort());
+		obs.setPassword(settings.getOBSPassword());
+		String connectString = "ws://"+obs.getHost()+":"+obs.getPort();
+		controller = new OBSRemoteController(connectString,true,obs.getPassword(),false);
+		controller.connect();
+//				controller.registerConnectCallback(response -> {obsConnectPanel.setMessage("Connected! Studio Version: " + response.getObsStudioVersion());});
+		controller.registerConnectCallback(response -> {obsConnectPanel.setMessage("Connected! Studio Version: " + response.getObsStudioVersion());updateOBSConnected();});
+//				controller.setCurrentScene("Scene", message -> {System.out.println("Scene set, maybe: " + message.getMessageId() + ", " + message.getStatus() + ", " + message.getError());} );
+//				controller.getCurrentScene(message -> {System.out.println("Scene: " + message.getName());});
+//				controller.setSourceVisibility("Scene", "MakeItWork", true, null);
+		if (controller.isFailed()) {
+			obsConnectPanel.setMessage("Unable to connect. Is OBS running? Check Port and credentials.");
+		} else {
+//					obsConnectPanel.setMessage("Connected?");
+		}
+	}
 	////// Listeners \\\\\\
 	private class CodeListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
@@ -588,6 +605,18 @@ public class Main {
 			switchPanel.updateMnemonics();
 			resetPanel.updateMnemonics();
 			statsEntryPanel.updateMnemonics();
+		}
+	}
+	private class OBSDisconnectListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			controller.disconnect();
+			updateOBSDisconnected();
+			obsConnectPanel.setMessage("Disconnected!");
+		}
+	}
+	private class OBSConnectListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			connectToOBS();
 		}
 	}
 	private class SettingsSaveListener implements ActionListener {
@@ -901,5 +930,4 @@ public class Main {
 		List<String> codes = stats.getCodeHistoryAsList();
 		return codes;
 	}
-
 }
