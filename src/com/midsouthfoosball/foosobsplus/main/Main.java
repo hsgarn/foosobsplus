@@ -100,6 +100,7 @@ import com.midsouthfoosball.foosobsplus.model.Stats;
 import com.midsouthfoosball.foosobsplus.model.Table;
 import com.midsouthfoosball.foosobsplus.model.Team;
 import com.midsouthfoosball.foosobsplus.model.TimeClock;
+import com.midsouthfoosball.foosobsplus.view.BallPanel;
 import com.midsouthfoosball.foosobsplus.view.FileNamesFrame;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowPanel;
@@ -185,6 +186,7 @@ public class Main {
 	private TablePanel 			tablePanel 			= new TablePanel(settings);
 	private TimerPanel 			timerPanel 			= new TimerPanel(settings);
 	private MatchPanel			matchPanel			= new MatchPanel(settings);
+	private BallPanel			ballPanel			= new BallPanel(settings);
 	private TeamPanel 			teamPanel1 			= new TeamPanel(1, settings.getSide1Color(), settings);
 	private TeamPanel 			teamPanel2 			= new TeamPanel(2, settings.getSide2Color(), settings);
 	private StatsEntryPanel 	statsEntryPanel 	= new StatsEntryPanel(settings);
@@ -205,8 +207,8 @@ public class Main {
 	////// Display the View Panels on a JFrame \\\\\\
 	
 	private MainFrame mainFrame = new MainFrame(tablePanel, timerPanel, teamPanel1, teamPanel2, statsEntryPanel, 
-												switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, 
-												fileNamesFrame, obsConnectFrame, this);
+												switchPanel, resetPanel, statsDisplayPanel, matchPanel, ballPanel, 
+												parametersFrame, hotKeysFrame, fileNamesFrame, obsConnectFrame, this);
 
 	////// Set up independent Windows \\\\\\
 	
@@ -233,6 +235,24 @@ public class Main {
 			connectToOBS();
 		}
 		fetchAll(settings.getTableName());
+		
+		this.ballPanel.addBtnCueBallListener(new BtnCueBallListener());
+		this.ballPanel.addBtnOneBallListener(new BtnOneBallListener());
+		this.ballPanel.addBtnTwoBallListener(new BtnTwoBallListener());
+		this.ballPanel.addBtnThreeBallListener(new BtnThreeBallListener());
+		this.ballPanel.addBtnFourBallListener(new BtnFourBallListener());
+		this.ballPanel.addBtnFiveBallListener(new BtnFiveBallListener());
+		this.ballPanel.addBtnSixBallListener(new BtnSixBallListener());
+		this.ballPanel.addBtnSevenBallListener(new BtnSevenBallListener());
+		this.ballPanel.addBtnEightBallListener(new BtnEightBallListener());
+		this.ballPanel.addBtnNineBallListener(new BtnNineBallListener());
+		this.ballPanel.addBtnTenBallListener(new BtnTenBallListener());
+		this.ballPanel.addBtnElevenBallListener(new BtnElevenBallListener());
+		this.ballPanel.addBtnTwelveBallListener(new BtnTwelveBallListener());
+		this.ballPanel.addBtnThirteenBallListener(new BtnThirteenBallListener());
+		this.ballPanel.addBtnFourteenBallListener(new BtnFourteenBallListener());
+		this.ballPanel.addBtnFifteenBallListener(new BtnFifteenBallListener());
+		
 		this.hotKeysPanel.addSaveListener(new HotKeysSaveListener());
 		this.parametersPanel.addSaveListener(new SettingsSaveListener());
 		this.obsConnectPanel.addConnectListener(new OBSConnectListener());
@@ -555,7 +575,91 @@ public class Main {
 //					obsConnectPanel.setMessage("Connected?");
 		}
 	}
+	private void obsSetBallVisible(String source, boolean show) {
+		controller.setSourceVisibility("Scene", source, show, null);
+	}
 	////// Listeners \\\\\\
+	private class BtnCueBallListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("CueBall", !ballPanel.getCueBallSelectedState());
+		}
+	}
+	private class BtnOneBallListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("OneBall", !ballPanel.getOneBallSelectedState());
+		}
+	}
+	private class BtnTwoBallListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("TwoBall", !ballPanel.getTwoBallSelectedState());
+		}
+	}
+	private class BtnThreeBallListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("ThreeBall", !ballPanel.getThreeBallSelectedState());
+		}
+	}
+	private class BtnFourBallListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("FourBall", !ballPanel.getFourBallSelectedState());
+		}
+	}
+	private class BtnFiveBallListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("FiveBall", !ballPanel.getFiveBallSelectedState());
+		}
+	}
+	private class BtnSixBallListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("SixBall", !ballPanel.getSixBallSelectedState());
+		}
+	}
+	private class BtnSevenBallListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("SevenBall", !ballPanel.getSevenBallSelectedState());
+		}
+	}
+	private class BtnEightBallListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("EightBall", !ballPanel.getEightBallSelectedState());
+		}
+	}
+	private class BtnNineBallListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("NineBall", !ballPanel.getNineBallSelectedState());
+		}
+	}
+	private class BtnTenBallListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("TenBall", !ballPanel.getTenBallSelectedState());
+		}
+	}
+	private class BtnElevenBallListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("ElevenBall", !ballPanel.getElevenBallSelectedState());
+		}
+	}
+	private class BtnTwelveBallListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("TwelveBall", !ballPanel.getTwelveBallSelectedState());
+		}
+	}
+	private class BtnThirteenBallListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("ThirteenBall", !ballPanel.getThirteenBallSelectedState());
+		}
+	}
+	private class BtnFourteenBallListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("FourteenBall", !ballPanel.getFourteenBallSelectedState());
+		}
+	}
+	private class BtnFifteenBallListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("FifteenBall", !ballPanel.getFifteenBallSelectedState());
+		}
+	}
+
 	private class CodeListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			Boolean isRedo = false;

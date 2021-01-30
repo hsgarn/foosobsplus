@@ -94,7 +94,7 @@ public class StatsEntryPanel extends JPanel {
 		btnClear.setText(Messages.getString("StatsEntryPanel.Clear", settings.getGameType())); //$NON-NLS-1$
 		setTitle();
 	}
-	public void layoutComponents() {
+	private void layoutComponents() {
 		setLayout(new GridBagLayout());
 		
 		GridBagConstraints gc = new GridBagConstraints();

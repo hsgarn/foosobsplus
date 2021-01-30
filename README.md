@@ -448,6 +448,9 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.065 01/29/2021<br/>
+Add ball panel and logic to show/hide balls in obs<br/>
+<br/>
 v1.064 01/28/2021<br/>
 Build OBS Connect screen GUI<br/>
 Implement OBS Connect functionality<br/>
