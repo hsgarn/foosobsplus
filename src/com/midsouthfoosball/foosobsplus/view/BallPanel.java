@@ -59,6 +59,10 @@ public class BallPanel extends JPanel {
 	private JToggleButton btnThirteenBall;
 	private JToggleButton btnFourteenBall;
 	private JToggleButton btnFifteenBall;
+	private JButton btnSyncOBS;
+	private JButton btnResetNineBall;
+	private JButton btnShowAllBalls;
+	private JButton btnHideAllBalls;
 	
 	public BallPanel(Settings settings) {
 		this.settings = settings;
@@ -232,6 +236,11 @@ public class BallPanel extends JPanel {
 		btnFifteenBall.setSelectedIcon(imgIconFifteenXBall);
 		btnFifteenBall.setRolloverIcon(btnFifteenBall.isSelected() ? btnFifteenBall.getSelectedIcon() : btnFifteenBall.getIcon());
 
+		btnSyncOBS = new JButton("Sync OBS");
+		btnResetNineBall = new JButton("9 Ball");
+		btnShowAllBalls = new JButton("Show All");
+		btnHideAllBalls = new JButton("Hide All");
+		
 		layoutComponents();
 
 	}
@@ -253,7 +262,6 @@ public class BallPanel extends JPanel {
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		gc.anchor = GridBagConstraints.SOUTH;
 		gc.insets = new Insets(0, 0, 0, 0);
-//		add(lblIconCueBall, gc);
 		add(btnCueBall, gc);
 
 		gc.weightx = 1;
@@ -406,7 +414,53 @@ public class BallPanel extends JPanel {
 		gc.anchor = GridBagConstraints.SOUTH;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnFifteenBall, gc);
-	}
+		
+		gc.gridy ++;
+		gc.weightx = 1;
+		gc.weighty = 1;
+		
+		gc.gridx = 0;
+		gc.gridwidth=2;
+		gc.gridheight=1;
+		gc.fill = GridBagConstraints.HORIZONTAL;
+		gc.anchor = GridBagConstraints.SOUTH;
+		gc.insets = new Insets(0, 0, 0, 0);
+		add(btnSyncOBS, gc);
+
+		gc.weightx = 1;
+		gc.weighty = 1;
+		
+		gc.gridx = 2;
+		gc.gridwidth=2;
+		gc.gridheight=1;
+		gc.fill = GridBagConstraints.HORIZONTAL;
+		gc.anchor = GridBagConstraints.SOUTH;
+		gc.insets = new Insets(0, 0, 0, 0);
+		add(btnResetNineBall, gc);
+		
+		gc.weightx = 1;
+		gc.weighty = 1;
+		
+		gc.gridx = 4;
+		gc.gridwidth = 2;
+		gc.gridheight=1;
+		gc.fill = GridBagConstraints.HORIZONTAL;
+		gc.anchor = GridBagConstraints.SOUTH;
+		gc.insets = new Insets(0, 0, 0, 0);
+		add(btnShowAllBalls, gc);
+
+		gc.weightx = 1;
+		gc.weighty = 1;
+		
+		gc.gridx = 6;
+		gc.gridwidth = 2;
+		gc.gridheight=1;
+		gc.fill = GridBagConstraints.HORIZONTAL;
+		gc.anchor = GridBagConstraints.SOUTH;
+		gc.insets = new Insets(0, 0, 0, 0);
+		add(btnHideAllBalls, gc);
+}
+	
 	public boolean getCueBallSelectedState() {
 		return btnCueBall.isSelected();
 	}
@@ -455,6 +509,80 @@ public class BallPanel extends JPanel {
 	public boolean getFifteenBallSelectedState() {
 		return btnFifteenBall.isSelected();
 	}
+	public boolean getBallSelectedState(String ball) {
+		boolean state = false;
+		switch (ball) {
+		case "Cue": state = btnCueBall.isSelected();
+			break;
+		case "One": state = btnOneBall.isSelected();
+			break;
+		case "Two": state = btnTwoBall.isSelected();
+			break;
+		case "Three": state = btnThreeBall.isSelected();
+			break;
+		case "Four": state = btnFourBall.isSelected();
+			break;
+		case "Five": state = btnFiveBall.isSelected();
+			break;
+		case "Six": state = btnSixBall.isSelected();
+			break;
+		case "Seven": state = btnSevenBall.isSelected();
+			break;
+		case "Eight": state = btnEightBall.isSelected();
+			break;
+		case "Nine": state = btnNineBall.isSelected();
+			break;
+		case "Ten": state = btnTenBall.isSelected();
+			break;
+		case "Eleven": state = btnElevenBall.isSelected();
+			break;
+		case "Twelve": state = btnTwelveBall.isSelected();
+			break;
+		case "Thirteen": state = btnThirteenBall.isSelected();
+			break;
+		case "Fourteen": state = btnFourteenBall.isSelected();
+			break;
+		case "Fifteen": state = btnFifteenBall.isSelected();
+			break;
+		}
+		return state;
+	}
+	public void setBallSelected(String ball, boolean selected) {
+		switch (ball) {
+			case "Cue": btnCueBall.setSelected(selected);
+				break;
+			case "One": btnOneBall.setSelected(selected);
+				break;
+			case "Two": btnTwoBall.setSelected(selected);
+				break;
+			case "Three": btnThreeBall.setSelected(selected);
+				break;
+			case "Four": btnFourBall.setSelected(selected);
+				break;
+			case "Five": btnFiveBall.setSelected(selected);
+				break;
+			case "Six": btnSixBall.setSelected(selected);
+				break;
+			case "Seven": btnSevenBall.setSelected(selected);
+				break;
+			case "Eight": btnEightBall.setSelected(selected);
+				break;
+			case "Nine": btnNineBall.setSelected(selected);
+				break;
+			case "Ten": btnTenBall.setSelected(selected);
+				break;
+			case "Eleven": btnElevenBall.setSelected(selected);
+				break;
+			case "Twelve": btnTwelveBall.setSelected(selected);
+				break;
+			case "Thirteen": btnThirteenBall.setSelected(selected);
+				break;
+			case "Fourteen": btnFourteenBall.setSelected(selected);
+				break;
+			case "Fifteen": btnFifteenBall.setSelected(selected);
+				break;
+		}
+	}
 	//////// Listeners \\\\\\\\\\
 	public void addBtnCueBallListener(ActionListener listenForBtnCueBall) {
 		btnCueBall.addActionListener(listenForBtnCueBall);
@@ -465,57 +593,56 @@ public class BallPanel extends JPanel {
 	public void addBtnTwoBallListener(ActionListener listenForBtnTwoBall) {
 		btnTwoBall.addActionListener(listenForBtnTwoBall);
 	}
-
 	public void addBtnThreeBallListener(ActionListener listenForBtnThreeBall) {
 		btnThreeBall.addActionListener(listenForBtnThreeBall);
 	}
-
 	public void addBtnFourBallListener(ActionListener listenForBtnFourBall) {
 		btnFourBall.addActionListener(listenForBtnFourBall);
 	}
-
 	public void addBtnFiveBallListener(ActionListener listenForBtnFiveBall) {
 		btnFiveBall.addActionListener(listenForBtnFiveBall);
 	}
-
 	public void addBtnSixBallListener(ActionListener listenForBtnSixBall) {
 		btnSixBall.addActionListener(listenForBtnSixBall);
 	}
-
 	public void addBtnSevenBallListener(ActionListener listenForBtnSevenBall) {
 		btnSevenBall.addActionListener(listenForBtnSevenBall);
 	}
-
 	public void addBtnEightBallListener(ActionListener listenForBtnEightBall) {
 		btnEightBall.addActionListener(listenForBtnEightBall);
 	}
-
 	public void addBtnNineBallListener(ActionListener listenForBtnNineBall) {
 		btnNineBall.addActionListener(listenForBtnNineBall);
 	}
-
 	public void addBtnTenBallListener(ActionListener listenForBtnTenBall) {
 		btnTenBall.addActionListener(listenForBtnTenBall);
 	}
-
 	public void addBtnElevenBallListener(ActionListener listenForBtnElevenBall) {
 		btnElevenBall.addActionListener(listenForBtnElevenBall);
 	}
-
 	public void addBtnTwelveBallListener(ActionListener listenForBtnTwelveBall) {
 		btnTwelveBall.addActionListener(listenForBtnTwelveBall);
 	}
-
 	public void addBtnThirteenBallListener(ActionListener listenForBtnThirteenBall) {
 		btnThirteenBall.addActionListener(listenForBtnThirteenBall);
 	}
-
 	public void addBtnFourteenBallListener(ActionListener listenForBtnFourteenBall) {
 		btnFourteenBall.addActionListener(listenForBtnFourteenBall);
 	}
-
 	public void addBtnFifteenBallListener(ActionListener listenForBtnFifteenBall) {
 		btnFifteenBall.addActionListener(listenForBtnFifteenBall);
 	}
-
+	public void addBtnSyncOBSListener(ActionListener listenForBtnSyncOBS) {
+		btnSyncOBS.addActionListener(listenForBtnSyncOBS);
+	}
+	public void addBtnResetNineBallListener(ActionListener listenForBtnResetNineBall) {
+		btnResetNineBall.addActionListener(listenForBtnResetNineBall);
+	}
+	public void addBtnShowAllBallsListener(ActionListener listenForBtnShowAllBalls) {
+		btnShowAllBalls.addActionListener(listenForBtnShowAllBalls);
+	}
+	public void addBtnHideAllBallsListener(ActionListener listenForBtnHideAllBalls) {
+		btnHideAllBalls.addActionListener(listenForBtnHideAllBalls);
+	}
+	
 }

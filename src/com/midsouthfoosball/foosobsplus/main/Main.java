@@ -26,6 +26,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
@@ -52,6 +53,7 @@ import com.midsouthfoosball.foosobsplus.commands.Memento;
 import com.midsouthfoosball.foosobsplus.commands.PCACommand;
 import com.midsouthfoosball.foosobsplus.commands.PCT1Command;
 import com.midsouthfoosball.foosobsplus.commands.PCT2Command;
+import com.midsouthfoosball.foosobsplus.commands.PNBCommand;
 import com.midsouthfoosball.foosobsplus.commands.PPMCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRACommand;
 import com.midsouthfoosball.foosobsplus.commands.PRGCommand;
@@ -65,6 +67,7 @@ import com.midsouthfoosball.foosobsplus.commands.PRTOCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSGCCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSGCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSMCommand;
+import com.midsouthfoosball.foosobsplus.commands.PSOCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSRCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSSCCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSSCommand;
@@ -146,7 +149,9 @@ public class Main {
 	private Settings			settings			= new Settings();
 	public OBSInterface 		obsInterface 		= new OBSInterface(settings);
 	public String				matchId				= "";
-
+	private HashMap<String, Boolean> allBallsMap = new HashMap<>();
+	private HashMap<String, Boolean> nineBallsMap = new HashMap<>();
+	
 	////// CommandStack and UndoRedo setup \\\\\\
 	
 	private int undoRedoPointer = -1;
@@ -235,6 +240,41 @@ public class Main {
 			connectToOBS();
 		}
 		fetchAll(settings.getTableName());
+
+		allBallsMap.put("Cue", true);
+		allBallsMap.put("One", true);
+		allBallsMap.put("Two", true);
+		allBallsMap.put("Three", true);
+		allBallsMap.put("Four", true);
+		allBallsMap.put("Five", true);
+		allBallsMap.put("Six", true);
+		allBallsMap.put("Seven", true);
+		allBallsMap.put("Eight", true);
+		allBallsMap.put("Nine", true);
+		allBallsMap.put("Ten", true);
+		allBallsMap.put("Eleven", true);
+		allBallsMap.put("Twelve", true);
+		allBallsMap.put("Thirteen", true);
+		allBallsMap.put("Fourteen", true);
+		allBallsMap.put("Fifteen", true);
+		
+		nineBallsMap.put("Cue", true);
+		nineBallsMap.put("Cue", true);
+		nineBallsMap.put("One", true);
+		nineBallsMap.put("Two", true);
+		nineBallsMap.put("Three", true);
+		nineBallsMap.put("Four", true);
+		nineBallsMap.put("Five", true);
+		nineBallsMap.put("Six", true);
+		nineBallsMap.put("Seven", true);
+		nineBallsMap.put("Eight", true);
+		nineBallsMap.put("Nine", true);
+		nineBallsMap.put("Ten", false);
+		nineBallsMap.put("Eleven", false);
+		nineBallsMap.put("Twelve", false);
+		nineBallsMap.put("Thirteen", false);
+		nineBallsMap.put("Fourteen", false);
+		nineBallsMap.put("Fifteen", false);
 		
 		this.ballPanel.addBtnCueBallListener(new BtnCueBallListener());
 		this.ballPanel.addBtnOneBallListener(new BtnOneBallListener());
@@ -252,6 +292,10 @@ public class Main {
 		this.ballPanel.addBtnThirteenBallListener(new BtnThirteenBallListener());
 		this.ballPanel.addBtnFourteenBallListener(new BtnFourteenBallListener());
 		this.ballPanel.addBtnFifteenBallListener(new BtnFifteenBallListener());
+		this.ballPanel.addBtnSyncOBSListener(new BtnSyncOBSListener());
+		this.ballPanel.addBtnResetNineBallListener(new BtnResetNineBallListener());
+		this.ballPanel.addBtnShowAllBallsListener(new BtnShowAllBallsListener());
+		this.ballPanel.addBtnHideAllBallsListener(new BtnHideAllBallsListener());
 		
 		this.hotKeysPanel.addSaveListener(new HotKeysSaveListener());
 		this.parametersPanel.addSaveListener(new SettingsSaveListener());
@@ -501,6 +545,10 @@ public class Main {
 		Command prto = new PRTOCommand(statsController, teamController);
 		Command prr = new PRRCommand(statsController, teamController);
 		Command pra = new PRACommand(statsController, teamController);
+		Command pso = new PSOCommand(statsController, this);
+		Command pnb = new PNBCommand(statsController, this);
+		Command psa = new PSACommand(statsController, this);
+		Command pha = new PHACommand(statsController, this);
 		Command codeCommand = new CodeCommand(statsController);
 
 		mySwitch = new CommandSwitch();
@@ -546,6 +594,10 @@ public class Main {
 		mySwitch.register("PRTO", prto);
 		mySwitch.register("PRR", prr);
 		mySwitch.register("PRA", pra);
+		mySwitch.register("PSO", pso);
+		mySwitch.register("PNB", pnb);
+		mySwitch.register("PSA", psa);
+		mySwitch.register("PHA", pha);
 		mySwitch.register("code", codeCommand);
 	}
 	public void updateOBSConnected() {
@@ -577,6 +629,29 @@ public class Main {
 	}
 	private void obsSetBallVisible(String source, boolean show) {
 		controller.setSourceVisibility("Scene", source, show, null);
+	}
+	public void obsSyncBalls() {
+		allBallsMap.forEach((ball,show) -> {
+			obsSetBallVisible(ball+"Ball", !ballPanel.getBallSelectedState(ball));
+		});
+	}
+	public void resetNineBall() {
+		nineBallsMap.forEach((ball, show) -> {
+			obsSetBallVisible(ball+"Ball", show);
+			ballPanel.setBallSelected(ball, !show);
+		});
+	}
+	public void showAllBalls() {
+		allBallsMap.forEach((ball, show) -> {
+			obsSetBallVisible(ball+"Ball", show);
+			ballPanel.setBallSelected(ball, !show);
+		});
+	}
+	public void hideAllBalls() {
+		allBallsMap.forEach((ball, show) -> {
+			obsSetBallVisible(ball+"Ball", !show);
+			ballPanel.setBallSelected(ball, show);
+		});
 	}
 	////// Listeners \\\\\\
 	private class BtnCueBallListener implements ActionListener {
@@ -657,6 +732,26 @@ public class Main {
 	private class BtnFifteenBallListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			obsSetBallVisible("FifteenBall", !ballPanel.getFifteenBallSelectedState());
+		}
+	}
+	private class BtnSyncOBSListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsSyncBalls();
+		}
+	}
+	private class BtnResetNineBallListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			resetNineBall();
+		}
+	}
+	private class BtnShowAllBallsListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			showAllBalls();
+		}
+	}
+	private class BtnHideAllBallsListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			hideAllBalls();
 		}
 	}
 

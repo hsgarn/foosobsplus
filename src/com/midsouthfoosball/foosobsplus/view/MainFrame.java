@@ -121,7 +121,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 
 //		addWindowListener(this); //not sure why this is here
 		
-		setSize(1350,850);
+		setSize(1400,850);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
