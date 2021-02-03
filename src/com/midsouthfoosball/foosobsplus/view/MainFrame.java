@@ -75,6 +75,8 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private JCheckBoxMenuItem viewGameTableWindow;
 	private JCheckBoxMenuItem viewAllWindows;
 	private JCheckBoxMenuItem helpShowParsed;
+	private JMenuItem obsConnectItem;
+	private JMenuItem obsDisconnectItem;
 	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
 	
 	public MainFrame(TablePanel tablePanel, TimerPanel timerPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
@@ -155,9 +157,11 @@ public final class MainFrame extends JFrame implements WindowListener {
 		editMenu.add(settingsMenu);
 		
 		JMenu obsMenu = new JMenu(Messages.getString("MainFrame.OBS")); //$NON-NLS-1$
-		JMenuItem obsConnectItem = new JMenuItem(Messages.getString("MainFrame.OBSConnect")); //$NON-NLS-1$
+		obsConnectItem = new JMenuItem(Messages.getString("MainFrame.OBSConnect")); //$NON-NLS-1$
+		obsDisconnectItem = new JMenuItem(Messages.getString("MainFrame.OBSDisconnect")); //$NON-NLS-1$
 		
 		obsMenu.add(obsConnectItem);
+		obsMenu.add(obsDisconnectItem);
 				
 		JMenu viewMenu = new JMenu(Messages.getString("MainFrame.View")); //$NON-NLS-1$
 		viewMenu.add(viewAlwaysOnTop);
@@ -211,6 +215,12 @@ public final class MainFrame extends JFrame implements WindowListener {
 				obsConnectFrame.setVisible(true);
 			}
 		});
+		
+//		obsDisconnectItem.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent ase) {
+//				obsConnectFrame.setVisible(true);
+//			}
+//		});
 
 		helpPage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
@@ -302,6 +312,10 @@ public final class MainFrame extends JFrame implements WindowListener {
 			}
 		});
 		return menuBar;
+	}
+	public void enableConnect(Boolean state) {
+		obsConnectItem.setEnabled(state);
+		obsDisconnectItem.setEnabled(!state);
 	}
 	
 	private void importStatsFile(String file) {
@@ -537,6 +551,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 	}
 	public void addGameTableWindowItemListener(ItemListener listenForGameTableWindowItem) {
 		viewGameTableWindow.addItemListener(listenForGameTableWindowItem);
+	}
+	public void addOBSDisconnectItemListener(ActionListener listenForOBSDisconnectItemListener) {
+		obsDisconnectItem.addActionListener(listenForOBSDisconnectItemListener);
 	}
 	
 	///// Utility Methods \\\\\\

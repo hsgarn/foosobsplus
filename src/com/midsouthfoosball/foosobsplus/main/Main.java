@@ -301,6 +301,7 @@ public class Main {
 		this.parametersPanel.addSaveListener(new SettingsSaveListener());
 		this.obsConnectPanel.addConnectListener(new OBSConnectListener());
 		this.obsConnectPanel.addDisconnectListener(new OBSDisconnectListener());
+		this.mainFrame.addOBSDisconnectItemListener(new OBSDisconnectItemListener());
 		this.statsEntryPanel.addUndoListener(new StatsEntryUndoListener());
 		this.statsEntryPanel.addRedoListener(new StatsEntryRedoListener());
 		this.statsEntryPanel.addCodeListener(new CodeListener());
@@ -603,10 +604,12 @@ public class Main {
 	public void updateOBSConnected() {
 		obs.setConnected(true);
 		obsConnectPanel.disableConnect();
+		mainFrame.enableConnect(false);
 	}
 	public void updateOBSDisconnected() {
 		obs.setConnected(false);
 		obsConnectPanel.enableConnect();
+		mainFrame.enableConnect(true);
 	}
 	public void connectToOBS() {
 		obsConnectPanel.saveSettings(settings);
@@ -616,40 +619,41 @@ public class Main {
 		String connectString = "ws://"+obs.getHost()+":"+obs.getPort();
 		controller = new OBSRemoteController(connectString,true,obs.getPassword(),false);
 		controller.connect();
-//				controller.registerConnectCallback(response -> {obsConnectPanel.setMessage("Connected! Studio Version: " + response.getObsStudioVersion());});
 		controller.registerConnectCallback(response -> {obsConnectPanel.setMessage("Connected! Studio Version: " + response.getObsStudioVersion());updateOBSConnected();});
 //				controller.setCurrentScene("Scene", message -> {System.out.println("Scene set, maybe: " + message.getMessageId() + ", " + message.getStatus() + ", " + message.getError());} );
 //				controller.getCurrentScene(message -> {System.out.println("Scene: " + message.getName());});
 //				controller.setSourceVisibility("Scene", "MakeItWork", true, null);
 		if (controller.isFailed()) {
 			obsConnectPanel.setMessage("Unable to connect. Is OBS running? Check Port and credentials.");
-		} else {
-//					obsConnectPanel.setMessage("Connected?");
 		}
+//		controller.getCurrentScene(message -> obs.setCurrentScene(message.getName()) );
+//		System.out.println("Scene = " + obs.getCurrentScene());
 	}
 	private void obsSetBallVisible(String source, boolean show) {
-		controller.setSourceVisibility("Scene", source, show, null);
+		if (obs.getConnected()) controller.setSourceVisibility("Scene", source, show, null);
 	}
 	public void obsSyncBalls() {
-		allBallsMap.forEach((ball,show) -> {
-			obsSetBallVisible(ball+"Ball", !ballPanel.getBallSelectedState(ball));
-		});
+		if (obs.getConnected()) {
+			allBallsMap.forEach((ball,show) -> {
+				obsSetBallVisible(ball+"Ball", !ballPanel.getBallSelectedState(ball));
+			});
+		}
 	}
 	public void resetNineBall() {
 		nineBallsMap.forEach((ball, show) -> {
-			obsSetBallVisible(ball+"Ball", show);
+			if (obs.getConnected()) obsSetBallVisible(ball+"Ball", show);
 			ballPanel.setBallSelected(ball, !show);
 		});
 	}
 	public void showAllBalls() {
 		allBallsMap.forEach((ball, show) -> {
-			obsSetBallVisible(ball+"Ball", show);
+			if (obs.getConnected()) obsSetBallVisible(ball+"Ball", show);
 			ballPanel.setBallSelected(ball, !show);
 		});
 	}
 	public void hideAllBalls() {
 		allBallsMap.forEach((ball, show) -> {
-			obsSetBallVisible(ball+"Ball", !show);
+			if (obs.getConnected()) obsSetBallVisible(ball+"Ball", !show);
 			ballPanel.setBallSelected(ball, show);
 		});
 	}
@@ -816,6 +820,13 @@ public class Main {
 	private class OBSConnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			connectToOBS();
+		}
+	}
+	private class OBSDisconnectItemListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			controller.disconnect();
+			updateOBSDisconnected();
+			obsConnectPanel.setMessage("Disconnected!");
 		}
 	}
 	private class SettingsSaveListener implements ActionListener {

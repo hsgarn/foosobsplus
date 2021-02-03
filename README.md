@@ -448,6 +448,11 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.067 02/02/2021<br/>
+Add disconnect menu item<br/>
+Only call obs commands when connected<br/>
+Add CurrentScene to OBS model<br/>
+<br/>
 v1.066 01/31/2021<br/>
 Add Sync OBS, 9 Ball, Show All, Hide All buttons for Ball Panel.<br/>
 Add associated XPSO, XPNB, XPSA, XPHA commands for above buttons respectively.<br/>

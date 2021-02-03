@@ -34,7 +34,7 @@ import net.miginfocom.swing.MigLayout;
 public class AboutPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private static final String versionNumber = "1.066"; //$NON-NLS-1$
+	private static final String versionNumber = "1.067"; //$NON-NLS-1$
 
 	public AboutPanel(JFrame aboutFrame) {
 		setLayout(new MigLayout("", "[127.00][50.00:87.00,grow,left]", "[][][][][grow][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

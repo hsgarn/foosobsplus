@@ -12,6 +12,7 @@ public class OBS {
 	private Boolean autoLogin;
 	private Boolean connected;
 	private String message;
+	private String currentScene;
 	
 	private OBS() {}
 	public static OBS getInstance() {
@@ -64,5 +65,11 @@ public class OBS {
 	}
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	public String getCurrentScene() {
+		return currentScene;
+	}
+	public void setCurrentScene(String currentScene) {
+		this.currentScene = currentScene;
 	}
 }
