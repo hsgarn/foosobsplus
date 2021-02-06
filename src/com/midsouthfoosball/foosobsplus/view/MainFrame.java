@@ -21,8 +21,10 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Dimension;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,6 +42,8 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -49,6 +53,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import com.midsouthfoosball.foosobsplus.main.Main;
+
 
 @SuppressWarnings("serial")
 public final class MainFrame extends JFrame implements WindowListener {
@@ -77,6 +82,11 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private JCheckBoxMenuItem helpShowParsed;
 	private JMenuItem obsConnectItem;
 	private JMenuItem obsDisconnectItem;
+	private JMenu obsMenu;
+	private ImageIcon imgConnected;
+	private ImageIcon imgDisconnected;
+	private Icon imgIconConnected;
+	private Icon imgIconDisconnected;
 	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
 	
 	public MainFrame(TablePanel tablePanel, TimerPanel timerPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
@@ -156,12 +166,20 @@ public final class MainFrame extends JFrame implements WindowListener {
 		settingsMenu.add(settingsStatItem);
 		editMenu.add(settingsMenu);
 		
-		JMenu obsMenu = new JMenu(Messages.getString("MainFrame.OBS")); //$NON-NLS-1$
+		obsMenu = new JMenu(Messages.getString("MainFrame.OBS")); //$NON-NLS-1$
 		obsConnectItem = new JMenuItem(Messages.getString("MainFrame.OBSConnect")); //$NON-NLS-1$
 		obsDisconnectItem = new JMenuItem(Messages.getString("MainFrame.OBSDisconnect")); //$NON-NLS-1$
 		
+		imgConnected = new ImageIcon(this.getClass().getResource("Connected.png"));; //$NON-NLS-1$
+		imgConnected.setImage(imgConnected.getImage().getScaledInstance(12, 12,  Image.SCALE_DEFAULT));
+		imgIconConnected = imgConnected;
+		imgDisconnected = new ImageIcon(this.getClass().getResource("Disconnected.png"));; //$NON-NLS-1$
+		imgDisconnected.setImage(imgDisconnected.getImage().getScaledInstance(12, 12,  Image.SCALE_DEFAULT));
+		imgIconDisconnected = imgDisconnected;
+		
 		obsMenu.add(obsConnectItem);
 		obsMenu.add(obsDisconnectItem);
+		obsMenu.setIcon(imgIconDisconnected);
 				
 		JMenu viewMenu = new JMenu(Messages.getString("MainFrame.View")); //$NON-NLS-1$
 		viewMenu.add(viewAlwaysOnTop);
@@ -185,6 +203,8 @@ public final class MainFrame extends JFrame implements WindowListener {
 		menuBar.add(obsMenu);
 		menuBar.add(viewMenu);
 		menuBar.add(helpMenu);
+		
+		obsMenu.setIcon(imgIconDisconnected);
 		
 		viewAlwaysOnTop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
@@ -312,6 +332,13 @@ public final class MainFrame extends JFrame implements WindowListener {
 			}
 		});
 		return menuBar;
+	}
+	public void setOBSIconConnected(Boolean connected) {
+		if (connected) {
+			obsMenu.setIcon(imgIconConnected);
+		} else {
+			obsMenu.setIcon(imgIconDisconnected);
+		}
 	}
 	public void enableConnect(Boolean state) {
 		obsConnectItem.setEnabled(state);
@@ -522,6 +549,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 		resetPanel.setPreferredSize(new Dimension(300,400));
 		add(resetPanel, gc);
 	}
+//	public void setBallPanelBackgroundColor(Color color) {
+//		ballPanel.setBackground(color);
+//	}
 	
 	////// Listeners //////
 	
@@ -555,7 +585,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 	public void addOBSDisconnectItemListener(ActionListener listenForOBSDisconnectItemListener) {
 		obsDisconnectItem.addActionListener(listenForOBSDisconnectItemListener);
 	}
-	
 	///// Utility Methods \\\\\\
 	public HotKeysPanel getHotKeysPanel() {
 		return hotKeysFrame.getHotKeysPanel();

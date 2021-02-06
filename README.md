@@ -448,6 +448,9 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.068 02/06/2021<br/>
+Show Connected/Disconnect icon in menu bar<br/>
+<br/>
 v1.067 02/02/2021<br/>
 Add disconnect menu item<br/>
 Only call obs commands when connected<br/>

@@ -20,6 +20,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.main;
 
+import java.awt.Color;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -605,11 +606,15 @@ public class Main {
 		obs.setConnected(true);
 		obsConnectPanel.disableConnect();
 		mainFrame.enableConnect(false);
+		mainFrame.setOBSIconConnected(true);
+//		mainFrame.setBallPanelBackgroundColor(Color.GREEN);
 	}
 	public void updateOBSDisconnected() {
 		obs.setConnected(false);
 		obsConnectPanel.enableConnect();
 		mainFrame.enableConnect(true);
+		mainFrame.setOBSIconConnected(false);
+//		mainFrame.setBallPanelBackgroundColor(Color.RED);
 	}
 	public void connectToOBS() {
 		obsConnectPanel.saveSettings(settings);
@@ -628,6 +633,7 @@ public class Main {
 		}
 //		controller.getCurrentScene(message -> obs.setCurrentScene(message.getName()) );
 //		System.out.println("Scene = " + obs.getCurrentScene());
+//		controller.registerCloseCallback(message -> {mainFrame.setOBSIconConnected(false);});
 	}
 	private void obsSetBallVisible(String source, boolean show) {
 		if (obs.getConnected()) controller.setSourceVisibility("Scene", source, show, null);
