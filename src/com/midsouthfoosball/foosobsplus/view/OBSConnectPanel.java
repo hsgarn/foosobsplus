@@ -1,14 +1,20 @@
 package com.midsouthfoosball.foosobsplus.view;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
@@ -24,9 +30,17 @@ public class OBSConnectPanel extends JPanel {
 	private JCheckBox chckbxSavePassword;
 	private JCheckBox chckbxAutoLogin;
 	private JButton btnDisconnect;
-	private JTextArea txtAreaMessage;
+	private Settings settings;
+	private JList<String> lstMessageHistory;
+	private DefaultListModel<String> mdlMessageHistory;
+	
+	private JScrollPane scrMessageHistory;
 	
 	public OBSConnectPanel(Settings settings) throws IOException {
+		this.settings = settings;
+		mdlMessageHistory = new DefaultListModel<String>();
+		lstMessageHistory = new JList<String>(mdlMessageHistory);
+		
 		setLayout(new MigLayout("", "[][grow]", "[][][][][][][][][][grow]"));
 		
 		JLabel lblPanelTitle = new JLabel("OBS Connection Details:");
@@ -68,9 +82,11 @@ public class OBSConnectPanel extends JPanel {
 		JLabel lblMessage = new JLabel("Message:");
 		add(lblMessage, "cell 1 8");
 		
-		txtAreaMessage = new JTextArea();
-		txtAreaMessage.setEditable(false);
-		add(txtAreaMessage, "cell 1 9,grow");
+		scrMessageHistory = new JScrollPane();
+		scrMessageHistory.setViewportView(lstMessageHistory);
+		lstMessageHistory.setLayoutOrientation(JList.VERTICAL);
+		lstMessageHistory.setCellRenderer(new AttributiveCellRenderer());
+		add(scrMessageHistory, "cell 1 9,grow");
 		
 		txtHost = new JTextField();
 		txtHost.setText(settings.getOBSHost());
@@ -94,9 +110,9 @@ public class OBSConnectPanel extends JPanel {
 		btnConnect.setEnabled(true);
 		btnDisconnect.setEnabled(false);
 	}
-	public void setMessage(String message) {
-		txtAreaMessage.setText(message);
-//		return;
+	public void addMessage(String message) {
+		mdlMessageHistory.insertElementAt(message, 0);
+//		scrMessageHistory.append(message + "\n");
 	}
 	public void saveSettings(Settings settings) {
 		settings.setOBSHost(txtHost.getText());
@@ -118,6 +134,28 @@ public class OBSConnectPanel extends JPanel {
 			System.out.println(Messages.getString("Errors.ErrorSavingPropertiesFile", settings.getGameType()) + ex.getMessage());		 //$NON-NLS-1$
 		}
 	}
+    public class AttributiveCellRenderer extends DefaultListCellRenderer {
+	  private static final long serialVersionUID = 1L;
+	  public AttributiveCellRenderer() {
+	    setOpaque(true);
+	  }
+
+	  public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) 
+	  {
+		  String tmp = ""; //$NON-NLS-1$
+		  tmp = (String) value;
+		  setBackground(UIManager.getColor("List.background")); //$NON-NLS-1$
+		  setForeground(UIManager.getColor("List.foreground")); //$NON-NLS-1$
+		  if (tmp.indexOf("Disconnect") != -1 || tmp.indexOf("Unable") != -1) { //$NON-NLS-1$
+			  setForeground(Color.RED);
+		  } 
+		  if (tmp.indexOf("Connected!") != -1) {
+			  setForeground(Color.BLUE);
+		  }
+          setText(tmp);
+          return this;
+	  }
+    }
 	////// Listeners \\\\\\
 	public void addConnectListener(ActionListener listenForBtnConnect) {
 		btnConnect.addActionListener(listenForBtnConnect);

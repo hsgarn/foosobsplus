@@ -20,12 +20,14 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.main;
 
-import java.awt.Color;
+//import java.awt.Color;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -152,6 +154,7 @@ public class Main {
 	public String				matchId				= "";
 	private HashMap<String, Boolean> allBallsMap = new HashMap<>();
 	private HashMap<String, Boolean> nineBallsMap = new HashMap<>();
+	private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 	
 	////// CommandStack and UndoRedo setup \\\\\\
 	
@@ -212,28 +215,34 @@ public class Main {
 	
 	////// Display the View Panels on a JFrame \\\\\\
 	
-	private MainFrame mainFrame = new MainFrame(tablePanel, timerPanel, teamPanel1, teamPanel2, statsEntryPanel, 
-												switchPanel, resetPanel, statsDisplayPanel, matchPanel, ballPanel, 
-												parametersFrame, hotKeysFrame, fileNamesFrame, obsConnectFrame, this);
+	private MainFrame mainFrame; // = new MainFrame(settings.getGameType(), tablePanel, timerPanel, teamPanel1, teamPanel2, statsEntryPanel, 
+//												switchPanel, resetPanel, statsDisplayPanel, matchPanel, ballPanel, 
+//												parametersFrame, hotKeysFrame, fileNamesFrame, obsConnectFrame, this);
+//	private MainFrame billiardsMainFrame = new MainFrame("Billiards",tablePanel, timerPanel, teamPanel1, teamPanel2, statsEntryPanel, 
+//												switchPanel, resetPanel, statsDisplayPanel, matchPanel, ballPanel, 
+//												parametersFrame, hotKeysFrame, fileNamesFrame, obsConnectFrame, this);
 
 	////// Set up independent Windows \\\\\\
 	
-	private GameTableWindowPanel	gameTableWindowPanel	= new GameTableWindowPanel(settings);
-	private GameTableWindowFrame	gameTableWindowFrame	= new GameTableWindowFrame(gameTableWindowPanel, mainFrame);
-	private TimerWindowFrame 		timerWindowFrame 		= new TimerWindowFrame(mainFrame);
-	private LastScored1WindowFrame 	lastScored1WindowFrame 	= new LastScored1WindowFrame(mainFrame);
-	private LastScored2WindowFrame 	lastScored2WindowFrame 	= new LastScored2WindowFrame(mainFrame);
+	private GameTableWindowPanel	gameTableWindowPanel;//	= new GameTableWindowPanel(settings);
+	private GameTableWindowFrame	gameTableWindowFrame;//	= new GameTableWindowFrame(gameTableWindowPanel, mainFrame);
+	private TimerWindowFrame 		timerWindowFrame;// 		= new TimerWindowFrame(mainFrame);
+	private LastScored1WindowFrame 	lastScored1WindowFrame;// 	= new LastScored1WindowFrame(mainFrame);
+	private LastScored2WindowFrame 	lastScored2WindowFrame;// 	= new LastScored2WindowFrame(mainFrame);
 
 	////// Build and Start the Controllers (mvC) \\\\\\
 	
-	MainController 		mainController 		= new MainController(mainFrame, timerWindowFrame, lastScored1WindowFrame, lastScored2WindowFrame, gameTableWindowFrame);
-	TimerController 	timerController 	= new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock);
-	TeamController 		teamController 		= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, matchPanel, gameTableWindowPanel, statsDisplayPanel, timerController, lastScored1Clock, lastScored2Clock, gameClock);
-	TableController 	tableController 	= new TableController(obsInterface, settings, table, match, tablePanel, teamController);
-	MatchController     matchController     = new MatchController(settings, match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, switchPanel, gameTableWindowPanel, teamController);
-	StatsController 	statsController 	= new StatsController(stats, statsDisplayPanel, teamController);
+	private MainController 	mainController;// 	= new MainController(mainFrame, timerWindowFrame, lastScored1WindowFrame, lastScored2WindowFrame, gameTableWindowFrame);
+	private TimerController timerController;// = new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock);
+	private TeamController 	teamController;// 	= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, matchPanel, gameTableWindowPanel, statsDisplayPanel, timerController, lastScored1Clock, lastScored2Clock, gameClock);
+	private TableController tableController;// = new TableController(obsInterface, settings, table, match, tablePanel, teamController);
+	private MatchController matchController;// = new MatchController(settings, match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, switchPanel, gameTableWindowPanel, teamController);
+	private StatsController statsController;// = new StatsController(stats, statsDisplayPanel, teamController);
 
 	public Main() throws IOException {
+
+		loadWindowsAndControllers();
+		
 		obsInterface.setFilePath(settings.getDatapath());
 		obsInterface.setTableName(settings.getTableName());
 		updateOBSDisconnected();
@@ -242,6 +251,112 @@ public class Main {
 		}
 		fetchAll(settings.getTableName());
 
+		loadBallMaps();
+		
+		loadListeners();
+
+		loadCommands();
+	}
+	public void loadWindowsAndControllers() {
+		mainFrame = new MainFrame(settings.getGameType(), tablePanel, timerPanel, teamPanel1, teamPanel2, statsEntryPanel, 
+				switchPanel, resetPanel, statsDisplayPanel, matchPanel, ballPanel, 
+				parametersFrame, hotKeysFrame, fileNamesFrame, obsConnectFrame, this);
+
+		////// Set up independent Windows \\\\\\
+		
+		gameTableWindowPanel	= new GameTableWindowPanel(settings);
+		gameTableWindowFrame	= new GameTableWindowFrame(gameTableWindowPanel, mainFrame);
+		timerWindowFrame 		= new TimerWindowFrame(mainFrame);
+		lastScored1WindowFrame 	= new LastScored1WindowFrame(mainFrame);
+		lastScored2WindowFrame 	= new LastScored2WindowFrame(mainFrame);
+
+		////// Build and Start the Controllers (mvC) \\\\\\
+		
+		mainController 	= new MainController(mainFrame, timerWindowFrame, lastScored1WindowFrame, lastScored2WindowFrame, gameTableWindowFrame);
+		timerController = new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock);
+		teamController 	= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, matchPanel, gameTableWindowPanel, statsDisplayPanel, timerController, lastScored1Clock, lastScored2Clock, gameClock);
+		tableController = new TableController(obsInterface, settings, table, match, tablePanel, teamController);
+		matchController = new MatchController(settings, match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, switchPanel, gameTableWindowPanel, teamController);
+		statsController = new StatsController(stats, statsDisplayPanel, teamController);
+	}
+	public void loadListeners() {
+		ballPanel.addBtnCueBallListener(new BtnCueBallListener());
+		ballPanel.addBtnOneBallListener(new BtnOneBallListener());
+		ballPanel.addBtnTwoBallListener(new BtnTwoBallListener());
+		ballPanel.addBtnThreeBallListener(new BtnThreeBallListener());
+		ballPanel.addBtnFourBallListener(new BtnFourBallListener());
+		ballPanel.addBtnFiveBallListener(new BtnFiveBallListener());
+		ballPanel.addBtnSixBallListener(new BtnSixBallListener());
+		ballPanel.addBtnSevenBallListener(new BtnSevenBallListener());
+		ballPanel.addBtnEightBallListener(new BtnEightBallListener());
+		ballPanel.addBtnNineBallListener(new BtnNineBallListener());
+		ballPanel.addBtnTenBallListener(new BtnTenBallListener());
+		ballPanel.addBtnElevenBallListener(new BtnElevenBallListener());
+		ballPanel.addBtnTwelveBallListener(new BtnTwelveBallListener());
+		ballPanel.addBtnThirteenBallListener(new BtnThirteenBallListener());
+		ballPanel.addBtnFourteenBallListener(new BtnFourteenBallListener());
+		ballPanel.addBtnFifteenBallListener(new BtnFifteenBallListener());
+		ballPanel.addBtnSyncOBSListener(new BtnSyncOBSListener());
+		ballPanel.addBtnResetNineBallListener(new BtnResetNineBallListener());
+		ballPanel.addBtnShowAllBallsListener(new BtnShowAllBallsListener());
+		ballPanel.addBtnHideAllBallsListener(new BtnHideAllBallsListener());
+		
+		hotKeysPanel.addSaveListener(new HotKeysSaveListener());
+		parametersPanel.addSaveListener(new SettingsSaveListener());
+		obsConnectPanel.addConnectListener(new OBSConnectListener());
+		obsConnectPanel.addDisconnectListener(new OBSDisconnectListener());
+		statsEntryPanel.addUndoListener(new StatsEntryUndoListener());
+		statsEntryPanel.addRedoListener(new StatsEntryRedoListener());
+		statsEntryPanel.addCodeListener(new CodeListener());
+		teamPanel1.addClearAllListener(new TeamClearAllListener());
+		teamPanel2.addClearAllListener(new TeamClearAllListener());
+		tablePanel.addClearListener(new TableClearAllListener());
+		tablePanel.addLoadListener(new TableLoadListener());
+		tablePanel.addSetListener(new TableSetListener());
+		statsEntryPanel.addStatsClearListener(new StatsClearListener());
+		teamPanel1.addScoreIncreaseListener(new ScoreIncreaseListener());
+		teamPanel2.addScoreIncreaseListener(new ScoreIncreaseListener());
+		teamPanel1.addScoreDecreaseListener(new ScoreDecreaseListener());
+		teamPanel2.addScoreDecreaseListener(new ScoreDecreaseListener());
+		teamPanel1.addGameCountIncreaseListener(new GameCountIncreaseListener());
+		teamPanel2.addGameCountIncreaseListener(new GameCountIncreaseListener());
+		teamPanel1.addGameCountDecreaseListener(new GameCountDecreaseListener());
+		teamPanel2.addGameCountDecreaseListener(new GameCountDecreaseListener());
+		teamPanel1.addTimeOutCountIncreaseListener(new TimeOutCountIncreaseListener());
+		teamPanel2.addTimeOutCountIncreaseListener(new TimeOutCountIncreaseListener());
+		teamPanel1.addTimeOutCountDecreaseListener(new TimeOutCountDecreaseListener());
+		teamPanel2.addTimeOutCountDecreaseListener(new TimeOutCountDecreaseListener());
+		teamPanel1.addResetListener(new ResetListener());
+		teamPanel2.addResetListener(new ResetListener());
+		teamPanel1.addWarnListener(new WarnListener());
+		teamPanel2.addWarnListener(new WarnListener());
+		teamPanel1.addSwitchPositionsListener(new SwitchPositionsListener());
+		teamPanel2.addSwitchPositionsListener(new SwitchPositionsListener());
+		switchPanel.addSwitchSidesListener(new SwitchSidesListener());
+		timerPanel.addShotTimerListener(new ShotTimerListener());
+		timerPanel.addPassTimerListener(new PassTimerListener());
+		timerPanel.addTimeOutTimerListener(new TimeOutTimerListener());
+		timerPanel.addGameTimerListener(new GameTimerListener());
+		timerPanel.addRecallTimerListener(new RecallTimerListener());
+		timerPanel.addResetTimerListener(new ResetTimerListener());
+		matchPanel.addStartMatchListener(new StartMatchListener());
+		matchPanel.addPauseMatchListener(new PauseMatchListener());
+		matchPanel.addStartGameListener(new StartGameListener());
+		switchPanel.addSwitchTeamsListener(new SwitchTeamsListener());
+		switchPanel.addSwitchScoresListener(new SwitchScoresListener());
+		switchPanel.addSwitchGameCountsListener(new SwitchGameCountsListener());
+		switchPanel.addSwitchTimeOutsListener(new SwitchTimeOutsListener());
+		switchPanel.addSwitchResetWarnsListener(new SwitchResetWarnsListener());
+		switchPanel.addClearAllListener(new ClearAllListener());
+		resetPanel.addResetNamesListener(new ResetNamesListener());
+		resetPanel.addResetScoresListener(new ResetScoresListener());
+		resetPanel.addResetGameCountsListener(new ResetGameCountsListener());
+		resetPanel.addResetTimeOutsListener(new ResetTimeOutsListener());
+		resetPanel.addResetResetWarnsListener(new ResetResetWarnsListener());
+		resetPanel.addResetAllListener(new ResetAllListener());
+		mainFrame.addOBSDisconnectItemListener(new OBSDisconnectItemListener());
+	}
+	public void loadBallMaps() {
 		allBallsMap.put("Cue", true);
 		allBallsMap.put("One", true);
 		allBallsMap.put("Two", true);
@@ -276,83 +391,6 @@ public class Main {
 		nineBallsMap.put("Thirteen", false);
 		nineBallsMap.put("Fourteen", false);
 		nineBallsMap.put("Fifteen", false);
-		
-		this.ballPanel.addBtnCueBallListener(new BtnCueBallListener());
-		this.ballPanel.addBtnOneBallListener(new BtnOneBallListener());
-		this.ballPanel.addBtnTwoBallListener(new BtnTwoBallListener());
-		this.ballPanel.addBtnThreeBallListener(new BtnThreeBallListener());
-		this.ballPanel.addBtnFourBallListener(new BtnFourBallListener());
-		this.ballPanel.addBtnFiveBallListener(new BtnFiveBallListener());
-		this.ballPanel.addBtnSixBallListener(new BtnSixBallListener());
-		this.ballPanel.addBtnSevenBallListener(new BtnSevenBallListener());
-		this.ballPanel.addBtnEightBallListener(new BtnEightBallListener());
-		this.ballPanel.addBtnNineBallListener(new BtnNineBallListener());
-		this.ballPanel.addBtnTenBallListener(new BtnTenBallListener());
-		this.ballPanel.addBtnElevenBallListener(new BtnElevenBallListener());
-		this.ballPanel.addBtnTwelveBallListener(new BtnTwelveBallListener());
-		this.ballPanel.addBtnThirteenBallListener(new BtnThirteenBallListener());
-		this.ballPanel.addBtnFourteenBallListener(new BtnFourteenBallListener());
-		this.ballPanel.addBtnFifteenBallListener(new BtnFifteenBallListener());
-		this.ballPanel.addBtnSyncOBSListener(new BtnSyncOBSListener());
-		this.ballPanel.addBtnResetNineBallListener(new BtnResetNineBallListener());
-		this.ballPanel.addBtnShowAllBallsListener(new BtnShowAllBallsListener());
-		this.ballPanel.addBtnHideAllBallsListener(new BtnHideAllBallsListener());
-		
-		this.hotKeysPanel.addSaveListener(new HotKeysSaveListener());
-		this.parametersPanel.addSaveListener(new SettingsSaveListener());
-		this.obsConnectPanel.addConnectListener(new OBSConnectListener());
-		this.obsConnectPanel.addDisconnectListener(new OBSDisconnectListener());
-		this.mainFrame.addOBSDisconnectItemListener(new OBSDisconnectItemListener());
-		this.statsEntryPanel.addUndoListener(new StatsEntryUndoListener());
-		this.statsEntryPanel.addRedoListener(new StatsEntryRedoListener());
-		this.statsEntryPanel.addCodeListener(new CodeListener());
-		this.teamPanel1.addClearAllListener(new TeamClearAllListener());
-		this.teamPanel2.addClearAllListener(new TeamClearAllListener());
-		this.tablePanel.addClearListener(new TableClearAllListener());
-		this.tablePanel.addLoadListener(new TableLoadListener());
-		this.tablePanel.addSetListener(new TableSetListener());
-		this.statsEntryPanel.addStatsClearListener(new StatsClearListener());
-		this.teamPanel1.addScoreIncreaseListener(new ScoreIncreaseListener());
-		this.teamPanel2.addScoreIncreaseListener(new ScoreIncreaseListener());
-		this.teamPanel1.addScoreDecreaseListener(new ScoreDecreaseListener());
-		this.teamPanel2.addScoreDecreaseListener(new ScoreDecreaseListener());
-		this.teamPanel1.addGameCountIncreaseListener(new GameCountIncreaseListener());
-		this.teamPanel2.addGameCountIncreaseListener(new GameCountIncreaseListener());
-		this.teamPanel1.addGameCountDecreaseListener(new GameCountDecreaseListener());
-		this.teamPanel2.addGameCountDecreaseListener(new GameCountDecreaseListener());
-		this.teamPanel1.addTimeOutCountIncreaseListener(new TimeOutCountIncreaseListener());
-		this.teamPanel2.addTimeOutCountIncreaseListener(new TimeOutCountIncreaseListener());
-		this.teamPanel1.addTimeOutCountDecreaseListener(new TimeOutCountDecreaseListener());
-		this.teamPanel2.addTimeOutCountDecreaseListener(new TimeOutCountDecreaseListener());
-		this.teamPanel1.addResetListener(new ResetListener());
-		this.teamPanel2.addResetListener(new ResetListener());
-		this.teamPanel1.addWarnListener(new WarnListener());
-		this.teamPanel2.addWarnListener(new WarnListener());
-		this.teamPanel1.addSwitchPositionsListener(new SwitchPositionsListener());
-		this.teamPanel2.addSwitchPositionsListener(new SwitchPositionsListener());
-		this.switchPanel.addSwitchSidesListener(new SwitchSidesListener());
-		this.timerPanel.addShotTimerListener(new ShotTimerListener());
-		this.timerPanel.addPassTimerListener(new PassTimerListener());
-		this.timerPanel.addTimeOutTimerListener(new TimeOutTimerListener());
-		this.timerPanel.addGameTimerListener(new GameTimerListener());
-		this.timerPanel.addRecallTimerListener(new RecallTimerListener());
-		this.timerPanel.addResetTimerListener(new ResetTimerListener());
-		this.matchPanel.addStartMatchListener(new StartMatchListener());
-		this.matchPanel.addPauseMatchListener(new PauseMatchListener());
-		this.matchPanel.addStartGameListener(new StartGameListener());
-		this.switchPanel.addSwitchTeamsListener(new SwitchTeamsListener());
-		this.switchPanel.addSwitchScoresListener(new SwitchScoresListener());
-		this.switchPanel.addSwitchGameCountsListener(new SwitchGameCountsListener());
-		this.switchPanel.addSwitchTimeOutsListener(new SwitchTimeOutsListener());
-		this.switchPanel.addSwitchResetWarnsListener(new SwitchResetWarnsListener());
-		this.switchPanel.addClearAllListener(new ClearAllListener());
-		this.resetPanel.addResetNamesListener(new ResetNamesListener());
-		this.resetPanel.addResetScoresListener(new ResetScoresListener());
-		this.resetPanel.addResetGameCountsListener(new ResetGameCountsListener());
-		this.resetPanel.addResetTimeOutsListener(new ResetTimeOutsListener());
-		this.resetPanel.addResetResetWarnsListener(new ResetResetWarnsListener());
-		this.resetPanel.addResetAllListener(new ResetAllListener());
-		loadCommands();
 	}
 	public void startMatch() {
 		if(match.isMatchStarted()) {
@@ -624,12 +662,16 @@ public class Main {
 		String connectString = "ws://"+obs.getHost()+":"+obs.getPort();
 		controller = new OBSRemoteController(connectString,true,obs.getPassword(),false);
 		controller.connect();
-		controller.registerConnectCallback(response -> {obsConnectPanel.setMessage("Connected! Studio Version: " + response.getObsStudioVersion());updateOBSConnected();});
+		controller.registerConnectCallback(response -> {
+			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Connected! Studio Version: " + response.getObsStudioVersion());
+			updateOBSConnected();
+			obsConnectFrame.setVisible(false);
+		});
 //				controller.setCurrentScene("Scene", message -> {System.out.println("Scene set, maybe: " + message.getMessageId() + ", " + message.getStatus() + ", " + message.getError());} );
 //				controller.getCurrentScene(message -> {System.out.println("Scene: " + message.getName());});
 //				controller.setSourceVisibility("Scene", "MakeItWork", true, null);
 		if (controller.isFailed()) {
-			obsConnectPanel.setMessage("Unable to connect. Is OBS running? Check Port and credentials.");
+			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Unable to connect. Is OBS running? Check Port and credentials.");
 		}
 //		controller.getCurrentScene(message -> obs.setCurrentScene(message.getName()) );
 //		System.out.println("Scene = " + obs.getCurrentScene());
@@ -820,7 +862,7 @@ public class Main {
 		public void actionPerformed(ActionEvent e) {
 			controller.disconnect();
 			updateOBSDisconnected();
-			obsConnectPanel.setMessage("Disconnected!");
+			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Disconnected!");
 		}
 	}
 	private class OBSConnectListener implements ActionListener {
@@ -832,7 +874,7 @@ public class Main {
 		public void actionPerformed(ActionEvent e) {
 			controller.disconnect();
 			updateOBSDisconnected();
-			obsConnectPanel.setMessage("Disconnected!");
+			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Disconnected!");
 		}
 	}
 	private class SettingsSaveListener implements ActionListener {
@@ -847,6 +889,10 @@ public class Main {
 				gameTableWindowPanel.resizeGameTable();
 			}
 			if (!oldGameType.equals(newGameType)) {
+				//mainFrame.setVisible(false);
+				mainFrame.closeWindow();
+				loadWindowsAndControllers();
+				mainFrame.setOBSIconConnected(obs.getConnected());
 				teamPanel1.changeGameType();
 				teamPanel2.changeGameType();
 				switchPanel.changeGameType();

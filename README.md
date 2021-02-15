@@ -448,7 +448,12 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
-v1.068 02/06/2021<br/>
+v1.069<br/>
+Switch out mainFrame when gameType changes<br/>
+Auto hide connection window on successful connection<br/>
+Append text to connect window text box instead of overwriting and add time stamp<br/>
+Extract some code to methods in Main<br/>
+<br/>v1.068 02/06/2021<br/>
 Show Connected/Disconnect icon in menu bar<br/>
 <br/>
 v1.067 02/02/2021<br/>
