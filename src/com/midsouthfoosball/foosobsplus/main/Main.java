@@ -20,7 +20,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.main;
 
-//import java.awt.Color;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,6 +31,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -75,6 +75,8 @@ import com.midsouthfoosball.foosobsplus.commands.PSRCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSSCCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSSCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSTCommand;
+import com.midsouthfoosball.foosobsplus.commands.XP1Command;
+import com.midsouthfoosball.foosobsplus.commands.XP2Command;
 import com.midsouthfoosball.foosobsplus.commands.PSTOCommand;
 import com.midsouthfoosball.foosobsplus.commands.PWT1Command;
 import com.midsouthfoosball.foosobsplus.commands.PWT2Command;
@@ -131,7 +133,6 @@ import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
 
 import net.twasi.obsremotejava.OBSRemoteController;
 
-
 public class Main {
 	{
 		try {
@@ -155,6 +156,8 @@ public class Main {
 	private HashMap<String, Boolean> allBallsMap = new HashMap<>();
 	private HashMap<String, Boolean> nineBallsMap = new HashMap<>();
 	private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+	private String obsSceneName = "Scene";//"FoosObs+ Main";
+	private String obsShowScoresSource = "Scores";//"ScoresAndLabels";
 	
 	////// CommandStack and UndoRedo setup \\\\\\
 	
@@ -215,29 +218,25 @@ public class Main {
 	
 	////// Display the View Panels on a JFrame \\\\\\
 	
-	private MainFrame mainFrame; // = new MainFrame(settings.getGameType(), tablePanel, timerPanel, teamPanel1, teamPanel2, statsEntryPanel, 
-//												switchPanel, resetPanel, statsDisplayPanel, matchPanel, ballPanel, 
-//												parametersFrame, hotKeysFrame, fileNamesFrame, obsConnectFrame, this);
-//	private MainFrame billiardsMainFrame = new MainFrame("Billiards",tablePanel, timerPanel, teamPanel1, teamPanel2, statsEntryPanel, 
-//												switchPanel, resetPanel, statsDisplayPanel, matchPanel, ballPanel, 
-//												parametersFrame, hotKeysFrame, fileNamesFrame, obsConnectFrame, this);
+	private MainFrame mainFrame; // The Main Window JFrame with multiple View Panels on it
 
 	////// Set up independent Windows \\\\\\
 	
-	private GameTableWindowPanel	gameTableWindowPanel;//	= new GameTableWindowPanel(settings);
-	private GameTableWindowFrame	gameTableWindowFrame;//	= new GameTableWindowFrame(gameTableWindowPanel, mainFrame);
-	private TimerWindowFrame 		timerWindowFrame;// 		= new TimerWindowFrame(mainFrame);
-	private LastScored1WindowFrame 	lastScored1WindowFrame;// 	= new LastScored1WindowFrame(mainFrame);
-	private LastScored2WindowFrame 	lastScored2WindowFrame;// 	= new LastScored2WindowFrame(mainFrame);
+	private GameTableWindowPanel	gameTableWindowPanel;
+	private GameTableWindowFrame	gameTableWindowFrame;
+	private TimerWindowFrame 		timerWindowFrame;
+	private LastScored1WindowFrame 	lastScored1WindowFrame;
+	private LastScored2WindowFrame 	lastScored2WindowFrame;
 
 	////// Build and Start the Controllers (mvC) \\\\\\
 	
-	private MainController 	mainController;// 	= new MainController(mainFrame, timerWindowFrame, lastScored1WindowFrame, lastScored2WindowFrame, gameTableWindowFrame);
-	private TimerController timerController;// = new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock);
-	private TeamController 	teamController;// 	= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, matchPanel, gameTableWindowPanel, statsDisplayPanel, timerController, lastScored1Clock, lastScored2Clock, gameClock);
-	private TableController tableController;// = new TableController(obsInterface, settings, table, match, tablePanel, teamController);
-	private MatchController matchController;// = new MatchController(settings, match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, switchPanel, gameTableWindowPanel, teamController);
-	private StatsController statsController;// = new StatsController(stats, statsDisplayPanel, teamController);
+	@SuppressWarnings("unused")
+	private MainController 	mainController;
+	private TimerController timerController;
+	private TeamController 	teamController;
+	private TableController tableController;
+	private MatchController matchController;
+	private StatsController statsController;
 
 	public Main() throws IOException {
 
@@ -343,6 +342,8 @@ public class Main {
 		matchPanel.addPauseMatchListener(new PauseMatchListener());
 		matchPanel.addStartGameListener(new StartGameListener());
 		switchPanel.addSwitchTeamsListener(new SwitchTeamsListener());
+		switchPanel.addSwitchPlayer1Listener(new SwitchPlayer1Listener());
+		switchPanel.addSwitchPlayer2Listener(new SwitchPlayer2Listener());
 		switchPanel.addSwitchScoresListener(new SwitchScoresListener());
 		switchPanel.addSwitchGameCountsListener(new SwitchGameCountsListener());
 		switchPanel.addSwitchTimeOutsListener(new SwitchTimeOutsListener());
@@ -374,7 +375,6 @@ public class Main {
 		allBallsMap.put("Fourteen", true);
 		allBallsMap.put("Fifteen", true);
 		
-		nineBallsMap.put("Cue", true);
 		nineBallsMap.put("Cue", true);
 		nineBallsMap.put("One", true);
 		nineBallsMap.put("Two", true);
@@ -572,6 +572,8 @@ public class Main {
 		Command xpt1 = new XPT1Command(statsController, teamController);
 		Command xpt2 = new XPT2Command(statsController, teamController);
 		Command pst = new PSTCommand(statsController, teamController);
+		Command xp1 = new XP1Command(statsController, teamController);
+		Command xp2 = new XP2Command(statsController, teamController);
 		Command pssc = new PSSCCommand(statsController, teamController);
 		Command psgc = new PSGCCommand(statsController, teamController);
 		Command psto = new PSTOCommand(statsController, teamController);
@@ -621,6 +623,8 @@ public class Main {
 		mySwitch.register("XPT1", xpt1);
 		mySwitch.register("XPT2", xpt2);
 		mySwitch.register("PST", pst);
+		mySwitch.register("XP1", xp1);
+		mySwitch.register("XP2", xp2);
 		mySwitch.register("PSSC", pssc);
 		mySwitch.register("PSGC", psgc);
 		mySwitch.register("PSTO", psto);
@@ -640,39 +644,79 @@ public class Main {
 		mySwitch.register("PHA", pha);
 		mySwitch.register("code", codeCommand);
 	}
+	public void showScores(boolean show) {
+		if (obs.getConnected()) controller.setSourceVisibility(obsSceneName, obsShowScoresSource, show, null);
+/*		if (obs.getConnected()) controller.getSourceSettings(obsShowScoresSource,response -> {
+			response.getSourceSettings().keySet()
+					.iterator()
+					.forEachRemaining(System.out::println)
+					;
+			response.getSourceSettings().values().stream().forEach(System.out::println);
+			System.out.println(response.getSourceSettings().get("items").toString());
+		});
+*/
+//		if (obs.getConnected()) controller.getSceneItemProperties(obsSceneName, obsShowScoresSource, response -> {
+//			System.out.println("Test: " + response.isVisible());
+//		});
+	}
+
 	public void updateOBSConnected() {
 		obs.setConnected(true);
 		obsConnectPanel.disableConnect();
 		mainFrame.enableConnect(false);
 		mainFrame.setOBSIconConnected(true);
-//		mainFrame.setBallPanelBackgroundColor(Color.GREEN);
 	}
 	public void updateOBSDisconnected() {
 		obs.setConnected(false);
 		obsConnectPanel.enableConnect();
 		mainFrame.enableConnect(true);
 		mainFrame.setOBSIconConnected(false);
-//		mainFrame.setBallPanelBackgroundColor(Color.RED);
 	}
 	public void connectToOBS() {
+		AtomicReference<String> connectionFailedResult = new AtomicReference<>();
+		AtomicReference<String> disconnectResult = new AtomicReference<>();
+		AtomicReference<String> onErrorReason = new AtomicReference<>();
+		AtomicReference<String> connectResult = new AtomicReference<>();
 		obsConnectPanel.saveSettings(settings);
 		obs.setHost(settings.getOBSHost());
 		obs.setPort(settings.getOBSPort());
 		obs.setPassword(settings.getOBSPassword());
 		String connectString = "ws://"+obs.getHost()+":"+obs.getPort();
-		controller = new OBSRemoteController(connectString,true,obs.getPassword(),false);
-		controller.connect();
-		controller.registerConnectCallback(response -> {
-			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Connected! Studio Version: " + response.getObsStudioVersion());
-			updateOBSConnected();
-			obsConnectFrame.setVisible(false);
-		});
-//				controller.setCurrentScene("Scene", message -> {System.out.println("Scene set, maybe: " + message.getMessageId() + ", " + message.getStatus() + ", " + message.getError());} );
-//				controller.getCurrentScene(message -> {System.out.println("Scene: " + message.getName());});
-//				controller.setSourceVisibility("Scene", "MakeItWork", true, null);
+		controller = new OBSRemoteController(connectString,false,obs.getPassword(),false);
+
 		if (controller.isFailed()) {
-			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Unable to connect. Is OBS running? Check Port and credentials.");
+			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS Controller failed!");
 		}
+
+		controller.registerConnectCallback(response -> {
+			connectResult.set(dtf.format(LocalDateTime.now()) + ": Connected! Studio Version: " + response.getObsStudioVersion());
+			updateOBSConnected();
+			obsConnectPanel.addMessage(connectResult.get());
+			if(settings.getOBSCloseOnConnect()==1) {
+				obsConnectFrame.setVisible(false);
+			}
+		});
+		
+		controller.registerDisconnectCallback(() -> {
+			disconnectResult.set(dtf.format(LocalDateTime.now()) + ": OBS Disconnect Confirmed!");
+			updateOBSDisconnected();
+			obsConnectPanel.addMessage(disconnectResult.get());
+		});
+		
+		controller.registerOnError((message, throwable) -> {
+			onErrorReason.set(dtf.format(LocalDateTime.now()) + ": OBS onError called unexpectedly. May need to disconnect/reconnect.");
+			obsConnectPanel.addMessage(onErrorReason.get());
+		});
+
+		controller.registerConnectionFailedCallback(connectionFailedResult::set);
+//		controller.registerConnectionFailedCallback(message -> {
+//			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Oops!: " + message);
+//		});
+
+		controller.connect();
+		controller.setCurrentScene("Scene", message -> {System.out.println("Scene set, maybe: " + message.getMessageId() + ", " + message.getStatus() + ", " + message.getError());} );
+		controller.getCurrentScene(message -> {System.out.println("Scene: " + message.getName());});
+//		controller.setSourceVisibility("Scene", "MakeItWork", true, null);
 //		controller.getCurrentScene(message -> obs.setCurrentScene(message.getName()) );
 //		System.out.println("Scene = " + obs.getCurrentScene());
 //		controller.registerCloseCallback(message -> {mainFrame.setOBSIconConnected(false);});
@@ -709,6 +753,7 @@ public class Main {
 	private class BtnCueBallListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			obsSetBallVisible("CueBall", !ballPanel.getCueBallSelectedState());
+//			if (obs.getConnected()) controller.setTextGDIPlusProperties("MakeItWork", "True Text", true, null);
 		}
 	}
 	private class BtnOneBallListener implements ActionListener {
@@ -1082,6 +1127,18 @@ public class Main {
 	private class SwitchTeamsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPST",false);
+			statsEntryPanel.setFocusOnCode();
+		}
+	}
+	private class SwitchPlayer1Listener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XXP1",false);
+			statsEntryPanel.setFocusOnCode();
+		}
+	}
+	private class SwitchPlayer2Listener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XXP2",false);
 			statsEntryPanel.setFocusOnCode();
 		}
 	}

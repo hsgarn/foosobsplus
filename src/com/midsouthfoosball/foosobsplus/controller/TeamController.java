@@ -457,6 +457,22 @@ public class TeamController {
 		teamPanel2.updateGoalieName(team2.getGoalieName());
 		updateGameTables();
 	}
+	public void switchPlayer1() {
+		String tmp = team1.getForwardName();
+		team1.setForwardName(team2.getForwardName());
+		team2.setForwardName(tmp);
+		teamPanel1.updateForwardName(team1.getForwardName());
+		teamPanel2.updateForwardName(team2.getForwardName());
+		updateGameTables();
+	}
+	public void switchPlayer2() {
+		String tmp2 = team1.getGoalieName();
+		team1.setGoalieName(team2.getGoalieName());
+		team2.setGoalieName(tmp2);
+		teamPanel1.updateGoalieName(team1.getGoalieName());
+		teamPanel2.updateGoalieName(team2.getGoalieName());
+		updateGameTables();
+	}
 	public void switchScores() {
 		int tmp = team1.getScore();
 		team1.setScore(team2.getScore());

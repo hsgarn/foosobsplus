@@ -40,6 +40,8 @@ public class SwitchPanel extends JPanel {
 	
 	private JButton btnSwitchSides;
 	private JButton btnSwitchTeams;
+	private JButton btnSwitchPlayer1;
+	private JButton btnSwitchPlayer2;
 	private JButton btnSwitchScores;
 	private JButton btnSwitchGameCounts;
 	private JButton btnSwitchTimeOuts;
@@ -60,6 +62,8 @@ public class SwitchPanel extends JPanel {
 		
 		btnSwitchSides = new JButton(Messages.getString("SwitchPanel.SwitchSides", settings.getGameType())); //$NON-NLS-1$
 		btnSwitchTeams = new JButton(Messages.getString("SwitchPanel.SwitchTeams", settings.getGameType())); //$NON-NLS-1$
+		btnSwitchPlayer1 = new JButton(Messages.getString("SwitchPanel.SwitchPlayer1", settings.getGameType()));
+		btnSwitchPlayer2 = new JButton(Messages.getString("SwitchPanel.SwitchPlayer2", settings.getGameType()));
 		btnSwitchScores = new JButton(Messages.getString("SwitchPanel.SwitchScores", settings.getGameType())); //$NON-NLS-1$
 		btnSwitchGameCounts = new JButton(Messages.getString("SwitchPanel.SwitchGameCounts", settings.getGameType())); //$NON-NLS-1$
 		btnSwitchTimeOuts = new JButton(Messages.getString("SwitchPanel.SwitchTimeOuts", settings.getGameType())); //$NON-NLS-1$
@@ -81,6 +85,8 @@ public class SwitchPanel extends JPanel {
 	public void changeGameType() {
 		btnSwitchSides.setText(Messages.getString("SwitchPanel.SwitchSides", settings.getGameType())); //$NON-NLS-1$
 		btnSwitchTeams.setText(Messages.getString("SwitchPanel.SwitchTeams", settings.getGameType())); //$NON-NLS-1$
+		btnSwitchPlayer1.setText(Messages.getString("SwitchPanel.SwitchPlayer1", settings.getGameType()));
+		btnSwitchPlayer2.setText(Messages.getString("SwitchPanel.SwitchPlayer2", settings.getGameType()));
 		btnSwitchScores.setText(Messages.getString("SwitchPanel.SwitchScores", settings.getGameType())); //$NON-NLS-1$
 		btnSwitchGameCounts.setText(Messages.getString("SwitchPanel.SwitchGameCounts", settings.getGameType())); //$NON-NLS-1$
 		btnSwitchTimeOuts.setText(Messages.getString("SwitchPanel.SwitchTimeOuts", settings.getGameType())); //$NON-NLS-1$
@@ -118,6 +124,30 @@ public class SwitchPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(btnSwitchTeams, gc);
+		
+		//////// Switch Player1 ////////
+		gc.gridy++;
+
+		gc.weightx = 1;
+		gc.weighty = 0.1;
+		
+		gc.gridx = 1;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.insets = new Insets(0, 0, 0, 5);
+		add(btnSwitchPlayer1, gc);
+		
+		//////// Switch Player2 ////////
+		gc.gridy++;
+
+		gc.weightx = 1;
+		gc.weighty = 0.1;
+		
+		gc.gridx = 1;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.insets = new Insets(0, 0, 0, 5);
+		add(btnSwitchPlayer2, gc);
 		
 		//////// Switch Scores ////////
 		gc.gridy++;
@@ -203,6 +233,16 @@ public class SwitchPanel extends JPanel {
 		} else {
 			btnSwitchTeams.setMnemonic(settings.getSwitchTeamsHotKey().charAt(0));
 		};
+		if(settings.getSwitchPlayer1HotKey().isEmpty()) {
+			btnSwitchPlayer1.setMnemonic(-1);
+		} else {
+			btnSwitchPlayer1.setMnemonic(settings.getSwitchPlayer1HotKey().charAt(0));
+		};
+		if(settings.getSwitchPlayer2HotKey().isEmpty()) {
+			btnSwitchPlayer2.setMnemonic(-1);
+		} else {
+			btnSwitchPlayer2.setMnemonic(settings.getSwitchPlayer2HotKey().charAt(0));
+		};
 		if(settings.getSwitchScoresHotKey().isEmpty()) {
 			btnSwitchScores.setMnemonic(-1);
 		} else {
@@ -237,6 +277,12 @@ public class SwitchPanel extends JPanel {
 	}
 	public void addSwitchTeamsListener(ActionListener listenForBtnSwitchTeams) {
 		btnSwitchTeams.addActionListener(listenForBtnSwitchTeams);
+	}
+	public void addSwitchPlayer1Listener(ActionListener listenForBtnSwitchPlayer1) {
+		btnSwitchPlayer1.addActionListener(listenForBtnSwitchPlayer1);
+	}
+	public void addSwitchPlayer2Listener(ActionListener listenForBtnSwitchPlayer2) {
+		btnSwitchPlayer2.addActionListener(listenForBtnSwitchPlayer2);
 	}
 	public void addSwitchScoresListener(ActionListener listenForBtnSwitchScores) {
 		btnSwitchScores.addActionListener(listenForBtnSwitchScores);

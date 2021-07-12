@@ -139,6 +139,8 @@ public class Settings {
 	private String team2ClearHotKey;
 	private String team2SwitchPositionsHotKey;
 	private String switchTeamsHotKey;
+	private String switchPlayer1HotKey;
+	private String switchPlayer2HotKey;
 	private String gameCount1MinusHotKey;
 	private String gameCount1PlusHotKey;
 	private String gameCount2MinusHotKey;
@@ -181,6 +183,7 @@ public class Settings {
 	private String obsPassword;
 	private int obsSavePassword;
 	private int obsAutoLogin;
+	private int obsCloseOnConnect;
 // Property Settings
 	private Properties defaultProps;
 	
@@ -301,6 +304,8 @@ public class Settings {
 		defaultProps.setProperty("Team2ClearHotKey", "");
 		defaultProps.setProperty("Team2SwitchPositionsHotKey", "m");
 		defaultProps.setProperty("SwitchTeamsHotKey", "e");
+		defaultProps.setProperty("SwitchPlayer1", "");
+		defaultProps.setProperty("SwitchPlayer2", "");
 		defaultProps.setProperty("GameCount1MinusHotKey", "");
 		defaultProps.setProperty("GameCount1PlusHotKey", "5");
 		defaultProps.setProperty("GameCount2MinusHotKey", "");
@@ -344,6 +349,7 @@ public class Settings {
 		defaultProps.setProperty("OBSPassword","");
 		defaultProps.setProperty("OBSAutoLogin", "0");
 		defaultProps.setProperty("OBSSavePassword", "0");
+		defaultProps.setProperty("OBSCloseOnConnect", "1");
 		//Properties
 		configProps = new Properties(defaultProps);
 		loadFromConfig();
@@ -597,6 +603,8 @@ public class Settings {
 	public String getTeam2ClearHotKey() {return team2ClearHotKey;}
 	public String getTeam2SwitchPositionsHotKey() {return team2SwitchPositionsHotKey;}
 	public String getSwitchTeamsHotKey() {return switchTeamsHotKey;}
+	public String getSwitchPlayer1HotKey() {return switchPlayer1HotKey;}
+	public String getSwitchPlayer2HotKey() {return switchPlayer2HotKey;}
 	public String getGameCount1MinusHotKey() {return gameCount1MinusHotKey;}
 	public String getGameCount1PlusHotKey() {return gameCount1PlusHotKey;}
 	public String getGameCount2MinusHotKey() {return gameCount2MinusHotKey;}
@@ -639,6 +647,7 @@ public class Settings {
 	public String getOBSPassword() {return obsPassword;}
 	public int getOBSSavePassword() {return obsSavePassword;}
 	public int getOBSAutoLogin() {return obsAutoLogin;}
+	public int getOBSCloseOnConnect() {return obsCloseOnConnect;}
 //Setters
 	//Parameters
 	public void setGameType(String gameType) {
@@ -1056,6 +1065,14 @@ public class Settings {
 		this.switchTeamsHotKey = switchTeamsHotKey;
 		configProps.setProperty("SwitchTeamsHotKey", this.switchTeamsHotKey);
 	}
+	public void setSwitchPlayer1HotKey(String switchPlayer1HotKey) {
+		this.switchPlayer1HotKey = switchPlayer1HotKey;
+		configProps.setProperty("SwitchPlayer1HotKey", this.switchPlayer1HotKey);
+	}
+	public void setSwitchPlayer2HotKey(String switchPlayer2HotKey) {
+		this.switchPlayer2HotKey = switchPlayer2HotKey;
+		configProps.setProperty("SwitchPlayer2HotKey", this.switchPlayer2HotKey);
+	}
 	public void setGameCount1MinusHotKey(String gameCount1MinusHotKey) {
 		this.gameCount1MinusHotKey = gameCount1MinusHotKey;
 		configProps.setProperty("GameCount1MinusHotKey", this.gameCount1MinusHotKey);
@@ -1219,6 +1236,9 @@ public class Settings {
 	public void setOBSAutoLogin(int obsAutoLogin) {
 		this.obsAutoLogin = obsAutoLogin;
 	}
+	public void setOBSCloseOnConnect(int obsCloseOnConnect) {
+		this.obsCloseOnConnect = obsCloseOnConnect;
+	}
 //Get Defaults
 	//Parameters
 	public String getDefaultGameType() {return defaultProps.getProperty("GameType");}
@@ -1325,6 +1345,8 @@ public class Settings {
 	public String getDefaultTeam2ClearHotKey() {return defaultProps.getProperty("Team2ClearHotKey");}
 	public String getDefaultTeam2SwitchPositionsHotKey() {return defaultProps.getProperty("Team2SwitchPositionsHotKey");}
 	public String getDefaultSwitchTeamsHotKey() {return defaultProps.getProperty("SwitchTeamsHotKey");}
+	public String getDefaultSwitchPlayer1HotKey() {return defaultProps.getProperty("SwitchPlayer1HotKey");}
+	public String getDefaultSwitchPlayer2HotKey() {return defaultProps.getProperty("SwitchPlayer2HotKey");}
 	public String getDefaultGameCount1MinusHotKey() {return defaultProps.getProperty("GameCount1MinusHotKey");}
 	public String getDefaultGameCount1PlusHotKey() {return defaultProps.getProperty("GameCount1PlusHotKey");}
 	public String getDefaultGameCount2MinusHotKey() {return defaultProps.getProperty("GameCount2MinusHotKey");}
@@ -1367,6 +1389,7 @@ public class Settings {
 	public String getDefaultOBSPassword() {return defaultProps.getProperty("OBSPassword");}
 	public int getDefaultOBSAutoLogin() {return Integer.parseInt(defaultProps.getProperty("OBSAutoLogin"));}
 	public int getDefaultOBSSavePassword() {return Integer.parseInt(defaultProps.getProperty("OBSSavePassword"));}
+	public int getDefaultOBSCloseOnConnect() {return Integer.parseInt(defaultProps.getProperty("OBSCloseOnConnect"));}
 	
 	public void loadFromConfig() throws IOException {
 
@@ -1492,6 +1515,8 @@ public class Settings {
 		team2ClearHotKey = configProps.getProperty("Team2ClearHotKey");
 		team2SwitchPositionsHotKey = configProps.getProperty("Team2SwitchPositionsHotKey");
 		switchTeamsHotKey = configProps.getProperty("SwitchTeamsHotKey");
+		switchPlayer1HotKey = configProps.getProperty("SwitchPlayer1HotKey");
+		switchPlayer2HotKey = configProps.getProperty("SwitchPlayer2HotKey");
 		gameCount1MinusHotKey = configProps.getProperty("GameCount1MinusHotKey");
 		gameCount1PlusHotKey = configProps.getProperty("GameCount1PlusHotKey");
 		gameCount2MinusHotKey = configProps.getProperty("GameCount2MinusHotKey");
@@ -1534,6 +1559,7 @@ public class Settings {
 		obsPassword = configProps.getProperty("OBSPassword");
 		obsAutoLogin = Integer.parseInt(configProps.getProperty("OBSAutoLogin"));
 		obsSavePassword = Integer.parseInt(configProps.getProperty("OBSSavePassword"));
+		obsCloseOnConnect = Integer.parseInt(configProps.getProperty("OBSCloseOnConnect"));
 	}
 	
 	public void saveToConfig() throws IOException {
@@ -1643,6 +1669,8 @@ public class Settings {
 		configProps.setProperty("Team2ClearHotKey", this.getTeam2ClearHotKey());
 		configProps.setProperty("Team2SwitchPositionsHotKey", this.getTeam2SwitchPositionsHotKey());
 		configProps.setProperty("SwitchTeamsHotKey", this.getSwitchTeamsHotKey());
+		configProps.setProperty("SwitchPlayer1HotKey", this.getSwitchPlayer1HotKey());
+		configProps.setProperty("SwitchPlayer2HotKey", this.getSwitchPlayer2HotKey());
 		configProps.setProperty("GameCount1MinusHotKey", this.getGameCount1MinusHotKey());
 		configProps.setProperty("GameCount1PlusHotKey", this.getGameCount1PlusHotKey());
 		configProps.setProperty("GameCount2MinusHotKey", this.getGameCount2MinusHotKey());
@@ -1689,6 +1717,7 @@ public class Settings {
 		}
 		configProps.setProperty("OBSAutoLogin", Integer.toString(this.getOBSAutoLogin()));
 		configProps.setProperty("OBSSavePassword", Integer.toString(this.getOBSSavePassword()));
+		configProps.setProperty("OBSCloseOnConnect", Integer.toString(this.getOBSCloseOnConnect()));
 
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configFileName))) {
 			configProps.store(outputStream, "FoosOBSPlus settings");

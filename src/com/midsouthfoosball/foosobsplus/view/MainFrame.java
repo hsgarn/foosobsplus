@@ -82,6 +82,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private JCheckBoxMenuItem viewGameTableWindow;
 	private JCheckBoxMenuItem viewAllWindows;
 	private JCheckBoxMenuItem helpShowParsed;
+	private JCheckBoxMenuItem showScores;
 	private JMenuItem obsConnectItem;
 	private JMenuItem obsDisconnectItem;
 	private JMenu obsMenu;
@@ -95,7 +96,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, BallPanel ballPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,
 			FileNamesFrame fileNamesFrame, OBSConnectFrame obsConnectFrame, Main main) {
 
-		super(programName + ": " + gameType);
+		super(programName + ": " + gameType); //$NON-NLS-1$
 
 		this.tablePanel 		= tablePanel;
 		this.timerPanel 		= timerPanel;
@@ -124,7 +125,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		setLayout(new GridBagLayout());
 		
 		setJMenuBar(createMenuBar());
-		if(gameType.equals("Foosball")) {
+		if(gameType.equals("Foosball")) { //$NON-NLS-1$
 			layoutFoosballComponents();
 		} else {
 			layoutBilliardComponents();
@@ -172,6 +173,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		obsMenu 			= new JMenu(Messages.getString("MainFrame.OBS")); //$NON-NLS-1$
 		obsConnectItem 		= new JMenuItem(Messages.getString("MainFrame.OBSConnect")); //$NON-NLS-1$
 		obsDisconnectItem 	= new JMenuItem(Messages.getString("MainFrame.OBSDisconnect")); //$NON-NLS-1$
+		showScores          = new JCheckBoxMenuItem(Messages.getString("MainFrame.ShowScores")); //$NON-NLS-1$
 		
 		imgConnected = new ImageIcon(this.getClass().getResource("Connected.png"));; //$NON-NLS-1$
 		imgConnected.setImage(imgConnected.getImage().getScaledInstance(12, 12,  Image.SCALE_DEFAULT));
@@ -182,6 +184,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		
 		obsMenu.add(obsConnectItem);
 		obsMenu.add(obsDisconnectItem);
+		obsMenu.add(showScores);
 		obsMenu.setIcon(imgIconDisconnected);
 				
 		JMenu viewMenu = new JMenu(Messages.getString("MainFrame.View")); //$NON-NLS-1$
@@ -191,6 +194,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewMenu.add(viewLastScored2Window);
 		viewMenu.add(viewGameTableWindow);
 		viewMenu.add(viewAllWindows);
+//		viewMenu.add(showScores);
 
 		JMenu helpMenu 		= new JMenu(Messages.getString("MainFrame.Help")); //$NON-NLS-1$
 		JMenuItem helpPage 	= new JMenuItem(programName + " " + Messages.getString("MainFrame.Help")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -209,6 +213,11 @@ public final class MainFrame extends JFrame implements WindowListener {
 		
 		obsMenu.setIcon(imgIconDisconnected);
 		
+		showScores.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				main.showScores(showScores.isSelected());
+			}
+		});
 		viewAlwaysOnTop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				setAlwaysOnTop(viewAlwaysOnTop.isSelected());

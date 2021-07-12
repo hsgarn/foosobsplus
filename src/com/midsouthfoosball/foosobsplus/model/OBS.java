@@ -10,6 +10,7 @@ public class OBS {
 	private OBSRemoteController controller;
 	private Boolean savePassword;
 	private Boolean autoLogin;
+	private Boolean closeOnConnect;
 	private Boolean connected;
 	private String message;
 	private String currentScene;
@@ -53,6 +54,12 @@ public class OBS {
 	}
 	public void setAutoLogin(Boolean autoLogin) {
 		this.autoLogin = autoLogin;
+	}
+	public Boolean getCloseOnConnect() {
+		return closeOnConnect;
+	}
+	public void setCloseOnConnect(Boolean closeOnConnect) {
+		this.closeOnConnect = closeOnConnect;
 	}
 	public Boolean getConnected() {
 		return connected;

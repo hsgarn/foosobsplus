@@ -29,6 +29,7 @@ public class OBSConnectPanel extends JPanel {
 	private JTextField txtPassword;
 	private JCheckBox chckbxSavePassword;
 	private JCheckBox chckbxAutoLogin;
+	private JCheckBox chckbxCloseOnConnect;
 	private JButton btnDisconnect;
 	private Settings settings;
 	private JList<String> lstMessageHistory;
@@ -66,7 +67,15 @@ public class OBSConnectPanel extends JPanel {
 		} else {
 			chckbxSavePassword.setSelected(false);
 		}
-		add(chckbxSavePassword, "cell 1 5");
+		add(chckbxSavePassword, "flowx,cell 1 5,growx");
+		
+		chckbxCloseOnConnect = new JCheckBox("Close on Connect");
+		if (Integer.toString(settings.getOBSCloseOnConnect()).equals("1")) { //$NON-NLS-1$
+			chckbxCloseOnConnect.setSelected(true);
+		} else {
+			chckbxCloseOnConnect.setSelected(false);
+		}
+		add(chckbxCloseOnConnect, "cell 1 5,growx");
 		
 		chckbxAutoLogin = new JCheckBox("Auto Login on Start");
 		if (Integer.toString(settings.getOBSAutoLogin()).equals("1")) { //$NON-NLS-1$
@@ -127,6 +136,11 @@ public class OBSConnectPanel extends JPanel {
 			settings.setOBSAutoLogin(1);
 		} else {
 			settings.setOBSAutoLogin(0);
+		}
+		if (chckbxCloseOnConnect.isSelected()) {
+			settings.setOBSCloseOnConnect(1);
+		} else {
+			settings.setOBSCloseOnConnect(0);
 		}
 		try {
 			settings.saveToConfig();

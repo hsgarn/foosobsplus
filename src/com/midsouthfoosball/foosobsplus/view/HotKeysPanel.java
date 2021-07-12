@@ -85,6 +85,8 @@ public class HotKeysPanel extends JPanel {
 	private JTextField txtResetNamesHotKey;
 	private JTextField txtUndoHotKey;
 	private JTextField txtRedoHotKey;
+	private JTextField txtSwitchPlayer1HotKey;
+	private JTextField txtSwitchPlayer2HotKey;
 	private JButton btnSave;
 
 	public HotKeysPanel(Settings settings) throws IOException {
@@ -533,6 +535,27 @@ public class HotKeysPanel extends JPanel {
 		add(txtSwitchTimeOutsHotKey, "cell 4 16,alignx left"); //$NON-NLS-1$
 		txtSwitchTimeOutsHotKey.setColumns(10);
 		
+		JLabel lblSwitchPlayer1HotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchPlayer1", settings.getGameType())); //$NON-NLS-1$
+		add(lblSwitchPlayer1HotKey, "cell 9 12,alignx trailing"); //$NON-NLS-1$
+		                            
+		txtSwitchPlayer1HotKey = new JTextField();
+		txtSwitchPlayer1HotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtSwitchPlayer1HotKey.setText(settings.getSwitchPlayer1HotKey());
+		add(txtSwitchPlayer1HotKey, "cell 10 12,alignx left"); //$NON-NLS-1$
+
+		txtSwitchPlayer1HotKey.setColumns(10);
+		
+		JLabel lblSwitchPlayer2HotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchPlayer2", settings.getGameType())); //$NON-NLS-1$
+		add(lblSwitchPlayer2HotKey, "cell 9 13,alignx trailing"); //$NON-NLS-1$
+
+		txtSwitchPlayer2HotKey = new JTextField();
+		txtSwitchPlayer2HotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtSwitchPlayer2HotKey.setText(settings.getSwitchPlayer2HotKey());
+		add(txtSwitchPlayer2HotKey, "cell 10 13,alignx left"); //$NON-NLS-1$
+
+		txtSwitchPlayer2HotKey.setColumns(10);
+
+		
 		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		add(btnSave, "cell 3 18,alignx center"); //$NON-NLS-1$
 		
@@ -600,6 +623,8 @@ public class HotKeysPanel extends JPanel {
 		txtResetTimersHotKey.setText(settings.getDefaultResetTimersHotKey());
 		txtUndoHotKey.setText(settings.getDefaultUndoHotKey());
 		txtRedoHotKey.setText(settings.getDefaultRedoHotKey());
+		txtSwitchPlayer1HotKey.setText(settings.getDefaultSwitchPlayer1HotKey());
+		txtSwitchPlayer2HotKey.setText(settings.getDefaultSwitchPlayer2HotKey());
 	}
 	
 	public void saveSettings(Settings settings) {
@@ -647,6 +672,8 @@ public class HotKeysPanel extends JPanel {
 		settings.setResetTimersHotKey(txtResetTimersHotKey.getText());
 		settings.setUndoHotKey(txtUndoHotKey.getText());
 		settings.setRedoHotKey(txtRedoHotKey.getText());
+		settings.setSwitchPlayer1HotKey(txtSwitchPlayer1HotKey.getText());
+		settings.setSwitchPlayer2HotKey(txtSwitchPlayer2HotKey.getText());
 		try {
 			settings.saveToConfig();
 		} catch (IOException ex) {
