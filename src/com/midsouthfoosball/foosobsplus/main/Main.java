@@ -645,7 +645,11 @@ public class Main {
 		mySwitch.register("code", codeCommand);
 	}
 	public void showScores(boolean show) {
-		if (obs.getConnected()) controller.setSourceVisibility(obsSceneName, obsShowScoresSource, show, null);
+		if (obs.getConnected()) controller.setSourceVisibility(obsSceneName, obsShowScoresSource, show, response -> {
+			if(stats.getShowParsed()) {
+				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceVisibility called");
+			}
+		});
 /*		if (obs.getConnected()) controller.getSourceSettings(obsShowScoresSource,response -> {
 			response.getSourceSettings().keySet()
 					.iterator()
@@ -714,15 +718,18 @@ public class Main {
 //		});
 
 		controller.connect();
-		controller.setCurrentScene("Scene", message -> {System.out.println("Scene set, maybe: " + message.getMessageId() + ", " + message.getStatus() + ", " + message.getError());} );
-		controller.getCurrentScene(message -> {System.out.println("Scene: " + message.getName());});
-//		controller.setSourceVisibility("Scene", "MakeItWork", true, null);
-//		controller.getCurrentScene(message -> obs.setCurrentScene(message.getName()) );
-//		System.out.println("Scene = " + obs.getCurrentScene());
-//		controller.registerCloseCallback(message -> {mainFrame.setOBSIconConnected(false);});
+		controller.setCurrentScene(obsSceneName, response -> {
+			controller.getCurrentScene(response2 -> {System.out.println("Scene Set to: " + response2.getName());});
+		});
 	}
 	private void obsSetBallVisible(String source, boolean show) {
-		if (obs.getConnected()) controller.setSourceVisibility("Scene", source, show, null);
+		if (obs.getConnected()) {
+			controller.setSourceVisibility("Scene", source, show, response -> {
+				if(stats.getShowParsed()) {
+					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceVisibility called");
+				}
+			});
+		}
 	}
 	public void obsSyncBalls() {
 		if (obs.getConnected()) {

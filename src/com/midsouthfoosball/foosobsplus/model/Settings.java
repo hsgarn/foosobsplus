@@ -304,8 +304,8 @@ public class Settings {
 		defaultProps.setProperty("Team2ClearHotKey", "");
 		defaultProps.setProperty("Team2SwitchPositionsHotKey", "m");
 		defaultProps.setProperty("SwitchTeamsHotKey", "e");
-		defaultProps.setProperty("SwitchPlayer1", "");
-		defaultProps.setProperty("SwitchPlayer2", "");
+		defaultProps.setProperty("SwitchPlayer1HotKey", "");
+		defaultProps.setProperty("SwitchPlayer2HotKey", "");
 		defaultProps.setProperty("GameCount1MinusHotKey", "");
 		defaultProps.setProperty("GameCount1PlusHotKey", "5");
 		defaultProps.setProperty("GameCount2MinusHotKey", "");

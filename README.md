@@ -448,6 +448,18 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.071 07/13/2021<br/>
+Fix SwitchPlayer1Hotkey and SwitchPlayer2Hotkey so defaults will load if not found in config.properties<br/>
+Fix errors in some OBS calls.<br/>
+ShowParse now also shows some OBS Commands in the connect window.<br/>
+<br/>
+v1.070 07/11/2021<br/>
+Add Show Scores option to turn scores on/off in OBS<br/>
+Clean up Main (remove code that was commented out)<br/>
+Define obsSceneName and obsShowScoresSource<br/>
+Add Switch Player1/Switch Player2 buttons<br/>
+Add Close on Connect checkbox<br/>
+<br/>
 v1.069<br/>
 Switch out mainFrame when gameType changes<br/>
 Auto hide connection window on successful connection<br/>
@@ -492,7 +504,7 @@ Set Max Win points to Points to Win if Points to Win exceeds Max Win points.<br/
 <br/>
 v1.059 12/26/2020<br/>
 Add revision history to help page<br/>
-Set help page to specifically start at #FoosOBSPlus<br/>
+Issue #17 Set help page to specifically start at #FoosOBSPlus<br/>
 <br/>
 v1.058 12/26/2020<br/>
 Issue #17 Change help to call foosOBSPlus repository page instead of foosOBS repository page<br/>
