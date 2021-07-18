@@ -448,6 +448,9 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.072 07/18/2021<br/>
+Issue #18 Reset All, Reset Game Counts, Clear All buttons should reset currentGameNumber and repaint game tables.<br/>
+<br/>
 v1.071 07/13/2021<br/>
 Fix SwitchPlayer1Hotkey and SwitchPlayer2Hotkey so defaults will load if not found in config.properties<br/>
 Fix errors in some OBS calls.<br/>

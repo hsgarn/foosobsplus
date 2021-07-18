@@ -59,7 +59,7 @@ public class TeamController {
 	private LastScored1Clock lastScored1Clock;
 	private LastScored2Clock lastScored2Clock;
 	private GameClock gameClock;
-	private Team teams[] = new Team[] {	null,null};
+	private Team teams[] = new Team[] {null,null};
 	private TeamPanel teamPanels[] = new TeamPanel[] {null,null};
 	
 	public TeamController(OBSInterface obsInterface, Settings settings, Team team1, Team team2, Match match, TeamPanel teamPanel1, TeamPanel teamPanel2, SwitchPanel switchPanel, MatchPanel matchPanel, GameTableWindowPanel gameTableWindowPanel, StatsDisplayPanel statsDisplayPanel, TimerController timerController, LastScored1Clock lastScored1Clock, LastScored2Clock lastScored2Clock, GameClock gameClock) {
@@ -508,13 +508,6 @@ public class TeamController {
 		teamPanel1.updateWarn(team1.getWarn());
 		teamPanel2.updateWarn(team2.getWarn());
 	}
-	public void clearAll() {
-		team1.clearAll();
-		team2.clearAll();
-		match.clearAll();
-		displayAll();
-		switchPanel.setLastScored(settings.getLastScoredStrings()[0]);
-	}
 	public void resetNames() {
 		team1.setTeamName("");
 		team2.setTeamName("");
@@ -542,7 +535,11 @@ public class TeamController {
 		team2.setGameCount(0);
 		teamPanel1.updateGameCount(team1.getGameCount());
 		teamPanel2.updateGameCount(team2.getGameCount());
+		match.resetGameCounts();
+		match.setCurrentScoreTeam1(team1.getScore());
+		match.setCurrentScoreTeam2(team2.getScore());
 		updateGameTables();
+		displayAll();
 	}
 	public void resetTimeOuts() {
 		team1.resetTimeOuts();
@@ -564,6 +561,14 @@ public class TeamController {
 		team1.resetStats();
 		team2.resetStats();
 	}
+	public void clearAll() {
+		team1.clearAll();
+		team2.clearAll();
+		match.clearAll();
+		resetAll();
+		displayAll();
+		switchPanel.setLastScored(settings.getLastScoredStrings()[0]);
+	}
 	public void resetAll() {
 		resetScores();
 		resetGameCounts();
@@ -574,6 +579,7 @@ public class TeamController {
 		resetLastScored();
 		team1.writeAll();
 		team2.writeAll();
+		match.resetMatch(); // probably should go through matchController, but it is not accessible here
 		updateGameTables();
 	}
 	private void resetLastScored() {

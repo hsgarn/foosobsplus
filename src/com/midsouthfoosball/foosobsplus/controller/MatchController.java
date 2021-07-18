@@ -158,6 +158,9 @@ public class MatchController {
 			}
 		}
 	}
+	public void resetMatch() {
+		match.resetMatch();
+	}
 	public void startGame() {
 		if(match.isMatchPaused()==true) {
 			pauseMatch();

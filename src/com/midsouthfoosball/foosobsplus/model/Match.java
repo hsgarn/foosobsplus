@@ -99,6 +99,29 @@ public class Match implements Serializable {
 		setMatchPaused(false);
 		increaseCurrentGameNumber();
 	}
+	public void resetMatch() {
+		setMatchWon(false);
+		setMatchWinner(0);
+		setCurrentGameNumber(1);
+		setLastScored(0);
+		clearScores();
+		clearTimes();
+		clearGameWinners();
+		clearMatchWinner();
+		clearMeatball();
+	}
+	public void resetGameCounts() {
+		setMatchWon(false);
+		setMatchWinner(0);
+		setCurrentGameNumber(1);
+//		setLastScored(0);
+		clearScoresAfterFirst();
+		clearTimesAfterFirst();
+		clearGameWinners();//AfterFirst();
+		clearMatchWinner();
+		clearMeatball();
+		
+	}
 	private void increaseCurrentGameNumber() {
 		if(/*!matchWon &&*/ (currentGameNumber==0 || checkForGameWinOnly())) {
 			currentGameNumber++;
@@ -146,8 +169,19 @@ public class Match implements Serializable {
 			scoresTeam2[i] = "0";
 		}
 	}
+	private void clearScoresAfterFirst() {
+		for (int i =1; i < maxGameCount; i++) {
+			scoresTeam1[i] = "0";
+			scoresTeam2[i] = "0";
+		}
+	}
 	private void clearTimes() {
 		for (int i = 0; i < maxGameCount; i++) {
+			times[i] = "00:00:00";
+		}
+	}
+	private void clearTimesAfterFirst() {
+		for (int i = 1; i < maxGameCount; i++) {
 			times[i] = "00:00:00";
 		}
 	}
@@ -256,10 +290,10 @@ public class Match implements Serializable {
 		clearMatchWinner();
 		clearMeatball();
 	}
-	private void setCurrentScoreTeam1 (int score) {
+	public void setCurrentScoreTeam1 (int score) {
 		scoresTeam1[currentGameNumber-1] = Integer.toString(score);
 	}
-	private void setCurrentScoreTeam2 (int score) {
+	public void setCurrentScoreTeam2 (int score) {
 		scoresTeam2[currentGameNumber-1] = Integer.toString(score);
 	}
 	private void setCurrentTime (String gameTime) {
@@ -319,13 +353,9 @@ public class Match implements Serializable {
 		}
 		if (winState>0) {
 			setCurrentTime(gameTime);
-//the below if statement was commented out.  remove this comment if you haven't noticed any issues.
-/* 			if (!matchWon) {*/
- 				currentGameNumber++;
-				int maxGameCount = settings.getGamesToWin() * 2 - 1;
-				if (currentGameNumber > maxGameCount) currentGameNumber = maxGameCount;
-/*			}*/
-
+			currentGameNumber++;
+			int maxGameCount = settings.getGamesToWin() * 2 - 1;
+			if (currentGameNumber > maxGameCount) currentGameNumber = maxGameCount;
 		}
 
 		if(matchWon) {
@@ -515,6 +545,11 @@ public class Match implements Serializable {
 	}
 	public void clearGameWinners() {
 		for(int i=0; i<gameWinners.length;i++) {
+			gameWinners[i] = 0;
+		}
+	}
+	public void clearGameWinnersAfterFirst() {
+		for(int i=1; i<gameWinners.length;i++) {
 			gameWinners[i] = 0;
 		}
 	}
