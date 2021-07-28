@@ -75,8 +75,6 @@ import com.midsouthfoosball.foosobsplus.commands.PSRCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSSCCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSSCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSTCommand;
-import com.midsouthfoosball.foosobsplus.commands.XP1Command;
-import com.midsouthfoosball.foosobsplus.commands.XP2Command;
 import com.midsouthfoosball.foosobsplus.commands.PSTOCommand;
 import com.midsouthfoosball.foosobsplus.commands.PWT1Command;
 import com.midsouthfoosball.foosobsplus.commands.PWT2Command;
@@ -89,6 +87,8 @@ import com.midsouthfoosball.foosobsplus.commands.SSTCommand;
 import com.midsouthfoosball.foosobsplus.commands.STTCommand;
 import com.midsouthfoosball.foosobsplus.commands.UTT1Command;
 import com.midsouthfoosball.foosobsplus.commands.UTT2Command;
+import com.midsouthfoosball.foosobsplus.commands.XP1Command;
+import com.midsouthfoosball.foosobsplus.commands.XP2Command;
 import com.midsouthfoosball.foosobsplus.commands.XPT1Command;
 import com.midsouthfoosball.foosobsplus.commands.XPT2Command;
 import com.midsouthfoosball.foosobsplus.controller.MainController;
@@ -148,27 +148,27 @@ public class Main {
 	}	
 	////// Settings and OBSInterface setup \\\\\\
 	
-	final OBS obs = OBS.getInstance();
-	private OBSRemoteController controller;
+	final   OBS obs			 						= OBS.getInstance();
+	private OBSRemoteController obsController;
 	private Settings			settings			= new Settings();
-	public OBSInterface 		obsInterface 		= new OBSInterface(settings);
-	public String				matchId				= "";
-	private HashMap<String, Boolean> allBallsMap = new HashMap<>();
-	private HashMap<String, Boolean> nineBallsMap = new HashMap<>();
-	private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-	private String obsSceneName = "Scene";//"FoosObs+ Main";
-	private String obsShowScoresSource = "Scores";//"ScoresAndLabels";
+	public  OBSInterface 		obsInterface 		= new OBSInterface(settings);
+	public  String				matchId				= "";
+	private HashMap<String, Boolean> allBallsMap 	= new HashMap<>();
+	private HashMap<String, Boolean> nineBallsMap 	= new HashMap<>();
+	private DateTimeFormatter dtf 					= DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+	private String obsSceneName 					= "Scene";//"FoosObs+ Main";
+	private String obsShowScoresSource 				= "Scores";//"ScoresAndLabels";
 	
 	////// CommandStack and UndoRedo setup \\\\\\
 	
-	private int undoRedoPointer = -1;
-	private Stack<Command> commandStack = new Stack<>();
-	private Stack<Memento> mementoStackTeam1 = new Stack<>();
-	private Stack<Memento> mementoStackTeam2 = new Stack<>();
-	private Stack<Memento> mementoStackStats = new Stack<>();
-	private Stack<Memento> mementoStackMatch = new Stack<>();
-	private Stack<Memento> mementoStackGameClock = new Stack<>();
-	private Stack<String> codeStack = new Stack<>();
+	private int undoRedoPointer 					= -1;
+	private Stack<Command> commandStack 			= new Stack<>();
+	private Stack<Memento> mementoStackTeam1 		= new Stack<>();
+	private Stack<Memento> mementoStackTeam2		= new Stack<>();
+	private Stack<Memento> mementoStackStats 		= new Stack<>();
+	private Stack<Memento> mementoStackMatch		= new Stack<>();
+	private Stack<Memento> mementoStackGameClock	= new Stack<>();
+	private Stack<String> codeStack 				= new Stack<>();
 	private CommandSwitch mySwitch;
 
 	////// Generate the Data Models (Mvc) \\\\\\
@@ -208,13 +208,13 @@ public class Main {
 
 	////// Set up Timer and Settings Windows \\\\\\
 	
-	private ParametersFrame 		parametersFrame 		= new ParametersFrame(settings);
-	private ParametersPanel			parametersPanel			= parametersFrame.getSettingsPanel();
-	private HotKeysFrame 			hotKeysFrame 			= new HotKeysFrame(settings);
-	private HotKeysPanel 			hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
-	private FileNamesFrame			fileNamesFrame			= new FileNamesFrame(settings, obsInterface);
-	private OBSConnectFrame			obsConnectFrame			= new OBSConnectFrame(settings);
-	private OBSConnectPanel			obsConnectPanel			= obsConnectFrame.getOBSConnectPanel();
+	private ParametersFrame 	parametersFrame 	= new ParametersFrame(settings);
+	private ParametersPanel		parametersPanel		= parametersFrame.getSettingsPanel();
+	private HotKeysFrame 		hotKeysFrame 		= new HotKeysFrame(settings);
+	private HotKeysPanel 		hotKeysPanel		= hotKeysFrame.getHotKeysPanel();
+	private FileNamesFrame		fileNamesFrame		= new FileNamesFrame(settings, obsInterface);
+	private OBSConnectFrame		obsConnectFrame		= new OBSConnectFrame(settings);
+	private OBSConnectPanel		obsConnectPanel		= obsConnectFrame.getOBSConnectPanel();
 	
 	////// Display the View Panels on a JFrame \\\\\\
 	
@@ -645,7 +645,7 @@ public class Main {
 		mySwitch.register("code", codeCommand);
 	}
 	public void showScores(boolean show) {
-		if (obs.getConnected()) controller.setSourceVisibility(obsSceneName, obsShowScoresSource, show, response -> {
+		if (obs.getConnected()) obsController.setSourceVisibility(obsSceneName, obsShowScoresSource, show, response -> {
 			if(stats.getShowParsed()) {
 				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceVisibility called");
 			}
@@ -676,55 +676,74 @@ public class Main {
 		mainFrame.enableConnect(true);
 		mainFrame.setOBSIconConnected(false);
 	}
-	public void connectToOBS() {
+
+	public void connectToOBS() { 
 		AtomicReference<String> connectionFailedResult = new AtomicReference<>();
 		AtomicReference<String> disconnectResult = new AtomicReference<>();
 		AtomicReference<String> onErrorReason = new AtomicReference<>();
-		AtomicReference<String> connectResult = new AtomicReference<>();
+		AtomicReference<String> connectResult = new AtomicReference<>(); 
+		AtomicReference<String> onCloseResult = new AtomicReference<>();
 		obsConnectPanel.saveSettings(settings);
-		obs.setHost(settings.getOBSHost());
+		obs.setHost(settings.getOBSHost()); 
 		obs.setPort(settings.getOBSPort());
 		obs.setPassword(settings.getOBSPassword());
 		String connectString = "ws://"+obs.getHost()+":"+obs.getPort();
-		controller = new OBSRemoteController(connectString,false,obs.getPassword(),false);
-
-		if (controller.isFailed()) {
-			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS Controller failed!");
+// need to make controller - we are getting it from OBS object, but it has not been set yet.
+		obsController = new OBSRemoteController(connectString,false,obs.getPassword(),false);
+		obs.setController(obsController);
+		  
+		  if (obsController.isFailed()) {
+			  obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS Controller failed!"); 
+		  }
+		  
+		  obsController.registerConnectCallback(response -> {
+			  connectResult.set(dtf.format(LocalDateTime.now()) + ": Connected! Studio Version: " + response.getObsStudioVersion());
+			  updateOBSConnected(); obsConnectPanel.addMessage(connectResult.get());
+			  if(settings.getOBSCloseOnConnect()==1) { 
+				  obsConnectFrame.setVisible(false);
+			  }
+		  });
+		  
+		  obsController.registerDisconnectCallback(() -> {
+			  disconnectResult.set(dtf.format(LocalDateTime.now()) + ": OBS Disconnect Confirmed!"); updateOBSDisconnected();
+			  obsConnectPanel.addMessage(disconnectResult.get());
+		  });
+		  
+		  obsController.registerOnError((message, throwable) -> {
+			  onErrorReason.set(dtf.format(LocalDateTime.now()) + ": OBS onError called unexpectedly. May need to disconnect/reconnect.");
+			  obsConnectPanel.addMessage(onErrorReason.get());
+		  });
+		  
+		  obsController.registerCloseCallback((errorNumber, message) -> {
+			  onCloseResult.set(dtf.format(LocalDateTime.now()) + ": OBS Connection closed.  Code: " + errorNumber);
+			  obsConnectPanel.addMessage(onCloseResult.get());
+		  });
+		  
+		  obsController.registerConnectionFailedCallback(connectionFailedResult::set);
+		  
+		  // controller.registerConnectionFailedCallback(message -> { 
+		  //	  obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Oops!: " + message);
+		  // });
+		  
+		  obsController.connect();
+		  if(obsController.isFailed()) {
+			  obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " Failed to connect to OBS.  Is OBS running and WebSocket plugin enabled?");
+		  }
+		if(!obsController.isFailed()) { 
+		  obsController.setCurrentScene(obsSceneName, response -> { 
+			  if(stats.getShowParsed()) {
+				  obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Setting scene to: " + obsSceneName);
+				  obsController.getCurrentScene(response2 -> { 
+					  obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " Scene Set to: " + response2.getName());
+				  });
+			  } 
+		  });
 		}
-
-		controller.registerConnectCallback(response -> {
-			connectResult.set(dtf.format(LocalDateTime.now()) + ": Connected! Studio Version: " + response.getObsStudioVersion());
-			updateOBSConnected();
-			obsConnectPanel.addMessage(connectResult.get());
-			if(settings.getOBSCloseOnConnect()==1) {
-				obsConnectFrame.setVisible(false);
-			}
-		});
-		
-		controller.registerDisconnectCallback(() -> {
-			disconnectResult.set(dtf.format(LocalDateTime.now()) + ": OBS Disconnect Confirmed!");
-			updateOBSDisconnected();
-			obsConnectPanel.addMessage(disconnectResult.get());
-		});
-		
-		controller.registerOnError((message, throwable) -> {
-			onErrorReason.set(dtf.format(LocalDateTime.now()) + ": OBS onError called unexpectedly. May need to disconnect/reconnect.");
-			obsConnectPanel.addMessage(onErrorReason.get());
-		});
-
-		controller.registerConnectionFailedCallback(connectionFailedResult::set);
-//		controller.registerConnectionFailedCallback(message -> {
-//			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Oops!: " + message);
-//		});
-
-		controller.connect();
-		controller.setCurrentScene(obsSceneName, response -> {
-			controller.getCurrentScene(response2 -> {System.out.println("Scene Set to: " + response2.getName());});
-		});
 	}
+	 
 	private void obsSetBallVisible(String source, boolean show) {
 		if (obs.getConnected()) {
-			controller.setSourceVisibility("Scene", source, show, response -> {
+			obsController.setSourceVisibility("Scene", source, show, response -> {
 				if(stats.getShowParsed()) {
 					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceVisibility called");
 				}
@@ -912,7 +931,7 @@ public class Main {
 	}
 	private class OBSDisconnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			controller.disconnect();
+			obsController.disconnect();
 			updateOBSDisconnected();
 			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Disconnected!");
 		}
@@ -924,7 +943,7 @@ public class Main {
 	}
 	private class OBSDisconnectItemListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			controller.disconnect();
+			obsController.disconnect();
 			updateOBSDisconnected();
 			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Disconnected!");
 		}

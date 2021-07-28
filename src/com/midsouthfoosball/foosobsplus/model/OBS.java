@@ -16,6 +16,7 @@ public class OBS {
 	private String currentScene;
 	
 	private OBS() {}
+	
 	public static OBS getInstance() {
 		return instance;
 	}

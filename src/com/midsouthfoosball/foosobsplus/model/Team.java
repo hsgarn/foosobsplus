@@ -29,6 +29,8 @@ import java.text.DecimalFormat;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
+import net.twasi.obsremotejava.OBSRemoteController;
+
 public class Team implements Serializable {
 
 	private static final long serialVersionUID = 6807215509861474745L;
@@ -604,11 +606,17 @@ public class Team implements Serializable {
 		}
     }
     private void writeScore() {
-		try {
-			obsInterface.setContents(settings.getScoreFileName(teamNbr), Integer.toString(getScore()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    	OBS obs = OBS.getInstance();
+    	OBSRemoteController obsController = obs.getController();
+    	if (obsController == null) {
+			try {
+				obsInterface.setContents(settings.getScoreFileName(teamNbr), Integer.toString(getScore()));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    	} else  {
+    		obsController.setTextGDIPlusProperties("Score"+teamNbr, Integer.toString(getScore()), false, response -> System.out.println("Team writeScore: [" + response + "]"));
+    	}
     }
     private void writeGameCount() {
     	try {

@@ -448,6 +448,10 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.073 07/28/2021<br/>
+Added setTextGDIPlus to obs-websocket-java v1.3. Supports source, text, readfromfile parameters.<br/>
+Add ability for writeScores to use websocket or file.<br/>
+<br/>
 v1.072 07/18/2021<br/>
 Issue #18 Reset All, Reset Game Counts, Clear All buttons should reset currentGameNumber and repaint game tables.<br/>
 <br/>

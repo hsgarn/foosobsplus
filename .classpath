@@ -17,7 +17,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="miglayout15-swing.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/sb/websocket-obs-java/classes/artifacts/obs_websocket_java_jar/obs-websocket-java.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/obs-websocket-java"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
