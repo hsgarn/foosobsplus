@@ -25,8 +25,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.KeyboardFocusManager;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
@@ -52,7 +50,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 import com.midsouthfoosball.foosobsplus.main.Main;
 
@@ -72,6 +69,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private BallPanel ballPanel;
 	private ParametersFrame parametersFrame;
 	private HotKeysFrame hotKeysFrame;
+	private SourcesFrame sourcesFrame;
 	private FileNamesFrame fileNamesFrame;
 	private OBSConnectFrame obsConnectFrame;
 	private Main main;
@@ -94,7 +92,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	
 	public MainFrame(String gameType, TablePanel tablePanel, TimerPanel timerPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
 			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, BallPanel ballPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,
-			FileNamesFrame fileNamesFrame, OBSConnectFrame obsConnectFrame, Main main) {
+			SourcesFrame sourcesFrame, FileNamesFrame fileNamesFrame, OBSConnectFrame obsConnectFrame, Main main) {
 
 		super(programName + ": " + gameType); //$NON-NLS-1$
 
@@ -110,6 +108,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		this.ballPanel 			= ballPanel;
 		this.parametersFrame 	= parametersFrame;
 		this.hotKeysFrame 		= hotKeysFrame;
+		this.sourcesFrame		= sourcesFrame;
 		this.fileNamesFrame 	= fileNamesFrame;
 		this.obsConnectFrame 	= obsConnectFrame;
 		this.main 				= main;
@@ -161,11 +160,13 @@ public final class MainFrame extends JFrame implements WindowListener {
 		JMenu settingsMenu 				= new JMenu(Messages.getString("MainFrame.Settings")); //$NON-NLS-1$
 		JMenuItem settingsParamItem 	= new JMenuItem(Messages.getString("MainFrame.Parameters")); //$NON-NLS-1$
 		JMenuItem settingsHotKeyItem 	= new JMenuItem(Messages.getString("MainFrame.HotKeys")); //$NON-NLS-1$
+		JMenuItem settingsSourceItem	= new JMenuItem(Messages.getString("MainFrame.Sources")); //$NON-NLS-1$
 		JMenuItem settingsFileItem 		= new JMenuItem(Messages.getString("MainFrame.FileNames")); //$NON-NLS-1$
 		JMenuItem settingsStatItem		= new JMenuItem(Messages.getString("MainFrame.Statistics")); //$NON-NLS-1$
 		
 		settingsMenu.add(settingsParamItem);
 		settingsMenu.add(settingsHotKeyItem);
+		settingsMenu.add(settingsSourceItem);
 		settingsMenu.add(settingsFileItem);
 		settingsMenu.add(settingsStatItem);
 		editMenu.add(settingsMenu);
@@ -236,6 +237,12 @@ public final class MainFrame extends JFrame implements WindowListener {
 			}
 		});
 
+		settingsSourceItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				sourcesFrame.setVisible(true);
+			}
+		});
+		
 		settingsFileItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				fileNamesFrame.setVisible(true);

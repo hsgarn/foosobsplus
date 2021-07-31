@@ -57,7 +57,6 @@ public class LastScored1Clock {
 						lastScoredHours++;
 						lastScoredMinutes=0;
 					}
-					writeLastScoredTime();
 				}
 			}
 		};
@@ -101,7 +100,6 @@ public class LastScored1Clock {
 		lastScoredMinutes=0;
 		lastScoredHours=0;
 		lastScoredTimerRunning=true;
-		writeLastScoredTime();
 	}
 	public void stopLastScoredTimer() {
 		lastScoredTimerRunning=false;
@@ -115,15 +113,6 @@ public class LastScored1Clock {
 	}
 	public void addLastScoredClockTimerListener(ActionListener alAction) {
 		timer.addActionListener(alAction);
-	}
-	private void writeLastScoredTime() {
-/*
- 		try {
-			obsInterface.setContents(settings.getLastScoredTimeFileName(team), getLastScoredTime());
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-*/
 	}
 }
 

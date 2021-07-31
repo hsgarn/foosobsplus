@@ -77,10 +77,13 @@ public class TimeClock {
 		timer.addActionListener(alAction);
 	}
 	private void writeTimerInUse() {
-		try {
-			obsInterface.setContents(settings.getTimerInUseFileName(), getTimerInUse());
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+		writeData(settings.getTimerInUseFileName(), getTimerInUse());
 	}
+    private void writeData(String filename, String data) {
+    	try {
+    		obsInterface.setContents(filename, data);
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
+    }
 }

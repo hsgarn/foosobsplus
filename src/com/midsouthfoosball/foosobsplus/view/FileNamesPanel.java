@@ -241,7 +241,7 @@ public class FileNamesPanel extends JPanel {
 		settings.setTeam1ShotsOnGoalFileName(txtTeam1ShotsOnGoalFileName.getText());
 		settings.setTeam2ShotsOnGoalFileName(txtTeam2ShotsOnGoalFileName.getText());
 		try {
-			settings.saveToConfig();
+			settings.saveToFileNameConfig();
 		} catch (IOException ex) {
 			System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
 		}
@@ -277,7 +277,7 @@ public class FileNamesPanel extends JPanel {
 					obsInterface.setFilePath(formattedTxtPath.getText());
 					try {
 						settings.setDatapath(formattedTxtPath.getText());
-						settings.saveToConfig();
+						settings.saveToFileNameConfig();
 					} catch (IOException ex) {
 						System.out.print(Messages.getString("FileNamesPanel.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
 					}
@@ -293,7 +293,7 @@ public class FileNamesPanel extends JPanel {
 		    	try {
 					obsInterface.setFilePath(formattedTxtPath.getText());
 					settings.setDatapath(formattedTxtPath.getText());
-					settings.saveToConfig();
+					settings.saveToFileNameConfig();
 		    	} catch (IOException ex) {
 		    		System.out.print(Messages.getString("FileNamesPanel.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
 		    	}
@@ -306,7 +306,7 @@ public class FileNamesPanel extends JPanel {
 			    	try {
 						obsInterface.setFilePath(formattedTxtPath.getText());
 						settings.setDatapath(formattedTxtPath.getText());
-						settings.saveToConfig();
+						settings.saveToFileNameConfig();
 			    	} catch (IOException ex) {
 			    		System.out.print(Messages.getString("FileNamesPanel.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
 			    	}

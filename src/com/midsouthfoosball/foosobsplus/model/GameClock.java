@@ -205,20 +205,19 @@ public class GameClock implements Serializable {
 		timer.addActionListener(alAction);
 	}
 	private void writeGameTime() {
-		try {
-			obsInterface.setContents(settings.getGameTimeFileName(), getGameTime());
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+		writeData(settings.getGameTimeFileName(), getGameTime());
 	}
 	private void writeMatchTime() {
-		try {
-			obsInterface.setContents(settings.getMatchTimeFileName(), getMatchTime());
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+		writeData(settings.getMatchTimeFileName(), getMatchTime());
 	}
-	public void restoreState(byte[] serializedObject) {
+    private void writeData(String filename, String data) {
+    	try {
+    		obsInterface.setContents(filename, data);
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
+    }
+    public void restoreState(byte[] serializedObject) {
 		GameClock tempGameClock = null;
 		try {
 			byte b[] = serializedObject;

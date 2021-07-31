@@ -484,7 +484,7 @@ public class ParametersPanel extends JPanel {
 			settings.setWinByFinalOnly(0);
 		}
 		try {
-			settings.saveToConfig();
+			settings.saveToControlConfig();
 		} catch (IOException ex) {
 			System.out.println(Messages.getString("Errors.ErrorSavingPropertiesFile", settings.getGameType()) + ex.getMessage());		 //$NON-NLS-1$
 		}

@@ -585,218 +585,113 @@ public class Team implements Serializable {
 	////// Writes to Files \\\\\\
 	
 	private void writeTeamName() {
-		try {
-			obsInterface.setContents(settings.getTeamNameFileName(teamNbr), getTeamName());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getTeamNameFileName(teamNbr), getTeamName());
     }
     private void writeForwardName() {
-		try {
-			obsInterface.setContents(settings.getTeamForwardFileName(teamNbr), getForwardName());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    	writeData(settings.getTeamForwardFileName(teamNbr), getForwardName());
     }
     private void writeGoalieName() {
-		try {
-			obsInterface.setContents(settings.getTeamGoalieFileName(teamNbr), getGoalieName());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    	writeData(settings.getTeamGoalieFileName(teamNbr), getGoalieName());
     }
     private void writeScore() {
     	OBS obs = OBS.getInstance();
     	OBSRemoteController obsController = obs.getController();
     	if (obsController == null) {
-			try {
-				obsInterface.setContents(settings.getScoreFileName(teamNbr), Integer.toString(getScore()));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+    		writeData(settings.getScoreFileName(teamNbr), Integer.toString(getScore()));
     	} else  {
-    		obsController.setTextGDIPlusProperties("Score"+teamNbr, Integer.toString(getScore()), false, response -> System.out.println("Team writeScore: [" + response + "]"));
+    		obsController.setTextGDIPlusProperties("Score "+teamNbr, Integer.toString(getScore()), false, response -> System.out.println("Team writeScore: Source: [" + "Score "+teamNbr + "] Text: [" + Integer.toString(getScore()) + "] " + response + "]"));
     	}
     }
     private void writeGameCount() {
-    	try {
-			obsInterface.setContents(settings.getGameCountFileName(teamNbr), Integer.toString(getGameCount()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    	writeData(settings.getGameCountFileName(teamNbr), Integer.toString(getGameCount()));
     }
     private void writeTimeOuts() {
-    	try {
-			obsInterface.setContents(settings.getTimeOutFileName(teamNbr), Integer.toString(getTimeOutCount()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+   		writeData(settings.getTimeOutFileName(teamNbr), Integer.toString(getTimeOutCount()));
     }
 	private void writeReset() {
-		try {
-			String fn = settings.getResetFileName(teamNbr);
-			if(resetState) {
-				obsInterface.setContents(fn, "RESET");
-			} else {
-				obsInterface.setContents(fn, "");
-			}
-		} catch (IOException e1) {
-			e1.printStackTrace();
+		String fn = settings.getResetFileName(teamNbr);
+		if(resetState) {
+			writeData(fn, "RESET");
+		} else {
+			writeData(fn, "");
 		}
 	}
 	private void writeWarn() {
-		try {
-			String fn = settings.getWarnFileName(teamNbr);
-			if(warnState) {
-				obsInterface.setContents(fn, "WARNING");
-			} else {
-				obsInterface.setContents(fn, "");
-			}
-		} catch (IOException e1) {
-			e1.printStackTrace();
+		String fn = settings.getWarnFileName(teamNbr);
+		if(warnState) {
+			writeData(fn, "WARNING");
+		} else {
+			writeData(fn, "");
 		}
 	}
     private void writePassAttempts() {
-		try {
-			obsInterface.setContents(settings.getPassAttemptsFileName(teamNbr), Integer.toString(getPassAttempts()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getPassAttemptsFileName(teamNbr), Integer.toString(getPassAttempts()));
     }
     private void writePassCompletes() {
-		try {
-			obsInterface.setContents(settings.getPassCompletesFileName(teamNbr), Integer.toString(getPassCompletes()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getPassCompletesFileName(teamNbr), Integer.toString(getPassCompletes()));
     }
     private void writePassPercent() {
-		try {
-			obsInterface.setContents(settings.getPassPercentFileName(teamNbr), String.format("%-5s",df.format(getPassPercent())+"%"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getPassPercentFileName(teamNbr), String.format("%-5s",df.format(getPassPercent())+"%"));
     }
     private void writePassBreaks() {
-//    	try {
-//   		obsInterface.setContents(settings.getPassBreaksFileName(teamNbr), Integer.toString(getPassBreaks()));
-//    	} catch (IOException e) {
-//    		e.printStackTrace();
-//    	}
+// 		writeData(settings.getPassBreaksFileName(teamNbr), Integer.toString(getPassBreaks()));
     }
     private void writeShotAttempts() {
-		try {
-			obsInterface.setContents(settings.getShotAttemptsFileName(teamNbr), Integer.toString(getShotAttempts()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getShotAttemptsFileName(teamNbr), Integer.toString(getShotAttempts()));
     }
     private void writeShotCompletes() {
-		try {
-			obsInterface.setContents(settings.getShotCompletesFileName(teamNbr), Integer.toString(getShotCompletes()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getShotCompletesFileName(teamNbr), Integer.toString(getShotCompletes()));
     }
     private void writeShotPercent() {
-		try {
-			obsInterface.setContents(settings.getShotPercentFileName(teamNbr), String.format("%-5s",df.format(getShotPercent())+"%"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getShotPercentFileName(teamNbr), String.format("%-5s",df.format(getShotPercent())+"%"));
     }
     private void writeClearAttempts() {
-		try {
-			obsInterface.setContents(settings.getClearAttemptsFileName(teamNbr), Integer.toString(getClearAttempts()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getClearAttemptsFileName(teamNbr), Integer.toString(getClearAttempts()));
     }
     private void writeClearCompletes() {
-		try {
-			obsInterface.setContents(settings.getClearCompletesFileName(teamNbr), Integer.toString(getClearCompletes()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getClearCompletesFileName(teamNbr), Integer.toString(getClearCompletes()));
     }
     private void writeClearPercent() {
-		try {
-			obsInterface.setContents(settings.getClearPercentFileName(teamNbr), String.format("%-5s",df.format(getClearPercent())+"%"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getClearPercentFileName(teamNbr), String.format("%-5s",df.format(getClearPercent())+"%"));
     }
     private void writeTwoBarPassAttempts() {
-		try {
-			obsInterface.setContents(settings.getTwoBarPassAttemptsFileName(teamNbr), Integer.toString(getTwoBarPassAttempts()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getTwoBarPassAttemptsFileName(teamNbr), Integer.toString(getTwoBarPassAttempts()));
     }
     private void writeTwoBarPassCompletes() {
-		try {
-			obsInterface.setContents(settings.getTwoBarPassCompletesFileName(teamNbr), Integer.toString(getTwoBarPassCompletes()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getTwoBarPassCompletesFileName(teamNbr), Integer.toString(getTwoBarPassCompletes()));
     }
     private void writeTwoBarPassPercent() {
-		try {
-			obsInterface.setContents(settings.getTwoBarPassPercentFileName(teamNbr), String.format("%-5s",df.format(getTwoBarPassPercent())+"%"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getTwoBarPassPercentFileName(teamNbr), String.format("%-5s",df.format(getTwoBarPassPercent())+"%"));
     }
 	private void writeScoring() {
-		try {
-			obsInterface.setContents(settings.getScoringFileName(teamNbr), Integer.toString(getScoring()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getScoringFileName(teamNbr), Integer.toString(getScoring()));
 	}
 	private void writeThreeBarScoring() {
-		try {
-			obsInterface.setContents(settings.getThreeBarScoringFileName(teamNbr), Integer.toString(getThreeBarScoring()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getThreeBarScoringFileName(teamNbr), Integer.toString(getThreeBarScoring()));
 	}
 	private void writeFiveBarScoring() {
-		try {
-			obsInterface.setContents(settings.getFiveBarScoringFileName(teamNbr), Integer.toString(getFiveBarScoring()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getFiveBarScoringFileName(teamNbr), Integer.toString(getFiveBarScoring()));
 	}
 	private void writeTwoBarScoring() {
-		try {
-			obsInterface.setContents(settings.getTwoBarScoringFileName(teamNbr), Integer.toString(getTwoBarScoring()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getTwoBarScoringFileName(teamNbr), Integer.toString(getTwoBarScoring()));
 	}
 	   private void writeShotsOnGoal() {
-	    	try {
-				obsInterface.setContents(settings.getShotsOnGoalFileName(teamNbr), Integer.toString(getShotsOnGoal()));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-	    }
+		writeData(settings.getShotsOnGoalFileName(teamNbr), Integer.toString(getShotsOnGoal()));
+    }
 	private void writeStuffs() {
-		try {
-			obsInterface.setContents(settings.getStuffsFileName(teamNbr), Integer.toString(getStuffs()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getStuffsFileName(teamNbr), Integer.toString(getStuffs()));
 	}
 	private void writeBreaks() {
-		try {
-			obsInterface.setContents(settings.getBreaksFileName(teamNbr), Integer.toString(getBreaks()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getBreaksFileName(teamNbr), Integer.toString(getBreaks()));
 	}
-   public void writeStats() {
+    private void writeData(String filename, String data) {
+    	try {
+    		obsInterface.setContents(filename, data);
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
+    }
+    public void writeStats() {
    		writePassAttempts();
    		writePassCompletes();
    		writePassPercent();

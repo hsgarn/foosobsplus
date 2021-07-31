@@ -675,7 +675,7 @@ public class HotKeysPanel extends JPanel {
 		settings.setSwitchPlayer1HotKey(txtSwitchPlayer1HotKey.getText());
 		settings.setSwitchPlayer2HotKey(txtSwitchPlayer2HotKey.getText());
 		try {
-			settings.saveToConfig();
+			settings.saveToHotKeyConfig();
 		} catch (IOException ex) {
 			System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
 		}

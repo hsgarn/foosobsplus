@@ -123,6 +123,7 @@ import com.midsouthfoosball.foosobsplus.view.OBSConnectPanel;
 import com.midsouthfoosball.foosobsplus.view.ParametersFrame;
 import com.midsouthfoosball.foosobsplus.view.ParametersPanel;
 import com.midsouthfoosball.foosobsplus.view.ResetPanel;
+import com.midsouthfoosball.foosobsplus.view.SourcesFrame;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
@@ -212,6 +213,7 @@ public class Main {
 	private ParametersPanel		parametersPanel		= parametersFrame.getSettingsPanel();
 	private HotKeysFrame 		hotKeysFrame 		= new HotKeysFrame(settings);
 	private HotKeysPanel 		hotKeysPanel		= hotKeysFrame.getHotKeysPanel();
+	private SourcesFrame		sourcesFrame		= new SourcesFrame(settings, obsInterface);
 	private FileNamesFrame		fileNamesFrame		= new FileNamesFrame(settings, obsInterface);
 	private OBSConnectFrame		obsConnectFrame		= new OBSConnectFrame(settings);
 	private OBSConnectPanel		obsConnectPanel		= obsConnectFrame.getOBSConnectPanel();
@@ -259,7 +261,7 @@ public class Main {
 	public void loadWindowsAndControllers() {
 		mainFrame = new MainFrame(settings.getGameType(), tablePanel, timerPanel, teamPanel1, teamPanel2, statsEntryPanel, 
 				switchPanel, resetPanel, statsDisplayPanel, matchPanel, ballPanel, 
-				parametersFrame, hotKeysFrame, fileNamesFrame, obsConnectFrame, this);
+				parametersFrame, hotKeysFrame, sourcesFrame, fileNamesFrame, obsConnectFrame, this);
 
 		////// Set up independent Windows \\\\\\
 		

@@ -88,25 +88,13 @@ public class Table {
 		tableName = "";
 	}
 	private void writeTournamentName() {
-    	try {
-    		obsInterface.setContents(settings.getTournamentFileName(), getTournamentName());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+   		writeData(settings.getTournamentFileName(), getTournamentName());
 	}
     private void writeEventName() {
-		try {
-    		obsInterface.setContents(settings.getEventFileName(), getEventName());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    	writeData(settings.getEventFileName(), getEventName());
     }
     private void writeTableName() {
-		try {
-    		obsInterface.setContents(settings.getTableFileName(), getTableName());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+   		writeData(settings.getTableFileName(), getTableName());
     }
     public void writeAll() {
  		try {
@@ -117,4 +105,11 @@ public class Table {
  			e.printStackTrace();
  		}
      }
+    private void writeData(String filename, String data) {
+    	try {
+    		obsInterface.setContents(filename, data);
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
+    }
   }

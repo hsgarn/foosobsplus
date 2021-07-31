@@ -448,6 +448,12 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.074<br/>
+Split config.properties into control.properties, filename.properties, hotkey.properties.<br/>
+Add source.properties<br/>
+Clean up writes in all the Model classes.<br/>
+Remove all the unnecessary config variables and just use the properties maps.<br/>
+<br/>
 v1.073 07/28/2021<br/>
 Added setTextGDIPlus to obs-websocket-java v1.3. Supports source, text, readfromfile parameters.<br/>
 Add ability for writeScores to use websocket or file.<br/>

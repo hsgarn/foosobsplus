@@ -485,41 +485,28 @@ public class Match implements Serializable {
 		this.startTime = startTime;
 	}
 	private void writeLastScored() {
-		try {
-			obsInterface.setContents(settings.getLastScoredFileName(), settings.getLastScoredStrings()[lastScored]);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+		writeData(settings.getLastScoredFileName(), settings.getLastScoredStrings()[lastScored]);
 	}
 	private void writeMatchWinner(String theContents) {
-		try {
-			obsInterface.setContents(settings.getMatchWinnerFileName(), theContents);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getMatchWinnerFileName(), theContents);
 	}
 	private void clearMatchWinner() {
-		try {
-			obsInterface.setContents(settings.getMatchWinnerFileName(), "");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getMatchWinnerFileName(), "");
 	}
 	private void writeMeatball() {
-		try {
-			obsInterface.setContents(settings.getMeatballFileName(), settings.getMeatball());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getMeatballFileName(), settings.getMeatball());
 	}
 	private void clearMeatball() {
-		try {
-			obsInterface.setContents(settings.getMeatballFileName(), "");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeData(settings.getMeatballFileName(), "");
 	}
-	public void restoreState(byte[] serializedObject) {
+    private void writeData(String filename, String data) {
+    	try {
+    		obsInterface.setContents(filename, data);
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
+    }
+    public void restoreState(byte[] serializedObject) {
 
 		Match tempMatch = null;
 		try {
