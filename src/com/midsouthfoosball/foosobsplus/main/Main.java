@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -185,7 +185,7 @@ public class Main {
 																	new Game(obsInterface, settings, team1, team2, 5)
 																};
 
-	private Stats 				stats 				= new Stats(team1, team2);
+	private Stats 				stats 				= new Stats(settings, team1, team2);
 	
 	////// Create a TimeClock to be the Timer \\\\\\
 	
@@ -259,7 +259,7 @@ public class Main {
 		loadCommands();
 	}
 	public void loadWindowsAndControllers() {
-		mainFrame = new MainFrame(settings.getGameType(), tablePanel, timerPanel, teamPanel1, teamPanel2, statsEntryPanel, 
+		mainFrame = new MainFrame(settings, tablePanel, timerPanel, teamPanel1, teamPanel2, statsEntryPanel, 
 				switchPanel, resetPanel, statsDisplayPanel, matchPanel, ballPanel, 
 				parametersFrame, hotKeysFrame, sourcesFrame, fileNamesFrame, obsConnectFrame, this);
 
@@ -422,8 +422,13 @@ public class Main {
 		teamController.switchSides();
 		matchController.switchSides();
 	}
-	public void setIsShowParsed(boolean isShowParsed) {
-		stats.setIsShowParsed(isShowParsed);
+	public void setShowParsed(boolean showParsed) {
+		settings.setShowParsed(showParsed);
+		try {
+			settings.saveControlConfig();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	private String createMatchId() {
 		Date date = new Date();
@@ -648,7 +653,7 @@ public class Main {
 	}
 	public void showScores(boolean show) {
 		if (obs.getConnected()) obsController.setSourceVisibility(obsSceneName, obsShowScoresSource, show, response -> {
-			if(stats.getShowParsed()) {
+			if(settings.getShowParsed()) {
 				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceVisibility called");
 			}
 		});
@@ -685,7 +690,7 @@ public class Main {
 		AtomicReference<String> onErrorReason = new AtomicReference<>();
 		AtomicReference<String> connectResult = new AtomicReference<>(); 
 		AtomicReference<String> onCloseResult = new AtomicReference<>();
-		obsConnectPanel.saveSettings(settings);
+		obsConnectPanel.saveSettings();
 		obs.setHost(settings.getOBSHost()); 
 		obs.setPort(settings.getOBSPort());
 		obs.setPassword(settings.getOBSPassword());
@@ -721,21 +726,21 @@ public class Main {
 			  obsConnectPanel.addMessage(onCloseResult.get());
 		  });
 		  
-		  obsController.registerConnectionFailedCallback(connectionFailedResult::set);
+		  obsController.registerConnectionFailedCallback(message -> {
+			  connectionFailedResult.set(message);
+			  obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": From ConnectionFailedCallback: " + connectionFailedResult.get());}
+		  );
 		  
-		  // controller.registerConnectionFailedCallback(message -> { 
-		  //	  obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Oops!: " + message);
-		  // });
-		  
-		  obsController.connect();
 		  if(obsController.isFailed()) {
 			  obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " Failed to connect to OBS.  Is OBS running and WebSocket plugin enabled?");
 		  }
-		if(!obsController.isFailed()) { 
-		  obsController.setCurrentScene(obsSceneName, response -> { 
-			  if(stats.getShowParsed()) {
-				  obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Setting scene to: " + obsSceneName);
-				  obsController.getCurrentScene(response2 -> { 
+		  obsController.connect();
+
+		  if(!obsController.isFailed()) { 
+			  obsController.setCurrentScene(obsSceneName, response -> { 
+				  if(settings.getShowParsed()) {
+					  obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Setting scene to: " + obsSceneName);
+					  obsController.getCurrentScene(response2 -> { 
 					  obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " Scene Set to: " + response2.getName());
 				  });
 			  } 
@@ -746,7 +751,7 @@ public class Main {
 	private void obsSetBallVisible(String source, boolean show) {
 		if (obs.getConnected()) {
 			obsController.setSourceVisibility("Scene", source, show, response -> {
-				if(stats.getShowParsed()) {
+				if(settings.getShowParsed()) {
 					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceVisibility called");
 				}
 			});

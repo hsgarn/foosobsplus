@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -484,7 +484,7 @@ public class ParametersPanel extends JPanel {
 			settings.setWinByFinalOnly(0);
 		}
 		try {
-			settings.saveToControlConfig();
+			settings.saveControlConfig();
 		} catch (IOException ex) {
 			System.out.println(Messages.getString("Errors.ErrorSavingPropertiesFile", settings.getGameType()) + ex.getMessage());		 //$NON-NLS-1$
 		}

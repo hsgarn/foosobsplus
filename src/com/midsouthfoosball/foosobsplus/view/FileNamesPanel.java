@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -241,7 +241,7 @@ public class FileNamesPanel extends JPanel {
 		settings.setTeam1ShotsOnGoalFileName(txtTeam1ShotsOnGoalFileName.getText());
 		settings.setTeam2ShotsOnGoalFileName(txtTeam2ShotsOnGoalFileName.getText());
 		try {
-			settings.saveToFileNameConfig();
+			settings.saveFileNameConfig();
 		} catch (IOException ex) {
 			System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
 		}
@@ -277,7 +277,7 @@ public class FileNamesPanel extends JPanel {
 					obsInterface.setFilePath(formattedTxtPath.getText());
 					try {
 						settings.setDatapath(formattedTxtPath.getText());
-						settings.saveToFileNameConfig();
+						settings.saveFileNameConfig();
 					} catch (IOException ex) {
 						System.out.print(Messages.getString("FileNamesPanel.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
 					}
@@ -293,7 +293,7 @@ public class FileNamesPanel extends JPanel {
 		    	try {
 					obsInterface.setFilePath(formattedTxtPath.getText());
 					settings.setDatapath(formattedTxtPath.getText());
-					settings.saveToFileNameConfig();
+					settings.saveFileNameConfig();
 		    	} catch (IOException ex) {
 		    		System.out.print(Messages.getString("FileNamesPanel.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
 		    	}
@@ -306,7 +306,7 @@ public class FileNamesPanel extends JPanel {
 			    	try {
 						obsInterface.setFilePath(formattedTxtPath.getText());
 						settings.setDatapath(formattedTxtPath.getText());
-						settings.saveToFileNameConfig();
+						settings.saveFileNameConfig();
 			    	} catch (IOException ex) {
 			    		System.out.print(Messages.getString("FileNamesPanel.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
 			    	}

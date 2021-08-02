@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -61,7 +61,6 @@ public class Stats implements Serializable {
 	private transient boolean wasTwoRod;
 	private transient boolean wasThreeRod;
 	private transient boolean isForwardDirection;
-	private transient boolean isShowParsed = false;
 	private transient boolean isTeam1;
 	private transient boolean isTeam2;
 	private transient boolean[] teamScored = {false, false};
@@ -106,11 +105,13 @@ public class Stats implements Serializable {
 	private transient char protocolChar = new Character('R');
 	private transient char otherChar = new Character('O');
 	
+	private transient Settings settings;
 	private transient Team team1;
 	private transient Team team2;
 
-	public Stats(Team team1, Team team2) {
+	public Stats(Settings settings, Team team1, Team team2) {
 		codeHistory = new DefaultListModel<String>();
+		this.settings = settings;
 		this.team1 = team1;
 		this.team2 = team2;
 	}
@@ -180,12 +181,12 @@ public class Stats implements Serializable {
 	public boolean getIsError() {
 		return isError;
 	}
-	public void setIsShowParsed(boolean isShowParsed) {
-		this.isShowParsed = isShowParsed;
-	}
-	public boolean getShowParsed() {
-		return isShowParsed;
-	}
+//	public void setIsShowParsed(boolean isShowParsed) {
+//		this.isShowParsed = isShowParsed;
+//	}
+//	public boolean getShowParsed() {
+//		return isShowParsed;
+//	}
 	public void setCodeHistory(DefaultListModel<String> codeHistory) {
 		this.codeHistory = codeHistory;
 	}
@@ -334,7 +335,7 @@ public class Stats implements Serializable {
 				errorMsg = errorMsg + "Invalid modifier: " + currentModifier + ". ";
 			}
 		}
-		if (isShowParsed) {
+		if (settings.getShowParsed()) {
 			System.out.println("ErrorMsg: " + errorMsg);
 		}
 //		return isError;
@@ -697,7 +698,9 @@ public class Stats implements Serializable {
 		}
 	}
 	public void showParsed() {
-		if (!isShowParsed) return;
+		if (!settings.getShowParsed()) {
+			return;
+		}
 		System.out.println("----------------------------------------");
 		System.out.println("Previous Code: " + previousCode + "       Current Code: " + code);
 		System.out.println("Previous Team: " + previousTeam + "         Current Team: " + currentTeam);

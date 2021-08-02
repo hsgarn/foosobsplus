@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2012 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -675,7 +675,7 @@ public class HotKeysPanel extends JPanel {
 		settings.setSwitchPlayer1HotKey(txtSwitchPlayer1HotKey.getText());
 		settings.setSwitchPlayer2HotKey(txtSwitchPlayer2HotKey.getText());
 		try {
-			settings.saveToHotKeyConfig();
+			settings.saveHotKeyConfig();
 		} catch (IOException ex) {
 			System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
 		}

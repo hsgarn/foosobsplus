@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -52,7 +52,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import com.midsouthfoosball.foosobsplus.main.Main;
-
+import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
 public final class MainFrame extends JFrame implements WindowListener {
@@ -90,11 +90,11 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private Icon imgIconDisconnected;
 	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
 	
-	public MainFrame(String gameType, TablePanel tablePanel, TimerPanel timerPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
+	public MainFrame(Settings settings, TablePanel tablePanel, TimerPanel timerPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
 			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, BallPanel ballPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,
 			SourcesFrame sourcesFrame, FileNamesFrame fileNamesFrame, OBSConnectFrame obsConnectFrame, Main main) {
 
-		super(programName + ": " + gameType); //$NON-NLS-1$
+		super(programName + ": " + settings.getGameType()); //$NON-NLS-1$
 
 		this.tablePanel 		= tablePanel;
 		this.timerPanel 		= timerPanel;
@@ -120,11 +120,11 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewAllWindows 			= new JCheckBoxMenuItem(Messages.getString("MainFrame.ShowAllWindows")); //$NON-NLS-1$
 		viewAlwaysOnTop 		= new JCheckBoxMenuItem(Messages.getString("MainFrame.AlwaysOnTop")); //$NON-NLS-1$
 		helpShowParsed 			= new JCheckBoxMenuItem(Messages.getString("MainFrame.ShowParsed")); //$NON-NLS-1$
-		
+		helpShowParsed.setSelected(settings.getShowParsed());
 		setLayout(new GridBagLayout());
 		
 		setJMenuBar(createMenuBar());
-		if(gameType.equals("Foosball")) { //$NON-NLS-1$
+		if(settings.getGameType().equals("Foosball")) { //$NON-NLS-1$
 			layoutFoosballComponents();
 		} else {
 			layoutBilliardComponents();
@@ -288,7 +288,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 
 		helpShowParsed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				main.setIsShowParsed(helpShowParsed.isSelected());
+				main.setShowParsed(helpShowParsed.isSelected());
  			}
 		});
 

@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2021 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -41,12 +41,15 @@ public class StatSettingsPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private JTextField txtTeam1NameFileName;
+	private Settings settings;
 
 
 	/**
 	 * Create the Panel.
 	 */
 	public StatSettingsPanel(Settings settings) throws IOException {
+		this.settings = settings;
+		
 		setBounds(100, 100, 853, 489);
 		setLayout(new MigLayout("", "[][][151.00][15.00][91.00][grow][]", "[][][][][][][][][][][][][][][]"));
 		
@@ -67,7 +70,7 @@ public class StatSettingsPanel extends JPanel {
 		JButton btnSaveFileNames = new JButton("Save");
 		btnSaveFileNames.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveSettings(settings);
+				saveSettings();
 				JComponent comp = (JComponent) e.getSource();
 				Window win = SwingUtilities.getWindowAncestor(comp);
 				win.dispose();
@@ -98,10 +101,10 @@ public class StatSettingsPanel extends JPanel {
 		txtTeam1NameFileName.setText(settings.getDefaultTeam1NameFileName());
 	}
 	
-	private void saveSettings(Settings settings) {
+	private void saveSettings() {
 		settings.setTeam1NameFileName(txtTeam1NameFileName.getText());
 		try {
-			settings.saveToConfig();
+			settings.saveFileNameConfig();
 		} catch (IOException ex) {
 			System.out.print("Error saving properties file: " + ex.getMessage());		
 		}

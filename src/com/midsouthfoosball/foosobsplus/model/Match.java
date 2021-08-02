@@ -29,6 +29,8 @@ import java.util.Date;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
+import net.twasi.obsremotejava.OBSRemoteController;
+
 public class Match implements Serializable {
 	
 	private static final long serialVersionUID = -3958726389588837391L;
@@ -485,26 +487,35 @@ public class Match implements Serializable {
 		this.startTime = startTime;
 	}
 	private void writeLastScored() {
-		writeData(settings.getLastScoredFileName(), settings.getLastScoredStrings()[lastScored]);
+		writeData(settings.getLastScoredFileName(), settings.getLastScoredSource(), settings.getLastScoredStrings()[lastScored]);
 	}
 	private void writeMatchWinner(String theContents) {
-		writeData(settings.getMatchWinnerFileName(), theContents);
+		writeData(settings.getMatchWinnerFileName(), settings.getMatchWinnerSource(), theContents);
 	}
 	private void clearMatchWinner() {
-		writeData(settings.getMatchWinnerFileName(), "");
+		writeData(settings.getMatchWinnerFileName(), settings.getMatchWinnerSource(), "");
 	}
 	private void writeMeatball() {
-		writeData(settings.getMeatballFileName(), settings.getMeatball());
+		writeData(settings.getMeatballFileName(), settings.getMeatballSource(), settings.getMeatball());
 	}
 	private void clearMeatball() {
-		writeData(settings.getMeatballFileName(), "");
+		writeData(settings.getMeatballFileName(), settings.getMeatballSource(), "");
 	}
-    private void writeData(String filename, String data) {
-    	try {
-    		obsInterface.setContents(filename, data);
-    	} catch (IOException e) {
-    		e.printStackTrace();
-    	}
+    private void writeData(String filename, String source, String data) {
+    	OBS obs = OBS.getInstance();
+    	OBSRemoteController obsController = obs.getController();
+    	if (obsController == null || !obs.getConnected()) {
+		   	try {
+		    		obsInterface.setContents(filename, data);
+		    	} catch (IOException e) {
+		    		e.printStackTrace();
+		    	}
+		} else {
+	   		obsController.setTextGDIPlusProperties(source, data, false, response -> {
+	   			if(settings.getShowParsed())
+	   				System.out.println("Match class: Source: [" + source + "] Text: [" + data + "] " + response + "]");
+	   		});
+		}
     }
     public void restoreState(byte[] serializedObject) {
 

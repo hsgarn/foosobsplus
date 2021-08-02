@@ -241,7 +241,7 @@ public class SourcesPanel extends JPanel {
 		settings.setTeam1ShotsOnGoalSource(txtTeam1ShotsOnGoalSource.getText());
 		settings.setTeam2ShotsOnGoalSource(txtTeam2ShotsOnGoalSource.getText());
 		try {
-			settings.saveToSourceConfig();
+			settings.saveSourceConfig();
 		} catch (IOException ex) {
 			System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
 		}
@@ -277,7 +277,7 @@ public class SourcesPanel extends JPanel {
 					obsInterface.setFilePath(formattedTxtPath.getText());
 					try {
 						settings.setDatapath(formattedTxtPath.getText());
-						settings.saveToSourceConfig();
+						settings.saveSourceConfig();
 					} catch (IOException ex) {
 						System.out.print(Messages.getString("SourcesPanel.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
 					}
@@ -293,7 +293,7 @@ public class SourcesPanel extends JPanel {
 		    	try {
 					obsInterface.setFilePath(formattedTxtPath.getText());
 					settings.setDatapath(formattedTxtPath.getText());
-					settings.saveToSourceConfig();
+					settings.saveSourceConfig();
 		    	} catch (IOException ex) {
 		    		System.out.print(Messages.getString("SourcesPanel.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
 		    	}
@@ -306,7 +306,7 @@ public class SourcesPanel extends JPanel {
 			    	try {
 						obsInterface.setFilePath(formattedTxtPath.getText());
 						settings.setDatapath(formattedTxtPath.getText());
-						settings.saveToSourceConfig();
+						settings.saveSourceConfig();
 			    	} catch (IOException ex) {
 			    		System.out.print(Messages.getString("SourcesPanel.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
 			    	}

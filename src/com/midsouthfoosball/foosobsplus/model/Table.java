@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -23,6 +23,8 @@ package com.midsouthfoosball.foosobsplus.model;
 import java.io.IOException;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
+
+import net.twasi.obsremotejava.OBSRemoteController;
 
 public class Table {
 	
@@ -61,7 +63,7 @@ public class Table {
 		writeTableName();
 		settings.setTableName(tableName);
 		try {
-		settings.saveToConfig();
+		settings.saveControlConfig();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -88,28 +90,34 @@ public class Table {
 		tableName = "";
 	}
 	private void writeTournamentName() {
-   		writeData(settings.getTournamentFileName(), getTournamentName());
+   		writeData(settings.getTournamentFileName(), settings.getTournamentSource(), getTournamentName());
 	}
     private void writeEventName() {
-    	writeData(settings.getEventFileName(), getEventName());
+    	writeData(settings.getEventFileName(), settings.getEventSource(), getEventName());
     }
     private void writeTableName() {
-   		writeData(settings.getTableFileName(), getTableName());
+   		writeData(settings.getTableFileName(), settings.getTableSource(), getTableName());
     }
     public void writeAll() {
- 		try {
-    		obsInterface.setContents(settings.getTournamentFileName(), getTournamentName());
-    		obsInterface.setContents(settings.getEventFileName(), getEventName());
-     		obsInterface.setContents(settings.getTableFileName(), getTableName());
- 		} catch (IOException e) {
- 			e.printStackTrace();
- 		}
+    	writeTournamentName();
+    	writeEventName();
+    	writeTableName();
      }
-    private void writeData(String filename, String data) {
-    	try {
-    		obsInterface.setContents(filename, data);
-    	} catch (IOException e) {
-    		e.printStackTrace();
-    	}
-    }
+	private void writeData(String filename, String source, String data) {
+    	OBS obs = OBS.getInstance();
+    	OBSRemoteController obsController = obs.getController();
+    	if (obsController == null || !obs.getConnected()) {
+		   	try {
+		    		obsInterface.setContents(filename, data);
+		    	} catch (IOException e) {
+		    		e.printStackTrace();
+		    	}
+		} else {
+	   		obsController.setTextGDIPlusProperties(source, data, false, response -> {
+	   			if(settings.getShowParsed())
+	   				System.out.println("Table class: Source: [" + source + "] Text: [" + data + "] " + response + "]");
+	   			});
+		}
+	}
+
   }
