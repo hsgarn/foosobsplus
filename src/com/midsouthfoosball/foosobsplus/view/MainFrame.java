@@ -353,7 +353,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		}
 	}
 	public void enableConnect(Boolean state) {
-		obsConnectItem.setEnabled(state);
+//		obsConnectItem.setEnabled(state);  // Leaving Connect... option always enabled.
 		obsDisconnectItem.setEnabled(!state);
 	}
 	

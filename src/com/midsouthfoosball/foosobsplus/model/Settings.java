@@ -40,16 +40,19 @@ public class Settings {
 	private Properties defaultSourceProps;
 	private Properties defaultFileNameProps;
 	private Properties defaultHotKeyProps;
+	private Properties defaultOBSProps;
 	
 	public Properties configControlProps;
 	public Properties configSourceProps;
 	public Properties configFileNameProps;
 	public Properties configHotKeyProps;
+	public Properties configOBSProps;
 	
 	private String configControlFileName 	= "control.properties";
 	private String configSourceFileName 	= "source.properties";
 	private String configFileNameFileName 	= "filename.properties";
 	private String configHotKeyFileName 	= "hotkey.properties";
+	private String configOBSFileName        = "obs.properties";
 
 	//////////////////////////////////////////////////////
 	
@@ -58,6 +61,7 @@ public class Settings {
 		defaultSourceProps 		= new Properties();
 		defaultFileNameProps 	= new Properties();
 		defaultHotKeyProps 		= new Properties();
+		defaultOBSProps         = new Properties();
 		// sets default properties
 		// Parameter settings
 		defaultControlProps.setProperty("ShowParsed", "true");
@@ -92,12 +96,13 @@ public class Settings {
 		defaultControlProps.setProperty("LogoImageURL", "/imgs/MidsouthFoosballLogo4.png");
 		defaultControlProps.setProperty("LogoLinkURI", "https://www.facebook.com/midsouthfoosball");
 		//OBS
-		defaultControlProps.setProperty("OBSHost", "localhost");
-		defaultControlProps.setProperty("OBSPort", "4444");
-		defaultControlProps.setProperty("OBSPassword","");
-		defaultControlProps.setProperty("OBSAutoLogin", "0");
-		defaultControlProps.setProperty("OBSSavePassword", "0");
-		defaultControlProps.setProperty("OBSCloseOnConnect", "1");
+		defaultOBSProps.setProperty("OBSHost", "localhost");
+		defaultOBSProps.setProperty("OBSPort", "4444");
+		defaultOBSProps.setProperty("OBSPassword","");
+		defaultOBSProps.setProperty("OBSScene", "FoosObs+ Main");
+		defaultOBSProps.setProperty("OBSAutoLogin", "0");
+		defaultOBSProps.setProperty("OBSSavePassword", "0");
+		defaultOBSProps.setProperty("OBSCloseOnConnect", "1");
 		//Sources
 		defaultSourceProps.setProperty("Table", "tablename");
 		defaultSourceProps.setProperty("Team1Name", "team1name");
@@ -286,7 +291,9 @@ public class Settings {
 		configSourceProps 	= new Properties(defaultSourceProps);
 		configFileNameProps = new Properties(defaultFileNameProps);
 		configHotKeyProps 	= new Properties(defaultHotKeyProps);
+		configOBSProps      = new Properties(defaultOBSProps);
 		loadFromControlConfig();
+		loadFromOBSConfig();
 		loadFromSourceConfig();
 		loadFromFileNameConfig();
 		loadFromHotKeyConfig();
@@ -331,12 +338,13 @@ public class Settings {
 	public String getLogoImageURL() {return configControlProps.getProperty("LogoImageURL");}
 	public String getLogoLinkURI() {return configControlProps.getProperty("LogoLinkURI");}
 	//OBS
-	public String getOBSHost() {return configControlProps.getProperty("OBSHost");}
-	public String getOBSPort() {return configControlProps.getProperty("OBSPort");}
-	public String getOBSPassword() {return configControlProps.getProperty("OBSPassword");}
-	public int getOBSSavePassword() {return Integer.parseInt(configControlProps.getProperty("OBSSavePassword"));}
-	public int getOBSAutoLogin() {return Integer.parseInt(configControlProps.getProperty("OBSAutoLogin"));}
-	public int getOBSCloseOnConnect() {return Integer.parseInt(configControlProps.getProperty("OBSCloseOnConnect"));}
+	public String getOBSHost() {return configOBSProps.getProperty("OBSHost");}
+	public String getOBSPort() {return configOBSProps.getProperty("OBSPort");}
+	public String getOBSPassword() {return configOBSProps.getProperty("OBSPassword");}
+	public String getOBSScene() {return configOBSProps.getProperty("OBSScene");}
+	public int getOBSSavePassword() {return Integer.parseInt(configOBSProps.getProperty("OBSSavePassword"));}
+	public int getOBSAutoLogin() {return Integer.parseInt(configOBSProps.getProperty("OBSAutoLogin"));}
+	public int getOBSCloseOnConnect() {return Integer.parseInt(configOBSProps.getProperty("OBSCloseOnConnect"));}
 	//Sources
 	public String getTeamNameSource(int teamNbr) {
 		if(teamNbr==1) {
@@ -882,22 +890,25 @@ public class Settings {
 	}
 	//OBS
 	public void setOBSHost(String obsHost) {
-		configControlProps.setProperty("OBSHost", obsHost);
+		configOBSProps.setProperty("OBSHost", obsHost);
 	}
 	public void setOBSPort(String obsPort) {
-		configControlProps.setProperty("OBSPort", obsPort);
+		configOBSProps.setProperty("OBSPort", obsPort);
 	}
 	public void setOBSPassword(String obsPassword) {
-		configControlProps.setProperty("OBSPassword", obsPassword);
+		configOBSProps.setProperty("OBSPassword", obsPassword);
 	}
 	public void setOBSSavePassword(int obsSavePassword) {
-		configControlProps.setProperty("OBSSavePassword", Integer.toString(obsSavePassword));
+		configOBSProps.setProperty("OBSSavePassword", Integer.toString(obsSavePassword));
+	}
+	public void setOBSScene(String obsScene) {
+		configOBSProps.setProperty("OBSScene", obsScene);
 	}
 	public void setOBSAutoLogin(int obsAutoLogin) {
-		configControlProps.setProperty("OBSAutoLogin", Integer.toString(obsAutoLogin));
+		configOBSProps.setProperty("OBSAutoLogin", Integer.toString(obsAutoLogin));
 	}
 	public void setOBSCloseOnConnect(int obsCloseOnConnect) {
-		configControlProps.setProperty("OBSCloseOnConnect", Integer.toString(obsCloseOnConnect));
+		configOBSProps.setProperty("OBSCloseOnConnect", Integer.toString(obsCloseOnConnect));
 	}
 	//Sources
 	public void setTeam1PassAttemptsSource(String team1PassAttemptsSource) {
@@ -1466,12 +1477,13 @@ public class Settings {
 	public int getDefaultAutoCapNames() {return Integer.parseInt(defaultControlProps.getProperty("AutoCapNames"));}
 	public int getDefaultWinByFinalOnly() {return Integer.parseInt(defaultControlProps.getProperty("WinByFinalOnly"));}
 	//OBS
-	public String getDefaultOBSHost() {return defaultControlProps.getProperty("OBSHost");}
-	public String getDefaultOBSPort() {return defaultControlProps.getProperty("OBSPort");}
-	public String getDefaultOBSPassword() {return defaultControlProps.getProperty("OBSPassword");}
-	public int getDefaultOBSAutoLogin() {return Integer.parseInt(defaultControlProps.getProperty("OBSAutoLogin"));}
-	public int getDefaultOBSSavePassword() {return Integer.parseInt(defaultControlProps.getProperty("OBSSavePassword"));}
-	public int getDefaultOBSCloseOnConnect() {return Integer.parseInt(defaultControlProps.getProperty("OBSCloseOnConnect"));}
+	public String getDefaultOBSHost() {return defaultOBSProps.getProperty("OBSHost");}
+	public String getDefaultOBSPort() {return defaultOBSProps.getProperty("OBSPort");}
+	public String getDefaultOBSPassword() {return defaultOBSProps.getProperty("OBSPassword");}
+	public String getDefaultOBSScene() {return defaultOBSProps.getProperty("OBSScene");}
+	public int getDefaultOBSAutoLogin() {return Integer.parseInt(defaultOBSProps.getProperty("OBSAutoLogin"));}
+	public int getDefaultOBSSavePassword() {return Integer.parseInt(defaultOBSProps.getProperty("OBSSavePassword"));}
+	public int getDefaultOBSCloseOnConnect() {return Integer.parseInt(defaultOBSProps.getProperty("OBSCloseOnConnect"));}
 	//Sources
 	public String getDefaultTableSource() {return defaultSourceProps.getProperty("Table");}
 	public String getDefaultTeam1NameSource() {return defaultSourceProps.getProperty("Team1Name");}
@@ -1661,7 +1673,17 @@ public class Settings {
 			Files.createFile(Paths.get(configControlFileName));
 			configControlProps = defaultControlProps;
 			saveControlConfig();
-			loadFromControlConfig();
+//			loadFromControlConfig();
+		}
+	}
+	public void loadFromOBSConfig() throws IOException {
+		try(InputStream inputStream = Files.newInputStream(Paths.get(configOBSFileName))) {
+			configOBSProps.load(inputStream);
+		} catch (NoSuchFileException e) {
+			Files.createFile(Paths.get(configOBSFileName));
+			configOBSProps = defaultOBSProps;
+			saveOBSConfig();
+//			loadFromOBSConfig();
 		}
 	}
 	public void loadFromSourceConfig() throws IOException {
@@ -1671,7 +1693,7 @@ public class Settings {
 			Files.createFile(Paths.get(configSourceFileName));
 			configSourceProps = defaultSourceProps;
 			saveSourceConfig();
-			loadFromSourceConfig();
+//			loadFromSourceConfig();
 		}
 	}
 	public void loadFromFileNameConfig() throws IOException {
@@ -1682,7 +1704,7 @@ public class Settings {
 			Files.createFile(Paths.get(configFileNameFileName));
 			configFileNameProps = defaultFileNameProps;
 			saveFileNameConfig();
-			loadFromFileNameConfig();
+//			loadFromFileNameConfig();
 		}
 	}
 	public void loadFromHotKeyConfig() throws IOException {
@@ -1692,13 +1714,20 @@ public class Settings {
 			Files.createFile(Paths.get(configHotKeyFileName));
 			configHotKeyProps = defaultHotKeyProps;
 			saveHotKeyConfig();
-			loadFromHotKeyConfig();
+//			loadFromHotKeyConfig();
 		}
 	}
+
 	public void saveControlConfig() throws IOException {
 		//Control Parameters
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configControlFileName))) {
 			configControlProps.store(outputStream, "FoosOBSPlus Control settings");
+		}
+	}
+	public void saveOBSConfig() throws IOException {
+		//OBS
+		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configOBSFileName))) {
+			configOBSProps.store(outputStream, "FoosOBSPlus OBS Settings");
 		}
 	}
 	public void saveSourceConfig() throws IOException {

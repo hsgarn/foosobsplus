@@ -21,13 +21,17 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FocusTraversalPolicy;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseListener;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -69,6 +73,7 @@ public class TeamPanel extends JPanel {
 	private Settings settings;
 	private int teamNbr;
 	private Border innerBorder;
+	private static CustomFocusTraversalPolicy customTraversalPolicy;
 	
 	public TeamPanel(int teamNbr, String teamColor, Settings settings) {
 		
@@ -139,7 +144,26 @@ public class TeamPanel extends JPanel {
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
 		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
-
+        Vector<Component> order = new Vector<Component>(16);
+        order.add(txtTeamName);
+        order.add(txtForwardName);
+        order.add(txtGoalieName);
+        order.add(txtScore);
+        order.add(txtGameCount);
+        order.add(txtTimeOutCount);
+        order.add(btnSwitchPositions);
+        order.add(btnScoreDecrease);
+        order.add(btnScoreIncrease);
+        order.add(btnGameCountDecrease);
+        order.add(btnGameCountIncrease);
+        order.add(btnTimeOutCountDecrease);
+        order.add(btnTimeOutCountIncrease);
+        order.add(btnReset);
+        order.add(btnWarn);
+        order.add(btnClear);
+        customTraversalPolicy = new CustomFocusTraversalPolicy(order);
+        this.setFocusTraversalPolicy(customTraversalPolicy);
+        this.setFocusCycleRoot(true);
 	}
 	public void changeGameType() {
 		lblTeamName.setText(Messages.getString("TeamPanel.TeamName",settings.getGameType())); //$NON-NLS-1$
@@ -641,5 +665,36 @@ public class TeamPanel extends JPanel {
 			theColor = settings.getSide2Color();
 		}
 		return Messages.getString("TeamPanel.Team",settings.getGameType()) + teamNbr + Messages.getString("TeamPanel.Information",settings.getGameType()) + theColor + Messages.getString("TeamPanel.Side",settings.getGameType()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
+    public static class CustomFocusTraversalPolicy extends FocusTraversalPolicy {
+    	Vector<Component> order;
+    	public CustomFocusTraversalPolicy(Vector<Component> order) {
+			this.order = new Vector<Component>(order.size());
+			this.order.addAll(order);
+		}
+		public Component getComponentAfter(Container focusCycleRoot, Component aComponent)	{
+			int idx = (order.indexOf(aComponent) + 1) % order.size();
+			return order.get(idx);
+		}
+
+		public Component getComponentBefore(Container focusCycleRoot, Component aComponent) {
+			int idx = order.indexOf(aComponent) - 1;
+			if (idx < 0) {
+			  idx = order.size() - 1;
+			}
+			return order.get(idx);
+		}
+	
+		public Component getDefaultComponent(Container focusCycleRoot) {
+			return order.get(0);
+		}
+		
+		public Component getLastComponent(Container focusCycleRoot) {
+			return order.lastElement();
+		}
+		
+		public Component getFirstComponent(Container focusCycleRoot) {
+			return order.get(0);
+		}
 	}
 }

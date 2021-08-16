@@ -34,7 +34,7 @@ import net.miginfocom.swing.MigLayout;
 public class AboutPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private static final String versionNumber = "1.075"; //$NON-NLS-1$
+	private static final String versionNumber = "1.076"; //$NON-NLS-1$
 
 	public AboutPanel(JFrame aboutFrame) {
 		setLayout(new MigLayout("", "[127.00][50.00:87.00,grow,left]", "[][][][][grow][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -60,7 +60,7 @@ public class AboutPanel extends JPanel {
 		JLabel lblCopyright = new JLabel(Messages.getString("AboutPanel.Copyright")); //$NON-NLS-1$
 		add(lblCopyright, "cell 0 3,alignx right"); //$NON-NLS-1$
 		
-		JLabel lblCopyrightValue = new JLabel("2020 Hugh Garner"); //$NON-NLS-1$
+		JLabel lblCopyrightValue = new JLabel("2020, 2021 Hugh Garner"); //$NON-NLS-1$
 		add(lblCopyrightValue, "cell 1 3"); //$NON-NLS-1$
 		
 		JLabel lblLicense = new JLabel(Messages.getString("AboutPanel.License")); //$NON-NLS-1$

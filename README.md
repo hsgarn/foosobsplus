@@ -448,6 +448,13 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.076 08/15/2021<br/>
+Add OBSScene property<br/>
+Add Set Scene button on OBS Connect Panel<br/>
+Add custom tab traversal for Team panels<br/>
+Split OBS parameters into own properties object/file<br/>
+Always show Connect... menu item enabled<br/>
+<br/>
 v1.075 08/01/2021<br/>
 Remove FileName from the filename properties so they would be same as source properties.<br/>
 Write data to file or web socket in Team, Table, Match models.<br/>

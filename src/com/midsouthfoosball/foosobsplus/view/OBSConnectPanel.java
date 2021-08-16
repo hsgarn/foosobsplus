@@ -23,6 +23,7 @@ package com.midsouthfoosball.foosobsplus.view;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusListener;
 import java.io.IOException;
 
 import javax.swing.DefaultListCellRenderer;
@@ -47,10 +48,13 @@ public class OBSConnectPanel extends JPanel {
 	private JTextField txtPort;
 	private JButton btnConnect;
 	private JTextField txtPassword;
+	private JTextField txtScene;
+	private JButton btnSetScene;
 	private JCheckBox chckbxSavePassword;
 	private JCheckBox chckbxAutoLogin;
 	private JCheckBox chckbxCloseOnConnect;
 	private JButton btnDisconnect;
+	private JButton btnSave;
 	private Settings settings;
 	private JList<String> lstMessageHistory;
 	private DefaultListModel<String> mdlMessageHistory;
@@ -80,6 +84,17 @@ public class OBSConnectPanel extends JPanel {
 		txtPassword.setText(settings.getOBSPassword());
 		add(txtPassword, "cell 1 3,growx");
 		txtPassword.setColumns(10);
+		
+		JLabel lblScene = new JLabel("Scene");
+		add(lblScene, "flowx, cell 0 4, alignx trailing");
+
+		txtScene = new JTextField();
+		txtScene.setText(settings.getOBSScene());
+		add(txtScene, "cell 1 4,growx");
+		txtScene.setColumns(10);
+		
+		btnSetScene = new JButton("Set Scene");
+		add(btnSetScene, "flowx,cell 2 4,growx");
 		
 		chckbxSavePassword = new JCheckBox("Save Password");
 		if (Integer.toString(settings.getOBSSavePassword()).equals("1")) { //$NON-NLS-1$
@@ -130,6 +145,9 @@ public class OBSConnectPanel extends JPanel {
 		btnDisconnect = new JButton("Disconnect");
 		add(btnDisconnect, "cell 1 7,growx");
 		
+		btnSave = new JButton("Save");
+		add(btnSave, "cell 2 7,growx");
+		
 	}
 	public void disableConnect() {
 		btnConnect.setEnabled(false);
@@ -147,6 +165,7 @@ public class OBSConnectPanel extends JPanel {
 		settings.setOBSHost(txtHost.getText());
 		settings.setOBSPort(txtPort.getText());
 		settings.setOBSPassword(txtPassword.getText());
+		settings.setOBSScene(txtScene.getText());
 		if (chckbxSavePassword.isSelected()) {
 			settings.setOBSSavePassword(1);
 		} else {
@@ -163,9 +182,9 @@ public class OBSConnectPanel extends JPanel {
 			settings.setOBSCloseOnConnect(0);
 		}
 		try {
-			settings.saveControlConfig();
+			settings.saveOBSConfig();
 		} catch (IOException ex) {
-			System.out.println(Messages.getString("Errors.ErrorSavingPropertiesFile", settings.getGameType()) + ex.getMessage());		 //$NON-NLS-1$
+			System.out.println(Messages.getString("Errors.ErrorSavingOBSPropertiesFile", settings.getGameType()) + ex.getMessage());		 //$NON-NLS-1$
 		}
 	}
     public class AttributiveCellRenderer extends DefaultListCellRenderer {
@@ -180,7 +199,7 @@ public class OBSConnectPanel extends JPanel {
 		  tmp = (String) value;
 		  setBackground(UIManager.getColor("List.background")); //$NON-NLS-1$
 		  setForeground(UIManager.getColor("List.foreground")); //$NON-NLS-1$
-		  if (tmp.indexOf("Disconnect") != -1 || tmp.indexOf("Unable") != -1) { //$NON-NLS-1$
+		  if (tmp.indexOf("Disconnect") != -1 || tmp.indexOf("Unable") != -1 || tmp.indexOf("ERROR!") != -1) { //$NON-NLS-1$
 			  setForeground(Color.RED);
 		  } 
 		  if (tmp.indexOf("Connected!") != -1) {
@@ -191,10 +210,22 @@ public class OBSConnectPanel extends JPanel {
 	  }
     }
 	////// Listeners \\\\\\
+	public void addSceneFocusListener(FocusListener focusListenerForTxtScene) {
+		txtScene.addFocusListener(focusListenerForTxtScene);
+	}
+	public void addSetSceneListener(ActionListener listenForBtnSetScene) {
+    	btnSetScene.addActionListener(listenForBtnSetScene);
+    }
 	public void addConnectListener(ActionListener listenForBtnConnect) {
 		btnConnect.addActionListener(listenForBtnConnect);
 	}
 	public void addDisconnectListener(ActionListener listenForBtnDisconnect) {
 		btnDisconnect.addActionListener(listenForBtnDisconnect);
+	}
+	public void addSceneListener(ActionListener listenForTxtScene) {
+		txtScene.addActionListener(listenForTxtScene);
+	}
+	public void addSaveListener(ActionListener listenForBtnSave) {
+		btnSave.addActionListener(listenForBtnSave);
 	}
 }
