@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -63,7 +63,13 @@ public class MainController {
 		this.lastScored2WindowFrame.addLastScored2WindowClosedListener(new LastScored2WindowCloseListener());
 		this.gameTableWindowFrame.addGameTableWindowClosedListener(new GameTableWindowCloseListener());
 	}
-
+	public void showTimerWindow() {
+		timerWindowFrame.setVisible(true);
+		mainFrame.setTimerWindowSelected(true);
+	}
+	public boolean getTimerWindowSelected() {
+		return mainFrame.getTimerWindowSelected();
+	}
 	////// MainFrame Listener Objects //////
 	private class TimerWindowCloseListener implements WindowListener {
 		public void windowClosed(WindowEvent we) {

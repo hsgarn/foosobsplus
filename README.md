@@ -448,6 +448,9 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.077 08/17/2021<br/>
+Make start/reset timer commands/buttons show timer window.<br/>
+<br/>
 v1.076 08/15/2021<br/>
 Add OBSScene property<br/>
 Add Set Scene button on OBS Connect Panel<br/>

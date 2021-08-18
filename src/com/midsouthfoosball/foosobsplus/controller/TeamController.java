@@ -38,6 +38,7 @@ import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.Team;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowPanel;
+import com.midsouthfoosball.foosobsplus.view.MainFrame;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
@@ -61,8 +62,9 @@ public class TeamController {
 	private GameClock gameClock;
 	private Team teams[] = new Team[] {null,null};
 	private TeamPanel teamPanels[] = new TeamPanel[] {null,null};
-	
-	public TeamController(OBSInterface obsInterface, Settings settings, Team team1, Team team2, Match match, TeamPanel teamPanel1, TeamPanel teamPanel2, SwitchPanel switchPanel, MatchPanel matchPanel, GameTableWindowPanel gameTableWindowPanel, StatsDisplayPanel statsDisplayPanel, TimerController timerController, LastScored1Clock lastScored1Clock, LastScored2Clock lastScored2Clock, GameClock gameClock) {
+    private MainController mainController;
+    
+	public TeamController(OBSInterface obsInterface, Settings settings, Team team1, Team team2, Match match, TeamPanel teamPanel1, TeamPanel teamPanel2, SwitchPanel switchPanel, MatchPanel matchPanel, GameTableWindowPanel gameTableWindowPanel, StatsDisplayPanel statsDisplayPanel, TimerController timerController, LastScored1Clock lastScored1Clock, LastScored2Clock lastScored2Clock, GameClock gameClock, MainController mainController) {
 		this.obsInterface = obsInterface;
 		this.settings = settings;
 		this.team1 = team1;
@@ -82,6 +84,7 @@ public class TeamController {
 		this.teams[1] = team2;
 		this.teamPanels[0] = teamPanel1;
 		this.teamPanels[1] = teamPanel2;
+		this.mainController = mainController;
 		
 		////// Team Panel Listeners Methods //////
 		
@@ -409,21 +412,39 @@ public class TeamController {
 	}
 	public void resetTimer() {
 		timerController.resetTimer();
+		if (!mainController.getTimerWindowSelected()) {
+			mainController.showTimerWindow();
+		}
 	}
 	public void startGameTimer() {
 		timerController.startGameTimer();
+		if (!mainController.getTimerWindowSelected()) {
+			mainController.showTimerWindow();
+		}
 	}
 	public void startShotTimer() {
 		timerController.startShotTimer();
+		if (!mainController.getTimerWindowSelected()) {
+			mainController.showTimerWindow();
+		}
 	}
 	public void startPassTimer() {
 		timerController.startPassTimer();
+		if (!mainController.getTimerWindowSelected()) {
+			mainController.showTimerWindow();
+		}
 	}
 	public void startTimeOutTimer() {
 		timerController.startTimeOutTimer();
+		if (!mainController.getTimerWindowSelected()) {
+			mainController.showTimerWindow();
+		}
 	}
 	public void startRecallTimer() {
 		timerController.startRecallTimer();
+		if (!mainController.getTimerWindowSelected()) {
+			mainController.showTimerWindow();
+		}
 	}
 	public void switchSides() {
 		team1.writeAll();
