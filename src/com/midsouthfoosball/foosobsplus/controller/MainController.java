@@ -30,19 +30,18 @@ import java.awt.event.WindowListener;
 import javax.swing.JCheckBoxMenuItem;
 
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowFrame;
-import com.midsouthfoosball.foosobsplus.view.LastScored1WindowFrame;
-import com.midsouthfoosball.foosobsplus.view.LastScored2WindowFrame;
+import com.midsouthfoosball.foosobsplus.view.LastScoredWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.MainFrame;
 import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
 
 public class MainController {
 	private MainFrame mainFrame;
 	private TimerWindowFrame timerWindowFrame;
-	private LastScored1WindowFrame lastScored1WindowFrame;
-	private LastScored2WindowFrame lastScored2WindowFrame;
+	private LastScoredWindowFrame lastScored1WindowFrame;
+	private LastScoredWindowFrame lastScored2WindowFrame;
 	private GameTableWindowFrame gameTableWindowFrame;
 	
-	public MainController(MainFrame mainFrame, TimerWindowFrame timerWindowFrame, LastScored1WindowFrame lastScored1WindowFrame, LastScored2WindowFrame lastScored2WindowFrame, GameTableWindowFrame gameTableWindowFrame) {
+	public MainController(MainFrame mainFrame, TimerWindowFrame timerWindowFrame, LastScoredWindowFrame lastScored1WindowFrame, LastScoredWindowFrame lastScored2WindowFrame, GameTableWindowFrame gameTableWindowFrame) {
 		this.mainFrame = mainFrame;
 		this.timerWindowFrame = timerWindowFrame;
 		this.lastScored1WindowFrame = lastScored1WindowFrame;
@@ -59,8 +58,8 @@ public class MainController {
 		this.mainFrame.addLastScored2WindowItemListener(new LastScored2ViewItemListener());
 		this.mainFrame.addGameTableWindowItemListener(new GameTableViewItemListener());
 		this.timerWindowFrame.addTimerWindowClosedListener(new TimerWindowCloseListener());
-		this.lastScored1WindowFrame.addLastScored1WindowClosedListener(new LastScored1WindowCloseListener());
-		this.lastScored2WindowFrame.addLastScored2WindowClosedListener(new LastScored2WindowCloseListener());
+		this.lastScored1WindowFrame.addLastScoredWindowClosedListener(new LastScoredWindow1CloseListener());
+		this.lastScored2WindowFrame.addLastScoredWindowClosedListener(new LastScoredWindow2CloseListener());
 		this.gameTableWindowFrame.addGameTableWindowClosedListener(new GameTableWindowCloseListener());
 	}
 	public void showTimerWindow() {
@@ -88,7 +87,7 @@ public class MainController {
 		public void windowOpened(WindowEvent e) {
 		}
 	}
-	private class LastScored1WindowCloseListener implements WindowListener {
+	private class LastScoredWindow1CloseListener implements WindowListener {
 		public void windowClosed(WindowEvent we) {
 			mainFrame.setLastScored1WindowSelected(false);
 		}
@@ -105,7 +104,7 @@ public class MainController {
 		public void windowOpened(WindowEvent e) {
 		}
 	}
-	private class LastScored2WindowCloseListener implements WindowListener {
+	private class LastScoredWindow2CloseListener implements WindowListener {
 		public void windowClosed(WindowEvent we) {
 			mainFrame.setLastScored2WindowSelected(false);
 		}

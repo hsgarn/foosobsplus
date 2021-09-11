@@ -101,8 +101,7 @@ import com.midsouthfoosball.foosobsplus.controller.TeamController;
 import com.midsouthfoosball.foosobsplus.controller.TimerController;
 import com.midsouthfoosball.foosobsplus.model.Game;
 import com.midsouthfoosball.foosobsplus.model.GameClock;
-import com.midsouthfoosball.foosobsplus.model.LastScored1Clock;
-import com.midsouthfoosball.foosobsplus.model.LastScored2Clock;
+import com.midsouthfoosball.foosobsplus.model.LastScoredClock;
 import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.OBS;
 import com.midsouthfoosball.foosobsplus.model.Settings;
@@ -116,8 +115,7 @@ import com.midsouthfoosball.foosobsplus.view.GameTableWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowPanel;
 import com.midsouthfoosball.foosobsplus.view.HotKeysFrame;
 import com.midsouthfoosball.foosobsplus.view.HotKeysPanel;
-import com.midsouthfoosball.foosobsplus.view.LastScored1WindowFrame;
-import com.midsouthfoosball.foosobsplus.view.LastScored2WindowFrame;
+import com.midsouthfoosball.foosobsplus.view.LastScoredWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.MainFrame;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
 import com.midsouthfoosball.foosobsplus.view.OBSConnectFrame;
@@ -193,8 +191,8 @@ public class Main {
 	
 	private TimeClock 			timeClock 			= new TimeClock(obsInterface, settings);
 	private GameClock           gameClock           = new GameClock(obsInterface, settings);
-	private LastScored1Clock    lastScored1Clock    = new LastScored1Clock(obsInterface, settings);
-	private LastScored2Clock    lastScored2Clock    = new LastScored2Clock(obsInterface, settings);
+	private LastScoredClock  	lastScored1Clock    = new LastScoredClock();
+	private LastScoredClock		lastScored2Clock    = new LastScoredClock();
 	
 	////// Create the View Panels to Display (mVc) \\\\\\
 	
@@ -229,8 +227,8 @@ public class Main {
 	private GameTableWindowPanel	gameTableWindowPanel;
 	private GameTableWindowFrame	gameTableWindowFrame;
 	private TimerWindowFrame 		timerWindowFrame;
-	private LastScored1WindowFrame 	lastScored1WindowFrame;
-	private LastScored2WindowFrame 	lastScored2WindowFrame;
+	private LastScoredWindowFrame 	lastScored1WindowFrame;
+	private LastScoredWindowFrame 	lastScored2WindowFrame;
 
 	////// Build and Start the Controllers (mvC) \\\\\\
 	
@@ -271,8 +269,8 @@ public class Main {
 		gameTableWindowPanel	= new GameTableWindowPanel(settings);
 		gameTableWindowFrame	= new GameTableWindowFrame(gameTableWindowPanel, mainFrame);
 		timerWindowFrame 		= new TimerWindowFrame(mainFrame);
-		lastScored1WindowFrame 	= new LastScored1WindowFrame(mainFrame);
-		lastScored2WindowFrame 	= new LastScored2WindowFrame(mainFrame);
+		lastScored1WindowFrame 	= new LastScoredWindowFrame(mainFrame, 1);
+		lastScored2WindowFrame 	= new LastScoredWindowFrame(mainFrame, 2);
 
 		////// Build and Start the Controllers (mvC) \\\\\\
 		

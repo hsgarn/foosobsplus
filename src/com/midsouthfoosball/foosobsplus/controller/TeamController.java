@@ -38,8 +38,7 @@ import javax.swing.JTextField;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 import com.midsouthfoosball.foosobsplus.model.GameClock;
-import com.midsouthfoosball.foosobsplus.model.LastScored1Clock;
-import com.midsouthfoosball.foosobsplus.model.LastScored2Clock;
+import com.midsouthfoosball.foosobsplus.model.LastScoredClock;
 import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.OBS;
 import com.midsouthfoosball.foosobsplus.model.Settings;
@@ -65,14 +64,14 @@ public class TeamController {
 	private GameTableWindowPanel gameTableWindowPanel;
 	private StatsDisplayPanel statsDisplayPanel;
 	private TimerController timerController;
-	private LastScored1Clock lastScored1Clock;
-	private LastScored2Clock lastScored2Clock;
+	private LastScoredClock lastScored1Clock;
+	private LastScoredClock lastScored2Clock;
 	private GameClock gameClock;
 	private Team teams[] = new Team[] {null,null};
 	private TeamPanel teamPanels[] = new TeamPanel[] {null,null};
     private MainController mainController;
     
-	public TeamController(OBSInterface obsInterface, Settings settings, Team team1, Team team2, Match match, TeamPanel teamPanel1, TeamPanel teamPanel2, SwitchPanel switchPanel, MatchPanel matchPanel, GameTableWindowPanel gameTableWindowPanel, StatsDisplayPanel statsDisplayPanel, TimerController timerController, LastScored1Clock lastScored1Clock, LastScored2Clock lastScored2Clock, GameClock gameClock, MainController mainController) {
+	public TeamController(OBSInterface obsInterface, Settings settings, Team team1, Team team2, Match match, TeamPanel teamPanel1, TeamPanel teamPanel2, SwitchPanel switchPanel, MatchPanel matchPanel, GameTableWindowPanel gameTableWindowPanel, StatsDisplayPanel statsDisplayPanel, TimerController timerController, LastScoredClock lastScored1Clock, LastScoredClock lastScored2Clock, GameClock gameClock, MainController mainController) {
 		this.obsInterface = obsInterface;
 		this.settings = settings;
 		this.team1 = team1;

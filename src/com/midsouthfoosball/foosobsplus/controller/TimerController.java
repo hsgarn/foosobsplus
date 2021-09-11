@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -27,12 +27,10 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
-import com.midsouthfoosball.foosobsplus.model.LastScored1Clock;
-import com.midsouthfoosball.foosobsplus.model.LastScored2Clock;
+import com.midsouthfoosball.foosobsplus.model.LastScoredClock;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.TimeClock;
-import com.midsouthfoosball.foosobsplus.view.LastScored1WindowFrame;
-import com.midsouthfoosball.foosobsplus.view.LastScored2WindowFrame;
+import com.midsouthfoosball.foosobsplus.view.LastScoredWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.TimerPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
 
@@ -42,15 +40,15 @@ public class TimerController {
 	private TimerPanel timerPanel;
 	private TimerWindowFrame timerWindowFrame;
 	private TimeClock timeClock;
-	private LastScored1WindowFrame lastScored1WindowFrame;
-	private LastScored1Clock lastScored1Clock;
-	private LastScored2WindowFrame lastScored2WindowFrame;
-	private LastScored2Clock lastScored2Clock;
+	private LastScoredWindowFrame lastScored1WindowFrame;
+	private LastScoredClock lastScored1Clock;
+	private LastScoredWindowFrame lastScored2WindowFrame;
+	private LastScoredClock lastScored2Clock;
 	private int displayWidth = 9;
 	private int prefixWidth;
 	private int suffixWidth = 3;
 	
-	public TimerController(OBSInterface obsInterface, Settings settings, TimerPanel timerPanel, TimerWindowFrame timerWindowFrame, TimeClock timeClock, LastScored1WindowFrame lastScored1WindowFrame, LastScored1Clock lastScored1Clock, LastScored2WindowFrame lastScored2WindowFrame, LastScored2Clock lastScored2Clock) {
+	public TimerController(OBSInterface obsInterface, Settings settings, TimerPanel timerPanel, TimerWindowFrame timerWindowFrame, TimeClock timeClock, LastScoredWindowFrame lastScored1WindowFrame, LastScoredClock lastScored1Clock, LastScoredWindowFrame lastScored2WindowFrame, LastScoredClock lastScored2Clock) {
 		this.obsInterface = obsInterface;
 		this.settings = settings;
 		this.timerPanel = timerPanel;

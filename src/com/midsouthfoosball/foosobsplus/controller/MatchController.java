@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -24,8 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import com.midsouthfoosball.foosobsplus.model.GameClock;
-import com.midsouthfoosball.foosobsplus.model.LastScored1Clock;
-import com.midsouthfoosball.foosobsplus.model.LastScored2Clock;
+import com.midsouthfoosball.foosobsplus.model.LastScoredClock;
 import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.Stats;
@@ -40,8 +39,8 @@ public class MatchController {
 	private Match match;
 	private Stats stats;
 	private GameClock gameClock;
-	private LastScored1Clock lastScored1Clock;
-	private LastScored2Clock lastScored2Clock;
+	private LastScoredClock lastScored1Clock;
+	private LastScoredClock lastScored2Clock;
 	private MatchPanel matchPanel;
 	private StatsEntryPanel statsEntryPanel;
 	private StatsDisplayPanel statsDisplayPanel;
@@ -49,7 +48,7 @@ public class MatchController {
 	private GameTableWindowPanel gameTableWindowPanel;
 	private TeamController teamController;
 	
-	public MatchController(Settings settings, Match match, Stats stats, GameClock gameClock, LastScored1Clock lastScored1Clock, LastScored2Clock lastScored2Clock, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, SwitchPanel switchPanel, GameTableWindowPanel gameTableWindowPanel, TeamController teamController) {
+	public MatchController(Settings settings, Match match, Stats stats, GameClock gameClock, LastScoredClock lastScored1Clock, LastScoredClock lastScored2Clock, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, SwitchPanel switchPanel, GameTableWindowPanel gameTableWindowPanel, TeamController teamController) {
 		this.settings = settings;
 		this.match = match;
 		this.stats = stats;
