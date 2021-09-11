@@ -448,6 +448,10 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.078 09/10/2021<br/>
+Add display of WebSocket Version on OBS connect<br/>
+Update Team data from OBS Screen data using WebSocket<br/>
+<br/>
 v1.077 08/17/2021<br/>
 Make start/reset timer commands/buttons show timer window.<br/>
 <br/>

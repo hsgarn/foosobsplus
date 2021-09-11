@@ -120,7 +120,6 @@ import com.midsouthfoosball.foosobsplus.view.LastScored1WindowFrame;
 import com.midsouthfoosball.foosobsplus.view.LastScored2WindowFrame;
 import com.midsouthfoosball.foosobsplus.view.MainFrame;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
-import com.midsouthfoosball.foosobsplus.view.Messages;
 import com.midsouthfoosball.foosobsplus.view.OBSConnectFrame;
 import com.midsouthfoosball.foosobsplus.view.OBSConnectPanel;
 import com.midsouthfoosball.foosobsplus.view.ParametersFrame;
@@ -235,7 +234,7 @@ public class Main {
 
 	////// Build and Start the Controllers (mvC) \\\\\\
 	
-	@SuppressWarnings("unused")
+//	@SuppressWarnings("unused")
 	private MainController 	mainController;
 	private TimerController timerController;
 	private TeamController 	teamController;
@@ -253,13 +252,14 @@ public class Main {
 		if (settings.getOBSAutoLogin()==1) {
 			connectToOBS();
 		}
-		fetchAll(settings.getTableName());
 
 		loadBallMaps();
 		
 		loadListeners();
 
 		loadCommands();
+
+		fetchAll(settings.getTableName());
 	}
 	public void loadWindowsAndControllers() {
 		mainFrame = new MainFrame(settings, tablePanel, timerPanel, teamPanel1, teamPanel2, statsEntryPanel, 
@@ -713,7 +713,7 @@ public class Main {
 		}
 			  
 		obsController.registerConnectCallback(response -> {
-			connectResult.set(dtf.format(LocalDateTime.now()) + ": Connected! Studio Version: " + response.getObsStudioVersion());
+			connectResult.set(dtf.format(LocalDateTime.now()) + ": Connected! Studio Version: " + response.getObsStudioVersion() + ", WebSocket Version: " + response.getObsWebsocketVersion());
 			updateOBSConnected(); obsConnectPanel.addMessage(connectResult.get());
 			if(settings.getOBSCloseOnConnect()==1) { 
 				obsConnectFrame.setVisible(false);
@@ -759,6 +759,7 @@ public class Main {
 		} catch (Exception e) {
 			System.out.println("WooWee, that was some kind of exception there: " + e.getMessage() );
 		}
+		
 	}
 	 
 	private void obsSetBallVisible(String source, boolean show) {
