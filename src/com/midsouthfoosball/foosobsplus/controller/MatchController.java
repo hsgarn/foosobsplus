@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -188,10 +188,12 @@ public class MatchController {
 		statsDisplayPanel.updateFiveBarScoring(2, teamController.getFiveBarScoring(2));
 		statsDisplayPanel.updateTwoBarScoring(1, teamController.getTwoBarScoring(1));
 		statsDisplayPanel.updateTwoBarScoring(2, teamController.getTwoBarScoring(2));
-		statsDisplayPanel.updateStuffs(1,  teamController.getStuffs(1));
-		statsDisplayPanel.updateStuffs(2,  teamController.getStuffs(2));
-		statsDisplayPanel.updateBreaks(1,  teamController.getBreaks(1));
-		statsDisplayPanel.updateBreaks(2,  teamController.getBreaks(2));
+		statsDisplayPanel.updateStuffs(1, teamController.getStuffs(1));
+		statsDisplayPanel.updateStuffs(2, teamController.getStuffs(2));
+		statsDisplayPanel.updateBreaks(1, teamController.getBreaks(1));
+		statsDisplayPanel.updateBreaks(2, teamController.getBreaks(2));
+		statsDisplayPanel.updateAces(1, teamController.getAces(1));
+		statsDisplayPanel.updateAces(2, teamController.getAces(2));
 		statsDisplayPanel.updateShotsOnGoal(1, teamController.getShotsOnGoal(1));
 		statsDisplayPanel.updateShotsOnGoal(2, teamController.getShotsOnGoal(2));
 	}

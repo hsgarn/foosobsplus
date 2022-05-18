@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -50,6 +50,7 @@ public class FileNamesPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTextField txtTournamentFileName;
 	private JTextField txtEventFileName;
+	private JTextField txtTableNameFileName;
 	private JTextField txtTeam1NameFileName;
 	private JTextField txtTeam1ForwardFileName;
 	private JTextField txtTeam1GoalieFileName;
@@ -77,6 +78,8 @@ public class FileNamesPanel extends JPanel {
 	private JTextField txtStuffs2FileName;
 	private JTextField txtBreaks1FileName;
 	private JTextField txtBreaks2FileName;
+	private JTextField txtAces1FileName;
+	private JTextField txtAces2FileName;
 	private JFormattedTextField formattedTxtPath;
 	private JTextField txtTeam1PassAttemptsFileName;
 	private JTextField txtTeam1PassCompletesFileName;
@@ -131,6 +134,7 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2ForwardFileName.setText(settings.getDefaultTeam2ForwardFileName());
 		txtTeam2GoalieFileName.setText(settings.getDefaultTeam2GoalieFileName());
 		txtEventFileName.setText(settings.getDefaultEventFileName());
+		txtTableNameFileName.setText(settings.getDefaultTableNameFileName());
 		txtGameCount1FileName.setText(settings.getDefaultGameCount1FileName());
 		txtTimeRemainingFileName.setText(settings.getDefaultTimeRemainingFileName());
 		txtGameCount2FileName.setText(settings.getDefaultGameCount2FileName());
@@ -191,6 +195,7 @@ public class FileNamesPanel extends JPanel {
 		settings.setTeam2ForwardFileName(txtTeam2ForwardFileName.getText());
 		settings.setTeam2GoalieFileName(txtTeam2GoalieFileName.getText());
 		settings.setEventFileName(txtEventFileName.getText());
+		settings.setTableNameFileName(txtTableNameFileName.getText());
 		settings.setGameCount1FileName(txtGameCount1FileName.getText());
 		settings.setTimeRemainingFileName(txtTimeRemainingFileName.getText());
 		settings.setGameCount2FileName(txtGameCount2FileName.getText());
@@ -503,6 +508,14 @@ public class FileNamesPanel extends JPanel {
 		txtEventFileName.setText(settings.getEventFileName());
 		add(txtEventFileName, "cell 5 7,alignx left"); //$NON-NLS-1$
 		txtEventFileName.setColumns(10);
+		
+		JLabel lblTableNameFileName = new JLabel(Messages.getString("FileNamesPanel.TableName", settings.getGameType())); //$NON-NLS-1$
+		add(lblTableNameFileName, "cell 1 16,alignx right"); //$NON-NLS-1$
+		
+		txtTableNameFileName = new JTextField();
+		txtTableNameFileName.setText(settings.getTableNameFileName());
+		add(txtTableNameFileName, "cell 2 16,alignx left"); //$NON-NLS-1$
+		txtTableNameFileName.setColumns(10);
 
 		JLabel lblTeam1ShotCompletesFileName = new JLabel(Messages.getString("FileNamesPanel.Team1ShotCompletes", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam1ShotCompletesFileName, "cell 7 7,alignx right"); //$NON-NLS-1$
@@ -657,11 +670,11 @@ public class FileNamesPanel extends JPanel {
 		txtWarn1FileName.setColumns(10);
 
 		JLabel lblLastScoredFileName = new JLabel(Messages.getString("FileNamesPanel.LastScored", settings.getGameType())); //$NON-NLS-1$
-		add(lblLastScoredFileName, "cell 4 12,alignx right"); //$NON-NLS-1$
+		add(lblLastScoredFileName, "cell 1 17,alignx right"); //$NON-NLS-1$
 
 		txtLastScoredFileName = new JTextField();
 		txtLastScoredFileName.setText(settings.getLastScoredFileName());
-		add(txtLastScoredFileName, "cell 5 12,alignx left"); //$NON-NLS-1$
+		add(txtLastScoredFileName, "cell 2 17,alignx left"); //$NON-NLS-1$
 		txtLastScoredFileName.setColumns(10);
 
 		JLabel lblTeam2ClearAttemptsFileName = new JLabel(Messages.getString("FileNamesPanel.Team2ClearAttempts", settings.getGameType())); //$NON-NLS-1$
@@ -689,11 +702,11 @@ public class FileNamesPanel extends JPanel {
 		txtWarn2FileName.setColumns(10);
 		
 		JLabel lblStuffs1FileName = new JLabel(Messages.getString("FileNamesPanel.Stuffs1", settings.getGameType())); //$NON-NLS-1$
-		add(lblStuffs1FileName, "cell 4 13,alignx right"); //$NON-NLS-1$
+		add(lblStuffs1FileName, "cell 4 14,alignx right"); //$NON-NLS-1$
 		
 		txtStuffs1FileName = new JTextField();
 		txtStuffs1FileName.setText(settings.getStuffsFileName(1));
-		add(txtStuffs1FileName, "cell 5 13,alignx left"); //$NON-NLS-1$
+		add(txtStuffs1FileName, "cell 5 14,alignx left"); //$NON-NLS-1$
 		txtStuffs1FileName.setColumns(10);
 
 		JLabel lblTeam2ClearCompletesFileName = new JLabel(Messages.getString("FileNamesPanel.Team2ClearCompletes", settings.getGameType())); //$NON-NLS-1$
@@ -747,11 +760,11 @@ public class FileNamesPanel extends JPanel {
 		txtGameTimeFileName.setColumns(10);
 		
 		JLabel lblStuffs2FileName = new JLabel(Messages.getString("FileNamesPanel.Stuffs2", settings.getGameType())); //$NON-NLS-1$
-		add(lblStuffs2FileName, "cell 4 14,alignx right"); //$NON-NLS-1$
+		add(lblStuffs2FileName, "cell 4 15,alignx right"); //$NON-NLS-1$
 		
 		txtStuffs2FileName = new JTextField();
 		txtStuffs2FileName.setText(settings.getStuffsFileName(2));
-		add(txtStuffs2FileName, "cell 5 14,alignx left"); //$NON-NLS-1$
+		add(txtStuffs2FileName, "cell 5 15,alignx left"); //$NON-NLS-1$
 		txtStuffs2FileName.setColumns(10);
 		
 		JLabel lblTeam1TwoBarPassAttemptsFileName_1 = new JLabel(Messages.getString("FileNamesPanel.Team12BarPassAttempts", settings.getGameType())); //$NON-NLS-1$
@@ -779,11 +792,11 @@ public class FileNamesPanel extends JPanel {
 		txtMatchTimeFileName.setColumns(10);
 		
 		JLabel lblBreaks1FileName = new JLabel(Messages.getString("FileNamesPanel.Breaks1", settings.getGameType())); //$NON-NLS-1$
-		add(lblBreaks1FileName, "cell 4 15,alignx right"); //$NON-NLS-1$
+		add(lblBreaks1FileName, "cell 4 16,alignx right"); //$NON-NLS-1$
 		
 		txtBreaks1FileName = new JTextField();
 		txtBreaks1FileName.setText(settings.getBreaksFileName(1));
-		add(txtBreaks1FileName, "cell 5 15,alignx left"); //$NON-NLS-1$
+		add(txtBreaks1FileName, "cell 5 16,alignx left"); //$NON-NLS-1$
 		txtBreaks1FileName.setColumns(10);
 		
 		JLabel lblTeam1TwoBarPassCompletesFileName = new JLabel(Messages.getString("FileNamesPanel.Team12BarPassCompletes", settings.getGameType())); //$NON-NLS-1$
@@ -803,11 +816,11 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2TwoBarScoringFileName.setColumns(10);
 		
 		JLabel lblBreaks2FileName = new JLabel(Messages.getString("FileNamesPanel.Breaks2", settings.getGameType())); //$NON-NLS-1$
-		add(lblBreaks2FileName, "cell 4 16,alignx right"); //$NON-NLS-1$
+		add(lblBreaks2FileName, "cell 4 17,alignx right"); //$NON-NLS-1$
 		
 		txtBreaks2FileName = new JTextField();
 		txtBreaks2FileName.setText(settings.getBreaksFileName(2));
-		add(txtBreaks2FileName, "cell 5 16,alignx left"); //$NON-NLS-1$
+		add(txtBreaks2FileName, "cell 5 17,alignx left"); //$NON-NLS-1$
 		txtBreaks2FileName.setColumns(10);
 		
 		JLabel lblTeam2TwoBarPassAttemptsFileName_1_1 = new JLabel(Messages.getString("FileNamesPanel.Team22BarPassAttempts", settings.getGameType())); //$NON-NLS-1$
@@ -825,6 +838,22 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2TwoBarPassCompletesFileName.setText(settings.getTwoBarPassCompletesFileName(2));
 		txtTeam2TwoBarPassCompletesFileName.setColumns(20);
 		add(txtTeam2TwoBarPassCompletesFileName, "cell 8 17,alignx left"); //$NON-NLS-1$
+
+		JLabel lblAces1FileName = new JLabel(Messages.getString("FileNamesPanel.Aces1", settings.getGameType())); //$NON-NLS-1$
+		add(lblAces1FileName, "cell 4 12,alignx right"); //$NON-NLS-1$
+		
+		txtAces1FileName = new JTextField();
+		txtAces1FileName.setText(settings.getAcesFileName(1));
+		add(txtAces1FileName, "cell 5 12,alignx left"); //$NON-NLS-1$
+		txtAces1FileName.setColumns(10);
+
+		JLabel lblAces2FileName = new JLabel(Messages.getString("FileNamesPanel.Aces2", settings.getGameType())); //$NON-NLS-1$
+		add(lblAces2FileName, "cell 4 13,alignx right"); //$NON-NLS-1$
+		
+		txtAces2FileName = new JTextField();
+		txtAces2FileName.setText(settings.getAcesFileName(2));
+		add(txtAces2FileName, "cell 5 13,alignx left"); //$NON-NLS-1$
+		txtAces2FileName.setColumns(10);
 
 		JButton btnCancelFileNames = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
 		btnCancelFileNames.addActionListener(new ActionListener() {

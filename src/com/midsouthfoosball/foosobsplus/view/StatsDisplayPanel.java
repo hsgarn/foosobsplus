@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -51,6 +51,7 @@ public class StatsDisplayPanel extends JPanel {
 	private JLabel lblTwoBarScoring;
 	private JLabel lblBreaks;
 	private JLabel lblStuffs;
+	private JLabel lblAces;
 	private JLabel lblTeam1PassAttempts;
 	private JLabel lblTeam1PassCompletes;
 	private JLabel lblTeam1Passing;
@@ -69,6 +70,7 @@ public class StatsDisplayPanel extends JPanel {
 	private JLabel lblTeam1FiveBarScoring;
 	private JLabel lblTeam1TwoBarScoring;
 	private JLabel lblTeam1Breaks;
+	private JLabel lblTeam1Aces;
 	private JLabel lblTeam1Stuffs;
 	private JLabel lblTeam2PassAttempts;
 	private JLabel lblTeam2PassCompletes;
@@ -88,6 +90,7 @@ public class StatsDisplayPanel extends JPanel {
 	private JLabel lblTeam2FiveBarScoring;
 	private JLabel lblTeam2TwoBarScoring;
 	private JLabel lblTeam2Breaks;
+	private JLabel lblTeam2Aces;
 	private JLabel lblTeam2Stuffs;
 	private DecimalFormat df = new DecimalFormat("###.#"); //$NON-NLS-1$
 	private Settings settings;
@@ -114,6 +117,7 @@ public class StatsDisplayPanel extends JPanel {
 		lblFiveBarScoring = new JLabel(Messages.getString("StatsDisplayPanel.5Bar", settings.getGameType())); //$NON-NLS-1$
 		lblTwoBarScoring = new JLabel(Messages.getString("StatsDisplayPanel.2Bar", settings.getGameType())); //$NON-NLS-1$
 		lblBreaks = new JLabel(Messages.getString("StatsDisplayPanel.Breaks", settings.getGameType())); //$NON-NLS-1$
+		lblAces = new JLabel(Messages.getString("StatsDisplayPanel.Aces", settings.getGameType())); //$NON-NLS-1$
 		lblStuffs = new JLabel(Messages.getString("StatsDisplayPanel.Stuffs", settings.getGameType())); //$NON-NLS-1$
 		lblTeam1PassAttempts = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		lblTeam1PassCompletes = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -133,6 +137,7 @@ public class StatsDisplayPanel extends JPanel {
 		lblTeam1FiveBarScoring = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		lblTeam1TwoBarScoring = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		lblTeam1Breaks = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam1Aces = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		lblTeam1Stuffs = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		lblTeam2PassAttempts = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		lblTeam2PassCompletes = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -152,6 +157,7 @@ public class StatsDisplayPanel extends JPanel {
 		lblTeam2FiveBarScoring = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		lblTeam2TwoBarScoring = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		lblTeam2Breaks = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeam2Aces = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		lblTeam2Stuffs = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
@@ -177,6 +183,7 @@ public class StatsDisplayPanel extends JPanel {
 		lblFiveBarScoring.setText(Messages.getString("StatsDisplayPanel.5Bar", settings.getGameType())); //$NON-NLS-1$
 		lblTwoBarScoring.setText(Messages.getString("StatsDisplayPanel.2Bar", settings.getGameType())); //$NON-NLS-1$
 		lblBreaks.setText(Messages.getString("StatsDisplayPanel.Breaks", settings.getGameType())); //$NON-NLS-1$
+		lblAces.setText(Messages.getString("StatsDisplayPanel.Aces", settings.getGameType())); //$NON-NLS-1$
 		lblStuffs.setText(Messages.getString("StatsDisplayPanel.Stuffs", settings.getGameType())); //$NON-NLS-1$
 		setTitle();
 	}
@@ -717,6 +724,37 @@ public class StatsDisplayPanel extends JPanel {
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(lblTeam2Stuffs, gc);
 		
+		/////// Aces Row \\\\\\
+
+		gc.gridy++;
+
+		gc.weightx = 1;
+		gc.weighty = 1;
+		
+		gc.gridx = 2;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.insets = new Insets(0, 0, 0, 5);
+		add(lblTeam1Aces, gc);
+
+		gc.weightx = 1;
+		gc.weighty = 1;
+		
+		gc.gridx++;
+		gc.fill = GridBagConstraints.CENTER;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.insets = new Insets(0, 0, 0, 5);
+		add(lblAces, gc);
+
+		gc.weightx = 1;
+		gc.weighty = 1;
+		
+		gc.gridx++;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.insets = new Insets(0, 0, 0, 5);
+		add(lblTeam2Aces, gc);
+		
 	}
 
 	////// Utility Methods \\\\\\
@@ -812,6 +850,13 @@ public class StatsDisplayPanel extends JPanel {
 			lblTeam1Breaks.setText(String.format("%-3s", Integer.toString(breaks))); //$NON-NLS-1$
 		} else {
 			lblTeam2Breaks.setText(String.format("%-3s", Integer.toString(breaks))); //$NON-NLS-1$
+		}
+	}
+	public void updateAces(int teamNbr, int aces) {
+		if(teamNbr==1) {
+			lblTeam1Aces.setText(String.format("%-3s", Integer.toString(aces))); //$NON-NLS-1$
+		} else {
+			lblTeam2Aces.setText(String.format("%-3s", Integer.toString(aces))); //$NON-NLS-1$
 		}
 	}
 	public void updateTeams(int teamNbr, String name, String teamName) {

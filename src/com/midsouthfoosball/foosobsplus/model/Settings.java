@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -103,6 +103,7 @@ public class Settings {
 		defaultOBSProps.setProperty("OBSAutoLogin", "0");
 		defaultOBSProps.setProperty("OBSSavePassword", "0");
 		defaultOBSProps.setProperty("OBSCloseOnConnect", "1");
+		defaultOBSProps.setProperty("OBSUpdateOnConnect",  "1");
 		//Sources
 		defaultSourceProps.setProperty("Table", "tablename");
 		defaultSourceProps.setProperty("Team1Name", "team1name");
@@ -113,6 +114,7 @@ public class Settings {
 		defaultSourceProps.setProperty("Team2Forward", "team2forward");
 		defaultSourceProps.setProperty("Team2Goalie", "team2goalie");
 		defaultSourceProps.setProperty("Event", "event");
+		defaultSourceProps.setProperty("TableName", "tablename");
 		defaultSourceProps.setProperty("GameCount1", "gamecount1");
 		defaultSourceProps.setProperty("TimeRemaining", "timeremaining");
 		defaultSourceProps.setProperty("GameCount2", "gamecount2");
@@ -134,6 +136,8 @@ public class Settings {
 		defaultSourceProps.setProperty("Stuffs2", "stuffs2");
 		defaultSourceProps.setProperty("Breaks1", "breaks1");
 		defaultSourceProps.setProperty("Breaks2", "breaks2");
+		defaultSourceProps.setProperty("Aces1",  "aces1");
+		defaultSourceProps.setProperty("Aces2",  "aces2");
 		defaultSourceProps.setProperty("Team1PassAttempts", "team1passattempts");
 		defaultSourceProps.setProperty("Team2PassAttempts", "team2passattempts");
 		defaultSourceProps.setProperty("Team1PassCompletes", "team1passcompletes");
@@ -180,6 +184,7 @@ public class Settings {
 		defaultFileNameProps.setProperty("Team2Forward", "team2forward.txt");
 		defaultFileNameProps.setProperty("Team2Goalie", "team2goalie.txt");
 		defaultFileNameProps.setProperty("Event", "event.txt");
+		defaultFileNameProps.setProperty("TableName", "tablename.txt");
 		defaultFileNameProps.setProperty("GameCount1", "gamecount1.txt");
 		defaultFileNameProps.setProperty("TimeRemaining", "timeremaining.txt");
 		defaultFileNameProps.setProperty("GameCount2", "gamecount2.txt");
@@ -201,6 +206,8 @@ public class Settings {
 		defaultFileNameProps.setProperty("Stuffs2", "stuffs2.txt");
 		defaultFileNameProps.setProperty("Breaks1", "breaks1.txt");
 		defaultFileNameProps.setProperty("Breaks2", "breaks2.txt");
+		defaultFileNameProps.setProperty("Aces1", "aces1.txt");
+		defaultFileNameProps.setProperty("Aces2", "aces2.txt");
 		defaultFileNameProps.setProperty("Team1PassAttempts", "team1passattempts.txt");
 		defaultFileNameProps.setProperty("Team2PassAttempts", "team2passattempts.txt");
 		defaultFileNameProps.setProperty("Team1PassCompletes", "team1passcompletes.txt");
@@ -345,6 +352,7 @@ public class Settings {
 	public int getOBSSavePassword() {return Integer.parseInt(configOBSProps.getProperty("OBSSavePassword"));}
 	public int getOBSAutoLogin() {return Integer.parseInt(configOBSProps.getProperty("OBSAutoLogin"));}
 	public int getOBSCloseOnConnect() {return Integer.parseInt(configOBSProps.getProperty("OBSCloseOnConnect"));}
+	public int getOBSUpdateOnConnect()  {return Integer.parseInt(configOBSProps.getProperty("OBSUpdateOnConnect"));}
 	//Sources
 	public String getTeamNameSource(int teamNbr) {
 		if(teamNbr==1) {
@@ -535,9 +543,17 @@ public class Settings {
 			return configSourceProps.getProperty("Breaks2");
 		}
 	}
+	public String getAcesSource(int teamNbr) {
+		if(teamNbr==1) {
+			return configSourceProps.getProperty("Aces1");
+		} else {
+			return configSourceProps.getProperty("Aces2");
+		}
+	}
 	public String getTableSource() {return configSourceProps.getProperty("Table");}
 	public String getTournamentSource() {return configSourceProps.getProperty("Tournament");}
 	public String getEventSource() {return configSourceProps.getProperty("Event");}
+	public String getTableNameSource() {return configSourceProps.getProperty("TableName");}
 	public String getTimeRemainingSource() {return configSourceProps.getProperty("TimeRemaining");}
 	public String getTimerInUseSource() {return configSourceProps.getProperty("TimerInUse");}
 	public String getMatchWinnerSource() {return configSourceProps.getProperty("MatchWinner");}
@@ -737,9 +753,17 @@ public class Settings {
 			return configFileNameProps.getProperty("Breaks2");
 		}
 	}
+	public String getAcesFileName(int teamNbr) {
+		if(teamNbr==1) {
+			return configFileNameProps.getProperty("Aces1");
+		} else {
+			return configFileNameProps.getProperty("Aces2");
+		}
+	}
 	public String getTableFileName() {return configFileNameProps.getProperty("Table");}
 	public String getTournamentFileName() {return configFileNameProps.getProperty("Tournament");}
 	public String getEventFileName() {return configFileNameProps.getProperty("Event");}
+	public String getTableNameFileName() {return configFileNameProps.getProperty("TableName");}
 	public String getTimeRemainingFileName() {return configFileNameProps.getProperty("TimeRemaining");}
 	public String getTimerInUseFileName() {return configFileNameProps.getProperty("TimerInUse");}
 	public String getMatchWinnerFileName() {return configFileNameProps.getProperty("MatchWinner");}
@@ -910,6 +934,9 @@ public class Settings {
 	public void setOBSCloseOnConnect(int obsCloseOnConnect) {
 		configOBSProps.setProperty("OBSCloseOnConnect", Integer.toString(obsCloseOnConnect));
 	}
+	public void setOBSUpdateOnConnect(int obsUpdateOnConnect) {
+		configOBSProps.setProperty("OBSUpdateOnConnect", Integer.toString(obsUpdateOnConnect));
+	}
 	//Sources
 	public void setTeam1PassAttemptsSource(String team1PassAttemptsSource) {
 		configSourceProps.setProperty("Team1PassAttempts", team1PassAttemptsSource);
@@ -1040,6 +1067,9 @@ public class Settings {
 	public void setEventSource(String eventSource) {
 		configSourceProps.setProperty("Event", eventSource);
 	}
+	public void setTableNameSource(String tableNameSource) {
+		configSourceProps.setProperty("TableName", tableNameSource);
+	}
 	public void setGameCount1Source(String gameCount1Source) {
 		configSourceProps.setProperty("GameCount1", gameCount1Source);
 	}
@@ -1102,6 +1132,12 @@ public class Settings {
 	}
 	public void setBreaks2Source(String breaks2Source) {
 		configSourceProps.setProperty("Breaks2", breaks2Source);
+	}
+	public void setAces1Source(String aces1Source) {
+		configSourceProps.setProperty("Aces1",  aces1Source);
+	}
+	public void setAces2Source(String aces2Source) {
+		configSourceProps.setProperty("Aces2",  aces2Source);
 	}
 	public void setSide1ColorSource(String side1ColorSource) {
 		configSourceProps.setProperty("Side1Color", side1ColorSource);
@@ -1239,6 +1275,9 @@ public class Settings {
 	public void setEventFileName(String eventFileName) {
 		configFileNameProps.setProperty("Event", eventFileName);
 	}
+	public void setTableNameFileName(String tableNameFileName) {
+		configFileNameProps.setProperty("TableName", tableNameFileName);
+	}
 	public void setGameCount1FileName(String gameCount1FileName) {
 		configFileNameProps.setProperty("GameCount1", gameCount1FileName);
 	}
@@ -1301,6 +1340,12 @@ public class Settings {
 	}
 	public void setBreaks2FileName(String breaks2FileName) {
 		configFileNameProps.setProperty("Breaks2", breaks2FileName);
+	}
+	public void setAces1FileName(String aces1FileName) {
+		configFileNameProps.setProperty("Aces1", aces1FileName);
+	}
+	public void setAces2FileName(String aces2FileName) {
+		configFileNameProps.setProperty("Aces2", aces2FileName);
 	}
 	public void setSide1ColorFileName(String side1ColorFileName) {
 		configFileNameProps.setProperty("Side1Color", side1ColorFileName);
@@ -1484,6 +1529,7 @@ public class Settings {
 	public int getDefaultOBSAutoLogin() {return Integer.parseInt(defaultOBSProps.getProperty("OBSAutoLogin"));}
 	public int getDefaultOBSSavePassword() {return Integer.parseInt(defaultOBSProps.getProperty("OBSSavePassword"));}
 	public int getDefaultOBSCloseOnConnect() {return Integer.parseInt(defaultOBSProps.getProperty("OBSCloseOnConnect"));}
+	public int getDefaultOBSUpdateOnConnect() {return Integer.parseInt(defaultOBSProps.getProperty("OBSUpdateOnConnect"));}
 	//Sources
 	public String getDefaultTableSource() {return defaultSourceProps.getProperty("Table");}
 	public String getDefaultTeam1NameSource() {return defaultSourceProps.getProperty("Team1Name");}
@@ -1494,6 +1540,7 @@ public class Settings {
 	public String getDefaultTeam2ForwardSource() {return defaultSourceProps.getProperty("Team2Forward");}
 	public String getDefaultTeam2GoalieSource() {return defaultSourceProps.getProperty("Team2Goalie");}
 	public String getDefaultEventSource() {return defaultSourceProps.getProperty("Event");}
+	public String getDefaultTableNameSource() {return defaultSourceProps.getProperty("TableName");}
 	public String getDefaultGameCount1Source() {return defaultSourceProps.getProperty("GameCount1");}
 	public String getDefaultTimeRemainingSource() {return defaultSourceProps.getProperty("TimeRemaining");}
 	public String getDefaultGameCount2Source() {return defaultSourceProps.getProperty("GameCount2");}
@@ -1515,6 +1562,8 @@ public class Settings {
 	public String getDefaultStuffs2Source() {return defaultSourceProps.getProperty("Stuffs2");}
 	public String getDefaultBreaks1Source() {return defaultSourceProps.getProperty("Breaks1");}
 	public String getDefaultBreaks2Source() {return defaultSourceProps.getProperty("Breaks2");}
+	public String getDefaultAces1Source() {return defaultSourceProps.getProperty("Aces1");}
+	public String getDefaultAces2Source() {return defaultSourceProps.getProperty("Aces2");}
 	public String getDefaultTeam1PassAttemptsSource() {return defaultSourceProps.getProperty("Team1PassAttempts");}
 	public String getDefaultTeam1PassCompletesSource() {return defaultSourceProps.getProperty("Team1PassCompletes");}
 	public String getDefaultTeam2PassAttemptsSource() {return defaultSourceProps.getProperty("Team2PassAttempts");}
@@ -1561,6 +1610,7 @@ public class Settings {
 	public String getDefaultTeam2ForwardFileName() {return defaultFileNameProps.getProperty("Team2Forward");}
 	public String getDefaultTeam2GoalieFileName() {return defaultFileNameProps.getProperty("Team2Goalie");}
 	public String getDefaultEventFileName() {return defaultFileNameProps.getProperty("Event");}
+	public String getDefaultTableNameFileName() {return defaultFileNameProps.getProperty("TableName");}
 	public String getDefaultGameCount1FileName() {return defaultFileNameProps.getProperty("GameCount1");}
 	public String getDefaultTimeRemainingFileName() {return defaultFileNameProps.getProperty("TimeRemaining");}
 	public String getDefaultGameCount2FileName() {return defaultFileNameProps.getProperty("GameCount2");}
@@ -1582,6 +1632,8 @@ public class Settings {
 	public String getDefaultStuffs2FileName() {return defaultFileNameProps.getProperty("Stuffs2");}
 	public String getDefaultBreaks1FileName() {return defaultFileNameProps.getProperty("Breaks1");}
 	public String getDefaultBreaks2FileName() {return defaultFileNameProps.getProperty("Breaks2");}
+	public String getDefaultAces1FileName() {return defaultFileNameProps.getProperty("Aces1");}
+	public String getDefaultAces2FileName() {return defaultFileNameProps.getProperty("Aces2");}
 	public String getDefaultTeam1PassAttemptsFileName() {return defaultFileNameProps.getProperty("Team1PassAttempts");}
 	public String getDefaultTeam1PassCompletesFileName() {return defaultFileNameProps.getProperty("Team1PassCompletes");}
 	public String getDefaultTeam2PassAttemptsFileName() {return defaultFileNameProps.getProperty("Team2PassAttempts");}

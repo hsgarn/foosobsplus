@@ -165,4 +165,7 @@ public class TableController {
 			e1.printStackTrace();
 		}
 	}
+	public void writeAll() {
+		table.writeAll();
+	}
 }

@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -53,6 +53,7 @@ public class OBSConnectPanel extends JPanel {
 	private JCheckBox chckbxSavePassword;
 	private JCheckBox chckbxAutoLogin;
 	private JCheckBox chckbxCloseOnConnect;
+	private JCheckBox chckbxUpdateOnConnect;
 	private JButton btnDisconnect;
 	private JButton btnSave;
 	private Settings settings;
@@ -118,7 +119,15 @@ public class OBSConnectPanel extends JPanel {
 		} else {
 			chckbxAutoLogin.setSelected(false);
 		}
-		add(chckbxAutoLogin, "cell 1 6");
+		add(chckbxAutoLogin, "flowx,cell 1 6,growx");
+		
+		chckbxUpdateOnConnect = new JCheckBox("Update on Connect");
+		if (Integer.toString(settings.getOBSUpdateOnConnect()).equals("1")) {
+			chckbxUpdateOnConnect.setSelected(true);
+		} else {
+			chckbxUpdateOnConnect.setSelected(false);
+		}
+		add(chckbxUpdateOnConnect, "cell 1 6,growx");
 		
 		btnConnect = new JButton("Connect");
 		add(btnConnect, "flowx,cell 1 7,growx");
@@ -164,17 +173,23 @@ public class OBSConnectPanel extends JPanel {
 	public void saveSettings() {
 		settings.setOBSHost(txtHost.getText());
 		settings.setOBSPort(txtPort.getText());
-		settings.setOBSPassword(txtPassword.getText());
 		settings.setOBSScene(txtScene.getText());
 		if (chckbxSavePassword.isSelected()) {
 			settings.setOBSSavePassword(1);
+			settings.setOBSPassword(txtPassword.getText());
 		} else {
 			settings.setOBSSavePassword(0);
+			settings.setOBSPassword("");
 		}
 		if (chckbxAutoLogin.isSelected()) {
 			settings.setOBSAutoLogin(1);
 		} else {
 			settings.setOBSAutoLogin(0);
+		}
+		if (chckbxUpdateOnConnect.isSelected()) {
+			settings.setOBSUpdateOnConnect(1);
+		} else {
+			settings.setOBSUpdateOnConnect(0);
 		}
 		if (chckbxCloseOnConnect.isSelected()) {
 			settings.setOBSCloseOnConnect(1);

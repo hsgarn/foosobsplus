@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -712,6 +712,8 @@ public class TeamController {
 		methodMap.put(settings.getStuffsSource(2), new SimpleEntry<Team, String>(team2, "setStuffs"));
 		methodMap.put(settings.getBreaksSource(1), new SimpleEntry<Team, String>(team1, "setBreaks"));
 		methodMap.put(settings.getBreaksSource(2), new SimpleEntry<Team, String>(team2, "setBreaks"));
+		methodMap.put(settings.getAcesSource(1), new SimpleEntry<Team, String>(team1, "setAces"));
+		methodMap.put(settings.getAcesSource(2), new SimpleEntry<Team, String>(team2, "setAces"));
 		methodMap.put(settings.getResetSource(1), new SimpleEntry<Team, String>(team1, "setReset"));
 		methodMap.put(settings.getResetSource(2), new SimpleEntry<Team, String>(team2, "setReset"));
 		methodMap.put(settings.getWarnSource(1), new SimpleEntry<Team, String>(team1, "setWarn"));
@@ -730,7 +732,7 @@ public class TeamController {
 			});
 			// This below sleep logic is apparently enough to keep the callbacks from overwriting themselves.  If the below is removed, then
 			// some of the callbacks get overwritten and so do not properly update. tried to figure out a way to queue the responses, but
-			// cannot find where the actual text in the response gets set.  Need to export the Session class more.
+			// cannot find where the actual text in the response gets set.  Need to explore the Session class more.
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e1) {
@@ -794,6 +796,8 @@ public class TeamController {
 //			team2.setStuffs(obsInterface.getContents(settings.getStuffsFileName(2)));
 //			team1.setBreaks(obsInterface.getContents(settings.getBreaksFileName(1)));
 //			team2.setBreaks(obsInterface.getContents(settings.getBreaksFileName(2)));
+//			team1.setAces(obsInterface.getContents(settings.getAcesFileName(1)));
+//			team2.setAces(obsInterface.getContents(settings.getAcesFileName(2)));
 			match.setLastScored(obsInterface.getContents(settings.getLastScoredFileName()));
 			teamPanel1.updateTeamName(team1.getTeamName());
 			teamPanel2.updateTeamName(team2.getTeamName());
@@ -924,6 +928,9 @@ public class TeamController {
 	}
 	public int getBreaks(int teamNumber) {
 		return teams[teamNumber-1].getBreaks();
+	}
+	public int getAces(int teamNumber) {
+		return teams[teamNumber-1].getAces();
 	}
 	public String getForwardName(int teamNumber) {
 		return teams[teamNumber-1].getForwardName();

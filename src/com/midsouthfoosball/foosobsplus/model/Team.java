@@ -1,6 +1,5 @@
 /**
-
-Copyright 2020, 2021 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -57,7 +56,7 @@ public class Team implements Serializable {
 	private int clearAttempts = 0;
 	private int clearCompletes = 0;
 	private Float clearPercent = 0f;
-//	private int aces = 0;
+	private int aces = 0;
 	private int twoBarPassAttempts = 0;
 	private int twoBarPassCompletes = 0;
 	private Float twoBarPassPercent = 0f;
@@ -220,7 +219,7 @@ public class Team implements Serializable {
 		clearAttempts = 0;
 		clearCompletes = 0;
 		clearPercent = 0f;
-//		aces = 0;
+		aces = 0;
 		twoBarPassAttempts = 0;
 		twoBarPassCompletes = 0;
 		twoBarPassPercent = 0f;
@@ -282,7 +281,7 @@ public class Team implements Serializable {
 		clearAttempts = 0;
 		clearCompletes = 0;
 		clearPercent = 0f;
-//		aces = 0;
+		aces = 0;
 		twoBarPassAttempts = 0;
 		twoBarPassCompletes = 0;
 		twoBarPassPercent = 0f;
@@ -370,6 +369,9 @@ public class Team implements Serializable {
 	}
     public int getBreaks() {
     	return breaks;
+    }
+    public int getAces() {
+    	return aces;
     }
 	
 	public void setPassAttempts(int passAttempts) {
@@ -581,6 +583,17 @@ public class Team implements Serializable {
 			setBreaks(Integer.parseInt(breaks));
 		}
 	}
+	public void setAces(int aces) {
+		this.aces = aces;
+		writeAces();
+	}
+	public void setAces(String aces) {
+		if(aces=="") {
+			setAces(0);
+		} else {
+			setAces(Integer.parseInt(aces));
+		}
+	}
 
 	////// Writes to Files \\\\\\
 	
@@ -677,6 +690,9 @@ public class Team implements Serializable {
 	private void writeBreaks() {
 		writeData(settings.getBreaksFileName(teamNbr), settings.getBreaksSource(teamNbr), Integer.toString(getBreaks()));
 	}
+	private void writeAces() {
+		writeData(settings.getAcesFileName(teamNbr), settings.getAcesSource(teamNbr), Integer.toString(getAces()));
+	}
     private void writeScore() {
     	writeData(settings.getScoreFileName(teamNbr), settings.getScoreSource(teamNbr), Integer.toString(getScore()));
     }
@@ -716,6 +732,7 @@ public class Team implements Serializable {
    		writeShotsOnGoal();
    		writeStuffs();
    		writeBreaks();
+   		writeAces();
     }
 	public void writeAll() {
 		writeTeamName();
@@ -760,7 +777,7 @@ public class Team implements Serializable {
 		this.setClearAttempts(tempTeam.getClearAttempts());
 		this.setClearCompletes(tempTeam.getClearCompletes());
 		this.setClearPercent(tempTeam.getClearPercent());
-//		this.setAces(tempTeam.getAces());
+		this.setAces(tempTeam.getAces());
 		this.setTwoBarPassAttempts(tempTeam.getTwoBarPassAttempts());
 		this.setTwoBarPassCompletes(tempTeam.getTwoBarPassCompletes());
 		this.setTwoBarPassPercent(tempTeam.getTwoBarPassPercent());

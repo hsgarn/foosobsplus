@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -48,6 +48,7 @@ public class Stats implements Serializable {
 	private transient boolean isBreak;
 	private transient boolean isPenalty;
 	private transient boolean isShot;
+	private transient boolean isAce;
 	private transient boolean isPass;
 	private transient boolean isClear;
 	private transient boolean isDrop;
@@ -94,6 +95,7 @@ public class Stats implements Serializable {
 	private transient char warnChar = new Character('W');
 	private transient char ballChar = new Character('Y');
 	private transient char errorChar = new Character('E');
+	private transient char aceChar = new Character('A');
 
 	private transient char wallsChar = new Character('W');
 	private transient char spinChar = new Character('S');
@@ -212,7 +214,7 @@ public class Stats implements Serializable {
 		if(isTeamScored) {
 			scoringLogic();
 		}
-		if(isShot) {
+		if(isShot||isAce) {
 			shotLogic();
 			if(isShotOnGoal) shotsOnGoalLogic();
 		}
@@ -266,6 +268,7 @@ public class Stats implements Serializable {
 		isPenalty = currentAction==penaltyChar;
 		isPass = currentAction==passChar;
 		isShot = currentAction==shotChar;
+		isAce = currentAction==aceChar;
 		isClear = currentAction==clearChar;
 		isDrop = currentAction==dropChar;
 		isTimeOut = currentAction==timeOutChar;
@@ -311,7 +314,8 @@ public class Stats implements Serializable {
 				currentAction==warnChar 	||
 				currentAction==penaltyChar 	||
 				currentAction==ballChar 	||
-				currentAction==errorChar)
+				currentAction==errorChar    ||
+				currentAction==aceChar)
 				) 
 		{
 			isError=true;
@@ -351,6 +355,7 @@ public class Stats implements Serializable {
 		isPenalty = false;
 		isPass = false;
 		isShot = false;
+		isAce = false;
 		isClear = false;
 		isDrop = false;
 		isTimeOut = false;
@@ -607,6 +612,7 @@ public class Stats implements Serializable {
 	private void shotLogic() {
 		int attempts;
 		int completes;
+		int aces;
 		if(isTeamScored) {
 			if(teamScored[0]) {
 				if(isSameTeam) {
@@ -619,6 +625,10 @@ public class Stats implements Serializable {
 					team1.setShotCompletes(completes);
 					team1.setShotPercent(caclPercent(attempts, completes));
 				}
+				if(isAce) {
+					aces=team1.getAces() + 1;
+					team1.setAces(aces);
+				}
 			} else {
 				if(isSameTeam) {
 					attempts=team1.getShotAttempts() + 1;
@@ -629,6 +639,10 @@ public class Stats implements Serializable {
 					team2.setShotAttempts(attempts);
 					team2.setShotCompletes(completes);
 					team2.setShotPercent(caclPercent(attempts, completes));
+				}
+				if(isAce) {
+					aces=team2.getAces() + 1;
+					team2.setAces(aces);
 				}
 			}
 			if(isStuff) {
@@ -720,7 +734,7 @@ public class Stats implements Serializable {
 		System.out.println(" IsFiveRod: " + isFiveRod + "    wasFiveRod: " + wasFiveRod);
 		System.out.println(" IsThreeRod: " + isThreeRod + "    wasThreeRod: " + wasThreeRod);
 		System.out.println(" IsShotOnGoal: "  + isShotOnGoal + "    isOffTable: " + isOffTable);
-		System.out.println(" IsDeadBall: " + isDeadBall);
+		System.out.println(" IsDeadBall: " + isDeadBall + "    isAce: " + isAce);
 		System.out.println("Team1PassAttempts: " + team1.getPassAttempts() + "  Completes: " + team1.getPassCompletes());
 		System.out.println("Team2PassAttempts: " + team2.getPassAttempts() + "  Completes: " + team2.getPassCompletes());
 		System.out.println("Team1ShotAttempts: " + team1.getShotAttempts() + "  Completes: " + team1.getShotCompletes());

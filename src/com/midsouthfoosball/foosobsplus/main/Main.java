@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -682,6 +682,11 @@ public class Main {
 		obsConnectPanel.disableConnect();
 		mainFrame.enableConnect(false);
 		mainFrame.setOBSIconConnected(true);
+		if(settings.getOBSUpdateOnConnect()==1) {
+			tableController.writeAll();
+			teamController.writeAll();
+			statsController.displayAllStats();
+		}
 	}
 	public void updateOBSDisconnected() {
 		obs.setConnected(false);
@@ -697,10 +702,15 @@ public class Main {
 		AtomicReference<String> connectResult = new AtomicReference<>(); 
 		AtomicReference<String> onCloseResult = new AtomicReference<>();
 //		obsConnectPanel.saveSettings();
-		obs.setHost(settings.getOBSHost()); 
-		obs.setPort(settings.getOBSPort());
-		obs.setPassword(settings.getOBSPassword());
-		obs.setScene(settings.getOBSScene());
+//		System.out.println("main 704: host: " + obs.getHost() + ", port: " + obs.getPort());
+//		if (obs.getHost().length() < 1) 
+			obs.setHost(settings.getOBSHost());
+//		if (obs.getPort().length() < 1) 
+			obs.setPort(settings.getOBSPort());
+//		if (obs.getPassword().length() < 1) 
+			obs.setPassword(settings.getOBSPassword());
+//		if (obs.getScene().length() < 1) 
+			obs.setScene(settings.getOBSScene());
 		String connectString = "ws://"+obs.getHost()+":"+obs.getPort();
 // need to make controller - we are getting it from OBS object, but it has not been set yet.
 		obsController = new OBSRemoteController(connectString,false,obs.getPassword(),false);
