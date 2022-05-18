@@ -189,6 +189,12 @@ This is the filename that holds the number of breaks team 1 has gotten.  Default
 #### Breaks 2
 This is the filename that holds the number of breaks team 2 has gotten.  Default filename is breaks2.txt.
 
+#### Aces 1
+This is the filename that holds the number of aces team 1 has gotten.  Default filename is aces1.txt.
+
+#### Aces 2
+This is the filename that holds the number of aces team 2 has gotten.  Default filename is aces2.txt.
+
 #### Team 1 Pass Attempts
 This is the filename that holds the number of pass attempts for team 1.  Default filename is team1passattempts.txt.
 
@@ -464,6 +470,12 @@ Add Set Scene button on OBS Connect Panel<br/>
 Add custom tab traversal for Team panels<br/>
 Split OBS parameters into own properties object/file<br/>
 Always show Connect... menu item enabled<br/>
+<br/>
+v1.080 05/17/2022<br/>
+Add Aces to stats
+Add table name to sources/filenames so it can be used in OBS.
+Only save password if save password checked
+Add option to Update on Connect (needs more work)
 <br/>
 v1.075 08/01/2021<br/>
 Remove FileName from the filename properties so they would be same as source properties.<br/>
