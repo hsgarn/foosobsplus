@@ -2,7 +2,7 @@
 FoosOBSPlus is a flexible foosball score keeper and statistics program compatible with OBS Studio and also plays well with Elagto's Stream Deck products.
 
 ## Overview
-FoosOBSPlus was written to update text files used by OBS Studio to display scores and game counts while live streaming foosball matches.  Almost every field displayed in FoosOBSPlus can be output to a file that OBS Studio can then read and display in a scene. 
+FoosOBSPlus was written to update text files used by OBS Studio to display scores and game counts while live streaming foosball matches.  Almost every field displayed in FoosOBSPlus can be output to a file that OBS Studio can then read and display in a scene. In version 1.073, it became possible to connect directly to OBS with web sockets and bypass the need for the files.
 
 FoosOBSPlus Main Screen:
 <img align="left" width="850" height="630" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusScreen1.png">
@@ -14,7 +14,7 @@ OBS Studio scene utilizing FoosOBSPlus text files:
 FoosOBSPlus is a java program. You can download the source and export to a jar file. I do this in eclipse so am not sure how to do it at command line or in other ide's, though I'm sure google is your friend and will provide you with that information.  Windows will need to have at least Java 1.8 loaded and set to associate jar files with java. 
 
 ## Settings
-If running FoosOBSPlus for the first time, it will create a config.properties file with the default properties in the folder in which the program is running. These properties contain the settings for the operating parameters, filenames and hot keys.
+If running FoosOBSPlus for the first time, it will create a config.properties file with the default properties in the folder in which the program is running. These properties contain the settings for the operating parameters, filenames, sources and hot keys.
 
 ### Operating Parameters
 FoosOBSPlus tries to make keeping track of a foosball match's progress as simple as possible.  To that end, there is a settings screen that contains parameters that affect how FoosOBSPlus will behave.  Click Edit then Settings then Parameters to get to the Parameter Settings screen.
@@ -144,6 +144,12 @@ This is the filename for the game clock time.  Default filename is gametime.txt.
 #### Match Time
 This is the filename for the match time.  Default filename is matchtime.txt.
 
+#### Table Name
+This is the filename for the table name.  Default filename is tablename.txt.
+
+#### Last Scored
+This is the filename that holds the indicator for which team scored last.  Default filename is lastscored.txt.
+
 #### Team 1 Forward
 This is the filename that holds Team 1's forward's name.  Default filename is team1forward.txt
 
@@ -174,8 +180,11 @@ This is the filename that holds the Winner Prefix, Team's Name and Winner Suffix
 #### Meatball
 This is the filename that holds the Meatball text when a game is tied just prior to the final point.  Default filename is meatball.txt.
 
-#### Last Scored
-This is the filename that holds the indicator for which team scored last.  Default filename is lastscored.txt.
+#### Aces 1
+This is the filename that holds the number of aces team 1 had done. Default filename is aces1.txt.
+
+#### Aces 2
+This is the filename that holds the number of aces team 2 had done. Default filename is aces2.txt.
 
 #### Stuffs 1
 This is the filename that holds the number of stuffs team 1 has done.  Default filename is stuffs1.txt.
@@ -188,12 +197,6 @@ This is the filename that holds the number of breaks team 1 has gotten.  Default
 
 #### Breaks 2
 This is the filename that holds the number of breaks team 2 has gotten.  Default filename is breaks2.txt.
-
-#### Aces 1
-This is the filename that holds the number of aces team 1 has gotten.  Default filename is aces1.txt.
-
-#### Aces 2
-This is the filename that holds the number of aces team 2 has gotten.  Default filename is aces2.txt.
 
 #### Team 1 Pass Attempts
 This is the filename that holds the number of pass attempts for team 1.  Default filename is team1passattempts.txt.
@@ -299,6 +302,212 @@ Click the cancel button to discard any filename changes made.
 
 #### Restore Defaults
 Click the Restore Defaults button to restore the default filenames.
+
+### Sources
+FoosOBSPlus sends its data to sources in OBS Studio so it can be displayed in a live stream.   The names of these sources are configurable if the default names do not suit you.  To get to the sources configuration, click on Edit, then Settings, then Sources:
+
+Below are the sources that can be configured:
+
+#### Team 1
+This is the source for Team 1's name(s). Default source is team1name.
+
+#### Team 2
+This is the source for Team 2's name(s). Default source is team2name.
+
+#### Game Count 1
+This is the source for Team 1's game count. Default source is gamecount1.
+
+#### Game Count 2
+This is the source for Team 2's game count. Default source is gamecount2.
+
+#### Score 1
+This is the source for Team 1's score. Default source is score1.
+
+#### Score 2
+This is the source for Team 2's score. Default source is score2.
+
+#### Time Out 1
+This is the source for Team 1's time outs used or remaining depending the Show Time Outs Used checkbox. Default source is timeout1.
+
+#### Time Out 2
+This is the source for Team 2's time outs used or remaining depending the Show Time Outs Used checkbox. Default source is timeout2.
+
+#### Reset 1
+This is the source for Team 1's Reset flag.  Default source is reset1.
+
+#### Reset 2
+This is the source for Team 2's Reset flag.  Default source is reset2.
+
+#### Warn 1
+This is the source for Team 1's Reset Warning flag.  Default source is warn1.
+
+#### Warn 2
+This is the source for Team 2's Reset Warning flag.  Default source is warn2.
+
+#### Game Time
+This is the source for the game clock time.  Default source is gametime.
+
+#### Match Time
+This is the source for the match time.  Default source is matchtime.
+
+#### Table Name
+This is the source for the table name.  Default source is tablename.
+
+#### Last Scored
+This is the source that holds the indicator for which team scored last.  Default source is lastscored.
+
+#### Team 1 Forward
+This is the source that holds Team 1's forward's name.  Default source is team1forward.
+
+#### Team 1 Goalie
+This is the source that holds Team 1's goalie's name.  Default source is team1goalie.
+
+#### Team 2 Forrward
+This is the source that holds Team 2's forward's name.  Default source is team2forward.
+
+#### Team 2 Goalie
+This is the source that holds Team 2's goalie's name.  Default source is team2goalie.
+
+#### Tournament
+This is the source of a freeform text field that can be used for the name of the tournament or venue.  Default source is tournament.
+
+#### Event
+This is the source of a freeform text field that can be used for the name of the event being played (i.e. DYP, Open Singles, etc).  Default source is event.
+
+#### Time Remaining
+This is the source for the Time Remaining on the current timer.  Default source is timeremaining.
+
+#### Timer
+This is the source that holds the name of the current timer that is running (Shot, Pass, Game, Timeout, Recall). Default source is timerinuse.
+
+#### Match Winner
+This is the source that holds the Winner Prefix, Team's Name and Winner Suffix of the team that won the match.  Default source is matchwinner.
+
+#### Meatball
+This is the source that holds the Meatball text when a game is tied just prior to the final point.  Default source is meatball.
+
+#### Aces 1
+This is the source that holds the number of aces team 1 had done. Default source is aces1.
+
+#### Aces 2
+This is the source that holds the number of aces team 2 had done. Default source is aces2.
+
+#### Stuffs 1
+This is the source that holds the number of stuffs team 1 has done.  Default source is stuffs1.
+
+#### Stuffs 2
+This is the source that holds the number of stuffs team 2 has done.  Default source is stuffs2.
+
+#### Breaks 1
+This is the source that holds the number of breaks team 1 has gotten.  Default source is breaks1.
+
+#### Breaks 2
+This is the source that holds the number of breaks team 2 has gotten.  Default source is breaks2.
+
+#### Team 1 Pass Attempts
+This is the source that holds the number of pass attempts for team 1.  Default source is team1passattempts.
+
+#### Team 1 Pass Completes
+This is the source that holds the number of pass completions for team 1.  Default source is team1passcompletes.
+
+#### Team 2 Pass Attempts
+This is the source that holds the number of pass attempts for team 2.  Default source is team2passattempts.
+
+#### Team 2 Pass Completes
+This is the source that holds the number of pass completions for team 2.  Default source is team2passcompletes.
+
+#### Team 1 Shot Attempts
+This is the source that holds the number of shot attempts for team 1.  Default source is team1shotattempts.
+
+#### Team 1 Shot Completes
+This is the source that holds the number of shots made for team 1.  Default source is team1shotcompletes.
+
+#### Team 2 Shot Attempts
+This is the source that holds the number of shot attempts for team 2.  Default source is team2shotattempts.
+
+#### Team 2 Shot Completes
+This is the source that holds the number of shots made for team 2.  Default source is team2shotcompletes.
+
+#### Team 1 Clear Attempts
+This is the source that holds the number of clearing attempts for team 1.  Default source is team1clearattempts.
+
+#### Team 1 Clear Completes
+This is the source that holds the number of successful clears for team 1 from the goalie area to the 5 bar or beyond.  Default source is team1clearcompletes.
+
+#### Team 2 Clear Attempts
+This is the source that holds the number of successful clears for team 2 from the goalie area to the 5 bar or beyond.  Default source is team2clearcompletes.
+
+#### Team 2 Clear Completes
+This is the source that holds the number of successful clears for team 2 from the goalie area to the 5 bar or beyond.  Default source is team2clearcompletes.
+
+#### Team 1 2-Bar Pass Attempts
+This is the source that holds the number of pass attempts for team 1 from the 2-bar to the 5-bar or 3-bar.  Default source is team1twobarpassattempts.
+
+#### Team 1 2-Bar Pass Completes
+This is the source that holds the number of succesful pass completions for team 1 from the 2-bar to the 5 or 3-bar.  Default source is team1twobarpasscompletes.
+
+#### Team 2 2-Bar Pass Attempts
+This is the source that holds the number of pass attempts for team 2 from the 2-bar to the 5-bar or 3-bar.  Default source is team2twobarpassattempts.
+
+#### Team 2 2-Bar Pass Completes
+This is the source that holds the number of succesful pass completions for team 2 from the 2-bar to the 5 or 3-bar.  Default source is team2twobarpasscompletes.
+
+#### Team 1 Pass Percent
+This is the source that holds the successful passing percentage for team 1.  Default source is team1passpercent.
+
+#### Team 2 Pass Percent
+This is the source that holds the successful passing percentage for team 2.  Default source is team2passpercent.
+
+#### Team 1 Shot Percent
+This is the source that holds the successful shot percentage for team 1.  Default source is team1shotpercent.
+
+#### Team 2 Shot Percent
+This is the source that holds the successful shot percentage for team 2.  Default source is team2shotpercent.
+
+#### Team 1 Clear Percent
+This is the source that holds the successful clear percentatge for team 1.  Default source is team1clearpercent.
+
+#### Team 2 Clear Percent
+This is the source that holds the successful clear percentatge for team 2.  Default source is team2clearpercent.
+
+#### Team 1 Scoring
+This is the source that holds the number of scores for team 1.  Default source is team1scoring.
+
+#### Team 2 Scoring
+This is the source that holds the number of scores for team 2.  Default source is team2scoring.
+
+#### Team 1 3-Bar Scoring
+This is the source that holds the number of scores from the 3-bar for team 1.  Default source is team1threebarscoring.
+
+#### Team 2 3-Bar Scoring
+This is the source that holds the number of scores from the 3-bar for team 2.  Default source is team2threebarscoring.
+
+#### Team 1 5-Bar Scoring
+This is the source that holds the number of scores from the 5-bar for team 1.  Default source is team1fivebarscoring.
+
+#### Team 2 5-Bar Scoring
+This is the source that holds the number of scores from the 5-bar for team 2.  Default source is team2fivebarscoring.
+
+#### Team 1 2-Bar Scoring
+This is the source that holds the number of scores from the 2-bar for team 1.  Default source is team1twobarscoring.
+
+#### Team 2 2-Bar Scoring
+This is the source that holds the number of scores from the 2-bar for team 2.  Default source is team2twobarscoring.
+
+#### Team 1 Shots On Goal
+This is the source that holds the number of shots on goal for team 1.  Default source is team1shotsongoal.
+
+#### Team 2 Shots On Goal
+This is the source that holds the number of shots on goal for team 2.  Default source is team2shotsongoal.
+
+#### Save
+Click the save button to save any source changes made.
+
+#### Cancel
+Click the cancel button to discard any source changes made.
+
+#### Restore Defaults
+Click the Restore Defaults button to restore the default sources.
 
 ### Hot Keys
 FoosOBSPlus uses buttons to do various functions such as increase or decrease scores, switch sides, reset game counts, start timers, etc.  Each button can have a Hot Key assigned to it.  Pressing ALT plus the assigned Hot Key for the button will function just like pressing the actual button.  The hot keys can be used in Stream Deck commands to make operating FoosOBSPlus a simple push button affair.
@@ -454,6 +663,20 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.081 05/22/2022<br/>
+Fix connect error when obs not running<br/>
+Fix nullpointerexception if OBS not running and autoconnect on<br/>
+Fix README some more<br/>
+Fix bug in currentModifier where it was not getting reset once set<br/>
+Bump gson to version 2.8.9 for security vulnerability remediation<br/>
+Change clear definition to from 2 bar to past same team's 5 bar.<br/>
+<br/>
+v1.080 05/17/2022<br/>
+Add Aces to stats<br/>
+Add table name to sources/filenames so it can be used in OBS.<br/>
+Only save password if save password checked<br/>
+Add option to Update on Connect (needs more work)<br/>
+<br/>
 v1.079 09/10/2021<br/>
 DeDupe LastScoredClock, LastScoredWindowPanel, LastScoredWindowFrame classes<br/>
 <br/>
@@ -470,12 +693,6 @@ Add Set Scene button on OBS Connect Panel<br/>
 Add custom tab traversal for Team panels<br/>
 Split OBS parameters into own properties object/file<br/>
 Always show Connect... menu item enabled<br/>
-<br/>
-v1.080 05/17/2022<br/>
-Add Aces to stats
-Add table name to sources/filenames so it can be used in OBS.
-Only save password if save password checked
-Add option to Update on Connect (needs more work)
 <br/>
 v1.075 08/01/2021<br/>
 Remove FileName from the filename properties so they would be same as source properties.<br/>

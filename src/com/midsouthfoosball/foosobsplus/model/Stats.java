@@ -255,6 +255,8 @@ public class Stats implements Serializable {
 		currentAction = code.charAt(2);
 		if (code.length() > 3) {
 			currentModifier = code.charAt(3);
+		} else {
+			currentModifier = Character.MIN_VALUE;
 		}
 		validateCode();
 		if (isError) {
@@ -284,7 +286,7 @@ public class Stats implements Serializable {
 		isForwardDirection = isSameTeam && !isSameRod && ((isFiveRod && wasTwoRod) || (isThreeRod && (wasFiveRod || wasTwoRod)));
 
 		isPassComplete = isPass && isSameTeam && !isSameRod && isForwardDirection;
-		isClearComplete = isClear && !isSameRod && (isSameTeam || (!isSameTeam && (isFiveRod || isTwoRod)));
+		isClearComplete = isClear && ((isSameTeam && isThreeRod) || (!isSameTeam && (isFiveRod || isTwoRod)));
 		isShotOnGoal = isShot && previousPosition==twoRodChar;
 
 	}

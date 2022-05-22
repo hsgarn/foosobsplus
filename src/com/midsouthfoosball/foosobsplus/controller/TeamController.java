@@ -720,107 +720,109 @@ public class TeamController {
 		methodMap.put(settings.getWarnSource(2), new SimpleEntry<Team, String>(team2, "setWarn"));
 		OBS obs = OBS.getInstance();
 		OBSRemoteController obsController = obs.getController();
-		
-		for (String source : methodMap.keySet()) {
-			obsController.getTextGDIPlusProperties(source, response -> {
+		if (!(obsController==null) && !obsController.isFailed())
+		{
+			for (String source : methodMap.keySet()) {
+				obsController.getTextGDIPlusProperties(source, response -> {
+					try {
+						setTextFromSource(response.getSource(),response.getText(), methodMap);
+					} catch (NullPointerException e) {
+						// TODO Auto-generated catch block
+						//e.printStackTrace();
+					}
+				});
+				// This below sleep logic is apparently enough to keep the callbacks from overwriting themselves.  If the below is removed, then
+				// some of the callbacks get overwritten and so do not properly update. tried to figure out a way to queue the responses, but
+				// cannot find where the actual text in the response gets set.  Need to explore the Session class more.
 				try {
-					setTextFromSource(response.getSource(),response.getText(), methodMap);
-				} catch (NullPointerException e) {
+					Thread.sleep(1);
+				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
-					//e.printStackTrace();
+					e1.printStackTrace();
 				}
-			});
-			// This below sleep logic is apparently enough to keep the callbacks from overwriting themselves.  If the below is removed, then
-			// some of the callbacks get overwritten and so do not properly update. tried to figure out a way to queue the responses, but
-			// cannot find where the actual text in the response gets set.  Need to explore the Session class more.
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
 			}
-		}
-			
-		try {
-//			team1.setTeamName(obsInterface.getContents(settings.getTeamNameFileName(1)));
-//			team2.setTeamName(obsInterface.getContents(settings.getTeamNameFileName(2)));
-//			team1.setForwardName(obsInterface.getContents(settings.getTeamForwardFileName(1)));
-//			team2.setForwardName(obsInterface.getContents(settings.getTeamForwardFileName(2)));
-//			team1.setGoalieName(obsInterface.getContents(settings.getTeamGoalieFileName(1)));
-//			team2.setGoalieName(obsInterface.getContents(settings.getTeamGoalieFileName(2)));
-//			team1.setScore(obsInterface.getContents(settings.getScoreFileName(1)));
-//			team2.setScore(obsInterface.getContents(settings.getScoreFileName(2)));
-//			team1.setGameCount(obsInterface.getContents(settings.getGameCountFileName(1)));
-//			team2.setGameCount(obsInterface.getContents(settings.getGameCountFileName(2)));
-//			team1.setTimeOutCount(obsInterface.getContents(settings.getTimeOutFileName(1)));
-//			team2.setTimeOutCount(obsInterface.getContents(settings.getTimeOutFileName(2)));
-//			team1.setReset(obsInterface.getContents(settings.getResetFileName(1))!=null);
-//			team2.setReset(obsInterface.getContents(settings.getResetFileName(2))!=null);
-//			team1.setWarn(obsInterface.getContents(settings.getWarnFileName(1))!=null);
-//			team2.setWarn(obsInterface.getContents(settings.getWarnFileName(2))!=null);
-//			team1.setPassAttempts(obsInterface.getContents(settings.getPassAttemptsFileName(1)));
-//			team2.setPassAttempts(obsInterface.getContents(settings.getPassAttemptsFileName(2)));
-//			team1.setShotAttempts(obsInterface.getContents(settings.getShotAttemptsFileName(1)));
-//			team2.setShotAttempts(obsInterface.getContents(settings.getShotAttemptsFileName(2)));
-//			team1.setClearAttempts(obsInterface.getContents(settings.getClearAttemptsFileName(1)));
-//			team2.setClearAttempts(obsInterface.getContents(settings.getClearAttemptsFileName(2)));
-//			team1.setPassCompletes(obsInterface.getContents(settings.getPassCompletesFileName(1)));
-//			team2.setPassCompletes(obsInterface.getContents(settings.getPassCompletesFileName(2)));
-//			team1.setShotCompletes(obsInterface.getContents(settings.getShotCompletesFileName(1)));
-//			team2.setShotCompletes(obsInterface.getContents(settings.getShotCompletesFileName(2)));
-//			team1.setClearCompletes(obsInterface.getContents(settings.getClearCompletesFileName(1)));
-//			team2.setClearCompletes(obsInterface.getContents(settings.getClearCompletesFileName(2)));
-//			team1.setPassPercent(obsInterface.getContents(settings.getPassPercentFileName(1)));
-//			team2.setPassPercent(obsInterface.getContents(settings.getPassPercentFileName(2)));
-//			team1.setShotPercent(obsInterface.getContents(settings.getShotPercentFileName(1)));
-//			team2.setShotPercent(obsInterface.getContents(settings.getShotPercentFileName(2)));
-//			team1.setClearPercent(obsInterface.getContents(settings.getClearPercentFileName(1)));
-//			team2.setClearPercent(obsInterface.getContents(settings.getClearPercentFileName(2)));
-//			team1.setTwoBarPassAttempts(obsInterface.getContents(settings.getTwoBarPassAttemptsFileName(1)));
-//			team2.setTwoBarPassAttempts(obsInterface.getContents(settings.getTwoBarPassAttemptsFileName(2)));
-//			team1.setTwoBarPassCompletes(obsInterface.getContents(settings.getTwoBarPassCompletesFileName(1)));
-//			team2.setTwoBarPassCompletes(obsInterface.getContents(settings.getTwoBarPassCompletesFileName(2)));
-//			team1.setTwoBarPassPercent(obsInterface.getContents(settings.getTwoBarPassPercentFileName(1)));
-//			team2.setTwoBarPassPercent(obsInterface.getContents(settings.getTwoBarPassPercentFileName(2)));
-//			team1.setScoring(obsInterface.getContents(settings.getScoringFileName(1)));
-//			team2.setScoring(obsInterface.getContents(settings.getScoringFileName(2)));
-//			team1.setThreeBarScoring(obsInterface.getContents(settings.getThreeBarScoringFileName(1)));
-//			team2.setThreeBarScoring(obsInterface.getContents(settings.getThreeBarScoringFileName(2)));
-//			team1.setFiveBarScoring(obsInterface.getContents(settings.getFiveBarScoringFileName(1)));
-//			team2.setFiveBarScoring(obsInterface.getContents(settings.getFiveBarScoringFileName(2)));
-//			team1.setTwoBarScoring(obsInterface.getContents(settings.getTwoBarScoringFileName(1)));
-//			team2.setTwoBarScoring(obsInterface.getContents(settings.getTwoBarScoringFileName(2)));
-//			team1.setShotsOnGoal(obsInterface.getContents(settings.getShotsOnGoalFileName(1)));
-//			team2.setShotsOnGoal(obsInterface.getContents(settings.getShotsOnGoalFileName(2)));
-//			team1.setStuffs(obsInterface.getContents(settings.getStuffsFileName(1)));
-//			team2.setStuffs(obsInterface.getContents(settings.getStuffsFileName(2)));
-//			team1.setBreaks(obsInterface.getContents(settings.getBreaksFileName(1)));
-//			team2.setBreaks(obsInterface.getContents(settings.getBreaksFileName(2)));
-//			team1.setAces(obsInterface.getContents(settings.getAcesFileName(1)));
-//			team2.setAces(obsInterface.getContents(settings.getAcesFileName(2)));
-			match.setLastScored(obsInterface.getContents(settings.getLastScoredFileName()));
-			teamPanel1.updateTeamName(team1.getTeamName());
-			teamPanel2.updateTeamName(team2.getTeamName());
-			teamPanel1.updateForwardName(team1.getForwardName());
-			teamPanel2.updateForwardName(team2.getForwardName());
-			teamPanel1.updateGoalieName(team1.getGoalieName());
-			teamPanel2.updateGoalieName(team2.getGoalieName());
-			teamPanel1.updateScore(team1.getScore());
-			teamPanel2.updateScore(team2.getScore());
-			teamPanel1.updateGameCount(team1.getGameCount());
-			teamPanel2.updateGameCount(team2.getGameCount());
-			teamPanel1.updateTimeOutCount(team1.getTimeOutCount());
-			teamPanel2.updateTimeOutCount(team2.getTimeOutCount());
-			teamPanel1.updateReset(team1.getReset());
-			teamPanel2.updateReset(team2.getReset());
-			teamPanel1.updateWarn(team1.getWarn());
-			teamPanel2.updateWarn(team2.getWarn());
-			switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
-			match.syncCurrentGameNumber();
-			match.syncGameScores();
-			updateGameTables();
-		} catch (IOException e) {
-			e.printStackTrace();
+				
+			try {
+	//			team1.setTeamName(obsInterface.getContents(settings.getTeamNameFileName(1)));
+	//			team2.setTeamName(obsInterface.getContents(settings.getTeamNameFileName(2)));
+	//			team1.setForwardName(obsInterface.getContents(settings.getTeamForwardFileName(1)));
+	//			team2.setForwardName(obsInterface.getContents(settings.getTeamForwardFileName(2)));
+	//			team1.setGoalieName(obsInterface.getContents(settings.getTeamGoalieFileName(1)));
+	//			team2.setGoalieName(obsInterface.getContents(settings.getTeamGoalieFileName(2)));
+	//			team1.setScore(obsInterface.getContents(settings.getScoreFileName(1)));
+	//			team2.setScore(obsInterface.getContents(settings.getScoreFileName(2)));
+	//			team1.setGameCount(obsInterface.getContents(settings.getGameCountFileName(1)));
+	//			team2.setGameCount(obsInterface.getContents(settings.getGameCountFileName(2)));
+	//			team1.setTimeOutCount(obsInterface.getContents(settings.getTimeOutFileName(1)));
+	//			team2.setTimeOutCount(obsInterface.getContents(settings.getTimeOutFileName(2)));
+	//			team1.setReset(obsInterface.getContents(settings.getResetFileName(1))!=null);
+	//			team2.setReset(obsInterface.getContents(settings.getResetFileName(2))!=null);
+	//			team1.setWarn(obsInterface.getContents(settings.getWarnFileName(1))!=null);
+	//			team2.setWarn(obsInterface.getContents(settings.getWarnFileName(2))!=null);
+	//			team1.setPassAttempts(obsInterface.getContents(settings.getPassAttemptsFileName(1)));
+	//			team2.setPassAttempts(obsInterface.getContents(settings.getPassAttemptsFileName(2)));
+	//			team1.setShotAttempts(obsInterface.getContents(settings.getShotAttemptsFileName(1)));
+	//			team2.setShotAttempts(obsInterface.getContents(settings.getShotAttemptsFileName(2)));
+	//			team1.setClearAttempts(obsInterface.getContents(settings.getClearAttemptsFileName(1)));
+	//			team2.setClearAttempts(obsInterface.getContents(settings.getClearAttemptsFileName(2)));
+	//			team1.setPassCompletes(obsInterface.getContents(settings.getPassCompletesFileName(1)));
+	//			team2.setPassCompletes(obsInterface.getContents(settings.getPassCompletesFileName(2)));
+	//			team1.setShotCompletes(obsInterface.getContents(settings.getShotCompletesFileName(1)));
+	//			team2.setShotCompletes(obsInterface.getContents(settings.getShotCompletesFileName(2)));
+	//			team1.setClearCompletes(obsInterface.getContents(settings.getClearCompletesFileName(1)));
+	//			team2.setClearCompletes(obsInterface.getContents(settings.getClearCompletesFileName(2)));
+	//			team1.setPassPercent(obsInterface.getContents(settings.getPassPercentFileName(1)));
+	//			team2.setPassPercent(obsInterface.getContents(settings.getPassPercentFileName(2)));
+	//			team1.setShotPercent(obsInterface.getContents(settings.getShotPercentFileName(1)));
+	//			team2.setShotPercent(obsInterface.getContents(settings.getShotPercentFileName(2)));
+	//			team1.setClearPercent(obsInterface.getContents(settings.getClearPercentFileName(1)));
+	//			team2.setClearPercent(obsInterface.getContents(settings.getClearPercentFileName(2)));
+	//			team1.setTwoBarPassAttempts(obsInterface.getContents(settings.getTwoBarPassAttemptsFileName(1)));
+	//			team2.setTwoBarPassAttempts(obsInterface.getContents(settings.getTwoBarPassAttemptsFileName(2)));
+	//			team1.setTwoBarPassCompletes(obsInterface.getContents(settings.getTwoBarPassCompletesFileName(1)));
+	//			team2.setTwoBarPassCompletes(obsInterface.getContents(settings.getTwoBarPassCompletesFileName(2)));
+	//			team1.setTwoBarPassPercent(obsInterface.getContents(settings.getTwoBarPassPercentFileName(1)));
+	//			team2.setTwoBarPassPercent(obsInterface.getContents(settings.getTwoBarPassPercentFileName(2)));
+	//			team1.setScoring(obsInterface.getContents(settings.getScoringFileName(1)));
+	//			team2.setScoring(obsInterface.getContents(settings.getScoringFileName(2)));
+	//			team1.setThreeBarScoring(obsInterface.getContents(settings.getThreeBarScoringFileName(1)));
+	//			team2.setThreeBarScoring(obsInterface.getContents(settings.getThreeBarScoringFileName(2)));
+	//			team1.setFiveBarScoring(obsInterface.getContents(settings.getFiveBarScoringFileName(1)));
+	//			team2.setFiveBarScoring(obsInterface.getContents(settings.getFiveBarScoringFileName(2)));
+	//			team1.setTwoBarScoring(obsInterface.getContents(settings.getTwoBarScoringFileName(1)));
+	//			team2.setTwoBarScoring(obsInterface.getContents(settings.getTwoBarScoringFileName(2)));
+	//			team1.setShotsOnGoal(obsInterface.getContents(settings.getShotsOnGoalFileName(1)));
+	//			team2.setShotsOnGoal(obsInterface.getContents(settings.getShotsOnGoalFileName(2)));
+	//			team1.setStuffs(obsInterface.getContents(settings.getStuffsFileName(1)));
+	//			team2.setStuffs(obsInterface.getContents(settings.getStuffsFileName(2)));
+	//			team1.setBreaks(obsInterface.getContents(settings.getBreaksFileName(1)));
+	//			team2.setBreaks(obsInterface.getContents(settings.getBreaksFileName(2)));
+	//			team1.setAces(obsInterface.getContents(settings.getAcesFileName(1)));
+	//			team2.setAces(obsInterface.getContents(settings.getAcesFileName(2)));
+				match.setLastScored(obsInterface.getContents(settings.getLastScoredFileName()));
+				teamPanel1.updateTeamName(team1.getTeamName());
+				teamPanel2.updateTeamName(team2.getTeamName());
+				teamPanel1.updateForwardName(team1.getForwardName());
+				teamPanel2.updateForwardName(team2.getForwardName());
+				teamPanel1.updateGoalieName(team1.getGoalieName());
+				teamPanel2.updateGoalieName(team2.getGoalieName());
+				teamPanel1.updateScore(team1.getScore());
+				teamPanel2.updateScore(team2.getScore());
+				teamPanel1.updateGameCount(team1.getGameCount());
+				teamPanel2.updateGameCount(team2.getGameCount());
+				teamPanel1.updateTimeOutCount(team1.getTimeOutCount());
+				teamPanel2.updateTimeOutCount(team2.getTimeOutCount());
+				teamPanel1.updateReset(team1.getReset());
+				teamPanel2.updateReset(team2.getReset());
+				teamPanel1.updateWarn(team1.getWarn());
+				teamPanel2.updateWarn(team2.getWarn());
+				switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
+				match.syncCurrentGameNumber();
+				match.syncGameScores();
+				updateGameTables();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	private void setTextFromSource(String source, String text, Map<String, Entry<Team, String>> methodMap) {
