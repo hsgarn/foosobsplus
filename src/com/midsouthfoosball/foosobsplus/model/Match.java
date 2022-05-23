@@ -231,12 +231,12 @@ public class Match implements Serializable {
 	}
 	public void setLastScored(String lastScoredtxt) {
 		if (lastScoredtxt.equals(settings.getLastScoredStrings()[2])) {
-			lastScored = 2;
+			this.lastScored = 2;
 		} else {
 			if (lastScoredtxt.equals(settings.getLastScoredStrings()[1])) {
-				lastScored = 1;
+				this.lastScored = 1;
 			} else {
-				lastScored = 0;
+				this.lastScored = 0;
 			}
 		}
 	}
@@ -260,7 +260,7 @@ public class Match implements Serializable {
 		default:
 			break;
 		}
-		writeLastScored();
+		setLastScored(lastScored);
 	}
 	public boolean isMatchPaused() {
 		return isMatchPaused;

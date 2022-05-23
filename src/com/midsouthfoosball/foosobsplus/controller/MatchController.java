@@ -107,7 +107,6 @@ public class MatchController {
 	}
 	public void switchSides() {
 		match.switchSides();
-//		match.switchLastScored();
 		updateGameTables();
 	}
 	public void startMatch(String matchId) {

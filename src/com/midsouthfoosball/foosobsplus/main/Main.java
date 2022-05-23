@@ -424,8 +424,8 @@ public class Main {
 		team2.restoreState(tmpTeam1.getState());
 		team1.setTeamNbr(1);
 		team2.setTeamNbr(2);
-		teamController.switchSides();
 		matchController.switchSides();
+		teamController.switchSides();
 	}
 	public void setShowParsed(boolean showParsed) {
 		settings.setShowParsed(showParsed);
