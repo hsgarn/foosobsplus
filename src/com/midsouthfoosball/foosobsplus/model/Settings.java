@@ -293,6 +293,12 @@ public class Settings {
 		defaultHotKeyProps.setProperty("ResetTimersHotKey", "r");
 		defaultHotKeyProps.setProperty("UndoHotKey", "u");
 		defaultHotKeyProps.setProperty("RedoHotKey", "d");
+		defaultHotKeyProps.setProperty("ConnectHotKey", "");
+		defaultHotKeyProps.setProperty("DisconnectHotKey", "");
+		defaultHotKeyProps.setProperty("PushHotKey", "");
+		defaultHotKeyProps.setProperty("PullHotKey", "");
+		defaultHotKeyProps.setProperty("ShowScoresHotKey", "");
+		defaultHotKeyProps.setProperty("ShowTimerHotKey", "");
 		//Config Properties
 		configControlProps 	= new Properties(defaultControlProps);
 		configSourceProps 	= new Properties(defaultSourceProps);
@@ -820,6 +826,12 @@ public class Settings {
 	public String getResetTimersHotKey() {return configHotKeyProps.getProperty("ResetTimersHotKey");}
 	public String getUndoHotKey() {return configHotKeyProps.getProperty("UndoHotKey");}
 	public String getRedoHotKey() {return configHotKeyProps.getProperty("RedoHotKey");}
+	public String getConnectHotKey() {return configHotKeyProps.getProperty("ConnectHotKey");}
+	public String getDisconnectHotKey() {return configHotKeyProps.getProperty("DisconnectHotKey");}
+	public String getPushHotKey() {return configHotKeyProps.getProperty("PushHotKey");}
+	public String getPullHotKey() {return configHotKeyProps.getProperty("PullHotKey");}
+	public String getShowScoresHotKey() {return configHotKeyProps.getProperty("ShowScoresHotKey");}
+	public String getShowTimerHotKey() {return configHotKeyProps.getProperty("ShowTimerHotKey");}
 //Setters
 	//Control Parameters
 	public void setShowParsed(boolean showParsed) {
@@ -1492,6 +1504,24 @@ public class Settings {
 	public void setRedoHotKey(String redoHotKey) {
 		configHotKeyProps.setProperty("RedoHotKey", redoHotKey);
 	}
+	public void setConnectHotKey(String connectHotKey) {
+		configHotKeyProps.setProperty("ConnectHotKey", connectHotKey);
+	}
+	public void setDisconnectHotKey(String disconnectHotKey) {
+		configHotKeyProps.setProperty("DisconnectHotKey", disconnectHotKey);
+	}
+	public void setPushHotKey(String pushHotKey) {
+		configHotKeyProps.setProperty("PushHotKey", pushHotKey);
+	}
+	public void setPullHotKey(String pullHotKey) {
+		configHotKeyProps.setProperty("PullHotKey", pullHotKey);
+	}
+	public void setShowScoresHotKey(String showScoresHotKey) {
+		configHotKeyProps.setProperty("ShowScoresHotKey", showScoresHotKey);
+	}
+	public void setShowTimerHotKey(String showTimerHotKey) {
+		configHotKeyProps.setProperty("ShowTimerHotKey", showTimerHotKey);
+	}
 //Get Defaults
 	//Control Parameters
 	public Boolean getDefaultShowParsed() {return Boolean.parseBoolean(defaultControlProps.getProperty("ShowParsed"));}
@@ -1717,6 +1747,12 @@ public class Settings {
 	public String getDefaultResetTimersHotKey() {return defaultHotKeyProps.getProperty("ResetTimersHotKey");}
 	public String getDefaultUndoHotKey() {return defaultHotKeyProps.getProperty("UndoHotKey");}
 	public String getDefaultRedoHotKey() {return defaultHotKeyProps.getProperty("RedoHotKey");}
+	public String getConnectDefaultHotKey() {return defaultHotKeyProps.getProperty("ConnectHotKey");}
+	public String getDisconnectDefaultHotKey() {return defaultHotKeyProps.getProperty("DisconnectHotKey");}
+	public String getPushDefaultHotKey() {return defaultHotKeyProps.getProperty("PushHotKey");}
+	public String getPullDefaultHotKey() {return defaultHotKeyProps.getProperty("PullHotKey");}
+	public String getShowScoresDefaultHotKey() {return defaultHotKeyProps.getProperty("ShowScoresHotKey");}
+	public String getShowTimerDefaultHotKey() {return defaultHotKeyProps.getProperty("ShowTimerHotKey");}
 	
 	public void loadFromControlConfig() throws IOException {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configControlFileName))) {

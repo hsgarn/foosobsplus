@@ -63,6 +63,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private SwitchPanel switchPanel;
 	private ResetPanel resetPanel;
 	private TimerPanel timerPanel;
+	private OBSPanel obsPanel;
 	private StatsEntryPanel statsEntryPanel;
 	private StatsDisplayPanel statsDisplayPanel;
 	private MatchPanel matchPanel;
@@ -90,7 +91,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private Icon imgIconDisconnected;
 	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
 	
-	public MainFrame(Settings settings, TablePanel tablePanel, TimerPanel timerPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
+	public MainFrame(Settings settings, TablePanel tablePanel, TimerPanel timerPanel, OBSPanel obsPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
 			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, BallPanel ballPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,
 			SourcesFrame sourcesFrame, FileNamesFrame fileNamesFrame, OBSConnectFrame obsConnectFrame, Main main) {
 
@@ -98,6 +99,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 
 		this.tablePanel 		= tablePanel;
 		this.timerPanel 		= timerPanel;
+		this.obsPanel           = obsPanel;
 		this.team1Panel 		= team1Panel;
 		this.team2Panel 		= team2Panel;
 		this.statsEntryPanel 	= statsEntryPanel;
@@ -439,11 +441,11 @@ public final class MainFrame extends JFrame implements WindowListener {
 		
 		gc.gridx = 1;
 		gc.gridwidth =1;
-		gc.gridheight = 2;
+		gc.gridheight = 1;
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		timerPanel.setPreferredSize(new Dimension(250,400));
+		timerPanel.setPreferredSize(new Dimension(250,200));
 		add(timerPanel, gc);
 
 		//////// Stats Entry Panel ////////
@@ -490,6 +492,20 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.insets = new Insets(0, 0, 0, 0);
 		matchPanel.setPreferredSize(new Dimension(400,250));
 		add(matchPanel, gc);
+
+		////////// OBS Panel  ///////////
+		
+		gc.weightx = .5;
+		gc.weighty = .5;
+		
+		gc.gridx = 1;
+		gc.gridwidth =1;
+		gc.gridheight = 1;
+		gc.fill = GridBagConstraints.BOTH;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.insets = new Insets(0, 0, 0, 0);
+		obsPanel.setPreferredSize(new Dimension(250,200));
+		add(obsPanel, gc);
 
 		////////// Team 1 Panel ///////////
 		

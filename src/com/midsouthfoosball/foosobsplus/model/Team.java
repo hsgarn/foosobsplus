@@ -419,7 +419,7 @@ public class Team implements Serializable {
 		}
 	}
 	public void setShotAttempts(int shotAttempts) {
-		this.shotAttempts = shotAttempts;
+		this.shotAttempts = shotAttempts; 
 		writeShotAttempts();
 	}
 	public void setShotCompletes(int shotCompletes) {
@@ -429,6 +429,17 @@ public class Team implements Serializable {
 	public void setShotPercent(Float shotPercent) {
 		this.shotPercent = shotPercent;
 		writeShotPercent();
+	}
+	public void setShotBreaks(int shotBreaks) {
+		this.shotBreaks = shotBreaks;
+		writeShotBreaks();
+	}
+	public void setShotBreaks(String shotBreaks) {
+		if(shotBreaks=="") {
+			setShotBreaks(0);
+		} else {
+			setShotBreaks(Integer.parseInt(shotBreaks));
+		}
 	}
 	public void setShotAttempts(String shotAttempts) {
 		if(shotAttempts=="") {
@@ -642,6 +653,9 @@ public class Team implements Serializable {
     private void writePassBreaks() {
 // 		writeData(settings.getPassBreaksFileName(teamNbr), settings.getPassBreaksSource(teamNbr), Integer.toString(getPassBreaks()));
     }
+    private void writeShotBreaks() {
+// 		writeData(settings.getShotBreaksFileName(teamNbr), settings.getShotBreaksSource(teamNbr), Integer.toString(getShotBreaks()));
+    }
     private void writeShotAttempts() {
 		writeData(settings.getShotAttemptsFileName(teamNbr), settings.getShotAttemptsSource(teamNbr), Integer.toString(getShotAttempts()));
     }
@@ -773,7 +787,7 @@ public class Team implements Serializable {
 		this.setShotAttempts(tempTeam.getShotAttempts());
 		this.setShotCompletes(tempTeam.getShotCompletes());
 		this.setShotPercent(tempTeam.getShotPercent());
-//		this.setShotBreaks(tempTeam.getShotBreaks());
+		this.setShotBreaks(tempTeam.getShotBreaks());
 		this.setClearAttempts(tempTeam.getClearAttempts());
 		this.setClearCompletes(tempTeam.getClearCompletes());
 		this.setClearPercent(tempTeam.getClearPercent());

@@ -19,7 +19,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.  
 **/
 package com.midsouthfoosball.foosobsplus.main;
-
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicReference;
-
+import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
@@ -42,7 +41,6 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-
 import com.midsouthfoosball.foosobsplus.commands.CodeCommand;
 import com.midsouthfoosball.foosobsplus.commands.Command;
 import com.midsouthfoosball.foosobsplus.commands.CommandSwitch;
@@ -120,6 +118,7 @@ import com.midsouthfoosball.foosobsplus.view.MainFrame;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
 import com.midsouthfoosball.foosobsplus.view.OBSConnectFrame;
 import com.midsouthfoosball.foosobsplus.view.OBSConnectPanel;
+import com.midsouthfoosball.foosobsplus.view.OBSPanel;
 import com.midsouthfoosball.foosobsplus.view.ParametersFrame;
 import com.midsouthfoosball.foosobsplus.view.ParametersPanel;
 import com.midsouthfoosball.foosobsplus.view.ResetPanel;
@@ -131,7 +130,6 @@ import com.midsouthfoosball.foosobsplus.view.TablePanel;
 import com.midsouthfoosball.foosobsplus.view.TeamPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
-
 import net.twasi.obsremotejava.OBSRemoteController;
 
 public class Main {
@@ -157,8 +155,9 @@ public class Main {
 	private HashMap<String, Boolean> allBallsMap 	= new HashMap<>();
 	private HashMap<String, Boolean> nineBallsMap 	= new HashMap<>();
 	private DateTimeFormatter dtf 					= DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-	private String obsSceneName 					= "FoosOBS+ Main";//"FoosObs+ Main";
-	private String obsShowScoresSource 				= "ScoresAndLabels";//"ScoresAndLabels";
+	private String obsSceneName 					= "FoosOBS+ Main";
+	private String obsShowScoresSource 				= "ScoresAndLabels";
+	private String obsShowTimerSource               = "Foos OBS+ Timer";
 	
 	////// CommandStack and UndoRedo setup \\\\\\
 	
@@ -198,6 +197,7 @@ public class Main {
 	
 	private TablePanel 			tablePanel 			= new TablePanel(settings);
 	private TimerPanel 			timerPanel 			= new TimerPanel(settings);
+	private OBSPanel            obsPanel            = new OBSPanel(settings);
 	private MatchPanel			matchPanel			= new MatchPanel(settings);
 	private BallPanel			ballPanel			= new BallPanel(settings);
 	private TeamPanel 			teamPanel1 			= new TeamPanel(1, settings.getSide1Color(), settings);
@@ -260,7 +260,7 @@ public class Main {
 		fetchAll(settings.getTableName());
 	}
 	public void loadWindowsAndControllers() {
-		mainFrame = new MainFrame(settings, tablePanel, timerPanel, teamPanel1, teamPanel2, statsEntryPanel, 
+		mainFrame = new MainFrame(settings, tablePanel, timerPanel, obsPanel, teamPanel1, teamPanel2, statsEntryPanel, 
 				switchPanel, resetPanel, statsDisplayPanel, matchPanel, ballPanel, 
 				parametersFrame, hotKeysFrame, sourcesFrame, fileNamesFrame, obsConnectFrame, this);
 
@@ -311,6 +311,12 @@ public class Main {
 		obsConnectPanel.addSceneFocusListener(new OBSSceneFocusListener());
 		obsConnectPanel.addSceneListener(new OBSSceneListener());
 		obsConnectPanel.addSaveListener(new OBSSaveListener());
+		obsPanel.addConnectListener(new OBSConnectListener());
+		obsPanel.addDisconnectListener(new OBSDisconnectListener());
+		obsPanel.addPushListener(new OBSPushListener());
+		obsPanel.addPullListener(new OBSPullListener());
+		obsPanel.addShowScoresListener(new OBSShowScoresListener());
+		obsPanel.addShowTimerListener(new OBSShowTimerListener());
 		statsEntryPanel.addUndoListener(new StatsEntryUndoListener());
 		statsEntryPanel.addRedoListener(new StatsEntryRedoListener());
 		statsEntryPanel.addCodeListener(new CodeListener());
@@ -657,26 +663,28 @@ public class Main {
 		mySwitch.register("code", codeCommand);
 	}
 	public void showScores(boolean show) {
-		
-		if (obs.getConnected()) obsController.setSourceVisibility(obs.getScene(), obsShowScoresSource, show, response -> {
-			if(settings.getShowParsed()) {
-				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceVisibility called: " + obs.getScene() + ", " + obsShowScoresSource + ", " + show );
-			}
-		});
-/*		if (obs.getConnected()) controller.getSourceSettings(obsShowScoresSource,response -> {
-			response.getSourceSettings().keySet()
-					.iterator()
-					.forEachRemaining(System.out::println)
-					;
-			response.getSourceSettings().values().stream().forEach(System.out::println);
-			System.out.println(response.getSourceSettings().get("items").toString());
-		});
-*/
-//		if (obs.getConnected()) controller.getSceneItemProperties(obsSceneName, obsShowScoresSource, response -> {
-//			System.out.println("Test: " + response.isVisible());
+		showSource(obsShowScoresSource, show);
+//		if (obs.getConnected()) obsController.setSourceVisibility(obs.getScene(), obsShowScoresSource, show, response -> {
+//			if(settings.getShowParsed()) {
+//				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceVisibility called: " + obs.getScene() + ", " + obsShowScoresSource + ", " + show );
+//			}
 //		});
 	}
-
+	public void showTimer(boolean show) {
+		showSource(obsShowTimerSource, show);
+//		if (obs.getConnected()) obsController.setSourceVisibility(obs.getScene(), obsShowTimerSource, show, response -> {
+//			if(settings.getShowParsed()) {
+//				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceVisibility called: " + obs.getScene() + ", " + obsShowTimerSource + ", " + show );
+//			}
+//		});
+	}
+	public void showSource(String source, boolean show) {
+		if (obs.getConnected()) obsController.setSourceVisibility(obs.getScene(), source, show, response -> {
+			if(settings.getShowParsed()) {
+				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceVisibility called: " + obs.getScene() + ", " + source + ", " + show );
+			}
+		});
+	}
 	public void updateOBSConnected() {
 		obs.setConnected(true);
 		obsConnectPanel.disableConnect();
@@ -996,6 +1004,42 @@ public class Main {
 	private class OBSSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.saveSettings();
+		}
+	}
+	private class OBSPushListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if (obs.getConnected()) {
+				tableController.writeAll();
+				teamController.writeAll();
+				statsController.displayAllStats();
+			}
+		}
+	}
+	private class OBSPullListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if (obs.getConnected()) {
+				teamController.fetchAll();
+				teamController.displayAll();
+//				tableController.writeAll();
+//				teamController.writeAll();
+//				statsController.displayAllStats();
+			}
+		}
+	}
+	private class OBSShowScoresListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if (obs.getConnected()) {
+				AbstractButton abstractButton = (AbstractButton) e.getSource();
+				showScores(abstractButton.getModel().isSelected());
+			}
+		}
+	}
+	private class OBSShowTimerListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if (obs.getConnected()) {
+				AbstractButton abstractButton = (AbstractButton) e.getSource();
+				showTimer(abstractButton.getModel().isSelected());
+			}
 		}
 	}
 	private class SettingsSaveListener implements ActionListener {

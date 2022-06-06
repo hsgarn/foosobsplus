@@ -663,6 +663,9 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.083 06/05/2022<br/>
+Add OBSPanel and buttons<br/>
+<br/>
 v1.082 05/22/2022<br/>
 Fix LastScored display bug<br/>
 <br/>
