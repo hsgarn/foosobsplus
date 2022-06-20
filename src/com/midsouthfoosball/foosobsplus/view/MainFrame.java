@@ -73,6 +73,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private SourcesFrame sourcesFrame;
 	private FileNamesFrame fileNamesFrame;
 	private OBSConnectFrame obsConnectFrame;
+	private AutoScoreFrame autoScoreFrame;
 	private Main main;
 	private JCheckBoxMenuItem viewTimerWindow;
 	private JCheckBoxMenuItem viewAlwaysOnTop;
@@ -93,7 +94,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	
 	public MainFrame(Settings settings, TablePanel tablePanel, TimerPanel timerPanel, OBSPanel obsPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
 			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, BallPanel ballPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,
-			SourcesFrame sourcesFrame, FileNamesFrame fileNamesFrame, OBSConnectFrame obsConnectFrame, Main main) {
+			SourcesFrame sourcesFrame, FileNamesFrame fileNamesFrame, OBSConnectFrame obsConnectFrame, AutoScoreFrame autoScoreFrame, Main main) {
 
 		super(programName + ": " + settings.getGameType()); //$NON-NLS-1$
 
@@ -113,6 +114,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		this.sourcesFrame		= sourcesFrame;
 		this.fileNamesFrame 	= fileNamesFrame;
 		this.obsConnectFrame 	= obsConnectFrame;
+		this.autoScoreFrame 	= autoScoreFrame;
 		this.main 				= main;
 		
 		viewLastScored2Window 	= new JCheckBoxMenuItem(Messages.getString("MainFrame.Team1LastScoredWindow")); //$NON-NLS-1$
@@ -165,12 +167,14 @@ public final class MainFrame extends JFrame implements WindowListener {
 		JMenuItem settingsSourceItem	= new JMenuItem(Messages.getString("MainFrame.Sources")); //$NON-NLS-1$
 		JMenuItem settingsFileItem 		= new JMenuItem(Messages.getString("MainFrame.FileNames")); //$NON-NLS-1$
 		JMenuItem settingsStatItem		= new JMenuItem(Messages.getString("MainFrame.Statistics")); //$NON-NLS-1$
+		JMenuItem settingsAutoScoreItem	= new JMenuItem(Messages.getString("MainFrame.AutoScore")); //$NON-NLS-1$
 		
 		settingsMenu.add(settingsParamItem);
 		settingsMenu.add(settingsHotKeyItem);
 		settingsMenu.add(settingsSourceItem);
 		settingsMenu.add(settingsFileItem);
 		settingsMenu.add(settingsStatItem);
+		settingsMenu.add(settingsAutoScoreItem);
 		editMenu.add(settingsMenu);
 		
 		obsMenu 			= new JMenu(Messages.getString("MainFrame.OBS")); //$NON-NLS-1$
@@ -236,6 +240,11 @@ public final class MainFrame extends JFrame implements WindowListener {
 		settingsHotKeyItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				hotKeysFrame.setVisible(true);
+			}
+		});
+		settingsAutoScoreItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				autoScoreFrame.setVisible(true);
 			}
 		});
 
@@ -765,6 +774,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 	}
 	public OBSConnectPanel getOBSConnectPanel() {
 		return obsConnectFrame.getOBSConnectPanel();
+	}
+	public AutoScorePanel getAutoScorePanel() {
+		return autoScoreFrame.getAutoScorePanel();
 	}
 
 	@Override

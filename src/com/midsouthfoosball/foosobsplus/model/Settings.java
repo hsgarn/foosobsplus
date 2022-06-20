@@ -41,18 +41,21 @@ public class Settings {
 	private Properties defaultFileNameProps;
 	private Properties defaultHotKeyProps;
 	private Properties defaultOBSProps;
+	private Properties defaultAutoScoreProps;
 	
 	public Properties configControlProps;
 	public Properties configSourceProps;
 	public Properties configFileNameProps;
 	public Properties configHotKeyProps;
 	public Properties configOBSProps;
+	public Properties configAutoScoreProps;
 	
 	private String configControlFileName 	= "control.properties";
 	private String configSourceFileName 	= "source.properties";
 	private String configFileNameFileName 	= "filename.properties";
 	private String configHotKeyFileName 	= "hotkey.properties";
 	private String configOBSFileName        = "obs.properties";
+	private String configAutoScoreFileName	= "autoscore.properties";
 
 	//////////////////////////////////////////////////////
 	
@@ -62,6 +65,7 @@ public class Settings {
 		defaultFileNameProps 	= new Properties();
 		defaultHotKeyProps 		= new Properties();
 		defaultOBSProps         = new Properties();
+		defaultAutoScoreProps	= new Properties();
 		// sets default properties
 		// Parameter settings
 		defaultControlProps.setProperty("ShowParsed", "true");
@@ -299,12 +303,18 @@ public class Settings {
 		defaultHotKeyProps.setProperty("PullHotKey", "");
 		defaultHotKeyProps.setProperty("ShowScoresHotKey", "");
 		defaultHotKeyProps.setProperty("ShowTimerHotKey", "");
+		//AutoScore Properites
+		defaultAutoScoreProps.setProperty("AutoScoreServerHostName", "foosScorePi");
+		defaultAutoScoreProps.setProperty("AutoScoreServerAddress", "192.168.68.69");
+		defaultAutoScoreProps.setProperty("AutoScoreServerPort", "5051");
 		//Config Properties
-		configControlProps 	= new Properties(defaultControlProps);
-		configSourceProps 	= new Properties(defaultSourceProps);
-		configFileNameProps = new Properties(defaultFileNameProps);
-		configHotKeyProps 	= new Properties(defaultHotKeyProps);
-		configOBSProps      = new Properties(defaultOBSProps);
+		configControlProps 		= new Properties(defaultControlProps);
+		configSourceProps 		= new Properties(defaultSourceProps);
+		configFileNameProps 	= new Properties(defaultFileNameProps);
+		configHotKeyProps 		= new Properties(defaultHotKeyProps);
+		configOBSProps      	= new Properties(defaultOBSProps);
+		configAutoScoreProps	= new Properties(defaultAutoScoreProps);
+		
 		loadFromControlConfig();
 		loadFromOBSConfig();
 		loadFromSourceConfig();
@@ -832,6 +842,10 @@ public class Settings {
 	public String getPullHotKey() {return configHotKeyProps.getProperty("PullHotKey");}
 	public String getShowScoresHotKey() {return configHotKeyProps.getProperty("ShowScoresHotKey");}
 	public String getShowTimerHotKey() {return configHotKeyProps.getProperty("ShowTimerHotKey");}
+	//AutoScore
+	public String getAutoScoreServerHostName() {return configAutoScoreProps.getProperty("AutoScoreServerHostName");}
+	public String getAutoScoreServerAddress() {return configAutoScoreProps.getProperty("AutoScoreServerAddress");}
+	public int getAutoScoreServerPort() {return Integer.parseInt(configAutoScoreProps.getProperty("AutoScoreServerPort"));}
 //Setters
 	//Control Parameters
 	public void setShowParsed(boolean showParsed) {
@@ -1522,6 +1536,16 @@ public class Settings {
 	public void setShowTimerHotKey(String showTimerHotKey) {
 		configHotKeyProps.setProperty("ShowTimerHotKey", showTimerHotKey);
 	}
+	//AutoScores
+	public void setAutoScoreServerHostName(String autoScoreServerHostName) {
+		configAutoScoreProps.setProperty("AutoScoreServerHostName", autoScoreServerHostName);
+	}
+	public void setAutoScoreServerAddress(String autoScoreServerAddress) {
+		configAutoScoreProps.setProperty("AutoScoreServerAddress", autoScoreServerAddress);
+	}
+	public void setAutoScoreServerPort(String autoScoreServerPort) {
+		configAutoScoreProps.setProperty("AutoScoreServerPort", autoScoreServerPort);
+	}
 //Get Defaults
 	//Control Parameters
 	public Boolean getDefaultShowParsed() {return Boolean.parseBoolean(defaultControlProps.getProperty("ShowParsed"));}
@@ -1753,6 +1777,10 @@ public class Settings {
 	public String getPullDefaultHotKey() {return defaultHotKeyProps.getProperty("PullHotKey");}
 	public String getShowScoresDefaultHotKey() {return defaultHotKeyProps.getProperty("ShowScoresHotKey");}
 	public String getShowTimerDefaultHotKey() {return defaultHotKeyProps.getProperty("ShowTimerHotKey");}
+	//AutoScore
+	public String getDefaultAutoScoreServerHostName() {return defaultAutoScoreProps.getProperty("AutoScoreServerHostName");}
+	public String getDefaultAutoScoreServerAddress() {return defaultAutoScoreProps.getProperty("AutoScoreServerAddress");}
+	public int getDefaultAutoScoreServerPort() {return Integer.parseInt(defaultAutoScoreProps.getProperty("AutoScoreServerPort"));}
 	
 	public void loadFromControlConfig() throws IOException {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configControlFileName))) {
@@ -1785,7 +1813,6 @@ public class Settings {
 		}
 	}
 	public void loadFromFileNameConfig() throws IOException {
-
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configFileNameFileName))) {
 			configFileNameProps.load(inputStream);
 		} catch (NoSuchFileException e) {
@@ -1803,6 +1830,16 @@ public class Settings {
 			configHotKeyProps = defaultHotKeyProps;
 			saveHotKeyConfig();
 //			loadFromHotKeyConfig();
+		}
+	}
+	public void loadFromAutoScoreConfig() throws IOException {
+		try(InputStream inputStream = Files.newInputStream(Paths.get(configAutoScoreFileName))) {
+			configAutoScoreProps.load(inputStream);
+		} catch (NoSuchFileException e) {
+			Files.createFile(Paths.get(configAutoScoreFileName));
+			configAutoScoreProps = defaultAutoScoreProps;
+			saveAutoScoreConfig();
+//			loadFromAutoScoreConfig();
 		}
 	}
 
@@ -1834,6 +1871,12 @@ public class Settings {
 		//HotKeys
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configHotKeyFileName))) {
 			configHotKeyProps.store(outputStream, "FoosOBSPlus Hot Key Settings");
+		}
+	}
+	public void saveAutoScoreConfig() throws IOException {
+		//AutoScore
+		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configAutoScoreFileName))) {
+			configAutoScoreProps.store(outputStream, "FoosOBSPlus AutoScore Settings");
 		}
 	}
 }

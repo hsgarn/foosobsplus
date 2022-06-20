@@ -24,7 +24,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -32,15 +37,19 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
+
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+
 import com.midsouthfoosball.foosobsplus.commands.CodeCommand;
 import com.midsouthfoosball.foosobsplus.commands.Command;
 import com.midsouthfoosball.foosobsplus.commands.CommandSwitch;
@@ -107,6 +116,8 @@ import com.midsouthfoosball.foosobsplus.model.Stats;
 import com.midsouthfoosball.foosobsplus.model.Table;
 import com.midsouthfoosball.foosobsplus.model.Team;
 import com.midsouthfoosball.foosobsplus.model.TimeClock;
+import com.midsouthfoosball.foosobsplus.view.AutoScoreFrame;
+import com.midsouthfoosball.foosobsplus.view.AutoScorePanel;
 import com.midsouthfoosball.foosobsplus.view.BallPanel;
 import com.midsouthfoosball.foosobsplus.view.FileNamesFrame;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowFrame;
@@ -130,6 +141,7 @@ import com.midsouthfoosball.foosobsplus.view.TablePanel;
 import com.midsouthfoosball.foosobsplus.view.TeamPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
+
 import net.twasi.obsremotejava.OBSRemoteController;
 
 public class Main {
@@ -217,6 +229,9 @@ public class Main {
 	private FileNamesFrame		fileNamesFrame		= new FileNamesFrame(settings, obsInterface);
 	private OBSConnectFrame		obsConnectFrame		= new OBSConnectFrame(settings);
 	private OBSConnectPanel		obsConnectPanel		= obsConnectFrame.getOBSConnectPanel();
+	private AutoScoreFrame		autoScoreFrame		= new AutoScoreFrame(settings);
+	private AutoScorePanel		autoScorePanel		= autoScoreFrame.getAutoScorePanel();
+	
 	
 	////// Display the View Panels on a JFrame \\\\\\
 	
@@ -258,11 +273,100 @@ public class Main {
 		loadCommands();
 
 		fetchAll(settings.getTableName());
+
+		InetAddress addr = InetAddress.getByName("foosScorePi");
+		System.out.println("Local HostAddress: " + addr.getHostAddress());
+		System.out.println("Local hostname: " + addr.getHostName());
+		
+		SwingWorker<Boolean, Integer> worker = new SwingWorker<Boolean, Integer>() {
+			Socket skt;
+			BufferedReader dataIn;
+			String team1 = "Team1";
+			String team2 = "Team2";
+			@Override
+			protected Boolean doInBackground() throws Exception {
+		    	boolean isConnected = false;
+		    	String address = settings.getAutoScoreServerAddress();
+		    	int port = settings.getAutoScoreServerPort();
+		    	try
+		        {
+		            skt = new Socket(address, port);
+		            System.out.println("Connected to " + address + ": " + port);
+		        	dataIn = new BufferedReader(new InputStreamReader(skt.getInputStream()));
+		        	isConnected = true;
+		        }
+		        catch(UnknownHostException uh)
+		        {
+		            System.out.println(uh);
+		        }
+		        catch(IOException io)
+		        {
+		            System.out.println(io);
+		        }
+		        String str = "";
+		        while (isConnected)
+		        {
+		        	try
+		            {
+		                str = dataIn.readLine();
+		                if (str.equals(team1))
+		                {
+		                	publish(1);
+		                } else {
+			                if (str.equals(team2)) {
+			                	publish(2);
+			                } else {
+			                	System.out.println(str);
+			                }
+		                }
+		            }
+		            catch(IOException io)
+		            {
+		                System.out.println(io);
+		                isConnected = false;
+		            }
+		        }
+		        System.out.println("Connection Terminated!!");
+		        try
+		        {
+		            dataIn.close();
+		            skt.close();
+		        }
+		        catch(IOException io)
+		        {
+		            System.out.println(io);
+		        }
+		        return isConnected;
+			}
+			protected void done() {
+				boolean status;
+			    try {
+			     status = get();
+			     System.out.println("Worker completed with isConnected: " + status);
+			    } catch (InterruptedException e) {
+			       System.out.println(e);
+			    } catch (ExecutionException e) {
+			       System.out.println(e);
+			    }
+			}
+			protected void process(List<Integer> chunks) {
+				int mostRecentValue = chunks.get(chunks.size()-1);
+				System.out.println("Team "+mostRecentValue+ " scored!");
+				if (mostRecentValue == 1) {
+					processCode("XIST1", false);
+				}	else {
+						if (mostRecentValue == 2) {
+							processCode("XIST2", false);
+						}
+				}
+			}
+		};
+		worker.execute();
 	}
 	public void loadWindowsAndControllers() {
 		mainFrame = new MainFrame(settings, tablePanel, timerPanel, obsPanel, teamPanel1, teamPanel2, statsEntryPanel, 
 				switchPanel, resetPanel, statsDisplayPanel, matchPanel, ballPanel, 
-				parametersFrame, hotKeysFrame, sourcesFrame, fileNamesFrame, obsConnectFrame, this);
+				parametersFrame, hotKeysFrame, sourcesFrame, fileNamesFrame, obsConnectFrame, autoScoreFrame, this);
 
 		////// Set up independent Windows \\\\\\
 		
@@ -304,6 +408,7 @@ public class Main {
 		ballPanel.addBtnHideAllBallsListener(new BtnHideAllBallsListener());
 		
 		hotKeysPanel.addSaveListener(new HotKeysSaveListener());
+		autoScorePanel.addSaveListener(new AutoScoreSaveListener());
 		parametersPanel.addSaveListener(new SettingsSaveListener());
 		obsConnectPanel.addSetSceneListener(new OBSSetSceneListener());
 		obsConnectPanel.addConnectListener(new OBSConnectListener());
@@ -965,6 +1070,12 @@ public class Main {
 			statsEntryPanel.updateMnemonics();
 		}
 	}
+	private class AutoScoreSaveListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			autoScorePanel.saveSettings(settings);
+		}
+	}
+
 	private class OBSSceneListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			setScene();
