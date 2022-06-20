@@ -320,6 +320,7 @@ public class Settings {
 		loadFromSourceConfig();
 		loadFromFileNameConfig();
 		loadFromHotKeyConfig();
+		loadFromAutoScoreConfig();
 	}
 
 	//Getters

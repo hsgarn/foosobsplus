@@ -663,7 +663,10 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
-v1.084 06/19/2022</br>
+v1.085 06/19/2022</br>
+Fix load autoscore properties on startup</br>
+Save valid data in autoscore.properties</br>
+</br>v1.084 06/19/2022</br>
 Add AutoScore window</br>
 Add auto score logic to update scores when score server sends team scored<br/>
 <br/>
