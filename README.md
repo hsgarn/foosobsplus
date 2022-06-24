@@ -663,6 +663,14 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.086 06/24/2022</br>
+</br>
+Get cancel autoscore working</br>
+Refocus after score shows timer window</br>
+Add release date to about</br>
+Add autoscoremainpanel</br>
+Automatically reset and start match on point after match has been won</br>
+</br>
 v1.085 06/19/2022</br>
 Fix load autoscore properties on startup</br>
 Save valid data in autoscore.properties</br>

@@ -62,12 +62,18 @@ public class MainController {
 		this.lastScored2WindowFrame.addLastScoredWindowClosedListener(new LastScoredWindow2CloseListener());
 		this.gameTableWindowFrame.addGameTableWindowClosedListener(new GameTableWindowCloseListener());
 	}
+	public void setFocusOnCode() {
+		mainFrame.setFocusOnCode();
+	}
 	public void showTimerWindow() {
 		timerWindowFrame.setVisible(true);
 		mainFrame.setTimerWindowSelected(true);
 	}
 	public boolean getTimerWindowSelected() {
 		return mainFrame.getTimerWindowSelected();
+	}
+	public void showAutoScore() {
+		mainFrame.showAutoScore();
 	}
 	////// MainFrame Listener Objects //////
 	private class TimerWindowCloseListener implements WindowListener {

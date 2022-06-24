@@ -43,7 +43,7 @@ public class AutoScoreFrame extends JFrame {
 			System.out.println(Messages.getString("AutoScoreFrame.ErrorLoadingSettings")); //$NON-NLS-1$
 			e.printStackTrace();
 		}
-		autoScorePanel.setPreferredSize(new Dimension(800, 550));
+		autoScorePanel.setPreferredSize(new Dimension(500, 400));
 		
 		getContentPane().add(autoScorePanel);
 		pack();

@@ -64,6 +64,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private ResetPanel resetPanel;
 	private TimerPanel timerPanel;
 	private OBSPanel obsPanel;
+	private AutoScoreMainPanel autoScoreMainPanel;
 	private StatsEntryPanel statsEntryPanel;
 	private StatsDisplayPanel statsDisplayPanel;
 	private MatchPanel matchPanel;
@@ -86,13 +87,19 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private JMenuItem obsConnectItem;
 	private JMenuItem obsDisconnectItem;
 	private JMenu obsMenu;
-	private ImageIcon imgConnected;
-	private ImageIcon imgDisconnected;
-	private Icon imgIconConnected;
-	private Icon imgIconDisconnected;
+	private JMenu autoScoreMenu;
+	private JMenuItem autoScoreSettingsItem;
+	private ImageIcon imgOBSConnected;
+	private ImageIcon imgOBSDisconnected;
+	private Icon imgIconOBSConnected;
+	private Icon imgIconOBSDisconnected;
+	private ImageIcon imgAutoScoreConnected;
+	private ImageIcon imgAutoScoreDisconnected;
+	private Icon imgIconAutoScoreConnected;
+	private Icon imgIconAutoScoreDisconnected;	
 	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
 	
-	public MainFrame(Settings settings, TablePanel tablePanel, TimerPanel timerPanel, OBSPanel obsPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
+	public MainFrame(Settings settings, TablePanel tablePanel, TimerPanel timerPanel, OBSPanel obsPanel, AutoScoreMainPanel autoScoreMainPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
 			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, BallPanel ballPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,
 			SourcesFrame sourcesFrame, FileNamesFrame fileNamesFrame, OBSConnectFrame obsConnectFrame, AutoScoreFrame autoScoreFrame, Main main) {
 
@@ -101,6 +108,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		this.tablePanel 		= tablePanel;
 		this.timerPanel 		= timerPanel;
 		this.obsPanel           = obsPanel;
+		this.autoScoreMainPanel = autoScoreMainPanel;
 		this.team1Panel 		= team1Panel;
 		this.team2Panel 		= team2Panel;
 		this.statsEntryPanel 	= statsEntryPanel;
@@ -167,14 +175,12 @@ public final class MainFrame extends JFrame implements WindowListener {
 		JMenuItem settingsSourceItem	= new JMenuItem(Messages.getString("MainFrame.Sources")); //$NON-NLS-1$
 		JMenuItem settingsFileItem 		= new JMenuItem(Messages.getString("MainFrame.FileNames")); //$NON-NLS-1$
 		JMenuItem settingsStatItem		= new JMenuItem(Messages.getString("MainFrame.Statistics")); //$NON-NLS-1$
-		JMenuItem settingsAutoScoreItem	= new JMenuItem(Messages.getString("MainFrame.AutoScore")); //$NON-NLS-1$
 		
 		settingsMenu.add(settingsParamItem);
 		settingsMenu.add(settingsHotKeyItem);
 		settingsMenu.add(settingsSourceItem);
 		settingsMenu.add(settingsFileItem);
 		settingsMenu.add(settingsStatItem);
-		settingsMenu.add(settingsAutoScoreItem);
 		editMenu.add(settingsMenu);
 		
 		obsMenu 			= new JMenu(Messages.getString("MainFrame.OBS")); //$NON-NLS-1$
@@ -182,18 +188,31 @@ public final class MainFrame extends JFrame implements WindowListener {
 		obsDisconnectItem 	= new JMenuItem(Messages.getString("MainFrame.OBSDisconnect")); //$NON-NLS-1$
 		showScores          = new JCheckBoxMenuItem(Messages.getString("MainFrame.ShowScores")); //$NON-NLS-1$
 		
-		imgConnected = new ImageIcon(this.getClass().getResource("Connected.png"));; //$NON-NLS-1$
-		imgConnected.setImage(imgConnected.getImage().getScaledInstance(12, 12,  Image.SCALE_DEFAULT));
-		imgIconConnected = imgConnected;
-		imgDisconnected = new ImageIcon(this.getClass().getResource("Disconnected.png"));; //$NON-NLS-1$
-		imgDisconnected.setImage(imgDisconnected.getImage().getScaledInstance(12, 12,  Image.SCALE_DEFAULT));
-		imgIconDisconnected = imgDisconnected;
+		imgOBSConnected = new ImageIcon(this.getClass().getResource("Connected.png"));; //$NON-NLS-1$
+		imgOBSConnected.setImage(imgOBSConnected.getImage().getScaledInstance(12, 12,  Image.SCALE_DEFAULT));
+		imgIconOBSConnected = imgOBSConnected;
+		imgOBSDisconnected = new ImageIcon(this.getClass().getResource("Disconnected.png"));; //$NON-NLS-1$
+		imgOBSDisconnected.setImage(imgOBSDisconnected.getImage().getScaledInstance(12, 12,  Image.SCALE_DEFAULT));
+		imgIconOBSDisconnected = imgOBSDisconnected;
 		
 		obsMenu.add(obsConnectItem);
 		obsMenu.add(obsDisconnectItem);
 		obsMenu.add(showScores);
-		obsMenu.setIcon(imgIconDisconnected);
-				
+		obsMenu.setIcon(imgIconOBSDisconnected);
+		
+		autoScoreMenu  = new JMenu(Messages.getString("MainFrame.AutoScore")); //$NON-NLS-1$
+		autoScoreSettingsItem  = new JMenuItem(Messages.getString("MainFrame.AutoScoreSettings")); //$NON-NLS-1$
+		
+		imgAutoScoreConnected = new ImageIcon(this.getClass().getResource("Connected.png"));; //$NON-NLS-1$
+		imgAutoScoreConnected.setImage(imgAutoScoreConnected.getImage().getScaledInstance(12, 12, Image.SCALE_DEFAULT));
+		imgIconAutoScoreConnected = imgAutoScoreConnected;
+		imgAutoScoreDisconnected = new ImageIcon(this.getClass().getResource("Disconnected.png"));; //$NON-NLS-1$
+		imgAutoScoreDisconnected.setImage(imgOBSDisconnected.getImage().getScaledInstance(12, 12,  Image.SCALE_DEFAULT));
+		imgIconAutoScoreDisconnected = imgOBSDisconnected;
+		
+		autoScoreMenu.add(autoScoreSettingsItem);
+		autoScoreMenu.setIcon(imgIconAutoScoreDisconnected);
+		
 		JMenu viewMenu = new JMenu(Messages.getString("MainFrame.View")); //$NON-NLS-1$
 		viewMenu.add(viewAlwaysOnTop);
 		viewMenu.add(viewTimerWindow);
@@ -215,10 +234,12 @@ public final class MainFrame extends JFrame implements WindowListener {
 		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
 		menuBar.add(obsMenu);
+		menuBar.add(autoScoreMenu);
 		menuBar.add(viewMenu);
 		menuBar.add(helpMenu);
 		
-		obsMenu.setIcon(imgIconDisconnected);
+		obsMenu.setIcon(imgIconOBSDisconnected);
+		autoScoreMenu.setIcon(imgIconAutoScoreDisconnected);
 		
 		showScores.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
@@ -242,7 +263,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 				hotKeysFrame.setVisible(true);
 			}
 		});
-		settingsAutoScoreItem.addActionListener(new ActionListener() {
+		autoScoreSettingsItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				autoScoreFrame.setVisible(true);
 			}
@@ -358,9 +379,16 @@ public final class MainFrame extends JFrame implements WindowListener {
 	}
 	public void setOBSIconConnected(Boolean connected) {
 		if (connected) {
-			obsMenu.setIcon(imgIconConnected);
+			obsMenu.setIcon(imgIconOBSConnected);
 		} else {
-			obsMenu.setIcon(imgIconDisconnected);
+			obsMenu.setIcon(imgIconOBSDisconnected);
+		}
+	}
+	public void setAutoScoreIconConnected(Boolean connected) {
+		if (connected) {
+			autoScoreMenu.setIcon(imgIconAutoScoreConnected);
+		} else {
+			autoScoreMenu.setIcon(imgIconAutoScoreDisconnected);
 		}
 	}
 	public void enableConnect(Boolean state) {
@@ -436,7 +464,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		
 		gc.gridx = 0;
 		gc.gridwidth = 1;
-		gc.gridheight = 1;
+		gc.gridheight = 2;
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
@@ -464,7 +492,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		
 		gc.gridx = 2;
 		gc.gridwidth =1;
-		gc.gridheight = 2;
+		gc.gridheight = 4;
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
@@ -479,7 +507,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		
 		gc.gridx = 3;
 		gc.gridwidth =1;
-		gc.gridheight = 2;
+		gc.gridheight = 4;
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
@@ -489,13 +517,14 @@ public final class MainFrame extends JFrame implements WindowListener {
 		////////// Match Panel  ///////////
 		
 		gc.gridy++;
+		gc.gridy++;
 
 		gc.weightx = .5;
 		gc.weighty = .5;
 		
 		gc.gridx = 0;
 		gc.gridwidth =1;
-		gc.gridheight = 1;
+		gc.gridheight = 2;
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
@@ -505,7 +534,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		////////// OBS Panel  ///////////
 		
 		gc.weightx = .5;
-		gc.weighty = .5;
+		gc.weighty = .25;
 		
 		gc.gridx = 1;
 		gc.gridwidth =1;
@@ -513,8 +542,23 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		obsPanel.setPreferredSize(new Dimension(250,200));
+		obsPanel.setPreferredSize(new Dimension(250,100));
 		add(obsPanel, gc);
+
+		////////// AutoScore Main Panel  ///////////
+		gc.gridy++;
+		
+		gc.weightx = .5;
+		gc.weighty = .25;
+		
+		gc.gridx = 1;
+		gc.gridwidth =1;
+		gc.gridheight = 1;
+		gc.fill = GridBagConstraints.BOTH;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.insets = new Insets(0, 0, 0, 0);
+		autoScoreMainPanel.setPreferredSize(new Dimension(250,100));
+		add(autoScoreMainPanel, gc);
 
 		////////// Team 1 Panel ///////////
 		
@@ -777,6 +821,12 @@ public final class MainFrame extends JFrame implements WindowListener {
 	}
 	public AutoScorePanel getAutoScorePanel() {
 		return autoScoreFrame.getAutoScorePanel();
+	}
+	public void setFocusOnCode() {
+		statsEntryPanel.setFocusOnCode();
+	}
+	public void showAutoScore() {
+		autoScoreFrame.setVisible(true);
 	}
 
 	@Override

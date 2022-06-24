@@ -34,7 +34,7 @@ import net.miginfocom.swing.MigLayout;
 public class AboutPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private static final String versionNumber = "1.085"; //$NON-NLS-1$
+	private static final String versionNumber = "1.086"; //$NON-NLS-1$
 
 	public AboutPanel(JFrame aboutFrame) {
 		setLayout(new MigLayout("", "[127.00][50.00:87.00,grow,left]", "[][][][][grow][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -48,33 +48,39 @@ public class AboutPanel extends JPanel {
 		JLabel lblVersion = new JLabel(Messages.getString("AboutPanel.Version")); //$NON-NLS-1$
 		add(lblVersion, "cell 0 1,alignx right"); //$NON-NLS-1$
 		
-		JLabel lblNewLabel = new JLabel(versionNumber);
-		add(lblNewLabel, "cell 1 1"); //$NON-NLS-1$
+		JLabel lblVersionValue = new JLabel(versionNumber);
+		add(lblVersionValue, "cell 1 1"); //$NON-NLS-1$
+		
+		JLabel lblReleaseDate = new JLabel(Messages.getString("AboutPanel.ReleaseDate")); //$NON-NLS-1$
+		add(lblReleaseDate, "cell 0 2,alignx right"); //$NON-NLS-1$
+		
+		JLabel lblReleaseDateValue = new JLabel("06/24/2022");
+		add(lblReleaseDateValue, "cell 1 2"); //$NON-NLS-1$
 		
 		JLabel lblAuthor = new JLabel(Messages.getString("AboutPanel.Author")); //$NON-NLS-1$
-		add(lblAuthor, "cell 0 2,alignx right"); //$NON-NLS-1$
+		add(lblAuthor, "cell 0 3,alignx right"); //$NON-NLS-1$
 		
 		JLabel lblAuthorValue = new JLabel("Hugh Garner"); //$NON-NLS-1$
-		add(lblAuthorValue, "cell 1 2"); //$NON-NLS-1$
+		add(lblAuthorValue, "cell 1 3"); //$NON-NLS-1$
 		
 		JLabel lblCopyright = new JLabel(Messages.getString("AboutPanel.Copyright")); //$NON-NLS-1$
-		add(lblCopyright, "cell 0 3,alignx right"); //$NON-NLS-1$
+		add(lblCopyright, "cell 0 4,alignx right"); //$NON-NLS-1$
 		
-		JLabel lblCopyrightValue = new JLabel("2020, 2021 Hugh Garner"); //$NON-NLS-1$
-		add(lblCopyrightValue, "cell 1 3"); //$NON-NLS-1$
+		JLabel lblCopyrightValue = new JLabel("2020, 2021, 2022 Hugh Garner"); //$NON-NLS-1$
+		add(lblCopyrightValue, "cell 1 4"); //$NON-NLS-1$
 		
 		JLabel lblLicense = new JLabel(Messages.getString("AboutPanel.License")); //$NON-NLS-1$
-		add(lblLicense, "cell 0 4,alignx right"); //$NON-NLS-1$
+		add(lblLicense, "cell 0 5,alignx right"); //$NON-NLS-1$
 		
 		JTextArea txtrPermissionIsHereby = new JTextArea();
 		txtrPermissionIsHereby.setText(Messages.getString("AboutPanel.LicenseText")); //$NON-NLS-1$
-		add(txtrPermissionIsHereby, "cell 1 4,grow"); //$NON-NLS-1$
+		add(txtrPermissionIsHereby, "cell 1 5,grow"); //$NON-NLS-1$
 
 		ImageIcon img = new ImageIcon(this.getClass().getResource("FoosBallTableAnimation.gif"));; //$NON-NLS-1$
 		img.setImage(img.getImage().getScaledInstance(100, 100,  Image.SCALE_DEFAULT));
 		Icon imgIcon = img;
 		JLabel lblIcon = new JLabel(imgIcon);
-		add(lblIcon, "cell 1 5,alignx center"); //$NON-NLS-1$
+		add(lblIcon, "cell 1 6,alignx center"); //$NON-NLS-1$
 
 	}
 

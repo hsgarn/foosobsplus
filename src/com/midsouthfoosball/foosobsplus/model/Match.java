@@ -96,6 +96,11 @@ public class Match implements Serializable {
 		clearMeatball();
 		startGame();
 	}
+	public String createMatchId() {
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-dd.HH:mm:ss.SSS");
+		return formatter.format(date);
+	}
 	public void startGame() {
 		setGamePaused(false);
 		setMatchPaused(false);
@@ -105,6 +110,7 @@ public class Match implements Serializable {
 		setMatchWon(false);
 		setMatchWinner(0);
 		setCurrentGameNumber(1);
+		resetGameCounts();
 		setLastScored(0);
 		clearScores();
 		clearTimes();

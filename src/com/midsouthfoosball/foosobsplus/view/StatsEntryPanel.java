@@ -252,6 +252,7 @@ public class StatsEntryPanel extends JPanel {
     }
     public void setFocusOnCode() {
     	txtCode.requestFocusInWindow();
+    	txtCode.requestFocus();
     }
 	public void setTitle() {
 		String title=buildTitle();

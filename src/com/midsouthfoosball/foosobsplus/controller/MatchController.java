@@ -78,6 +78,12 @@ public class MatchController {
 		}
 	}
 	public void incrementScore(int teamNumber) {
+		
+		if (match.getMatchWon()) {
+			match.resetMatch();
+			teamController.resetGameCounts();
+			match.startMatch(createMatchId());
+		}
 		int winState = teamController.incrementScore(teamNumber);
 		if (winState==1) {
 			startGame();
@@ -126,6 +132,9 @@ public class MatchController {
 		stats.setIsCommand(true);
 		stats.addCodeToHistory(tmpCode);
 		statsEntryPanel.updateCodeHistory(tmpCode);
+	}
+	public String createMatchId() {
+		return match.createMatchId();
 	}
 	public void endMatch() {
 		match.setMatchStarted(false);

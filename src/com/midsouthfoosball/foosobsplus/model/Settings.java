@@ -303,6 +303,9 @@ public class Settings {
 		defaultHotKeyProps.setProperty("PullHotKey", "");
 		defaultHotKeyProps.setProperty("ShowScoresHotKey", "");
 		defaultHotKeyProps.setProperty("ShowTimerHotKey", "");
+		defaultHotKeyProps.setProperty("AutoScoreMainConnectHotKey", "");
+		defaultHotKeyProps.setProperty("AutoScoreMainDisconnectHotKey", "");
+		defaultHotKeyProps.setProperty("AutoScoreMainSettingsHotKey", "");
 		//AutoScore Properites
 		defaultAutoScoreProps.setProperty("AutoScoreServerHostName", "foosScorePi");
 		defaultAutoScoreProps.setProperty("AutoScoreServerAddress", "192.168.68.69");
@@ -843,6 +846,9 @@ public class Settings {
 	public String getPullHotKey() {return configHotKeyProps.getProperty("PullHotKey");}
 	public String getShowScoresHotKey() {return configHotKeyProps.getProperty("ShowScoresHotKey");}
 	public String getShowTimerHotKey() {return configHotKeyProps.getProperty("ShowTimerHotKey");}
+	public String getAutoScoreMainConnectHotKey() {return configHotKeyProps.getProperty("AutoScoreMainConnectHotKey");}
+	public String getAutoScoreMainDisconnectHotKey() {return configHotKeyProps.getProperty("AutoScoreMainDisconnectHotKey");}
+	public String getAutoScoreMainSettingsHotKey() {return configHotKeyProps.getProperty("AutoScoreMainSettingsHotKey");}
 	//AutoScore
 	public String getAutoScoreServerHostName() {return configAutoScoreProps.getProperty("AutoScoreServerHostName");}
 	public String getAutoScoreServerAddress() {return configAutoScoreProps.getProperty("AutoScoreServerAddress");}

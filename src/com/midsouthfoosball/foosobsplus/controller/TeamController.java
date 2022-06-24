@@ -346,7 +346,6 @@ public class TeamController {
 	}
 	
 	////// Utility Methods \\\\\\
-
 	public void updateLastScoredTimes() {
 		String lastScoredTime1 = lastScored1Clock.getLastScoredTime();
 		String lastScoredTime2 = lastScored2Clock.getLastScoredTime();
@@ -433,6 +432,7 @@ public class TeamController {
 		timerController.startShotTimer();
 		if (!mainController.getTimerWindowSelected()) {
 			mainController.showTimerWindow();
+			mainController.setFocusOnCode();
 		}
 	}
 	public void startPassTimer() {
