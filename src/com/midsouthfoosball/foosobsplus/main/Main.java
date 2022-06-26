@@ -27,7 +27,6 @@ import java.awt.event.FocusEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
@@ -114,9 +113,11 @@ import com.midsouthfoosball.foosobsplus.model.Stats;
 import com.midsouthfoosball.foosobsplus.model.Table;
 import com.midsouthfoosball.foosobsplus.model.Team;
 import com.midsouthfoosball.foosobsplus.model.TimeClock;
-import com.midsouthfoosball.foosobsplus.view.AutoScoreFrame;
+import com.midsouthfoosball.foosobsplus.view.AutoScoreConfigFrame;
+import com.midsouthfoosball.foosobsplus.view.AutoScoreConfigPanel;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreMainPanel;
-import com.midsouthfoosball.foosobsplus.view.AutoScorePanel;
+import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsFrame;
+import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsPanel;
 import com.midsouthfoosball.foosobsplus.view.BallPanel;
 import com.midsouthfoosball.foosobsplus.view.FileNamesFrame;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowFrame;
@@ -169,6 +170,7 @@ public class Main {
 	private String obsSceneName 					= "FoosOBS+ Main";
 	private String obsShowScoresSource 				= "ScoresAndLabels";
 	private String obsShowTimerSource               = "Foos OBS+ Timer";
+	private boolean autoScoreConnected				= false; 
 	
 	////// CommandStack and UndoRedo setup \\\\\\
 	
@@ -229,8 +231,10 @@ public class Main {
 	private FileNamesFrame		fileNamesFrame		= new FileNamesFrame(settings, obsInterface);
 	private OBSConnectFrame		obsConnectFrame		= new OBSConnectFrame(settings);
 	private OBSConnectPanel		obsConnectPanel		= obsConnectFrame.getOBSConnectPanel();
-	private AutoScoreFrame		autoScoreFrame		= new AutoScoreFrame(settings);
-	private AutoScorePanel		autoScorePanel		= autoScoreFrame.getAutoScorePanel();
+	private AutoScoreSettingsFrame		autoScoreSettingsFrame		= new AutoScoreSettingsFrame(settings);
+	private AutoScoreSettingsPanel		autoScoreSettingsPanel		= autoScoreSettingsFrame.getAutoScoreSettingsPanel();
+	private AutoScoreConfigFrame		autoScoreConfigFrame		= new AutoScoreConfigFrame(settings);
+	private AutoScoreConfigPanel		autoScoreConfigPanel		= autoScoreConfigFrame.getAutoScoreConfigPanel();
 	
 	
 	////// Display the View Panels on a JFrame \\\\\\
@@ -273,12 +277,12 @@ public class Main {
 		loadCommands();
 
 		fetchAll(settings.getTableName());
-
-		InetAddress addr = InetAddress.getByName("foosScorePi");
-		autoScorePanel.addMessage(dtf.format(LocalDateTime.now()) + ": Local HostAddress: " + addr.getHostAddress());
-		autoScorePanel.addMessage(dtf.format(LocalDateTime.now()) + ": Local hostname: " + addr.getHostName());
 		
 		createAutoScoreWorker();
+		
+		if (settings.getAutoScoreSettingsAutoConnect() == 1) {
+			connectAutoScore();
+		}
 	}
 	private void createAutoScoreWorker() {
 		autoScoreWorker = new SwingWorker<Boolean, Integer>() {
@@ -289,22 +293,22 @@ public class Main {
 			@Override
 			protected Boolean doInBackground() throws Exception {
 		    	boolean isConnected = false;
-		    	String address = settings.getAutoScoreServerAddress();
-		    	int port = settings.getAutoScoreServerPort();
+		    	String address = settings.getAutoScoreSettingsServerAddress();
+		    	int port = settings.getAutoScoreSettingsServerPort();
 		    	try
 		        {
 		            skt = new Socket(address, port);
-		            autoScorePanel.addMessage(dtf.format(LocalDateTime.now()) + ": Connected to " + address + ": " + port);
+		            autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Connected to " + address + ": " + port);
 		        	dataIn = new BufferedReader(new InputStreamReader(skt.getInputStream()));
 		        	isConnected = true;
 		        }
 		        catch(UnknownHostException uh)
 		        {
-		        	autoScorePanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + uh.toString());
+		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + uh.toString());
 		        }
 		        catch(IOException io)
 		        {
-		        	autoScorePanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString());
+		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString());
 		        }
 		        String str = "";
 		        while (isConnected)
@@ -315,11 +319,17 @@ public class Main {
 		                if (str.equals(team1))
 		                {
 		                	publish(1);
+		                	if (settings.getAutoScoreSettingsDetailLog()==1) {
+		                		autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team 1 Scored." );
+		                	}
 		                } else {
 			                if (str.equals(team2)) {
 			                	publish(2);
+			                	if (settings.getAutoScoreSettingsDetailLog()==1) {
+			                		autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team 2 Scored." );
+			                	}
 			                } else {
-			                	autoScorePanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + str);
+			                	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + str);
 			                }
 		                }
 		                if (isCancelled()) {
@@ -328,11 +338,11 @@ public class Main {
 		            }
 		            catch(IOException io)
 		            {
-		            	autoScorePanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString());
+		            	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString());
 		                isConnected = false;
 		            }
 		        }
-		        autoScorePanel.addMessage(dtf.format(LocalDateTime.now()) + ": Connection Terminated!!");
+		        autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Connection Terminated!!");
 		        try
 		        {
 		            dataIn.close();
@@ -341,7 +351,7 @@ public class Main {
 		        }
 		        catch(IOException io)
 		        {
-		        	autoScorePanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString());
+		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString());
 		        }
 		        return isConnected;
 			}
@@ -351,18 +361,20 @@ public class Main {
 				if (isCancelled()) return;
 			    try {
 			     status = get();
-			     autoScorePanel.addMessage(dtf.format(LocalDateTime.now()) + ": Worker completed with isConnected: " + status);
+			     autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Worker completed with isConnected: " + status);
 			    } catch (InterruptedException e) {
-			    	autoScorePanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString());
+			    	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString());
 			    } catch (ExecutionException e) {
-			    	autoScorePanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString());
+			    	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString());
 			    }
 			}
 			@Override
 			protected void process(List<Integer> chunks) {
 				if (isCancelled()) return;
 				int mostRecentValue = chunks.get(chunks.size()-1);
-				autoScorePanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team "+mostRecentValue+ " scored!");
+            	if (settings.getAutoScoreSettingsDetailLog()==1) {
+            		autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team "+mostRecentValue+ " scored!");
+            	}
 				if (mostRecentValue == 1) {
 					processCode("XIST1", false);
 				}	else {
@@ -376,7 +388,7 @@ public class Main {
 	public void loadWindowsAndControllers() {
 		mainFrame = new MainFrame(settings, tablePanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, statsEntryPanel, 
 				switchPanel, resetPanel, statsDisplayPanel, matchPanel, ballPanel, 
-				parametersFrame, hotKeysFrame, sourcesFrame, fileNamesFrame, obsConnectFrame, autoScoreFrame, this);
+				parametersFrame, hotKeysFrame, sourcesFrame, fileNamesFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, this);
 
 		////// Set up independent Windows \\\\\\
 		
@@ -418,9 +430,11 @@ public class Main {
 		ballPanel.addBtnHideAllBallsListener(new BtnHideAllBallsListener());
 		
 		hotKeysPanel.addSaveListener(new HotKeysSaveListener());
-		autoScorePanel.addSaveListener(new AutoScoreSaveListener());
-		autoScorePanel.addConnectListener(new AutoScoreConnectListener());
-		autoScorePanel.addDisconnectListener(new AutoScoreDisconnectListener());
+		autoScoreSettingsPanel.addSaveListener(new AutoScoreSettingsSaveListener());
+		autoScoreSettingsPanel.addConnectListener(new AutoScoreSettingsConnectListener());
+		autoScoreSettingsPanel.addDisconnectListener(new AutoScoreSettingsDisconnectListener());
+		autoScoreConfigPanel.addSaveListener(new AutoScoreConfigSaveListener());
+		autoScoreConfigPanel.addSendConfigListener(new AutoScoreConfigSendConfigListener());
 		parametersPanel.addSaveListener(new SettingsSaveListener());
 		obsConnectPanel.addSetSceneListener(new OBSSetSceneListener());
 		obsConnectPanel.addConnectListener(new OBSConnectListener());
@@ -931,16 +945,24 @@ public class Main {
 		});
 	}
 	private void connectAutoScore() {
-		autoScorePanel.addMessage("Trying to connect...");
+		autoScoreSettingsPanel.addMessage("Trying to connect...");
 		createAutoScoreWorker();
 		autoScoreWorker.execute();
 		mainFrame.setAutoScoreIconConnected(true);
+		autoScoreConnected = true;
 	}
 	private void disconnectAutoScore() {
-		autoScorePanel.addMessage("Disconnecting...");
+		autoScoreSettingsPanel.addMessage("Disconnecting...");
 		autoScoreWorker.cancel(true);
 		mainFrame.setAutoScoreIconConnected(false);
+		autoScoreConnected = false;
 	}
+	private void sendAutoScoreConfig() {
+		if(autoScoreConnected) {
+			
+		}
+	}
+
 	////// Listeners \\\\\\
 	private class BtnCueBallListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
@@ -1094,19 +1116,29 @@ public class Main {
 			statsEntryPanel.updateMnemonics();
 		}
 	}
-	private class AutoScoreSaveListener implements ActionListener {
+	private class AutoScoreSettingsSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			autoScorePanel.saveSettings();
+			autoScoreSettingsPanel.saveSettings();
 		}
 	}
-	private class AutoScoreConnectListener implements ActionListener {
+	private class AutoScoreSettingsConnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			connectAutoScore();
 		}
 	}
-	private class AutoScoreDisconnectListener implements ActionListener {
+	private class AutoScoreSettingsDisconnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			disconnectAutoScore();
+		}
+	}
+	private class AutoScoreConfigSaveListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			autoScoreConfigPanel.saveSettings();
+		}
+	}
+	private class AutoScoreConfigSendConfigListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			sendAutoScoreConfig();
 		}
 	}
 	private class OBSSceneListener implements ActionListener {

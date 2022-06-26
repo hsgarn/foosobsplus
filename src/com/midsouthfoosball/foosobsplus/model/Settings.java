@@ -41,31 +41,35 @@ public class Settings {
 	private Properties defaultFileNameProps;
 	private Properties defaultHotKeyProps;
 	private Properties defaultOBSProps;
-	private Properties defaultAutoScoreProps;
+	private Properties defaultAutoScoreSettingsProps;
+	private Properties defaultAutoScoreConfigProps;
 	
 	public Properties configControlProps;
 	public Properties configSourceProps;
 	public Properties configFileNameProps;
 	public Properties configHotKeyProps;
 	public Properties configOBSProps;
-	public Properties configAutoScoreProps;
+	public Properties configAutoScoreSettingsProps;
+	public Properties configAutoScoreConfigProps;
 	
-	private String configControlFileName 	= "control.properties";
-	private String configSourceFileName 	= "source.properties";
-	private String configFileNameFileName 	= "filename.properties";
-	private String configHotKeyFileName 	= "hotkey.properties";
-	private String configOBSFileName        = "obs.properties";
-	private String configAutoScoreFileName	= "autoscore.properties";
+	private String configControlFileName 			= "control.properties";
+	private String configSourceFileName 			= "source.properties";
+	private String configFileNameFileName 			= "filename.properties";
+	private String configHotKeyFileName 			= "hotkey.properties";
+	private String configOBSFileName        		= "obs.properties";
+	private String configAutoScoreSettingsFileName	= "autoscoresettings.properties";
+	private String configAutoScoreConfigFileName	= "autoscoreconfig.properties";
 
 	//////////////////////////////////////////////////////
 	
 	public Settings() throws IOException {
-		defaultControlProps 	= new Properties();
-		defaultSourceProps 		= new Properties();
-		defaultFileNameProps 	= new Properties();
-		defaultHotKeyProps 		= new Properties();
-		defaultOBSProps         = new Properties();
-		defaultAutoScoreProps	= new Properties();
+		defaultControlProps 			= new Properties();
+		defaultSourceProps 				= new Properties();
+		defaultFileNameProps 			= new Properties();
+		defaultHotKeyProps 				= new Properties();
+		defaultOBSProps         		= new Properties();
+		defaultAutoScoreSettingsProps	= new Properties();
+		defaultAutoScoreConfigProps		= new Properties();
 		// sets default properties
 		// Parameter settings
 		defaultControlProps.setProperty("ShowParsed", "true");
@@ -306,24 +310,37 @@ public class Settings {
 		defaultHotKeyProps.setProperty("AutoScoreMainConnectHotKey", "");
 		defaultHotKeyProps.setProperty("AutoScoreMainDisconnectHotKey", "");
 		defaultHotKeyProps.setProperty("AutoScoreMainSettingsHotKey", "");
-		//AutoScore Properites
-		defaultAutoScoreProps.setProperty("AutoScoreServerHostName", "foosScorePi");
-		defaultAutoScoreProps.setProperty("AutoScoreServerAddress", "192.168.68.69");
-		defaultAutoScoreProps.setProperty("AutoScoreServerPort", "5051");
+		//AutoScore Settings Properites
+		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsServerAddress", "192.168.68.69");
+		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsServerPort", "5051");
+		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsAutoConnect", "0");
+		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsDetailLog", "0");
+		//AutoScore Config Properties
+		defaultAutoScoreConfigProps.setProperty("AutoScoreConfigTeam1Pin1", "40");  
+		defaultAutoScoreConfigProps.setProperty("AutoScoreConfigTeam1Pin2", "0");   
+		defaultAutoScoreConfigProps.setProperty("AutoScoreConfigTeam2Pin1", "35");  
+		defaultAutoScoreConfigProps.setProperty("AutoScoreConfigTeam2Pin2", "37");  
+		defaultAutoScoreConfigProps.setProperty("AutoScoreConfigTeam1LEDPin", "33");
+		defaultAutoScoreConfigProps.setProperty("AutoScoreConfigTeam2LEDPin", "18");
+		defaultAutoScoreConfigProps.setProperty("AutoScoreConfigSwitchPin", "7");   
+		defaultAutoScoreConfigProps.setProperty("AutoScoreConfigResetSeconds", "5");
+
 		//Config Properties
-		configControlProps 		= new Properties(defaultControlProps);
-		configSourceProps 		= new Properties(defaultSourceProps);
-		configFileNameProps 	= new Properties(defaultFileNameProps);
-		configHotKeyProps 		= new Properties(defaultHotKeyProps);
-		configOBSProps      	= new Properties(defaultOBSProps);
-		configAutoScoreProps	= new Properties(defaultAutoScoreProps);
+		configControlProps 				= new Properties(defaultControlProps);
+		configSourceProps 				= new Properties(defaultSourceProps);
+		configFileNameProps 			= new Properties(defaultFileNameProps);
+		configHotKeyProps 				= new Properties(defaultHotKeyProps);
+		configOBSProps      			= new Properties(defaultOBSProps);
+		configAutoScoreSettingsProps	= new Properties(defaultAutoScoreSettingsProps);
+		configAutoScoreConfigProps		= new Properties(defaultAutoScoreConfigProps);
 		
 		loadFromControlConfig();
 		loadFromOBSConfig();
 		loadFromSourceConfig();
 		loadFromFileNameConfig();
 		loadFromHotKeyConfig();
-		loadFromAutoScoreConfig();
+		loadFromAutoScoreSettingsConfig();
+		loadFromAutoScoreConfigConfig();
 	}
 
 	//Getters
@@ -849,11 +866,21 @@ public class Settings {
 	public String getAutoScoreMainConnectHotKey() {return configHotKeyProps.getProperty("AutoScoreMainConnectHotKey");}
 	public String getAutoScoreMainDisconnectHotKey() {return configHotKeyProps.getProperty("AutoScoreMainDisconnectHotKey");}
 	public String getAutoScoreMainSettingsHotKey() {return configHotKeyProps.getProperty("AutoScoreMainSettingsHotKey");}
-	//AutoScore
-	public String getAutoScoreServerHostName() {return configAutoScoreProps.getProperty("AutoScoreServerHostName");}
-	public String getAutoScoreServerAddress() {return configAutoScoreProps.getProperty("AutoScoreServerAddress");}
-	public int getAutoScoreServerPort() {return Integer.parseInt(configAutoScoreProps.getProperty("AutoScoreServerPort"));}
-//Setters
+	//AutoScore Settings
+	public String getAutoScoreSettingsServerAddress() {return configAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerAddress");}
+	public int getAutoScoreSettingsServerPort() {return Integer.parseInt(configAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerPort"));}
+	public int getAutoScoreSettingsAutoConnect() {return Integer.parseInt(configAutoScoreSettingsProps.getProperty("AutoScoreSettingsAutoConnect"));}
+	public int getAutoScoreSettingsDetailLog() {return Integer.parseInt(configAutoScoreSettingsProps.getProperty("AutoScoreSettingsDetailLog"));}
+	//AutoScore Config
+	public int getAutoScoreConfigTeam1Pin1() {return Integer.parseInt(configAutoScoreConfigProps.getProperty("AutoScoreConfigTeam1Pin1"));}
+	public int getAutoScoreConfigTeam1Pin2() {return Integer.parseInt(configAutoScoreConfigProps.getProperty("AutoScoreConfigTeam1Pin2"));}
+	public int getAutoScoreConfigTeam2Pin1() {return Integer.parseInt(configAutoScoreConfigProps.getProperty("AutoScoreConfigTeam2Pin1"));}
+	public int getAutoScoreConfigTeam2Pin2() {return Integer.parseInt(configAutoScoreConfigProps.getProperty("AutoScoreConfigTeam2Pin2"));}
+	public int getAutoScoreConfigTeam1LEDPin() {return Integer.parseInt(configAutoScoreConfigProps.getProperty("AutoScoreConfigTeam1LEDPin"));}
+	public int getAutoScoreConfigTeam2LEDPin() {return Integer.parseInt(configAutoScoreConfigProps.getProperty("AutoScoreConfigTeam2LEDPin"));}
+	public int getAutoScoreConfigSwitchPin() {return Integer.parseInt(configAutoScoreConfigProps.getProperty("AutoScoreConfigSwitchPin"));}
+	public int getAutoScoreConfigResetSeconds() {return Integer.parseInt(configAutoScoreConfigProps.getProperty("AutoScoreConfigResetSeconds"));}
+	//Setters
 	//Control Parameters
 	public void setShowParsed(boolean showParsed) {
 		configControlProps.setProperty("ShowParsed", Boolean.toString(showParsed));
@@ -1543,15 +1570,43 @@ public class Settings {
 	public void setShowTimerHotKey(String showTimerHotKey) {
 		configHotKeyProps.setProperty("ShowTimerHotKey", showTimerHotKey);
 	}
-	//AutoScores
-	public void setAutoScoreServerHostName(String autoScoreServerHostName) {
-		configAutoScoreProps.setProperty("AutoScoreServerHostName", autoScoreServerHostName);
+	//AutoScore Settings
+	public void setAutoScoreSettingsServerAddress(String autoScoreSettingsServerAddress) {
+		configAutoScoreSettingsProps.setProperty("AutoScoreSettingsServerAddress", autoScoreSettingsServerAddress);
 	}
-	public void setAutoScoreServerAddress(String autoScoreServerAddress) {
-		configAutoScoreProps.setProperty("AutoScoreServerAddress", autoScoreServerAddress);
+	public void setAutoScoreSettingsServerPort(String autoScoreSettingsServerPort) {
+		configAutoScoreSettingsProps.setProperty("AutoScoreSettingsServerPort", autoScoreSettingsServerPort);
 	}
-	public void setAutoScoreServerPort(String autoScoreServerPort) {
-		configAutoScoreProps.setProperty("AutoScoreServerPort", autoScoreServerPort);
+	public void setAutoScoreSettingsAutoConnect(int autoScoreSettingsAutoConnect) {
+		configAutoScoreSettingsProps.setProperty("AutoScoreSettingsAutoConnect", Integer.toString(autoScoreSettingsAutoConnect));
+	}
+	public void setAutoScoreSettingsDetailLog(int autoScoreSettingsDetailLog) {
+		configAutoScoreSettingsProps.setProperty("AutoScoreSettingsDetailLog", Integer.toString(autoScoreSettingsDetailLog));
+	}
+	//AutoScore Config
+	public void setAutoScoreConfigTeam1Pin1(String autoScoreConfigTeam1Pin1) {
+		configAutoScoreConfigProps.setProperty("AutoScoreConfigTeam1Pin1", autoScoreConfigTeam1Pin1);
+	}
+	public void setAutoScoreConfigTeam1Pin2(String autoScoreConfigTeam1Pin2) {
+		configAutoScoreConfigProps.setProperty("AutoScoreConfigTeam1Pin2", autoScoreConfigTeam1Pin2);
+	}
+	public void setAutoScoreConfigTeam2Pin1(String autoScoreConfigTeam2Pin1) {
+		configAutoScoreConfigProps.setProperty("AutoScoreConfigTeam2Pin1", autoScoreConfigTeam2Pin1);
+	}
+	public void setAutoScoreConfigTeam2Pin2(String autoScoreConfigTeam2Pin2) {
+		configAutoScoreConfigProps.setProperty("AutoScoreConfigTeam2Pin2", autoScoreConfigTeam2Pin2);
+	}
+	public void setAutoScoreConfigTeam1LEDPin(String autoScoreConfigTeam1LEDPin) {
+		configAutoScoreConfigProps.setProperty("AutoScoreConfigTeam1LEDPin", autoScoreConfigTeam1LEDPin);
+	}
+	public void setAutoScoreConfigTeam2LEDPin(String autoScoreConfigTeam2LEDPin) {
+		configAutoScoreConfigProps.setProperty("AutoScoreConfigTeam2LEDPin", autoScoreConfigTeam2LEDPin);
+	}
+	public void setAutoScoreConfigSwitchPin(String autoScoreConfigSwitchPin) {
+		configAutoScoreConfigProps.setProperty("AutoScoreConfigSwitchPin", autoScoreConfigSwitchPin);
+	}
+	public void setAutoScoreConfigResetSeconds(String autoScoreConfigResetSeconds) {
+		configAutoScoreConfigProps.setProperty("AutoScoreConfigResetSeconds", autoScoreConfigResetSeconds);
 	}
 //Get Defaults
 	//Control Parameters
@@ -1784,11 +1839,21 @@ public class Settings {
 	public String getPullDefaultHotKey() {return defaultHotKeyProps.getProperty("PullHotKey");}
 	public String getShowScoresDefaultHotKey() {return defaultHotKeyProps.getProperty("ShowScoresHotKey");}
 	public String getShowTimerDefaultHotKey() {return defaultHotKeyProps.getProperty("ShowTimerHotKey");}
-	//AutoScore
-	public String getDefaultAutoScoreServerHostName() {return defaultAutoScoreProps.getProperty("AutoScoreServerHostName");}
-	public String getDefaultAutoScoreServerAddress() {return defaultAutoScoreProps.getProperty("AutoScoreServerAddress");}
-	public int getDefaultAutoScoreServerPort() {return Integer.parseInt(defaultAutoScoreProps.getProperty("AutoScoreServerPort"));}
-	
+	//AutoScore Settings
+	public String getDefaultAutoScoreSettingsServerAddress() {return defaultAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerAddress");}
+	public int getDefaultAutoScoreSettingsServerPort() {return Integer.parseInt(defaultAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerPort"));}
+	public int getDefaultAutoScoreSettingsAutoConnect() {return Integer.parseInt(defaultAutoScoreSettingsProps.getProperty("AutoScoreSettingsAutoConnect"));}
+	public int getDefaultAutoScoreSettingsDetailLog() {return Integer.parseInt(defaultAutoScoreSettingsProps.getProperty("AutoScoreSettingsDetailLog"));}
+	//AutoScore Config
+	public int getDefaultAutoScoreConfigTeam1Pin1() {return Integer.parseInt(defaultAutoScoreConfigProps.getProperty("AutoScoreConfigTeam1Pin1"));}
+	public int getDefaultAutoScoreConfigTeam1Pin2() {return Integer.parseInt(defaultAutoScoreConfigProps.getProperty("AutoScoreConfigTeam1Pin2"));}
+	public int getDefaultAutoScoreConfigTeam2Pin1() {return Integer.parseInt(defaultAutoScoreConfigProps.getProperty("AutoScoreConfigTeam2Pin1"));}
+	public int getDefaultAutoScoreConfigTeam2Pin2() {return Integer.parseInt(defaultAutoScoreConfigProps.getProperty("AutoScoreConfigTeam2Pin2"));}
+	public int getDefaultAutoScoreConfigTeam1LEDPin() {return Integer.parseInt(defaultAutoScoreConfigProps.getProperty("AutoScoreConfigTeam1LEDPin"));}
+	public int getDefaultAutoScoreConfigTeam2LEDPin() {return Integer.parseInt(defaultAutoScoreConfigProps.getProperty("AutoScoreConfigTeam2LEDPin"));}
+	public int getDefaultAutoScoreConfigSwitchPin() {return Integer.parseInt(defaultAutoScoreConfigProps.getProperty("AutoScoreConfigSwitchPin"));}
+	public int getDefaultAutoScoreConfigResetSeconds() {return Integer.parseInt(defaultAutoScoreConfigProps.getProperty("AutoScoreConfigResetSeconds"));}
+
 	public void loadFromControlConfig() throws IOException {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configControlFileName))) {
 			configControlProps.load(inputStream);
@@ -1839,17 +1904,24 @@ public class Settings {
 //			loadFromHotKeyConfig();
 		}
 	}
-	public void loadFromAutoScoreConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(configAutoScoreFileName))) {
-			configAutoScoreProps.load(inputStream);
+	public void loadFromAutoScoreSettingsConfig() throws IOException {
+		try(InputStream inputStream = Files.newInputStream(Paths.get(configAutoScoreSettingsFileName))) {
+			configAutoScoreSettingsProps.load(inputStream);
 		} catch (NoSuchFileException e) {
-			Files.createFile(Paths.get(configAutoScoreFileName));
-			configAutoScoreProps = defaultAutoScoreProps;
-			saveAutoScoreConfig();
-//			loadFromAutoScoreConfig();
+			Files.createFile(Paths.get(configAutoScoreSettingsFileName));
+			configAutoScoreSettingsProps = defaultAutoScoreSettingsProps;
+			saveAutoScoreSettingsConfig();
 		}
 	}
-
+	public void loadFromAutoScoreConfigConfig() throws IOException {
+		try(InputStream inputStream = Files.newInputStream(Paths.get(configAutoScoreConfigFileName))) {
+			configAutoScoreConfigProps.load(inputStream);
+		} catch (NoSuchFileException e) {
+			Files.createFile(Paths.get(configAutoScoreConfigFileName));
+			configAutoScoreConfigProps = defaultAutoScoreConfigProps;
+			saveAutoScoreConfigConfig();
+		}
+	}
 	public void saveControlConfig() throws IOException {
 		//Control Parameters
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configControlFileName))) {
@@ -1880,10 +1952,16 @@ public class Settings {
 			configHotKeyProps.store(outputStream, "FoosOBSPlus Hot Key Settings");
 		}
 	}
-	public void saveAutoScoreConfig() throws IOException {
-		//AutoScore
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configAutoScoreFileName))) {
-			configAutoScoreProps.store(outputStream, "FoosOBSPlus AutoScore Settings");
+	public void saveAutoScoreSettingsConfig() throws IOException {
+		//AutoScore Settings
+		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configAutoScoreSettingsFileName))) {
+			configAutoScoreSettingsProps.store(outputStream, "FoosOBSPlus AutoScore Settings");
+		}
+	}
+	public void saveAutoScoreConfigConfig() throws IOException {
+		//AutoScore Config
+		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configAutoScoreConfigFileName))) {
+			configAutoScoreConfigProps.store(outputStream, "FoosOBSPlus AutoScore Config");
 		}
 	}
 }

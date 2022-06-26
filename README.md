@@ -663,6 +663,11 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.087 06/27/2022</br>
+</br>
+Add Auto Score Config window</br>
+Add AutoConnect, DetailLog to AutoScore Settings</br>
+</br>
 v1.086 06/24/2022</br>
 </br>
 Get cancel autoscore working</br>

@@ -73,7 +73,7 @@ public class MainController {
 		return mainFrame.getTimerWindowSelected();
 	}
 	public void showAutoScore() {
-		mainFrame.showAutoScore();
+		mainFrame.showAutoScoreSettings();
 	}
 	////// MainFrame Listener Objects //////
 	private class TimerWindowCloseListener implements WindowListener {

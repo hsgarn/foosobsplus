@@ -27,28 +27,29 @@ import javax.swing.JFrame;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
-public class AutoScoreFrame extends JFrame {
+public class AutoScoreConfigFrame extends JFrame {
 
-	private AutoScorePanel autoScorePanel;
+	private AutoScoreConfigPanel autoScoreConfigPanel;
 	private static final String programName = "FoosOBSPlus"; //$NON-NLS-1$
 	
-	public AutoScoreFrame(Settings settings) {
-		super(programName + " " + Messages.getString("AutoScoreFrame.AutoScoreSettings")); //$NON-NLS-1$ //$NON-NLS-2$
+	public AutoScoreConfigFrame(Settings settings) {
+		super(programName + " " + Messages.getString("AutoScoreConfigFrame.Title")); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
 		try {
-			autoScorePanel = new AutoScorePanel(settings);
+			autoScoreConfigPanel = new AutoScoreConfigPanel(settings);
 		} catch (IOException e) {
-			System.out.println(Messages.getString("AutoScoreFrame.ErrorLoadingSettings")); //$NON-NLS-1$
+			System.out.println(Messages.getString("AutoScoreConfigFrame.ErrorLoadingConfig")); //$NON-NLS-1$
 			e.printStackTrace();
 		}
-		autoScorePanel.setPreferredSize(new Dimension(500, 400));
+		autoScoreConfigPanel.setPreferredSize(new Dimension(500, 400));
 		
-		getContentPane().add(autoScorePanel);
+		getContentPane().add(autoScoreConfigPanel);
 		pack();
 	}
-	public AutoScorePanel getAutoScorePanel() {
-		return autoScorePanel;
+	public AutoScoreConfigPanel getAutoScoreConfigPanel() {
+		return autoScoreConfigPanel;
 	}
+
 }

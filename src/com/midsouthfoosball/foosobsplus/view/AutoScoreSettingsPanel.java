@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021, 2022 Hugh Garner
+Copyright 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -29,10 +29,13 @@ import java.io.IOException;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
+import javax.swing.InputVerifier;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -40,16 +43,18 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import com.google.common.net.InetAddresses;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 import net.miginfocom.swing.MigLayout;
 
-public class AutoScorePanel extends JPanel {
+public class AutoScoreSettingsPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private JTextField txtServerHostName;
 	private JTextField txtServerAddress;
 	private JTextField txtServerPort;
+	private JCheckBox chckbxAutoConnect;
+	private JCheckBox chckbxDetailLog;
 	private JButton btnSave;
 	private JButton btnConnect;
 	private JButton btnDisconnect;
@@ -58,51 +63,59 @@ public class AutoScorePanel extends JPanel {
 	private DefaultListModel<String> mdlMessageHistory;
 	private JScrollPane scrMessageHistory;
 
-	public AutoScorePanel(Settings settings) throws IOException {
+	public AutoScoreSettingsPanel(Settings settings) throws IOException {
 		this.settings = settings;
 		mdlMessageHistory = new DefaultListModel<String>();
 		lstMessageHistory = new JList<String>(mdlMessageHistory);
 		
 		setLayout(new MigLayout("", "[][grow][10.00][][grow][10.00][][grow][10.00][][grow]", "[][][][][][][][][][][][][][][][][][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		
-		JLabel lblServerHostName = new JLabel(Messages.getString("AutoScorePanel.ServerHostName", settings.getGameType())); //$NON-NLS-1$
-		add(lblServerHostName, "cell 0 1,alignx trailing"); //$NON-NLS-1$
-		
-		txtServerHostName = new JTextField();
-		txtServerHostName.setHorizontalAlignment(SwingConstants.CENTER);
-		txtServerHostName.setText(settings.getAutoScoreServerHostName());
-		add(txtServerHostName, "cell 1 1,alignx left"); //$NON-NLS-1$
-		txtServerHostName.setColumns(10);
-		
-		JLabel lblServerAddress = new JLabel(Messages.getString("AutoScorePanel.ServerAddress", settings.getGameType())); //$NON-NLS-1$
+		JLabel lblServerAddress = new JLabel(Messages.getString("AutoScoreSettingsPanel.ServerAddress", settings.getGameType())); //$NON-NLS-1$
 		add(lblServerAddress, "cell 0 2,alignx trailing"); //$NON-NLS-1$
 		
 		txtServerAddress = new JTextField();
 		txtServerAddress.setHorizontalAlignment(SwingConstants.CENTER);
-		txtServerAddress.setText(settings.getAutoScoreServerAddress());
+		txtServerAddress.setInputVerifier(new IPAddrInputVerifier());
+		txtServerAddress.setText(settings.getAutoScoreSettingsServerAddress());
 		add(txtServerAddress, "cell 1 2,alignx left"); //$NON-NLS-1$
 		txtServerAddress.setColumns(10);
 		
-		JLabel lblServerPort = new JLabel(Messages.getString("AutoScorePanel.ServerPort", settings.getGameType())); //$NON-NLS-1$
+		chckbxAutoConnect = new JCheckBox("Auto Connect on Start Up");
+		if (Integer.toString(settings.getAutoScoreSettingsAutoConnect()).equals("1")) {
+			chckbxAutoConnect.setSelected(true);
+		} else {
+			chckbxAutoConnect.setSelected(false);
+		}
+		add(chckbxAutoConnect, "cell 2 2, alignx left"); //$NON-NLS-1$
+		
+		JLabel lblServerPort = new JLabel(Messages.getString("AutoScoreSettingsPanel.ServerPort", settings.getGameType())); //$NON-NLS-1$
 		add(lblServerPort, "cell 0 3,alignx trailing"); //$NON-NLS-1$
 		
 		txtServerPort = new JTextField();
 		txtServerPort.setHorizontalAlignment(SwingConstants.CENTER);
-		txtServerPort.setText(Integer.toString(settings.getAutoScoreServerPort()));
+		txtServerPort.setText(Integer.toString(settings.getAutoScoreSettingsServerPort()));
 		add(txtServerPort, "cell 1 3,alignx left,aligny top"); //$NON-NLS-1$
 		txtServerPort.setColumns(10);
 
+		chckbxDetailLog = new JCheckBox("Detail Log");
+		if (Integer.toString(settings.getAutoScoreSettingsDetailLog()).equals("1")) {
+			chckbxDetailLog.setSelected(true);
+		} else {
+			chckbxDetailLog.setSelected(false);
+		}
+		add(chckbxDetailLog, "cell 2 3, alignx left"); //$NON-NLS-1$
+		
 		btnConnect = new JButton("Connect");
-		add(btnConnect, "flowx,cell 1 4,growx");
+		add(btnConnect, "flowx,cell 1 4,alignx left");
 		
 		btnDisconnect = new JButton("Disconnect");
-		add(btnDisconnect, "cell 1 4,growx");
+		add(btnDisconnect, "cell 2 4,growx");
 
 		scrMessageHistory = new JScrollPane();
 		scrMessageHistory.setViewportView(lstMessageHistory);
 		lstMessageHistory.setLayoutOrientation(JList.VERTICAL);
 		lstMessageHistory.setCellRenderer(new AttributiveCellRenderer());
-		add(scrMessageHistory, "cell 1 9,grow");
+		add(scrMessageHistory, "cell 1 9 3,grow");
 		
 		JLabel lblMessage = new JLabel("Message:");
 		add(lblMessage, "cell 1 8");
@@ -126,7 +139,7 @@ public class AutoScorePanel extends JPanel {
 				restoreDefaults(settings);
 			}
 		});
-		add(btnRestoreDefaults, "cell 1 18,alignx center"); //$NON-NLS-1$
+		add(btnRestoreDefaults, "cell 2 18,alignx center"); //$NON-NLS-1$
 
 	}
     public class AttributiveCellRenderer extends DefaultListCellRenderer {
@@ -151,6 +164,9 @@ public class AutoScorePanel extends JPanel {
           return this;
 	  }
     }
+    public void setServerAddress(String serverAddress) {
+    	txtServerAddress.setText(serverAddress);
+    }
 	public void disableConnect() {
 		btnConnect.setEnabled(false);
 		btnDisconnect.setEnabled(true);
@@ -163,19 +179,44 @@ public class AutoScorePanel extends JPanel {
 		mdlMessageHistory.insertElementAt(message, 0);
 	}
 	private void restoreDefaults(Settings settings) {
-		txtServerHostName.setText(settings.getDefaultAutoScoreServerHostName());
-		txtServerAddress.setText(settings.getDefaultAutoScoreServerAddress());
-		txtServerPort.setText(Integer.toString(settings.getDefaultAutoScoreServerPort()));
+		txtServerAddress.setText(settings.getDefaultAutoScoreSettingsServerAddress());
+		txtServerPort.setText(Integer.toString(settings.getDefaultAutoScoreSettingsServerPort()));
 	}
 	
 	public void saveSettings() {
-		settings.setAutoScoreServerHostName(txtServerHostName.getText());
-		settings.setAutoScoreServerAddress(txtServerAddress.getText());
-		settings.setAutoScoreServerPort(txtServerPort.getText());
+		settings.setAutoScoreSettingsServerAddress(txtServerAddress.getText());
+		settings.setAutoScoreSettingsServerPort(txtServerPort.getText());
+		if (chckbxAutoConnect.isSelected()) {
+			settings.setAutoScoreSettingsAutoConnect(1);
+		} else {
+			settings.setAutoScoreSettingsAutoConnect(0);
+		}
+		if (chckbxDetailLog.isSelected()) {
+			settings.setAutoScoreSettingsDetailLog(1);
+		} else {
+			settings.setAutoScoreSettingsDetailLog(0);
+		}
 		try {
-			settings.saveAutoScoreConfig();
+			settings.saveAutoScoreSettingsConfig();
 		} catch (IOException ex) {
 			System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
+		}
+	}
+	public class IPAddrInputVerifier extends InputVerifier {
+		@Override
+		public boolean verify(JComponent input) {
+			String text = ((JTextField) input).getText();
+			try {
+				if (InetAddresses.isInetAddress(text)) {
+					return true;
+				} else {
+					JOptionPane.showMessageDialog(null, "Must be valid IP Address: ###.###.###.###", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+					return false;
+				}
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(null, "Must be valid IP Address: ###.###.###.###", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+				return false;
+			}
 		}
 	}
 	////// Listeners \\\\\\
