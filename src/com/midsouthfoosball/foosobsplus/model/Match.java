@@ -34,6 +34,7 @@ import net.twasi.obsremotejava.OBSRemoteController;
 public class Match implements Serializable {
 	
 	private static final long serialVersionUID = -3958726389588837391L;
+	private int winState = 0;
 	private transient Team team1;
 	private transient Team team2;
 	private transient Settings settings;
@@ -90,11 +91,18 @@ public class Match implements Serializable {
 		setCurrentGameNumber(0);
 		setLastScored(0);
 		clearScores();
+		clearWinState();
 		clearTimes();
 		clearGameWinners();
 		clearMatchWinner();
 		clearMeatball();
 		startGame();
+	}
+	public int getWinState() {
+		return winState;
+	}
+	public void clearWinState() {
+		winState = 0;
 	}
 	public String createMatchId() {
 		Date date = new Date();
@@ -104,7 +112,7 @@ public class Match implements Serializable {
 	public void startGame() {
 		setGamePaused(false);
 		setMatchPaused(false);
-		increaseCurrentGameNumber();
+		if (currentGameNumber==0) increaseCurrentGameNumber();
 	}
 	public void resetMatch() {
 		setMatchWon(false);
@@ -113,6 +121,7 @@ public class Match implements Serializable {
 		resetGameCounts();
 		setLastScored(0);
 		clearScores();
+		clearWinState();
 		clearTimes();
 		clearGameWinners();
 		clearMatchWinner();
@@ -331,7 +340,16 @@ public class Match implements Serializable {
 		// return 0 if no winner
 		// return 1 if game won
 		// return 2 if match won
-		int winState = 0;
+//		int winState = 0;
+		if (winState>=1) {
+			resetScores();
+			resetTimeOuts();
+			resetResetWarn();
+			currentGameNumber++;
+			int maxGameCount = settings.getGamesToWin() * 2 - 1;
+			if (currentGameNumber > maxGameCount) currentGameNumber = maxGameCount;
+			winState = 0;
+		}
 		if(teamNbr==1) {
 			team1.incrementScore();
 			setLastScored(1);
@@ -340,9 +358,9 @@ public class Match implements Serializable {
 				gameWinners[currentGameNumber-1]=1;
 				matchWon = incrementGameCount(team1);
 				if(matchWon) matchWinner=1;
-				resetScores();
-				resetTimeOuts();
-				resetResetWarn();
+//				resetScores();
+//				resetTimeOuts();
+//				resetResetWarn();
 				winState = 1;
 			}
 		} else {
@@ -353,17 +371,17 @@ public class Match implements Serializable {
 				gameWinners[currentGameNumber-1]=2;
 				matchWon = incrementGameCount(team2);
 				if(matchWon) matchWinner=2;
-				resetScores();
-				resetTimeOuts();
-				resetResetWarn();
+//				resetScores();
+//				resetTimeOuts();
+//				resetResetWarn();
 				winState = 1;
 			}
 		}
 		if (winState>0) {
 			setCurrentTime(gameTime);
-			currentGameNumber++;
-			int maxGameCount = settings.getGamesToWin() * 2 - 1;
-			if (currentGameNumber > maxGameCount) currentGameNumber = maxGameCount;
+//			currentGameNumber++;
+//			int maxGameCount = settings.getGamesToWin() * 2 - 1;
+//			if (currentGameNumber > maxGameCount) currentGameNumber = maxGameCount;
 		}
 
 		if(matchWon) {
@@ -403,7 +421,7 @@ public class Match implements Serializable {
 					writeMatchWinner(settings.getWinnerPrefix() + name + settings.getWinnerSuffix());
 				}
 			}
-			resetScores();
+//			resetScores();
 //			resetGameCounts();
 		} else {
 			clearMatchWinner();

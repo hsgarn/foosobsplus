@@ -346,6 +346,22 @@ public class TeamController {
 	}
 	
 	////// Utility Methods \\\\\\
+	public void setTeam1ForwardName(String name) {
+		team1.setForwardName(name);
+		teamPanel1.updateForwardName(name);
+	}
+	public void setTeam1GoalieName(String name) {
+		team1.setGoalieName(name);
+		teamPanel1.updateGoalieName(name);
+	}
+	public void setTeam2ForwardName(String name) {
+		team2.setForwardName(name);
+		teamPanel2.updateForwardName(name);
+	}
+	public void setTeam2GoalieName(String name) {
+		team2.setGoalieName(name);
+		teamPanel2.updateGoalieName(name);
+	}
 	public void updateLastScoredTimes() {
 		String lastScoredTime1 = lastScored1Clock.getLastScoredTime();
 		String lastScoredTime2 = lastScored2Clock.getLastScoredTime();

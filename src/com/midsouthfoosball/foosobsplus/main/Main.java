@@ -25,14 +25,26 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchEvent.Kind;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
@@ -171,6 +183,8 @@ public class Main {
 	private String obsShowScoresSource 				= "ScoresAndLabels";
 	private String obsShowTimerSource               = "Foos OBS+ Timer";
 	private boolean autoScoreConnected				= false; 
+	////// Watch Service for File changes \\\\\\
+	WatchService watchService;
 	
 	////// CommandStack and UndoRedo setup \\\\\\
 	
@@ -259,6 +273,7 @@ public class Main {
 	private MatchController matchController;
 	private StatsController statsController;
 	private SwingWorker<Boolean, Integer> autoScoreWorker;
+	private SwingWorker<Boolean, String> fileWatchWorker;
 	public Main() throws IOException {
 
 		loadWindowsAndControllers();
@@ -283,6 +298,9 @@ public class Main {
 		if (settings.getAutoScoreSettingsAutoConnect() == 1) {
 			connectAutoScore();
 		}
+		
+		createFileWatchWorker();
+		fileWatchWorker.execute();
 	}
 	private void createAutoScoreWorker() {
 		autoScoreWorker = new SwingWorker<Boolean, Integer>() {
@@ -1583,5 +1601,101 @@ public class Main {
 				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " ERROR! Must connect before setting Scene");	
 			}
 		}
+	}
+	private void createFileWatchWorker() {
+		fileWatchWorker = new SwingWorker<Boolean, String>() {
+			@Override
+			protected Boolean doInBackground() throws Exception {
+				String dir = "C:\\FoosTourney";
+				final String clearString = "XXX_ALREADY_READ_XXX";
+				Path partnerPath = Paths.get(dir);
+				watchService = FileSystems.getDefault().newWatchService(); 
+				partnerPath.getFileSystem().newWatchService();
+				partnerPath.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
+		        WatchKey watchKey;
+		        while (!isCancelled())
+		        {
+		        	watchKey = watchService.poll();
+		        	if (watchKey != null) {
+		        		for (WatchEvent<?> watchEvent : watchKey.pollEvents()) {
+		        			final Kind<?> kind = watchEvent.kind();
+		        			if (kind==StandardWatchEventKinds.OVERFLOW) {
+		        				System.out.println("Got ourselves an overflow");
+		        				continue;
+		        			}
+		        			if (kind == StandardWatchEventKinds.ENTRY_CREATE || kind == StandardWatchEventKinds.ENTRY_MODIFY) {
+		        				final WatchEvent<Path> watchEventPath = (WatchEvent<Path>) watchEvent;
+		        				final Path filePath = watchEventPath.context();
+			        			String fileName = filePath.toString();
+			        			if (fileName.equals("Player1.txt") || fileName.equals("Player2.txt") || fileName.equals("Player3.txt") || fileName.equals("Player4.txt")) {
+				        			try {
+				        				File file = new File(dir + "\\" + fileName);
+				        				Scanner fileReader = new Scanner(file);
+				        				if (fileReader.hasNextLine()) {
+				        					String data = fileReader.nextLine();
+				        					if (!data.equals(clearString)) {
+				        						FileWriter fileWriter = new FileWriter(file);
+				        						fileWriter.write(clearString);
+				        						fileWriter.close();
+				        						publish(fileName + "=" + data);
+				        					}
+				        				}
+				        				fileReader.close();
+				        			} catch (FileNotFoundException e) {
+				        				System.out.println("FileNotFoundException occurred");
+				        				e.printStackTrace();
+				        			} catch (Exception ee) {
+				        				System.out.println("general exception");
+				        				ee.printStackTrace();
+				        			}
+			        			}
+		        			}
+		        		}
+			        	boolean valid = watchKey.reset();
+			        	if (!valid) {
+			        		System.out.println("wasn't valid so made a break for it");
+			        		break;
+			        	}
+	        		}
+		        }
+		        watchService.close();
+		        return true;
+			}
+			@Override
+			protected void done() {
+				boolean status;
+				if (isCancelled()) return;
+			    try {
+			     status = get();
+			     System.out.println(dtf.format(LocalDateTime.now()) + ": Worker completed with isConnected: " + status);
+			    } catch (InterruptedException e) {
+			    	System.out.println(dtf.format(LocalDateTime.now()) + ": " + e.toString());
+			    } catch (ExecutionException e) {
+			    	System.out.println(dtf.format(LocalDateTime.now()) + ": " + e.toString());
+			    }
+			}
+			@Override
+			protected void process(List<String> chunks) {
+				if (isCancelled()) return;
+				for (String value : chunks) {
+					String[] pieces = value.split("=");
+					if (pieces[0].equals("Player1.txt")) {
+						teamController.setTeam1ForwardName(pieces[1]);
+					} else {
+						if (pieces[0].equals("Player2.txt")) {
+							teamController.setTeam1GoalieName(pieces[1]);
+						} else {
+							if (pieces[0].equals("Player3.txt")) {
+								teamController.setTeam2ForwardName(pieces[1]);
+							} else {
+								if (pieces[0].equals("Player4.txt")) {
+									teamController.setTeam2GoalieName(pieces[1]);
+								}
+							}
+						}
+					}
+				}
+			}
+		};
 	}
 }

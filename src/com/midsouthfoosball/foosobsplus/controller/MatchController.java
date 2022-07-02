@@ -81,6 +81,7 @@ public class MatchController {
 		
 		if (match.getMatchWon()) {
 			match.resetMatch();
+			teamController.resetScores();
 			teamController.resetGameCounts();
 			match.startMatch(createMatchId());
 		}
