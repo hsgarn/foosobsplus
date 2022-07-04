@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -139,7 +139,7 @@ public class Match implements Serializable {
 		clearMeatball();
 		
 	}
-	private void increaseCurrentGameNumber() {
+	public void increaseCurrentGameNumber() {
 		if(/*!matchWon &&*/ (currentGameNumber==0 || checkForGameWinOnly())) {
 			currentGameNumber++;
 			if (currentGameNumber > maxGameCount) currentGameNumber = maxGameCount;
@@ -340,12 +340,10 @@ public class Match implements Serializable {
 		// return 0 if no winner
 		// return 1 if game won
 		// return 2 if match won
-//		int winState = 0;
 		if (winState>=1) {
 			resetScores();
 			resetTimeOuts();
 			resetResetWarn();
-			currentGameNumber++;
 			int maxGameCount = settings.getGamesToWin() * 2 - 1;
 			if (currentGameNumber > maxGameCount) currentGameNumber = maxGameCount;
 			winState = 0;
@@ -358,9 +356,6 @@ public class Match implements Serializable {
 				gameWinners[currentGameNumber-1]=1;
 				matchWon = incrementGameCount(team1);
 				if(matchWon) matchWinner=1;
-//				resetScores();
-//				resetTimeOuts();
-//				resetResetWarn();
 				winState = 1;
 			}
 		} else {
@@ -371,17 +366,11 @@ public class Match implements Serializable {
 				gameWinners[currentGameNumber-1]=2;
 				matchWon = incrementGameCount(team2);
 				if(matchWon) matchWinner=2;
-//				resetScores();
-//				resetTimeOuts();
-//				resetResetWarn();
 				winState = 1;
 			}
 		}
 		if (winState>0) {
 			setCurrentTime(gameTime);
-//			currentGameNumber++;
-//			int maxGameCount = settings.getGamesToWin() * 2 - 1;
-//			if (currentGameNumber > maxGameCount) currentGameNumber = maxGameCount;
 		}
 
 		if(matchWon) {

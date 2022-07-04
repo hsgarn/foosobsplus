@@ -390,13 +390,18 @@ public class Main {
 			protected void process(List<Integer> chunks) {
 				if (isCancelled()) return;
 				int mostRecentValue = chunks.get(chunks.size()-1);
+				boolean ignoreSensors = autoScoreMainPanel.isIgnored();
             	if (settings.getAutoScoreSettingsDetailLog()==1) {
-            		autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team "+mostRecentValue+ " scored!");
+            		if (ignoreSensors) {
+            			autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team "+mostRecentValue+ " scored! but ignored!");
+            		} else {
+            			autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team "+mostRecentValue+ " scored!");
+            		}
             	}
-				if (mostRecentValue == 1) {
+				if (!ignoreSensors && (mostRecentValue == 1)) {
 					processCode("XIST1", false);
 				}	else {
-						if (mostRecentValue == 2) {
+						if (!ignoreSensors && (mostRecentValue == 2)) {
 							processCode("XIST2", false);
 						}
 				}
@@ -1624,7 +1629,8 @@ public class Main {
 		        				continue;
 		        			}
 		        			if (kind == StandardWatchEventKinds.ENTRY_CREATE || kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-		        				final WatchEvent<Path> watchEventPath = (WatchEvent<Path>) watchEvent;
+		        				@SuppressWarnings("unchecked")
+								final WatchEvent<Path> watchEventPath = (WatchEvent<Path>) watchEvent;
 		        				final Path filePath = watchEventPath.context();
 			        			String fileName = filePath.toString();
 			        			if (fileName.equals("Player1.txt") || fileName.equals("Player2.txt") || fileName.equals("Player3.txt") || fileName.equals("Player4.txt")) {

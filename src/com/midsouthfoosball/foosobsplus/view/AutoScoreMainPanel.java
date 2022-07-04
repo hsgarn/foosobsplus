@@ -28,6 +28,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
@@ -39,6 +40,7 @@ public class AutoScoreMainPanel extends JPanel {
 	private JButton btnConnect;
 	private JButton btnDisconnect;
 	private JButton btnSettings;
+	private JCheckBox chkbxIgnore;
 	private Settings settings;
 	private Border innerBorder;
 
@@ -53,6 +55,7 @@ public class AutoScoreMainPanel extends JPanel {
 		btnConnect = new JButton(Messages.getString("AutoScoreMainPanel.Connect", settings.getGameType())); //$NON-NLS-1$
 		btnDisconnect = new JButton(Messages.getString("AutoScoreMainPanel.Disconnect", settings.getGameType())); //$NON-NLS-1$
 		btnSettings = new JButton(Messages.getString("AutoScoreMainPanel.Settings", settings.getGameType())); //$NON-NLS-1$
+		chkbxIgnore = new JCheckBox(Messages.getString("AutoScoreMainPanel.Ignore", settings.getGameType())); //$NON-NLS-1$
 
 		setMnemonics();
 		
@@ -111,6 +114,16 @@ public class AutoScoreMainPanel extends JPanel {
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(btnSettings, gc);
 		
+		//////// Ignore Sensors \\\\\\\\\\\\\
+		gc.weightx = .1;
+		gc.weighty = .1;
+		
+		gc.gridx = 1;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.LINE_END;
+		gc.insets = new Insets(0, 0, 0, 5);
+		add(chkbxIgnore, gc);
+		
 	}
 	private void setMnemonics() {
 		if(settings.getAutoScoreMainConnectHotKey().isEmpty()) {
@@ -153,5 +166,8 @@ public class AutoScoreMainPanel extends JPanel {
 	}
 	private String buildTitle() {
 		return Messages.getString("AutoScoreMainPanel.AutoScoreMainPanel", settings.getGameType()); //$NON-NLS-1$
+	}
+	public boolean isIgnored() {
+		return chkbxIgnore.isSelected();
 	}
 }

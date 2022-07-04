@@ -663,7 +663,11 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
-v1.088 07/02/2022</br>
+v1.089 07/04/2022</br>
+</br>
+Add ignore sensors button.</br>
+Fix timer bug.
+</br>v1.088 07/02/2022</br>
 </br>
 Scan folder for player name changes</br>
 Keep score at end of each game and match until next point is scored.</br>

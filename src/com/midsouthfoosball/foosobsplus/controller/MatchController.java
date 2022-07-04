@@ -78,15 +78,15 @@ public class MatchController {
 		}
 	}
 	public void incrementScore(int teamNumber) {
-		
 		if (match.getMatchWon()) {
 			match.resetMatch();
 			teamController.resetScores();
 			teamController.resetGameCounts();
-			match.startMatch(createMatchId());
+			startMatch(createMatchId());
 		}
 		int winState = teamController.incrementScore(teamNumber);
 		if (winState==1) {
+			match.increaseCurrentGameNumber();
 			startGame();
 		}
 		if (winState==2) {
@@ -110,7 +110,7 @@ public class MatchController {
 		gameTableWindowPanel.setTeams(teamController.getForwardName(1) + " / " + teamController.getGoalieName(1) + ":",teamController.getForwardName(2) + " / " + teamController.getGoalieName(2) + ":");
 		gameTableWindowPanel.setGameWinners(match.getGameWinners());
 		gameTableWindowPanel.setMatchWinner(match.getMatchWinner());
-		gameTableWindowPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
+		gameTableWindowPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(),match.getCurrentGameNumber());
 	}
 	public void switchSides() {
 		match.switchSides();
@@ -122,17 +122,24 @@ public class MatchController {
 		teamController.resetAll();
 		displayAllStats();
 		gameClock.startMatchTimer();
-		gameClock.startGameTimer();
 		match.startMatch(matchId);
 		matchPanel.setPauseLabel("Pause Match");
 		matchPanel.updateStartTime(match.getStartTime());
-		updateGameTables();
+		startGame();
 		String tmpCode  = stats.getLastCode();
 		stats.clearAll();
 		statsEntryPanel.clearAll();
 		stats.setIsCommand(true);
 		stats.addCodeToHistory(tmpCode);
 		statsEntryPanel.updateCodeHistory(tmpCode);
+	}
+	public void startGame() {
+		if(match.isMatchPaused()==true) {
+			pauseMatch();
+		}
+		gameClock.startGameTimer();
+		match.startGame();
+		updateGameTables();
 	}
 	public String createMatchId() {
 		return match.createMatchId();
@@ -168,14 +175,6 @@ public class MatchController {
 	}
 	public void resetMatch() {
 		match.resetMatch();
-	}
-	public void startGame() {
-		if(match.isMatchPaused()==true) {
-			pauseMatch();
-		}
-		gameClock.startGameTimer();
-		match.startGame();
-		updateGameTables();
 	}
 	
 	public void displayAllStats() {
