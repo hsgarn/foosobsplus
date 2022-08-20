@@ -319,6 +319,8 @@ public class Main {
 		            autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Connected to " + address + ": " + port);
 		        	dataIn = new BufferedReader(new InputStreamReader(skt.getInputStream()));
 		        	isConnected = true;
+		    		mainFrame.setAutoScoreIconConnected(true);
+		    		autoScoreConnected = true;
 		        }
 		        catch(UnknownHostException uh)
 		        {
@@ -334,20 +336,15 @@ public class Main {
 		        	try
 		            {
 		                str = dataIn.readLine();
+	                	if (settings.getAutoScoreSettingsDetailLog()==1) {
+	                		autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Received " + str);
+	                	}
 		                if (str.equals(team1))
 		                {
 		                	publish(1);
-		                	if (settings.getAutoScoreSettingsDetailLog()==1) {
-		                		autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team 1 Scored." );
-		                	}
 		                } else {
 			                if (str.equals(team2)) {
 			                	publish(2);
-			                	if (settings.getAutoScoreSettingsDetailLog()==1) {
-			                		autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team 2 Scored." );
-			                	}
-			                } else {
-			                	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + str);
 			                }
 		                }
 		                if (isCancelled()) {
@@ -971,8 +968,8 @@ public class Main {
 		autoScoreSettingsPanel.addMessage("Trying to connect...");
 		createAutoScoreWorker();
 		autoScoreWorker.execute();
-		mainFrame.setAutoScoreIconConnected(true);
-		autoScoreConnected = true;
+//		mainFrame.setAutoScoreIconConnected(true);
+//		autoScoreConnected = true;
 	}
 	private void disconnectAutoScore() {
 		autoScoreSettingsPanel.addMessage("Disconnecting...");

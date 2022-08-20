@@ -663,11 +663,20 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.090 08/20/2022</br>
+</br>
+Change auto scoring debug messages slightly</br>
+Fix Increase Game Count buttons not working</br>
+Reset scores on game wins but not match win</br>
+Pass/Shot Start Timer buttons will reset scores/timeouts/resetwarns if match has been won</br>
+Only show AutoScore green connection icon if we actually get connected.</br>
+</br>
 v1.089 07/04/2022</br>
 </br>
 Add ignore sensors button.</br>
-Fix timer bug.
-</br>v1.088 07/02/2022</br>
+Fix timer bug.</br>
+</br>
+v1.088 07/02/2022</br>
 </br>
 Scan folder for player name changes</br>
 Keep score at end of each game and match until next point is scored.</br>

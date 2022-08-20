@@ -410,11 +410,10 @@ public class TeamController {
 		updateGameTables();
 	}
 	public void incrementGameCount(int teamNumber) {
-//		boolean matchWon = false;
-//		matchWon = match.incrementGameCount(teams[teamNumber-1]);
+		boolean matchWon = match.incrementGameCount(teams[teamNumber-1]);
 		match.syncCurrentGameNumber();
 		teamPanels[teamNumber-1].updateGameCount(teams[teamNumber-1].getGameCount());
-//		if(!matchWon) startGameTimer();
+		if(!matchWon) startGameTimer();
 		updateGameTables();
 	}
 	public void decrementGameCount(int teamNumber) {
@@ -445,13 +444,29 @@ public class TeamController {
 		}
 	}
 	public void startShotTimer() {
+		int winState = match.getWinState();
+		if (winState > 0) {
+			resetForNewGame();
+		}
 		timerController.startShotTimer();
 		if (!mainController.getTimerWindowSelected()) {
 			mainController.showTimerWindow();
 			mainController.setFocusOnCode();
 		}
 	}
+	public void resetForNewGame() {
+		resetScores();
+		resetTimeOuts();
+		resetResetWarns();
+		if (match.getWinState()==2) {
+			resetGameCounts();
+		}
+	}
 	public void startPassTimer() {
+		int winState = match.getWinState();
+		if (winState > 0) {
+			resetForNewGame();
+		}
 		timerController.startPassTimer();
 		if (!mainController.getTimerWindowSelected()) {
 			mainController.showTimerWindow();

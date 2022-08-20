@@ -139,6 +139,12 @@ public class MatchController {
 		}
 		gameClock.startGameTimer();
 		match.startGame();
+		int winState = match.getWinState();
+		if (winState>=1) {
+			teamController.resetScores();
+			teamController.resetTimeOuts();
+			teamController.resetResetWarns();
+		}
 		updateGameTables();
 	}
 	public String createMatchId() {
