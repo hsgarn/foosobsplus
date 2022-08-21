@@ -134,31 +134,30 @@ public class TeamController {
 	private class TeamNameListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JTextField txt = (JTextField) e.getSource();
-			String name = txt.getName();
-			String teamName = txt.getText();
-			int teamNumber = 2;
-			if(name.equals("Team 1")) {
-				teamNumber = 1;
-			}
-			teams[teamNumber-1].setTeamName(teamName);
-			teamPanels[teamNumber-1].updateTeamName(teamName);
-			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
+			teamNameChange(txt);
 		}
 	}
 
 	private class TeamNameFocusListener extends FocusAdapter{
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
-			String name = txt.getName();
-			String teamName = txt.getText();
-			int teamNumber = 2;
-			if(name.equals("Team 1")) {
-				teamNumber = 1;
-			}
-			teams[teamNumber-1].setTeamName(teamName);
-			teamPanels[teamNumber-1].updateTeamName(teamName);
-			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
+			teamNameChange(txt);
 		}
+	}
+	private void teamNameChange(JTextField txt) {
+		String name = txt.getName();
+		String teamName = txt.getText();
+		int teamNumber = 2;
+		if(name.equals("Team 1")) {
+			teamNumber = 1;
+		}
+		teams[teamNumber-1].setTeamName(teamName);
+		teamPanels[teamNumber-1].updateTeamName(teamName);
+		statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
+		if (match.getWinState() > 0) {
+			resetForNewGame();
+		}
+		updateGameTables();
 	}
 	private class TeamNameMouseListener extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) {
@@ -174,32 +173,29 @@ public class TeamController {
 	private class ForwardNameListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JTextField txt = (JTextField) e.getSource();
-			String name = txt.getName();
-			String forwardName = txt.getText();
-			int teamNumber = 2;
-			if(name.equals("Team 1")) {
-				teamNumber = 1;
-			}
-			teams[teamNumber-1].setForwardName(forwardName);
-			teamPanels[teamNumber-1].updateForwardName(forwardName);
-			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
-			updateGameTables();
+			forwardNameChange(txt);
 		}
 	}
 	private class ForwardNameFocusListener extends FocusAdapter{
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
-			String name = txt.getName();
-			String forwardName = txt.getText();
-			int teamNumber = 2;
-			if(name.equals("Team 1")) {
-				teamNumber = 1;
-			}
-			teams[teamNumber-1].setForwardName(forwardName);
-			teamPanels[teamNumber-1].updateForwardName(forwardName);
-			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
-			updateGameTables();
+			forwardNameChange(txt);
 		}
+	}
+	private void forwardNameChange(JTextField txt) {
+		String name = txt.getName();
+		String forwardName = txt.getText();
+		int teamNumber = 2;
+		if(name.equals("Team 1")) {
+			teamNumber = 1;
+		}
+		teams[teamNumber-1].setForwardName(forwardName);
+		teamPanels[teamNumber-1].updateForwardName(forwardName);
+		statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
+		if (match.getWinState() > 0) {
+			resetForNewGame();
+		}
+		updateGameTables();
 	}
 	private class ForwardNameMouseListener extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) {
@@ -217,32 +213,29 @@ public class TeamController {
 	private class GoalieNameListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JTextField txt = (JTextField) e.getSource();
-			String name = txt.getName();
-			String goalieName = txt.getText();
-			int teamNumber = 2;
-			if(name.equals("Team 1")) {
-				teamNumber = 1;
-			}
-			teams[teamNumber-1].setGoalieName(goalieName);
-			teamPanels[teamNumber-1].updateGoalieName(goalieName);
-			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
-			updateGameTables();
+			goalieNameChange(txt);
 		}
 	}
 	private class GoalieNameFocusListener extends FocusAdapter{
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
-			String name = txt.getName();
-			String goalieName = txt.getText();
-			int teamNumber = 2;
-			if(name.equals("Team 1")) {
-				teamNumber = 1;
-			}
-			teams[teamNumber-1].setGoalieName(goalieName);
-			teamPanels[teamNumber-1].updateGoalieName(goalieName);
-			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
-			updateGameTables();
+			goalieNameChange(txt);
 		}
+	}
+	private void goalieNameChange(JTextField txt) {
+		String name = txt.getName();
+		String goalieName = txt.getText();
+		int teamNumber = 2;
+		if(name.equals("Team 1")) {
+			teamNumber = 1;
+		}
+		teams[teamNumber-1].setGoalieName(goalieName);
+		teamPanels[teamNumber-1].updateGoalieName(goalieName);
+		statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
+		if (match.getWinState() > 0) {
+			resetForNewGame();
+		}
+		updateGameTables();
 	}
 	private class GoalieNameMouseListener extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) {

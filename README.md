@@ -663,6 +663,10 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.091 08/21/2022</br>
+</br>
+Forward/Goalie/Team name change will reset scores/timeouts/resetwarns if match has been won</br>
+</br>
 v1.090 08/20/2022</br>
 </br>
 Change auto scoring debug messages slightly</br>
