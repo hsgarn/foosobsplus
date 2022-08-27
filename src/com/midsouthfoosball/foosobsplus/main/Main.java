@@ -306,8 +306,8 @@ public class Main {
 		autoScoreWorker = new SwingWorker<Boolean, Integer>() {
 			Socket skt;
 			BufferedReader dataIn;
-			String team1 = "Team1";
-			String team2 = "Team2";
+			String team1Label = "Team1";
+			String team2Label = "Team2";
 			@Override
 			protected Boolean doInBackground() throws Exception {
 		    	boolean isConnected = false;
@@ -339,11 +339,11 @@ public class Main {
 	                	if (settings.getAutoScoreSettingsDetailLog()==1) {
 	                		autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Received " + str);
 	                	}
-		                if (str.equals(team1))
+		                if (str.equals(team1Label))
 		                {
 		                	publish(1);
 		                } else {
-			                if (str.equals(team2)) {
+			                if (str.equals(team2Label)) {
 			                	publish(2);
 			                }
 		                }
@@ -402,8 +402,36 @@ public class Main {
 							processCode("XIST2", false);
 						}
 				}
+				if (!ignoreSensors && (mostRecentValue > 0)) {
+					checkForSkunk();
+				}
 			}
 		};
+	}
+	private void checkForSkunk() {
+		int winState = match.getWinState();
+		if (winState == 1) {
+			int gn = match.getCurrentGameNumber();
+			if (gn > 1) {
+				int a = Integer.parseInt(match.getScoresTeam1()[gn-2]); 
+				int b = Integer.parseInt(match.getScoresTeam2()[gn-2]);
+				if (a == 0 || b == 0) {
+					showSkunk();
+				}
+			}
+		} else {
+			if (winState == 2) {
+				int a = team1.getScore();
+				int b = team2.getScore();
+				if (a == 0 || b == 0) {
+					showSkunk();
+				}
+			}
+		}
+		
+	}
+	private void showSkunk() {
+		setSourceFilterVisibility(obs.getScene(), "Skunk 2", true);
 	}
 	public void loadWindowsAndControllers() {
 		mainFrame = new MainFrame(settings, tablePanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, statsEntryPanel, 
@@ -834,6 +862,13 @@ public class Main {
 		if (obs.getConnected()) obsController.setSourceVisibility(obs.getScene(), source, show, response -> {
 			if(settings.getShowParsed()) {
 				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceVisibility called: " + obs.getScene() + ", " + source + ", " + show );
+			}
+		});
+	}
+	public void setSourceFilterVisibility(String source, String filter, boolean show) {
+		if (obs.getConnected()) obsController.setSourceFilterVisibility(source, filter, show, response -> {
+			if(settings.getShowParsed()) {
+				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceFilterVisibility called: " + source + ", " + filter + ", " + show );
 			}
 		});
 	}
@@ -1296,6 +1331,7 @@ public class Main {
 			} else {
 				processCode("XIST2",false);
 			}
+			checkForSkunk();
 			statsEntryPanel.setFocusOnCode();
 		}
 	}

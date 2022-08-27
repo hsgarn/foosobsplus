@@ -663,6 +663,10 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.092 08/27/2022</br>
+</br>
+Add Skunk detection and action.</br>
+</br>
 v1.091 08/21/2022</br>
 </br>
 Forward/Goalie/Team name change will reset scores/timeouts/resetwarns if match has been won</br>
