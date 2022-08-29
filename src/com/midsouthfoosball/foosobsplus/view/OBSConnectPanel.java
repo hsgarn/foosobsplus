@@ -50,6 +50,9 @@ public class OBSConnectPanel extends JPanel {
 	private JTextField txtPassword;
 	private JTextField txtScene;
 	private JButton btnSetScene;
+	private JTextField txtScoreSource;
+	private JTextField txtTimerSource;
+	private JTextField txtSkunkFilter;
 	private JCheckBox chckbxSavePassword;
 	private JCheckBox chckbxAutoLogin;
 	private JCheckBox chckbxCloseOnConnect;
@@ -79,23 +82,30 @@ public class OBSConnectPanel extends JPanel {
 		add(lblPort, "cell 0 2,alignx right");
 		
 		JLabel lblPassword = new JLabel("Password");
-		add(lblPassword, "flowx,cell 0 3,alignx trailing");
+		add(lblPassword, "cell 0 3,alignx right");
+
+		JLabel lblScene = new JLabel("Scene");
+		add(lblScene, "cell 0 4, alignx right");
+		
+		txtHost = new JTextField();
+		txtHost.setText(settings.getOBSHost());
+		add(txtHost, "cell 1 1,alignx left");
+		txtHost.setColumns(10);
+		
+		txtPort = new JTextField();
+		txtPort.setText(settings.getOBSPort());
+		add(txtPort, "cell 1 2,alignx left");
+		txtPort.setColumns(10);
 		
 		txtPassword = new JTextField();
 		txtPassword.setText(settings.getOBSPassword());
-		add(txtPassword, "cell 1 3,growx");
+		add(txtPassword, "cell 1 3,alignx left");
 		txtPassword.setColumns(10);
 		
-		JLabel lblScene = new JLabel("Scene");
-		add(lblScene, "flowx, cell 0 4, alignx trailing");
-
 		txtScene = new JTextField();
 		txtScene.setText(settings.getOBSScene());
-		add(txtScene, "cell 1 4,growx");
+		add(txtScene, "cell 1 4,alignx left");
 		txtScene.setColumns(10);
-		
-		btnSetScene = new JButton("Set Scene");
-		add(btnSetScene, "flowx,cell 2 4,growx");
 		
 		chckbxSavePassword = new JCheckBox("Save Password");
 		if (Integer.toString(settings.getOBSSavePassword()).equals("1")) { //$NON-NLS-1$
@@ -103,15 +113,7 @@ public class OBSConnectPanel extends JPanel {
 		} else {
 			chckbxSavePassword.setSelected(false);
 		}
-		add(chckbxSavePassword, "flowx,cell 1 5,growx");
-		
-		chckbxCloseOnConnect = new JCheckBox("Close on Connect");
-		if (Integer.toString(settings.getOBSCloseOnConnect()).equals("1")) { //$NON-NLS-1$
-			chckbxCloseOnConnect.setSelected(true);
-		} else {
-			chckbxCloseOnConnect.setSelected(false);
-		}
-		add(chckbxCloseOnConnect, "cell 1 5,growx");
+		add(chckbxSavePassword, "cell 1 5,alignx left");
 		
 		chckbxAutoLogin = new JCheckBox("Auto Login on Start");
 		if (Integer.toString(settings.getOBSAutoLogin()).equals("1")) { //$NON-NLS-1$
@@ -119,7 +121,57 @@ public class OBSConnectPanel extends JPanel {
 		} else {
 			chckbxAutoLogin.setSelected(false);
 		}
-		add(chckbxAutoLogin, "flowx,cell 1 6,growx");
+		add(chckbxAutoLogin, "cell 1 6,alignx left");
+		
+		btnConnect = new JButton("Connect");
+		add(btnConnect, "cell 1 7,alignx left");
+		
+		JLabel lblMessage = new JLabel("Message:");
+		add(lblMessage, "cell 1 8, alignx left");
+		
+		scrMessageHistory = new JScrollPane();
+		scrMessageHistory.setViewportView(lstMessageHistory);
+		lstMessageHistory.setLayoutOrientation(JList.VERTICAL);
+		lstMessageHistory.setCellRenderer(new AttributiveCellRenderer());
+		add(scrMessageHistory, "cell 1 9,span 3");
+		
+		JLabel lblScoreSource = new JLabel("Score Source");
+		add(lblScoreSource, "cell 2 1,alignx right");
+		
+		JLabel lblTimerSource = new JLabel("Timer Source");
+		add(lblTimerSource, "cell 2 2,alignx right");
+
+		JLabel lblSkunkFilter = new JLabel("Skunk Filter");
+		add(lblSkunkFilter, "cell 2 3,alignx right");
+
+		btnSetScene = new JButton("Set Scene");
+		add(btnSetScene, "cell 1 4,alignx right");
+		
+		btnDisconnect = new JButton("Disconnect");
+		add(btnDisconnect, "cell 1 7,alignx right");
+
+		txtScoreSource = new JTextField();
+		txtScoreSource.setText(settings.getOBSScoreSource());
+		add(txtScoreSource, "cell 3 1,alignx left");
+		txtScoreSource.setColumns(10);
+
+		txtTimerSource = new JTextField();
+		txtTimerSource.setText(settings.getOBSTimerSource());
+		add(txtTimerSource, "cell 3 2,alignx left");
+		txtTimerSource.setColumns(10);
+		
+		txtSkunkFilter = new JTextField();
+		txtSkunkFilter.setText(settings.getOBSSkunkFilter());
+		add(txtSkunkFilter, "cell 3 3,alignx left");
+		txtSkunkFilter.setColumns(10);
+		
+		chckbxCloseOnConnect = new JCheckBox("Close on Connect");
+		if (Integer.toString(settings.getOBSCloseOnConnect()).equals("1")) { //$NON-NLS-1$
+			chckbxCloseOnConnect.setSelected(true);
+		} else {
+			chckbxCloseOnConnect.setSelected(false);
+		}
+		add(chckbxCloseOnConnect, "cell 3 5,alignx left");
 		
 		chckbxUpdateOnConnect = new JCheckBox("Update on Connect");
 		if (Integer.toString(settings.getOBSUpdateOnConnect()).equals("1")) {
@@ -127,36 +179,10 @@ public class OBSConnectPanel extends JPanel {
 		} else {
 			chckbxUpdateOnConnect.setSelected(false);
 		}
-		add(chckbxUpdateOnConnect, "cell 1 6,growx");
-		
-		btnConnect = new JButton("Connect");
-		add(btnConnect, "flowx,cell 1 7,growx");
-		
-		JLabel lblMessage = new JLabel("Message:");
-		add(lblMessage, "cell 1 8");
-		
-		scrMessageHistory = new JScrollPane();
-		scrMessageHistory.setViewportView(lstMessageHistory);
-		lstMessageHistory.setLayoutOrientation(JList.VERTICAL);
-		lstMessageHistory.setCellRenderer(new AttributiveCellRenderer());
-		add(scrMessageHistory, "cell 1 9,grow");
-		
-		txtHost = new JTextField();
-		txtHost.setText(settings.getOBSHost());
-		add(txtHost, "cell 1 1,growx");
-		txtHost.setColumns(10);
-		
-		txtPort = new JTextField();
-		txtPort.setText(settings.getOBSPort());
-		add(txtPort, "cell 1 2,growx");
-		txtPort.setColumns(10);
-		
-		btnDisconnect = new JButton("Disconnect");
-		add(btnDisconnect, "cell 1 7,growx");
-		
+		add(chckbxUpdateOnConnect, "cell 3 6,alignx left");
+
 		btnSave = new JButton("Save");
-		add(btnSave, "cell 2 7,growx");
-		
+		add(btnSave, "cell 3 7,alignx left");
 	}
 	public void disableConnect() {
 		btnConnect.setEnabled(false);

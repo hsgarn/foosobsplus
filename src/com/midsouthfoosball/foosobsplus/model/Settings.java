@@ -101,6 +101,8 @@ public class Settings {
 		defaultControlProps.setProperty("ShowTimeOutsUsed", "1");
 		defaultControlProps.setProperty("AutoCapNames",  "1");
 		defaultControlProps.setProperty("WinByFinalOnly", "1");
+		defaultControlProps.setProperty("ShowSkunk",  "1");
+		defaultControlProps.setProperty("CutThroatMode", "0");
 		defaultControlProps.setProperty("LogoImageURL", "/imgs/MidsouthFoosballLogo4.png");
 		defaultControlProps.setProperty("LogoLinkURI", "https://www.facebook.com/midsouthfoosball");
 		//OBS
@@ -112,6 +114,9 @@ public class Settings {
 		defaultOBSProps.setProperty("OBSSavePassword", "0");
 		defaultOBSProps.setProperty("OBSCloseOnConnect", "1");
 		defaultOBSProps.setProperty("OBSUpdateOnConnect",  "1");
+		defaultOBSProps.setProperty("OBSScoreSource", "ScoresAndLabels");
+		defaultOBSProps.setProperty("OBSTimerSource", "Foos OBS+ Timer");
+		defaultOBSProps.setProperty("OBSSkunkFilter", "Skunk 2");
 		//Sources
 		defaultSourceProps.setProperty("Table", "tablename");
 		defaultSourceProps.setProperty("Team1Name", "team1name");
@@ -307,10 +312,11 @@ public class Settings {
 		defaultHotKeyProps.setProperty("PullHotKey", "");
 		defaultHotKeyProps.setProperty("ShowScoresHotKey", "");
 		defaultHotKeyProps.setProperty("ShowTimerHotKey", "");
+		defaultHotKeyProps.setProperty("ShowSkunkHotKey", "k");
 		defaultHotKeyProps.setProperty("AutoScoreMainConnectHotKey", "");
 		defaultHotKeyProps.setProperty("AutoScoreMainDisconnectHotKey", "");
 		defaultHotKeyProps.setProperty("AutoScoreMainSettingsHotKey", "");
-		//AutoScore Settings Properites
+		//AutoScore Settings Properties
 		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsServerAddress", "192.168.68.69");
 		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsServerPort", "5051");
 		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsAutoConnect", "0");
@@ -379,6 +385,8 @@ public class Settings {
 	public int getShowTimeOutsUsed() {return Integer.parseInt(configControlProps.getProperty("ShowTimeOutsUsed"));}
 	public int getAutoCapNames() {return Integer.parseInt(configControlProps.getProperty("AutoCapNames"));}
 	public int getWinByFinalOnly() {return Integer.parseInt(configControlProps.getProperty("WinByFinalOnly"));}
+	public int getShowSkunk() {return Integer.parseInt(configControlProps.getProperty("ShowSkunk"));}
+	public int getCutThroatMode() {return Integer.parseInt(configControlProps.getProperty("CutThroatMode"));}
 	public String getLogoImageURL() {return configControlProps.getProperty("LogoImageURL");}
 	public String getLogoLinkURI() {return configControlProps.getProperty("LogoLinkURI");}
 	//OBS
@@ -390,6 +398,9 @@ public class Settings {
 	public int getOBSAutoLogin() {return Integer.parseInt(configOBSProps.getProperty("OBSAutoLogin"));}
 	public int getOBSCloseOnConnect() {return Integer.parseInt(configOBSProps.getProperty("OBSCloseOnConnect"));}
 	public int getOBSUpdateOnConnect()  {return Integer.parseInt(configOBSProps.getProperty("OBSUpdateOnConnect"));}
+	public String getOBSScoreSource() {return configOBSProps.getProperty("OBSScoreSource");}
+	public String getOBSTimerSource() {return configOBSProps.getProperty("OBSTimerSource");}
+	public String getOBSSkunkFilter() {return configOBSProps.getProperty("OBSSkunkFilter");}
 	//Sources
 	public String getTeamNameSource(int teamNbr) {
 		if(teamNbr==1) {
@@ -863,6 +874,7 @@ public class Settings {
 	public String getPullHotKey() {return configHotKeyProps.getProperty("PullHotKey");}
 	public String getShowScoresHotKey() {return configHotKeyProps.getProperty("ShowScoresHotKey");}
 	public String getShowTimerHotKey() {return configHotKeyProps.getProperty("ShowTimerHotKey");}
+	public String getShowSkunkHotKey() {return configHotKeyProps.getProperty("ShowSkunkHotKey");}
 	public String getAutoScoreMainConnectHotKey() {return configHotKeyProps.getProperty("AutoScoreMainConnectHotKey");}
 	public String getAutoScoreMainDisconnectHotKey() {return configHotKeyProps.getProperty("AutoScoreMainDisconnectHotKey");}
 	public String getAutoScoreMainSettingsHotKey() {return configHotKeyProps.getProperty("AutoScoreMainSettingsHotKey");}
@@ -966,6 +978,12 @@ public class Settings {
 	public void setWinByFinalOnly(int winByFinalOnly) {
 		configControlProps.setProperty("WinByFinalOnly", Integer.toString(winByFinalOnly));
 	}
+	public void setShowSkunk(int showSkunk) {
+		configControlProps.setProperty("ShowSkunk", Integer.toString(showSkunk));
+	}
+	public void setCutThroatMode(int cutThroatMode) {
+		configControlProps.setProperty("CutThroatMode", Integer.toString(cutThroatMode));
+	}
 	public void setLogoImageURL(String logoImageURL) {
 		configControlProps.setProperty("LogoImageURL", logoImageURL);
 	}
@@ -996,6 +1014,15 @@ public class Settings {
 	}
 	public void setOBSUpdateOnConnect(int obsUpdateOnConnect) {
 		configOBSProps.setProperty("OBSUpdateOnConnect", Integer.toString(obsUpdateOnConnect));
+	}
+	public void setOBSScoreSource(String obsScoreSource) {
+		configOBSProps.setProperty("OBSScoreSource", obsScoreSource);
+	}
+	public void setOBSTimerSource(String obsTimerSource) {
+		configOBSProps.setProperty("OBSTimerSource", obsTimerSource);
+	}
+	public void setOBSSkunkFilter(String obsSkunkFilter) {
+		configOBSProps.setProperty("OBSSkunkFilter", obsSkunkFilter);
 	}
 	//Sources
 	public void setTeam1PassAttemptsSource(String team1PassAttemptsSource) {
@@ -1570,6 +1597,9 @@ public class Settings {
 	public void setShowTimerHotKey(String showTimerHotKey) {
 		configHotKeyProps.setProperty("ShowTimerHotKey", showTimerHotKey);
 	}
+	public void setShowSkunkHotKey(String showSkunkHotKey) {
+		configHotKeyProps.setProperty("ShowSkunkHotKey", showSkunkHotKey);
+	}
 	//AutoScore Settings
 	public void setAutoScoreSettingsServerAddress(String autoScoreSettingsServerAddress) {
 		configAutoScoreSettingsProps.setProperty("AutoScoreSettingsServerAddress", autoScoreSettingsServerAddress);
@@ -1637,6 +1667,8 @@ public class Settings {
 	public int getDefaultShowTimeOutsUsed() {return Integer.parseInt(defaultControlProps.getProperty("ShowTimeOutsUsed"));}
 	public int getDefaultAutoCapNames() {return Integer.parseInt(defaultControlProps.getProperty("AutoCapNames"));}
 	public int getDefaultWinByFinalOnly() {return Integer.parseInt(defaultControlProps.getProperty("WinByFinalOnly"));}
+	public int getDefaultShowSkunk() {return Integer.parseInt(defaultControlProps.getProperty("ShowSkunk"));}
+	public int getDefaultCutThroatMode() {return Integer.parseInt(defaultControlProps.getProperty("CutThroatMode"));}
 	//OBS
 	public String getDefaultOBSHost() {return defaultOBSProps.getProperty("OBSHost");}
 	public String getDefaultOBSPort() {return defaultOBSProps.getProperty("OBSPort");}
@@ -1646,6 +1678,9 @@ public class Settings {
 	public int getDefaultOBSSavePassword() {return Integer.parseInt(defaultOBSProps.getProperty("OBSSavePassword"));}
 	public int getDefaultOBSCloseOnConnect() {return Integer.parseInt(defaultOBSProps.getProperty("OBSCloseOnConnect"));}
 	public int getDefaultOBSUpdateOnConnect() {return Integer.parseInt(defaultOBSProps.getProperty("OBSUpdateOnConnect"));}
+	public String getDefaultOBSScoreSource() {return defaultOBSProps.getProperty("OBSScoreSource");}
+	public String getDefaultOBSTimerSource() {return defaultOBSProps.getProperty("OBSTimerSource");}
+	public String getDefaultOBSSkunkFilter() {return defaultOBSProps.getProperty("OBSSkunkFilter");}
 	//Sources
 	public String getDefaultTableSource() {return defaultSourceProps.getProperty("Table");}
 	public String getDefaultTeam1NameSource() {return defaultSourceProps.getProperty("Team1Name");}
@@ -1837,8 +1872,9 @@ public class Settings {
 	public String getDisconnectDefaultHotKey() {return defaultHotKeyProps.getProperty("DisconnectHotKey");}
 	public String getPushDefaultHotKey() {return defaultHotKeyProps.getProperty("PushHotKey");}
 	public String getPullDefaultHotKey() {return defaultHotKeyProps.getProperty("PullHotKey");}
-	public String getShowScoresDefaultHotKey() {return defaultHotKeyProps.getProperty("ShowScoresHotKey");}
-	public String getShowTimerDefaultHotKey() {return defaultHotKeyProps.getProperty("ShowTimerHotKey");}
+	public String getDefaultShowScoresHotKey() {return defaultHotKeyProps.getProperty("ShowScoresHotKey");}
+	public String getDefaultShowTimerHotKey() {return defaultHotKeyProps.getProperty("ShowTimerHotKey");}
+	public String getDefaultShowSkunkHotKey() {return defaultHotKeyProps.getProperty("ShowSkunkHotKey");}
 	//AutoScore Settings
 	public String getDefaultAutoScoreSettingsServerAddress() {return defaultAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerAddress");}
 	public int getDefaultAutoScoreSettingsServerPort() {return Integer.parseInt(defaultAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerPort"));}

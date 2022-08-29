@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -63,6 +63,8 @@ public class ParametersPanel extends JPanel {
 	private JCheckBox chckbxShowTimeOutsUsed;
 	private JCheckBox chckbxAutoCapNames;
 	private JCheckBox chckbxWinByFinalOnly;
+	private JCheckBox chckbxShowSkunk;
+	private JCheckBox chckbxCutThroatMode;
 	private JTextField txtTeam1LastScored;
 	private JTextField txtTeam2LastScored;
 	private JTextField txtClearLastScored;
@@ -177,43 +179,43 @@ public class ParametersPanel extends JPanel {
 		txtRecallTime.setColumns(10);
 		
 		JLabel lblTeam1LastScored = new JLabel(Messages.getString("ParametersPanel.Team1LastScored", settings.getGameType())); //$NON-NLS-1$
-		add(lblTeam1LastScored, "cell 0 6,alignx trailing"); //$NON-NLS-1$
+		add(lblTeam1LastScored, "cell 2 6,alignx trailing"); //$NON-NLS-1$
 		
 		txtTeam1LastScored = new JTextField();
 		txtTeam1LastScored.setText(settings.getTeam1LastScored());
-		add(txtTeam1LastScored, "cell 1 6,growx"); //$NON-NLS-1$
+		add(txtTeam1LastScored, "cell 3 6,growx"); //$NON-NLS-1$
 		txtTeam1LastScored.setColumns(10);
 
 		JLabel lblTeam2LastScored = new JLabel(Messages.getString("ParametersPanel.Team2LastScored", settings.getGameType())); //$NON-NLS-1$
-		add(lblTeam2LastScored, "cell 2 6,alignx trailing"); //$NON-NLS-1$
+		add(lblTeam2LastScored, "cell 2 7,alignx trailing"); //$NON-NLS-1$
 		
 		txtTeam2LastScored = new JTextField();
 		txtTeam2LastScored.setText(settings.getTeam2LastScored());
-		add(txtTeam2LastScored, "cell 3 6,growx"); //$NON-NLS-1$
+		add(txtTeam2LastScored, "cell 3 7,growx"); //$NON-NLS-1$
 		txtTeam2LastScored.setColumns(10);
 		
 		JLabel lblClearLastScored = new JLabel(Messages.getString("ParametersPanel.ClearLastScored", settings.getGameType())); //$NON-NLS-1$
-		add(lblClearLastScored, "cell 0 7,alignx trailing"); //$NON-NLS-1$
+		add(lblClearLastScored, "cell 2 8,alignx trailing"); //$NON-NLS-1$
 		
 		txtClearLastScored = new JTextField();
 		txtClearLastScored.setText(settings.getClearLastScored());
-		add(txtClearLastScored, "cell 1 7,growx"); //$NON-NLS-1$
+		add(txtClearLastScored, "cell 3 8,growx"); //$NON-NLS-1$
 		txtClearLastScored.setColumns(10);
 		
 		JLabel lblSide1Color = new JLabel(Messages.getString("ParametersPanel.Team1Color", settings.getGameType())); //$NON-NLS-1$
-		add(lblSide1Color, "cell 0 8,alignx trailing"); //$NON-NLS-1$
+		add(lblSide1Color, "cell 0 6,alignx trailing"); //$NON-NLS-1$
 		
 		txtSide1Color = new JTextField();
 		txtSide1Color.setText(settings.getSide1Color());
-		add(txtSide1Color, "cell 1 8,growx,aligny top"); //$NON-NLS-1$
+		add(txtSide1Color, "cell 1 6,growx,aligny top"); //$NON-NLS-1$
 		txtSide1Color.setColumns(10);
 		
 		JLabel lblSide2Color = new JLabel(Messages.getString("ParametersPanel.Team2Color", settings.getGameType())); //$NON-NLS-1$
-		add(lblSide2Color, "cell 2 8,alignx trailing"); //$NON-NLS-1$
+		add(lblSide2Color, "cell 0 7,alignx trailing"); //$NON-NLS-1$
 		
 		txtSide2Color = new JTextField();
 		txtSide2Color.setText(settings.getSide2Color());
-		add(txtSide2Color, "cell 3 8,growx"); //$NON-NLS-1$
+		add(txtSide2Color, "cell 1 7,growx"); //$NON-NLS-1$
 		txtSide2Color.setColumns(10);
 		
 		JLabel lblAutoIncrementGame = new JLabel(Messages.getString("ParametersPanel.AutoIncrementGame", settings.getGameType())); //$NON-NLS-1$
@@ -299,7 +301,7 @@ public class ParametersPanel extends JPanel {
 		comboBoxGameType.setEditable(true);
 		add(comboBoxGameType, "cell 3 15,growx"); //$NON-NLS-1$
 		
-		JLabel lblWinByFinalOnly = new JLabel(Messages.getString("ParametersPanel.WinByInFinalGameOnly", settings.getGameType())); //$NON-NLS-1$
+		JLabel lblWinByFinalOnly = new JLabel(Messages.getString("ParametersPanel.WinByFinalGameOnly", settings.getGameType())); //$NON-NLS-1$
 		add(lblWinByFinalOnly, "cell 0 16,alignx right"); //$NON-NLS-1$
 		
 		chckbxWinByFinalOnly = new JCheckBox(""); //$NON-NLS-1$
@@ -317,6 +319,28 @@ public class ParametersPanel extends JPanel {
 		txtGameType.setText(settings.getGameType());
 		add(txtGameType, "cell 3 16,alignx left"); //$NON-NLS-1$
 		txtGameType.setColumns(10);
+
+		JLabel lblShowSkunk = new JLabel(Messages.getString("ParametersPanel.ShowSkunk", settings.getGameType())); //$NON-NLS-1$
+		add(lblShowSkunk, "cell 0 17,alignx right"); //$NON-NLS-1$
+		
+		chckbxShowSkunk = new JCheckBox(""); //$NON-NLS-1$
+		if (Integer.toString(settings.getShowSkunk()).equals("1")) { //$NON-NLS-1$
+			chckbxShowSkunk.setSelected(true);
+		} else {
+			chckbxShowSkunk.setSelected(false);
+		}
+		add(chckbxShowSkunk, "cell 1 17"); //$NON-NLS-1$
+		
+		JLabel lblCutThroatMode = new JLabel(Messages.getString("ParametersPanel.CutThroatMode", settings.getGameType())); //$NON-NLS-1$
+		add(lblCutThroatMode, "cell 0 18, alignx right"); //$NON-NLS-1$
+		
+		chckbxCutThroatMode = new JCheckBox(""); //$NON-NLS-1$
+		if (Integer.toString(settings.getCutThroatMode()).equals("1")) { //$NON-NLS-1$
+			chckbxCutThroatMode.setSelected(true);
+		} else {
+			chckbxCutThroatMode.setSelected(false);
+		}
+		add(chckbxCutThroatMode, "cell 1 18"); //$NON-NLS-1$
 		
 		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		add(btnSave, "cell 1 20,alignx center"); //$NON-NLS-1$
@@ -387,6 +411,16 @@ public class ParametersPanel extends JPanel {
 			chckbxWinByFinalOnly.setSelected(true);
 		} else {
 			chckbxWinByFinalOnly.setSelected(false);
+		}
+		if (Integer.toString(settings.getDefaultShowSkunk()).equals("1")) { //$NON-NLS-1$
+			chckbxShowSkunk.setSelected(true);
+		} else {
+			chckbxShowSkunk.setSelected(false);
+		}
+		if (Integer.toString(settings.getDefaultCutThroatMode()).equals("1")) { //$NON-NLS-1$
+			chckbxCutThroatMode.setSelected(true);
+		} else {
+			chckbxCutThroatMode.setSelected(false);
 		}
 		txtTeam1LastScored.setText(settings.getDefaultTeam1LastScored());
 		txtTeam2LastScored.setText(settings.getDefaultTeam2LastScored());
@@ -482,6 +516,16 @@ public class ParametersPanel extends JPanel {
 			settings.setWinByFinalOnly(1);
 		} else {
 			settings.setWinByFinalOnly(0);
+		}
+		if (chckbxShowSkunk.isSelected()) {
+			settings.setShowSkunk(1);
+		} else {
+			settings.setShowSkunk(0);
+		}
+		if (chckbxCutThroatMode.isSelected()) {
+			settings.setCutThroatMode(1);
+		} else {
+			settings.setCutThroatMode(0);
 		}
 		try {
 			settings.saveControlConfig();

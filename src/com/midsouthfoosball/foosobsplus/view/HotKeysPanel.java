@@ -87,6 +87,7 @@ public class HotKeysPanel extends JPanel {
 	private JTextField txtRedoHotKey;
 	private JTextField txtSwitchPlayer1HotKey;
 	private JTextField txtSwitchPlayer2HotKey;
+	private JTextField txtShowSkunkHotKey;
 	private JButton btnSave;
 
 	public HotKeysPanel(Settings settings) throws IOException {
@@ -555,7 +556,16 @@ public class HotKeysPanel extends JPanel {
 
 		txtSwitchPlayer2HotKey.setColumns(10);
 
-		
+		JLabel lblShowSkunkHotKey = new JLabel(Messages.getString("HotKeysPanel.ShowSkunk", settings.getGameType())); //$NON-NLS-1$
+		add(lblShowSkunkHotKey, "cell 9 14,alignx trailing"); //$NON-NLS-1$
+
+		txtShowSkunkHotKey = new JTextField();
+		txtShowSkunkHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtShowSkunkHotKey.setText(settings.getShowSkunkHotKey());
+		add(txtShowSkunkHotKey, "cell 10 14,alignx left"); //$NON-NLS-1$
+
+		txtShowSkunkHotKey.setColumns(10);
+	
 		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		add(btnSave, "cell 3 18,alignx center"); //$NON-NLS-1$
 		
@@ -625,6 +635,7 @@ public class HotKeysPanel extends JPanel {
 		txtRedoHotKey.setText(settings.getDefaultRedoHotKey());
 		txtSwitchPlayer1HotKey.setText(settings.getDefaultSwitchPlayer1HotKey());
 		txtSwitchPlayer2HotKey.setText(settings.getDefaultSwitchPlayer2HotKey());
+		txtShowSkunkHotKey.setText(settings.getDefaultShowSkunkHotKey());
 	}
 	
 	public void saveSettings(Settings settings) {
@@ -674,6 +685,7 @@ public class HotKeysPanel extends JPanel {
 		settings.setRedoHotKey(txtRedoHotKey.getText());
 		settings.setSwitchPlayer1HotKey(txtSwitchPlayer1HotKey.getText());
 		settings.setSwitchPlayer2HotKey(txtSwitchPlayer2HotKey.getText());
+		settings.setShowSkunkHotKey(txtShowSkunkHotKey.getText());
 		try {
 			settings.saveHotKeyConfig();
 		} catch (IOException ex) {

@@ -663,6 +663,13 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.093 08/28/2022</br>
+</br>
+Add ShowSkunk setting</br>
+Add ShowSkunk button</br>
+Parameterize Scene, Score, Timer sources and Skunk filter</br>
+Add CutThroat Mode to rotate player names</br>
+</br>
 v1.092 08/27/2022</br>
 </br>
 Add Skunk detection and action.</br>

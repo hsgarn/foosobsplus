@@ -43,6 +43,7 @@ public class OBSPanel extends JPanel {
 	private JButton btnPush;
 	private JToggleButton tglbtnShowScores;
 	private JToggleButton tglbtnShowTimer;
+	private JToggleButton tglbtnShowSkunk;
 	private Settings settings;
 	private Border innerBorder;
 
@@ -60,6 +61,7 @@ public class OBSPanel extends JPanel {
 		btnPush = new JButton(Messages.getString("OBSPanel.Push", settings.getGameType())); //$NON-NLS-1$
 		tglbtnShowScores = new JToggleButton(Messages.getString("OBSPanel.ShowScores", settings.getGameType())); //$NON-NLS-1$
 		tglbtnShowTimer = new JToggleButton(Messages.getString("OBSPanel.ShowTimer", settings.getGameType())); //$NON-NLS-1$
+		tglbtnShowSkunk = new JToggleButton(Messages.getString("OBSPanel.ShowSkunk", settings.getGameType())); //$NON-NLS-1$
 
 		setMnemonics();
 		
@@ -77,6 +79,7 @@ public class OBSPanel extends JPanel {
 		btnPull.setText(Messages.getString("OBSPanel.Pull", settings.getGameType())); //$NON-NLS-1$
 		tglbtnShowScores.setText(Messages.getString("OBSPanel.ShowScores", settings.getGameType())); //$NON-NLS-1$
 		tglbtnShowTimer.setText(Messages.getString("OBSPanel.ShowTimer", settings.getGameType())); //$NON-NLS-1$
+		tglbtnShowSkunk.setText(Messages.getString("OBSPanel.ShowSkunk", settings.getGameType())); //$NON-NLS-1$
 		setTitle();
 	}
 	public void layoutComponents() {
@@ -98,8 +101,6 @@ public class OBSPanel extends JPanel {
 		add(btnConnect, gc);
 
 		//////// Disconnect ////////
-//		gc.gridy++;
-
 		gc.weightx = .1;
 		gc.weighty = 0.1;
 		
@@ -143,13 +144,25 @@ public class OBSPanel extends JPanel {
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(tglbtnShowScores, gc);
 		
-		/////// Show Timer /////////
+		/////// Show Skunk /////////
 		gc.weightx = .1;
 		gc.weighty = 0.1;
 		
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
+		gc.insets = new Insets(0, 0, 0, 5);
+		add(tglbtnShowSkunk, gc);
+		
+		/////// Show Timer /////////
+		gc.gridy++;
+		
+		gc.weightx = .1;
+		gc.weighty = 0.1;
+		
+		gc.gridx = 0;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.LINE_START;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(tglbtnShowTimer, gc);
 		
@@ -185,6 +198,11 @@ public class OBSPanel extends JPanel {
 		} else {
 			tglbtnShowTimer.setMnemonic(settings.getShowTimerHotKey().charAt(0));
 		};
+		if(settings.getShowSkunkHotKey().isEmpty()) {
+			tglbtnShowSkunk.setMnemonic(-1);
+		} else {
+			tglbtnShowSkunk.setMnemonic(settings.getShowSkunkHotKey().charAt(0));
+		}
 	}
 	////// Listeners  //////
 	public void addConnectListener(ActionListener listenForBtnConnect) {
@@ -204,6 +222,9 @@ public class OBSPanel extends JPanel {
 	}
 	public void addShowTimerListener(ActionListener listenForBtnShowTimer) {
 		tglbtnShowTimer.addActionListener(listenForBtnShowTimer);
+	}
+	public void addShowSkunkListener(ActionListener listenForBtnShowSkunk) {
+		tglbtnShowSkunk.addActionListener(listenForBtnShowSkunk);
 	}
 
 	////// Utility Methods //////
