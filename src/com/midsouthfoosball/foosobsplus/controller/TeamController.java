@@ -192,9 +192,7 @@ public class TeamController {
 		teams[teamNumber-1].setForwardName(forwardName);
 		teamPanels[teamNumber-1].updateForwardName(forwardName);
 		statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
-		if (match.getWinState() > 0) {
-			resetForNewGame();
-		}
+		checkResetForNewGame();
 		updateGameTables();
 	}
 	private class ForwardNameMouseListener extends MouseAdapter{
@@ -232,9 +230,7 @@ public class TeamController {
 		teams[teamNumber-1].setGoalieName(goalieName);
 		teamPanels[teamNumber-1].updateGoalieName(goalieName);
 		statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
-		if (match.getWinState() > 0) {
-			resetForNewGame();
-		}
+		checkResetForNewGame();
 		updateGameTables();
 	}
 	private class GoalieNameMouseListener extends MouseAdapter{
@@ -378,6 +374,7 @@ public class TeamController {
 		String forwardName = names[0];
 		String goalieName = names[1];
 		teamPanels[teamNumber-1].updateNames(forwardName, goalieName);
+		checkResetForNewGame();
 		updateGameTables();
 	};
 	public int incrementScore(int teamNumber) {
@@ -431,20 +428,24 @@ public class TeamController {
 		}
 	}
 	public void startGameTimer() {
+		checkResetForNewGame();
 		timerController.startGameTimer();
 		if (!mainController.getTimerWindowSelected()) {
 			mainController.showTimerWindow();
 		}
 	}
 	public void startShotTimer() {
-		int winState = match.getWinState();
-		if (winState > 0) {
-			resetForNewGame();
-		}
+		checkResetForNewGame();
 		timerController.startShotTimer();
 		if (!mainController.getTimerWindowSelected()) {
 			mainController.showTimerWindow();
 			mainController.setFocusOnCode();
+		}
+	}
+	public void checkResetForNewGame() {
+		int winState = match.getWinState();
+		if (winState > 0) {
+			resetForNewGame();
 		}
 	}
 	public void resetForNewGame() {
@@ -456,22 +457,21 @@ public class TeamController {
 		}
 	}
 	public void startPassTimer() {
-		int winState = match.getWinState();
-		if (winState > 0) {
-			resetForNewGame();
-		}
+		checkResetForNewGame();
 		timerController.startPassTimer();
 		if (!mainController.getTimerWindowSelected()) {
 			mainController.showTimerWindow();
 		}
 	}
 	public void startTimeOutTimer() {
+		checkResetForNewGame();
 		timerController.startTimeOutTimer();
 		if (!mainController.getTimerWindowSelected()) {
 			mainController.showTimerWindow();
 		}
 	}
 	public void startRecallTimer() {
+		checkResetForNewGame();
 		timerController.startRecallTimer();
 		if (!mainController.getTimerWindowSelected()) {
 			mainController.showTimerWindow();
@@ -492,6 +492,7 @@ public class TeamController {
 		displayAll();
 	}
 	public void switchTeams() {
+		checkResetForNewGame();
 		String temp = team1.getTeamName();
 		team1.setTeamName(team2.getTeamName());
 		team2.setTeamName(temp);
@@ -510,6 +511,7 @@ public class TeamController {
 		updateGameTables();
 	}
 	public void switchPlayer1() {
+		checkResetForNewGame();
 		String tmp = team1.getForwardName();
 		team1.setForwardName(team2.getForwardName());
 		team2.setForwardName(tmp);
@@ -518,6 +520,7 @@ public class TeamController {
 		updateGameTables();
 	}
 	public void switchPlayer2() {
+		checkResetForNewGame();
 		String tmp2 = team1.getGoalieName();
 		team1.setGoalieName(team2.getGoalieName());
 		team2.setGoalieName(tmp2);
@@ -614,6 +617,7 @@ public class TeamController {
 		team2.resetStats();
 	}
 	public void clearAll() {
+		checkResetForNewGame();
 		team1.clearAll();
 		team2.clearAll();
 		match.clearAll();
