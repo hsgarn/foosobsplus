@@ -37,6 +37,8 @@ public class Team implements Serializable {
 	private String forwardName = "";
 	private String goalieName = "";
 	private int score = 0;
+	private int forwardScore = 0;
+	private int goalieScore = 0;
 	private int gameCount = 0;
 	private int timeOutCount;
 	private boolean resetState = false;
@@ -101,10 +103,42 @@ public class Team implements Serializable {
 			setScore(Integer.parseInt(score));
 		}
 	}
+	public int getForwardScore() {
+		return forwardScore;
+	}
+	public void setForwardScore(int forwardScore) {
+		this.forwardScore = forwardScore;
+	}
+	public int getGoalieScore() {
+		return goalieScore;
+	}
+	public void setGoalieScore(int goalieScore) {
+		this.goalieScore = goalieScore;
+	}
+	public int incrementForwardScore() {
+		forwardScore++;
+		writeForwardScore();
+		return forwardScore;
+	}
+	public int incrementGoalieScore() {
+		goalieScore++;
+		writeGoalieScore();
+		return goalieScore;
+	}
 	public int incrementScore() {
 		score++;
 		writeScore();
 		return score;
+	}
+	public int decrementForwardScore() {
+		if(forwardScore > 0) forwardScore--;
+		writeForwardScore();
+		return forwardScore;
+	}
+	public int decrementGoalieScore() {
+		if(goalieScore > 0) goalieScore--;
+		writeGoalieScore();
+		return goalieScore;
 	}
 	public int decrementScore() {
 		if(score > 0) score--;
@@ -269,6 +303,8 @@ public class Team implements Serializable {
 		forwardName = "";
 		goalieName = "";
 		score = 0;
+		forwardScore = 0;
+		goalieScore = 0;
 		gameCount = 0;
 		passAttempts = 0;
 		passCompletes = 0;
@@ -612,10 +648,22 @@ public class Team implements Serializable {
 		writeData(settings.getTeamNameFileName(teamNbr), settings.getTeamNameSource(teamNbr), getTeamName());
     }
     private void writeForwardName() {
-    	writeData(settings.getTeamForwardFileName(teamNbr), settings.getTeamForwardSource(teamNbr), getForwardName());
+    	String forwardName;
+    	if(settings.getCutThroatMode()==1) {
+    		forwardName = getForwardName() + " " + getForwardScore();
+    	} else {
+    		forwardName = getForwardName();
+    	}
+    	writeData(settings.getTeamForwardFileName(teamNbr), settings.getTeamForwardSource(teamNbr), forwardName);
     }
     private void writeGoalieName() {
-    	writeData(settings.getTeamGoalieFileName(teamNbr), settings.getTeamGoalieSource(teamNbr), getGoalieName());
+    	String goalieName;
+    	if(settings.getCutThroatMode()==1) {
+    		goalieName = getGoalieName() + " " + getGoalieScore();
+    	} else {
+    		goalieName = getGoalieName();
+    	}
+    	writeData(settings.getTeamGoalieFileName(teamNbr), settings.getTeamGoalieSource(teamNbr), goalieName);
     }
     private void writeGameCount() {
     	writeData(settings.getGameCountFileName(teamNbr), settings.getGameCountSource(teamNbr), Integer.toString(getGameCount()));
@@ -709,6 +757,12 @@ public class Team implements Serializable {
 	}
     private void writeScore() {
     	writeData(settings.getScoreFileName(teamNbr), settings.getScoreSource(teamNbr), Integer.toString(getScore()));
+    }
+    private void writeForwardScore() {
+    	
+    }
+    private void writeGoalieScore() {
+    	
     }
 	private void writeData(String filename, String source, String data) {
     	OBS obs = OBS.getInstance();

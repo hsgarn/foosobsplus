@@ -78,23 +78,33 @@ public class MatchController {
 		}
 	}
 	public void incrementScore(int teamNumber) {
-		if (match.getMatchWon()) {
-			match.resetMatch();
-			teamController.resetScores();
-			teamController.resetGameCounts();
-			startMatch(createMatchId());
+		if (settings.getCutThroatMode()==1) {
+			if (teamNumber == 1) {
+				//Single player scores
+				teamController.incrementForwardScore(teamNumber);
+			} else {
+				//Rotate players and scores
+				teamController.cutThroatRotate(); 
+			}
+		} else {
+			if (match.getMatchWon()) {
+				match.resetMatch();
+				teamController.resetScores();
+				teamController.resetGameCounts();
+				startMatch(createMatchId());
+			}
+			int winState = teamController.incrementScore(teamNumber);
+			if (winState==1) {
+				match.increaseCurrentGameNumber();
+				startGame();
+			}
+			if (winState==2) {
+				gameClock.stopMatchTimer();
+				gameClock.stopGameTimer();
+			}
+			switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
+			updateGameTables();
 		}
-		int winState = teamController.incrementScore(teamNumber);
-		if (winState==1) {
-			match.increaseCurrentGameNumber();
-			startGame();
-		}
-		if (winState==2) {
-			gameClock.stopMatchTimer();
-			gameClock.stopGameTimer();
-		}
-		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
-		updateGameTables();
 	}
 	public void decrementScore(int teamNumber) {
 		teamController.decrementScore(teamNumber);

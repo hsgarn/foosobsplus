@@ -375,6 +375,7 @@ public class TeamController {
 		String goalieName = names[1];
 		teamPanels[teamNumber-1].updateNames(forwardName, goalieName);
 		checkResetForNewGame();
+		displayAll();
 		updateGameTables();
 	};
 	public int incrementScore(int teamNumber) {
@@ -393,6 +394,14 @@ public class TeamController {
 		}
 		displayAll();
 		return winState;
+	}
+	public void incrementForwardScore(int teamNumber) {
+		if(teamNumber == 1) {
+			team1.incrementForwardScore();
+		} else {
+			team2.incrementForwardScore();
+		}
+		displayAll();
 	}
 	public void decrementScore(int teamNumber) {
 		match.decrementScore(teamNumber);
@@ -581,9 +590,14 @@ public class TeamController {
 	public void resetScores() {
 		team1.setScore(0);
 		team2.setScore(0);
+		team1.setForwardScore(0);
+		team1.setGoalieScore(0);
+		team2.setForwardScore(0);
+		team2.setGoalieScore(0);
 		teamPanel1.updateScore(team1.getScore());
 		teamPanel2.updateScore(team2.getScore());
 		updateGameTables();
+		displayAll();
 	}
 	public void resetGameCounts() {
 		team1.setGameCount(0);
@@ -647,26 +661,51 @@ public class TeamController {
 		lastScored2Clock.startLastScoredTimer();
 	}
 	public void displayAll() {
+		String forwardName1;
+		String goalieName1;
+		String forwardName2;
+		String goalieName2;
 		String teamName1 = team1.getTeamName();
-		String forwardName1 = team1.getForwardName();
-		String goalieName1 = team1.getGoalieName();
 		int score1 = team1.getScore();
 		int gameCount1 = team1.getGameCount();
 		int timeOutCount1 = team1.getTimeOutCount();
 		boolean isReset1 = team1.getReset();
 		boolean isWarn1 = team1.getWarn();
 		String teamName2 = team2.getTeamName();
-		String forwardName2 = team2.getForwardName();
-		String goalieName2 = team2.getGoalieName();
 		int score2 = team2.getScore();
 		int gameCount2 = team2.getGameCount();
 		int timeOutCount2 = team2.getTimeOutCount();
 		boolean isReset2 = team2.getReset();
 		boolean isWarn2 = team2.getWarn();
+		if (settings.getCutThroatMode()==1) {
+			forwardName1 = team1.getForwardName() + " " + team1.getForwardScore();
+			goalieName1 = team1.getGoalieName();
+			forwardName2 = team2.getForwardName() + " " + team2.getForwardScore();
+			goalieName2 = team2.getGoalieName() + " " + team2.getGoalieScore();
+
+		} else {
+			forwardName1 = team1.getForwardName();
+			goalieName1 = team1.getGoalieName();
+			forwardName2 = team2.getForwardName();
+			goalieName2 = team2.getGoalieName();
+		}
+		team1.writeAll();
+		team2.writeAll();
 		teamPanel1.displayAllFields(teamName1, forwardName1, goalieName1, score1, gameCount1, timeOutCount1, isReset1, isWarn1);
 		teamPanel2.displayAllFields(teamName2, forwardName2, goalieName2, score2, gameCount2, timeOutCount2, isReset2, isWarn2);
 		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
 		updateGameTables();
+	}
+	public void cutThroatRotate() {
+		String tmp = team1.getForwardName();
+		team1.setForwardName(team2.getForwardName());
+		team2.setForwardName(team2.getGoalieName());
+		team2.setGoalieName(tmp);
+		int tmpScore = team1.getForwardScore();
+		team1.setForwardScore(team2.getForwardScore());
+		team2.setForwardScore(team2.getGoalieScore());
+		team2.setGoalieScore(tmpScore);
+		displayAll();
 	}
 	public void updateGameTables() {
 		matchPanel.setGameWinners(match.getGameWinners());

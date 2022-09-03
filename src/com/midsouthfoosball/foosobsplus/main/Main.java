@@ -393,11 +393,9 @@ public class Main {
             	}
 				if (!ignoreSensors && (mostRecentValue == 1)) {
 					processCode("XIST1", false);
-					checkForCutThroat(1);
 				}	else {
 						if (!ignoreSensors && (mostRecentValue == 2)) {
 							processCode("XIST2", false);
-							checkForCutThroat(2);
 						}
 				}
 				if (!ignoreSensors && (mostRecentValue > 0)) {
@@ -405,17 +403,6 @@ public class Main {
 				}
 			}
 		};
-	}
-	private void checkForCutThroat(int teamNbr) {
-		if (settings.getCutThroatMode() == 0) return;
-		if (teamNbr == 2) {
-			//Rotate players
-			String tmpName = team1.getForwardName();
-			team1.setForwardName(team2.getForwardName());
-			team2.setForwardName(team2.getGoalieName());
-			team2.setGoalieName(tmpName);
-			teamController.displayAll();
-		}
 	}
 	private void checkForSkunk() {
 		if (settings.getShowSkunk() == 0) return;
@@ -1301,6 +1288,7 @@ public class Main {
 				teamPanel1.setTitle();
 				teamPanel2.setTitle();
 			}
+			teamController.displayAll();
 			JComponent comp = (JComponent) e.getSource();
 			Window win = SwingUtilities.getWindowAncestor(comp);
 			win.dispose();
@@ -1327,10 +1315,8 @@ public class Main {
 			String name = btn.getName();
 			if(name.equals("Team 1")) {
 				processCode("XIST1",false);
-				checkForCutThroat(1);
 			} else {
 				processCode("XIST2",false);
-				checkForCutThroat(2);
 			}
 			checkForSkunk();
 			statsEntryPanel.setFocusOnCode();
