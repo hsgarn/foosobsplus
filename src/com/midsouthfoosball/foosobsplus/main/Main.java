@@ -326,20 +326,22 @@ public class Main {
 		        {
 		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString());
 		        }
-		        String str = "";
+		    	String raw = "";
+		        String str[];
 		        while (isConnected)
 		        {
 		        	try
 		            {
-		                str = dataIn.readLine();
+		        		raw = dataIn.readLine();
+		                str = raw.split("[,]",0);
 	                	if (settings.getAutoScoreSettingsDetailLog()==1) {
-	                		autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Received " + str);
+	                		autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Received " + raw);
 	                	}
-		                if (str.equals(team1Label))
+		                if (str[0].equals(team1Label))
 		                {
 		                	publish(1);
 		                } else {
-			                if (str.equals(team2Label)) {
+			                if (str[0].equals(team2Label)) {
 			                	publish(2);
 			                }
 		                }

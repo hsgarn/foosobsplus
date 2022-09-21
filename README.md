@@ -663,6 +663,10 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.096 09/20/2022</br>
+</br>
+Autoscore now receives Pin number in addition to Team number for easier debugging.
+</br>
 v1.095 09/03/2022</br>
 </br>
 Hack in CutThroat Mode scoring</br>
