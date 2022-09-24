@@ -1647,7 +1647,7 @@ public class Main {
 		        		for (WatchEvent<?> watchEvent : watchKey.pollEvents()) {
 		        			final Kind<?> kind = watchEvent.kind();
 		        			if (kind==StandardWatchEventKinds.OVERFLOW) {
-		        				System.out.println("Got ourselves an overflow");
+		        				System.out.println("Got ourselves an overflow in createFileWatchWorker doInBackground");
 		        				continue;
 		        			}
 		        			if (kind == StandardWatchEventKinds.ENTRY_CREATE || kind == StandardWatchEventKinds.ENTRY_MODIFY) {
@@ -1681,7 +1681,7 @@ public class Main {
 		        		}
 			        	boolean valid = watchKey.reset();
 			        	if (!valid) {
-			        		System.out.println("wasn't valid so made a break for it");
+			        		System.out.println("watchKey wasn't valid so made a break for it");
 			        		break;
 			        	}
 	        		}
@@ -1706,18 +1706,25 @@ public class Main {
 			protected void process(List<String> chunks) {
 				if (isCancelled()) return;
 				for (String value : chunks) {
+					String newName;
 					String[] pieces = value.split("=");
+					if (pieces.length == 1) {
+						newName = "";
+					}
+					else {
+						newName = pieces[1];
+					}
 					if (pieces[0].equals("Player1.txt")) {
-						teamController.setTeam1ForwardName(pieces[1]);
+						teamController.setTeam1ForwardName(newName);
 					} else {
 						if (pieces[0].equals("Player2.txt")) {
-							teamController.setTeam1GoalieName(pieces[1]);
+							teamController.setTeam1GoalieName(newName);
 						} else {
 							if (pieces[0].equals("Player3.txt")) {
-								teamController.setTeam2ForwardName(pieces[1]);
+								teamController.setTeam2ForwardName(newName);
 							} else {
 								if (pieces[0].equals("Player4.txt")) {
-									teamController.setTeam2GoalieName(pieces[1]);
+									teamController.setTeam2GoalieName(newName);
 								}
 							}
 						}
