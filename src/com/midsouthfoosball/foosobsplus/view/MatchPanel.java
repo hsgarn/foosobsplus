@@ -47,6 +47,7 @@ public class MatchPanel extends JPanel {
 	
 	private JButton btnStartMatch;
 	private JButton btnPauseMatch;
+	private JButton btnEndMatch;
 	private JButton btnStartGame;
 	private JLabel lblStartTimeLabel;
 	private JLabel lblElapsedTimeLabel;
@@ -74,6 +75,7 @@ public class MatchPanel extends JPanel {
 		
 		btnStartMatch = new JButton(Messages.getString("MatchPanel.StartMatch", settings.getGameType())); //$NON-NLS-1$
 		btnPauseMatch = new JButton(Messages.getString("MatchPanel.PauseMatch", settings.getGameType())); //$NON-NLS-1$
+		btnEndMatch = new JButton(Messages.getString("MatchPanel.EndMatch", settings.getGameType())); //$NON-NLS-1$
 		btnStartGame = new JButton(Messages.getString("MatchPanel.StartGame", settings.getGameType())); //$NON-NLS-1$
 		lblStartTimeLabel = new JLabel(Messages.getString("MatchPanel.StartTime", settings.getGameType())); //$NON-NLS-1$
 		lblElapsedTimeLabel = new JLabel(Messages.getString("MatchPanel.ElapsedTime", settings.getGameType())); //$NON-NLS-1$
@@ -97,6 +99,7 @@ public class MatchPanel extends JPanel {
 	public void changeGameType() {
 		btnStartMatch.setText(Messages.getString("MatchPanel.StartMatch", settings.getGameType())); //$NON-NLS-1$
 		btnPauseMatch.setText(Messages.getString("MatchPanel.PauseMatch", settings.getGameType())); //$NON-NLS-1$
+		btnEndMatch.setText(Messages.getString("MatchPanel.EndMatch", settings.getGameType())); //$NON-NLS-1$
 		btnStartGame.setText(Messages.getString("MatchPanel.StartGame", settings.getGameType())); //$NON-NLS-1$
 		lblStartTimeLabel.setText(Messages.getString("MatchPanel.StartTime", settings.getGameType())); //$NON-NLS-1$
 		lblElapsedTimeLabel.setText(Messages.getString("MatchPanel.ElapsedTime", settings.getGameType())); //$NON-NLS-1$
@@ -168,6 +171,16 @@ public class MatchPanel extends JPanel {
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(lblElapsedTime, gc);
+
+		//////// End Match ///////
+		gc.gridy++;
+		gc.gridx = 0;
+		gc.gridheight = 1;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.LINE_START;
+		gc.insets = new Insets(5, 5, 5, 5);
+		add(btnEndMatch, gc);
+		gc.gridheight = 1;
 		
 		////////  Start Game ////////
 		gc.gridy++;
@@ -215,6 +228,9 @@ public class MatchPanel extends JPanel {
 	public void addPauseMatchListener(ActionListener listenForBtnPauseMatch) {
 		btnPauseMatch.addActionListener(listenForBtnPauseMatch);
 	}
+	public void addEndMatchListener(ActionListener listenForBtnEndMatch) {
+		btnEndMatch.addActionListener(listenForBtnEndMatch);
+	}
 	public void addStartGameListener(ActionListener listenForBtnStartGame) {
 		btnStartGame.addActionListener(listenForBtnStartGame);
 	}
@@ -240,9 +256,6 @@ public class MatchPanel extends JPanel {
 	public void setPauseLabel(String labelText) {
 		btnPauseMatch.setText(labelText);
 	}
-	public void setStartMatchLabel(String labelText) {
-		btnStartMatch.setText(labelText);
-	}
 	private void setMnemonics() {
 		if(settings.getStartMatchHotKey().isEmpty()) {
 			btnStartMatch.setMnemonic(-1);
@@ -254,6 +267,11 @@ public class MatchPanel extends JPanel {
 		} else {
 			btnPauseMatch.setMnemonic(settings.getPauseMatchHotKey().charAt(0));
 		};
+//		if(settings.getEndMatchHotKey().isEmpty()) {
+//			btnEndMatch.setMnemonic(-1);
+//		} else {
+//			btnEndMatch.setMnemonic(settings.getEndMatchHotKey().charAt(0));
+//		};
 		if(settings.getStartGameHotKey().isEmpty()) {
 			btnStartGame.setMnemonic(-1);
 		} else {

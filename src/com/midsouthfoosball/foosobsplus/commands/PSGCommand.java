@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -21,20 +21,20 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 package com.midsouthfoosball.foosobsplus.commands;
 
-import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
+import com.midsouthfoosball.foosobsplus.main.Main;
 
 public class PSGCommand implements Command {
 	private StatsController statsController;
-	private MatchController matchController;
+	private Main main;
 	
-	public PSGCommand(StatsController statsController, MatchController matchController) {
+	public PSGCommand(StatsController statsController, Main main) {
 		this.statsController = statsController;
-		this.matchController = matchController;
+		this.main = main;
 	}
 	
 	public void execute() {
-		matchController.startGame();
+		main.startGame();
 	}
 
 	public String getCode() {

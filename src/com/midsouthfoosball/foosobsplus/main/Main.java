@@ -88,6 +88,7 @@ import com.midsouthfoosball.foosobsplus.commands.PRTOCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSGCCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSGCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSMCommand;
+import com.midsouthfoosball.foosobsplus.commands.PEMCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSOCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSRCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSSCCommand;
@@ -180,6 +181,7 @@ public class Main {
 	private HashMap<String, Boolean> nineBallsMap 	= new HashMap<>();
 	private DateTimeFormatter dtf 					= DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 	private boolean autoScoreConnected				= false;
+	private StreamIndexer streamIndexer             = new StreamIndexer(settings.getDatapath());
 	////// Watch Service for File changes \\\\\\
 	WatchService watchService;
 	
@@ -417,6 +419,13 @@ public class Main {
 				if (a == 0 || b == 0) {
 					showSkunk();
 				}
+				if(gameClock.isStreamTimerRunning()) {
+					if(settings.getCutThroatMode()==1) {
+						streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Game end: " + team1.getForwardName() + " vs " + team2.getForwardName() + " vs " + team2.getGoalieName() + "\r\n");
+					} else {
+						streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Game end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + ": " + a + " to " + b + "\r\n");
+					}
+				}
 			}
 		} else {
 			if (winState == 2) {
@@ -424,6 +433,13 @@ public class Main {
 				int b = team2.getScore();
 				if (a == 0 || b == 0) {
 					showSkunk();
+				}
+				if(gameClock.isStreamTimerRunning()) {
+					if(settings.getCutThroatMode()==1) {
+						streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Match end: " + team1.getForwardName() + " vs " + team2.getForwardName() + " vs " + team2.getGoalieName() + "\r\n");
+					} else {
+						streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Match end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + ": " + a + " to " + b + "\r\n");
+					}
 				}
 			}
 		}
@@ -450,7 +466,7 @@ public class Main {
 		timerController = new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock);
 		teamController 	= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, matchPanel, gameTableWindowPanel, statsDisplayPanel, timerController, lastScored1Clock, lastScored2Clock, gameClock, mainController);
 		tableController = new TableController(obsInterface, settings, table, match, tablePanel, teamController);
-		matchController = new MatchController(settings, match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, switchPanel, gameTableWindowPanel, teamController);
+		matchController = new MatchController(settings, match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, switchPanel, gameTableWindowPanel, teamController, streamIndexer);
 		statsController = new StatsController(stats, statsDisplayPanel, teamController);
 	}
 	public void loadListeners() {
@@ -495,6 +511,7 @@ public class Main {
 		obsPanel.addShowScoresListener(new OBSShowScoresListener());
 		obsPanel.addShowTimerListener(new OBSShowTimerListener());
 		obsPanel.addShowSkunkListener(new OBSShowSkunkListener());
+		obsPanel.addStartStreamListener(new OBSStartStreamListener());
 		autoScoreMainPanel.addConnectListener(new AutoScoreMainPanelConnectListener());
 		autoScoreMainPanel.addDisconnectListener(new AutoScoreMainPanelDisconnectListener());
 		autoScoreMainPanel.addSettingsListener(new AutoScoreMainPanelSettingsListener());
@@ -534,6 +551,7 @@ public class Main {
 		timerPanel.addResetTimerListener(new ResetTimerListener());
 		matchPanel.addStartMatchListener(new StartMatchListener());
 		matchPanel.addPauseMatchListener(new PauseMatchListener());
+		matchPanel.addEndMatchListener(new EndMatchListener());
 		matchPanel.addStartGameListener(new StartGameListener());
 		switchPanel.addSwitchTeamsListener(new SwitchTeamsListener());
 		switchPanel.addSwitchPlayer1Listener(new SwitchPlayer1Listener());
@@ -587,16 +605,32 @@ public class Main {
 		nineBallsMap.put("Fifteen", false);
 	}
 	public void startMatch() {
-		if(match.isMatchStarted()) {
-			matchController.endMatch();
-		} else {
-			matchId = createMatchId();
-			matchController.startMatch(matchId);
-			for(Game game: games) {
-				game.clearAll();
-				game.setMatchId(matchId);
+		matchId = createMatchId();
+		matchController.startMatch(matchId);
+		for(Game game: games) {
+			game.clearAll();
+			game.setMatchId(matchId);
+		}
+		if(gameClock.isStreamTimerRunning()) {
+			if(settings.getCutThroatMode()==1) {
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Start Match Pressed: " + team1.getForwardName() + " vs " + team2.getForwardName() + " vs " + team2.getGoalieName() + "\r\n");
+			} else {
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Start Match Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n");
 			}
 		}
+	}
+	public void endMatch() {
+		matchController.endMatch();
+	}
+	public void startGame() {
+		if(gameClock.isStreamTimerRunning()) {
+			if(settings.getCutThroatMode()==1) {
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Start Game Pressed: " + team1.getForwardName() + " vs " + team2.getForwardName() + " vs " + team2.getGoalieName() + "\r\n");
+			} else {
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Start Game Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n");
+			}
+		}
+		matchController.startGame();
 	}
 	private void fetchAll(String tableNbr) {
 		tableController.fetchAll(tableNbr);
@@ -740,8 +774,9 @@ public class Main {
     }
 	private void loadCommands() {
 		Command psm = new PSMCommand(statsController, this);
+		Command pem = new PEMCommand(statsController, this);
 		Command ppm = new PPMCommand(statsController, matchController);
-		Command psg = new PSGCommand(statsController, matchController);
+		Command psg = new PSGCommand(statsController, this);
 		Command sst = new SSTCommand(statsController, teamController);
 		Command spt = new SPTCommand(statsController, teamController);
 		Command sgt = new SGTCommand(statsController, teamController);
@@ -791,6 +826,7 @@ public class Main {
 
 		mySwitch = new CommandSwitch();
 		mySwitch.register("PSM", psm);
+		mySwitch.register("PEM", pem);
 		mySwitch.register("PPM", ppm);
 		mySwitch.register("PSG", psg);
 		mySwitch.register("SST", sst);
@@ -1261,6 +1297,11 @@ public class Main {
 			}
 		}
 	}
+	private class OBSStartStreamListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			gameClock.startStreamTimer();
+		}
+	}
 	private class SettingsSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			int oldGamesToWin = settings.getGamesToWin();
@@ -1471,6 +1512,12 @@ public class Main {
 	private class PauseMatchListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPPM",false);
+			statsEntryPanel.setFocusOnCode();
+		}
+	}
+	private class EndMatchListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPEM",false);
 			statsEntryPanel.setFocusOnCode();
 		}
 	}

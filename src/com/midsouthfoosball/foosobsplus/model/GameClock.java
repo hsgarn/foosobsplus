@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -43,6 +43,10 @@ public class GameClock implements Serializable {
 	private int matchMinutes;
 	private int matchHours;
 	private boolean matchTimerRunning;
+	private int streamSeconds;
+	private int streamMinutes;
+	private int streamHours;
+	private boolean streamTimerRunning;
 	private transient OBSInterface obsInterface;
 	private transient Settings settings;
 	private transient DecimalFormat df = new DecimalFormat("00");
@@ -78,6 +82,17 @@ public class GameClock implements Serializable {
 						matchMinutes=0;
 					}
 					writeMatchTime();
+				}
+				if(streamTimerRunning) {
+					streamSeconds++;
+					if (streamSeconds>=60) {
+						streamMinutes++;
+						streamSeconds=0;
+					}
+					if (streamMinutes>=60) {
+						streamHours++;
+						streamMinutes=0;
+					}
 				}
 			}
 		};
@@ -157,6 +172,37 @@ public class GameClock implements Serializable {
 	public void setMatchTimerRunning(boolean matchTimerRunning) {
 		this.matchTimerRunning = matchTimerRunning;
 	}
+	public int getStreamSeconds() {
+		return streamSeconds;
+	}
+
+	public void setStreamSeconds(int streamSeconds) {
+		this.streamSeconds = streamSeconds;
+	}
+
+	public int getStreamMinutes() {
+		return streamMinutes;
+	}
+
+	public void setStreamMinutes(int streamMinutes) {
+		this.streamMinutes = streamMinutes;
+	}
+
+	public int getStreamHours() {
+		return streamHours;
+	}
+
+	public void setStreamHours(int streamHours) {
+		this.streamHours = streamHours;
+	}
+
+	public boolean isStreamTimerRunning() {
+		return streamTimerRunning;
+	}
+
+	public void setStreamTimerRunning(boolean streamTimerRunning) {
+		this.streamTimerRunning = streamTimerRunning;
+	}
 
 	public void restartGameTimer() {
 		timer.restart();
@@ -166,6 +212,9 @@ public class GameClock implements Serializable {
 	}
 	public String getMatchTime() {
 		return df.format(matchHours) + ":" + df.format(matchMinutes) + ":" + df.format(matchSeconds);
+	}
+	public String getStreamTime() {
+		return df.format(streamHours) + ":" + df.format(streamMinutes) + ":" + df.format(streamSeconds);
 	}
 	public void startGameTimer() {
 		gameSeconds=0;
@@ -200,6 +249,15 @@ public class GameClock implements Serializable {
 		} else {
 			matchTimerRunning=true;
 		}
+	}
+	public void startStreamTimer() {
+		streamSeconds=0;
+		streamMinutes=0;
+		streamHours=0;
+		streamTimerRunning=true;
+	}
+	public void stopStreamTimer() {
+		streamTimerRunning=false;
 	}
 	public void addGameClockTimerListener(ActionListener alAction) {
 		timer.addActionListener(alAction);

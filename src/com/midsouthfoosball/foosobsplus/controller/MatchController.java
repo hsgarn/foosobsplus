@@ -22,7 +22,10 @@ package com.midsouthfoosball.foosobsplus.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
+import com.midsouthfoosball.foosobsplus.main.StreamIndexer;
 import com.midsouthfoosball.foosobsplus.model.GameClock;
 import com.midsouthfoosball.foosobsplus.model.LastScoredClock;
 import com.midsouthfoosball.foosobsplus.model.Match;
@@ -47,8 +50,10 @@ public class MatchController {
 	private SwitchPanel switchPanel;
 	private GameTableWindowPanel gameTableWindowPanel;
 	private TeamController teamController;
+	private StreamIndexer streamIndexer;
+	private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 	
-	public MatchController(Settings settings, Match match, Stats stats, GameClock gameClock, LastScoredClock lastScored1Clock, LastScoredClock lastScored2Clock, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, SwitchPanel switchPanel, GameTableWindowPanel gameTableWindowPanel, TeamController teamController) {
+	public MatchController(Settings settings, Match match, Stats stats, GameClock gameClock, LastScoredClock lastScored1Clock, LastScoredClock lastScored2Clock, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, SwitchPanel switchPanel, GameTableWindowPanel gameTableWindowPanel, TeamController teamController, StreamIndexer streamIndexer) {
 		this.settings = settings;
 		this.match = match;
 		this.stats = stats;
@@ -62,6 +67,7 @@ public class MatchController {
 		this.gameTableWindowPanel = gameTableWindowPanel;
 		this.teamController = teamController;
 		this.gameClock.addGameClockTimerListener(new GameClockTimerListener());
+		this.streamIndexer = streamIndexer;
 		updateGameTables();
 	}
 	
@@ -92,6 +98,12 @@ public class MatchController {
 				teamController.resetScores();
 				teamController.resetGameCounts();
 				startMatch(createMatchId());
+				if(settings.getCutThroatMode()==1) {
+					streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + " vs " + teamController.getForwardName(2) + " vs " + teamController.getGoalieName(2) + "\r\n");
+				} else {
+					streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + "\r\n");
+				}
+
 			}
 			int winState = teamController.incrementScore(teamNumber);
 			if (winState==1) {
@@ -128,7 +140,6 @@ public class MatchController {
 	}
 	public void startMatch(String matchId) {
 		match.setMatchStarted(true);
-		matchPanel.setStartMatchLabel("End Match");
 		teamController.resetAll();
 		displayAllStats();
 		gameClock.startMatchTimer();
@@ -162,7 +173,6 @@ public class MatchController {
 	}
 	public void endMatch() {
 		match.setMatchStarted(false);
-		matchPanel.setStartMatchLabel("Start Match");
 		gameClock.pauseGameTimer(true);
 		gameClock.pauseMatchTimer(true);
 		lastScored1Clock.pauseLastScoredTimer(true);

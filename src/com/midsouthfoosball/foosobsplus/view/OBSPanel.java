@@ -44,6 +44,7 @@ public class OBSPanel extends JPanel {
 	private JToggleButton tglbtnShowScores;
 	private JToggleButton tglbtnShowTimer;
 	private JToggleButton tglbtnShowSkunk;
+	private JButton btnStartStream;
 	private Settings settings;
 	private Border innerBorder;
 
@@ -62,6 +63,7 @@ public class OBSPanel extends JPanel {
 		tglbtnShowScores = new JToggleButton(Messages.getString("OBSPanel.ShowScores", settings.getGameType())); //$NON-NLS-1$
 		tglbtnShowTimer = new JToggleButton(Messages.getString("OBSPanel.ShowTimer", settings.getGameType())); //$NON-NLS-1$
 		tglbtnShowSkunk = new JToggleButton(Messages.getString("OBSPanel.ShowSkunk", settings.getGameType())); //$NON-NLS-1$
+		btnStartStream = new JButton(Messages.getString("OBSPanel.StartStream",settings.getGameType())); //$NON-NLS-1$
 
 		setMnemonics();
 		
@@ -80,6 +82,7 @@ public class OBSPanel extends JPanel {
 		tglbtnShowScores.setText(Messages.getString("OBSPanel.ShowScores", settings.getGameType())); //$NON-NLS-1$
 		tglbtnShowTimer.setText(Messages.getString("OBSPanel.ShowTimer", settings.getGameType())); //$NON-NLS-1$
 		tglbtnShowSkunk.setText(Messages.getString("OBSPanel.ShowSkunk", settings.getGameType())); //$NON-NLS-1$
+		btnStartStream.setText(Messages.getString("OBSPanel.StartStream", settings.getGameType())); //$NON-NLS-1$
 		setTitle();
 	}
 	public void layoutComponents() {
@@ -165,6 +168,16 @@ public class OBSPanel extends JPanel {
 		gc.anchor = GridBagConstraints.LINE_START;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(tglbtnShowTimer, gc);
+
+		//////// Start Stream ////////
+		gc.weightx = .1;
+		gc.weighty = 0.1;
+		
+		gc.gridx = 1;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.LINE_END;
+		gc.insets = new Insets(0, 0, 0, 5);
+		add(btnStartStream, gc);
 		
 	}
 	private void setMnemonics() {
@@ -202,7 +215,12 @@ public class OBSPanel extends JPanel {
 			tglbtnShowSkunk.setMnemonic(-1);
 		} else {
 			tglbtnShowSkunk.setMnemonic(settings.getShowSkunkHotKey().charAt(0));
-		}
+		};
+//		if(settings.getStartStreamHotKey().isEmpty()) {
+//			btnStartStream.setMnemonic(-1);
+//		} else {
+//			btnStartStream.setMnemonic(settings.getStartStreamHotKey().charAt(0));
+//		};
 	}
 	////// Listeners  //////
 	public void addConnectListener(ActionListener listenForBtnConnect) {
@@ -225,6 +243,9 @@ public class OBSPanel extends JPanel {
 	}
 	public void addShowSkunkListener(ActionListener listenForBtnShowSkunk) {
 		tglbtnShowSkunk.addActionListener(listenForBtnShowSkunk);
+	}
+	public void addStartStreamListener(ActionListener listenForBtnStartStream) {
+		btnStartStream.addActionListener(listenForBtnStartStream);
 	}
 
 	////// Utility Methods //////
