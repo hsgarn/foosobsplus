@@ -663,6 +663,15 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.099 10/23/2022</br>
+Add Partner Program Settings screen.</br>
+</br>
+v1.098 10/11/2022</br>
+Split Start Match button into Start Match and End Match buttons.</br>
+Add Start Stream button to start a stream timer.</br>
+Make Start Match/Game buttons write stream time and players to file.</br>
+Write players and scores to file when game/match is won.</br>
+</br>
 v1.097 09/24/2022</br>
 </br>
 Fix bug in file whatcher logic when less than 4 players</br>

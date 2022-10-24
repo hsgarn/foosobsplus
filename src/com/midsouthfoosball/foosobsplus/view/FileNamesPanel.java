@@ -725,6 +725,7 @@ public class FileNamesPanel extends JPanel {
 				win.dispose();
 			}
 		});
+		add(btnSaveFileNames, "cell 2 19,alignx center"); //$NON-NLS-1$
 		
 		JLabel lblTeam1SOG = new JLabel(Messages.getString("FileNamesPanel.Team1ShotsOnGoal", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam1SOG, "cell 10 16,alignx trailing"); //$NON-NLS-1$
@@ -741,7 +742,6 @@ public class FileNamesPanel extends JPanel {
 		txtTeam2ShotsOnGoalFileName.setText(settings.getShotsOnGoalFileName(2));
 		add(txtTeam2ShotsOnGoalFileName, "cell 11 17,alignx left"); //$NON-NLS-1$
 		txtTeam2ShotsOnGoalFileName.setColumns(10);
-		add(btnSaveFileNames, "cell 2 19,alignx center"); //$NON-NLS-1$
 		
 		JLabel lblTeambar_1 = new JLabel(Messages.getString("FileNamesPanel.Team25BarScoring", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeambar_1, "cell 10 13,alignx right"); //$NON-NLS-1$

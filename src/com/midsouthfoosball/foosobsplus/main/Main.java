@@ -133,6 +133,7 @@ import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsFrame;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsPanel;
 import com.midsouthfoosball.foosobsplus.view.BallPanel;
 import com.midsouthfoosball.foosobsplus.view.FileNamesFrame;
+import com.midsouthfoosball.foosobsplus.view.PartnerProgramFrame;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowPanel;
 import com.midsouthfoosball.foosobsplus.view.HotKeysFrame;
@@ -242,6 +243,7 @@ public class Main {
 	private HotKeysPanel 		hotKeysPanel		= hotKeysFrame.getHotKeysPanel();
 	private SourcesFrame		sourcesFrame		= new SourcesFrame(settings, obsInterface);
 	private FileNamesFrame		fileNamesFrame		= new FileNamesFrame(settings, obsInterface);
+	private PartnerProgramFrame partnerProgramFrame = new PartnerProgramFrame(settings);
 	private OBSConnectFrame		obsConnectFrame		= new OBSConnectFrame(settings);
 	private OBSConnectPanel		obsConnectPanel		= obsConnectFrame.getOBSConnectPanel();
 	private AutoScoreSettingsFrame		autoScoreSettingsFrame		= new AutoScoreSettingsFrame(settings);
@@ -450,7 +452,7 @@ public class Main {
 	public void loadWindowsAndControllers() {
 		mainFrame = new MainFrame(settings, tablePanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, statsEntryPanel, 
 				switchPanel, resetPanel, statsDisplayPanel, matchPanel, ballPanel, 
-				parametersFrame, hotKeysFrame, sourcesFrame, fileNamesFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, this);
+				parametersFrame, hotKeysFrame, sourcesFrame, fileNamesFrame, partnerProgramFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, this);
 
 		////// Set up independent Windows \\\\\\
 		
@@ -1680,9 +1682,13 @@ public class Main {
 		fileWatchWorker = new SwingWorker<Boolean, String>() {
 			@Override
 			protected Boolean doInBackground() throws Exception {
-				String dir = "C:\\FoosTourney";
-				final String clearString = "XXX_ALREADY_READ_XXX";
-				Path partnerPath = Paths.get(dir);
+				String partnerProgramDir = settings.getPartnerProgramPath();
+				final String clearString = "XXX_ALREADY_READ_XXX";//= settings.getPartnerProgramClearString();
+				String partnerProgramPlayer1FileName = settings.getPlayer1FileName();
+				String partnerProgramPlayer2FileName = settings.getPlayer2FileName();
+				String partnerProgramPlayer3FileName = settings.getPlayer3FileName();
+				String partnerProgramPlayer4FileName = settings.getPlayer4FileName();
+				Path partnerPath = Paths.get(partnerProgramDir);
 				watchService = FileSystems.getDefault().newWatchService(); 
 				partnerPath.getFileSystem().newWatchService();
 				partnerPath.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
@@ -1702,9 +1708,9 @@ public class Main {
 								final WatchEvent<Path> watchEventPath = (WatchEvent<Path>) watchEvent;
 		        				final Path filePath = watchEventPath.context();
 			        			String fileName = filePath.toString();
-			        			if (fileName.equals("Player1.txt") || fileName.equals("Player2.txt") || fileName.equals("Player3.txt") || fileName.equals("Player4.txt")) {
+			        			if (fileName.equals(partnerProgramPlayer1FileName) || fileName.equals(partnerProgramPlayer2FileName) || fileName.equals(partnerProgramPlayer3FileName) || fileName.equals(partnerProgramPlayer4FileName)) {
 				        			try {
-				        				File file = new File(dir + "\\" + fileName);
+				        				File file = new File(partnerProgramDir + "\\" + fileName);
 				        				Scanner fileReader = new Scanner(file);
 				        				if (fileReader.hasNextLine()) {
 				        					String data = fileReader.nextLine();
@@ -1753,6 +1759,10 @@ public class Main {
 			protected void process(List<String> chunks) {
 				if (isCancelled()) return;
 				for (String value : chunks) {
+					String partnerProgramPlayer1FileName = settings.getPlayer1FileName();
+					String partnerProgramPlayer2FileName = settings.getPlayer2FileName();
+					String partnerProgramPlayer3FileName = settings.getPlayer3FileName();
+					String partnerProgramPlayer4FileName = settings.getPlayer4FileName();
 					String newName;
 					String[] pieces = value.split("=");
 					if (pieces.length == 1) {
@@ -1761,16 +1771,16 @@ public class Main {
 					else {
 						newName = pieces[1];
 					}
-					if (pieces[0].equals("Player1.txt")) {
+					if (pieces[0].equals(partnerProgramPlayer1FileName)) {
 						teamController.setTeam1ForwardName(newName);
 					} else {
-						if (pieces[0].equals("Player2.txt")) {
+						if (pieces[0].equals(partnerProgramPlayer2FileName)) {
 							teamController.setTeam1GoalieName(newName);
 						} else {
-							if (pieces[0].equals("Player3.txt")) {
+							if (pieces[0].equals(partnerProgramPlayer3FileName)) {
 								teamController.setTeam2ForwardName(newName);
 							} else {
-								if (pieces[0].equals("Player4.txt")) {
+								if (pieces[0].equals(partnerProgramPlayer4FileName)) {
 									teamController.setTeam2GoalieName(newName);
 								}
 							}

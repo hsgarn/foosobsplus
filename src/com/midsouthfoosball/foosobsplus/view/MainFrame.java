@@ -73,6 +73,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private HotKeysFrame hotKeysFrame;
 	private SourcesFrame sourcesFrame;
 	private FileNamesFrame fileNamesFrame;
+	private PartnerProgramFrame partnerProgramFrame;
 	private OBSConnectFrame obsConnectFrame;
 	private AutoScoreSettingsFrame autoScoreSettingsFrame;
 	private AutoScoreConfigFrame autoScoreConfigFrame;
@@ -103,7 +104,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	
 	public MainFrame(Settings settings, TablePanel tablePanel, TimerPanel timerPanel, OBSPanel obsPanel, AutoScoreMainPanel autoScoreMainPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
 			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, BallPanel ballPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,
-			SourcesFrame sourcesFrame, FileNamesFrame fileNamesFrame, OBSConnectFrame obsConnectFrame, AutoScoreSettingsFrame autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame, Main main) {
+			SourcesFrame sourcesFrame, FileNamesFrame fileNamesFrame, PartnerProgramFrame partnerProgramFrame, OBSConnectFrame obsConnectFrame, AutoScoreSettingsFrame autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame, Main main) {
 
 		super(programName + ": " + settings.getGameType()); //$NON-NLS-1$
 
@@ -123,6 +124,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		this.hotKeysFrame 			= hotKeysFrame;
 		this.sourcesFrame			= sourcesFrame;
 		this.fileNamesFrame 		= fileNamesFrame;
+		this.partnerProgramFrame    = partnerProgramFrame;
 		this.obsConnectFrame 		= obsConnectFrame;
 		this.autoScoreSettingsFrame = autoScoreSettingsFrame;
 		this.autoScoreConfigFrame 	= autoScoreConfigFrame;
@@ -177,12 +179,14 @@ public final class MainFrame extends JFrame implements WindowListener {
 		JMenuItem settingsHotKeyItem 	= new JMenuItem(Messages.getString("MainFrame.HotKeys")); //$NON-NLS-1$
 		JMenuItem settingsSourceItem	= new JMenuItem(Messages.getString("MainFrame.Sources")); //$NON-NLS-1$
 		JMenuItem settingsFileItem 		= new JMenuItem(Messages.getString("MainFrame.FileNames")); //$NON-NLS-1$
+		JMenuItem settingsPartnerProgramItem = new JMenuItem(Messages.getString("MainFrame.PartnerProgram")); //$NON-NLS-1$
 		JMenuItem settingsStatItem		= new JMenuItem(Messages.getString("MainFrame.Statistics")); //$NON-NLS-1$
 		
 		settingsMenu.add(settingsParamItem);
 		settingsMenu.add(settingsHotKeyItem);
 		settingsMenu.add(settingsSourceItem);
 		settingsMenu.add(settingsFileItem);
+		settingsMenu.add(settingsPartnerProgramItem);
 		settingsMenu.add(settingsStatItem);
 		editMenu.add(settingsMenu);
 		
@@ -288,6 +292,12 @@ public final class MainFrame extends JFrame implements WindowListener {
 		settingsFileItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				fileNamesFrame.setVisible(true);
+			}
+		});
+		
+		settingsPartnerProgramItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				partnerProgramFrame.setVisible(true);
 			}
 		});
 

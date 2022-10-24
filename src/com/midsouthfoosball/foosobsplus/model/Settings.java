@@ -39,6 +39,7 @@ public class Settings {
 	private Properties defaultControlProps;
 	private Properties defaultSourceProps;
 	private Properties defaultFileNameProps;
+	private Properties defaultPartnerProgramProps;
 	private Properties defaultHotKeyProps;
 	private Properties defaultOBSProps;
 	private Properties defaultAutoScoreSettingsProps;
@@ -47,6 +48,7 @@ public class Settings {
 	public Properties configControlProps;
 	public Properties configSourceProps;
 	public Properties configFileNameProps;
+	public Properties configPartnerProgramProps;
 	public Properties configHotKeyProps;
 	public Properties configOBSProps;
 	public Properties configAutoScoreSettingsProps;
@@ -55,6 +57,7 @@ public class Settings {
 	private String configControlFileName 			= "control.properties";
 	private String configSourceFileName 			= "source.properties";
 	private String configFileNameFileName 			= "filename.properties";
+	private String configPartnerProgramFileName     = "partnerprogram.properties";
 	private String configHotKeyFileName 			= "hotkey.properties";
 	private String configOBSFileName        		= "obs.properties";
 	private String configAutoScoreSettingsFileName	= "autoscoresettings.properties";
@@ -66,6 +69,7 @@ public class Settings {
 		defaultControlProps 			= new Properties();
 		defaultSourceProps 				= new Properties();
 		defaultFileNameProps 			= new Properties();
+		defaultPartnerProgramProps      = new Properties();
 		defaultHotKeyProps 				= new Properties();
 		defaultOBSProps         		= new Properties();
 		defaultAutoScoreSettingsProps	= new Properties();
@@ -257,6 +261,12 @@ public class Settings {
 		defaultFileNameProps.setProperty("Team2ShotsOnGoal", "team2shotsongoal.txt");
 		defaultFileNameProps.setProperty("Side1Color","side1color.txt");
 		defaultFileNameProps.setProperty("Side2Color","side2color.txt");
+		//PartnerProgram
+		defaultPartnerProgramProps.setProperty("PartnerProgramPath", "C:\\FoosTourney");
+		defaultPartnerProgramProps.setProperty("Player1FileName", "Player1.txt");
+		defaultPartnerProgramProps.setProperty("Player2FileName", "Player2.txt");
+		defaultPartnerProgramProps.setProperty("Player3FileName", "Player3.txt");
+		defaultPartnerProgramProps.setProperty("Player4FileName", "Player4.txt");
 		//HotKeys
 		defaultHotKeyProps.setProperty("StartMatchHotKey", "");
 		defaultHotKeyProps.setProperty("PauseMatchHotKey", "");
@@ -335,6 +345,7 @@ public class Settings {
 		configControlProps 				= new Properties(defaultControlProps);
 		configSourceProps 				= new Properties(defaultSourceProps);
 		configFileNameProps 			= new Properties(defaultFileNameProps);
+		configPartnerProgramProps       = new Properties(defaultPartnerProgramProps);
 		configHotKeyProps 				= new Properties(defaultHotKeyProps);
 		configOBSProps      			= new Properties(defaultOBSProps);
 		configAutoScoreSettingsProps	= new Properties(defaultAutoScoreSettingsProps);
@@ -344,6 +355,7 @@ public class Settings {
 		loadFromOBSConfig();
 		loadFromSourceConfig();
 		loadFromFileNameConfig();
+		loadFromPartnerProgramConfig();
 		loadFromHotKeyConfig();
 		loadFromAutoScoreSettingsConfig();
 		loadFromAutoScoreConfigConfig();
@@ -821,6 +833,12 @@ public class Settings {
 	public String getMatchTimeFileName() {return configFileNameProps.getProperty("MatchTime");}
 	public String getSide1ColorFileName() {return configFileNameProps.getProperty("Side1Color");}
 	public String getSide2ColorFileName() {return configFileNameProps.getProperty("Side2Color");}
+	//PartnerProgram
+	public String getPartnerProgramPath() {return configPartnerProgramProps.getProperty("PartnerProgramPath");}
+	public String getPlayer1FileName() {return configPartnerProgramProps.getProperty("Player1FileName");}
+	public String getPlayer2FileName() {return configPartnerProgramProps.getProperty("Player2FileName");}
+	public String getPlayer3FileName() {return configPartnerProgramProps.getProperty("Player3FileName");}
+	public String getPlayer4FileName() {return configPartnerProgramProps.getProperty("Player4FileName");}
 	//HotKeys
 	public String getStartMatchHotKey() {return configHotKeyProps.getProperty("StartMatchHotKey");}
 	public String getPauseMatchHotKey() {return configHotKeyProps.getProperty("PauseMatchHotKey");}
@@ -1440,6 +1458,22 @@ public class Settings {
 	public void setSide2ColorFileName(String side2ColorFileName) {
 		configFileNameProps.setProperty("Side2Color", side2ColorFileName);
 	}
+	//PartnerProgram
+	public void setPartnerProgramPath(String path) {
+		configPartnerProgramProps.setProperty("PartnerProgramPath", path);
+	}
+	public void setPlayer1FileName(String name) {
+		configPartnerProgramProps.setProperty("Player1FileName", name);
+	}
+	public void setPlayer2FileName(String name) {
+		configPartnerProgramProps.setProperty("Player2FileName", name);
+	}
+	public void setPlayer3FileName(String name) {
+		configPartnerProgramProps.setProperty("Player3FileName", name);
+	}
+	public void setPlayer4FileName(String name) {
+		configPartnerProgramProps.setProperty("Player4FileName", name);
+	}
 	//HotKeys
 	public void setStartMatchHotKey(String startMatchHotKey) {
 		configHotKeyProps.setProperty("StartMatchHotKey", startMatchHotKey);
@@ -1821,6 +1855,12 @@ public class Settings {
 	public String getDefaultTeam2TwoBarScoringFileName() {return defaultFileNameProps.getProperty("Team2TwoBarScoring");}	
 	public String getDefaultTeam1ShotsOnGoalFileName() {return defaultFileNameProps.getProperty("Team1ShotsOnGoal");}
 	public String getDefaultTeam2ShotsOnGoalFileName() {return defaultFileNameProps.getProperty("Team2ShotsOnGoal");}
+	//PartnerProgram
+	public String getDefaultPartnerProgramPath() {return defaultPartnerProgramProps.getProperty("PartnerProgramPath");}
+	public String getDefaultPlayer1FileName() {return defaultPartnerProgramProps.getProperty("Player1FileName");}
+	public String getDefaultPlayer2FileName() {return defaultPartnerProgramProps.getProperty("Player2FileName");}
+	public String getDefaultPlayer3FileName() {return defaultPartnerProgramProps.getProperty("Player3FileName");}
+	public String getDefaultPlayer4FileName() {return defaultPartnerProgramProps.getProperty("Player4FileName");}
 	//HotKeys
 	public String getDefaultStartMatchHotKey() {return defaultHotKeyProps.getProperty("StartMatchHotKey");}
 	public String getDefaultPauseMatchHotKey() {return defaultHotKeyProps.getProperty("PauseMatchHotKey");}
@@ -1897,7 +1937,6 @@ public class Settings {
 			Files.createFile(Paths.get(configControlFileName));
 			configControlProps = defaultControlProps;
 			saveControlConfig();
-//			loadFromControlConfig();
 		}
 	}
 	public void loadFromOBSConfig() throws IOException {
@@ -1907,7 +1946,6 @@ public class Settings {
 			Files.createFile(Paths.get(configOBSFileName));
 			configOBSProps = defaultOBSProps;
 			saveOBSConfig();
-//			loadFromOBSConfig();
 		}
 	}
 	public void loadFromSourceConfig() throws IOException {
@@ -1917,7 +1955,6 @@ public class Settings {
 			Files.createFile(Paths.get(configSourceFileName));
 			configSourceProps = defaultSourceProps;
 			saveSourceConfig();
-//			loadFromSourceConfig();
 		}
 	}
 	public void loadFromFileNameConfig() throws IOException {
@@ -1927,7 +1964,15 @@ public class Settings {
 			Files.createFile(Paths.get(configFileNameFileName));
 			configFileNameProps = defaultFileNameProps;
 			saveFileNameConfig();
-//			loadFromFileNameConfig();
+		}
+	}
+	public void loadFromPartnerProgramConfig() throws IOException {
+		try(InputStream inputStream = Files.newInputStream(Paths.get(configPartnerProgramFileName))) {
+			configPartnerProgramProps.load(inputStream);
+		} catch (NoSuchFileException e) {
+			Files.createFile(Paths.get(configPartnerProgramFileName));
+			configPartnerProgramProps = defaultPartnerProgramProps;
+			savePartnerProgramConfig();
 		}
 	}
 	public void loadFromHotKeyConfig() throws IOException {
@@ -1937,7 +1982,6 @@ public class Settings {
 			Files.createFile(Paths.get(configHotKeyFileName));
 			configHotKeyProps = defaultHotKeyProps;
 			saveHotKeyConfig();
-//			loadFromHotKeyConfig();
 		}
 	}
 	public void loadFromAutoScoreSettingsConfig() throws IOException {
@@ -1980,6 +2024,12 @@ public class Settings {
 		//FileNames
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configFileNameFileName))) {
 			configFileNameProps.store(outputStream, "FoosOBSPlus File Name Settings");
+		}
+	}
+	public void savePartnerProgramConfig() throws IOException {
+		//PartnerProgram
+		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configPartnerProgramFileName))) {
+			configPartnerProgramProps.store(outputStream, "FoosOBSPlus Partner Program Settings");
 		}
 	}
 	public void saveHotKeyConfig() throws IOException {
