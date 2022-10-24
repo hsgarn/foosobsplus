@@ -34,7 +34,7 @@ import net.miginfocom.swing.MigLayout;
 public class AboutPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private static final String versionNumber = "1.099"; //$NON-NLS-1$
+	private static final String versionNumber = "1.100"; //$NON-NLS-1$
 
 	public AboutPanel(JFrame aboutFrame) {
 		setLayout(new MigLayout("", "[127.00][50.00:87.00,grow,left]", "[][][][][grow][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -54,7 +54,7 @@ public class AboutPanel extends JPanel {
 		JLabel lblReleaseDate = new JLabel(Messages.getString("AboutPanel.ReleaseDate")); //$NON-NLS-1$
 		add(lblReleaseDate, "cell 0 2,alignx right"); //$NON-NLS-1$
 		
-		JLabel lblReleaseDateValue = new JLabel("10/23/2022");
+		JLabel lblReleaseDateValue = new JLabel("10/24/2022");
 		add(lblReleaseDateValue, "cell 1 2"); //$NON-NLS-1$
 		
 		JLabel lblAuthor = new JLabel(Messages.getString("AboutPanel.Author")); //$NON-NLS-1$

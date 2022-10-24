@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -110,7 +110,7 @@ public class SwitchPanel extends JPanel {
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnSwitchSides, gc);
 		
 		//////// Switch Teams ////////
@@ -122,7 +122,7 @@ public class SwitchPanel extends JPanel {
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnSwitchTeams, gc);
 		
 		//////// Switch Player1 ////////
@@ -134,7 +134,7 @@ public class SwitchPanel extends JPanel {
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnSwitchPlayer1, gc);
 		
 		//////// Switch Player2 ////////
@@ -146,7 +146,7 @@ public class SwitchPanel extends JPanel {
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnSwitchPlayer2, gc);
 		
 		//////// Switch Scores ////////
@@ -158,7 +158,7 @@ public class SwitchPanel extends JPanel {
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnSwitchScores, gc);
 		
 		//////// Switch Game Counts ////////
@@ -170,7 +170,7 @@ public class SwitchPanel extends JPanel {
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnSwitchGameCounts, gc);
 		
 		//////// Switch Time Out Counts ////////
@@ -182,7 +182,7 @@ public class SwitchPanel extends JPanel {
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnSwitchTimeOuts, gc);
 		
 		//////// Switch Reset Warns ////////
@@ -194,7 +194,7 @@ public class SwitchPanel extends JPanel {
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnSwitchResetWarns, gc);
 
 		//////// Clear All ////////
@@ -206,7 +206,7 @@ public class SwitchPanel extends JPanel {
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnClearAll, gc);
 
 		//////// Last Scored ////////
@@ -218,7 +218,7 @@ public class SwitchPanel extends JPanel {
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblLastScored, gc);
 	}
 

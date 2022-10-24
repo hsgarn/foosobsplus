@@ -74,6 +74,7 @@ import com.midsouthfoosball.foosobsplus.commands.Memento;
 import com.midsouthfoosball.foosobsplus.commands.PCACommand;
 import com.midsouthfoosball.foosobsplus.commands.PCT1Command;
 import com.midsouthfoosball.foosobsplus.commands.PCT2Command;
+import com.midsouthfoosball.foosobsplus.commands.PEMCommand;
 import com.midsouthfoosball.foosobsplus.commands.PNBCommand;
 import com.midsouthfoosball.foosobsplus.commands.PPMCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRACommand;
@@ -85,10 +86,10 @@ import com.midsouthfoosball.foosobsplus.commands.PRT1Command;
 import com.midsouthfoosball.foosobsplus.commands.PRT2Command;
 import com.midsouthfoosball.foosobsplus.commands.PRTCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRTOCommand;
+import com.midsouthfoosball.foosobsplus.commands.PSECommand;
 import com.midsouthfoosball.foosobsplus.commands.PSGCCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSGCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSMCommand;
-import com.midsouthfoosball.foosobsplus.commands.PEMCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSOCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSRCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSSCCommand;
@@ -133,7 +134,6 @@ import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsFrame;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsPanel;
 import com.midsouthfoosball.foosobsplus.view.BallPanel;
 import com.midsouthfoosball.foosobsplus.view.FileNamesFrame;
-import com.midsouthfoosball.foosobsplus.view.PartnerProgramFrame;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowPanel;
 import com.midsouthfoosball.foosobsplus.view.HotKeysFrame;
@@ -141,11 +141,13 @@ import com.midsouthfoosball.foosobsplus.view.HotKeysPanel;
 import com.midsouthfoosball.foosobsplus.view.LastScoredWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.MainFrame;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
+import com.midsouthfoosball.foosobsplus.view.Messages;
 import com.midsouthfoosball.foosobsplus.view.OBSConnectFrame;
 import com.midsouthfoosball.foosobsplus.view.OBSConnectPanel;
 import com.midsouthfoosball.foosobsplus.view.OBSPanel;
 import com.midsouthfoosball.foosobsplus.view.ParametersFrame;
 import com.midsouthfoosball.foosobsplus.view.ParametersPanel;
+import com.midsouthfoosball.foosobsplus.view.PartnerProgramFrame;
 import com.midsouthfoosball.foosobsplus.view.ResetPanel;
 import com.midsouthfoosball.foosobsplus.view.SourcesFrame;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
@@ -551,6 +553,7 @@ public class Main {
 		timerPanel.addGameTimerListener(new GameTimerListener());
 		timerPanel.addRecallTimerListener(new RecallTimerListener());
 		timerPanel.addResetTimerListener(new ResetTimerListener());
+		matchPanel.addStartEventListener(new StartEventListener());
 		matchPanel.addStartMatchListener(new StartMatchListener());
 		matchPanel.addPauseMatchListener(new PauseMatchListener());
 		matchPanel.addEndMatchListener(new EndMatchListener());
@@ -606,6 +609,11 @@ public class Main {
 		nineBallsMap.put("Fourteen", false);
 		nineBallsMap.put("Fifteen", false);
 	}
+	public void startEvent() {
+		if(gameClock.isStreamTimerRunning()) {
+			streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartEvent", settings.getGameType()) + " Pressed: " + table.getTournamentName() + ": " + table.getEventName() + "\r\n");
+		}
+	}
 	public void startMatch() {
 		matchId = createMatchId();
 		matchController.startMatch(matchId);
@@ -615,9 +623,9 @@ public class Main {
 		}
 		if(gameClock.isStreamTimerRunning()) {
 			if(settings.getCutThroatMode()==1) {
-				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Start Match Pressed: " + team1.getForwardName() + " vs " + team2.getForwardName() + " vs " + team2.getGoalieName() + "\r\n");
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch", settings.getGameType()) + " Pressed: " + team1.getForwardName() + " vs " + team2.getForwardName() + " vs " + team2.getGoalieName() + "\r\n");
 			} else {
-				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Start Match Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n");
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch", settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n");
 			}
 		}
 	}
@@ -627,9 +635,9 @@ public class Main {
 	public void startGame() {
 		if(gameClock.isStreamTimerRunning()) {
 			if(settings.getCutThroatMode()==1) {
-				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Start Game Pressed: " + team1.getForwardName() + " vs " + team2.getForwardName() + " vs " + team2.getGoalieName() + "\r\n");
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame", settings.getGameType()) + " Pressed: " + team1.getForwardName() + " vs " + team2.getForwardName() + " vs " + team2.getGoalieName() + "\r\n");
 			} else {
-				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Start Game Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n");
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame", settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n");
 			}
 		}
 		matchController.startGame();
@@ -775,6 +783,7 @@ public class Main {
 	    }
     }
 	private void loadCommands() {
+		Command pse = new PSECommand(statsController, this);
 		Command psm = new PSMCommand(statsController, this);
 		Command pem = new PEMCommand(statsController, this);
 		Command ppm = new PPMCommand(statsController, matchController);
@@ -827,6 +836,7 @@ public class Main {
 		Command codeCommand = new CodeCommand(statsController);
 
 		mySwitch = new CommandSwitch();
+		mySwitch.register("PSE", pse);
 		mySwitch.register("PSM", psm);
 		mySwitch.register("PEM", pem);
 		mySwitch.register("PPM", ppm);
@@ -1505,6 +1515,12 @@ public class Main {
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
+	private class StartEventListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPSE",false);
+			statsEntryPanel.setFocusOnCode();
+		}
+	}
 	private class StartMatchListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSM",false);
@@ -1642,7 +1658,7 @@ public class Main {
 		}
 	}
 //	private void testProcessCodes() {
-//		String codes[] = {"XPSM", "Y5D", "Y3P", "BGS", "B5D", "B3P", "YGS" };
+//		String codes[] = {"XPSE", "XPSM", "Y5D", "Y3P", "BGS", "B5D", "B3P", "YGS" };
 //		autoProcessCodes(codes);
 //	}
 //	private void autoProcessCodes(String[] codes) {

@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -45,6 +45,7 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 @SuppressWarnings("serial")
 public class MatchPanel extends JPanel {
 	
+	private JButton btnStartEvent;
 	private JButton btnStartMatch;
 	private JButton btnPauseMatch;
 	private JButton btnEndMatch;
@@ -73,6 +74,7 @@ public class MatchPanel extends JPanel {
 		dim.height = 100;
 		setPreferredSize(dim);
 		
+		btnStartEvent = new JButton(Messages.getString("MatchPanel.StartEvent", settings.getGameType())); //$NON-NLS-1$
 		btnStartMatch = new JButton(Messages.getString("MatchPanel.StartMatch", settings.getGameType())); //$NON-NLS-1$
 		btnPauseMatch = new JButton(Messages.getString("MatchPanel.PauseMatch", settings.getGameType())); //$NON-NLS-1$
 		btnEndMatch = new JButton(Messages.getString("MatchPanel.EndMatch", settings.getGameType())); //$NON-NLS-1$
@@ -117,102 +119,126 @@ public class MatchPanel extends JPanel {
 		
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = 0;
-
-		////////  Start ////////
+		
+		//////// Start Event ///////
 		gc.gridy++;
+
 		gc.weightx = 1;
-		gc.weighty = 1;
+		gc.weighty = .5;
 
 		gc.gridx = 0;
 		gc.gridheight = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_START;
-		gc.insets = new Insets(5, 5, 5, 5);
+		gc.insets = new Insets(1, 5, 1, 5);
+		add(btnStartEvent, gc);
+
+		////////  Start Match ////////
+		gc.gridy++;
+
+		gc.weightx = 1;
+		gc.weighty = .5;
+
+		gc.gridx = 0;
+		gc.gridheight = 1;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.LINE_START;
+		gc.insets = new Insets(1, 5, 1, 5);
 		add(btnStartMatch, gc);
 		
 		gc.gridx = 1;
 		gc.gridwidth = 1;
 		gc.gridheight = 1;
 		gc.fill = GridBagConstraints.NONE;
-		gc.insets = new Insets(5, 5, 5, 5);
+		gc.insets = new Insets(1, 5, 1, 5);
 		gc.anchor = GridBagConstraints.LINE_END;
 		add(lblStartTimeLabel, gc);
 
 		gc.gridx = 2;
 		gc.gridwidth = 1;
 		gc.fill = GridBagConstraints.NONE;
-		gc.insets = new Insets(5, 5, 5, 5);
+		gc.insets = new Insets(1, 5, 1, 5);
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(lblStartTime, gc);
 
 		////////  Elapsed Time ////////
 		gc.gridy++;
+		
+		gc.weightx = 1;
+		gc.weighty = .5;
+
 		gc.gridx = 0;
 		gc.gridheight = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_START;
-		gc.insets = new Insets(5, 5, 5, 5);
+		gc.insets = new Insets(1, 5, 1, 5);
 		add(btnPauseMatch, gc);
 		gc.gridheight = 1;
-		
-		gc.weightx = 1;
-		gc.weighty = 1;
 
 		gc.gridx = 1;
 		gc.gridwidth = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = new Insets(5, 5, 5, 5);
+		gc.insets = new Insets(1, 5, 1, 5);
 		add(lblElapsedTimeLabel, gc);
 		
 		gc.gridx = 2;
 		gc.gridwidth = 1;
-		gc.insets = new Insets(5, 5, 5, 5);
+		gc.insets = new Insets(1, 5, 1, 5);
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(lblElapsedTime, gc);
 
 		//////// End Match ///////
 		gc.gridy++;
+		
+		gc.weightx = 1;
+		gc.weighty = .5;
+
 		gc.gridx = 0;
 		gc.gridheight = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_START;
-		gc.insets = new Insets(5, 5, 5, 5);
+		gc.insets = new Insets(1, 5, 1, 5);
 		add(btnEndMatch, gc);
 		gc.gridheight = 1;
 		
 		////////  Start Game ////////
 		gc.gridy++;
+
+		gc.weightx = 1;
+		gc.weighty = .5;
+
 		gc.gridx = 0;
 		gc.gridheight = 1;
+
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_START;
-		gc.insets = new Insets(5, 5, 5, 5);
+		gc.insets = new Insets(1, 5, 1, 5);
 		add(btnStartGame, gc);
 		gc.gridheight = 1;
 		
-		gc.weightx = 1;
-		gc.weighty = 1;
-
 		gc.gridx = 1;
 		gc.gridwidth = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = new Insets(5, 5, 5, 5);
+		gc.insets = new Insets(1, 5, 1, 5);
 		add(lblGameTimeLabel, gc);
 		
 		gc.gridx = 2;
 		gc.gridwidth = 1;
-		gc.insets = new Insets(5, 5, 5, 5);
+		gc.insets = new Insets(1, 5, 1, 5);
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(lblGameTime, gc);
 		
 		////// Game Table \\\\\\
 		gc.gridy++;
-		gc.gridx = 0;
+		
+		gc.weightx = 1;
 		gc.weighty = 0.1;
+
+		gc.gridx = 0;
 		gc.gridwidth = 6;
 		gc.gridheight = 4;
 		gc.fill = GridBagConstraints.BOTH;
@@ -222,6 +248,9 @@ public class MatchPanel extends JPanel {
 	}		
 
 	////// Listeners  //////
+	public void addStartEventListener(ActionListener listenForBtnStartEvent) {
+		btnStartEvent.addActionListener(listenForBtnStartEvent);
+	}
 	public void addStartMatchListener(ActionListener listenForBtnStartMatch) {
 		btnStartMatch.addActionListener(listenForBtnStartMatch);
 	}

@@ -663,6 +663,9 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.100 10/24/2022</br>
+Add Start Event Button and tweak some panel layouts.</br>
+</br>
 v1.099 10/23/2022</br>
 Add Partner Program Settings screen.</br>
 </br>

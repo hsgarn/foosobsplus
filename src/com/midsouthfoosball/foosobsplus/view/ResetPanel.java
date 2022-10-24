@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -97,7 +97,7 @@ public class ResetPanel extends JPanel {
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnResetNames, gc);
 		
 		//////// Reset Scores ////////
@@ -109,7 +109,7 @@ public class ResetPanel extends JPanel {
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnResetScores, gc);
 		
 		//////// Reset Game Counts ////////
@@ -121,7 +121,7 @@ public class ResetPanel extends JPanel {
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnResetGameCounts, gc);
 		
 		//////// Reset Time Out Counts ////////
@@ -133,7 +133,7 @@ public class ResetPanel extends JPanel {
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnResetTimeOuts, gc);
 		
 		//////// Reset Reset Warns ////////
@@ -145,7 +145,7 @@ public class ResetPanel extends JPanel {
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnResetResetWarns, gc);
 
 		//////// Reset All ////////
@@ -157,7 +157,7 @@ public class ResetPanel extends JPanel {
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnResetAll, gc);
 	}
 	private void setMnemonics() {

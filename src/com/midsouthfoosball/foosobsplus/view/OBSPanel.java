@@ -100,7 +100,7 @@ public class OBSPanel extends JPanel {
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_START;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnConnect, gc);
 
 		//////// Disconnect ////////
@@ -110,7 +110,7 @@ public class OBSPanel extends JPanel {
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnDisconnect, gc);
 
 		//////// Push ////////
@@ -122,7 +122,7 @@ public class OBSPanel extends JPanel {
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_START;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnPush, gc);
 		
 		//////// Pull ////////
@@ -132,7 +132,7 @@ public class OBSPanel extends JPanel {
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnPull, gc);
 		
 		//////// Show Scores ////////
@@ -144,7 +144,7 @@ public class OBSPanel extends JPanel {
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_START;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(tglbtnShowScores, gc);
 		
 		/////// Show Skunk /////////
@@ -154,7 +154,7 @@ public class OBSPanel extends JPanel {
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(tglbtnShowSkunk, gc);
 		
 		/////// Show Timer /////////
@@ -166,7 +166,7 @@ public class OBSPanel extends JPanel {
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_START;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(tglbtnShowTimer, gc);
 
 		//////// Start Stream ////////
@@ -176,7 +176,7 @@ public class OBSPanel extends JPanel {
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnStartStream, gc);
 		
 	}
