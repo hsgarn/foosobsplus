@@ -216,11 +216,11 @@ public class OBSPanel extends JPanel {
 		} else {
 			tglbtnShowSkunk.setMnemonic(settings.getShowSkunkHotKey().charAt(0));
 		};
-//		if(settings.getStartStreamHotKey().isEmpty()) {
-//			btnStartStream.setMnemonic(-1);
-//		} else {
-//			btnStartStream.setMnemonic(settings.getStartStreamHotKey().charAt(0));
-//		};
+		if(settings.getStartStreamHotKey().isEmpty()) {
+			btnStartStream.setMnemonic(-1);
+		} else {
+			btnStartStream.setMnemonic(settings.getStartStreamHotKey().charAt(0));
+		};
 	}
 	////// Listeners  //////
 	public void addConnectListener(ActionListener listenForBtnConnect) {

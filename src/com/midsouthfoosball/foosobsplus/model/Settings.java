@@ -268,37 +268,37 @@ public class Settings {
 		defaultPartnerProgramProps.setProperty("Player3FileName", "Player3.txt");
 		defaultPartnerProgramProps.setProperty("Player4FileName", "Player4.txt");
 		//HotKeys
-		defaultHotKeyProps.setProperty("StartMatchHotKey", "");
-		defaultHotKeyProps.setProperty("PauseMatchHotKey", "");
-		defaultHotKeyProps.setProperty("StartGameHotKey", "");
+		defaultHotKeyProps.setProperty("StartMatchHotKey", "b");
+		defaultHotKeyProps.setProperty("PauseMatchHotKey", ",");
+		defaultHotKeyProps.setProperty("StartGameHotKey", ".");
 		defaultHotKeyProps.setProperty("TournamentNameClearHotKey", "");
-		defaultHotKeyProps.setProperty("Team1ClearHotKey", "");
+		defaultHotKeyProps.setProperty("Team1ClearHotKey", "f");
 		defaultHotKeyProps.setProperty("Team1SwitchPositionsHotKey", "t");
-		defaultHotKeyProps.setProperty("Team2ClearHotKey", "");
+		defaultHotKeyProps.setProperty("Team2ClearHotKey", "h");
 		defaultHotKeyProps.setProperty("Team2SwitchPositionsHotKey", "m");
 		defaultHotKeyProps.setProperty("SwitchTeamsHotKey", "e");
-		defaultHotKeyProps.setProperty("SwitchPlayer1HotKey", "");
-		defaultHotKeyProps.setProperty("SwitchPlayer2HotKey", "");
-		defaultHotKeyProps.setProperty("GameCount1MinusHotKey", "");
+		defaultHotKeyProps.setProperty("SwitchPlayer1HotKey", ";");
+		defaultHotKeyProps.setProperty("SwitchPlayer2HotKey", "x");
+		defaultHotKeyProps.setProperty("GameCount1MinusHotKey", "j");
 		defaultHotKeyProps.setProperty("GameCount1PlusHotKey", "5");
-		defaultHotKeyProps.setProperty("GameCount2MinusHotKey", "");
+		defaultHotKeyProps.setProperty("GameCount2MinusHotKey", "i");
 		defaultHotKeyProps.setProperty("GameCount2PlusHotKey", "6");
-		defaultHotKeyProps.setProperty("GameCountSwitchHotKey", "");
-		defaultHotKeyProps.setProperty("Score1MinusHotKey", "");
+		defaultHotKeyProps.setProperty("GameCountSwitchHotKey", "l");
+		defaultHotKeyProps.setProperty("Score1MinusHotKey", "4");
 		defaultHotKeyProps.setProperty("Score1PlusHotKey", "1");
-		defaultHotKeyProps.setProperty("Score2MinusHotKey", "");
+		defaultHotKeyProps.setProperty("Score2MinusHotKey", "8");
 		defaultHotKeyProps.setProperty("Score2PlusHotKey", "2");
 		defaultHotKeyProps.setProperty("SwitchScoresHotKey", "");
 		defaultHotKeyProps.setProperty("SwitchGameCountsHotKey", "");
-		defaultHotKeyProps.setProperty("TimeOut1MinusHotKey", "");
+		defaultHotKeyProps.setProperty("TimeOut1MinusHotKey", "n");
 		defaultHotKeyProps.setProperty("TimeOut1PlusHotKey", "9");
-		defaultHotKeyProps.setProperty("TimeOut2MinusHotKey", "");
+		defaultHotKeyProps.setProperty("TimeOut2MinusHotKey", "q");
 		defaultHotKeyProps.setProperty("TimeOut2PlusHotKey", "0");
-		defaultHotKeyProps.setProperty("SwitchTimeOutsHotKey", "");
-		defaultHotKeyProps.setProperty("Reset1HotKey", "z");
-		defaultHotKeyProps.setProperty("Reset2HotKey", ",");
-		defaultHotKeyProps.setProperty("Warn1HotKey", "x");
-		defaultHotKeyProps.setProperty("Warn2HotKey", ".");
+		defaultHotKeyProps.setProperty("SwitchTimeOutsHotKey", "[");
+		defaultHotKeyProps.setProperty("Reset1HotKey", "");
+		defaultHotKeyProps.setProperty("Reset2HotKey", "");
+		defaultHotKeyProps.setProperty("Warn1HotKey", "");
+		defaultHotKeyProps.setProperty("Warn2HotKey", "");
 		defaultHotKeyProps.setProperty("SwitchResetWarnsHotKey", "");
 		defaultHotKeyProps.setProperty("SwitchSidesHotKey", "w");
 		defaultHotKeyProps.setProperty("ResetNamesHotKey", "");
@@ -323,6 +323,7 @@ public class Settings {
 		defaultHotKeyProps.setProperty("ShowScoresHotKey", "");
 		defaultHotKeyProps.setProperty("ShowTimerHotKey", "");
 		defaultHotKeyProps.setProperty("ShowSkunkHotKey", "k");
+		defaultHotKeyProps.setProperty("StartStreamHotKey", "z");
 		defaultHotKeyProps.setProperty("AutoScoreMainConnectHotKey", "");
 		defaultHotKeyProps.setProperty("AutoScoreMainDisconnectHotKey", "");
 		defaultHotKeyProps.setProperty("AutoScoreMainSettingsHotKey", "");
@@ -893,6 +894,7 @@ public class Settings {
 	public String getShowScoresHotKey() {return configHotKeyProps.getProperty("ShowScoresHotKey");}
 	public String getShowTimerHotKey() {return configHotKeyProps.getProperty("ShowTimerHotKey");}
 	public String getShowSkunkHotKey() {return configHotKeyProps.getProperty("ShowSkunkHotKey");}
+	public String getStartStreamHotKey() {return configHotKeyProps.getProperty("StartStreamHotKey");}
 	public String getAutoScoreMainConnectHotKey() {return configHotKeyProps.getProperty("AutoScoreMainConnectHotKey");}
 	public String getAutoScoreMainDisconnectHotKey() {return configHotKeyProps.getProperty("AutoScoreMainDisconnectHotKey");}
 	public String getAutoScoreMainSettingsHotKey() {return configHotKeyProps.getProperty("AutoScoreMainSettingsHotKey");}
@@ -1634,6 +1636,9 @@ public class Settings {
 	public void setShowSkunkHotKey(String showSkunkHotKey) {
 		configHotKeyProps.setProperty("ShowSkunkHotKey", showSkunkHotKey);
 	}
+	public void setStartStreamHotKey(String startStreamHotKey) {
+		configHotKeyProps.setProperty("StartStreamHotKey", startStreamHotKey);
+	}
 	//AutoScore Settings
 	public void setAutoScoreSettingsServerAddress(String autoScoreSettingsServerAddress) {
 		configAutoScoreSettingsProps.setProperty("AutoScoreSettingsServerAddress", autoScoreSettingsServerAddress);
@@ -1915,6 +1920,7 @@ public class Settings {
 	public String getDefaultShowScoresHotKey() {return defaultHotKeyProps.getProperty("ShowScoresHotKey");}
 	public String getDefaultShowTimerHotKey() {return defaultHotKeyProps.getProperty("ShowTimerHotKey");}
 	public String getDefaultShowSkunkHotKey() {return defaultHotKeyProps.getProperty("ShowSkunkHotKey");}
+	public String getDefaultStartStreamHotKey() {return defaultHotKeyProps.getProperty("StartStreamHotKey");}
 	//AutoScore Settings
 	public String getDefaultAutoScoreSettingsServerAddress() {return defaultAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerAddress");}
 	public int getDefaultAutoScoreSettingsServerPort() {return Integer.parseInt(defaultAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerPort"));}

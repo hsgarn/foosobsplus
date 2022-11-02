@@ -1312,6 +1312,7 @@ public class Main {
 	private class OBSStartStreamListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			gameClock.startStreamTimer();
+			System.out.println("Start Stream triggered");
 		}
 	}
 	private class SettingsSaveListener implements ActionListener {

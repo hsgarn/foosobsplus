@@ -88,6 +88,7 @@ public class HotKeysPanel extends JPanel {
 	private JTextField txtSwitchPlayer1HotKey;
 	private JTextField txtSwitchPlayer2HotKey;
 	private JTextField txtShowSkunkHotKey;
+	private JTextField txtStartStreamHotKey;
 	private JButton btnSave;
 
 	public HotKeysPanel(Settings settings) throws IOException {
@@ -566,6 +567,16 @@ public class HotKeysPanel extends JPanel {
 
 		txtShowSkunkHotKey.setColumns(10);
 	
+		JLabel lblStartStreamHotKey = new JLabel(Messages.getString("HotKeysPanel.StartStream", settings.getGameType())); //$NON-NLS-1$
+		add(lblStartStreamHotKey, "cell 9 15,alignx trailing"); //$NON-NLS-1$
+
+		txtStartStreamHotKey = new JTextField();
+		txtStartStreamHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtStartStreamHotKey.setText(settings.getStartStreamHotKey());
+		add(txtStartStreamHotKey, "cell 10 15,alignx left"); //$NON-NLS-1$
+
+		txtStartStreamHotKey.setColumns(10);
+	
 		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		add(btnSave, "cell 3 18,alignx center"); //$NON-NLS-1$
 		
@@ -636,6 +647,7 @@ public class HotKeysPanel extends JPanel {
 		txtSwitchPlayer1HotKey.setText(settings.getDefaultSwitchPlayer1HotKey());
 		txtSwitchPlayer2HotKey.setText(settings.getDefaultSwitchPlayer2HotKey());
 		txtShowSkunkHotKey.setText(settings.getDefaultShowSkunkHotKey());
+		txtStartStreamHotKey.setText(settings.getDefaultStartStreamHotKey());
 	}
 	
 	public void saveSettings(Settings settings) {
@@ -686,6 +698,7 @@ public class HotKeysPanel extends JPanel {
 		settings.setSwitchPlayer1HotKey(txtSwitchPlayer1HotKey.getText());
 		settings.setSwitchPlayer2HotKey(txtSwitchPlayer2HotKey.getText());
 		settings.setShowSkunkHotKey(txtShowSkunkHotKey.getText());
+		settings.setStartStreamHotKey(txtStartStreamHotKey.getText());
 		try {
 			settings.saveHotKeyConfig();
 		} catch (IOException ex) {
