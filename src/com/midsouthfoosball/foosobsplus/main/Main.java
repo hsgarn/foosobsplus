@@ -1187,17 +1187,18 @@ public class Main {
 	}
 	private class HotKeysSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			hotKeysPanel.saveSettings(settings);
-			JComponent comp = (JComponent) e.getSource();
-			Window win = SwingUtilities.getWindowAncestor(comp);
-			win.dispose();
-			matchPanel.updateMnemonics();
-			teamPanel1.updateMnemonics();
-			teamPanel2.updateMnemonics();
-			timerPanel.updateMnemonics();
-			switchPanel.updateMnemonics();
-			resetPanel.updateMnemonics();
-			statsEntryPanel.updateMnemonics();
+			if (hotKeysPanel.saveSettings(settings)) {
+				JComponent comp = (JComponent) e.getSource();
+				Window win = SwingUtilities.getWindowAncestor(comp);
+				win.dispose();
+				matchPanel.updateMnemonics();
+				teamPanel1.updateMnemonics();
+				teamPanel2.updateMnemonics();
+				timerPanel.updateMnemonics();
+				switchPanel.updateMnemonics();
+				resetPanel.updateMnemonics();
+				statsEntryPanel.updateMnemonics();
+			}
 		}
 	}
 	private class AutoScoreSettingsSaveListener implements ActionListener {
@@ -1312,7 +1313,6 @@ public class Main {
 	private class OBSStartStreamListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			gameClock.startStreamTimer();
-			System.out.println("Start Stream triggered");
 		}
 	}
 	private class SettingsSaveListener implements ActionListener {

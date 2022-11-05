@@ -1,0 +1,16 @@
+; This script activates ~function~ for FoosOBSPlus
+#NoEnv ; Recommended for performance and compatibility with future AutoHotkey releases.
+SendMode Input ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
+SetTitleMatchMode, 1
+If !WinExist("FoosOBSPlus")
+{
+  Run, C:\sw\FoosOBSPlus\FoosOBSPlus.jar,C:\sw\FoosOBSPlus
+  WinWait, FoosOBSPlus
+}
+If WinExist("FoosOBSPlus: Foosball") or WinExist("FoosOBSPlus: Billiards")
+{
+  winActivate
+  SendInput !~hotkey~
+  WinMove 100,1000
+}	

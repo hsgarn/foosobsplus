@@ -20,6 +20,9 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.model;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -28,12 +31,19 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.Scanner;
+
+import javax.swing.JOptionPane;
+
+import com.midsouthfoosball.foosobsplus.view.Messages;
 
 public class Settings {
 	
 // Parameter settings
 	private String separator 			= FileSystems.getDefault().getSeparator();
 	private String[] lastScoredStrings 	= new String[3];
+	private String scriptPath           = "C:\\FoosOBSPlusScripts\\";
+	private String baseScriptFileName   = "hotkeybasescript.txt";
 
 	// Property Settings
 	private Properties defaultControlProps;
@@ -2055,5 +2065,44 @@ public class Settings {
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configAutoScoreConfigFileName))) {
 			configAutoScoreConfigProps.store(outputStream, "FoosOBSPlus AutoScore Config");
 		}
+	}
+	public void generateHotKeyScripts() {
+//		Set set = configHotKeyProps.entrySet();
+//		Iterator itr = set.iterator();
+//		while (itr.hasNext()) {
+//			Map.Entry entry = (Map.Entry)itr.next();
+//			if (entry.getValue().toString().length() > 0) {
+//				System.out.println(entry.getKey() + " = " + entry.getValue());
+//			}
+//		}
+		configHotKeyProps.entrySet()
+			.stream()
+			.filter(e -> e.getValue().toString().length() > 0)
+			.forEach(e->createHotKeyScript(e.getKey().toString(), e.getValue().toString()));
+	}
+	private void createHotKeyScript(String keyFunction, String hotKey) {
+		File file = new File(baseScriptFileName);
+		String ln;
+		keyFunction = keyFunction.substring(0, keyFunction.length()-6);
+		try {
+			Scanner sc = new Scanner(file);
+			if(sc != null) {
+				try {
+					File scriptFile = new File(scriptPath + keyFunction + ".ahk");
+					scriptFile.createNewFile();
+					FileWriter fileWriter = new FileWriter(scriptFile);
+					while (sc.hasNextLine()) {
+						ln = sc.nextLine().replace("~function~", keyFunction).replace("~hotkey~", hotKey);
+						fileWriter.write(ln + "\r\n");
+					}
+					fileWriter.close();
+					sc.close();
+				} catch (IOException ex) {
+					JOptionPane.showMessageDialog(null, Messages.getString("Errors.ScriptWriteFailure") + " " + keyFunction, "Scripting Error", 1);
+				}
+			}
+		} catch (FileNotFoundException e) {
+			JOptionPane.showMessageDialog(null, Messages.getString("Errors.BaseScriptFile") + " " + baseScriptFileName, "Scripting Error", 1);
+		} 
 	}
 }

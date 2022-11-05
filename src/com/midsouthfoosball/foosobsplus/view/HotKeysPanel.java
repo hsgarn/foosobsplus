@@ -20,15 +20,18 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.view;
 
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.HashSet;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -90,6 +93,7 @@ public class HotKeysPanel extends JPanel {
 	private JTextField txtShowSkunkHotKey;
 	private JTextField txtStartStreamHotKey;
 	private JButton btnSave;
+	private JButton btnGenerateHotKeyScripts;
 
 	public HotKeysPanel(Settings settings) throws IOException {
 		setLayout(new MigLayout("", "[][grow][10.00][][grow][10.00][][grow][10.00][][grow]", "[][][][][][][][][][][][][][][][][][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -576,9 +580,18 @@ public class HotKeysPanel extends JPanel {
 		add(txtStartStreamHotKey, "cell 10 15,alignx left"); //$NON-NLS-1$
 
 		txtStartStreamHotKey.setColumns(10);
+		
+		btnGenerateHotKeyScripts = new JButton(Messages.getString("HotKeysPanel.GenerateHotKeyScripts", settings.getGameType())); //$NON-NLS-1$
+		btnGenerateHotKeyScripts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				settings.generateHotKeyScripts();
+				JOptionPane.showMessageDialog(null, "Done");
+			}
+		});
+		add(btnGenerateHotKeyScripts, "cell 0 18, spanx 2, alignx center"); //$NON-NLS-1$
 	
 		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
-		add(btnSave, "cell 3 18,alignx center"); //$NON-NLS-1$
+		add(btnSave, "cell 6 18,alignx center"); //$NON-NLS-1$
 		
 		JButton btnCancel = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
 		btnCancel.addActionListener(new ActionListener() {
@@ -588,7 +601,7 @@ public class HotKeysPanel extends JPanel {
 				win.dispose();
 			}
 		});
-		add(btnCancel, "cell 6 18,alignx center"); //$NON-NLS-1$
+		add(btnCancel, "cell 7 18,alignx center"); //$NON-NLS-1$
 		
 		JButton btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
 		btnRestoreDefaults.addActionListener(new ActionListener() {
@@ -596,7 +609,7 @@ public class HotKeysPanel extends JPanel {
 				restoreDefaults(settings);
 			}
 		});
-		add(btnRestoreDefaults, "cell 9 18,alignx center"); //$NON-NLS-1$
+		add(btnRestoreDefaults, "cell 9 18, spanx 2, alignx center"); //$NON-NLS-1$
 
 	}
 	private void restoreDefaults(Settings settings) {
@@ -650,60 +663,83 @@ public class HotKeysPanel extends JPanel {
 		txtStartStreamHotKey.setText(settings.getDefaultStartStreamHotKey());
 	}
 	
-	public void saveSettings(Settings settings) {
-		settings.setStartMatchHotKey(txtStartMatchHotKey.getText());
-		settings.setPauseMatchHotKey(txtPauseMatchHotKey.getText());
-		settings.setStartGameHotKey(txtStartGameHotKey.getText());
-		settings.setTeam1ClearHotKey(txtTeam1ClearHotKey.getText());
-		settings.setTeam1SwitchPositionsHotKey(txtTeam1SwitchPositionsHotKey.getText());
-		settings.setTeam2ClearHotKey(txtTeam2ClearHotKey.getText());
-		settings.setTeam2SwitchPositionsHotKey(txtTeam2SwitchPositionsHotKey.getText());
-		settings.setSwitchTeamsHotKey(txtSwitchTeamsHotKey.getText());
-		settings.setGameCount1MinusHotKey(txtGameCount1MinusHotKey.getText());
-		settings.setGameCount1PlusHotKey(txtGameCount1PlusHotKey.getText());
-		settings.setGameCount2MinusHotKey(txtGameCount2MinusHotKey.getText());
-		settings.setGameCount2PlusHotKey(txtGameCount2PlusHotKey.getText());
-		settings.setSwitchGameCountsHotKey(txtSwitchGameCountsHotKey.getText());
-		settings.setScore1MinusHotKey(txtScore1MinusHotKey.getText());
-		settings.setScore1PlusHotKey(txtScore1PlusHotKey.getText());
-		settings.setScore2MinusHotKey(txtScore2MinusHotKey.getText());
-		settings.setScore2PlusHotKey(txtScore2PlusHotKey.getText());
-		settings.setSwitchScoresHotKey(txtSwitchScoresHotKey.getText());
-		settings.setTimeOut1MinusHotKey(txtTimeOut1MinusHotKey.getText());
-		settings.setTimeOut1PlusHotKey(txtTimeOut1PlusHotKey.getText());
-		settings.setTimeOut2MinusHotKey(txtTimeOut2MinusHotKey.getText());
-		settings.setTimeOut2PlusHotKey(txtTimeOut2PlusHotKey.getText());
-		settings.setSwitchTimeOutsHotKey(txtSwitchTimeOutsHotKey.getText());
-		settings.setReset1HotKey(txtReset1HotKey.getText());
-		settings.setReset2HotKey(txtReset2HotKey.getText());
-		settings.setWarn1HotKey(txtWarn1HotKey.getText());
-		settings.setWarn2HotKey(txtWarn2HotKey.getText());
-		settings.setSwitchResetWarnsHotKey(txtSwitchResetWarnsHotKey.getText());
-		settings.setSwitchSidesHotKey(txtSwitchSidesHotKey.getText());
-		settings.setResetNamesHotKey(txtResetNamesHotKey.getText());
-		settings.setResetGameCountsHotKey(txtResetGameCountsHotKey.getText());
-		settings.setResetScoresHotKey(txtResetScoresHotKey.getText());
-		settings.setResetTimeOutsHotKey(txtResetTimeOutsHotKey.getText());
-		settings.setResetResetWarnHotKey(txtResetResetWarnHotKey.getText());
-		settings.setResetAllHotKey(txtResetAllHotKey.getText());
-		settings.setClearAllHotKey(txtClearAllHotKey.getText());
-		settings.setShotTimerHotKey(txtShotTimerHotKey.getText());
-		settings.setPassTimerHotKey(txtPassTimerHotKey.getText());
-		settings.setTimeOutTimerHotKey(txtTimeOutTimerHotKey.getText());
-		settings.setGameTimerHotKey(txtGameTimerHotKey.getText());
-		settings.setRecallTimerHotKey(txtRecallTimerHotKey.getText());
-		settings.setResetTimersHotKey(txtResetTimersHotKey.getText());
-		settings.setUndoHotKey(txtUndoHotKey.getText());
-		settings.setRedoHotKey(txtRedoHotKey.getText());
-		settings.setSwitchPlayer1HotKey(txtSwitchPlayer1HotKey.getText());
-		settings.setSwitchPlayer2HotKey(txtSwitchPlayer2HotKey.getText());
-		settings.setShowSkunkHotKey(txtShowSkunkHotKey.getText());
-		settings.setStartStreamHotKey(txtStartStreamHotKey.getText());
-		try {
-			settings.saveHotKeyConfig();
-		} catch (IOException ex) {
-			System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
+	public boolean saveSettings(Settings settings) {
+		boolean okToCloseWindow = false;
+		if(checkForUniqueHotKeys()) {
+			settings.setStartMatchHotKey(txtStartMatchHotKey.getText());
+			settings.setPauseMatchHotKey(txtPauseMatchHotKey.getText());
+			settings.setStartGameHotKey(txtStartGameHotKey.getText());
+			settings.setTeam1ClearHotKey(txtTeam1ClearHotKey.getText());
+			settings.setTeam1SwitchPositionsHotKey(txtTeam1SwitchPositionsHotKey.getText());
+			settings.setTeam2ClearHotKey(txtTeam2ClearHotKey.getText());
+			settings.setTeam2SwitchPositionsHotKey(txtTeam2SwitchPositionsHotKey.getText());
+			settings.setSwitchTeamsHotKey(txtSwitchTeamsHotKey.getText());
+			settings.setGameCount1MinusHotKey(txtGameCount1MinusHotKey.getText());
+			settings.setGameCount1PlusHotKey(txtGameCount1PlusHotKey.getText());
+			settings.setGameCount2MinusHotKey(txtGameCount2MinusHotKey.getText());
+			settings.setGameCount2PlusHotKey(txtGameCount2PlusHotKey.getText());
+			settings.setSwitchGameCountsHotKey(txtSwitchGameCountsHotKey.getText());
+			settings.setScore1MinusHotKey(txtScore1MinusHotKey.getText());
+			settings.setScore1PlusHotKey(txtScore1PlusHotKey.getText());
+			settings.setScore2MinusHotKey(txtScore2MinusHotKey.getText());
+			settings.setScore2PlusHotKey(txtScore2PlusHotKey.getText());
+			settings.setSwitchScoresHotKey(txtSwitchScoresHotKey.getText());
+			settings.setTimeOut1MinusHotKey(txtTimeOut1MinusHotKey.getText());
+			settings.setTimeOut1PlusHotKey(txtTimeOut1PlusHotKey.getText());
+			settings.setTimeOut2MinusHotKey(txtTimeOut2MinusHotKey.getText());
+			settings.setTimeOut2PlusHotKey(txtTimeOut2PlusHotKey.getText());
+			settings.setSwitchTimeOutsHotKey(txtSwitchTimeOutsHotKey.getText());
+			settings.setReset1HotKey(txtReset1HotKey.getText());
+			settings.setReset2HotKey(txtReset2HotKey.getText());
+			settings.setWarn1HotKey(txtWarn1HotKey.getText());
+			settings.setWarn2HotKey(txtWarn2HotKey.getText());
+			settings.setSwitchResetWarnsHotKey(txtSwitchResetWarnsHotKey.getText());
+			settings.setSwitchSidesHotKey(txtSwitchSidesHotKey.getText());
+			settings.setResetNamesHotKey(txtResetNamesHotKey.getText());
+			settings.setResetGameCountsHotKey(txtResetGameCountsHotKey.getText());
+			settings.setResetScoresHotKey(txtResetScoresHotKey.getText());
+			settings.setResetTimeOutsHotKey(txtResetTimeOutsHotKey.getText());
+			settings.setResetResetWarnHotKey(txtResetResetWarnHotKey.getText());
+			settings.setResetAllHotKey(txtResetAllHotKey.getText());
+			settings.setClearAllHotKey(txtClearAllHotKey.getText());
+			settings.setShotTimerHotKey(txtShotTimerHotKey.getText());
+			settings.setPassTimerHotKey(txtPassTimerHotKey.getText());
+			settings.setTimeOutTimerHotKey(txtTimeOutTimerHotKey.getText());
+			settings.setGameTimerHotKey(txtGameTimerHotKey.getText());
+			settings.setRecallTimerHotKey(txtRecallTimerHotKey.getText());
+			settings.setResetTimersHotKey(txtResetTimersHotKey.getText());
+			settings.setUndoHotKey(txtUndoHotKey.getText());
+			settings.setRedoHotKey(txtRedoHotKey.getText());
+			settings.setSwitchPlayer1HotKey(txtSwitchPlayer1HotKey.getText());
+			settings.setSwitchPlayer2HotKey(txtSwitchPlayer2HotKey.getText());
+			settings.setShowSkunkHotKey(txtShowSkunkHotKey.getText());
+			settings.setStartStreamHotKey(txtStartStreamHotKey.getText());
+			try {
+				settings.saveHotKeyConfig();
+				okToCloseWindow = true;
+			} catch (IOException ex) {
+				JOptionPane.showMessageDialog(null, Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage(), "Settings Error", 1);		 //$NON-NLS-1$
+			}
 		}
+		return okToCloseWindow;
+	}
+	private boolean checkForUniqueHotKeys() {
+		boolean allClear = true;
+		HashSet<String> checkUnique = new HashSet<String>();
+		Component[] componentArray = this.getComponents();
+		for(int i=0; i<componentArray.length; i++) {
+			if(componentArray[i] instanceof JTextField) {
+				String text = ((JTextField)componentArray[i]).getText();
+				if (!text.equals("")) {
+					if(!checkUnique.add(text)) {
+						allClear = false;
+						i = componentArray.length + 1;
+						JOptionPane.showMessageDialog(null, Messages.getString("Errors.DuplicateHotKey") + " " + text, "Settings Error", 1);
+					}
+				}
+			}
+		}
+		return allClear;
 	}
 	////// Listeners \\\\\\
 	public void addSaveListener(ActionListener listenForBtnSave) {
