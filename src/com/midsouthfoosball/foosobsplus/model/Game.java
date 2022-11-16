@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -20,13 +20,11 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.model;
 
-import com.midsouthfoosball.foosobsplus.main.OBSInterface;
+//import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
 public class Game {
 	private Team team1;
 	private Team team2;
-	private Settings settings;
-	private OBSInterface obsInterface;
 //	private Date startTime;
 //	private Date endTime;
 //	private int elapsedTime;
@@ -45,14 +43,10 @@ public class Game {
 	private String matchId;
 
 	
-	public Game(OBSInterface obsInterface, Settings settings,Team team1, Team team2, int gameNumber) {
+	public Game(Team team1, Team team2, int gameNumber) {
 		this.team1 = team1;
 		this.team2 = team2;
-		this.settings = settings;
-		this.obsInterface = obsInterface;
 		this.gameNumber = gameNumber;
-		this.maxGames = maxGames;
-		this.matchId = matchId;
 	}
 	public Team getTeam1() {
 		return team1;

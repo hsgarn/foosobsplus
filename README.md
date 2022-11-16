@@ -663,6 +663,10 @@ Click the cancel button to discard any hot keye changes made.
 Click the Restore Defaults button to restore the default hot keys.
 
 ## Revision History
+v1.103 11/15/2022</br>
+Convert to obs-websockets-java v2.0.0</br>
+Cleanup some java warnings</br>
+</br>
 v1.102 11/04/2022</br>
 Check for duplicate hot keys and warn</br>
 Add Generate AutoHotKey Scripts button and logic</br>

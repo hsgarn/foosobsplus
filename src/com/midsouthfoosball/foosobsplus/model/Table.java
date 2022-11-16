@@ -24,7 +24,10 @@ import java.io.IOException;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
-import net.twasi.obsremotejava.OBSRemoteController;
+import io.obswebsocket.community.client.OBSRemoteController;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class Table {
 	
@@ -113,9 +116,12 @@ public class Table {
 		    		e.printStackTrace();
 		    	}
 		} else {
-	   		obsController.setTextGDIPlusProperties(source, data, false, response -> {
+			String jsonString = "{'text':'" + data + "'}";
+			JsonObject jsonObject = (JsonObject) JsonParser.parseString(jsonString);
+			
+			obsController.setInputSettings(source, jsonObject, true, response -> {
 	   			if(settings.getShowParsed())
-	   				System.out.println("Table class: Source: [" + source + "] Text: [" + data + "] " + response + "]");
+	   				System.out.println("Table class: Source: [" + source + "] Text: [" + data + "] " + response.getMessageData().getRequestStatus() + "]");
 	   			});
 		}
 	}

@@ -19,6 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.  
 **/
 package com.midsouthfoosball.foosobsplus.main;
+
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,7 +48,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -75,6 +75,7 @@ import com.midsouthfoosball.foosobsplus.commands.PCACommand;
 import com.midsouthfoosball.foosobsplus.commands.PCT1Command;
 import com.midsouthfoosball.foosobsplus.commands.PCT2Command;
 import com.midsouthfoosball.foosobsplus.commands.PEMCommand;
+import com.midsouthfoosball.foosobsplus.commands.PHACommand;
 import com.midsouthfoosball.foosobsplus.commands.PNBCommand;
 import com.midsouthfoosball.foosobsplus.commands.PPMCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRACommand;
@@ -86,6 +87,7 @@ import com.midsouthfoosball.foosobsplus.commands.PRT1Command;
 import com.midsouthfoosball.foosobsplus.commands.PRT2Command;
 import com.midsouthfoosball.foosobsplus.commands.PRTCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRTOCommand;
+import com.midsouthfoosball.foosobsplus.commands.PSACommand;
 import com.midsouthfoosball.foosobsplus.commands.PSECommand;
 import com.midsouthfoosball.foosobsplus.commands.PSGCCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSGCommand;
@@ -158,7 +160,10 @@ import com.midsouthfoosball.foosobsplus.view.TeamPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
 
-import net.twasi.obsremotejava.OBSRemoteController;
+import io.obswebsocket.community.client.OBSRemoteController;
+import io.obswebsocket.community.client.WebSocketCloseCode;
+import io.obswebsocket.community.client.listener.lifecycle.ReasonThrowable;
+import io.obswebsocket.community.client.message.response.scenes.GetCurrentProgramSceneResponse;
 
 public class Main {
 	{
@@ -176,7 +181,7 @@ public class Main {
 	////// Settings and OBSInterface setup \\\\\\
 	
 	final   OBS obs			 						= OBS.getInstance();
-	private OBSRemoteController obsController;
+	private final OBSRemoteController obsRemoteController;
 	private Settings			settings			= new Settings();
 	public  OBSInterface 		obsInterface 		= new OBSInterface(settings);
 	public  String				matchId				= "";
@@ -206,11 +211,11 @@ public class Main {
 	private Team 				team1 				= new Team(obsInterface, settings, 1, settings.getSide1Color());
 	private Team 				team2 				= new Team(obsInterface, settings, 2, settings.getSide2Color());
 	private Match 				match				= new Match(obsInterface, settings, team1, team2);
-	private Game				games[]	 			= new Game[] {	new Game(obsInterface, settings, team1, team2, 1), 
-																	new Game(obsInterface, settings, team1, team2, 2), 
-																	new Game(obsInterface, settings, team1, team2, 3), 
-																	new Game(obsInterface, settings, team1, team2, 4), 
-																	new Game(obsInterface, settings, team1, team2, 5)
+	private Game				games[]	 			= new Game[] {	new Game(team1, team2, 1), 
+																	new Game(team1, team2, 2), 
+																	new Game(team1, team2, 3), 
+																	new Game(team1, team2, 4), 
+																	new Game(team1, team2, 5)
 																};
 
 	private Stats 				stats 				= new Stats(settings, team1, team2);
@@ -229,7 +234,7 @@ public class Main {
 	private OBSPanel            obsPanel            = new OBSPanel(settings);
 	private AutoScoreMainPanel	autoScoreMainPanel  = new AutoScoreMainPanel(settings);
 	private MatchPanel			matchPanel			= new MatchPanel(settings);
-	private BallPanel			ballPanel			= new BallPanel(settings);
+	private BallPanel			ballPanel			= new BallPanel();
 	private TeamPanel 			teamPanel1 			= new TeamPanel(1, settings.getSide1Color(), settings);
 	private TeamPanel 			teamPanel2 			= new TeamPanel(2, settings.getSide2Color(), settings);
 	private StatsEntryPanel 	statsEntryPanel 	= new StatsEntryPanel(settings);
@@ -267,7 +272,6 @@ public class Main {
 
 	////// Build and Start the Controllers (mvC) \\\\\\
 	
-//	@SuppressWarnings("unused")
 	private MainController 	mainController;
 	private TimerController timerController;
 	private TeamController 	teamController;
@@ -282,7 +286,25 @@ public class Main {
 		
 		obsInterface.setFilePath(settings.getDatapath());
 		obsInterface.setTableName(settings.getTableName());
+		obs.setHost(settings.getOBSHost());
+		obs.setPort(settings.getOBSPort());
+		obs.setPassword(settings.getOBSPassword());
+		obs.setScene(settings.getOBSScene());
 		updateOBSDisconnected();
+		this.obsRemoteController = OBSRemoteController.builder()
+				.autoConnect(false)
+				.host(obs.getHost())
+				.port(Integer.parseInt(obs.getPort()))
+				.password(obs.getPassword())
+				.lifecycle()
+				.onReady(this::onReady)
+				.onClose(webSocketCloseCode -> this.onClose(webSocketCloseCode))
+				.onControllerError(reason -> this.onError(reason))
+				.onCommunicatorError(reason -> this.onError(reason))
+				.and()
+				.build();
+		obs.setController(obsRemoteController);
+		
 		if (settings.getOBSAutoLogin()==1) {
 			connectToOBS();
 		}
@@ -303,6 +325,7 @@ public class Main {
 		
 		createFileWatchWorker();
 		fileWatchWorker.execute();
+		
 	}
 	private void createAutoScoreWorker() {
 		autoScoreWorker = new SwingWorker<Boolean, Integer>() {
@@ -895,18 +918,37 @@ public class Main {
 		showSource(settings.getOBSTimerSource(), show);
 	}
 	public void showSource(String source, boolean show) {
-		if (obs.getConnected()) obsController.setSourceVisibility(obs.getScene(), source, show, response -> {
-			if(settings.getShowParsed()) {
-				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceVisibility called: " + obs.getScene() + ", " + source + ", " + show );
-			}
-		});
+		if (obs.getConnected()) {
+			obsRemoteController.setSceneItemEnabled(
+				obsRemoteController.getCurrentProgramScene(1000).getCurrentProgramSceneName(),
+				obsRemoteController.getSceneItemId(obsRemoteController.getCurrentProgramScene(1000).getCurrentProgramSceneName(), source, 0, 1000).getSceneItemId(),
+				show, response -> {
+					if(response != null && response.isSuccessful()) {
+						if(settings.getShowParsed()) {
+							obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled called: " + source + ", " + show);
+						}
+					} else {
+						if(settings.getShowParsed()) {
+							obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled failed: " + source + ", " + show);
+						}
+					}
+			});
+		}
 	}
 	public void setSourceFilterVisibility(String source, String filter, boolean show) {
-		if (obs.getConnected()) obsController.setSourceFilterVisibility(source, filter, show, response -> {
-			if(settings.getShowParsed()) {
-				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceFilterVisibility called: " + source + ", " + filter + ", " + show );
-			}
-		});
+		if (obs.getConnected()) {
+			obsRemoteController.setSourceFilterEnabled(source, filter, show, response -> {
+				if(response != null && response.isSuccessful()) {
+					if(settings.getShowParsed()) {
+						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceFilterEnabled called: " + source + ", " + show);
+					}
+				} else {
+					if(settings.getShowParsed()) {
+						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceFilterEnabled failed: " + source + ", " + show);
+					}
+				}
+			});
+		}
 	}
 	public void updateOBSConnected() {
 		obs.setConnected(true);
@@ -927,82 +969,62 @@ public class Main {
 	}
 
 	public void connectToOBS() { 
-		AtomicReference<String> connectionFailedResult = new AtomicReference<>();
-		AtomicReference<String> disconnectResult = new AtomicReference<>();
-		AtomicReference<String> onErrorReason = new AtomicReference<>();
-		AtomicReference<String> connectResult = new AtomicReference<>(); 
-		AtomicReference<String> onCloseResult = new AtomicReference<>();
-//		obsConnectPanel.saveSettings();
-//		System.out.println("main 704: host: " + obs.getHost() + ", port: " + obs.getPort());
-		obs.setHost(settings.getOBSHost());
-		obs.setPort(settings.getOBSPort());
-		obs.setPassword(settings.getOBSPassword());
-		obs.setScene(settings.getOBSScene());
-		String connectString = "ws://"+obs.getHost()+":"+obs.getPort();
-// need to make controller - we are getting it from OBS object, but it has not been set yet.
-		obsController = new OBSRemoteController(connectString,false,obs.getPassword(),false);
-		obs.setController(obsController);
-		  
-		if (obsController.isFailed()) {
-		  obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS Controller failed!"); 
-		}
-			  
-		obsController.registerConnectCallback(response -> {
-			connectResult.set(dtf.format(LocalDateTime.now()) + ": Connected! Studio Version: " + response.getObsStudioVersion() + ", WebSocket Version: " + response.getObsWebsocketVersion());
-			updateOBSConnected(); obsConnectPanel.addMessage(connectResult.get());
-			if(settings.getOBSCloseOnConnect()==1) { 
-				obsConnectFrame.setVisible(false);
+		obsRemoteController.connect();
+		obsRemoteController.setCurrentProgramScene(settings.getOBSScene(), response -> { 
+			if(response != null && response.isSuccessful()) {
+				if(settings.getShowParsed()) {
+						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Scene set to: " + settings.getOBSScene());
+				}
+			} else {
+				if(settings.getShowParsed()) {
+					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Unable to set scene to: " + settings.getOBSScene());
+				}
 			}
 		});
-		  
-		obsController.registerDisconnectCallback(() -> {
-			disconnectResult.set(dtf.format(LocalDateTime.now()) + ": OBS Disconnect Confirmed!"); updateOBSDisconnected();
-			obsConnectPanel.addMessage(disconnectResult.get());
-		});
-		  
-		obsController.registerOnError((message, throwable) -> {
-			onErrorReason.set(dtf.format(LocalDateTime.now()) + ": OBS onError called unexpectedly. May need to disconnect/reconnect.");
-			obsConnectPanel.addMessage(onErrorReason.get());
-		});
-		  
-		obsController.registerCloseCallback((errorNumber, message) -> {
-			onCloseResult.set(dtf.format(LocalDateTime.now()) + ": OBS Connection closed.  Code: " + errorNumber);
-			obsConnectPanel.addMessage(onCloseResult.get());
-		});
-		  
-		obsController.registerConnectionFailedCallback(message -> {
-			connectionFailedResult.set(message);
-			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": From ConnectionFailedCallback: " + connectionFailedResult.get());
-		});
-		  
-		if(obsController.isFailed()) {
-			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " Failed to connect to OBS.  Is OBS running and WebSocket plugin enabled?");
-		}
-		try {
-			obsController.connect();
-
-			if(!obsController.isFailed()) { 
-				obsController.setCurrentScene(settings.getOBSScene(), response -> { 
-					if(settings.getShowParsed()) {
-						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Setting scene to: " + settings.getOBSScene());
-						obsController.getCurrentScene(response2 -> { 
-							obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " Scene Set to: " + response2.getName());
-						});
-					} 
-				});
+	}
+	private void onReady() {
+		updateOBSConnected(); obsConnectPanel.addMessage("OBS Connected. ");
+		this.onConnection();
+	}
+	private void onClose(WebSocketCloseCode webSocketCloseCode) {
+		updateOBSDisconnected();
+		obsConnectPanel.addMessage("OBS Disconnected. " + webSocketCloseCode.getCode());
+	}
+	private void onConnection() {
+		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS Controller Connected. ");
+		obsRemoteController.getVersion(versionInfo -> {
+			if(versionInfo != null && versionInfo.isSuccessful()) {
+				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " OBS Version: " + versionInfo.getObsVersion());
+				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " WebSocket Version: " + versionInfo.getObsWebSocketVersion());
 			}
-		} catch (Exception e) {
-			System.out.println("WooWee, that was some kind of exception there: " + e.getMessage() );
+		});
+		if(settings.getOBSCloseOnConnect()==1) { 
+			obsConnectFrame.setVisible(false);
 		}
+	}
+	private void onError(ReasonThrowable reason) {
+		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " " + reason.getReason());
 	}
 	 
 	private void obsSetBallVisible(String source, boolean show) {
 		if (obs.getConnected()) {
-			obsController.setSourceVisibility("Scene", source, show, response -> {
-				if(settings.getShowParsed()) {
-					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceVisibility called");
-				}
-			});
+			String sceneName;
+			GetCurrentProgramSceneResponse getCurrentProgramSceneResponse = obsRemoteController.getCurrentProgramScene(1000);
+			if (getCurrentProgramSceneResponse != null && getCurrentProgramSceneResponse.isSuccessful()) {
+				sceneName = getCurrentProgramSceneResponse.getCurrentProgramSceneName();
+				obsRemoteController.getSceneItemId(sceneName, source, null,
+						getSceneItemIdResponse -> {
+							if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
+								obsRemoteController.setSceneItemEnabled(sceneName,getSceneItemIdResponse.getSceneItemId(),show,
+										setSceneItemEnabledResponse -> {
+											if(settings.getShowParsed()) {
+												obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled called: " + source + ", " + show);
+											}
+										}
+								);
+							}
+				});
+			}
 		}
 	}
 	public void obsSyncBalls() {
@@ -1244,9 +1266,8 @@ public class Main {
 	}
 	private class OBSDisconnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			obsController.disconnect();
-			updateOBSDisconnected();
-			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Disconnected!");
+			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Requesting disconnect.");
+			obsRemoteController.disconnect();
 		}
 	}
 	private class OBSConnectListener implements ActionListener {
@@ -1256,9 +1277,8 @@ public class Main {
 	}
 	private class OBSDisconnectItemListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			obsController.disconnect();
-			updateOBSDisconnected();
-			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Disconnected!");
+			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Requesting disconnect.");
+			obsRemoteController.disconnect();
 		}
 	}
 	private class OBSSaveListener implements ActionListener {
@@ -1672,26 +1692,23 @@ public class Main {
 		return codes;
 	}
 	private void setScene() {
-		if(obsController == null ) {
+		if(obsRemoteController == null ) {
 			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " ERROR! Must connect before setting Scene");	
 		} else {
-			if(obs.getConnected()) {
-			  if (!obsController.isFailed() && obs.getScene() != null && !obs.getScene().isEmpty()) {
+			if (obs.getScene() != null && !obs.getScene().isEmpty()) {
 				if (obs.getConnected()) {
-					obsController.setCurrentScene(obs.getScene(), response -> { 
+					obsRemoteController.setCurrentProgramScene(settings.getOBSScene(), response -> { 
 						if(settings.getShowParsed()) {
-							obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Setting scene to: " + obs.getScene());
-							obsController.getCurrentScene(response2 -> { 
-								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " Scene Set to: " + response2.getName());
-							});
+							if (response != null && response.isSuccessful()) {
+								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Scene set to: " + settings.getOBSScene());
+							} else {
+								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Unable to set scene to: " + settings.getOBSScene());
+							}
 						} 
 					});
 				}else {
 					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " ERROR! Must connect before setting Scene");
 				}
-			  }
-			} else {
-				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " ERROR! Must connect before setting Scene");	
 			}
 		}
 	}

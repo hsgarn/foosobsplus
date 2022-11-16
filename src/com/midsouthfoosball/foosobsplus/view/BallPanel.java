@@ -1,5 +1,5 @@
 /**
-Copyright 2021 Hugh Garner
+Copyright 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -36,12 +36,8 @@ import javax.swing.JToggleButton;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import com.midsouthfoosball.foosobsplus.model.Settings;
-
-	
 @SuppressWarnings("serial")
 public class BallPanel extends JPanel {
-	private Settings settings;
 	private Border innerBorder;
 	private JToggleButton btnCueBall;
 	private JToggleButton btnOneBall;
@@ -64,8 +60,7 @@ public class BallPanel extends JPanel {
 	private JButton btnShowAllBalls;
 	private JButton btnHideAllBalls;
 	
-	public BallPanel(Settings settings) {
-		this.settings = settings;
+	public BallPanel() {
 		Dimension dim = getPreferredSize();
 		dim.width = 350;
 		dim.height = 30;

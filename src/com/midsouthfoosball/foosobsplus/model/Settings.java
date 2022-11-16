@@ -121,7 +121,7 @@ public class Settings {
 		defaultControlProps.setProperty("LogoLinkURI", "https://www.facebook.com/midsouthfoosball");
 		//OBS
 		defaultOBSProps.setProperty("OBSHost", "localhost");
-		defaultOBSProps.setProperty("OBSPort", "4444");
+		defaultOBSProps.setProperty("OBSPort", "4455");
 		defaultOBSProps.setProperty("OBSPassword","");
 		defaultOBSProps.setProperty("OBSScene", "FoosObs+ Main");
 		defaultOBSProps.setProperty("OBSAutoLogin", "0");
@@ -2067,14 +2067,6 @@ public class Settings {
 		}
 	}
 	public void generateHotKeyScripts() {
-//		Set set = configHotKeyProps.entrySet();
-//		Iterator itr = set.iterator();
-//		while (itr.hasNext()) {
-//			Map.Entry entry = (Map.Entry)itr.next();
-//			if (entry.getValue().toString().length() > 0) {
-//				System.out.println(entry.getKey() + " = " + entry.getValue());
-//			}
-//		}
 		configHotKeyProps.entrySet()
 			.stream()
 			.filter(e -> e.getValue().toString().length() > 0)

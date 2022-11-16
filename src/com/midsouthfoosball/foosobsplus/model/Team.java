@@ -26,9 +26,11 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
-import net.twasi.obsremotejava.OBSRemoteController;
+import io.obswebsocket.community.client.OBSRemoteController;
 
 public class Team implements Serializable {
 
@@ -774,7 +776,10 @@ public class Team implements Serializable {
 		    		e.printStackTrace();
 		    	}
 		} else {
-	   		obsController.setTextGDIPlusProperties(source, data, false, response -> {
+			String jsonString = "{'text':'" + data + "'}";
+			JsonObject jsonObject = (JsonObject) JsonParser.parseString(jsonString);
+			
+			obsController.setInputSettings(source, jsonObject, true, response -> {
 	   			if(settings.getShowParsed())
 	   				System.out.println("Team class: Source: [" + source + "] Text: [" + data + "] " + response + "]");
 	   			});

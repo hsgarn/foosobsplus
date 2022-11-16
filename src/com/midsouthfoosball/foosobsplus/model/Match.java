@@ -27,9 +27,12 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
-import net.twasi.obsremotejava.OBSRemoteController;
+import io.obswebsocket.community.client.OBSRemoteController;
+
 
 public class Match implements Serializable {
 	
@@ -524,7 +527,10 @@ public class Match implements Serializable {
 		    		e.printStackTrace();
 		    	}
 		} else {
-	   		obsController.setTextGDIPlusProperties(source, data, false, response -> {
+			String jsonString = "{'text':'" + data + "'}";
+			JsonObject jsonObject = (JsonObject) JsonParser.parseString(jsonString);
+			
+			obsController.setInputSettings(source, jsonObject, true, response -> {
 	   			if(settings.getShowParsed())
 	   				System.out.println("Match class: Source: [" + source + "] Text: [" + data + "] " + response + "]");
 	   		});

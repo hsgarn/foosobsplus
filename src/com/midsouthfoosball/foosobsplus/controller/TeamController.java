@@ -49,7 +49,8 @@ import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
 import com.midsouthfoosball.foosobsplus.view.TeamPanel;
 
-import net.twasi.obsremotejava.OBSRemoteController;
+import io.obswebsocket.community.client.OBSRemoteController;
+
 
 public class TeamController {
 	private OBSInterface obsInterface;
@@ -733,8 +734,6 @@ public class TeamController {
 		teamMethodMap.put(settings.getTeamForwardSource(2), new SimpleEntry<Team, String>(team2, "setForwardName"));
 		teamMethodMap.put(settings.getTeamGoalieSource(1), new SimpleEntry<Team, String>(team1, "setGoalieName"));
 		teamMethodMap.put(settings.getTeamGoalieSource(2), new SimpleEntry<Team, String>(team2, "setGoalieName"));
-		teamMethodMap.put(settings.getTeamNameSource(1), new SimpleEntry<Team, String>(team1, "setTeamName"));
-		teamMethodMap.put(settings.getTeamNameSource(2), new SimpleEntry<Team, String>(team2, "setTeamName"));
 		teamMethodMap.put(settings.getScoreSource(1), new SimpleEntry<Team, String>(team1, "setScore"));
 		teamMethodMap.put(settings.getScoreSource(2), new SimpleEntry<Team, String>(team2, "setScore"));
 		teamMethodMap.put(settings.getGameCountSource(1), new SimpleEntry<Team, String>(team1, "setGameCount"));
@@ -786,26 +785,16 @@ public class TeamController {
 		teamMethodMap.put(settings.getWarnSource(1), new SimpleEntry<Team, String>(team1, "setWarn"));
 		teamMethodMap.put(settings.getWarnSource(2), new SimpleEntry<Team, String>(team2, "setWarn"));
 		OBS obs = OBS.getInstance();
-		OBSRemoteController obsController = obs.getController();
-		if (!(obsController==null) && !obsController.isFailed())
+		OBSRemoteController obsRemoteController = obs.getController();
+		if (!(obsRemoteController==null) && obs.getConnected())
 		{
 			for (String source : teamMethodMap.keySet()) {
-				obsController.getTextGDIPlusProperties(source, response -> {
-					// response comes back with null entries if source does not exist in OBS
-					if (!((response.getSource() == null) || (response.getText() == null))) {
-						setTextFromSource(response.getSource(),response.getText(), teamMethodMap);
+				obsRemoteController.getInputSettings(source, response -> {
+					if (response != null && response.isSuccessful()) {
+						setTextFromSource(source,response.getInputSettings().get("text").getAsString(), teamMethodMap);
 					}
 				});
-				// This below sleep logic is apparently enough to keep the callbacks from overwriting themselves.  If the below is removed, then
-				// some of the callbacks get overwritten and so do not properly update. tried to figure out a way to queue the responses, but
-				// cannot find where the actual text in the response gets set.  Need to explore the Session class more.
-				try {
-					Thread.sleep(1);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
 			}
-				
 			try {
 				match.setLastScored(obsInterface.getContents(settings.getLastScoredFileName()));
 				teamPanel1.updateTeamName(team1.getTeamName());

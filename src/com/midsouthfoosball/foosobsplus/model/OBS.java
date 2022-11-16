@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -20,7 +20,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.model;
 
-import net.twasi.obsremotejava.OBSRemoteController;
+//import net.twasi.obsremotejava.OBSRemoteController;
+import io.obswebsocket.community.client.OBSRemoteController;
 
 public class OBS {
 	private static OBS instance = new OBS();
