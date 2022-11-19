@@ -2,19 +2,19 @@
 FoosOBSPlus is a flexible foosball score keeper and statistics program compatible with OBS Studio and also plays well with Elagto's Stream Deck products.
 
 ## Overview
-FoosOBSPlus was written to update text files used by OBS Studio to display scores and game counts while live streaming foosball matches.  Almost every field displayed in FoosOBSPlus can be output to a file that OBS Studio can then read and display in a scene. In version 1.073, it became possible to connect directly to OBS with web sockets and bypass the need for the files.
+FoosOBSPlus sends your Foosball game data (Players, scores, game counts, time outs, etc.) to OBS Studio using OBS Studio's web sockets protocol.  Almost every field displayed in FoosOBSPlus can be sent OBS Studio and displayed to your live stream. FoosOBSPlus can also connect to an auto scoring system using a Raspberry Pico W and some lasers (see https://github.com/hsgarn/FoosScore for more information.)
 
 FoosOBSPlus Main Screen:
 <img align="left" width="850" height="630" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusScreen1.png">
 
-OBS Studio scene utilizing FoosOBSPlus text files:
+OBS Studio scene utilizing FoosOBSPlus to display various data:
 <img align="left" width="1920" height="1090" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusScreen2.png">
 
 ## Setup
 FoosOBSPlus is a java program. You can download the source and export to a jar file. I do this in eclipse so am not sure how to do it at command line or in other ide's, though I'm sure google is your friend and will provide you with that information.  Windows will need to have at least Java 1.8 loaded and set to associate jar files with java. 
 
 ## Settings
-If running FoosOBSPlus for the first time, it will create a config.properties file with the default properties in the folder in which the program is running. These properties contain the settings for the operating parameters, filenames, sources and hot keys.
+If running FoosOBSPlus for the first time, it will create a set of properties files with the default properties in the folder in which the program is running. These property files contain the settings for the operating parameters, sources, hot keys and more.
 
 ### Operating Parameters
 FoosOBSPlus tries to make keeping track of a foosball match's progress as simple as possible.  To that end, there is a settings screen that contains parameters that affect how FoosOBSPlus will behave.  Click Edit then Settings then Parameters to get to the Parameter Settings screen.
@@ -25,7 +25,7 @@ Parameter Settings Page:
 <img width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings2.png">
 
 #### Points to Win
-This is the number of points required to win a game.  This is only used if the Auto Increment Game checkbox is checked. Once a team's score reaches this number, it will reset the scores to zero and increase the game counter for the team.  If the Announce Winner check box is set and the team has reached the number set in the Games to Win parameter, then the Team's name will be written to the Match Winner file along with the text specified in the Winner Prefix and Winner Suffix parameters.  Points to Win is also utilized to determine if it is meatball (both teams 1 point away from winning score in final game).
+This is the number of points required to win a game.  This is only used if the Auto Increment Game checkbox is checked. Once a team's score reaches this number, it will reset the scores to zero and increase the game counter for the team.  If the Announce Winner check box is set and the team has reached the number set in the Games to Win parameter, then the Team's name will be sent to the Match Winner OBS source along with the text specified in the Winner Prefix and Winner Suffix parameters.  Points to Win is also utilized to determine if it is meatball (both teams 1 point away from winning score in final game).
 
 #### Max Win
 The Max Win parameter is only used when the Win By parameter is greater than 1.  If a team has to win by more than 1 point, then Max Win is the maximum score a team can get and at that point it does not matter if they won by more than 1 point.
@@ -34,19 +34,10 @@ The Max Win parameter is only used when the Win By parameter is greater than 1. 
 The Win By parameter is used to force a team to win by a specified number of points.  Default is 1 which means that a team only has to win by 1 point (normal game behavior).  Setting the parameter to 2 would require that a team win by two points.  If a team reaches the Points to Win value without being ahead by the Win By value, then the game continues until either a team wins by the Win By margin, or the Max Win value is reached.  Note: If Win By in Final Game Only is checked, then the Win By points are only considered in the last game of the match (prior games are win by 1).
 
 #### Games to Win
-The Games to Win parameter is used to determine when a match is won.  Specify the number of games required to win the match.  Default is 2 for a 2 out of 3 match.  Use 3 for a 3 out of 5 match. etc.
+The Games to Win parameter is used to determine when a match is won.  Specify the number of games required to win the match.  Default is 2 for a 2 out of 3 match.  Use 3 for a 3 out of 5 match. etc.  6 is the maximum value supported at this time.
 
 #### Max Time Outs
 The Max Time Outs parameter is used to set how many time outs each team has.  The default is 2.
-
-#### Team 1 Last Scored
-This parameter defines the text that will be put in the Last Scored text file when Team 1 scores.  The default value is "<--- Last Scored".
-
-#### Team 2 Last Scored
-This parameter defines the text that will be put in the Last Scored text file when Team 2 scores.  The default value is "Last Scored --->".
-
-#### Clear Last Scored
-This parameter defines the text that will be put in the Last Scored text file when neither team has scored (after the Reset All button is clicked or a score is reduced by the - button).
 
 #### Team 1 Color
 This is the color of the player figures for Team 1. Default is Yellow. This is used to help recognize which side of the table Team 1 is on.
@@ -69,11 +60,20 @@ This is the time allowed between games in seconds.  The default is 90 seconds.
 #### Recall Time (min)
 This is the number of minutes a player may be on recall before forfeiting the match.  The default is 10 minutes.
 
+#### Team 1 Last Scored
+This parameter defines the text that will be sent to the Last Scored OBS source when Team 1 scores.  The default value is "<--- Last Scored".
+
+#### Team 2 Last Scored
+This parameter defines the text that will be sent to the Last Scored OBS source when Team 2 scores.  The default value is "Last Scored --->".
+
+#### Clear Last Scored
+This parameter defines the text that will be sent to the Last Scored OBS source when neither team has scored (after the Reset All button is clicked or a score is reduced by the - button).
+
 #### Auto Increment Game checkbox
 When checked, the game count for the team that just scored will be automatically incremented when their score is incremented and reaches the number of points required to win a game.
 
 #### Announce Winner checkbox
-When checked, the Match Winner file will be populated with the winning team name (prefixed by the Winner Prefix parameter and suffixed by the Winner Suffix parameter) when the game count for a team reaches the Games to Win parameter value.  Use the Start Match, Reset Scores or Reset All buttons to clear the Match Winner file for the next match.  Team names will be used if they are populated, otherwise the Forward and Goalie names display.  If team name, forward and goalie fields are all empty, then the match winner will not be displayed.
+When checked, the Match Winner OBS source will be populated with the winning team name (prefixed by the Winner Prefix parameter and suffixed by the Winner Suffix parameter) when the game count for a team reaches the Games to Win parameter value.  Use the Start Match, Reset Scores or Reset All buttons to clear the Match Winner for the next match.  Team names will be used if they are populated, otherwise the Forward and Goalie names display.  If team name, forward and goalie fields are all empty, then the match winner will not be displayed.
 
 #### Winner Prefix
 Text to be displayed in front of the winning teams name when the match is won.  The default is Match Winner:.
@@ -82,10 +82,10 @@ Text to be displayed in front of the winning teams name when the match is won.  
 Text to be displayed after the winning teams name when the match is won.  The default is !!!.
 
 #### Announce Meatball checkbox and text field
-When checked, the Meatball file will be populated with the text in the Announce Meatball parameter when both teams' scores are one point away from winning.  Once the score changes, the text in the Meatball file will be automatically cleared.
+When checked, the Meatball OBS source will be populated with the text in the Announce Meatball parameter when both teams' scores are one point away from winning.  Once the score changes, the text in the Meatball OBS source will be automatically cleared.
 
 #### Show Time Outs Used
-When checked, the program will put the number of time outs used for each team in the Time Out files.  When unchecked, the program will put the number of time outs remaining for each team in the Time Out Files.
+When checked, the program will put the number of time outs used for each team in the Time Out OBS sources.  When unchecked, the program will put the number of time outs remaining for each team in the Time Out OBS sources.
 
 #### Auto Capitalize Names
 When checked, the program will automatically capitalize the first letter of each team's player's names.  If not checked, the team names are left as entered.
@@ -93,218 +93,18 @@ When checked, the program will automatically capitalize the first letter of each
 #### Win By in Final Game Only
 When checked, a team must win by the margin in Win By parameter in the final game of the match only.  The prior games will be win by 1 point.  When unchecked, a team must always win by the margin in the Win By field in every game.
 
-### FileNames
-FoosOBSPlus writes out most of it's data to text files so that it can be read by programs such as OBS Studio and displayed in a live video stream.  The names of these files are configurable if the default names do not suit you.  FoosOBSPlus also allows you to run more than one table at a time.  It does this by prefixing each file with the table name.  To get to the filenames configuration, click on Edit, then Settings, then File Names:
+#### Show Skunk
+When checked, the program will activate the OBS filter defined in the OBS Connect dialogue box when a team wins a game without the opposing team scoring a single point in the game.
+
+#### CutThroat Mode
+When checked, the program activates CutThroat Mode to support the game of CutThroat.  In CutThroat, three people play against each other. One player starts on the scoring side (Team 1) while the other players play on Team 2. The player on the scoring side always serves the ball and when scores, gets a point.  If the players on other side score, then everybody rotates so that Team 2 Forward moves to the scoring side. Team 2 Goalie moves to the Team 1 Forward position.  And the player who was on the scoring side moves to the Team 2 Goalie position.  The scores in this mode are appended to the players names.
+
+### Sources
+FoosOBSPlus sends most of its data to sources in OBS Studio so it can be displayed in a live stream.   The names of these sources are configurable if the default names do not suit you.  To get to the sources configuration, click on Edit, then Settings, then Sources:
 
 <img align="left" width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings3.png">
 
 <img align="left" width="502" height="302" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings5.png">
-
-Below are the file names that can be configured:
-
-#### Team 1
-This is the filename for Team 1's name(s). Default filename is team1name.txt.
-
-#### Team 2
-This is the filename for Team 2's name(s). Default filename is team2name.txt.
-
-#### Game Count 1
-This is the filename for Team 1's game count. Default filename is gamecount1.txt.
-
-#### Game Count 2
-This is the filename for Team 2's game count. Default filename is gamecount2.txt.
-
-#### Score 1
-This is the filename for Team 1's score. Default filename is score1.txt.
-
-#### Score 2
-This is the filename for Team 2's score. Default filename is score2.txt.
-
-#### Time Out 1
-This is the filename for Team 1's time outs used or remaining depending the Show Time Outs Used checkbox. Default filename is timeout1.txt.
-
-#### Time Out 2
-This is the filename for Team 2's time outs used or remaining depending the Show Time Outs Used checkbox. Default filename is timeout2.txt.
-
-#### Reset 1
-This is the filename for Team 1's Reset flag.  Default filename is reset1.txt.
-
-#### Reset 2
-This is the filename for Team 2's Reset flag.  Default filename is reset2.txt.
-
-#### Warn 1
-This is the filename for Team 1's Reset Warning flag.  Default filename is warn1.txt.
-
-#### Warn 2
-This is the filename for Team 2's Reset Warning flag.  Default filename is warn2.txt.
-
-#### Game Time
-This is the filename for the game clock time.  Default filename is gametime.txt.
-
-#### Match Time
-This is the filename for the match time.  Default filename is matchtime.txt.
-
-#### Table Name
-This is the filename for the table name.  Default filename is tablename.txt.
-
-#### Last Scored
-This is the filename that holds the indicator for which team scored last.  Default filename is lastscored.txt.
-
-#### Team 1 Forward
-This is the filename that holds Team 1's forward's name.  Default filename is team1forward.txt
-
-#### Team 1 Goalie
-This is the filename that holds Team 1's goalie's name.  Default filename is team1goalie.txt
-
-#### Team 2 Forrward
-This is the filename that holds Team 2's forward's name.  Default filename is team2forward.txt
-
-#### Team 2 Goalie
-This is the filename that holds Team 2's goalie's name.  Default filename is team2goalie.txt
-
-#### Tournament
-This is the filename of a freeform text field that can be used for the name of the tournament or venue.  Default filename is tournament.txt.
-
-#### Event
-This is the filename of a freeform text field that can be used for the name of the event being played (i.e. DYP, Open Singles, etc).  Default filename is event.txt.
-
-#### Time Remaining
-This is the filename for the Time Remaining on the current timer.  Default filename is timeremaining.txt.
-
-#### Timer
-This is the filename that holds the name of the current timer that is running (Shot, Pass, Game, Timeout, Recall). Default filename is timerinuse.txt.
-
-#### Match Winner
-This is the filename that holds the Winner Prefix, Team's Name and Winner Suffix of the team that won the match.  Default filename is matchwinner.txt.
-
-#### Meatball
-This is the filename that holds the Meatball text when a game is tied just prior to the final point.  Default filename is meatball.txt.
-
-#### Aces 1
-This is the filename that holds the number of aces team 1 had done. Default filename is aces1.txt.
-
-#### Aces 2
-This is the filename that holds the number of aces team 2 had done. Default filename is aces2.txt.
-
-#### Stuffs 1
-This is the filename that holds the number of stuffs team 1 has done.  Default filename is stuffs1.txt.
-
-#### Stuffs 2
-This is the filename that holds the number of stuffs team 2 has done.  Default filename is stuffs2.txt.
-
-#### Breaks 1
-This is the filename that holds the number of breaks team 1 has gotten.  Default filename is breaks1.txt.
-
-#### Breaks 2
-This is the filename that holds the number of breaks team 2 has gotten.  Default filename is breaks2.txt.
-
-#### Team 1 Pass Attempts
-This is the filename that holds the number of pass attempts for team 1.  Default filename is team1passattempts.txt.
-
-#### Team 1 Pass Completes
-This is the filename that holds the number of pass completions for team 1.  Default filename is team1passcompletes.txt.
-
-#### Team 2 Pass Attempts
-This is the filename that holds the number of pass attempts for team 2.  Default filename is team2passattempts.txt.
-
-#### Team 2 Pass Completes
-This is the filename that holds the number of pass completions for team 2.  Default filename is team2passcompletes.txt.
-
-#### Team 1 Shot Attempts
-This is the filename that holds the number of shot attempts for team 1.  Default filename is team1shotattempts.txt.
-
-#### Team 1 Shot Completes
-This is the filename that holds the number of shots made for team 1.  Default filename is team1shotcompletes.txt.
-
-#### Team 2 Shot Attempts
-This is the filename that holds the number of shot attempts for team 2.  Default filename is team2shotattempts.txt.
-
-#### Team 2 Shot Completes
-This is the filename that holds the number of shots made for team 2.  Default filename is team2shotcompletes.txt.
-
-#### Team 1 Clear Attempts
-This is the filename that holds the number of clearing attempts for team 1.  Default filename is team1clearattempts.txt.
-
-#### Team 1 Clear Completes
-This is the filename that holds the number of successful clears for team 1 from the goalie area to the 5 bar or beyond.  Default filename is team1clearcompletes.txt.
-
-#### Team 2 Clear Attempts
-This is the filename that holds the number of successful clears for team 2 from the goalie area to the 5 bar or beyond.  Default filename is team2clearcompletes.txt.
-
-#### Team 2 Clear Completes
-This is the filename that holds the number of successful clears for team 2 from the goalie area to the 5 bar or beyond.  Default filename is team2clearcompletes.txt.
-
-#### Team 1 2-Bar Pass Attempts
-This is the filename that holds the number of pass attempts for team 1 from the 2-bar to the 5-bar or 3-bar.  Default filename is team1twobarpassattempts.txt.
-
-#### Team 1 2-Bar Pass Completes
-This is the filename that holds the number of succesful pass completions for team 1 from the 2-bar to the 5 or 3-bar.  Default filename is team1twobarpasscompletes.txt
-
-#### Team 2 2-Bar Pass Attempts
-This is the filename that holds the number of pass attempts for team 2 from the 2-bar to the 5-bar or 3-bar.  Default filename is team2twobarpassattempts.txt.
-
-#### Team 2 2-Bar Pass Completes
-This is the filename that holds the number of succesful pass completions for team 2 from the 2-bar to the 5 or 3-bar.  Default filename is team2twobarpasscompletes.txt
-
-#### Team 1 Pass Percent
-This is the filename that holds the successful passing percentage for team 1.  Default filename is team1passpercent.txt.
-
-#### Team 2 Pass Percent
-This is the filename that holds the successful passing percentage for team 2.  Default filename is team2passpercent.txt.
-
-#### Team 1 Shot Percent
-This is the filename that holds the successful shot percentage for team 1.  Default filename is team1shotpercent.txt.
-
-#### Team 2 Shot Percent
-This is the filename that holds the successful shot percentage for team 2.  Default filename is team2shotpercent.txt.
-
-#### Team 1 Clear Percent
-This is the filename that holds the successful clear percentatge for team 1.  Default filename is team1clearpercent.txt.
-
-#### Team 2 Clear Percent
-This is the filename that holds the successful clear percentatge for team 2.  Default filename is team2clearpercent.txt.
-
-#### Team 1 Scoring
-This is the filename that holds the number of scores for team 1.  Default filename is team1scoring.txt.
-
-#### Team 2 Scoring
-This is the filename that holds the number of scores for team 2.  Default filename is team2scoring.txt.
-
-#### Team 1 3-Bar Scoring
-This is the filename that holds the number of scores from the 3-bar for team 1.  Default filename is team1threebarscoring.txt.
-
-#### Team 2 3-Bar Scoring
-This is the filename that holds the number of scores from the 3-bar for team 2.  Default filename is team2threebarscoring.txt.
-
-#### Team 1 5-Bar Scoring
-This is the filename that holds the number of scores from the 5-bar for team 1.  Default filename is team1fivebarscoring.txt.
-
-#### Team 2 5-Bar Scoring
-This is the filename that holds the number of scores from the 5-bar for team 2.  Default filename is team2fivebarscoring.txt.
-
-#### Team 1 2-Bar Scoring
-This is the filename that holds the number of scores from the 2-bar for team 1.  Default filename is team1twobarscoring.txt.
-
-#### Team 2 2-Bar Scoring
-This is the filename that holds the number of scores from the 2-bar for team 2.  Default filename is team2twobarscoring.txt.
-
-#### Team 1 Shots On Goal
-This is the filename that holds the number of shots on goal for team 1.  Default filename is team1shotsongoal.txt.
-
-#### Team 2 Shots On Goal
-This is the filename that holds the number of shots on goal for team 2.  Default filename is team2shotsongoal.txt.
-
-#### Save
-Click the save button to save any filename changes made.
-
-#### Cancel
-Click the cancel button to discard any filename changes made.
-
-#### Restore Defaults
-Click the Restore Defaults button to restore the default filenames.
-
-### Sources
-FoosOBSPlus sends its data to sources in OBS Studio so it can be displayed in a live stream.   The names of these sources are configurable if the default names do not suit you.  To get to the sources configuration, click on Edit, then Settings, then Sources:
 
 Below are the sources that can be configured:
 
@@ -510,61 +310,60 @@ Click the cancel button to discard any source changes made.
 Click the Restore Defaults button to restore the default sources.
 
 ### Hot Keys
-FoosOBSPlus uses buttons to do various functions such as increase or decrease scores, switch sides, reset game counts, start timers, etc.  Each button can have a Hot Key assigned to it.  Pressing ALT plus the assigned Hot Key for the button will function just like pressing the actual button.  The hot keys can be used in Stream Deck commands to make operating FoosOBSPlus a simple push button affair.
+FoosOBSPlus uses buttons to do various functions such as increase or decrease scores, switch sides, reset game counts, start timers, etc.  Each button can have a Hot Key assigned to it.  Pressing ALT plus the assigned Hot Key for the button will function just like pressing the actual button.  The hot keys can be used in Stream Deck commands to make operating FoosOBSPlus a simple push button affair.  Unfortunately, there are more buttons than available hot keys so you can not assign a hot key to every button. 
 
 <img align="left" width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings4.png">
 
 <img align="left" width="802" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings6.png">
 
 #### Start Match
-Assigns the hot key for the Start Match button.  Default hot key is unassigned.
+Assigns the hot key for the Start Match button.  Default hot key is b.
 
 #### Pause Match
-Assigns the hot key for the Pause Match button.  Default hot key is unassigned.
+Assigns the hot key for the Pause Match button.  Default hot key is ,.
 
 #### Start Game
-Assigns the hot key for the Start Game button.  Default hot key is unassigned.
+Assigns the hot key for the Start Game button.  Default hot key is ..
 
 #### Reset(Team 1)
-Assigns the hot key for the Reset button for Team 1.  Default hot key is z.
+Assigns the hot key for the Reset button for Team 1.  Default hot key is unassigned.
 
 #### Reset(Team 2)
-Assigns the hot key for the Reset button for Team 2.  Default hot key is ,.
+Assigns the hot key for the Reset button for Team 2.  Default hot key is unassigned.
 
 #### Warn(Team 1)
-Assigns the hot key for the Warn button for Team 1. Default hot key is x.
+Assigns the hot key for the Warn button for Team 1. Default hot key is unassigned.
 
 #### Warn(Team 2)
-Assigns the hot key for the Warn button for Team 2. Default hot key is ..
+Assigns the hot key for the Warn button for Team 2. Default hot key is unassigned.
 
-#### <-Switch->(Reset/Warn)
-Assigns the hot key to swap the Reset and Warn flags for Team 1 with Team 2.  Deafult hot key is not assigned.
+#### Switch Reset/Warns
+Assigns the hot key to swap the Reset and Warn flags for Team 1 with Team 2.  Default hot key is unassigned.
 
 #### Team Names
 ##### Clear(Team 1)
-Assigns the hot key for the Clear button for Team 1's name. Default hot key is unassigned.
+Assigns the hot key for the Clear button for Team 1's name. Default hot key is f.
 
 ##### Team 1 Switch Positions
 Assigns the hot key to Switch Team 1 and Team 2's names. Default hot key is t.
 
 ##### Clear(Team 2)
-Assigns the hot key for the Clear button for Team 2's name. Default hot key is unassigned.
-
+Assigns the hot key for the Clear button for Team 2's name. Default hot key is h
 ##### Team 2 Switch Positions
 Assigns the hot key for the Switch button for Team 2's names. Default hot key is m.
 
 ##### Switch Teams
-Assigns the hot key to swap Team 1's and Team 2's names (Team, Forward & Goalid) with each other.  Default hot key is e.
+Assigns the hot key to swap Team 1's and Team 2's names (Team, Forward & Goalie) with each other.  Default hot key is e.
 
 #### Scores
 ##### -(Team 1)
-Assigns the hot key for the - button for Team 1's score. Default hot key is unassigned.
+Assigns the hot key for the - button for Team 1's score. Default hot key is 4.
 
 ##### +(Team 1)
 Assigns the hot key for the + button to increase Team 1's score. Default hot key is 1.
 
 ##### -(Team 2)
-Assigns the hot key for the - button for Team 2's score. Default hot key is unassigned.
+Assigns the hot key for the - button for Team 2's score. Default hot key is 8.
 
 ##### +(Team 2)
 Assigns the hot key for the + button to increase Team 2's score. Default hot key is 2.
@@ -580,13 +379,13 @@ Assigns the hot key for the Clear All button in the Switch Panel.  Default hot k
 
 #### Game Counts
 ##### -(Team 1)
-Assigns the hot key for the - button for Team 1's score. Default hot key is unassigned.
+Assigns the hot key for the - button for Team 1's score. Default hot key is j.
 
 ##### +(Team 1)
 Assigns the hot key for the + button to increase Team 1's game count. Default hot key is 5.
 
 ##### -(Team 2)
-Assigns the hot key for the - button for Team 2's score. Default hot key is unassigned.
+Assigns the hot key for the - button for Team 2's score. Default hot key is i.
 
 ##### +(Team 2)
 Assigns the hot key for the + button to increase Team 2's game count. Default hot key is 6.
@@ -596,19 +395,19 @@ Assigns the hot key to switch the game counts. Team 1's game count will be swapp
 
 #### Time Outs
 ##### Return TO(Team 1)
-Assigns the hot key to return a time out to Team 1's available pool of timeouts or used pool of time outs depending on how the Show Time Outs Used setting is set.  Default hot key is unassigned.
+Assigns the hot key to return a time out to Team 1's available pool of timeouts or used pool of time outs depending on how the Show Time Outs Used setting is set.  Default hot key is n.
 
 ##### Use TO(Team 1)
 Assigns the hot key to use a time out for Team 1.  Default hot key is 9.
 
 ##### Return TO(Team 2)
-Assigns the hot key to return a time out to Team 2's available pool of timeouts or used pool of time outs depending on how the Show Time Outs Used setting is set.  Default hot key is unassigned.
+Assigns the hot key to return a time out to Team 2's available pool of timeouts or used pool of time outs depending on how the Show Time Outs Used setting is set.  Default hot key is 1.
 
 ##### Use TO(Team 2)
 Assigns the hot key to use a time out for Team 2.  Default hot key is 0.
 
 ##### Switch Time Outs
-Assigns the hot key to switch the time out counts. Team 1's time out count will be swapped with Team 2's time out count.  Default hot key is unassigned.
+Assigns the hot key to switch the time out counts. Team 1's time out count will be swapped with Team 2's time out count.  Default hot key is [.
 
 #### Reset Names
 Assigns the hot key for the Reset Names button in the Reset Panel.  Default hot key is unassigned.
@@ -653,6 +452,18 @@ Assigns the hot key for the Undo button.  Default hot key is u.
 #### Redo
 Assigns the hot key for the Redo button.  Default hot key is d.
 
+#### Switch Forwards
+Assigns the hot key for switching only the names of the Forwards of Team 1 and Team 2.  Default hot key is ;.
+
+#### Switch Goalies
+Assigns the hot key for switching only the names of the Goalies of Team 1 and Team 2.  Default hot key is x.
+
+#### Show Skunk
+Assigns the hot key for the Show Skunk button. Default hot key is k.
+
+#### Start Stream
+Assigns the hot key for the Start Stream button. Default hot key is z.
+
 #### Save
 Click the save button to save any hot key changes made.
 
@@ -661,6 +472,39 @@ Click the cancel button to discard any hot keye changes made.
 
 #### Restore Defaults
 Click the Restore Defaults button to restore the default hot keys.
+
+### Partner Program
+FoosOBSPlus can read player names from files.  For example, we have an Access program called Partner Program and when a match is called in this program, it writes the players' names to 4 files. The directory and filenames can be set in the Partner Program Settings window.
+
+<img align="left" width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings7.png">
+
+<img align="left" width="802" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings8.png">
+
+#### Select Path
+The Select Path allows you to choose the directory that will contain the files of the players' names.  Optionally you can just type the path in the box to the right of the Select Path button.
+
+#### File Name
+
+#### Player 1
+This is the name of the file containing the name of Team 1's forward.  Default is Player1.txt.
+
+#### Player 2
+This is the name of the file containing the name of Team 1's goalie.  Default is Player2.txt.
+
+#### Player 3
+This is the name of the file containing the name of Team 2's forward.  Default is Player3.txt.
+
+#### Player 4
+This is the name of the file containing the name of Team 2's goalie.  Default is Player4.txt.
+
+#### Save
+Click the save button to save any changes made.
+
+#### Cancel
+Click the cancel button to discard any changes made.
+
+#### Restore Defaults
+Click the Restore Defaults button to restore the default file names.
 
 ## Revision History
 v1.105 11/18/2022</br>
