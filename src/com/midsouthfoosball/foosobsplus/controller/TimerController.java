@@ -181,7 +181,7 @@ public class TimerController {
 	}
 	private void writeTimeRemaining() {
 		try {
-			obsInterface.setContents(settings.getTimeRemainingFileName(), timerPanel.getTimerDisplayText());
+			obsInterface.setContents(settings.getTimeRemainingSource(), timerPanel.getTimerDisplayText());
 		} catch (IOException e2) {
 			e2.printStackTrace();
 		}

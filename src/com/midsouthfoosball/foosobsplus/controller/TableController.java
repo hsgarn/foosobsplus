@@ -155,9 +155,9 @@ public class TableController {
 	}
 	public void fetchAll(String tableName) {
 		try {
-			table.setTournamentName(obsInterface.getContents(settings.getTournamentFileName()));
+			table.setTournamentName(obsInterface.getContents(settings.getTournamentSource()));
 			tablePanel.updateTournamentName(table.getTournamentName());
-			table.setEventName(obsInterface.getContents(settings.getEventFileName()));
+			table.setEventName(obsInterface.getContents(settings.getEventSource()));
 			tablePanel.updateEventName(table.getEventName());
 			table.setTableName(tableName);
 			tablePanel.updateTableName(table.getTableName());

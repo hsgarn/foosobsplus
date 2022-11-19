@@ -1,5 +1,5 @@
 /**
-Copyright 2021 Hugh Garner
+Copyright 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -63,7 +63,7 @@ public class StatSettingsPanel extends JPanel {
 		add(lblTeam1NameFileName, "cell 1 1,alignx trailing");
 		
 		txtTeam1NameFileName = new JTextField();
-		txtTeam1NameFileName.setText(settings.getTeamNameFileName(1));
+		txtTeam1NameFileName.setText(settings.getTeamNameSource(1));
 		add(txtTeam1NameFileName, "cell 2 1,alignx left");
 		txtTeam1NameFileName.setColumns(10);
 		
@@ -98,15 +98,15 @@ public class StatSettingsPanel extends JPanel {
 	}
 
 	private void restoreDefaults(Settings settings) {
-		txtTeam1NameFileName.setText(settings.getDefaultTeam1NameFileName());
+		txtTeam1NameFileName.setText(settings.getDefaultTeam1NameSource());
 	}
 	
 	private void saveSettings() {
-		settings.setTeam1NameFileName(txtTeam1NameFileName.getText());
-		try {
-			settings.saveFileNameConfig();
-		} catch (IOException ex) {
-			System.out.print("Error saving properties file: " + ex.getMessage());		
-		}
+		settings.setTeam1NameSource(txtTeam1NameFileName.getText());
+//		try {
+//			settings.saveStatsConfig();
+//		} catch (IOException ex) {
+//			System.out.print("Error saving properties file: " + ex.getMessage());		
+//		}
 	}
 }

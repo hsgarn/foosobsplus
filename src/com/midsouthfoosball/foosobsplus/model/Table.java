@@ -24,11 +24,6 @@ import java.io.IOException;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
-import io.obswebsocket.community.client.OBSRemoteController;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 public class Table {
 	
 	private String tournamentName;
@@ -93,37 +88,21 @@ public class Table {
 		tableName = "";
 	}
 	private void writeTournamentName() {
-   		writeData(settings.getTournamentFileName(), settings.getTournamentSource(), getTournamentName());
+   		writeData(settings.getTournamentSource(), getTournamentName());
 	}
     private void writeEventName() {
-    	writeData(settings.getEventFileName(), settings.getEventSource(), getEventName());
+    	writeData(settings.getEventSource(), getEventName());
     }
     private void writeTableName() {
-   		writeData(settings.getTableFileName(), settings.getTableSource(), getTableName());
+   		writeData(settings.getTableSource(), getTableName());
     }
     public void writeAll() {
     	writeTournamentName();
     	writeEventName();
     	writeTableName();
      }
-	private void writeData(String filename, String source, String data) {
-    	OBS obs = OBS.getInstance();
-    	OBSRemoteController obsController = obs.getController();
-    	if (obsController == null || !obs.getConnected()) {
-		   	try {
-		    		obsInterface.setContents(filename, data);
-		    	} catch (IOException e) {
-		    		e.printStackTrace();
-		    	}
-		} else {
-			String jsonString = "{'text':'" + data + "'}";
-			JsonObject jsonObject = (JsonObject) JsonParser.parseString(jsonString);
-			
-			obsController.setInputSettings(source, jsonObject, true, response -> {
-	   			if(settings.getShowParsed())
-	   				System.out.println("Table class: Source: [" + source + "] Text: [" + data + "] " + response.getMessageData().getRequestStatus() + "]");
-	   			});
-		}
+	private void writeData(String source, String data) {
+		obsInterface.writeData(source, data, "Table", settings.getShowParsed());
 	}
 
   }

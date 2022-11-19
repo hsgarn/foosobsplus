@@ -107,8 +107,8 @@ public class PartnerProgramPanel extends JPanel {
 						formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
 					}
 					try {
-						settings.setDatapath(formattedTxtPath.getText());
-						settings.saveFileNameConfig();
+						settings.setPartnerProgramPath(formattedTxtPath.getText());
+						settings.savePartnerProgramConfig();;
 					} catch (IOException ex) {
 						System.out.print(Messages.getString("PartnerProgramPanel.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
 					}
@@ -123,7 +123,7 @@ public class PartnerProgramPanel extends JPanel {
 			public void focusLost(FocusEvent arg0) {
 		    	try {
 					settings.setPartnerProgramPath(formattedTxtPath.getText());
-					settings.saveFileNameConfig();
+					settings.savePartnerProgramConfig();
 		    	} catch (IOException ex) {
 		    		System.out.print(Messages.getString("PartnerProgramPanel.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
 		    	}
@@ -135,7 +135,7 @@ public class PartnerProgramPanel extends JPanel {
 			    if (key == KeyEvent.VK_ENTER) {
 			    	try {
 						settings.setPartnerProgramPath(formattedTxtPath.getText());
-						settings.saveFileNameConfig();
+						settings.savePartnerProgramConfig();
 			    	} catch (IOException ex) {
 			    		System.out.print(Messages.getString("PartnerProgramPanel.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
 			    	}

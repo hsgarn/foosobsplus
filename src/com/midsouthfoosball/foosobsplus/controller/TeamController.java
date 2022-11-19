@@ -796,7 +796,7 @@ public class TeamController {
 				});
 			}
 			try {
-				match.setLastScored(obsInterface.getContents(settings.getLastScoredFileName()));
+				match.setLastScored(obsInterface.getContents(settings.getLastScoredSource()));
 				teamPanel1.updateTeamName(team1.getTeamName());
 				teamPanel2.updateTeamName(team2.getTeamName());
 				teamPanel1.updateForwardName(team1.getForwardName());

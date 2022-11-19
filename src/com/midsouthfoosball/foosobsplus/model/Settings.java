@@ -49,7 +49,6 @@ public class Settings {
 	// Property Settings
 	private Properties defaultControlProps;
 	private Properties defaultSourceProps;
-	private Properties defaultFileNameProps;
 	private Properties defaultPartnerProgramProps;
 	private Properties defaultHotKeyProps;
 	private Properties defaultOBSProps;
@@ -58,7 +57,6 @@ public class Settings {
 	
 	public Properties configControlProps;
 	public Properties configSourceProps;
-	public Properties configFileNameProps;
 	public Properties configPartnerProgramProps;
 	public Properties configHotKeyProps;
 	public Properties configOBSProps;
@@ -67,7 +65,6 @@ public class Settings {
 	
 	private String configControlFileName 			= "control.properties";
 	private String configSourceFileName 			= "source.properties";
-	private String configFileNameFileName 			= "filename.properties";
 	private String configPartnerProgramFileName     = "partnerprogram.properties";
 	private String configHotKeyFileName 			= "hotkey.properties";
 	private String configOBSFileName        		= "obs.properties";
@@ -79,7 +76,6 @@ public class Settings {
 	public Settings() throws IOException {
 		defaultControlProps 			= new Properties();
 		defaultSourceProps 				= new Properties();
-		defaultFileNameProps 			= new Properties();
 		defaultPartnerProgramProps      = new Properties();
 		defaultHotKeyProps 				= new Properties();
 		defaultOBSProps         		= new Properties();
@@ -201,76 +197,6 @@ public class Settings {
 		defaultSourceProps.setProperty("Team2ShotsOnGoal", "team2shotsongoal");
 		defaultSourceProps.setProperty("Side1Color","side1color");
 		defaultSourceProps.setProperty("Side2Color","side2color");
-		//FileNames
-		defaultFileNameProps.setProperty("Table", "tablename.txt");
-		defaultFileNameProps.setProperty("Team1Name", "team1name.txt");
-		defaultFileNameProps.setProperty("Team1Forward", "team1forward.txt");
-		defaultFileNameProps.setProperty("Team1Goalie", "team1goalie.txt");
-		defaultFileNameProps.setProperty("Tournament", "tournament.txt");
-		defaultFileNameProps.setProperty("Team2Name", "team2name.txt");
-		defaultFileNameProps.setProperty("Team2Forward", "team2forward.txt");
-		defaultFileNameProps.setProperty("Team2Goalie", "team2goalie.txt");
-		defaultFileNameProps.setProperty("Event", "event.txt");
-		defaultFileNameProps.setProperty("TableName", "tablename.txt");
-		defaultFileNameProps.setProperty("GameCount1", "gamecount1.txt");
-		defaultFileNameProps.setProperty("TimeRemaining", "timeremaining.txt");
-		defaultFileNameProps.setProperty("GameCount2", "gamecount2.txt");
-		defaultFileNameProps.setProperty("TimerInUse", "timerinuse.txt");
-		defaultFileNameProps.setProperty("Score1", "score1.txt");
-		defaultFileNameProps.setProperty("MatchWinner", "matchwinner.txt");
-		defaultFileNameProps.setProperty("Meatball",  "meatball.txt");
-		defaultFileNameProps.setProperty("Score2", "score2.txt");
-		defaultFileNameProps.setProperty("TimeOut1", "timeout1.txt");
-		defaultFileNameProps.setProperty("TimeOut2", "timeout2.txt");
-		defaultFileNameProps.setProperty("Reset1", "reset1.txt");
-		defaultFileNameProps.setProperty("Reset2", "reset2.txt");
-		defaultFileNameProps.setProperty("Warn1", "warn1.txt");
-		defaultFileNameProps.setProperty("Warn2", "warn2.txt");
-		defaultFileNameProps.setProperty("LastScored","lastscored.txt");
-		defaultFileNameProps.setProperty("GameTime", "gametime.txt");
-		defaultFileNameProps.setProperty("MatchTime", "matchtime.txt");
-		defaultFileNameProps.setProperty("Stuffs1", "stuffs1.txt");
-		defaultFileNameProps.setProperty("Stuffs2", "stuffs2.txt");
-		defaultFileNameProps.setProperty("Breaks1", "breaks1.txt");
-		defaultFileNameProps.setProperty("Breaks2", "breaks2.txt");
-		defaultFileNameProps.setProperty("Aces1", "aces1.txt");
-		defaultFileNameProps.setProperty("Aces2", "aces2.txt");
-		defaultFileNameProps.setProperty("Team1PassAttempts", "team1passattempts.txt");
-		defaultFileNameProps.setProperty("Team2PassAttempts", "team2passattempts.txt");
-		defaultFileNameProps.setProperty("Team1PassCompletes", "team1passcompletes.txt");
-		defaultFileNameProps.setProperty("Team2PassCompletes", "team2passcompletes.txt");
-		defaultFileNameProps.setProperty("Team1ShotAttempts", "team1shotattempts.txt");
-		defaultFileNameProps.setProperty("Team2ShotAttempts", "team2shotattempts.txt");
-		defaultFileNameProps.setProperty("Team1ShotCompletes", "team1shotcompletes.txt");
-		defaultFileNameProps.setProperty("Team2ShotCompletes", "team2shotcompletes.txt");
-		defaultFileNameProps.setProperty("Team1ClearAttempts", "team1clearattempts.txt");
-		defaultFileNameProps.setProperty("Team2ClearAttempts", "team2clearattempts.txt");
-		defaultFileNameProps.setProperty("Team1ClearCompletes", "team1clearcompletes.txt");
-		defaultFileNameProps.setProperty("Team2ClearCompletes", "team2clearcompletes.txt");
-		defaultFileNameProps.setProperty("Team1PassPercent", "team1passpercent.txt");
-		defaultFileNameProps.setProperty("Team2PassPercent", "team2passpercent.txt");
-		defaultFileNameProps.setProperty("Team1ShotPercent", "team1shotpercent.txt");
-		defaultFileNameProps.setProperty("Team2ShotPercent", "team2shotpercent.txt");
-		defaultFileNameProps.setProperty("Team1ClearPercent", "team1clearpercent.txt");
-		defaultFileNameProps.setProperty("Team2ClearPercent", "team2clearpercent.txt");
-		defaultFileNameProps.setProperty("Team1TwoBarPassAttempts", "team1twobarpassattempts.txt");
-		defaultFileNameProps.setProperty("Team2TwoBarPassAttempts", "team2twobarpassattempts.txt");
-		defaultFileNameProps.setProperty("Team1TwoBarPassCompletes", "team1twobarpasscompletes.txt");
-		defaultFileNameProps.setProperty("Team2TwoBarPassCompletes", "team2twobarpasscompletes.txt");
-		defaultFileNameProps.setProperty("Team1TwoBarPassPercent", "team1twobarpasspercent.txt");
-		defaultFileNameProps.setProperty("Team2TwoBarPassPercent", "team2twobarpasspercent.txt");
-		defaultFileNameProps.setProperty("Team1Scoring", "team1scoring.txt");
-		defaultFileNameProps.setProperty("Team2Scoring", "team2scoring.txt");
-		defaultFileNameProps.setProperty("Team1ThreeBarScoring", "team1threebarscoring.txt");
-		defaultFileNameProps.setProperty("Team2ThreeBarScoring", "team2threebarscoring.txt");
-		defaultFileNameProps.setProperty("Team1FiveBarScoring", "team1fivebarscoring.txt");
-		defaultFileNameProps.setProperty("Team2FiveBarScoring", "team2fivebarscoring.txt");
-		defaultFileNameProps.setProperty("Team1TwoBarScoring", "team1twobarscoring.txt");
-		defaultFileNameProps.setProperty("Team2TwoBarScoring", "team2twobarscoring.txt");
-		defaultFileNameProps.setProperty("Team1ShotsOnGoal", "team1shotsongoal.txt");
-		defaultFileNameProps.setProperty("Team2ShotsOnGoal", "team2shotsongoal.txt");
-		defaultFileNameProps.setProperty("Side1Color","side1color.txt");
-		defaultFileNameProps.setProperty("Side2Color","side2color.txt");
 		//PartnerProgram
 		defaultPartnerProgramProps.setProperty("PartnerProgramPath", "C:\\FoosTourney");
 		defaultPartnerProgramProps.setProperty("Player1FileName", "Player1.txt");
@@ -355,7 +281,6 @@ public class Settings {
 		//Config Properties
 		configControlProps 				= new Properties(defaultControlProps);
 		configSourceProps 				= new Properties(defaultSourceProps);
-		configFileNameProps 			= new Properties(defaultFileNameProps);
 		configPartnerProgramProps       = new Properties(defaultPartnerProgramProps);
 		configHotKeyProps 				= new Properties(defaultHotKeyProps);
 		configOBSProps      			= new Properties(defaultOBSProps);
@@ -365,7 +290,6 @@ public class Settings {
 		loadFromControlConfig();
 		loadFromOBSConfig();
 		loadFromSourceConfig();
-		loadFromFileNameConfig();
 		loadFromPartnerProgramConfig();
 		loadFromHotKeyConfig();
 		loadFromAutoScoreSettingsConfig();
@@ -634,216 +558,6 @@ public class Settings {
 	public String getMatchTimeSource() {return configSourceProps.getProperty("MatchTime");}
 	public String getSide1ColorSource() {return configSourceProps.getProperty("Side1Color");}
 	public String getSide2ColorSource() {return configSourceProps.getProperty("Side2Color");}
-	//FileNames
-	public String getTeamNameFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1Name");
-		} else {
-			return configFileNameProps.getProperty("Team2Name");
-		}
-	}
-	public String getTeamForwardFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1Forward");
-		} else {
-			return configFileNameProps.getProperty("Team2Forward");
-		}
-	}
-	public String getTeamGoalieFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1Goalie");
-		} else {
-			return configFileNameProps.getProperty("Team2Goalie");
-		}
-	}
-	public String getGameCountFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("GameCount1");
-		} else {
-			return configFileNameProps.getProperty("GameCount2");
-		}
-	}
-	public String getScoreFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Score1");
-		} else {
-			return configFileNameProps.getProperty("Score2");
-		}
-	}
-	public String getTimeOutFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("TimeOut1");
-		} else {
-			return configFileNameProps.getProperty("TimeOut2");
-		}
-	}
-	public String getResetFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Reset1");
-		} else {
-			return configFileNameProps.getProperty("Reset2");
-		}
-	}
-	public String getWarnFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Warn1");
-		} else {
-			return configFileNameProps.getProperty("Warn2");
-		}
-	}
-	public String getPassAttemptsFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1PassAttempts");
-		} else {
-			return configFileNameProps.getProperty("Team2PassAttempts");
-		}
-	}
-	public String getPassCompletesFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1PassCompletes");
-		} else {
-			return configFileNameProps.getProperty("Team2PassCompletes");
-		}
-	}
-	public String getShotAttemptsFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1ShotAttempts");
-		} else {
-			return configFileNameProps.getProperty("Team2ShotAttempts");
-		}
-	}
-	public String getShotCompletesFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1ShotCompletes");
-		} else {
-			return configFileNameProps.getProperty("Team2ShotCompletes");
-		}
-	}
-	public String getClearAttemptsFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1ClearAttempts");
-		} else {
-			return configFileNameProps.getProperty("Team2ClearAttempts");
-		}
-	}
-	public String getClearCompletesFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1ClearCompletes");
-		} else {
-			return configFileNameProps.getProperty("Team2ClearCompletes");
-		}
-	}
-	public String getPassPercentFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1PassPercent");
-		} else {
-			return configFileNameProps.getProperty("Team2PassPercent");
-		}
-	}
-	public String getShotPercentFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1ShotPercent");
-		} else {
-			return configFileNameProps.getProperty("Team2ShotPercent");
-		}
-	}
-	public String getClearPercentFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1ClearPercent");
-		} else {
-			return configFileNameProps.getProperty("Team2ClearPercent");
-		}
-	}
-	public String getTwoBarPassAttemptsFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1TwoBarPassAttempts");
-		} else {
-			return configFileNameProps.getProperty("Team2TwoBarPassAttempts");
-		}
-	}
-	public String getTwoBarPassCompletesFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1TwoBarPassCompletes");
-		} else {
-			return configFileNameProps.getProperty("Team2TwoBarPassCompletes");
-		}
-	}
-	public String getTwoBarPassPercentFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1TwoBarPassPercent");
-		} else {
-			return configFileNameProps.getProperty("Team2TwoBarPassPercent");
-		}
-	}
-	public String getScoringFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1Scoring");
-		} else {
-			return configFileNameProps.getProperty("Team2Scoring");
-		}
-	}
-	public String getThreeBarScoringFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1ThreeBarScoring");
-		} else {
-			return configFileNameProps.getProperty("Team2ThreeBarScoring");
-		}
-	}
-	public String getFiveBarScoringFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1FiveBarScoring");
-		} else {
-			return configFileNameProps.getProperty("Team2FiveBarScoring");
-		}
-	}
-	public String getTwoBarScoringFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1TwoBarScoring");
-		} else {
-			return configFileNameProps.getProperty("Team2TwoBarScoring");
-		}
-	}
-	public String getShotsOnGoalFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Team1ShotsOnGoal");
-		} else {
-			return configFileNameProps.getProperty("Team2ShotsOnGoal");
-		}
-	}
-	public String getStuffsFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Stuffs1");
-		} else {
-			return configFileNameProps.getProperty("Stuffs2");
-		}
-	}
-	public String getBreaksFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Breaks1");
-		} else {
-			return configFileNameProps.getProperty("Breaks2");
-		}
-	}
-	public String getAcesFileName(int teamNbr) {
-		if(teamNbr==1) {
-			return configFileNameProps.getProperty("Aces1");
-		} else {
-			return configFileNameProps.getProperty("Aces2");
-		}
-	}
-	public String getTableFileName() {return configFileNameProps.getProperty("Table");}
-	public String getTournamentFileName() {return configFileNameProps.getProperty("Tournament");}
-	public String getEventFileName() {return configFileNameProps.getProperty("Event");}
-	public String getTableNameFileName() {return configFileNameProps.getProperty("TableName");}
-	public String getTimeRemainingFileName() {return configFileNameProps.getProperty("TimeRemaining");}
-	public String getTimerInUseFileName() {return configFileNameProps.getProperty("TimerInUse");}
-	public String getMatchWinnerFileName() {return configFileNameProps.getProperty("MatchWinner");}
-	public String getMeatballFileName() {return configFileNameProps.getProperty("Meatball");}
-	public String getLastScoredFileName() {return configFileNameProps.getProperty("LastScored");}
-	public String getGameTimeFileName() {return configFileNameProps.getProperty("GameTime");}
-	public String getMatchTimeFileName() {return configFileNameProps.getProperty("MatchTime");}
-	public String getSide1ColorFileName() {return configFileNameProps.getProperty("Side1Color");}
-	public String getSide2ColorFileName() {return configFileNameProps.getProperty("Side2Color");}
 	//PartnerProgram
 	public String getPartnerProgramPath() {return configPartnerProgramProps.getProperty("PartnerProgramPath");}
 	public String getPlayer1FileName() {return configPartnerProgramProps.getProperty("Player1FileName");}
@@ -1259,214 +973,6 @@ public class Settings {
 	public void setSide2ColorSource(String side2ColorSource) {
 		configSourceProps.setProperty("Side2Color", side2ColorSource);
 	}
-	//FileNames
-	public void setTeam1PassAttemptsFileName(String team1PassAttemptsFileName) {
-		configFileNameProps.setProperty("Team1PassAttempts", team1PassAttemptsFileName);
-	}
-	public void setTeam2PassAttemptsFileName(String team2PassAttemptsFileName) {
-		configFileNameProps.setProperty("Team2PassAttempts", team2PassAttemptsFileName);
-	}
-	public void setTeam1PassCompletesFileName(String team1PassCompletesFileName) {
-		configFileNameProps.setProperty("Team1PassCompletes", team1PassCompletesFileName);
-	}
-	public void setTeam2PassCompletesFileName(String team2PassCompletesFileName) {
-		configFileNameProps.setProperty("Team2PassCompletes", team2PassCompletesFileName);
-	}
-	public void setTeam1ShotAttemptsFileName(String team1ShotAttemptsFileName) {
-		configFileNameProps.setProperty("Team1ShotAttempts", team1ShotAttemptsFileName);
-	}
-	public void setTeam2ShotAttemptsFileName(String team2ShotAttemptsFileName) {
-		configFileNameProps.setProperty("Team2ShotAttempts", team2ShotAttemptsFileName);
-	}
-	public void setTeam1ShotCompletesFileName(String team1ShotCompletesFileName) {
-		configFileNameProps.setProperty("Team1ShotCompletes", team1ShotCompletesFileName);
-	}
-	public void setTeam2ShotCompletesFileName(String team2ShotCompletesFileName) {
-		configFileNameProps.setProperty("Team2ShotCompletes", team2ShotCompletesFileName);
-	}
-	public void setTeam1ClearAttemptsFileName(String team1ClearAttemptsFileName) {
-		configFileNameProps.setProperty("Team1ClearAttempts", team1ClearAttemptsFileName);
-	}
-	public void setTeam2ClearAttemptsFileName(String team2ClearAttemptsFileName) {
-		configFileNameProps.setProperty("Team2ClearAttempts", team2ClearAttemptsFileName);
-	}
-	public void setTeam1ClearCompletesFileName(String team1ClearCompletesFileName) {
-		configFileNameProps.setProperty("Team1ClearCompletes", team1ClearCompletesFileName);
-	}
-	public void setTeam2ClearCompletesFileName(String team2ClearCompletesFileName) {
-		configFileNameProps.setProperty("Team2ClearCompletes", team2ClearCompletesFileName);
-	}
-	public void setTeam1PassPercentFileName(String team1PassPercentFileName) {
-		configFileNameProps.setProperty("Team1PassPercent", team1PassPercentFileName);
-	}
-	public void setTeam2PassPercentFileName(String team2PassPercentFileName) {
-		configFileNameProps.setProperty("Team2PassPercent", team2PassPercentFileName);
-	}
-	public void setTeam1ShotPercentFileName(String team1ShotPercentFileName) {
-		configFileNameProps.setProperty("Team1ShotPercent", team1ShotPercentFileName);
-	}
-	public void setTeam2ShotPercentFileName(String team2ShotPercentFileName) {
-		configFileNameProps.setProperty("Team2ShotPercent", team2ShotPercentFileName);
-	}
-	public void setTeam1ClearPercentFileName(String team1ClearPercentFileName) {
-		configFileNameProps.setProperty("Team1ClearPercent", team1ClearPercentFileName);
-	}
-	public void setTeam2ClearPercentFileName(String team2ClearPercentFileName) {
-		configFileNameProps.setProperty("Team2ClearPercent", team2ClearPercentFileName);
-	}
-	public void setTeam1TwoBarPassAttemptsFileName(String team1TwoBarPassAttemptsFileName) {
-		configFileNameProps.setProperty("Team1TwoBarPassAttempts", team1TwoBarPassAttemptsFileName);
-	}
-	public void setTeam2TwoBarPassAttemptsFileName(String team2TwoBarPassAttemptsFileName) {
-		configFileNameProps.setProperty("Team2TwoBarPassAttempts", team2TwoBarPassAttemptsFileName);
-	}
-	public void setTeam1TwoBarPassCompletesFileName(String team1TwoBarPassCompletesFileName) {
-		configFileNameProps.setProperty("Team1TwoBarPassCompletes", team1TwoBarPassCompletesFileName);
-	}
-	public void setTeam2TwoBarPassCompletesFileName(String team2TwoBarPassCompletesFileName) {
-		configFileNameProps.setProperty("Team2TwoBarPassCompletes", team2TwoBarPassCompletesFileName);
-	}
-	public void setTeam1TwoBarPassPercentFileName(String team1TwoBarPassPercentFileName) {
-		configFileNameProps.setProperty("Team1TwoBarPassPercent", team1TwoBarPassPercentFileName);
-	}
-	public void setTeam2TwoBarPassPercentFileName(String team2TwoBarPassPercentFileName) {
-		configFileNameProps.setProperty("Team2TwoBarPassPercent", team2TwoBarPassPercentFileName);
-	}
-	public void setTeam1ScoringFileName(String team1ScoringFileName) {
-		configFileNameProps.setProperty("Team1Scoring", team1ScoringFileName);
-	}
-	public void setTeam2ScoringFileName(String team2ScoringFileName) {
-		configFileNameProps.setProperty("Team2Scoring", team2ScoringFileName);
-	}
-	public void setTeam1ThreeBarScoringFileName(String team1ThreeBarScoringFileName) {
-		configFileNameProps.setProperty("Team1ThreeBarScoring", team1ThreeBarScoringFileName);
-	}
-	public void setTeam2ThreeBarScoringFileName(String team2ThreeBarScoringFileName) {
-		configFileNameProps.setProperty("Team2ThreeBarScoring", team2ThreeBarScoringFileName);
-	}
-	public void setTeam1FiveBarScoringFileName(String team1FiveBarScoringFileName) {
-		configFileNameProps.setProperty("Team1FiveBarScoring", team1FiveBarScoringFileName);
-	}
-	public void setTeam2FiveBarScoringFileName(String team2FiveBarScoringFileName) {
-		configFileNameProps.setProperty("Team2FiveBarScoring", team2FiveBarScoringFileName);
-	}
-	public void setTeam1TwoBarScoringFileName(String team1TwoBarScoringFileName) {
-		configFileNameProps.setProperty("Team1TwoBarScoring", team1TwoBarScoringFileName);
-	}
-	public void setTeam2TwoBarScoringFileName(String team2TwoBarScoringFileName) {
-		configFileNameProps.setProperty("Team2TwoBarScoring", team2TwoBarScoringFileName);
-	}
-	public void setTeam1ShotsOnGoalFileName(String team1ShotsOnGoalFileName) {
-		configFileNameProps.setProperty("Team1ShotsOnGoal", team1ShotsOnGoalFileName);
-	}
-	public void setTeam2ShotsOnGoalFileName(String team2ShotsOnGoalFileName) {
-		configFileNameProps.setProperty("Team2ShotsOnGoal", team2ShotsOnGoalFileName);
-	}
-	public void setTableFileName(String tableFileName) {
-		configFileNameProps.setProperty("Table", tableFileName);
-	}
-	public void setTeam1NameFileName(String team1NameFileName) {
-		configFileNameProps.setProperty("Team1Name", team1NameFileName);
-	}
-	public void setTeam1ForwardFileName(String team1ForwardFileName) {
-		configFileNameProps.setProperty("Team1Forward", team1ForwardFileName);
-	}
-	public void setTeam1GoalieFileName(String team1GoalieFileName) {
-		configFileNameProps.setProperty("Team1Goalie", team1GoalieFileName);
-	}
-	public void setTournamentFileName(String tournamentFileName) {
-		configFileNameProps.setProperty("Tournament", tournamentFileName);
-	}
-	public void setTeam2NameFileName(String team2NameFileName) {
-		configFileNameProps.setProperty("Team2Name", team2NameFileName);
-	}
-	public void setTeam2ForwardFileName(String team2ForwardFileName) {
-		configFileNameProps.setProperty("Team2Forward", team2ForwardFileName);
-	}
-	public void setTeam2GoalieFileName(String team2GoalieFileName) {
-		configFileNameProps.setProperty("Team2Goalie", team2GoalieFileName);
-	}
-	public void setEventFileName(String eventFileName) {
-		configFileNameProps.setProperty("Event", eventFileName);
-	}
-	public void setTableNameFileName(String tableNameFileName) {
-		configFileNameProps.setProperty("TableName", tableNameFileName);
-	}
-	public void setGameCount1FileName(String gameCount1FileName) {
-		configFileNameProps.setProperty("GameCount1", gameCount1FileName);
-	}
-	public void setTimeRemainingFileName(String timeRemainingFileName) {
-		configFileNameProps.setProperty("TimeRemaining", timeRemainingFileName);
-	}
-	public void setGameCount2FileName(String gameCount2FileName) {
-		configFileNameProps.setProperty("GameCount2", gameCount2FileName);
-	}
-	public void setTimerInUseFileName(String timerInUseFileName) {
-		configFileNameProps.setProperty("TimerInUse", timerInUseFileName);
-	}
-	public void setScore1FileName(String score1FileName) {
-		configFileNameProps.setProperty("Score1", score1FileName);
-	}
-	public void setMatchWinnerFileName(String matchWinnerFileName) {
-		configFileNameProps.setProperty("MatchWinner", matchWinnerFileName);
-	}
-	public void setMeatballFileName(String meatballFileName) {
-		configFileNameProps.setProperty("Meatball", meatballFileName);
-	}
-	public void setScore2FileName(String score2FileName) {
-		configFileNameProps.setProperty("Score2", score2FileName);
-	}
-	public void setTimeOut1FileName(String timeOut1FileName) {
-		configFileNameProps.setProperty("TimeOut1", timeOut1FileName);
-	}
-	public void setTimeOut2FileName(String timeOut2FileName) {
-		configFileNameProps.setProperty("TimeOut2", timeOut2FileName);
-	}
-	public void setReset1FileName(String reset1FileName) {
-		configFileNameProps.setProperty("Reset1", reset1FileName);
-	}
-	public void setReset2FileName(String reset2FileName) {
-		configFileNameProps.setProperty("Reset2", reset2FileName);
-	}
-	public void setWarn1FileName(String warn1FileName) {
-		configFileNameProps.setProperty("Warn1", warn1FileName);
-	}
-	public void setWarn2FileName(String warn2FileName) {
-		configFileNameProps.setProperty("Warn2", warn2FileName);
-	}
-	public void setLastScoredFileName(String lastScoredFileName) {
-		configFileNameProps.setProperty("LastScored", lastScoredFileName);
-	}
-	public void setGameTimeFileName(String gameTimeFileName) {
-		configFileNameProps.setProperty("GameTime", gameTimeFileName);
-	}
-	public void setMatchTimeFileName(String matchTimeFileName) {
-		configFileNameProps.setProperty("MatchTime", matchTimeFileName);
-	}
-	public void setStuffs1FileName(String stuffs1FileName) {
-		configFileNameProps.setProperty("Stuffs1", stuffs1FileName);
-	}
-	public void setStuffs2FileName(String stuffs2FileName) {
-		configFileNameProps.setProperty("Stuffs2", stuffs2FileName);
-	}
-	public void setBreaks1FileName(String breaks1FileName) {
-		configFileNameProps.setProperty("Breaks1", breaks1FileName);
-	}
-	public void setBreaks2FileName(String breaks2FileName) {
-		configFileNameProps.setProperty("Breaks2", breaks2FileName);
-	}
-	public void setAces1FileName(String aces1FileName) {
-		configFileNameProps.setProperty("Aces1", aces1FileName);
-	}
-	public void setAces2FileName(String aces2FileName) {
-		configFileNameProps.setProperty("Aces2", aces2FileName);
-	}
-	public void setSide1ColorFileName(String side1ColorFileName) {
-		configFileNameProps.setProperty("Side1Color", side1ColorFileName);
-	}
-	public void setSide2ColorFileName(String side2ColorFileName) {
-		configFileNameProps.setProperty("Side2Color", side2ColorFileName);
-	}
 	//PartnerProgram
 	public void setPartnerProgramPath(String path) {
 		configPartnerProgramProps.setProperty("PartnerProgramPath", path);
@@ -1796,76 +1302,6 @@ public class Settings {
 	public String getDefaultTeam2TwoBarScoringSource() {return defaultSourceProps.getProperty("Team2TwoBarScoring");}	
 	public String getDefaultTeam1ShotsOnGoalSource() {return defaultSourceProps.getProperty("Team1ShotsOnGoal");}
 	public String getDefaultTeam2ShotsOnGoalSource() {return defaultSourceProps.getProperty("Team2ShotsOnGoal");}
-	//FileNames
-	public String getDefaultTableFileName() {return defaultFileNameProps.getProperty("Table");}
-	public String getDefaultTeam1NameFileName() {return defaultFileNameProps.getProperty("Team1Name");}
-	public String getDefaultTeam1ForwardFileName() {return defaultFileNameProps.getProperty("Team1Forward");}
-	public String getDefaultTeam1GoalieFileName() {return defaultFileNameProps.getProperty("Team1Goalie");}
-	public String getDefaultTournamentFileName() {return defaultFileNameProps.getProperty("Tournament");}
-	public String getDefaultTeam2NameFileName() {return defaultFileNameProps.getProperty("Team2Name");}
-	public String getDefaultTeam2ForwardFileName() {return defaultFileNameProps.getProperty("Team2Forward");}
-	public String getDefaultTeam2GoalieFileName() {return defaultFileNameProps.getProperty("Team2Goalie");}
-	public String getDefaultEventFileName() {return defaultFileNameProps.getProperty("Event");}
-	public String getDefaultTableNameFileName() {return defaultFileNameProps.getProperty("TableName");}
-	public String getDefaultGameCount1FileName() {return defaultFileNameProps.getProperty("GameCount1");}
-	public String getDefaultTimeRemainingFileName() {return defaultFileNameProps.getProperty("TimeRemaining");}
-	public String getDefaultGameCount2FileName() {return defaultFileNameProps.getProperty("GameCount2");}
-	public String getDefaultTimerInUseFileName() {return defaultFileNameProps.getProperty("TimerInUse");}
-	public String getDefaultScore1FileName() {return defaultFileNameProps.getProperty("Score1");}
-	public String getDefaultMatchWinnerFileName() {return defaultFileNameProps.getProperty("MatchWinner");}
-	public String getDefaultMeatballFileName() {return defaultFileNameProps.getProperty("Meatball");}
-	public String getDefaultScore2FileName() {return defaultFileNameProps.getProperty("Score2");}
-	public String getDefaultTimeOut1FileName() {return defaultFileNameProps.getProperty("TimeOut1");}
-	public String getDefaultTimeOut2FileName() {return defaultFileNameProps.getProperty("TimeOut2");}
-	public String getDefaultReset1FileName() {return defaultFileNameProps.getProperty("Reset1");}
-	public String getDefaultReset2FileName() {return defaultFileNameProps.getProperty("Reset2");}
-	public String getDefaultWarn1FileName() {return defaultFileNameProps.getProperty("Warn1");}
-	public String getDefaultWarn2FileName() {return defaultFileNameProps.getProperty("Warn2");}
-	public String getDefaultLastScoredFileName() {return defaultFileNameProps.getProperty("LastScored");}
-	public String getDefaultGameTimeFileName() {return defaultFileNameProps.getProperty("GameTime");}
-	public String getDefaultMatchTimeFileName() {return defaultFileNameProps.getProperty("MatchTime");}
-	public String getDefaultStuffs1FileName() {return defaultFileNameProps.getProperty("Stuffs1");}
-	public String getDefaultStuffs2FileName() {return defaultFileNameProps.getProperty("Stuffs2");}
-	public String getDefaultBreaks1FileName() {return defaultFileNameProps.getProperty("Breaks1");}
-	public String getDefaultBreaks2FileName() {return defaultFileNameProps.getProperty("Breaks2");}
-	public String getDefaultAces1FileName() {return defaultFileNameProps.getProperty("Aces1");}
-	public String getDefaultAces2FileName() {return defaultFileNameProps.getProperty("Aces2");}
-	public String getDefaultTeam1PassAttemptsFileName() {return defaultFileNameProps.getProperty("Team1PassAttempts");}
-	public String getDefaultTeam1PassCompletesFileName() {return defaultFileNameProps.getProperty("Team1PassCompletes");}
-	public String getDefaultTeam2PassAttemptsFileName() {return defaultFileNameProps.getProperty("Team2PassAttempts");}
-	public String getDefaultTeam2PassCompletesFileName() {return defaultFileNameProps.getProperty("Team2PassCompletes");}
-	public String getDefaultTeam1ShotAttemptsFileName() {return defaultFileNameProps.getProperty("Team1ShotAttempts");}
-	public String getDefaultTeam1ShotCompletesFileName() {return defaultFileNameProps.getProperty("Team1ShotCompletes");}
-	public String getDefaultTeam2ShotAttemptsFileName() {return defaultFileNameProps.getProperty("Team2ShotAttempts");}
-	public String getDefaultTeam2ShotCompletesFileName() {return defaultFileNameProps.getProperty("Team2ShotCompletes");}
-	public String getDefaultTeam1ClearAttemptsFileName() {return defaultFileNameProps.getProperty("Team1ClearAttempts");}
-	public String getDefaultTeam1ClearCompletesFileName() {return defaultFileNameProps.getProperty("Team1ClearCompletes");}
-	public String getDefaultTeam2ClearAttemptsFileName() {return defaultFileNameProps.getProperty("Team2ClearAttempts");}
-	public String getDefaultTeam2ClearCompletesFileName() {return defaultFileNameProps.getProperty("Team2ClearCompletes");}
-	public String getDefaultSide1ColorFileName() {return defaultFileNameProps.getProperty("Side1Color");}
-	public String getDefaultSide2ColorFileName() {return defaultFileNameProps.getProperty("Side2Color");}
-	public String getDefaultTeam1PassPercentFileName() {return defaultFileNameProps.getProperty("Team1PassPercent");}
-	public String getDefaultTeam2PassPercentFileName() {return defaultFileNameProps.getProperty("Team2PassPercent");}
-	public String getDefaultTeam1ShotPercentFileName() {return defaultFileNameProps.getProperty("Team1ShotPercent");}
-	public String getDefaultTeam2ShotPercentFileName() {return defaultFileNameProps.getProperty("Team2ShotPercent");}
-	public String getDefaultTeam1ClearPercentFileName() {return defaultFileNameProps.getProperty("Team1ClearPercent");}
-	public String getDefaultTeam2ClearPercentFileName() {return defaultFileNameProps.getProperty("Team2ClearPercent");}
-	public String getDefaultTeam1TwoBarPassAttemptsFileName() {return defaultFileNameProps.getProperty("Team1TwoBarPassAttempts");}
-	public String getDefaultTeam1TwoBarPassCompletesFileName() {return defaultFileNameProps.getProperty("Team1TwoBarPassCompletes");}
-	public String getDefaultTeam2TwoBarPassAttemptsFileName() {return defaultFileNameProps.getProperty("Team2TwoBarPassAttempts");}
-	public String getDefaultTeam2TwoBarPassCompletesFileName() {return defaultFileNameProps.getProperty("Team2TwoBarPassCompletes");}
-	public String getDefaultTeam1TwoBarPassPercentFileName() {return defaultFileNameProps.getProperty("Team1TwoBarPassPercent");}
-	public String getDefaultTeam2TwoBarPassPercentFileName() {return defaultFileNameProps.getProperty("Team2TwoBarPassPercent");}
-	public String getDefaultTeam1ScoringFileName() {return defaultFileNameProps.getProperty("Team1Scoring");}
-	public String getDefaultTeam2ScoringFileName() {return defaultFileNameProps.getProperty("Team2Scoring");}
-	public String getDefaultTeam1ThreeBarScoringFileName() {return defaultFileNameProps.getProperty("Team1ThreeBarScoring");}
-	public String getDefaultTeam2ThreeBarScoringFileName() {return defaultFileNameProps.getProperty("Team2ThreeBarScoring");}
-	public String getDefaultTeam1FiveBarScoringFileName() {return defaultFileNameProps.getProperty("Team1FiveBarScoring");}
-	public String getDefaultTeam2FiveBarScoringFileName() {return defaultFileNameProps.getProperty("Team2FiveBarScoring");}
-	public String getDefaultTeam1TwoBarScoringFileName() {return defaultFileNameProps.getProperty("Team1TwoBarScoring");}	
-	public String getDefaultTeam2TwoBarScoringFileName() {return defaultFileNameProps.getProperty("Team2TwoBarScoring");}	
-	public String getDefaultTeam1ShotsOnGoalFileName() {return defaultFileNameProps.getProperty("Team1ShotsOnGoal");}
-	public String getDefaultTeam2ShotsOnGoalFileName() {return defaultFileNameProps.getProperty("Team2ShotsOnGoal");}
 	//PartnerProgram
 	public String getDefaultPartnerProgramPath() {return defaultPartnerProgramProps.getProperty("PartnerProgramPath");}
 	public String getDefaultPlayer1FileName() {return defaultPartnerProgramProps.getProperty("Player1FileName");}
@@ -1969,15 +1405,6 @@ public class Settings {
 			saveSourceConfig();
 		}
 	}
-	public void loadFromFileNameConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(configFileNameFileName))) {
-			configFileNameProps.load(inputStream);
-		} catch (NoSuchFileException e) {
-			Files.createFile(Paths.get(configFileNameFileName));
-			configFileNameProps = defaultFileNameProps;
-			saveFileNameConfig();
-		}
-	}
 	public void loadFromPartnerProgramConfig() throws IOException {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configPartnerProgramFileName))) {
 			configPartnerProgramProps.load(inputStream);
@@ -2030,12 +1457,6 @@ public class Settings {
 		//Source
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configSourceFileName))) {
 			configSourceProps.store(outputStream, "FoosOBSPlus Source Settings");
-		}
-	}
-	public void saveFileNameConfig() throws IOException {
-		//FileNames
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configFileNameFileName))) {
-			configFileNameProps.store(outputStream, "FoosOBSPlus File Name Settings");
 		}
 	}
 	public void savePartnerProgramConfig() throws IOException {

@@ -71,7 +71,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private ParametersFrame parametersFrame;
 	private HotKeysFrame hotKeysFrame;
 	private SourcesFrame sourcesFrame;
-	private FileNamesFrame fileNamesFrame;
 	private PartnerProgramFrame partnerProgramFrame;
 	private OBSConnectFrame obsConnectFrame;
 	private AutoScoreSettingsFrame autoScoreSettingsFrame;
@@ -103,7 +102,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	
 	public MainFrame(Settings settings, TablePanel tablePanel, TimerPanel timerPanel, OBSPanel obsPanel, AutoScoreMainPanel autoScoreMainPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
 			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,
-			SourcesFrame sourcesFrame, FileNamesFrame fileNamesFrame, PartnerProgramFrame partnerProgramFrame, OBSConnectFrame obsConnectFrame, AutoScoreSettingsFrame autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame, Main main) {
+			SourcesFrame sourcesFrame, PartnerProgramFrame partnerProgramFrame, OBSConnectFrame obsConnectFrame, AutoScoreSettingsFrame autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame, Main main) {
 
 		super(programName + ": Foosball"); //$NON-NLS-1$
 
@@ -121,7 +120,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 		this.parametersFrame 		= parametersFrame;
 		this.hotKeysFrame 			= hotKeysFrame;
 		this.sourcesFrame			= sourcesFrame;
-		this.fileNamesFrame 		= fileNamesFrame;
 		this.partnerProgramFrame    = partnerProgramFrame;
 		this.obsConnectFrame 		= obsConnectFrame;
 		this.autoScoreSettingsFrame = autoScoreSettingsFrame;
@@ -172,14 +170,12 @@ public final class MainFrame extends JFrame implements WindowListener {
 		JMenuItem settingsParamItem 	= new JMenuItem(Messages.getString("MainFrame.Parameters")); //$NON-NLS-1$
 		JMenuItem settingsHotKeyItem 	= new JMenuItem(Messages.getString("MainFrame.HotKeys")); //$NON-NLS-1$
 		JMenuItem settingsSourceItem	= new JMenuItem(Messages.getString("MainFrame.Sources")); //$NON-NLS-1$
-		JMenuItem settingsFileItem 		= new JMenuItem(Messages.getString("MainFrame.FileNames")); //$NON-NLS-1$
 		JMenuItem settingsPartnerProgramItem = new JMenuItem(Messages.getString("MainFrame.PartnerProgram")); //$NON-NLS-1$
 		JMenuItem settingsStatItem		= new JMenuItem(Messages.getString("MainFrame.Statistics")); //$NON-NLS-1$
 		
 		settingsMenu.add(settingsParamItem);
 		settingsMenu.add(settingsHotKeyItem);
 		settingsMenu.add(settingsSourceItem);
-		settingsMenu.add(settingsFileItem);
 		settingsMenu.add(settingsPartnerProgramItem);
 		settingsMenu.add(settingsStatItem);
 		editMenu.add(settingsMenu);
@@ -223,7 +219,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewMenu.add(viewLastScored2Window);
 		viewMenu.add(viewGameTableWindow);
 		viewMenu.add(viewAllWindows);
-//		viewMenu.add(showScores);
 
 		JMenu helpMenu 		= new JMenu(Messages.getString("MainFrame.Help")); //$NON-NLS-1$
 		JMenuItem helpPage 	= new JMenuItem(programName + " " + Messages.getString("MainFrame.Help")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -280,12 +275,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 		settingsSourceItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				sourcesFrame.setVisible(true);
-			}
-		});
-		
-		settingsFileItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				fileNamesFrame.setVisible(true);
 			}
 		});
 		
@@ -406,7 +395,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 		}
 	}
 	public void enableConnect(Boolean state) {
-//		obsConnectItem.setEnabled(state);  // Leaving Connect... option always enabled.
 		obsDisconnectItem.setEnabled(!state);
 	}
 	

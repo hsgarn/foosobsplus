@@ -29,7 +29,12 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.midsouthfoosball.foosobsplus.model.OBS;
 import com.midsouthfoosball.foosobsplus.model.Settings;
+
+import io.obswebsocket.community.client.OBSRemoteController;
 
 public class OBSInterface {
 	
@@ -97,5 +102,17 @@ public class OBSInterface {
 			}
 		}
 		return theContents;
+	}
+	
+	public void writeData(String source, String data, String className, Boolean showParsed) {
+		OBS obs = OBS.getInstance();
+		OBSRemoteController obsRemoteController = obs.getController();
+		String jsonString = "{'text':'" + data + "'}";
+		JsonObject jsonObject = (JsonObject) JsonParser.parseString(jsonString);
+
+		obsRemoteController.setInputSettings(source, jsonObject, true, response -> {
+	   			if(showParsed)
+	   				System.out.println(className + " class: Source: [" + source + "] Text: [" + data + "] " + response.getMessageData().getRequestStatus() + "]");
+	   			});
 	}
 }

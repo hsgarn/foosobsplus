@@ -23,7 +23,6 @@ package com.midsouthfoosball.foosobsplus.model;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -263,17 +262,13 @@ public class GameClock implements Serializable {
 		timer.addActionListener(alAction);
 	}
 	private void writeGameTime() {
-		writeData(settings.getGameTimeFileName(), getGameTime());
+		writeData(settings.getGameTimeSource(), getGameTime());
 	}
 	private void writeMatchTime() {
-		writeData(settings.getMatchTimeFileName(), getMatchTime());
+		writeData(settings.getMatchTimeSource(), getMatchTime());
 	}
-    private void writeData(String filename, String data) {
-    	try {
-    		obsInterface.setContents(filename, data);
-    	} catch (IOException e) {
-    		e.printStackTrace();
-    	}
+    private void writeData(String source, String data) {
+		obsInterface.writeData(source, data, "Table", settings.getShowParsed());
     }
     public void restoreState(byte[] serializedObject) {
 		GameClock tempGameClock = null;

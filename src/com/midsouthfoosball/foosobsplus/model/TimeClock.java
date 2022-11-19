@@ -22,7 +22,6 @@ package com.midsouthfoosball.foosobsplus.model;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 import javax.swing.Timer;
 
@@ -77,13 +76,9 @@ public class TimeClock {
 		timer.addActionListener(alAction);
 	}
 	private void writeTimerInUse() {
-		writeData(settings.getTimerInUseFileName(), getTimerInUse());
+		writeData(settings.getTimerInUseSource(), getTimerInUse());
 	}
-    private void writeData(String filename, String data) {
-    	try {
-    		obsInterface.setContents(filename, data);
-    	} catch (IOException e) {
-    		e.printStackTrace();
-    	}
+    private void writeData(String source, String data) {
+		obsInterface.writeData(source, data, "TimeClock", settings.getShowParsed());
     }
 }

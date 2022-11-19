@@ -21,17 +21,12 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.model;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
-
-import io.obswebsocket.community.client.OBSRemoteController;
 
 
 public class Match implements Serializable {
@@ -503,38 +498,22 @@ public class Match implements Serializable {
 		this.startTime = startTime;
 	}
 	private void writeLastScored() {
-		writeData(settings.getLastScoredFileName(), settings.getLastScoredSource(), settings.getLastScoredStrings()[lastScored]);
+		writeData(settings.getLastScoredSource(), settings.getLastScoredStrings()[lastScored]);
 	}
 	private void writeMatchWinner(String theContents) {
-		writeData(settings.getMatchWinnerFileName(), settings.getMatchWinnerSource(), theContents);
+		writeData(settings.getMatchWinnerSource(), theContents);
 	}
 	private void clearMatchWinner() {
-		writeData(settings.getMatchWinnerFileName(), settings.getMatchWinnerSource(), "");
+		writeData(settings.getMatchWinnerSource(), "");
 	}
 	private void writeMeatball() {
-		writeData(settings.getMeatballFileName(), settings.getMeatballSource(), settings.getMeatball());
+		writeData(settings.getMeatballSource(), settings.getMeatball());
 	}
 	private void clearMeatball() {
-		writeData(settings.getMeatballFileName(), settings.getMeatballSource(), "");
+		writeData(settings.getMeatballSource(), "");
 	}
-    private void writeData(String filename, String source, String data) {
-    	OBS obs = OBS.getInstance();
-    	OBSRemoteController obsController = obs.getController();
-    	if (obsController == null || !obs.getConnected()) {
-		   	try {
-		    		obsInterface.setContents(filename, data);
-		    	} catch (IOException e) {
-		    		e.printStackTrace();
-		    	}
-		} else {
-			String jsonString = "{'text':'" + data + "'}";
-			JsonObject jsonObject = (JsonObject) JsonParser.parseString(jsonString);
-			
-			obsController.setInputSettings(source, jsonObject, true, response -> {
-	   			if(settings.getShowParsed())
-	   				System.out.println("Match class: Source: [" + source + "] Text: [" + data + "] " + response + "]");
-	   		});
-		}
+    private void writeData(String source, String data) {
+		obsInterface.writeData(source, data, "Match", settings.getShowParsed());
     }
     public void restoreState(byte[] serializedObject) {
 
