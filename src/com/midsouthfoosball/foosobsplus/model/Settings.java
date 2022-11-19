@@ -44,6 +44,7 @@ public class Settings {
 	private String[] lastScoredStrings 	= new String[3];
 	private String scriptPath           = "C:\\FoosOBSPlusScripts\\";
 	private String baseScriptFileName   = "hotkeybasescript.txt";
+	private final String gameType       = "Foosball";
 
 	// Property Settings
 	private Properties defaultControlProps;
@@ -87,7 +88,6 @@ public class Settings {
 		// sets default properties
 		// Parameter settings
 		defaultControlProps.setProperty("ShowParsed", "true");
-		defaultControlProps.setProperty("GameType", "Foosball");
 		defaultControlProps.setProperty("TableName", "");
 		defaultControlProps.setProperty("datapath", "c:" + separator + "temp");
 		defaultControlProps.setProperty("PointsToWin", "5");
@@ -374,8 +374,8 @@ public class Settings {
 
 	//Getters
 	//Control Parameters
+	public String getGameType() {return gameType;}
 	public boolean getShowParsed() {return Boolean.parseBoolean(configControlProps.getProperty("ShowParsed"));}
-	public String getGameType() {return configControlProps.getProperty("GameType");}
 	public String getTableName() {return configControlProps.getProperty("TableName");}
 	public String getDatapath() {return configControlProps.getProperty("datapath");}
 	public int getPointsToWin() {return Integer.parseInt(configControlProps.getProperty("PointsToWin"));}
@@ -926,9 +926,6 @@ public class Settings {
 	//Control Parameters
 	public void setShowParsed(boolean showParsed) {
 		configControlProps.setProperty("ShowParsed", Boolean.toString(showParsed));
-	}
-	public void setGameType(String gameType) {
-		configControlProps.setProperty("GameType", gameType);
 	}
 	public void setTableName(String tableName) {
 		configControlProps.setProperty("TableName", tableName);
@@ -1690,7 +1687,6 @@ public class Settings {
 //Get Defaults
 	//Control Parameters
 	public Boolean getDefaultShowParsed() {return Boolean.parseBoolean(defaultControlProps.getProperty("ShowParsed"));}
-	public String getDefaultGameType() {return defaultControlProps.getProperty("GameType");}
 	public int getDefaultPointsToWin() {return Integer.parseInt(defaultControlProps.getProperty("PointsToWin"));}
 	public int getDefaultMaxWin() {return Integer.parseInt(defaultControlProps.getProperty("MaxWin"));}
 	public int getDefaultWinBy() {return Integer.parseInt(defaultControlProps.getProperty("WinBy"));}

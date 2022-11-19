@@ -39,7 +39,6 @@ import javax.swing.SwingUtilities;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 import net.miginfocom.swing.MigLayout;
-import javax.swing.JComboBox;
 
 public class ParametersPanel extends JPanel {
 
@@ -74,9 +73,6 @@ public class ParametersPanel extends JPanel {
 	private JButton btnCancel;
 	private JButton btnRestoreDefaults;
 	private final Integer maxGamesToWin = 6;
-	private JLabel lblGameType;
-	private JTextField txtGameType;
-	private JComboBox<Object> comboBoxGameType;
 
 	public ParametersPanel(Settings settings) throws IOException {
 
@@ -296,11 +292,6 @@ public class ParametersPanel extends JPanel {
 		}
 		add(chckbxAutoCapNames, "cell 1 15"); //$NON-NLS-1$
 		
-		String s1[] = {"Foosball", "Billiards"}; //$NON-NLS-1$ //$NON-NLS-2$
-		comboBoxGameType = new JComboBox<Object>(s1);
-		comboBoxGameType.setEditable(true);
-		add(comboBoxGameType, "cell 3 15,growx"); //$NON-NLS-1$
-		
 		JLabel lblWinByFinalOnly = new JLabel(Messages.getString("ParametersPanel.WinByFinalGameOnly", settings.getGameType())); //$NON-NLS-1$
 		add(lblWinByFinalOnly, "cell 0 16,alignx right"); //$NON-NLS-1$
 		
@@ -312,14 +303,6 @@ public class ParametersPanel extends JPanel {
 		}
 		add(chckbxWinByFinalOnly, "cell 1 16"); //$NON-NLS-1$
 		
-		lblGameType = new JLabel(Messages.getString("ParametersPanel.GameType", settings.getGameType())); //$NON-NLS-1$
-		add(lblGameType, "cell 2 16,alignx trailing,aligny baseline"); //$NON-NLS-1$
-		
-		txtGameType = new JTextField();
-		txtGameType.setText(settings.getGameType());
-		add(txtGameType, "cell 3 16,alignx left"); //$NON-NLS-1$
-		txtGameType.setColumns(10);
-
 		JLabel lblShowSkunk = new JLabel(Messages.getString("ParametersPanel.ShowSkunk", settings.getGameType())); //$NON-NLS-1$
 		add(lblShowSkunk, "cell 0 17,alignx right"); //$NON-NLS-1$
 		
@@ -366,7 +349,6 @@ public class ParametersPanel extends JPanel {
 	}
 	
 	private void restoreDefaults(Settings settings) {
-		txtGameType.setText(settings.getDefaultGameType());
 		txtPointsToWin.setText(Integer.toString(settings.getDefaultPointsToWin()));
 		txtShotTime.setText(Integer.toString(settings.getDefaultShotTime()));
 		txtMaxWin.setText(Integer.toString(settings.getDefaultMaxWin()));
@@ -430,10 +412,6 @@ public class ParametersPanel extends JPanel {
 	}
 	
 	public void saveSettings(Settings settings) {
-		if (!comboBoxGameType.getSelectedItem().toString().equals(txtGameType.getText())) {
-			txtGameType.setText(comboBoxGameType.getSelectedItem().toString());
-		}
-		settings.setGameType(txtGameType.getText());
     	if (isValidInteger(txtPointsToWin.getText())) {
 			settings.setPointsToWin(Integer.parseInt(txtPointsToWin.getText()));
     	}

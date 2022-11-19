@@ -68,7 +68,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private StatsEntryPanel statsEntryPanel;
 	private StatsDisplayPanel statsDisplayPanel;
 	private MatchPanel matchPanel;
-	private BallPanel ballPanel;
 	private ParametersFrame parametersFrame;
 	private HotKeysFrame hotKeysFrame;
 	private SourcesFrame sourcesFrame;
@@ -103,10 +102,10 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
 	
 	public MainFrame(Settings settings, TablePanel tablePanel, TimerPanel timerPanel, OBSPanel obsPanel, AutoScoreMainPanel autoScoreMainPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
-			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, BallPanel ballPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,
+			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,
 			SourcesFrame sourcesFrame, FileNamesFrame fileNamesFrame, PartnerProgramFrame partnerProgramFrame, OBSConnectFrame obsConnectFrame, AutoScoreSettingsFrame autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame, Main main) {
 
-		super(programName + ": " + settings.getGameType()); //$NON-NLS-1$
+		super(programName + ": Foosball"); //$NON-NLS-1$
 
 		this.tablePanel 			= tablePanel;
 		this.timerPanel 			= timerPanel;
@@ -119,7 +118,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 		this.resetPanel 			= resetPanel;
 		this.statsDisplayPanel 		= statsDisplayPanel;
 		this.matchPanel 			= matchPanel;
-		this.ballPanel 				= ballPanel;
 		this.parametersFrame 		= parametersFrame;
 		this.hotKeysFrame 			= hotKeysFrame;
 		this.sourcesFrame			= sourcesFrame;
@@ -141,11 +139,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		setLayout(new GridBagLayout());
 		
 		setJMenuBar(createMenuBar());
-		if(settings.getGameType().equals("Foosball")) { //$NON-NLS-1$
-			layoutFoosballComponents();
-		} else {
-			layoutBilliardComponents();
-		}
+		layoutFoosballComponents();
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent arg0) {
 				dispose();
@@ -638,161 +632,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 		resetPanel.setPreferredSize(new Dimension(300,400));
 		add(resetPanel, gc);
 	}
-	private void layoutBilliardComponents() {
-		GridBagConstraints gc = new GridBagConstraints();
-		gc.gridy = -1;
-
-		//////// Table Panel ////////
-		
-		gc.gridy++;
-
-		gc.weightx = .5;
-		gc.weighty = .5;
-		
-		gc.gridx = 0;
-		gc.gridwidth = 1;
-		gc.gridheight = 1;
-		gc.fill = GridBagConstraints.BOTH;
-		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 0);
-		tablePanel.setPreferredSize(new Dimension(400,200));
-		add(tablePanel, gc);
-		
-		//////// Timer Panel ////////
-		
-		gc.weightx = .5;
-		gc.weighty = .5;
-		
-		gc.gridx = 1;
-		gc.gridwidth =1;
-		gc.gridheight = 2;
-		gc.fill = GridBagConstraints.BOTH;
-		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 0);
-		timerPanel.setPreferredSize(new Dimension(250,400));
-		add(timerPanel, gc);
-
-		//////// Stats Entry Panel ////////
-		
-		gc.weightx = .5;
-		gc.weighty = 1;
-		
-		gc.gridx = 2;
-		gc.gridwidth =1;
-		gc.gridheight = 1;
-		gc.fill = GridBagConstraints.BOTH;
-		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 0);
-		add(statsEntryPanel, gc);
-		statsEntryPanel.setPreferredSize(new Dimension(400,350));
-		gc.gridheight = 1;
-		
-		//////// Stats Display Panel ////////
-		
-		gc.weightx = .5;
-		gc.weighty = .5;
-		
-		gc.gridx = 3;
-		gc.gridwidth =1;
-		gc.gridheight = 2;
-		gc.fill = GridBagConstraints.BOTH;
-		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 0);
-		statsDisplayPanel.setPreferredSize(new Dimension(300,400));
-		add(statsDisplayPanel, gc);
-		
-		////////// Match Panel  ///////////
-		
-		gc.gridy++;
-
-		gc.weightx = .5;
-		gc.weighty = .5;
-		
-		gc.gridx = 0;
-		gc.gridwidth =1;
-		gc.gridheight = 1;
-		gc.fill = GridBagConstraints.BOTH;
-		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 0);
-		matchPanel.setPreferredSize(new Dimension(400,250));
-		add(matchPanel, gc);
-
-		//////// Ball Panel ////////
-		
-		gc.weightx = .5;
-		gc.weighty = .1;
-		
-		gc.gridx = 2;
-		gc.gridwidth =1;
-		gc.gridheight = 1;
-		gc.fill = GridBagConstraints.BOTH;
-		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 0);
-		add(ballPanel, gc);
-		ballPanel.setPreferredSize(new Dimension(400,50));
-		gc.gridheight = 1;
-		
-		////////// Team 1 Panel ///////////
-		
-		gc.gridy++;
-
-		gc.weightx = .5;
-		gc.weighty = .5;
-		
-		gc.gridx = 0;
-		gc.gridwidth =1;
-		gc.gridheight = 1;
-		gc.fill = GridBagConstraints.BOTH;
-		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 0);
-		team1Panel.setPreferredSize(new Dimension(400,400));
-		add(team1Panel, gc);
-		
-		////////// Switch Panel ///////////
-
-		gc.weightx = .5;
-		gc.weighty = .5;
-		
-		gc.gridx = 1;
-		gc.gridwidth =1;
-		gc.gridheight = 1;
-		gc.fill = GridBagConstraints.BOTH;
-		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 0);
-		switchPanel.setPreferredSize(new Dimension(250,400));
-		add(switchPanel, gc);
-
-		//////// Team 2 Panel ////////
-
-		gc.weightx = .5;
-		gc.weighty = .5;
-		
-		gc.gridx = 2;
-		gc.gridwidth =1;
-		gc.gridheight = 1;
-		gc.fill = GridBagConstraints.BOTH;
-		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 0);
-		team2Panel.setPreferredSize(new Dimension(400,400));
-		add(team2Panel, gc);
-
-		//////// Reset Panel ////////
-
-		gc.weightx = .5;
-		gc.weighty = .5;
-		
-		gc.gridx = 3;
-		gc.gridwidth =1;
-		gc.gridheight = 1;
-		gc.fill = GridBagConstraints.BOTH;
-		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 0);
-		resetPanel.setPreferredSize(new Dimension(300,400));
-		add(resetPanel, gc);
-	}
-//	public void setBallPanelBackgroundColor(Color color) {
-//		ballPanel.setBackground(color);
-//	}
 	
 	////// Listeners //////
 	

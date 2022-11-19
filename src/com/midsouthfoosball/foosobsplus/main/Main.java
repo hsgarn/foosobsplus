@@ -43,7 +43,6 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
@@ -75,8 +74,6 @@ import com.midsouthfoosball.foosobsplus.commands.PCACommand;
 import com.midsouthfoosball.foosobsplus.commands.PCT1Command;
 import com.midsouthfoosball.foosobsplus.commands.PCT2Command;
 import com.midsouthfoosball.foosobsplus.commands.PEMCommand;
-import com.midsouthfoosball.foosobsplus.commands.PHACommand;
-import com.midsouthfoosball.foosobsplus.commands.PNBCommand;
 import com.midsouthfoosball.foosobsplus.commands.PPMCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRACommand;
 import com.midsouthfoosball.foosobsplus.commands.PRGCommand;
@@ -87,12 +84,10 @@ import com.midsouthfoosball.foosobsplus.commands.PRT1Command;
 import com.midsouthfoosball.foosobsplus.commands.PRT2Command;
 import com.midsouthfoosball.foosobsplus.commands.PRTCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRTOCommand;
-import com.midsouthfoosball.foosobsplus.commands.PSACommand;
 import com.midsouthfoosball.foosobsplus.commands.PSECommand;
 import com.midsouthfoosball.foosobsplus.commands.PSGCCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSGCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSMCommand;
-import com.midsouthfoosball.foosobsplus.commands.PSOCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSRCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSSCCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSSCommand;
@@ -134,7 +129,6 @@ import com.midsouthfoosball.foosobsplus.view.AutoScoreConfigPanel;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreMainPanel;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsFrame;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsPanel;
-import com.midsouthfoosball.foosobsplus.view.BallPanel;
 import com.midsouthfoosball.foosobsplus.view.FileNamesFrame;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowPanel;
@@ -163,7 +157,7 @@ import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
 import io.obswebsocket.community.client.OBSRemoteController;
 import io.obswebsocket.community.client.WebSocketCloseCode;
 import io.obswebsocket.community.client.listener.lifecycle.ReasonThrowable;
-import io.obswebsocket.community.client.message.response.scenes.GetCurrentProgramSceneResponse;
+//import io.obswebsocket.community.client.message.response.scenes.GetCurrentProgramSceneResponse;
 
 public class Main {
 	{
@@ -185,8 +179,6 @@ public class Main {
 	private Settings			settings			= new Settings();
 	public  OBSInterface 		obsInterface 		= new OBSInterface(settings);
 	public  String				matchId				= "";
-	private HashMap<String, Boolean> allBallsMap 	= new HashMap<>();
-	private HashMap<String, Boolean> nineBallsMap 	= new HashMap<>();
 	private DateTimeFormatter dtf 					= DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 	private boolean autoScoreConnected				= false;
 	private StreamIndexer streamIndexer             = new StreamIndexer(settings.getDatapath());
@@ -234,7 +226,6 @@ public class Main {
 	private OBSPanel            obsPanel            = new OBSPanel(settings);
 	private AutoScoreMainPanel	autoScoreMainPanel  = new AutoScoreMainPanel(settings);
 	private MatchPanel			matchPanel			= new MatchPanel(settings);
-	private BallPanel			ballPanel			= new BallPanel();
 	private TeamPanel 			teamPanel1 			= new TeamPanel(1, settings.getSide1Color(), settings);
 	private TeamPanel 			teamPanel2 			= new TeamPanel(2, settings.getSide2Color(), settings);
 	private StatsEntryPanel 	statsEntryPanel 	= new StatsEntryPanel(settings);
@@ -309,8 +300,6 @@ public class Main {
 			connectToOBS();
 		}
 
-		loadBallMaps();
-		
 		loadListeners();
 
 		loadCommands();
@@ -476,8 +465,8 @@ public class Main {
 	}
 	public void loadWindowsAndControllers() {
 		mainFrame = new MainFrame(settings, tablePanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, statsEntryPanel, 
-				switchPanel, resetPanel, statsDisplayPanel, matchPanel, ballPanel, 
-				parametersFrame, hotKeysFrame, sourcesFrame, fileNamesFrame, partnerProgramFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, this);
+				switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, sourcesFrame, fileNamesFrame, 
+				partnerProgramFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, this);
 
 		////// Set up independent Windows \\\\\\
 		
@@ -497,27 +486,6 @@ public class Main {
 		statsController = new StatsController(stats, statsDisplayPanel, teamController);
 	}
 	public void loadListeners() {
-		ballPanel.addBtnCueBallListener(new BtnCueBallListener());
-		ballPanel.addBtnOneBallListener(new BtnOneBallListener());
-		ballPanel.addBtnTwoBallListener(new BtnTwoBallListener());
-		ballPanel.addBtnThreeBallListener(new BtnThreeBallListener());
-		ballPanel.addBtnFourBallListener(new BtnFourBallListener());
-		ballPanel.addBtnFiveBallListener(new BtnFiveBallListener());
-		ballPanel.addBtnSixBallListener(new BtnSixBallListener());
-		ballPanel.addBtnSevenBallListener(new BtnSevenBallListener());
-		ballPanel.addBtnEightBallListener(new BtnEightBallListener());
-		ballPanel.addBtnNineBallListener(new BtnNineBallListener());
-		ballPanel.addBtnTenBallListener(new BtnTenBallListener());
-		ballPanel.addBtnElevenBallListener(new BtnElevenBallListener());
-		ballPanel.addBtnTwelveBallListener(new BtnTwelveBallListener());
-		ballPanel.addBtnThirteenBallListener(new BtnThirteenBallListener());
-		ballPanel.addBtnFourteenBallListener(new BtnFourteenBallListener());
-		ballPanel.addBtnFifteenBallListener(new BtnFifteenBallListener());
-		ballPanel.addBtnSyncOBSListener(new BtnSyncOBSListener());
-		ballPanel.addBtnResetNineBallListener(new BtnResetNineBallListener());
-		ballPanel.addBtnShowAllBallsListener(new BtnShowAllBallsListener());
-		ballPanel.addBtnHideAllBallsListener(new BtnHideAllBallsListener());
-		
 		hotKeysPanel.addSaveListener(new HotKeysSaveListener());
 		autoScoreSettingsPanel.addSaveListener(new AutoScoreSettingsSaveListener());
 		autoScoreSettingsPanel.addConnectListener(new AutoScoreSettingsConnectListener());
@@ -596,41 +564,6 @@ public class Main {
 		resetPanel.addResetResetWarnsListener(new ResetResetWarnsListener());
 		resetPanel.addResetAllListener(new ResetAllListener());
 		mainFrame.addOBSDisconnectItemListener(new OBSDisconnectItemListener());
-	}
-	public void loadBallMaps() {
-		allBallsMap.put("Cue", true);
-		allBallsMap.put("One", true);
-		allBallsMap.put("Two", true);
-		allBallsMap.put("Three", true);
-		allBallsMap.put("Four", true);
-		allBallsMap.put("Five", true);
-		allBallsMap.put("Six", true);
-		allBallsMap.put("Seven", true);
-		allBallsMap.put("Eight", true);
-		allBallsMap.put("Nine", true);
-		allBallsMap.put("Ten", true);
-		allBallsMap.put("Eleven", true);
-		allBallsMap.put("Twelve", true);
-		allBallsMap.put("Thirteen", true);
-		allBallsMap.put("Fourteen", true);
-		allBallsMap.put("Fifteen", true);
-		
-		nineBallsMap.put("Cue", true);
-		nineBallsMap.put("One", true);
-		nineBallsMap.put("Two", true);
-		nineBallsMap.put("Three", true);
-		nineBallsMap.put("Four", true);
-		nineBallsMap.put("Five", true);
-		nineBallsMap.put("Six", true);
-		nineBallsMap.put("Seven", true);
-		nineBallsMap.put("Eight", true);
-		nineBallsMap.put("Nine", true);
-		nineBallsMap.put("Ten", false);
-		nineBallsMap.put("Eleven", false);
-		nineBallsMap.put("Twelve", false);
-		nineBallsMap.put("Thirteen", false);
-		nineBallsMap.put("Fourteen", false);
-		nineBallsMap.put("Fifteen", false);
 	}
 	public void startEvent() {
 		if(gameClock.isStreamTimerRunning()) {
@@ -852,10 +785,6 @@ public class Main {
 		Command prto = new PRTOCommand(statsController, teamController);
 		Command prr = new PRRCommand(statsController, teamController);
 		Command pra = new PRACommand(statsController, teamController);
-		Command pso = new PSOCommand(statsController, this);
-		Command pnb = new PNBCommand(statsController, this);
-		Command psa = new PSACommand(statsController, this);
-		Command pha = new PHACommand(statsController, this);
 		Command codeCommand = new CodeCommand(statsController);
 
 		mySwitch = new CommandSwitch();
@@ -905,10 +834,6 @@ public class Main {
 		mySwitch.register("PRTO", prto);
 		mySwitch.register("PRR", prr);
 		mySwitch.register("PRA", pra);
-		mySwitch.register("PSO", pso);
-		mySwitch.register("PNB", pnb);
-		mySwitch.register("PSA", psa);
-		mySwitch.register("PHA", pha);
 		mySwitch.register("code", codeCommand);
 	}
 	public void showScores(boolean show) {
@@ -1006,52 +931,27 @@ public class Main {
 		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " " + reason.getReason());
 	}
 	 
-	private void obsSetBallVisible(String source, boolean show) {
-		if (obs.getConnected()) {
-			String sceneName;
-			GetCurrentProgramSceneResponse getCurrentProgramSceneResponse = obsRemoteController.getCurrentProgramScene(1000);
-			if (getCurrentProgramSceneResponse != null && getCurrentProgramSceneResponse.isSuccessful()) {
-				sceneName = getCurrentProgramSceneResponse.getCurrentProgramSceneName();
-				obsRemoteController.getSceneItemId(sceneName, source, null,
-						getSceneItemIdResponse -> {
-							if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
-								obsRemoteController.setSceneItemEnabled(sceneName,getSceneItemIdResponse.getSceneItemId(),show,
-										setSceneItemEnabledResponse -> {
-											if(settings.getShowParsed()) {
-												obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled called: " + source + ", " + show);
-											}
-										}
-								);
-							}
-				});
-			}
-		}
-	}
-	public void obsSyncBalls() {
-		if (obs.getConnected()) {
-			allBallsMap.forEach((ball,show) -> {
-				obsSetBallVisible(ball+"Ball", !ballPanel.getBallSelectedState(ball));
-			});
-		}
-	}
-	public void resetNineBall() {
-		nineBallsMap.forEach((ball, show) -> {
-			if (obs.getConnected()) obsSetBallVisible(ball+"Ball", show);
-			ballPanel.setBallSelected(ball, !show);
-		});
-	}
-	public void showAllBalls() {
-		allBallsMap.forEach((ball, show) -> {
-			if (obs.getConnected()) obsSetBallVisible(ball+"Ball", show);
-			ballPanel.setBallSelected(ball, !show);
-		});
-	}
-	public void hideAllBalls() {
-		allBallsMap.forEach((ball, show) -> {
-			if (obs.getConnected()) obsSetBallVisible(ball+"Ball", !show);
-			ballPanel.setBallSelected(ball, show);
-		});
-	}
+//	private void obsSetItemVisible(String source, boolean show) {
+//		if (obs.getConnected()) {
+//			String sceneName;
+//			GetCurrentProgramSceneResponse getCurrentProgramSceneResponse = obsRemoteController.getCurrentProgramScene(1000);
+//			if (getCurrentProgramSceneResponse != null && getCurrentProgramSceneResponse.isSuccessful()) {
+//				sceneName = getCurrentProgramSceneResponse.getCurrentProgramSceneName();
+//				obsRemoteController.getSceneItemId(sceneName, source, null,
+//						getSceneItemIdResponse -> {
+//							if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
+//								obsRemoteController.setSceneItemEnabled(sceneName,getSceneItemIdResponse.getSceneItemId(),show,
+//										setSceneItemEnabledResponse -> {
+//											if(settings.getShowParsed()) {
+//												obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled called: " + source + ", " + show);
+//											}
+//										}
+//								);
+//							}
+//				});
+//			}
+//		}
+//	}
 	private void connectAutoScore() {
 		autoScoreSettingsPanel.addMessage("Trying to connect...");
 		createAutoScoreWorker();
@@ -1071,106 +971,6 @@ public class Main {
 		}
 	}
 	////// Listeners \\\\\\
-	private class BtnCueBallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("CueBall", !ballPanel.getCueBallSelectedState());
-		}
-	}
-	private class BtnOneBallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("OneBall", !ballPanel.getOneBallSelectedState());
-		}
-	}
-	private class BtnTwoBallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("TwoBall", !ballPanel.getTwoBallSelectedState());
-		}
-	}
-	private class BtnThreeBallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("ThreeBall", !ballPanel.getThreeBallSelectedState());
-		}
-	}
-	private class BtnFourBallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("FourBall", !ballPanel.getFourBallSelectedState());
-		}
-	}
-	private class BtnFiveBallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("FiveBall", !ballPanel.getFiveBallSelectedState());
-		}
-	}
-	private class BtnSixBallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("SixBall", !ballPanel.getSixBallSelectedState());
-		}
-	}
-	private class BtnSevenBallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("SevenBall", !ballPanel.getSevenBallSelectedState());
-		}
-	}
-	private class BtnEightBallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("EightBall", !ballPanel.getEightBallSelectedState());
-		}
-	}
-	private class BtnNineBallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("NineBall", !ballPanel.getNineBallSelectedState());
-		}
-	}
-	private class BtnTenBallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("TenBall", !ballPanel.getTenBallSelectedState());
-		}
-	}
-	private class BtnElevenBallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("ElevenBall", !ballPanel.getElevenBallSelectedState());
-		}
-	}
-	private class BtnTwelveBallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("TwelveBall", !ballPanel.getTwelveBallSelectedState());
-		}
-	}
-	private class BtnThirteenBallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("ThirteenBall", !ballPanel.getThirteenBallSelectedState());
-		}
-	}
-	private class BtnFourteenBallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("FourteenBall", !ballPanel.getFourteenBallSelectedState());
-		}
-	}
-	private class BtnFifteenBallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("FifteenBall", !ballPanel.getFifteenBallSelectedState());
-		}
-	}
-	private class BtnSyncOBSListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			obsSyncBalls();
-		}
-	}
-	private class BtnResetNineBallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			resetNineBall();
-		}
-	}
-	private class BtnShowAllBallsListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			showAllBalls();
-		}
-	}
-	private class BtnHideAllBallsListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			hideAllBalls();
-		}
-	}
 	private class CodeListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			Boolean isRedo = false;
@@ -1338,32 +1138,14 @@ public class Main {
 	private class SettingsSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			int oldGamesToWin = settings.getGamesToWin();
-			String oldGameType = settings.getGameType();
 			parametersPanel.saveSettings(settings);
 			int newGamesToWin = settings.getGamesToWin();
-			String newGameType = settings.getGameType();
 			if (oldGamesToWin != newGamesToWin) {
 				matchPanel.resizeGameTable();
 				gameTableWindowPanel.resizeGameTable();
 			}
-			if (!oldGameType.equals(newGameType)) {
-				//mainFrame.setVisible(false);
-				mainFrame.closeWindow();
-				loadWindowsAndControllers();
-				mainFrame.setOBSIconConnected(obs.getConnected());
-				teamPanel1.changeGameType();
-				teamPanel2.changeGameType();
-				switchPanel.changeGameType();
-				resetPanel.changeGameType();
-				matchPanel.changeGameType();
-				tablePanel.changeGameType();
-				timerPanel.changeGameType();
-				statsEntryPanel.changeGameType();
-				statsDisplayPanel.changeGameType();
-			} else {
-				teamPanel1.setTitle();
-				teamPanel2.setTitle();
-			}
+			teamPanel1.setTitle();
+			teamPanel2.setTitle();
 			teamController.displayAll();
 			JComponent comp = (JComponent) e.getSource();
 			Window win = SwingUtilities.getWindowAncestor(comp);
