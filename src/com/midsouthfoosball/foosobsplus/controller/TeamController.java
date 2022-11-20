@@ -26,7 +26,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.AbstractMap.SimpleEntry;
@@ -795,31 +794,27 @@ public class TeamController {
 					}
 				});
 			}
-			try {
-				match.setLastScored(obsInterface.getContents(settings.getLastScoredSource()));
-				teamPanel1.updateTeamName(team1.getTeamName());
-				teamPanel2.updateTeamName(team2.getTeamName());
-				teamPanel1.updateForwardName(team1.getForwardName());
-				teamPanel2.updateForwardName(team2.getForwardName());
-				teamPanel1.updateGoalieName(team1.getGoalieName());
-				teamPanel2.updateGoalieName(team2.getGoalieName());
-				teamPanel1.updateScore(team1.getScore());
-				teamPanel2.updateScore(team2.getScore());
-				teamPanel1.updateGameCount(team1.getGameCount());
-				teamPanel2.updateGameCount(team2.getGameCount());
-				teamPanel1.updateTimeOutCount(team1.getTimeOutCount());
-				teamPanel2.updateTimeOutCount(team2.getTimeOutCount());
-				teamPanel1.updateReset(team1.getReset());
-				teamPanel2.updateReset(team2.getReset());
-				teamPanel1.updateWarn(team1.getWarn());
-				teamPanel2.updateWarn(team2.getWarn());
-				switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
-				match.syncCurrentGameNumber();
-				match.syncGameScores();
-				updateGameTables();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			match.setLastScored(obsInterface.getContents(settings.getLastScoredSource()));
+			teamPanel1.updateTeamName(team1.getTeamName());
+			teamPanel2.updateTeamName(team2.getTeamName());
+			teamPanel1.updateForwardName(team1.getForwardName());
+			teamPanel2.updateForwardName(team2.getForwardName());
+			teamPanel1.updateGoalieName(team1.getGoalieName());
+			teamPanel2.updateGoalieName(team2.getGoalieName());
+			teamPanel1.updateScore(team1.getScore());
+			teamPanel2.updateScore(team2.getScore());
+			teamPanel1.updateGameCount(team1.getGameCount());
+			teamPanel2.updateGameCount(team2.getGameCount());
+			teamPanel1.updateTimeOutCount(team1.getTimeOutCount());
+			teamPanel2.updateTimeOutCount(team2.getTimeOutCount());
+			teamPanel1.updateReset(team1.getReset());
+			teamPanel2.updateReset(team2.getReset());
+			teamPanel1.updateWarn(team1.getWarn());
+			teamPanel2.updateWarn(team2.getWarn());
+			switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
+			match.syncCurrentGameNumber();
+			match.syncGameScores();
+			updateGameTables();
 		}
 	}
 	private void setTextFromSource(String source, String text, Map<String, Entry<Team, String>> methodMap) {

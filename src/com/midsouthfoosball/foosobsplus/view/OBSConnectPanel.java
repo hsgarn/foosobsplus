@@ -32,6 +32,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -196,6 +197,15 @@ public class OBSConnectPanel extends JPanel {
 		mdlMessageHistory.insertElementAt(message, 0);
 //		scrMessageHistory.append(message + "\n");
 	}
+	public boolean isConnectionChanged() {
+		boolean changed = false;
+		if (!txtHost.getText().equals(settings.getOBSHost()) ||
+			!txtPort.getText().equals(settings.getOBSPort())  ||
+			!txtPassword.getText().equals(settings.getOBSPassword())) {
+			changed = true;
+		}
+		return changed;
+	}
 	public void saveSettings() {
 		settings.setOBSHost(txtHost.getText());
 		settings.setOBSPort(txtPort.getText());
@@ -222,10 +232,19 @@ public class OBSConnectPanel extends JPanel {
 		} else {
 			settings.setOBSCloseOnConnect(0);
 		}
+		if (settings.getOBSAutoLogin()==1) {
+			if (settings.getOBSHost().isEmpty() || settings.getOBSPassword().isEmpty() || settings.getOBSPort().isEmpty() || settings.getOBSSavePassword() == 0) {
+				settings.setOBSAutoLogin(0);
+				chckbxAutoLogin.setSelected(false);
+				String msg = Messages.getString("Errors.OBSConnectPanel.AutoLogin");
+				String ttl = Messages.getString("Errors.OBSConnectPanel.AutoLogin.Title");
+				JOptionPane.showMessageDialog(null, msg, ttl,1);
+			}
+		}
 		try {
 			settings.saveOBSConfig();
 		} catch (IOException ex) {
-			System.out.println(Messages.getString("Errors.ErrorSavingOBSPropertiesFile", settings.getGameType()) + ex.getMessage());		 //$NON-NLS-1$
+			JOptionPane.showMessageDialog(null, ex.getMessage(), Messages.getString("Errors.ErrorSavingPropertiesFile"),1);
 		}
 	}
     public class AttributiveCellRenderer extends DefaultListCellRenderer {

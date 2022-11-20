@@ -338,7 +338,7 @@ public class Settings {
 	public String getLogoLinkURI() {return configControlProps.getProperty("LogoLinkURI");}
 	//OBS
 	public String getOBSHost() {return configOBSProps.getProperty("OBSHost");}
-	public String getOBSPort() {return configOBSProps.getProperty("OBSPort");}
+	public String getOBSPort() {return configOBSProps.getProperty("OBSPort").isEmpty()?"0": configOBSProps.getProperty("OBSPort");}
 	public String getOBSPassword() {return configOBSProps.getProperty("OBSPassword");}
 	public String getOBSScene() {return configOBSProps.getProperty("OBSScene");}
 	public int getOBSSavePassword() {return Integer.parseInt(configOBSProps.getProperty("OBSSavePassword"));}

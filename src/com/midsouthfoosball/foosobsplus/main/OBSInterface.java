@@ -20,9 +20,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.main;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -35,13 +33,13 @@ import com.midsouthfoosball.foosobsplus.model.OBS;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 import io.obswebsocket.community.client.OBSRemoteController;
+import io.obswebsocket.community.client.message.response.inputs.GetInputSettingsResponse;
 
 public class OBSInterface {
 	
 	private String txtFilePath="";
 	private String tableName="";
 	private String fileName;
-	private String theFileName;
 	private String separator = FileSystems.getDefault().getSeparator();
 	
 	public OBSInterface(Settings settings) {
@@ -87,19 +85,19 @@ public class OBSInterface {
 		}
 	}
 
-	public String getContents(String whichFile) throws IOException {
-		String theContents = "";
-		if (tableName.isEmpty()) {
-			theFileName = txtFilePath + separator + whichFile;
-		} else {
-			theFileName = txtFilePath + separator + tableName + "_" + whichFile;
-		}
-		if(!Files.exists(Paths.get(theFileName))) {
-			theContents = "";
-		} else {
-			try(BufferedReader br = new BufferedReader(new FileReader(theFileName))) {
-				theContents = br.readLine();
+	public String getContents(String whichSource) {
+		final String theContents;
+		OBS obs = OBS.getInstance();
+		OBSRemoteController obsRemoteController = obs.getController();
+		if (!(obsRemoteController==null) && obs.getConnected()) {
+			GetInputSettingsResponse getInputSettings = obsRemoteController.getInputSettings(whichSource, 500);
+			if (getInputSettings != null && getInputSettings.isSuccessful()) {
+				theContents = getInputSettings.getInputSettings().get("text").getAsString();
+			} else {
+				theContents = "";
 			}
+		} else {
+			theContents = "";
 		}
 		return theContents;
 	}

@@ -508,7 +508,7 @@ public class ParametersPanel extends JPanel {
 		try {
 			settings.saveControlConfig();
 		} catch (IOException ex) {
-			System.out.println(Messages.getString("Errors.ErrorSavingPropertiesFile", settings.getGameType()) + ex.getMessage());		 //$NON-NLS-1$
+			JOptionPane.showMessageDialog(null, ex.getMessage(), Messages.getString("Errors.ErrorSavingPropertiesFile"), 1);//$NON-NLS-1$
 		}
 	}
 

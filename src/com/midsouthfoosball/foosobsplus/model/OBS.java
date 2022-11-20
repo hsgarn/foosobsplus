@@ -36,7 +36,9 @@ public class OBS {
 	private Boolean connected;
 	private String message;
 	private String currentScene;
-	
+	private boolean reconnect = false;
+	private boolean rebuild = false;
+
 	private OBS() {}
 	
 	public static OBS getInstance() {
@@ -107,5 +109,17 @@ public class OBS {
 	}
 	public void setCurrentScene(String currentScene) {
 		this.currentScene = currentScene;
+	}	
+	public boolean getReconnect() {
+		return reconnect;
+	}
+	public void setReconnect(boolean reconnect) {
+		this.reconnect = reconnect;
+	}
+	public boolean isRebuild() {
+		return rebuild;
+	}
+	public void setRebuild(boolean rebuild) {
+		this.rebuild = rebuild;
 	}
 }

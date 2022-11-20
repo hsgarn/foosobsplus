@@ -26,7 +26,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 
 import javax.swing.JTextField;
 
@@ -153,17 +152,16 @@ public class TableController {
 			teamController.writeAll();
 		}
 	}
+	public void fetchAll() {
+		table.setTournamentName(obsInterface.getContents(settings.getTournamentSource()));
+		tablePanel.updateTournamentName(table.getTournamentName());
+		table.setEventName(obsInterface.getContents(settings.getEventSource()));
+		tablePanel.updateEventName(table.getEventName());
+	}
 	public void fetchAll(String tableName) {
-		try {
-			table.setTournamentName(obsInterface.getContents(settings.getTournamentSource()));
-			tablePanel.updateTournamentName(table.getTournamentName());
-			table.setEventName(obsInterface.getContents(settings.getEventSource()));
-			tablePanel.updateEventName(table.getEventName());
-			table.setTableName(tableName);
-			tablePanel.updateTableName(table.getTableName());
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+		table.setTableName(tableName);
+		tablePanel.updateTableName(table.getTableName());
+		fetchAll();
 	}
 	public void writeAll() {
 		table.writeAll();

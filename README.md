@@ -1,5 +1,5 @@
 # FoosOBSPlus
-FoosOBSPlus is a flexible foosball score keeper and statistics program compatible with OBS Studio and also plays well with Elagto's Stream Deck products.
+FoosOBSPlus is a flexible foosball score keeper and statistics program compatible with OBS Studio (Version 28 or higher) using web sockets and also plays well with Elagto's Stream Deck products.
 
 ## Overview
 FoosOBSPlus sends your Foosball game data (Players, scores, game counts, time outs, etc.) to OBS Studio using OBS Studio's web sockets protocol.  Almost every field displayed in FoosOBSPlus can be sent OBS Studio and displayed to your live stream. FoosOBSPlus can also connect to an auto scoring system using a Raspberry Pico W and some lasers (see https://github.com/hsgarn/FoosScore for more information.)
@@ -507,6 +507,10 @@ Click the cancel button to discard any changes made.
 Click the Restore Defaults button to restore the default file names.
 
 ## Revision History
+v1.106 </br>
+Remove more filename support.</br>
+Add error checking for obs connection parameters and auto login on start.</br>
+</br>
 v1.105 11/18/2022</br>
 Remove support for using filenames with OBS</br>
 </br>

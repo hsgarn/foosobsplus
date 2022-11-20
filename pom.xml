@@ -43,4 +43,11 @@
 <version>1.7.30</version>
 </dependency>
 </dependencies>
+  <name>FoosOBSPlus</name>
+  <url>https://github.com/hsgarn/foosobsplus</url>
+  <description>FoosOBSPlus is a flexible foosball score keeper and statistics program compatible with OBS Studio (Version 28 or higher) using web sockets and also plays well with Elagto's Stream Deck products.</description>
+  <organization>
+  	<name>MidSouth Foosball</name>
+  	<url>https://www.facebook.com/midsouthfoosball</url>
+  </organization>
 </project>
