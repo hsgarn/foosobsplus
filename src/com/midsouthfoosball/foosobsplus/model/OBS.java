@@ -32,12 +32,11 @@ public class OBS {
 	private OBSRemoteController controller;
 	private Boolean savePassword;
 	private Boolean autoLogin;
+	private Boolean updateOnConnect;
 	private Boolean closeOnConnect;
 	private Boolean connected;
 	private String message;
 	private String currentScene;
-	private boolean reconnect = false;
-	private boolean rebuild = false;
 
 	private OBS() {}
 	
@@ -86,6 +85,12 @@ public class OBS {
 	public void setAutoLogin(Boolean autoLogin) {
 		this.autoLogin = autoLogin;
 	}
+	public Boolean getUpdateOnConnect() {
+		return updateOnConnect;
+	}
+	public void setUpdateOnConnect(Boolean updateOnConnect) {
+		this.updateOnConnect = updateOnConnect;
+	}
 	public Boolean getCloseOnConnect() {
 		return closeOnConnect;
 	}
@@ -110,16 +115,4 @@ public class OBS {
 	public void setCurrentScene(String currentScene) {
 		this.currentScene = currentScene;
 	}	
-	public boolean getReconnect() {
-		return reconnect;
-	}
-	public void setReconnect(boolean reconnect) {
-		this.reconnect = reconnect;
-	}
-	public boolean isRebuild() {
-		return rebuild;
-	}
-	public void setRebuild(boolean rebuild) {
-		this.rebuild = rebuild;
-	}
 }

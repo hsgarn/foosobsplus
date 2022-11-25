@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -85,14 +85,6 @@ public class StatsEntryPanel extends JPanel {
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
-	}
-	public void changeGameType() {
-		lblCode.setText(buildTitle());
-		lblCodeHistory.setText(Messages.getString("StatsEntryPanel.History", settings.getGameType())); //$NON-NLS-1$
-		btnUndo.setText(Messages.getString("StatsEntryPanel.Undo", settings.getGameType())); //$NON-NLS-1$
-		btnRedo.setText(Messages.getString("StatsEntryPanel.Redo", settings.getGameType())); //$NON-NLS-1$
-		btnClear.setText(Messages.getString("StatsEntryPanel.Clear", settings.getGameType())); //$NON-NLS-1$
-		setTitle();
 	}
 	private void layoutComponents() {
 		setLayout(new GridBagLayout());

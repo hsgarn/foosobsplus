@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -86,21 +86,6 @@ public class TimerPanel extends JPanel {
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
-	}
-	public void changeGameType() {
-		lblTimerInUse.setText(Messages.getString("TimerPanel.TimerReset", settings.getGameType())); //$NON-NLS-1$
-		lblShotTimer.setText(Messages.getString("TimerPanel.ShotTimer", settings.getGameType())); //$NON-NLS-1$
-		lblPassTimer.setText(Messages.getString("TimerPanel.PassTimer", settings.getGameType())); //$NON-NLS-1$
-		lblTimeOutTimer.setText(Messages.getString("TimerPanel.TimeOutTimer", settings.getGameType())); //$NON-NLS-1$
-		lblGameTimer.setText(Messages.getString("TimerPanel.GameTimer", settings.getGameType())); //$NON-NLS-1$
-		lblRecallTimer.setText(Messages.getString("TimerPanel.RecallTimer", settings.getGameType())); //$NON-NLS-1$
-		btnShotTimer.setText(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
-		btnPassTimer.setText(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
-		btnTimeOutTimer.setText(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
-		btnGameTimer.setText(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
-		btnRecallTimer.setText(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
-		btnResetTimer.setText(Messages.getString("TimerPanel.Reset", settings.getGameType())); //$NON-NLS-1$
-		setTitle();
 	}
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());

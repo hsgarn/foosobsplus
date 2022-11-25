@@ -72,16 +72,6 @@ public class ResetPanel extends JPanel {
 
 	}
 	
-	public void changeGameType() {
-		btnResetNames.setText(Messages.getString("ResetPanel.ResetNames", settings.getGameType())); //$NON-NLS-1$
-		btnResetScores.setText(Messages.getString("ResetPanel.ResetScores", settings.getGameType())); //$NON-NLS-1$
-		btnResetGameCounts.setText(Messages.getString("ResetPanel.ResetGameCounts", settings.getGameType())); //$NON-NLS-1$
-		btnResetTimeOuts.setText(Messages.getString("ResetPanel.ResetTimeOuts", settings.getGameType())); //$NON-NLS-1$
-		btnResetResetWarns.setText(Messages.getString("ResetPanel.ResetResetWarns", settings.getGameType())); //$NON-NLS-1$
-		btnResetAll.setText(Messages.getString("ResetPanel.ResetAll", settings.getGameType())); //$NON-NLS-1$
-		setTitle();
-	}
-	
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
 		

@@ -144,9 +144,24 @@ public class TeamController {
 			teamNameChange(txt);
 		}
 	}
+	private static String capitalizeWords(String str) {
+		String words[]=str.split("\\s");
+		String capitalizeWord="";
+		for(String w:words) {
+			String first=w.substring(0,1);
+			String afterfirst=w.substring(1);
+			capitalizeWord+=first.toUpperCase()+afterfirst+" ";
+		}
+		return capitalizeWord.trim();
+	}
 	private void teamNameChange(JTextField txt) {
 		String name = txt.getName();
-		String teamName = txt.getText();
+		String teamName;
+		if(settings.getAutoCapNames()==1) {
+			teamName = capitalizeWords(txt.getText());
+		} else {
+			teamName = txt.getText();
+		}
 		int teamNumber = 2;
 		if(name.equals("Team 1")) {
 			teamNumber = 1;
@@ -184,7 +199,12 @@ public class TeamController {
 	}
 	private void forwardNameChange(JTextField txt) {
 		String name = txt.getName();
-		String forwardName = txt.getText();
+		String forwardName;
+		if(settings.getAutoCapNames()==1) {
+			forwardName = capitalizeWords(txt.getText());
+		} else {
+			forwardName = txt.getText();
+		}
 		int teamNumber = 2;
 		if(name.equals("Team 1")) {
 			teamNumber = 1;
@@ -222,7 +242,12 @@ public class TeamController {
 	}
 	private void goalieNameChange(JTextField txt) {
 		String name = txt.getName();
-		String goalieName = txt.getText();
+		String goalieName;
+		if(settings.getAutoCapNames()==1) {
+			goalieName = capitalizeWords(txt.getText());
+		} else {
+			goalieName = txt.getText();
+		}
 		int teamNumber = 2;
 		if(name.equals("Team 1")) {
 			teamNumber = 1;

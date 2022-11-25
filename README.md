@@ -507,6 +507,10 @@ Click the cancel button to discard any changes made.
 Click the Restore Defaults button to restore the default file names.
 
 ## Revision History
+v1.107 11/25/2022</br>
+Always rebuild OBS Controller prior to connecting</br>
+Add auto capitalize names logic</br>
+</br>
 v1.106 </br>
 Remove more filename support.</br>
 Add error checking for obs connection parameters and auto login on start.</br>

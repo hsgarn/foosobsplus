@@ -165,25 +165,6 @@ public class TeamPanel extends JPanel {
         this.setFocusTraversalPolicy(customTraversalPolicy);
         this.setFocusCycleRoot(true);
 	}
-	public void changeGameType() {
-		lblTeamName.setText(Messages.getString("TeamPanel.TeamName",settings.getGameType())); //$NON-NLS-1$
-		lblForwardName.setText(Messages.getString("TeamPanel.ForwardName",settings.getGameType())); //$NON-NLS-1$
-		lblGoalieName.setText(Messages.getString("TeamPanel.GoalieName",settings.getGameType())); //$NON-NLS-1$
-		btnSwitchPositions.setText(Messages.getString("TeamPanel.SwitchPositions",settings.getGameType())); //$NON-NLS-1$
-		lblScore.setText(Messages.getString("TeamPanel.Score",settings.getGameType())); //$NON-NLS-1$
-		btnScoreDecrease.setText(Messages.getString("TeamPanel.Decrement",settings.getGameType())); //$NON-NLS-1$
-		btnScoreIncrease.setText(Messages.getString("TeamPanel.Increment",settings.getGameType())); //$NON-NLS-1$
-		lblGameCount.setText(Messages.getString("TeamPanel.GameCount",settings.getGameType())); //$NON-NLS-1$
-		btnGameCountDecrease.setText(Messages.getString("TeamPanel.Decrement",settings.getGameType())); //$NON-NLS-1$
-		btnGameCountIncrease.setText(Messages.getString("TeamPanel.Increment",settings.getGameType())); //$NON-NLS-1$
-		lblTimeOutCount.setText(Messages.getString("TeamPanel.TimeOutCount",settings.getGameType())); //$NON-NLS-1$
-		btnTimeOutCountDecrease.setText(Messages.getString("TeamPanel.ReturnTimeOut",settings.getGameType())); //$NON-NLS-1$
-		btnTimeOutCountIncrease.setText(Messages.getString("TeamPanel.UseTimeOut",settings.getGameType())); //$NON-NLS-1$
-		btnReset.setText(Messages.getString("TeamPanel.Reset",settings.getGameType())); //$NON-NLS-1$
-		btnWarn.setText(Messages.getString("TeamPanel.Warn",settings.getGameType())); //$NON-NLS-1$
-		btnClear.setText(Messages.getString("TeamPanel.Clear",settings.getGameType())); //$NON-NLS-1$
-		setTitle();
-	}
 	private void setMnemonics(int teamNbr) {
 		if (teamNbr == 1) {
 			if(settings.getTeam1ClearHotKey().isEmpty()) {

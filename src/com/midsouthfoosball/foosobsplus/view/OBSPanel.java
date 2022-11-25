@@ -74,17 +74,6 @@ public class OBSPanel extends JPanel {
 		
 		layoutComponents();
 	}
-	public void changeGameType() {
-		btnConnect.setText(Messages.getString("OBSPanel.Connect", settings.getGameType())); //$NON-NLS-1$
-		btnDisconnect.setText(Messages.getString("OBSPanel.Disconnect", settings.getGameType())); //$NON-NLS-1$
-		btnPush.setText(Messages.getString("OBSPanel.Push", settings.getGameType())); //$NON-NLS-1$
-		btnPull.setText(Messages.getString("OBSPanel.Pull", settings.getGameType())); //$NON-NLS-1$
-		tglbtnShowScores.setText(Messages.getString("OBSPanel.ShowScores", settings.getGameType())); //$NON-NLS-1$
-		tglbtnShowTimer.setText(Messages.getString("OBSPanel.ShowTimer", settings.getGameType())); //$NON-NLS-1$
-		tglbtnShowSkunk.setText(Messages.getString("OBSPanel.ShowSkunk", settings.getGameType())); //$NON-NLS-1$
-		btnStartStream.setText(Messages.getString("OBSPanel.StartStream", settings.getGameType())); //$NON-NLS-1$
-		setTitle();
-	}
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
 		

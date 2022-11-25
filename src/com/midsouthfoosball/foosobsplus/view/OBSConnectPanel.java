@@ -38,6 +38,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
+import com.midsouthfoosball.foosobsplus.model.OBS;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 import net.miginfocom.swing.MigLayout;
@@ -61,13 +62,16 @@ public class OBSConnectPanel extends JPanel {
 	private JButton btnDisconnect;
 	private JButton btnSave;
 	private Settings settings;
+	private OBS obs;
 	private JList<String> lstMessageHistory;
 	private DefaultListModel<String> mdlMessageHistory;
 	
 	private JScrollPane scrMessageHistory;
 	
-	public OBSConnectPanel(Settings settings) throws IOException {
+	public OBSConnectPanel(Settings settings, OBS obs) throws IOException {
 		this.settings = settings;
+		this.obs = obs;
+		
 		mdlMessageHistory = new DefaultListModel<String>();
 		lstMessageHistory = new JList<String>(mdlMessageHistory);
 		
@@ -206,10 +210,21 @@ public class OBSConnectPanel extends JPanel {
 		}
 		return changed;
 	}
+	public void updateOBS() {
+		obs.setHost(txtHost.getText());
+		obs.setPort(txtPort.getText());
+		obs.setPassword(txtPassword.getText());
+		obs.setSavePassword(chckbxSavePassword.isSelected());
+		obs.setAutoLogin(chckbxAutoLogin.isSelected());
+		obs.setUpdateOnConnect(chckbxUpdateOnConnect.isSelected());
+		obs.setCloseOnConnect(chckbxCloseOnConnect.isSelected());
+	}
 	public void saveSettings() {
+		updateOBS();
 		settings.setOBSHost(txtHost.getText());
 		settings.setOBSPort(txtPort.getText());
 		settings.setOBSScene(txtScene.getText());
+		obs.setScene(txtScene.getText());
 		if (chckbxSavePassword.isSelected()) {
 			settings.setOBSSavePassword(1);
 			settings.setOBSPassword(txtPassword.getText());
@@ -235,6 +250,7 @@ public class OBSConnectPanel extends JPanel {
 		if (settings.getOBSAutoLogin()==1) {
 			if (settings.getOBSHost().isEmpty() || settings.getOBSPassword().isEmpty() || settings.getOBSPort().isEmpty() || settings.getOBSSavePassword() == 0) {
 				settings.setOBSAutoLogin(0);
+				obs.setAutoLogin(false);
 				chckbxAutoLogin.setSelected(false);
 				String msg = Messages.getString("Errors.OBSConnectPanel.AutoLogin");
 				String ttl = Messages.getString("Errors.OBSConnectPanel.AutoLogin.Title");
@@ -287,5 +303,14 @@ public class OBSConnectPanel extends JPanel {
 	}
 	public void addSaveListener(ActionListener listenForBtnSave) {
 		btnSave.addActionListener(listenForBtnSave);
+	}
+	public void addHostListener(ActionListener listenForTxtHost) {
+		txtHost.addActionListener(listenForTxtHost);
+	}
+	public void addPortListener(ActionListener listenForTxtPort) {
+		txtPort.addActionListener(listenForTxtPort);
+	}
+	public void addPasswordListener(ActionListener listenForTxtPassword) {
+		txtPassword.addActionListener(listenForTxtPassword);
 	}
 }

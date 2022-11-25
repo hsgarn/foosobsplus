@@ -66,12 +66,6 @@ public class AutoScoreMainPanel extends JPanel {
 		
 		layoutComponents();
 	}
-	public void changeGameType() {
-		btnConnect.setText(Messages.getString("AutoScoreMainPanel.Connect", settings.getGameType())); //$NON-NLS-1$
-		btnDisconnect.setText(Messages.getString("AutoScoreMainPanel.Disconnect", settings.getGameType())); //$NON-NLS-1$
-		btnSettings.setText(Messages.getString("AutoScoreMainPanel.Settings", settings.getGameType())); //$NON-NLS-1$
-		setTitle();
-	}
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
 		

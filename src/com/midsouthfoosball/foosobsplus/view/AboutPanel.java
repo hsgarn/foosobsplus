@@ -54,7 +54,7 @@ public class AboutPanel extends JPanel {
 		JLabel lblReleaseDate = new JLabel(Messages.getString("AboutPanel.ReleaseDate")); //$NON-NLS-1$
 		add(lblReleaseDate, "cell 0 2,alignx right"); //$NON-NLS-1$
 		
-		JLabel lblReleaseDateValue = new JLabel("11/20/2022");
+		JLabel lblReleaseDateValue = new JLabel("11/25/2022");
 		add(lblReleaseDateValue, "cell 1 2"); //$NON-NLS-1$
 		
 		JLabel lblAuthor = new JLabel(Messages.getString("AboutPanel.Author")); //$NON-NLS-1$

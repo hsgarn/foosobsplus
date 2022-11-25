@@ -82,19 +82,6 @@ public class SwitchPanel extends JPanel {
 		layoutComponents();
 	}
 	
-	public void changeGameType() {
-		btnSwitchSides.setText(Messages.getString("SwitchPanel.SwitchSides", settings.getGameType())); //$NON-NLS-1$
-		btnSwitchTeams.setText(Messages.getString("SwitchPanel.SwitchTeams", settings.getGameType())); //$NON-NLS-1$
-		btnSwitchPlayer1.setText(Messages.getString("SwitchPanel.SwitchPlayer1", settings.getGameType()));
-		btnSwitchPlayer2.setText(Messages.getString("SwitchPanel.SwitchPlayer2", settings.getGameType()));
-		btnSwitchScores.setText(Messages.getString("SwitchPanel.SwitchScores", settings.getGameType())); //$NON-NLS-1$
-		btnSwitchGameCounts.setText(Messages.getString("SwitchPanel.SwitchGameCounts", settings.getGameType())); //$NON-NLS-1$
-		btnSwitchTimeOuts.setText(Messages.getString("SwitchPanel.SwitchTimeOuts", settings.getGameType())); //$NON-NLS-1$
-		btnSwitchResetWarns.setText(Messages.getString("SwitchPanel.SwitchResetWarns", settings.getGameType())); //$NON-NLS-1$
-		btnClearAll.setText(Messages.getString("SwitchPanel.ClearAll", settings.getGameType())); //$NON-NLS-1$
-		lblLastScored.setText(Messages.getString("SwitchPanel.LastScored", settings.getGameType())); //$NON-NLS-1$
-		setTitle();
-	}
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
 		

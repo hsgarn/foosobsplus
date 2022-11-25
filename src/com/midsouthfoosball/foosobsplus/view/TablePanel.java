@@ -80,16 +80,6 @@ public class TablePanel extends JPanel {
 		layoutComponents();
 	}
 	
-	public void changeGameType() {
-		lblTournamentName.setText(Messages.getString("TablePanel.TournamentName", settings.getGameType())); //$NON-NLS-1$
-		lblEventName.setText(Messages.getString("TablePanel.EventName", settings.getGameType())); //$NON-NLS-1$
-		lblTableName.setText(Messages.getString("TablePanel.TableName", settings.getGameType())); //$NON-NLS-1$
-		btnLoad.setText(Messages.getString("TablePanel.Load", settings.getGameType())); //$NON-NLS-1$
-		btnSet.setText(Messages.getString("TablePanel.Set", settings.getGameType())); //$NON-NLS-1$
-		btnClear.setText(Messages.getString("TablePanel.Clear", settings.getGameType())); //$NON-NLS-1$
-		setTitle();
-	}
-
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
 		

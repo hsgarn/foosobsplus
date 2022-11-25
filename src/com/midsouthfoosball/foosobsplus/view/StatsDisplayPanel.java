@@ -168,25 +168,6 @@ public class StatsDisplayPanel extends JPanel {
 		layoutComponents();
 
 	}
-	public void changeGameType() {
-		lblTeamName1.setText(Messages.getString("StatsDisplayPanel.TeamName1", settings.getGameType())); //$NON-NLS-1$
-		lblTeamName2.setText(Messages.getString("StatsDisplayPanel.TeamName2", settings.getGameType())); //$NON-NLS-1$
-		lblPlayerNames1.setText(Messages.getString("StatsDisplayPanel.Team1", settings.getGameType())); //$NON-NLS-1$
-		lblPlayerNames2.setText(Messages.getString("StatsDisplayPanel.Team2", settings.getGameType())); //$NON-NLS-1$
-		lblPassing.setText(Messages.getString("StatsDisplayPanel.Passing", settings.getGameType())); //$NON-NLS-1$
-		lblShooting.setText(Messages.getString("StatsDisplayPanel.Shooting", settings.getGameType())); //$NON-NLS-1$
-		lblClearing.setText(Messages.getString("StatsDisplayPanel.Clearing", settings.getGameType())); //$NON-NLS-1$
-		lblTwoBarPassing.setText(Messages.getString("StatsDisplayPanel.2BarPassing", settings.getGameType())); //$NON-NLS-1$
-		lblShotsOnGoal.setText(Messages.getString("StatsDisplayPanel.ShotsOnGoal", settings.getGameType())); //$NON-NLS-1$
-		lblScoring.setText(Messages.getString("StatsDisplayPanel.Scoring", settings.getGameType())); //$NON-NLS-1$
-		lblThreeBarScoring.setText(Messages.getString("StatsDisplayPanel.3Bar", settings.getGameType())); //$NON-NLS-1$
-		lblFiveBarScoring.setText(Messages.getString("StatsDisplayPanel.5Bar", settings.getGameType())); //$NON-NLS-1$
-		lblTwoBarScoring.setText(Messages.getString("StatsDisplayPanel.2Bar", settings.getGameType())); //$NON-NLS-1$
-		lblBreaks.setText(Messages.getString("StatsDisplayPanel.Breaks", settings.getGameType())); //$NON-NLS-1$
-		lblAces.setText(Messages.getString("StatsDisplayPanel.Aces", settings.getGameType())); //$NON-NLS-1$
-		lblStuffs.setText(Messages.getString("StatsDisplayPanel.Stuffs", settings.getGameType())); //$NON-NLS-1$
-		setTitle();
-	}
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
 		
