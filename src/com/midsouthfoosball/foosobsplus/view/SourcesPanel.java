@@ -729,6 +729,7 @@ public class SourcesPanel extends JPanel {
 				win.dispose();
 			}
 		});
+		add(btnSaveSources, "cell 2 19,alignx center"); //$NON-NLS-1$
 		
 		JLabel lblTeam1SOG = new JLabel(Messages.getString("SourcesPanel.Team1ShotsOnGoal", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam1SOG, "cell 10 16,alignx trailing"); //$NON-NLS-1$
@@ -745,7 +746,6 @@ public class SourcesPanel extends JPanel {
 		txtTeam2ShotsOnGoalSource.setText(settings.getShotsOnGoalSource(2));
 		add(txtTeam2ShotsOnGoalSource, "cell 11 17,alignx left"); //$NON-NLS-1$
 		txtTeam2ShotsOnGoalSource.setColumns(10);
-		add(btnSaveSources, "cell 2 19,alignx center"); //$NON-NLS-1$
 		
 		JLabel lblTeambar_1 = new JLabel(Messages.getString("SourcesPanel.Team25BarScoring", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeambar_1, "cell 10 13,alignx right"); //$NON-NLS-1$

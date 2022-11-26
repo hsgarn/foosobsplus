@@ -49,6 +49,7 @@ public class Settings {
 	// Property Settings
 	private Properties defaultControlProps;
 	private Properties defaultSourceProps;
+	private Properties defaultFilterProps;
 	private Properties defaultPartnerProgramProps;
 	private Properties defaultHotKeyProps;
 	private Properties defaultOBSProps;
@@ -57,6 +58,7 @@ public class Settings {
 	
 	public Properties configControlProps;
 	public Properties configSourceProps;
+	public Properties configFilterProps;
 	public Properties configPartnerProgramProps;
 	public Properties configHotKeyProps;
 	public Properties configOBSProps;
@@ -65,6 +67,7 @@ public class Settings {
 	
 	private String configControlFileName 			= "control.properties";
 	private String configSourceFileName 			= "source.properties";
+	private String configFilterFileName             = "filter.properties";
 	private String configPartnerProgramFileName     = "partnerprogram.properties";
 	private String configHotKeyFileName 			= "hotkey.properties";
 	private String configOBSFileName        		= "obs.properties";
@@ -76,6 +79,7 @@ public class Settings {
 	public Settings() throws IOException {
 		defaultControlProps 			= new Properties();
 		defaultSourceProps 				= new Properties();
+		defaultFilterProps              = new Properties();
 		defaultPartnerProgramProps      = new Properties();
 		defaultHotKeyProps 				= new Properties();
 		defaultOBSProps         		= new Properties();
@@ -197,6 +201,26 @@ public class Settings {
 		defaultSourceProps.setProperty("Team2ShotsOnGoal", "team2shotsongoal");
 		defaultSourceProps.setProperty("Side1Color","side1color");
 		defaultSourceProps.setProperty("Side2Color","side2color");
+		//Filters
+		defaultFilterProps.setProperty("Team1Score", "team1score");
+		defaultFilterProps.setProperty("Team2Score", "team2score");
+		defaultFilterProps.setProperty("Team1WinGame", "team1wingame");
+		defaultFilterProps.setProperty("Team2WinGame", "team2wingame");
+		defaultFilterProps.setProperty("Team1WinMatch", "team1winmatch");
+		defaultFilterProps.setProperty("Team2WinMatch", "team2winmatch");
+		defaultFilterProps.setProperty("Team1TimeOut", "team1timeout");
+		defaultFilterProps.setProperty("Team2TimeOut", "team2timeout");
+		defaultFilterProps.setProperty("Team1Reset", "team1reset");
+		defaultFilterProps.setProperty("Team2Reset", "team2reset");
+		defaultFilterProps.setProperty("Team1Warn", "team1warn");
+		defaultFilterProps.setProperty("Team2Warn", "team2warn");
+		defaultFilterProps.setProperty("Team1SwitchPositions", "team1switchpositions");
+		defaultFilterProps.setProperty("Team2SwitchPositions", "team2switchpositions");
+		defaultFilterProps.setProperty("Team1Skunk", "team1skunk");
+		defaultFilterProps.setProperty("Team2Skunk", "team2skunk");
+		defaultFilterProps.setProperty("StartMatch", "startmatch");
+		defaultFilterProps.setProperty("StartGame", "startgame");
+		defaultFilterProps.setProperty("SwitchSides", "switchsides");
 		//PartnerProgram
 		defaultPartnerProgramProps.setProperty("PartnerProgramPath", "C:\\FoosTourney");
 		defaultPartnerProgramProps.setProperty("Player1FileName", "Player1.txt");
@@ -281,6 +305,7 @@ public class Settings {
 		//Config Properties
 		configControlProps 				= new Properties(defaultControlProps);
 		configSourceProps 				= new Properties(defaultSourceProps);
+		configFilterProps               = new Properties(defaultFilterProps);
 		configPartnerProgramProps       = new Properties(defaultPartnerProgramProps);
 		configHotKeyProps 				= new Properties(defaultHotKeyProps);
 		configOBSProps      			= new Properties(defaultOBSProps);
@@ -290,6 +315,7 @@ public class Settings {
 		loadFromControlConfig();
 		loadFromOBSConfig();
 		loadFromSourceConfig();
+		loadFromFilterConfig();
 		loadFromPartnerProgramConfig();
 		loadFromHotKeyConfig();
 		loadFromAutoScoreSettingsConfig();
@@ -558,7 +584,27 @@ public class Settings {
 	public String getMatchTimeSource() {return configSourceProps.getProperty("MatchTime");}
 	public String getSide1ColorSource() {return configSourceProps.getProperty("Side1Color");}
 	public String getSide2ColorSource() {return configSourceProps.getProperty("Side2Color");}
-	//PartnerProgram
+	//Filters
+	public String getFiltersFilter(String filter) {return configFilterProps.getProperty(filter);}
+	public String getTeam1ScoreFilter() {return configFilterProps.getProperty("Team1Score");}
+	public String getTeam2ScoreFilter() {return configFilterProps.getProperty("Team2Score");}
+	public String getTeam1WinGameFilter() {return configFilterProps.getProperty("Team1WinGame");}
+	public String getTeam2WinGameFilter() {return configFilterProps.getProperty("Team2WinGame");}
+	public String getTeam1WinMatchFilter() {return configFilterProps.getProperty("Team1WinMatch");}
+	public String getTeam2WinMatchFilter() {return configFilterProps.getProperty("Team2WinMatch");}
+	public String getTeam1TimeOutFilter() {return configFilterProps.getProperty("Team1TimeOut");}
+	public String getTeam2TimeOutFilter() {return configFilterProps.getProperty("Team2TimeOut");}
+	public String getTeam1ResetFilter() {return configFilterProps.getProperty("Team1Reset");}
+	public String getTeam2ResetFilter() {return configFilterProps.getProperty("Team2Reset");}
+	public String getTeam1WarnFilter() {return configFilterProps.getProperty("Team1Warn");}
+	public String getTeam2WarnFilter() {return configFilterProps.getProperty("Team2Warn");}
+	public String getTeam1SwitchPositionsFilter() {return configFilterProps.getProperty("Team1SwitchPositions");}
+	public String getTeam2SwitchPositionsFilter() {return configFilterProps.getProperty("Team2SwitchPositions");}
+	public String getTeam1SkunkFilter() {return configFilterProps.getProperty("Team1Skunk");}
+	public String getTeam2SkunkFilter() {return configFilterProps.getProperty("Team2Skunk");}
+	public String getStartMatchFilter() {return configFilterProps.getProperty("StartMatch");}
+	public String getStartGameFilter() {return configFilterProps.getProperty("StartGame");}
+	public String getSwitchSidesFilter() {return configFilterProps.getProperty("SwitchSides");}	//PartnerProgram
 	public String getPartnerProgramPath() {return configPartnerProgramProps.getProperty("PartnerProgramPath");}
 	public String getPlayer1FileName() {return configPartnerProgramProps.getProperty("Player1FileName");}
 	public String getPlayer2FileName() {return configPartnerProgramProps.getProperty("Player2FileName");}
@@ -973,6 +1019,64 @@ public class Settings {
 	public void setSide2ColorSource(String side2ColorSource) {
 		configSourceProps.setProperty("Side2Color", side2ColorSource);
 	}
+	//Filters
+	public void setTeam1ScoreFilter(String team1Score) {
+		configFilterProps.setProperty("Team1Score", team1Score);
+	}
+	public void setTeam2ScoreFilter(String team2Score) {
+		configFilterProps.setProperty("Team2Score", team2Score);
+	}
+	public void setTeam1WinGameFilter(String team1WinGame) {
+		configFilterProps.setProperty("Team1WinGame", team1WinGame);
+	}
+	public void setTeam2WinGameFilter(String team2WinGame) {
+		configFilterProps.setProperty("Team2WinGame", team2WinGame);
+	}
+	public void setTeam1WinMatchFilter(String team1WinMatch) {
+		configFilterProps.setProperty("Team1WinMatch", team1WinMatch);
+	}
+	public void setTeam2WinMatchFilter(String team2WinMatch) {
+		configFilterProps.setProperty("Team2WinMatch", team2WinMatch);
+	}
+	public void setTeam1TimeOutFilter(String team1TimeOut) {
+		configFilterProps.setProperty("Team1TimeOut", team1TimeOut);
+	}
+	public void setTeam2TimeOutFilter(String team2TimeOut) {
+		configFilterProps.setProperty("Team2TimeOut", team2TimeOut);
+	}
+	public void setTeam1ResetFilter(String team1Reset) {
+		configFilterProps.setProperty("Team1Reset", team1Reset);
+	}
+	public void setTeam2ResetFilter(String team2Reset) {
+		configFilterProps.setProperty("Team2Reset", team2Reset);
+	}
+	public void setTeam1WarnFilter(String team1Warn) {
+		configFilterProps.setProperty("Team1Warn", team1Warn);
+	}
+	public void setTeam2WarnFilter(String team2Warn) {
+		configFilterProps.setProperty("Team2Warn", team2Warn);
+	}
+	public void setTeam1SwitchPositionsFilter(String team1SwitchPositions) {
+		configFilterProps.setProperty("Team1SwitchPositions", team1SwitchPositions);
+	}
+	public void setTeam2SwitchPositionsFilter(String team2SwitchPositions) {
+		configFilterProps.setProperty("Team2SwitchPositions", team2SwitchPositions);
+	}
+	public void setTeam1SkunkFilter(String team1Skunk) {
+		configFilterProps.setProperty("Team1Skunk", team1Skunk);
+	}
+	public void setTeam2SkunkFilter(String team2Skunk) {
+		configFilterProps.setProperty("Team2Skunk", team2Skunk);
+	}
+	public void setStartMatchFilter(String startMatch) {
+		configFilterProps.setProperty("StartMatch", startMatch);
+	}
+	public void setStartGameFilter(String startGame) {
+		configFilterProps.setProperty("StartGame", startGame);
+	}
+	public void setSwitchSidesFilter(String switchSides) {
+		configFilterProps.setProperty("SwitchSides", switchSides);
+	}
 	//PartnerProgram
 	public void setPartnerProgramPath(String path) {
 		configPartnerProgramProps.setProperty("PartnerProgramPath", path);
@@ -1302,6 +1406,26 @@ public class Settings {
 	public String getDefaultTeam2TwoBarScoringSource() {return defaultSourceProps.getProperty("Team2TwoBarScoring");}	
 	public String getDefaultTeam1ShotsOnGoalSource() {return defaultSourceProps.getProperty("Team1ShotsOnGoal");}
 	public String getDefaultTeam2ShotsOnGoalSource() {return defaultSourceProps.getProperty("Team2ShotsOnGoal");}
+	//Filters
+	public String getDefaultTeam1ScoreFilter() {return defaultFilterProps.getProperty("Team1Score");}
+	public String getDefaultTeam2ScoreFilter() {return defaultFilterProps.getProperty("Team2Score");}
+	public String getDefaultTeam1WinGameFilter() {return defaultFilterProps.getProperty("Team1WinGame");}
+	public String getDefaultTeam2WinGameFilter() {return defaultFilterProps.getProperty("Team2WinGame");}
+	public String getDefaultTeam1WinMatchFilter() {return defaultFilterProps.getProperty("Team1WinMatch");}
+	public String getDefaultTeam2WinMatchFilter() {return defaultFilterProps.getProperty("Team2WinMatch");}
+	public String getDefaultTeam1TimeOutFilter() {return defaultFilterProps.getProperty("Team1TimeOut");}
+	public String getDefaultTeam2TimeOutFilter() {return defaultFilterProps.getProperty("Team2TimeOut");}
+	public String getDefaultTeam1ResetFilter() {return defaultFilterProps.getProperty("Team1Reset");}
+	public String getDefaultTeam2ResetFilter() {return defaultFilterProps.getProperty("Team2Reset");}
+	public String getDefaultTeam1WarnFilter() {return defaultFilterProps.getProperty("Team1Warn");}
+	public String getDefaultTeam2WarnFilter() {return defaultFilterProps.getProperty("Team2Warn");}
+	public String getDefaultTeam1SwitchPositionsFilter() {return defaultFilterProps.getProperty("Team1SwitchPositions");}
+	public String getDefaultTeam2SwitchPositionsFilter() {return defaultFilterProps.getProperty("Team2SwitchPositions");}
+	public String getDefaultTeam1SkunkFilter() {return defaultFilterProps.getProperty("Team1Skunk");}
+	public String getDefaultTeam2SkunkFilter() {return defaultFilterProps.getProperty("Team2Skunk");}
+	public String getDefaultStartMatchFilter() {return defaultFilterProps.getProperty("StartMatch");}
+	public String getDefaultStartGameFilter() {return defaultFilterProps.getProperty("StartGame");}
+	public String getDefaultSwitchSidesFilter() {return defaultFilterProps.getProperty("SwitchSides");}
 	//PartnerProgram
 	public String getDefaultPartnerProgramPath() {return defaultPartnerProgramProps.getProperty("PartnerProgramPath");}
 	public String getDefaultPlayer1FileName() {return defaultPartnerProgramProps.getProperty("Player1FileName");}
@@ -1405,6 +1529,15 @@ public class Settings {
 			saveSourceConfig();
 		}
 	}
+	public void loadFromFilterConfig() throws IOException {
+		try(InputStream inputStream = Files.newInputStream(Paths.get(configFilterFileName))) {
+			configFilterProps.load(inputStream);
+		} catch (NoSuchFileException e) {
+			Files.createFile(Paths.get(configFilterFileName));
+			configFilterProps = defaultFilterProps;
+			saveFilterConfig();
+		}
+	}
 	public void loadFromPartnerProgramConfig() throws IOException {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configPartnerProgramFileName))) {
 			configPartnerProgramProps.load(inputStream);
@@ -1457,6 +1590,12 @@ public class Settings {
 		//Source
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configSourceFileName))) {
 			configSourceProps.store(outputStream, "FoosOBSPlus Source Settings");
+		}
+	}
+	public void saveFilterConfig() throws IOException {
+		//Filter
+		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configFilterFileName))) {
+			configFilterProps.store(outputStream, "FoosOBSPlus Filter Settings");
 		}
 	}
 	public void savePartnerProgramConfig() throws IOException {

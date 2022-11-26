@@ -36,6 +36,8 @@ public class Team implements Serializable {
 	private int score = 0;
 	private int forwardScore = 0;
 	private int goalieScore = 0;
+	private int forwardGameCount = 0;
+	private int goalieGameCount = 0;
 	private int gameCount = 0;
 	private int timeOutCount;
 	private boolean resetState = false;
@@ -112,6 +114,18 @@ public class Team implements Serializable {
 	public void setGoalieScore(int goalieScore) {
 		this.goalieScore = goalieScore;
 	}
+	public int getForwardGameCount() {
+		return forwardGameCount;
+	}
+	public void setForwardGameCount(int forwardGameCount) {
+		this.forwardGameCount = forwardGameCount;
+	}
+	public int getGoalieGameCount() {
+		return goalieGameCount;
+	}
+	public void setGoalieGameCount(int goalieGameCount) {
+		this.goalieGameCount = goalieGameCount;
+	}
 	public int incrementForwardScore() {
 		forwardScore++;
 		writeForwardScore();
@@ -121,6 +135,16 @@ public class Team implements Serializable {
 		goalieScore++;
 		writeGoalieScore();
 		return goalieScore;
+	}
+	public int incrementForwardGameCount() {
+		forwardGameCount++;
+		writeForwardGameCount();
+		return forwardGameCount;
+	}
+	public int incrementGoalieGameCount() {
+		goalieGameCount++;
+		writeGoalieGameCount();
+		return goalieGameCount;
 	}
 	public int incrementScore() {
 		score++;
@@ -136,6 +160,16 @@ public class Team implements Serializable {
 		if(goalieScore > 0) goalieScore--;
 		writeGoalieScore();
 		return goalieScore;
+	}
+	public int decrementForwardGameCount() {
+		if(forwardGameCount > 0) forwardGameCount--;
+		writeForwardGameCount();
+		return forwardGameCount;
+	}
+	public int decrementGoalieGameCount() {
+		if(goalieGameCount > 0) goalieGameCount--;
+		writeGoalieGameCount();
+		return goalieGameCount;
 	}
 	public int decrementScore() {
 		if(score > 0) score--;
@@ -302,6 +336,8 @@ public class Team implements Serializable {
 		score = 0;
 		forwardScore = 0;
 		goalieScore = 0;
+		forwardGameCount = 0;
+		goalieGameCount = 0;
 		gameCount = 0;
 		passAttempts = 0;
 		passCompletes = 0;
@@ -647,7 +683,7 @@ public class Team implements Serializable {
     private void writeForwardName() {
     	String forwardName;
     	if(settings.getCutThroatMode()==1) {
-    		forwardName = getForwardName() + " " + getForwardScore();
+    		forwardName = getForwardGameCount() + " " + getForwardName() + " " + getForwardScore();
     	} else {
     		forwardName = getForwardName();
     	}
@@ -656,7 +692,7 @@ public class Team implements Serializable {
     private void writeGoalieName() {
     	String goalieName;
     	if(settings.getCutThroatMode()==1) {
-    		goalieName = getGoalieName() + " " + getGoalieScore();
+    		goalieName = getGoalieGameCount() + " " + getGoalieName() + " " + getGoalieScore();
     	} else {
     		goalieName = getGoalieName();
     	}
@@ -757,6 +793,12 @@ public class Team implements Serializable {
     	
     }
     private void writeGoalieScore() {
+    	
+    }
+    private void writeForwardGameCount() {
+    	
+    }
+    private void writeGoalieGameCount() {
     	
     }
 	private void writeData(String source, String data) {

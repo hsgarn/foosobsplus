@@ -507,6 +507,10 @@ Click the cancel button to discard any changes made.
 Click the Restore Defaults button to restore the default file names.
 
 ## Revision History
+v1.108 11/25/2022</br>
+Add ability to set filters for a variety of events (score, game/match win, time out, etc)</br>
+Add game count for cutthroat mode</br>
+</br>
 v1.107 11/25/2022</br>
 Always rebuild OBS Controller prior to connecting</br>
 Add auto capitalize names logic</br>

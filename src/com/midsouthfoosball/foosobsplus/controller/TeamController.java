@@ -145,6 +145,7 @@ public class TeamController {
 		}
 	}
 	private static String capitalizeWords(String str) {
+		if(str.isEmpty()) {return str;}
 		String words[]=str.split("\\s");
 		String capitalizeWord="";
 		for(String w:words) {
@@ -423,10 +424,23 @@ public class TeamController {
 	public void incrementForwardScore(int teamNumber) {
 		if(teamNumber == 1) {
 			team1.incrementForwardScore();
+			if(team1.getForwardScore()>=settings.getPointsToWin()) {
+				team1.setForwardScore(0);
+				team2.setForwardScore(0);
+				team2.setGoalieScore(0);
+				team1.incrementForwardGameCount();
+			}
 		} else {
 			team2.incrementForwardScore();
 		}
 		displayAll();
+	}
+	public void incrementForwardGameCount(int teamNumber) {
+		if(teamNumber == 1) {
+			team1.incrementForwardGameCount();
+		} else {
+			team2.incrementForwardGameCount();
+		}
 	}
 	public void decrementScore(int teamNumber) {
 		match.decrementScore(teamNumber);
@@ -627,6 +641,10 @@ public class TeamController {
 	public void resetGameCounts() {
 		team1.setGameCount(0);
 		team2.setGameCount(0);
+		team1.setForwardGameCount(0);
+		team1.setGoalieGameCount(0);
+		team2.setForwardGameCount(0);
+		team2.setGoalieGameCount(0);
 		teamPanel1.updateGameCount(team1.getGameCount());
 		teamPanel2.updateGameCount(team2.getGameCount());
 		match.resetGameCounts();
@@ -703,10 +721,10 @@ public class TeamController {
 		boolean isReset2 = team2.getReset();
 		boolean isWarn2 = team2.getWarn();
 		if (settings.getCutThroatMode()==1) {
-			forwardName1 = team1.getForwardName() + " " + team1.getForwardScore();
+			forwardName1 = team1.getForwardGameCount() + " " + team1.getForwardName() + " " + team1.getForwardScore();
 			goalieName1 = team1.getGoalieName();
-			forwardName2 = team2.getForwardName() + " " + team2.getForwardScore();
-			goalieName2 = team2.getGoalieName() + " " + team2.getGoalieScore();
+			forwardName2 = team2.getForwardGameCount() + " " + team2.getForwardName() + " " + team2.getForwardScore();
+			goalieName2 = team2.getGoalieGameCount() + " " + team2.getGoalieName() + " " + team2.getGoalieScore();
 
 		} else {
 			forwardName1 = team1.getForwardName();
@@ -730,6 +748,10 @@ public class TeamController {
 		team1.setForwardScore(team2.getForwardScore());
 		team2.setForwardScore(team2.getGoalieScore());
 		team2.setGoalieScore(tmpScore);
+		int tmpGameCount = team1.getForwardGameCount();
+		team1.setForwardGameCount(team2.getForwardGameCount());
+		team2.setForwardGameCount(team2.getGoalieGameCount());
+		team2.setGoalieGameCount(tmpGameCount);
 		displayAll();
 	}
 	public void updateGameTables() {

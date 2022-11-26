@@ -130,6 +130,7 @@ import com.midsouthfoosball.foosobsplus.view.AutoScoreConfigPanel;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreMainPanel;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsFrame;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsPanel;
+import com.midsouthfoosball.foosobsplus.view.FiltersFrame;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowPanel;
 import com.midsouthfoosball.foosobsplus.view.HotKeysFrame;
@@ -240,6 +241,7 @@ public class Main {
 	private HotKeysFrame 		hotKeysFrame 		= new HotKeysFrame(settings);
 	private HotKeysPanel 		hotKeysPanel		= hotKeysFrame.getHotKeysPanel();
 	private SourcesFrame		sourcesFrame		= new SourcesFrame(settings, obsInterface);
+	private FiltersFrame        filtersFrame        = new FiltersFrame(settings, obsInterface);
 	private PartnerProgramFrame partnerProgramFrame = new PartnerProgramFrame(settings);
 	private OBSConnectFrame		obsConnectFrame		= new OBSConnectFrame(settings, obs);
 	private OBSConnectPanel		obsConnectPanel		= obsConnectFrame.getOBSConnectPanel();
@@ -492,13 +494,13 @@ public class Main {
 						}
 				}
 				if (!ignoreSensors && (mostRecentValue > 0)) {
-					checkForSkunk();
+					checkFilters(mostRecentValue);
 				}
 			}
 		};
 	}
-	private void checkForSkunk() {
-		if (settings.getShowSkunk() == 0) return;
+	private void checkFilters(int teamNbr) {
+		String filter = "";
 		int winState = match.getWinState();
 		if (winState == 1) {
 			int gn = match.getCurrentGameNumber();
@@ -506,7 +508,12 @@ public class Main {
 				int a = Integer.parseInt(match.getScoresTeam1()[gn-2]); 
 				int b = Integer.parseInt(match.getScoresTeam2()[gn-2]);
 				if (a == 0 || b == 0) {
-					showSkunk();
+					if(settings.getShowSkunk()==1) {
+						filter = "Team" + teamNbr + "Skunk";
+					}
+				}
+				if (filter.isEmpty()) {
+					filter = "Team" + teamNbr + "WinGame";
 				}
 				if(gameClock.isStreamTimerRunning()) {
 					if(settings.getCutThroatMode()==1) {
@@ -521,7 +528,12 @@ public class Main {
 				int a = team1.getScore();
 				int b = team2.getScore();
 				if (a == 0 || b == 0) {
-					showSkunk();
+					if(settings.getShowSkunk()==1) {
+						filter = "Team" + teamNbr + "Skunk";
+					}
+				}
+				if (filter.isEmpty()) {
+					filter = "Team" + teamNbr + "WinMatch";
 				}
 				if(gameClock.isStreamTimerRunning()) {
 					if(settings.getCutThroatMode()==1) {
@@ -530,16 +542,24 @@ public class Main {
 						streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Match end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + ": " + a + " to " + b + "\r\n");
 					}
 				}
+			} else {
+				filter = "Team" + teamNbr + "Score";
 			}
 		}
+		activateFilter(filter);
+	}
+	private void activateFilter(String filter) {
+		setSourceFilterVisibility(obs.getScene(), settings.getFiltersFilter(filter), true);
 	}
 	private void showSkunk() {
-		setSourceFilterVisibility(obs.getScene(), settings.getOBSSkunkFilter(), true);
+		if (settings.getShowSkunk() != 0) {
+			setSourceFilterVisibility(obs.getScene(), settings.getOBSSkunkFilter(), true);
+		}
 	}
 	public void loadWindowsAndControllers() {
 		mainFrame = new MainFrame(settings, tablePanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, statsEntryPanel, 
-				switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, sourcesFrame, partnerProgramFrame, 
-				obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, this);
+				switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, sourcesFrame, filtersFrame, 
+				partnerProgramFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, this);
 
 		////// Set up independent Windows \\\\\\
 		
@@ -940,6 +960,7 @@ public class Main {
 		}
 	}
 	public void setSourceFilterVisibility(String source, String filter, boolean show) {
+		if(filter == null) return;
 		if (obs.getConnected()) {
 			obs.getController().setSourceFilterEnabled(source, filter, show, response -> {
 				if(response != null && response.isSuccessful()) {
@@ -1174,12 +1195,15 @@ public class Main {
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String name = btn.getName();
+			int teamNbr;
 			if(name.equals("Team 1")) {
+				teamNbr = 1;
 				processCode("XIST1",false);
 			} else {
+				teamNbr = 2;
 				processCode("XIST2",false);
 			}
-			checkForSkunk();
+			checkFilters(teamNbr);
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
@@ -1225,8 +1249,10 @@ public class Main {
 			String name = btn.getName();
 			if(name.equals("Team 1")) {
 				processCode("XUTT1",false);
+				activateFilter("Team1TimeOut");
 			} else {
 				processCode("XUTT2",false);
+				activateFilter("Team2TimeOut");
 			}
 			statsEntryPanel.setFocusOnCode();
 		}
@@ -1249,8 +1275,10 @@ public class Main {
 			String name = btn.getName();
 			if(name.equals("Team 1")) {
 				processCode("XPRT1",false);
+				if (btn.isSelected()) activateFilter("Team1Reset");
 			} else {
 				processCode("XPRT2",false);
+				if (btn.isSelected()) activateFilter("Team2Reset");
 			}
 			statsEntryPanel.setFocusOnCode();
 		}
@@ -1261,8 +1289,10 @@ public class Main {
 			String name = btn.getName();
 			if(name.equals("Team 1")) {
 				processCode("XPWT1",false);
+				if (btn.isSelected()) activateFilter("Team1Warn");
 			} else {
 				processCode("XPWT2",false);
+				if (btn.isSelected()) activateFilter("Team2Warn");
 			}
 			statsEntryPanel.setFocusOnCode();
 		}
@@ -1273,8 +1303,10 @@ public class Main {
 			String name = btn.getName();
 			if(name.equals("Team 1")) {
 				processCode("XXPT1",false);
+				activateFilter("Team1SwitchPositions");
 			} else {
 				processCode("XXPT2",false);
+				activateFilter("Team2SwitchPositions");
 			}
 			statsEntryPanel.setFocusOnCode();
 		}
@@ -1282,6 +1314,7 @@ public class Main {
 	private class SwitchSidesListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSS",false);
+			activateFilter("SwitchSides");
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
@@ -1330,6 +1363,7 @@ public class Main {
 	private class StartMatchListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSM",false);
+			activateFilter("StartMatch");
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
@@ -1348,6 +1382,7 @@ public class Main {
 	private class StartGameListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSG",false);
+			activateFilter("StartGame");
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
