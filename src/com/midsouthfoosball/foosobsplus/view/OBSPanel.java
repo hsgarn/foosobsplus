@@ -43,7 +43,7 @@ public class OBSPanel extends JPanel {
 	private JButton btnPush;
 	private JToggleButton tglbtnShowScores;
 	private JToggleButton tglbtnShowTimer;
-	private JToggleButton tglbtnShowSkunk;
+	private JToggleButton tglbtnEnableSkunk;
 	private JButton btnStartStream;
 	private Settings settings;
 	private Border innerBorder;
@@ -55,6 +55,14 @@ public class OBSPanel extends JPanel {
 		dim.width = 350;
 		dim.height = 50;
 		setPreferredSize(dim);
+		String enableSkunkText;
+		boolean enableSkunkInitialState = false;
+		if (settings.getShowSkunk()==1) {
+			enableSkunkInitialState = true;
+			enableSkunkText = Messages.getString("OBSPanel.DisableSkunk", settings.getGameType()); //$NON-NLS-1$
+		} else {
+			enableSkunkText = Messages.getString("OBSPanel.EnableSkunk", settings.getGameType()); //$NON-NLS-1$
+		}
 		
 		btnConnect = new JButton(Messages.getString("OBSPanel.Connect", settings.getGameType())); //$NON-NLS-1$
 		btnDisconnect = new JButton(Messages.getString("OBSPanel.Disconnect", settings.getGameType())); //$NON-NLS-1$
@@ -62,7 +70,9 @@ public class OBSPanel extends JPanel {
 		btnPush = new JButton(Messages.getString("OBSPanel.Push", settings.getGameType())); //$NON-NLS-1$
 		tglbtnShowScores = new JToggleButton(Messages.getString("OBSPanel.ShowScores", settings.getGameType())); //$NON-NLS-1$
 		tglbtnShowTimer = new JToggleButton(Messages.getString("OBSPanel.ShowTimer", settings.getGameType())); //$NON-NLS-1$
-		tglbtnShowSkunk = new JToggleButton(Messages.getString("OBSPanel.ShowSkunk", settings.getGameType())); //$NON-NLS-1$
+		tglbtnEnableSkunk = new JToggleButton(enableSkunkText);
+		tglbtnEnableSkunk.setSelected(enableSkunkInitialState);
+		
 		btnStartStream = new JButton(Messages.getString("OBSPanel.StartStream",settings.getGameType())); //$NON-NLS-1$
 
 		setMnemonics();
@@ -73,6 +83,7 @@ public class OBSPanel extends JPanel {
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
+		
 	}
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
@@ -136,7 +147,7 @@ public class OBSPanel extends JPanel {
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(tglbtnShowScores, gc);
 		
-		/////// Show Skunk /////////
+		/////// Enable Skunk /////////
 		gc.weightx = .1;
 		gc.weighty = 0.1;
 		
@@ -144,7 +155,7 @@ public class OBSPanel extends JPanel {
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 0);
-		add(tglbtnShowSkunk, gc);
+		add(tglbtnEnableSkunk, gc);
 		
 		/////// Show Timer /////////
 		gc.gridy++;
@@ -201,9 +212,9 @@ public class OBSPanel extends JPanel {
 			tglbtnShowTimer.setMnemonic(settings.getShowTimerHotKey().charAt(0));
 		};
 		if(settings.getShowSkunkHotKey().isEmpty()) {
-			tglbtnShowSkunk.setMnemonic(-1);
+			tglbtnEnableSkunk.setMnemonic(-1);
 		} else {
-			tglbtnShowSkunk.setMnemonic(settings.getShowSkunkHotKey().charAt(0));
+			tglbtnEnableSkunk.setMnemonic(settings.getShowSkunkHotKey().charAt(0));
 		};
 		if(settings.getStartStreamHotKey().isEmpty()) {
 			btnStartStream.setMnemonic(-1);
@@ -230,8 +241,8 @@ public class OBSPanel extends JPanel {
 	public void addShowTimerListener(ActionListener listenForBtnShowTimer) {
 		tglbtnShowTimer.addActionListener(listenForBtnShowTimer);
 	}
-	public void addShowSkunkListener(ActionListener listenForBtnShowSkunk) {
-		tglbtnShowSkunk.addActionListener(listenForBtnShowSkunk);
+	public void addEnableSkunkListener(ActionListener listenForBtnEnableSkunk) {
+		tglbtnEnableSkunk.addActionListener(listenForBtnEnableSkunk);
 	}
 	public void addStartStreamListener(ActionListener listenForBtnStartStream) {
 		btnStartStream.addActionListener(listenForBtnStartStream);
@@ -239,6 +250,30 @@ public class OBSPanel extends JPanel {
 
 	////// Utility Methods //////
 	
+	public void setShowScores(boolean show) {
+		tglbtnShowScores.setSelected(show);
+		if (show) {
+			tglbtnShowScores.setText(Messages.getString("OBSPanel.HideScores", settings.getGameType())); //$NON-NLS-1$
+		} else {
+			tglbtnShowScores.setText(Messages.getString("OBSPanel.ShowScores", settings.getGameType())); //$NON-NLS-1$
+		}
+	}
+	public void setEnableSkunk(boolean enableSkunkFlag) {
+		tglbtnEnableSkunk.setSelected(enableSkunkFlag);
+		if (enableSkunkFlag) {
+			tglbtnEnableSkunk.setText(Messages.getString("OBSPanel.DisableSkunk", settings.getGameType())); //$NON-NLS-1$
+		} else {
+			tglbtnEnableSkunk.setText(Messages.getString("OBSPanel.EnableSkunk", settings.getGameType())); //$NON-NLS-1$
+		}
+	}
+	public void setShowTimer(boolean showTimerFlag) {
+		tglbtnShowTimer.setSelected(showTimerFlag);
+		if (showTimerFlag) {
+			tglbtnShowTimer.setText(Messages.getString("OBSPanel.HideTimer", settings.getGameType())); //$NON-NLS-1$
+		} else {
+			tglbtnShowTimer.setText(Messages.getString("OBSPanel.ShowTimer", settings.getGameType())); //$NON-NLS-1$
+		}
+	}
 	public void updateMnemonics() {
 		setMnemonics();
 	}

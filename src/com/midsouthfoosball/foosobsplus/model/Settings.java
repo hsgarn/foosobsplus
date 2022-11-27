@@ -130,7 +130,6 @@ public class Settings {
 		defaultOBSProps.setProperty("OBSUpdateOnConnect",  "1");
 		defaultOBSProps.setProperty("OBSScoreSource", "ScoresAndLabels");
 		defaultOBSProps.setProperty("OBSTimerSource", "Foos OBS+ Timer");
-		defaultOBSProps.setProperty("OBSSkunkFilter", "Skunk 2");
 		//Sources
 		defaultSourceProps.setProperty("Table", "tablename");
 		defaultSourceProps.setProperty("Team1Name", "team1name");
@@ -373,7 +372,6 @@ public class Settings {
 	public int getOBSUpdateOnConnect()  {return Integer.parseInt(configOBSProps.getProperty("OBSUpdateOnConnect"));}
 	public String getOBSScoreSource() {return configOBSProps.getProperty("OBSScoreSource");}
 	public String getOBSTimerSource() {return configOBSProps.getProperty("OBSTimerSource");}
-	public String getOBSSkunkFilter() {return configOBSProps.getProperty("OBSSkunkFilter");}
 	//Sources
 	public String getTeamNameSource(int teamNbr) {
 		if(teamNbr==1) {
@@ -807,9 +805,6 @@ public class Settings {
 	}
 	public void setOBSTimerSource(String obsTimerSource) {
 		configOBSProps.setProperty("OBSTimerSource", obsTimerSource);
-	}
-	public void setOBSSkunkFilter(String obsSkunkFilter) {
-		configOBSProps.setProperty("OBSSkunkFilter", obsSkunkFilter);
 	}
 	//Sources
 	public void setTeam1PassAttemptsSource(String team1PassAttemptsSource) {
@@ -1335,7 +1330,6 @@ public class Settings {
 	public int getDefaultOBSUpdateOnConnect() {return Integer.parseInt(defaultOBSProps.getProperty("OBSUpdateOnConnect"));}
 	public String getDefaultOBSScoreSource() {return defaultOBSProps.getProperty("OBSScoreSource");}
 	public String getDefaultOBSTimerSource() {return defaultOBSProps.getProperty("OBSTimerSource");}
-	public String getDefaultOBSSkunkFilter() {return defaultOBSProps.getProperty("OBSSkunkFilter");}
 	//Sources
 	public String getDefaultTableSource() {return defaultSourceProps.getProperty("Table");}
 	public String getDefaultTeam1NameSource() {return defaultSourceProps.getProperty("Team1Name");}

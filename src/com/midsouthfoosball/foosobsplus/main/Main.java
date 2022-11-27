@@ -25,6 +25,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -158,6 +160,7 @@ import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
 import io.obswebsocket.community.client.OBSRemoteController;
 import io.obswebsocket.community.client.WebSocketCloseCode;
 import io.obswebsocket.community.client.listener.lifecycle.ReasonThrowable;
+import io.obswebsocket.community.client.message.event.inputs.InputActiveStateChangedEvent;
 import io.obswebsocket.community.client.message.response.scenes.GetCurrentProgramSceneResponse;
 //import io.obswebsocket.community.client.message.response.scenes.GetCurrentProgramSceneResponse;
 
@@ -328,8 +331,17 @@ public class Main {
 			.onControllerError(reason -> this.onControllerError(reason))
 			.onCommunicatorError(reason -> this.onCommunicationError(reason))
 			.and()
+			.registerEventListener(InputActiveStateChangedEvent.class, this::checkActiveStateChange)
 			.build()
 		);
+	}
+	private void checkActiveStateChange(InputActiveStateChangedEvent inputActiveStateChangedEvent) {
+		String name = inputActiveStateChangedEvent.getInputName();
+		if (!settings.getOBSTimerSource().isEmpty() && name.equals(settings.getOBSTimerSource())) {
+			boolean show = inputActiveStateChangedEvent.getVideoActive();
+			obsPanel.setShowTimer(show);
+			mainController.showTimerWindow(show);
+		}
 	}
 	public void connectToOBS() {
 		buildOBSController();
@@ -373,6 +385,11 @@ public class Main {
 				}
 			}
 		});
+		obs.getController().getSourceActive(settings.getOBSTimerSource(), response -> 
+			{boolean show = response.getMessageData().getResponseData().getVideoActive();
+				obsPanel.setShowTimer(show);
+				mainController.showTimerWindow(show);		
+			});
 		if(settings.getOBSCloseOnConnect()==1) { 
 			obsConnectFrame.setVisible(false);
 		}
@@ -551,11 +568,6 @@ public class Main {
 	private void activateFilter(String filter) {
 		setSourceFilterVisibility(obs.getScene(), settings.getFiltersFilter(filter), true);
 	}
-	private void showSkunk() {
-		if (settings.getShowSkunk() != 0) {
-			setSourceFilterVisibility(obs.getScene(), settings.getOBSSkunkFilter(), true);
-		}
-	}
 	public void loadWindowsAndControllers() {
 		mainFrame = new MainFrame(settings, tablePanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, statsEntryPanel, 
 				switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, sourcesFrame, filtersFrame, 
@@ -586,6 +598,7 @@ public class Main {
 		autoScoreConfigPanel.addSaveListener(new AutoScoreConfigSaveListener());
 		autoScoreConfigPanel.addSendConfigListener(new AutoScoreConfigSendConfigListener());
 		parametersPanel.addSaveListener(new SettingsSaveListener());
+		parametersPanel.addEnableShowSkunkListener(new OBSEnableSkunkListener());
 		obsConnectPanel.addSetSceneListener(new OBSSetSceneListener());
 		obsConnectPanel.addConnectListener(new OBSConnectListener());
 		obsConnectPanel.addDisconnectListener(new OBSDisconnectListener());
@@ -598,7 +611,7 @@ public class Main {
 		obsPanel.addPullListener(new OBSPullListener());
 		obsPanel.addShowScoresListener(new OBSShowScoresListener());
 		obsPanel.addShowTimerListener(new OBSShowTimerListener());
-		obsPanel.addShowSkunkListener(new OBSShowSkunkListener());
+		obsPanel.addEnableSkunkListener(new OBSEnableSkunkListener());
 		obsPanel.addStartStreamListener(new OBSStartStreamListener());
 		autoScoreMainPanel.addConnectListener(new AutoScoreMainPanelConnectListener());
 		autoScoreMainPanel.addDisconnectListener(new AutoScoreMainPanelDisconnectListener());
@@ -657,6 +670,7 @@ public class Main {
 		resetPanel.addResetResetWarnsListener(new ResetResetWarnsListener());
 		resetPanel.addResetAllListener(new ResetAllListener());
 		mainFrame.addOBSDisconnectItemListener(new OBSDisconnectItemListener());
+		timerWindowFrame.addTimerWindowClosedListener(new TimerWindowCloseListener());
 	}
 	public void startEvent() {
 		if(gameClock.isStreamTimerRunning()) {
@@ -930,9 +944,11 @@ public class Main {
 		mySwitch.register("code", codeCommand);
 	}
 	public void showScores(boolean show) {
+		obsPanel.setShowScores(show);
 		showSource(settings.getOBSScoreSource(), show);
 	}
 	public void showTimer(boolean show) {
+		mainController.showTimerWindow(show);
 		showSource(settings.getOBSTimerSource(), show);
 	}
 	public void showSource(String source, boolean show) {
@@ -1146,11 +1162,16 @@ public class Main {
 			}
 		}
 	}
-	private class OBSShowSkunkListener implements ActionListener {
+	private class OBSEnableSkunkListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if (obs.getConnected()) {
-				AbstractButton abstractButton = (AbstractButton) e.getSource();
-				if (abstractButton.getModel().isSelected()) showSkunk();
+			AbstractButton abstractButton = (AbstractButton) e.getSource();
+			boolean showSkunkFlag = abstractButton.getModel().isSelected();
+			obsPanel.setEnableSkunk(showSkunkFlag);
+			parametersPanel.setEnableShowSkunk(showSkunkFlag);
+			if (showSkunkFlag) {
+				settings.setShowSkunk(1);
+			} else {
+				settings.setShowSkunk(0);
 			}
 		}
 	}
@@ -1498,6 +1519,24 @@ public class Main {
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
+	private class TimerWindowCloseListener implements WindowListener {
+		public void windowClosed(WindowEvent we) {
+			showTimer(false);
+		}
+		public void windowActivated(WindowEvent e) {
+		}
+		public void windowClosing(WindowEvent e) {
+		}
+		public void windowDeactivated(WindowEvent e) {
+		}
+		public void windowDeiconified(WindowEvent e) {
+		}
+		public void windowIconified(WindowEvent e) {
+		}
+		public void windowOpened(WindowEvent e) {
+		}
+	}
+
 //	private void testProcessCodes() {
 //		String codes[] = {"XPSE", "XPSM", "Y5D", "Y3P", "BGS", "B5D", "B3P", "YGS" };
 //		autoProcessCodes(codes);

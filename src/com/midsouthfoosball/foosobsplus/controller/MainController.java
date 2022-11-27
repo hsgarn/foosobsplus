@@ -66,8 +66,11 @@ public class MainController {
 		mainFrame.setFocusOnCode();
 	}
 	public void showTimerWindow() {
-		timerWindowFrame.setVisible(true);
-		mainFrame.setTimerWindowSelected(true);
+		showTimerWindow(true);
+	}
+	public void showTimerWindow(boolean show) {
+		timerWindowFrame.setVisible(show);
+		mainFrame.setTimerWindowSelected(show);
 	}
 	public boolean getTimerWindowSelected() {
 		return mainFrame.getTimerWindowSelected();

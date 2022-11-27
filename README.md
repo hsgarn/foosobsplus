@@ -507,6 +507,15 @@ Click the cancel button to discard any changes made.
 Click the Restore Defaults button to restore the default file names.
 
 ## Revision History
+v1.109</br>
+Change Show Skunk in OBS Panel to Enable Skunk.</br>
+Sync OBS Panel Enable Skunk with Parameters Enable Skunk.</br>
+Remove Skunk Filter from OBS Connect panel and Settings.</br>
+Show Score & Show Timer now toggle button text.</br>
+Query OBS for state of Timer Source when connected and </br>
+update Show Timer button on OBS Panel.</br>
+Closing Timer Window will deactive Timer Source in OBS.</br>
+</br>
 v1.108 11/25/2022</br>
 Add ability to set filters for a variety of events (score, game/match win, time out, etc)</br>
 Add game count for cutthroat mode</br>

@@ -62,7 +62,7 @@ public class ParametersPanel extends JPanel {
 	private JCheckBox chckbxShowTimeOutsUsed;
 	private JCheckBox chckbxAutoCapNames;
 	private JCheckBox chckbxWinByFinalOnly;
-	private JCheckBox chckbxShowSkunk;
+	private JCheckBox chckbxEnableShowSkunk;
 	private JCheckBox chckbxCutThroatMode;
 	private JTextField txtTeam1LastScored;
 	private JTextField txtTeam2LastScored;
@@ -303,16 +303,16 @@ public class ParametersPanel extends JPanel {
 		}
 		add(chckbxWinByFinalOnly, "cell 1 16"); //$NON-NLS-1$
 		
-		JLabel lblShowSkunk = new JLabel(Messages.getString("ParametersPanel.ShowSkunk", settings.getGameType())); //$NON-NLS-1$
-		add(lblShowSkunk, "cell 0 17,alignx right"); //$NON-NLS-1$
+		JLabel lblEnableShowSkunk = new JLabel(Messages.getString("ParametersPanel.EnableShowSkunk", settings.getGameType())); //$NON-NLS-1$
+		add(lblEnableShowSkunk, "cell 0 17,alignx right"); //$NON-NLS-1$
 		
-		chckbxShowSkunk = new JCheckBox(""); //$NON-NLS-1$
+		chckbxEnableShowSkunk = new JCheckBox(""); //$NON-NLS-1$
 		if (Integer.toString(settings.getShowSkunk()).equals("1")) { //$NON-NLS-1$
-			chckbxShowSkunk.setSelected(true);
+			chckbxEnableShowSkunk.setSelected(true);
 		} else {
-			chckbxShowSkunk.setSelected(false);
+			chckbxEnableShowSkunk.setSelected(false);
 		}
-		add(chckbxShowSkunk, "cell 1 17"); //$NON-NLS-1$
+		add(chckbxEnableShowSkunk, "cell 1 17"); //$NON-NLS-1$
 		
 		JLabel lblCutThroatMode = new JLabel(Messages.getString("ParametersPanel.CutThroatMode", settings.getGameType())); //$NON-NLS-1$
 		add(lblCutThroatMode, "cell 0 18, alignx right"); //$NON-NLS-1$
@@ -395,9 +395,9 @@ public class ParametersPanel extends JPanel {
 			chckbxWinByFinalOnly.setSelected(false);
 		}
 		if (Integer.toString(settings.getDefaultShowSkunk()).equals("1")) { //$NON-NLS-1$
-			chckbxShowSkunk.setSelected(true);
+			chckbxEnableShowSkunk.setSelected(true);
 		} else {
-			chckbxShowSkunk.setSelected(false);
+			chckbxEnableShowSkunk.setSelected(false);
 		}
 		if (Integer.toString(settings.getDefaultCutThroatMode()).equals("1")) { //$NON-NLS-1$
 			chckbxCutThroatMode.setSelected(true);
@@ -495,7 +495,7 @@ public class ParametersPanel extends JPanel {
 		} else {
 			settings.setWinByFinalOnly(0);
 		}
-		if (chckbxShowSkunk.isSelected()) {
+		if (chckbxEnableShowSkunk.isSelected()) {
 			settings.setShowSkunk(1);
 		} else {
 			settings.setShowSkunk(0);
@@ -521,8 +521,15 @@ public class ParametersPanel extends JPanel {
     	}
 	}
 	
+	public void setEnableShowSkunk(boolean enableFlag) {
+		chckbxEnableShowSkunk.setSelected(enableFlag);
+	}
+	
 	////// Listeners \\\\\\
 	public void addSaveListener(ActionListener listenForBtnSave) {
 		btnSave.addActionListener(listenForBtnSave);
+	}
+	public void addEnableShowSkunkListener(ActionListener listenForChckbxEnableShowSkunk) {
+		chckbxEnableShowSkunk.addActionListener(listenForChckbxEnableShowSkunk);
 	}
 }

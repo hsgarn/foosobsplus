@@ -54,7 +54,6 @@ public class OBSConnectPanel extends JPanel {
 	private JButton btnSetScene;
 	private JTextField txtScoreSource;
 	private JTextField txtTimerSource;
-	private JTextField txtSkunkFilter;
 	private JCheckBox chckbxSavePassword;
 	private JCheckBox chckbxAutoLogin;
 	private JCheckBox chckbxCloseOnConnect;
@@ -146,9 +145,6 @@ public class OBSConnectPanel extends JPanel {
 		JLabel lblTimerSource = new JLabel("Timer Source");
 		add(lblTimerSource, "cell 2 2,alignx right");
 
-		JLabel lblSkunkFilter = new JLabel("Skunk Filter");
-		add(lblSkunkFilter, "cell 2 3,alignx right");
-
 		btnSetScene = new JButton("Set Scene");
 		add(btnSetScene, "cell 1 4,alignx right");
 		
@@ -164,11 +160,6 @@ public class OBSConnectPanel extends JPanel {
 		txtTimerSource.setText(settings.getOBSTimerSource());
 		add(txtTimerSource, "cell 3 2,alignx left");
 		txtTimerSource.setColumns(10);
-		
-		txtSkunkFilter = new JTextField();
-		txtSkunkFilter.setText(settings.getOBSSkunkFilter());
-		add(txtSkunkFilter, "cell 3 3,alignx left");
-		txtSkunkFilter.setColumns(10);
 		
 		chckbxCloseOnConnect = new JCheckBox("Close on Connect");
 		if (Integer.toString(settings.getOBSCloseOnConnect()).equals("1")) { //$NON-NLS-1$
