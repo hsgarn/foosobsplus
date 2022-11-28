@@ -52,8 +52,6 @@ public class OBSConnectPanel extends JPanel {
 	private JTextField txtPassword;
 	private JTextField txtScene;
 	private JButton btnSetScene;
-	private JTextField txtScoreSource;
-	private JTextField txtTimerSource;
 	private JCheckBox chckbxSavePassword;
 	private JCheckBox chckbxAutoLogin;
 	private JCheckBox chckbxCloseOnConnect;
@@ -139,28 +137,12 @@ public class OBSConnectPanel extends JPanel {
 		lstMessageHistory.setCellRenderer(new AttributiveCellRenderer());
 		add(scrMessageHistory, "cell 1 9,span 3");
 		
-		JLabel lblScoreSource = new JLabel("Score Source");
-		add(lblScoreSource, "cell 2 1,alignx right");
-		
-		JLabel lblTimerSource = new JLabel("Timer Source");
-		add(lblTimerSource, "cell 2 2,alignx right");
-
 		btnSetScene = new JButton("Set Scene");
 		add(btnSetScene, "cell 1 4,alignx right");
 		
 		btnDisconnect = new JButton("Disconnect");
 		add(btnDisconnect, "cell 1 7,alignx right");
 
-		txtScoreSource = new JTextField();
-		txtScoreSource.setText(settings.getOBSScoreSource());
-		add(txtScoreSource, "cell 3 1,alignx left");
-		txtScoreSource.setColumns(10);
-
-		txtTimerSource = new JTextField();
-		txtTimerSource.setText(settings.getOBSTimerSource());
-		add(txtTimerSource, "cell 3 2,alignx left");
-		txtTimerSource.setColumns(10);
-		
 		chckbxCloseOnConnect = new JCheckBox("Close on Connect");
 		if (Integer.toString(settings.getOBSCloseOnConnect()).equals("1")) { //$NON-NLS-1$
 			chckbxCloseOnConnect.setSelected(true);

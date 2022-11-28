@@ -161,6 +161,7 @@ import io.obswebsocket.community.client.OBSRemoteController;
 import io.obswebsocket.community.client.WebSocketCloseCode;
 import io.obswebsocket.community.client.listener.lifecycle.ReasonThrowable;
 import io.obswebsocket.community.client.message.event.inputs.InputActiveStateChangedEvent;
+import io.obswebsocket.community.client.message.event.sceneitems.SceneItemEnableStateChangedEvent;
 import io.obswebsocket.community.client.message.response.scenes.GetCurrentProgramSceneResponse;
 //import io.obswebsocket.community.client.message.response.scenes.GetCurrentProgramSceneResponse;
 
@@ -332,15 +333,34 @@ public class Main {
 			.onCommunicatorError(reason -> this.onCommunicationError(reason))
 			.and()
 			.registerEventListener(InputActiveStateChangedEvent.class, this::checkActiveStateChange)
+			.registerEventListener(SceneItemEnableStateChangedEvent.class, this::checkItemEnableStateChange)
 			.build()
 		);
 	}
+	private void checkItemEnableStateChange(SceneItemEnableStateChangedEvent sceneItemEnableStateChanged) {
+		String sceneName = sceneItemEnableStateChanged.getSceneName();
+		Number itemId = sceneItemEnableStateChanged.getSceneItemId();
+		boolean show = sceneItemEnableStateChanged.getMessageData().getEventData().getSceneItemEnabled();
+		obs.getController().getSceneItemId(sceneName, settings.getShowScoresSource(), null,
+		        getSceneItemIdResponse -> {
+		        	if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
+			           	if (getSceneItemIdResponse.getSceneItemId().toString().equals(itemId.toString())) {
+			           		obsPanel.setShowScores(show);	
+			           	}
+			        }
+		    });
+	}
 	private void checkActiveStateChange(InputActiveStateChangedEvent inputActiveStateChangedEvent) {
 		String name = inputActiveStateChangedEvent.getInputName();
-		if (!settings.getOBSTimerSource().isEmpty() && name.equals(settings.getOBSTimerSource())) {
+		if (!settings.getShowTimerSource().isEmpty() && name.equals(settings.getShowTimerSource())) {
 			boolean show = inputActiveStateChangedEvent.getVideoActive();
 			obsPanel.setShowTimer(show);
 			mainController.showTimerWindow(show);
+		} else {
+			if (!settings.getShowScoresSource().isEmpty() && name.equals(settings.getShowScoresSource())) {
+				boolean show = inputActiveStateChangedEvent.getVideoActive();
+				obsPanel.setShowScores(show);
+			}
 		}
 	}
 	public void connectToOBS() {
@@ -385,10 +405,14 @@ public class Main {
 				}
 			}
 		});
-		obs.getController().getSourceActive(settings.getOBSTimerSource(), response -> 
+		obs.getController().getSourceActive(settings.getShowTimerSource(), response -> 
 			{boolean show = response.getMessageData().getResponseData().getVideoActive();
 				obsPanel.setShowTimer(show);
 				mainController.showTimerWindow(show);		
+			});
+		obs.getController().getSourceActive(settings.getShowScoresSource(), response ->
+			{boolean show = response.getMessageData().getResponseData().getVideoActive();
+				obsPanel.setShowScores(show);
 			});
 		if(settings.getOBSCloseOnConnect()==1) { 
 			obsConnectFrame.setVisible(false);
@@ -945,11 +969,11 @@ public class Main {
 	}
 	public void showScores(boolean show) {
 		obsPanel.setShowScores(show);
-		showSource(settings.getOBSScoreSource(), show);
+		showSource(settings.getShowScoresSource(), show);
 	}
 	public void showTimer(boolean show) {
 		mainController.showTimerWindow(show);
-		showSource(settings.getOBSTimerSource(), show);
+		showSource(settings.getShowTimerSource(), show);
 	}
 	public void showSource(String source, boolean show) {
 		if (obs.getConnected()) {

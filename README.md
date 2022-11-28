@@ -507,7 +507,12 @@ Click the cancel button to discard any changes made.
 Click the Restore Defaults button to restore the default file names.
 
 ## Revision History
-v1.109</br>
+v1.110 11/28/2022</br>
+Move Show Timer and Show Scores from OBS Connect Panel to Sources Panel.</br>
+Make corresponding move for settings.</br>
+Update Show Scores button on OBS Panel.</br>
+</br>
+v1.109 11/27/2022</br>
 Change Show Skunk in OBS Panel to Enable Skunk.</br>
 Sync OBS Panel Enable Skunk with Parameters Enable Skunk.</br>
 Remove Skunk Filter from OBS Connect panel and Settings.</br>

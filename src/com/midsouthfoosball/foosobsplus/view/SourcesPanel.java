@@ -113,6 +113,8 @@ public class SourcesPanel extends JPanel {
 	private JTextField txtTeam2TwoBarScoringSource;
 	private JTextField txtTeam1ShotsOnGoalSource;
 	private JTextField txtTeam2ShotsOnGoalSource;
+	private JTextField txtShowScoresSource;
+	private JTextField txtShowTimerSource;
 	OBSInterface obsInterface;
 	private String defaultFilePath = "c:\\temp"; //$NON-NLS-1$
 
@@ -186,6 +188,8 @@ public class SourcesPanel extends JPanel {
 		txtTeam2TwoBarScoringSource.setText(settings.getDefaultTeam2TwoBarScoringSource());
 		txtTeam1ShotsOnGoalSource.setText(settings.getDefaultTeam1ShotsOnGoalSource());
 		txtTeam2ShotsOnGoalSource.setText(settings.getDefaultTeam2ShotsOnGoalSource());
+		txtShowScoresSource.setText(settings.getDefaultShowScoresSource());
+		txtShowTimerSource.setText(settings.getDefaultShowTimerSource());
 	}
 
 	private void saveSettings(Settings settings) {
@@ -249,6 +253,8 @@ public class SourcesPanel extends JPanel {
 		settings.setTeam2TwoBarScoringSource(txtTeam2TwoBarScoringSource.getText());
 		settings.setTeam1ShotsOnGoalSource(txtTeam1ShotsOnGoalSource.getText());
 		settings.setTeam2ShotsOnGoalSource(txtTeam2ShotsOnGoalSource.getText());
+		settings.setShowScoresSource(txtShowScoresSource.getText());
+		settings.setShowTimerSource(txtShowTimerSource.getText());
 		try {
 			settings.saveSourceConfig();
 		} catch (IOException ex) {
@@ -746,6 +752,22 @@ public class SourcesPanel extends JPanel {
 		txtTeam2ShotsOnGoalSource.setText(settings.getShotsOnGoalSource(2));
 		add(txtTeam2ShotsOnGoalSource, "cell 11 17,alignx left"); //$NON-NLS-1$
 		txtTeam2ShotsOnGoalSource.setColumns(10);
+		
+		JLabel lblShowScoresSource = new JLabel(Messages.getString("SourcesPanel.ShowScoresSource", settings.getGameType())); //$NON-NLS-1$
+		add(lblShowScoresSource, "cell 10 18,alignx trailing"); //$NON-NLS-1$
+		
+		txtShowScoresSource = new JTextField();
+		txtShowScoresSource.setText(settings.getShowScoresSource());
+		add(txtShowScoresSource, "cell 11 18,alignx left"); //$NON-NLS-1$
+		txtShowScoresSource.setColumns(10);
+		
+		JLabel lblShowTimerSource = new JLabel(Messages.getString("SourcesPanel.ShowTimerSource", settings.getGameType())); //$NON-NLS-1$
+		add(lblShowTimerSource, "cell 10 19,alignx trailing"); //$NON-NLS-1$
+		
+		txtShowTimerSource = new JTextField();
+		txtShowTimerSource.setText(settings.getShowTimerSource());
+		add(txtShowTimerSource, "cell 11 19,alignx left"); //$NON-NLS-1$
+		txtShowTimerSource.setColumns(10);
 		
 		JLabel lblTeambar_1 = new JLabel(Messages.getString("SourcesPanel.Team25BarScoring", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeambar_1, "cell 10 13,alignx right"); //$NON-NLS-1$

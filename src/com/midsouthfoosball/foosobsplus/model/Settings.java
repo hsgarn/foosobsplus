@@ -128,8 +128,6 @@ public class Settings {
 		defaultOBSProps.setProperty("OBSSavePassword", "0");
 		defaultOBSProps.setProperty("OBSCloseOnConnect", "1");
 		defaultOBSProps.setProperty("OBSUpdateOnConnect",  "1");
-		defaultOBSProps.setProperty("OBSScoreSource", "ScoresAndLabels");
-		defaultOBSProps.setProperty("OBSTimerSource", "Foos OBS+ Timer");
 		//Sources
 		defaultSourceProps.setProperty("Table", "tablename");
 		defaultSourceProps.setProperty("Team1Name", "team1name");
@@ -200,6 +198,8 @@ public class Settings {
 		defaultSourceProps.setProperty("Team2ShotsOnGoal", "team2shotsongoal");
 		defaultSourceProps.setProperty("Side1Color","side1color");
 		defaultSourceProps.setProperty("Side2Color","side2color");
+		defaultSourceProps.setProperty("ShowScoresSource", "ScoresAndLabels");
+		defaultSourceProps.setProperty("ShowTimerSource", "Foos OBS+ Timer");
 		//Filters
 		defaultFilterProps.setProperty("Team1Score", "team1score");
 		defaultFilterProps.setProperty("Team2Score", "team2score");
@@ -370,8 +370,6 @@ public class Settings {
 	public int getOBSAutoLogin() {return Integer.parseInt(configOBSProps.getProperty("OBSAutoLogin"));}
 	public int getOBSCloseOnConnect() {return Integer.parseInt(configOBSProps.getProperty("OBSCloseOnConnect"));}
 	public int getOBSUpdateOnConnect()  {return Integer.parseInt(configOBSProps.getProperty("OBSUpdateOnConnect"));}
-	public String getOBSScoreSource() {return configOBSProps.getProperty("OBSScoreSource");}
-	public String getOBSTimerSource() {return configOBSProps.getProperty("OBSTimerSource");}
 	//Sources
 	public String getTeamNameSource(int teamNbr) {
 		if(teamNbr==1) {
@@ -582,6 +580,8 @@ public class Settings {
 	public String getMatchTimeSource() {return configSourceProps.getProperty("MatchTime");}
 	public String getSide1ColorSource() {return configSourceProps.getProperty("Side1Color");}
 	public String getSide2ColorSource() {return configSourceProps.getProperty("Side2Color");}
+	public String getShowScoresSource() {return configSourceProps.getProperty("ShowScoresSource");}
+	public String getShowTimerSource() {return configSourceProps.getProperty("ShowTimerSource");}
 	//Filters
 	public String getFiltersFilter(String filter) {return configFilterProps.getProperty(filter);}
 	public String getTeam1ScoreFilter() {return configFilterProps.getProperty("Team1Score");}
@@ -800,12 +800,6 @@ public class Settings {
 	public void setOBSUpdateOnConnect(int obsUpdateOnConnect) {
 		configOBSProps.setProperty("OBSUpdateOnConnect", Integer.toString(obsUpdateOnConnect));
 	}
-	public void setOBSScoreSource(String obsScoreSource) {
-		configOBSProps.setProperty("OBSScoreSource", obsScoreSource);
-	}
-	public void setOBSTimerSource(String obsTimerSource) {
-		configOBSProps.setProperty("OBSTimerSource", obsTimerSource);
-	}
 	//Sources
 	public void setTeam1PassAttemptsSource(String team1PassAttemptsSource) {
 		configSourceProps.setProperty("Team1PassAttempts", team1PassAttemptsSource);
@@ -1013,6 +1007,12 @@ public class Settings {
 	}
 	public void setSide2ColorSource(String side2ColorSource) {
 		configSourceProps.setProperty("Side2Color", side2ColorSource);
+	}
+	public void setShowScoresSource(String showScoresSource) {
+		configSourceProps.setProperty("ShowScoresSource", showScoresSource);
+	}
+	public void setShowTimerSource(String showTimerSource) {
+		configSourceProps.setProperty("ShowTimerSource", showTimerSource);
 	}
 	//Filters
 	public void setTeam1ScoreFilter(String team1Score) {
@@ -1328,8 +1328,6 @@ public class Settings {
 	public int getDefaultOBSSavePassword() {return Integer.parseInt(defaultOBSProps.getProperty("OBSSavePassword"));}
 	public int getDefaultOBSCloseOnConnect() {return Integer.parseInt(defaultOBSProps.getProperty("OBSCloseOnConnect"));}
 	public int getDefaultOBSUpdateOnConnect() {return Integer.parseInt(defaultOBSProps.getProperty("OBSUpdateOnConnect"));}
-	public String getDefaultOBSScoreSource() {return defaultOBSProps.getProperty("OBSScoreSource");}
-	public String getDefaultOBSTimerSource() {return defaultOBSProps.getProperty("OBSTimerSource");}
 	//Sources
 	public String getDefaultTableSource() {return defaultSourceProps.getProperty("Table");}
 	public String getDefaultTeam1NameSource() {return defaultSourceProps.getProperty("Team1Name");}
@@ -1400,6 +1398,8 @@ public class Settings {
 	public String getDefaultTeam2TwoBarScoringSource() {return defaultSourceProps.getProperty("Team2TwoBarScoring");}	
 	public String getDefaultTeam1ShotsOnGoalSource() {return defaultSourceProps.getProperty("Team1ShotsOnGoal");}
 	public String getDefaultTeam2ShotsOnGoalSource() {return defaultSourceProps.getProperty("Team2ShotsOnGoal");}
+	public String getDefaultShowScoresSource() {return defaultSourceProps.getProperty("ShowScoresSource");}
+	public String getDefaultShowTimerSource() {return defaultSourceProps.getProperty("ShowTimerSource");}
 	//Filters
 	public String getDefaultTeam1ScoreFilter() {return defaultFilterProps.getProperty("Team1Score");}
 	public String getDefaultTeam2ScoreFilter() {return defaultFilterProps.getProperty("Team2Score");}
