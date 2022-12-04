@@ -8,7 +8,7 @@ If !WinExist("FoosOBSPlus")
   Run, C:\sw\FoosOBSPlus\FoosOBSPlus.jar,C:\sw\FoosOBSPlus
   WinWait, FoosOBSPlus
 }
-If WinExist("FoosOBSPlus: Foosball") or WinExist("FoosOBSPlus: Billiards")
+If WinExist("FoosOBSPlus: Foosball")
 {
   winActivate
   SendInput !~hotkey~

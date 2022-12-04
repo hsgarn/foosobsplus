@@ -44,7 +44,7 @@ public class ParametersFrame extends JFrame {
 			System.out.println(Messages.getString("Errors.LoadSettingsError")); //$NON-NLS-1$
 			e.printStackTrace();
 		}
-		parametersPanel.setPreferredSize(new Dimension(650, 550));
+		parametersPanel.setPreferredSize(new Dimension(650, 600));
 		
 		getContentPane().add(parametersPanel);
 		pack();

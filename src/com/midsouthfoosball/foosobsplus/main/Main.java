@@ -149,6 +149,7 @@ import com.midsouthfoosball.foosobsplus.view.ParametersPanel;
 import com.midsouthfoosball.foosobsplus.view.PartnerProgramFrame;
 import com.midsouthfoosball.foosobsplus.view.ResetPanel;
 import com.midsouthfoosball.foosobsplus.view.SourcesFrame;
+import com.midsouthfoosball.foosobsplus.view.StatSettingsFrame;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
@@ -163,7 +164,6 @@ import io.obswebsocket.community.client.listener.lifecycle.ReasonThrowable;
 import io.obswebsocket.community.client.message.event.inputs.InputActiveStateChangedEvent;
 import io.obswebsocket.community.client.message.event.sceneitems.SceneItemEnableStateChangedEvent;
 import io.obswebsocket.community.client.message.response.scenes.GetCurrentProgramSceneResponse;
-//import io.obswebsocket.community.client.message.response.scenes.GetCurrentProgramSceneResponse;
 
 public class Main {
 	{
@@ -187,6 +187,7 @@ public class Main {
 	private DateTimeFormatter dtf 					= DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 	private boolean autoScoreConnected				= false;
 	private StreamIndexer streamIndexer             = new StreamIndexer(settings.getDatapath());
+
 	////// Watch Service for File changes \\\\\\
 	WatchService watchService;
 	
@@ -246,6 +247,7 @@ public class Main {
 	private HotKeysPanel 		hotKeysPanel		= hotKeysFrame.getHotKeysPanel();
 	private SourcesFrame		sourcesFrame		= new SourcesFrame(settings, obsInterface);
 	private FiltersFrame        filtersFrame        = new FiltersFrame(settings, obsInterface);
+	private StatSettingsFrame   statSettingsFrame   = new StatSettingsFrame(settings, obsInterface);
 	private PartnerProgramFrame partnerProgramFrame = new PartnerProgramFrame(settings);
 	private OBSConnectFrame		obsConnectFrame		= new OBSConnectFrame(settings, obs);
 	private OBSConnectPanel		obsConnectPanel		= obsConnectFrame.getOBSConnectPanel();
@@ -595,7 +597,7 @@ public class Main {
 	public void loadWindowsAndControllers() {
 		mainFrame = new MainFrame(settings, tablePanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, statsEntryPanel, 
 				switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, sourcesFrame, filtersFrame, 
-				partnerProgramFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, this);
+				statSettingsFrame, partnerProgramFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, this);
 
 		////// Set up independent Windows \\\\\\
 		

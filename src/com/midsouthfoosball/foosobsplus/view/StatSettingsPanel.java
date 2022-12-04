@@ -32,6 +32,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 import net.miginfocom.swing.MigLayout;
@@ -47,7 +48,7 @@ public class StatSettingsPanel extends JPanel {
 	/**
 	 * Create the Panel.
 	 */
-	public StatSettingsPanel(Settings settings) throws IOException {
+	public StatSettingsPanel(Settings settings, OBSInterface obsInterface) throws IOException {
 		this.settings = settings;
 		
 		setBounds(100, 100, 853, 489);
@@ -62,10 +63,10 @@ public class StatSettingsPanel extends JPanel {
 		JLabel lblTeam1NameFileName = new JLabel("Team 1:");
 		add(lblTeam1NameFileName, "cell 1 1,alignx trailing");
 		
-		txtTeam1NameFileName = new JTextField();
-		txtTeam1NameFileName.setText(settings.getTeamNameSource(1));
-		add(txtTeam1NameFileName, "cell 2 1,alignx left");
-		txtTeam1NameFileName.setColumns(10);
+//		txtTeam1NameFileName = new JTextField();
+//		txtTeam1NameFileName.setText(settings.getTeamNameSource(1));
+//		add(txtTeam1NameFileName, "cell 2 1,alignx left");
+//		txtTeam1NameFileName.setColumns(10);
 		
 		JButton btnSaveFileNames = new JButton("Save");
 		btnSaveFileNames.addActionListener(new ActionListener() {

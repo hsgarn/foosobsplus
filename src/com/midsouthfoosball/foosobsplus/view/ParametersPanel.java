@@ -64,11 +64,13 @@ public class ParametersPanel extends JPanel {
 	private JCheckBox chckbxWinByFinalOnly;
 	private JCheckBox chckbxEnableShowSkunk;
 	private JCheckBox chckbxCutThroatMode;
+	private JCheckBox chckbxRackMode;
 	private JTextField txtTeam1LastScored;
 	private JTextField txtTeam2LastScored;
 	private JTextField txtClearLastScored;
 	private JTextField txtSide1Color;
 	private JTextField txtSide2Color;
+	private JTextField txtBallsInRack;
 	private JButton btnSave;
 	private JButton btnCancel;
 	private JButton btnRestoreDefaults;
@@ -214,8 +216,27 @@ public class ParametersPanel extends JPanel {
 		add(txtSide2Color, "cell 1 7,growx"); //$NON-NLS-1$
 		txtSide2Color.setColumns(10);
 		
+		JLabel lblBallsInRack = new JLabel(Messages.getString("ParametersPanel.BallsInRack", settings.getGameType())); //$NON-NLS-1$
+		add(lblBallsInRack, "cell 0 8,alignx trailing"); //$NON-NLS-1$
+		
+		txtBallsInRack = new JTextField();
+		txtBallsInRack.setText(Integer.toString(settings.getBallsInRack()));
+		add(txtBallsInRack, "cell 1 8,growx"); //$NON-NLS-1$
+		txtBallsInRack.setColumns(10);
+		
+		JLabel lblRackMode = new JLabel(Messages.getString("ParametersPanel.RackMode", settings.getGameType())); //$NON-NLS-1$
+		add(lblRackMode, "cell 0 9,alignx right"); //$NON-NLS-1$
+		
+		chckbxRackMode = new JCheckBox(""); //$NON-NLS-1$
+		if (Integer.toString(settings.getRackMode()).equals("1")) { //$NON-NLS-1$
+			chckbxRackMode.setSelected(true);
+		} else {
+			chckbxRackMode.setSelected(false);
+		}
+		add(chckbxRackMode, "cell 1 9"); //$NON-NLS-1$
+		
 		JLabel lblAutoIncrementGame = new JLabel(Messages.getString("ParametersPanel.AutoIncrementGame", settings.getGameType())); //$NON-NLS-1$
-		add(lblAutoIncrementGame, "cell 0 11,alignx right"); //$NON-NLS-1$
+		add(lblAutoIncrementGame, "cell 0 12,alignx right"); //$NON-NLS-1$
 		
 		chckbxAutoIncrementGame = new JCheckBox(""); //$NON-NLS-1$
 		if (Integer.toString(settings.getAutoIncrementGame()).equals("1")) { //$NON-NLS-1$
@@ -223,7 +244,7 @@ public class ParametersPanel extends JPanel {
 		} else {
 			chckbxAutoIncrementGame.setSelected(false);
 		}
-		add(chckbxAutoIncrementGame, "cell 1 11"); //$NON-NLS-1$
+		add(chckbxAutoIncrementGame, "cell 1 12"); //$NON-NLS-1$
 		
 		JLabel lblWinnerPrefix = new JLabel(Messages.getString("ParametersPanel.WinnerPrefix", settings.getGameType())); //$NON-NLS-1$
 		add(lblWinnerPrefix, "cell 2 11,alignx center"); //$NON-NLS-1$
@@ -232,7 +253,7 @@ public class ParametersPanel extends JPanel {
 		add(lblWinnerSuffix, "cell 3 11,alignx center"); //$NON-NLS-1$
 		
 		JLabel lblAnnounceWinner = new JLabel(Messages.getString("ParametersPanel.AnnounceWinner", settings.getGameType())); //$NON-NLS-1$
-		add(lblAnnounceWinner, "cell 0 12,alignx right"); //$NON-NLS-1$
+		add(lblAnnounceWinner, "cell 0 13,alignx right"); //$NON-NLS-1$
 		
 		chckbxAnnounceWinner = new JCheckBox(""); //$NON-NLS-1$
 		if (Integer.toString(settings.getAnnounceWinner()).equals("1")) { //$NON-NLS-1$
@@ -240,7 +261,7 @@ public class ParametersPanel extends JPanel {
 		} else {
 			chckbxAnnounceWinner.setSelected(false);
 		}
-		add(chckbxAnnounceWinner, "cell 1 12,alignx left"); //$NON-NLS-1$
+		add(chckbxAnnounceWinner, "cell 1 13,alignx left"); //$NON-NLS-1$
 		
 		txtWinnerPrefix = new JTextField();
 		txtWinnerPrefix.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -254,7 +275,7 @@ public class ParametersPanel extends JPanel {
 		txtWinnerSuffix.setColumns(10);
 		
 		JLabel lblAnnounceMeatball = new JLabel(Messages.getString("ParametersPanel.AnnounceMeatball", settings.getGameType())); //$NON-NLS-1$
-		add(lblAnnounceMeatball, "cell 0 13,alignx right"); //$NON-NLS-1$
+		add(lblAnnounceMeatball, "cell 0 14,alignx right"); //$NON-NLS-1$
 		
 		chckbxAnnounceMeatball = new JCheckBox(""); //$NON-NLS-1$
 		if (Integer.toString(settings.getAnnounceMeatball()).equals("1")) { //$NON-NLS-1$
@@ -262,7 +283,7 @@ public class ParametersPanel extends JPanel {
 		} else {
 			chckbxAnnounceMeatball.setSelected(false);
 		}
-		add(chckbxAnnounceMeatball, "cell 1 13,alignx left"); //$NON-NLS-1$
+		add(chckbxAnnounceMeatball, "cell 1 14,alignx left"); //$NON-NLS-1$
 		
 		txtMeatball = new JTextField();
 		txtMeatball.setHorizontalAlignment(SwingConstants.CENTER);
@@ -271,7 +292,7 @@ public class ParametersPanel extends JPanel {
 		txtMeatball.setColumns(10);
 		
 		JLabel lblShowTimeOutsUsed = new JLabel(Messages.getString("ParametersPanel.ShowTimeOutsUsed", settings.getGameType())); //$NON-NLS-1$
-		add(lblShowTimeOutsUsed, "cell 0 14,alignx right"); //$NON-NLS-1$
+		add(lblShowTimeOutsUsed, "cell 0 15,alignx right"); //$NON-NLS-1$
 		
 		chckbxShowTimeOutsUsed = new JCheckBox(""); //$NON-NLS-1$
 		if (Integer.toString(settings.getShowTimeOutsUsed()).equals("1")) { //$NON-NLS-1$
@@ -279,10 +300,10 @@ public class ParametersPanel extends JPanel {
 		} else {
 			chckbxShowTimeOutsUsed.setSelected(false);
 		}
-		add(chckbxShowTimeOutsUsed, "cell 1 14"); //$NON-NLS-1$
+		add(chckbxShowTimeOutsUsed, "cell 1 15"); //$NON-NLS-1$
 		
 		JLabel lblAutoCapitalizeTeam = new JLabel(Messages.getString("ParametersPanel.AutoCapitalizeNames", settings.getGameType())); //$NON-NLS-1$
-		add(lblAutoCapitalizeTeam, "cell 0 15,alignx right"); //$NON-NLS-1$
+		add(lblAutoCapitalizeTeam, "cell 0 16,alignx right"); //$NON-NLS-1$
 		
 		chckbxAutoCapNames = new JCheckBox(""); //$NON-NLS-1$
 		if (Integer.toString(settings.getAutoCapNames()).equals("1")) { //$NON-NLS-1$
@@ -290,10 +311,10 @@ public class ParametersPanel extends JPanel {
 		} else {
 			chckbxAutoCapNames.setSelected(false);
 		}
-		add(chckbxAutoCapNames, "cell 1 15"); //$NON-NLS-1$
+		add(chckbxAutoCapNames, "cell 1 16"); //$NON-NLS-1$
 		
 		JLabel lblWinByFinalOnly = new JLabel(Messages.getString("ParametersPanel.WinByFinalGameOnly", settings.getGameType())); //$NON-NLS-1$
-		add(lblWinByFinalOnly, "cell 0 16,alignx right"); //$NON-NLS-1$
+		add(lblWinByFinalOnly, "cell 0 17,alignx right"); //$NON-NLS-1$
 		
 		chckbxWinByFinalOnly = new JCheckBox(""); //$NON-NLS-1$
 		if (Integer.toString(settings.getWinByFinalOnly()).equals("1")) { //$NON-NLS-1$
@@ -301,10 +322,10 @@ public class ParametersPanel extends JPanel {
 		} else {
 			chckbxWinByFinalOnly.setSelected(false);
 		}
-		add(chckbxWinByFinalOnly, "cell 1 16"); //$NON-NLS-1$
+		add(chckbxWinByFinalOnly, "cell 1 17"); //$NON-NLS-1$
 		
 		JLabel lblEnableShowSkunk = new JLabel(Messages.getString("ParametersPanel.EnableShowSkunk", settings.getGameType())); //$NON-NLS-1$
-		add(lblEnableShowSkunk, "cell 0 17,alignx right"); //$NON-NLS-1$
+		add(lblEnableShowSkunk, "cell 0 18,alignx right"); //$NON-NLS-1$
 		
 		chckbxEnableShowSkunk = new JCheckBox(""); //$NON-NLS-1$
 		if (Integer.toString(settings.getShowSkunk()).equals("1")) { //$NON-NLS-1$
@@ -312,10 +333,10 @@ public class ParametersPanel extends JPanel {
 		} else {
 			chckbxEnableShowSkunk.setSelected(false);
 		}
-		add(chckbxEnableShowSkunk, "cell 1 17"); //$NON-NLS-1$
+		add(chckbxEnableShowSkunk, "cell 1 18"); //$NON-NLS-1$
 		
 		JLabel lblCutThroatMode = new JLabel(Messages.getString("ParametersPanel.CutThroatMode", settings.getGameType())); //$NON-NLS-1$
-		add(lblCutThroatMode, "cell 0 18, alignx right"); //$NON-NLS-1$
+		add(lblCutThroatMode, "cell 0 19, alignx right"); //$NON-NLS-1$
 		
 		chckbxCutThroatMode = new JCheckBox(""); //$NON-NLS-1$
 		if (Integer.toString(settings.getCutThroatMode()).equals("1")) { //$NON-NLS-1$
@@ -323,10 +344,10 @@ public class ParametersPanel extends JPanel {
 		} else {
 			chckbxCutThroatMode.setSelected(false);
 		}
-		add(chckbxCutThroatMode, "cell 1 18"); //$NON-NLS-1$
+		add(chckbxCutThroatMode, "cell 1 19"); //$NON-NLS-1$
 		
 		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
-		add(btnSave, "cell 1 20,alignx center"); //$NON-NLS-1$
+		add(btnSave, "cell 1 21,alignx center"); //$NON-NLS-1$
 
 		btnCancel = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
 		btnCancel.addActionListener(new ActionListener() {
@@ -336,7 +357,7 @@ public class ParametersPanel extends JPanel {
 				win.dispose();
 			}
 		});
-		add(btnCancel, "cell 2 20,alignx center"); //$NON-NLS-1$
+		add(btnCancel, "cell 2 21,alignx center"); //$NON-NLS-1$
 		
 		btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
 		btnRestoreDefaults.addActionListener(new ActionListener() {
@@ -345,7 +366,7 @@ public class ParametersPanel extends JPanel {
 			}
 		});
 		btnRestoreDefaults.setHorizontalAlignment(SwingConstants.RIGHT);
-		add(btnRestoreDefaults, "cell 3 20,alignx center"); //$NON-NLS-1$
+		add(btnRestoreDefaults, "cell 3 21,alignx center"); //$NON-NLS-1$
 	}
 	
 	private void restoreDefaults(Settings settings) {
@@ -361,6 +382,11 @@ public class ParametersPanel extends JPanel {
 		txtGameTime.setText(Integer.toString(settings.getDefaultGameTime()));
 		txtMaxTimeOuts.setText(Integer.toString(settings.getDefaultMaxTimeOuts()));
 		txtRecallTime.setText(Integer.toString(settings.getDefaultRecallTime()));
+		if (Integer.toString(settings.getDefaultRackMode()).equals("1")) { //$NON-NLS-1$
+			chckbxRackMode.setSelected(true);
+		} else {
+			chckbxRackMode.setSelected(false);
+		}
 		if (Integer.toString(settings.getDefaultAutoIncrementGame()).equals("1")) { //$NON-NLS-1$
 			chckbxAutoIncrementGame.setSelected(true);
 		} else {
@@ -409,6 +435,7 @@ public class ParametersPanel extends JPanel {
 		txtClearLastScored.setText(settings.getDefaultClearLastScored());
 		txtSide1Color.setText(settings.getDefaultSide1Color());
 		txtSide2Color.setText(settings.getDefaultSide2Color());
+		txtBallsInRack.setText(settings.getDefaultBallsInRack());
 	}
 	
 	public void saveSettings(Settings settings) {
@@ -441,6 +468,11 @@ public class ParametersPanel extends JPanel {
     	if (isValidInteger(txtMaxTimeOuts.getText())) {
     		settings.setMaxTimeOuts(Integer.parseInt(txtMaxTimeOuts.getText()));
     	}
+    	if (chckbxRackMode.isSelected()) {
+    		settings.setRackMode(1);
+    	} else {
+    		settings.setRackMode(0);
+    	}
 		if (chckbxAutoIncrementGame.isSelected()) {
 			settings.setAutoIncrementGame(1);
 		} else {
@@ -464,7 +496,7 @@ public class ParametersPanel extends JPanel {
 		settings.setClearLastScored(txtClearLastScored.getText());
 		settings.setSide1Color(txtSide1Color.getText());
 		settings.setSide2Color(txtSide2Color.getText());
-
+		settings.setBallsInRack(txtBallsInRack.getText());
 		if (isValidInteger(txtShotTime.getText())) {
     		settings.setShotTime(Integer.parseInt(txtShotTime.getText()));
     	}

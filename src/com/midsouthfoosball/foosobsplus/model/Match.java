@@ -439,15 +439,27 @@ public class Match implements Serializable {
 		int maxWin = settings.getMaxWin();
 		int winBy = settings.getWinBy();
 		int winByFinalOnly = settings.getWinByFinalOnly();
+		boolean rackMode = settings.getRackMode() == 1;
 		if (settings.getAutoIncrementGame()==1) {
-			if (score1 >= maxWin || 
-					((score1 >= pointsToWin) && 
-							((score1 >= score2 + winBy) || ((winByFinalOnly==1) && currentGameNumber != maxGameCount)) )) 
-			{
-				clearMeatball();
-				return true;
+			if (rackMode) {
+				if (score1 + score2 == settings.getBallsInRack()) {
+					if (score1 > score2) {
+						clearMeatball();
+						return true;
+					} else {
+						clearMatchWinner();
+					}
+				}
 			} else {
-				clearMatchWinner();
+				if (score1 >= maxWin || 
+						((score1 >= pointsToWin) && 
+								((score1 >= score2 + winBy) || ((winByFinalOnly==1) && currentGameNumber != maxGameCount)) )) 
+				{
+					clearMeatball();
+					return true;
+				} else {
+					clearMatchWinner();
+				}
 			}
 		}
 		return false;

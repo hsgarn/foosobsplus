@@ -11,7 +11,7 @@ OBS Studio scene utilizing FoosOBSPlus to display various data:
 <img align="left" width="1920" height="1090" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusScreen2.png">
 
 ## Setup
-FoosOBSPlus is a java program. You can download the source and export to a jar file. I do this in eclipse so am not sure how to do it at command line or in other ide's, though I'm sure google is your friend and will provide you with that information.  Windows will need to have at least Java 1.8 loaded and set to associate jar files with java. 
+FoosOBSPlus is a java program.  You can download the executable jar file from the Releases section. You will need to have at least Java 1.8 loaded and set to associate jar files with java. There are many resources on the web for how to load java and set windows up to run the jar file.  (see https://www.howtogeek.com/812583/how-to-open-jar-files-windows/ for example.)
 
 ## Settings
 If running FoosOBSPlus for the first time, it will create a set of properties files with the default properties in the folder in which the program is running. These property files contain the settings for the operating parameters, sources, hot keys and more.
@@ -25,7 +25,7 @@ Parameter Settings Page:
 <img width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings2.png">
 
 #### Points to Win
-This is the number of points required to win a game.  This is only used if the Auto Increment Game checkbox is checked. Once a team's score reaches this number, it will reset the scores to zero and increase the game counter for the team.  If the Announce Winner check box is set and the team has reached the number set in the Games to Win parameter, then the Team's name will be sent to the Match Winner OBS source along with the text specified in the Winner Prefix and Winner Suffix parameters.  Points to Win is also utilized to determine if it is meatball (both teams 1 point away from winning score in final game).
+This is the number of points required to win a game.  This is only used if the Auto Increment Game checkbox is checked and the Rack Mode check box is unchecked. Once a team's score reaches this number, it will reset the scores to zero and increase the game counter for the team.  If the Announce Winner check box is set and the team has reached the number set in the Games to Win parameter, then the Team's name will be sent to the Match Winner OBS source along with the text specified in the Winner Prefix and Winner Suffix parameters.  Points to Win is also utilized to determine if it is meatball (both teams 1 point away from winning score in final game).
 
 #### Max Win
 The Max Win parameter is only used when the Win By parameter is greater than 1.  If a team has to win by more than 1 point, then Max Win is the maximum score a team can get and at that point it does not matter if they won by more than 1 point.
@@ -44,6 +44,13 @@ This is the color of the player figures for Team 1. Default is Yellow. This is u
 
 #### Team 2 Color
 This is the color of the player figures for Team 2. Default is Black. This is used to help recognize which side of the table Team 2 is on.
+
+#### Balls in Rack
+This is the number of balls in the table when using a coin op table.  This is used in Rack Mode.  In Rack Mode, the winner is determined by whoever has the most points after the number of balls in the Balls in Rack field have been scored.  The default is 9.
+
+#### Rack Mode
+When checked, Rack Mode is on.  A game is completed in Rack Mode when the number of balls in the Balls in Rack field have been scored. Whoever scored the most, wins.  So if Balls in Rack is 9, then the game ends when 9 points have been scored (the score could be 8 to 1, or 5 to 4 or 3 to 6, etc).  This mode is typically played on pay tables with pick up games as people play the full rack before starting a new game.
+When unchecked, Rack Mode is off and a game is completed after a team scores the number of points required to win a game.  This is the typical mode used for tournaments and is the default.
 
 #### Shot Time
 This is the time allowed to shoot the ball from the forward 3 rod or the goalie area in seconds.  The default is 15 seconds.
@@ -100,7 +107,7 @@ When checked, the program will activate the OBS filter defined in the OBS Connec
 When checked, the program activates CutThroat Mode to support the game of CutThroat.  In CutThroat, three people play against each other. One player starts on the scoring side (Team 1) while the other players play on Team 2. The player on the scoring side always serves the ball and when scores, gets a point.  If the players on other side score, then everybody rotates so that Team 2 Forward moves to the scoring side. Team 2 Goalie moves to the Team 1 Forward position.  And the player who was on the scoring side moves to the Team 2 Goalie position.  The scores in this mode are appended to the players names.
 
 ### Sources
-FoosOBSPlus sends most of its data to sources in OBS Studio so it can be displayed in a live stream.   The names of these sources are configurable if the default names do not suit you.  To get to the sources configuration, click on Edit, then Settings, then Sources:
+FoosOBSPlus sends most of its data to sources in OBS Studio so it can be displayed in a live stream.  The names of these sources are configurable if the default names do not suit you. The vast majority of these sources should be Text (GDI+) sources with the Read from file checkbox unchecked.  Exceptions to this will be specifically noted below.  To get to the sources configuration, click on Edit, then Settings, then Sources:
 
 <img align="left" width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings3.png">
 
@@ -162,7 +169,7 @@ This is the source that holds Team 1's forward's name.  Default source is team1f
 #### Team 1 Goalie
 This is the source that holds Team 1's goalie's name.  Default source is team1goalie.
 
-#### Team 2 Forrward
+#### Team 2 Forward
 This is the source that holds Team 2's forward's name.  Default source is team2forward.
 
 #### Team 2 Goalie
@@ -300,6 +307,16 @@ This is the source that holds the number of shots on goal for team 1.  Default s
 #### Team 2 Shots On Goal
 This is the source that holds the number of shots on goal for team 2.  Default source is team2shotsongoal.
 
+#### Show Scores
+This is the source that is controlled by the Show Score/Hide Score toggle button in the OBS Panel on the main screen.  This is intended to be a Scene within OBS that contains all the scoring fields and their associated labels.  This scene can then be included in your main streaming scene.  When you want to keep score, click the Show Score button on the main screen.  When no one is keeping the score, click the Hide Score button which will turn the scene in the Show Scores box off.
+The following sources would typically be contained in this scene:
+Last Scored, Time Out 1, Time Out 2, Game Count 1, Game Count 2, Score 1, Score 2
+Also include any labels that would look out of place without the above fields.
+
+#### Show Timer
+This is the source that shows the time remaining.  This should be a Window Capture source in OBS. The window should be setup as follows:
+<img width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettingsTimerWindow.png">
+
 #### Save
 Click the save button to save any source changes made.
 
@@ -310,7 +327,7 @@ Click the cancel button to discard any source changes made.
 Click the Restore Defaults button to restore the default sources.
 
 ### Hot Keys
-FoosOBSPlus uses buttons to do various functions such as increase or decrease scores, switch sides, reset game counts, start timers, etc.  Each button can have a Hot Key assigned to it.  Pressing ALT plus the assigned Hot Key for the button will function just like pressing the actual button.  The hot keys can be used in Stream Deck commands to make operating FoosOBSPlus a simple push button affair.  Unfortunately, there are more buttons than available hot keys so you can not assign a hot key to every button. 
+FoosOBSPlus uses buttons to do various functions such as increase or decrease scores, switch sides, reset game counts, start timers, etc.  Each button can have a Hot Key assigned to it.  Pressing ALT plus the assigned Hot Key for the button will function just like pressing the actual button.  Unfortunately, there are more buttons than available hot keys so you can not assign a hot key to every button. The hot keys can be used in Stream Deck commands to make operating FoosOBSPlus a simple push button affair.  TouchPortal is another program that can be used to activate the buttons in FoosOBSPlus.  These will require that AutoHotKey be installed. (See https://www.autohotkey.com/docs/Tutorial.htm).  FoosOBSPlus will generate the AutoHotKey scripts for any hot keys defined (see the Generate AutoHotKey Scripts button below).
 
 <img align="left" width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings4.png">
 
@@ -464,6 +481,12 @@ Assigns the hot key for the Show Skunk button. Default hot key is k.
 #### Start Stream
 Assigns the hot key for the Start Stream button. Default hot key is z.
 
+#### AutoHotKey Script Path
+This is the path to where the AutoHotKey scripts will be generated.  The default is C:\FoosOBSPlusScripts\.
+
+#### Generate AutoHotKey Scripts
+This button will generate an AutoHotKey script for each defined hot key.  The basic idea of the scripts is to bring the FoosOBSPlus window into focus and then press the hot key for the associated hot key for the action desired. It then moves the FoosOBSPlus window to the bottom of the screen so that your OBS program can stay the main focus.  The scripts will be placed into the directory specified in the AutoHotKey Script Path field.
+
 #### Save
 Click the save button to save any hot key changes made.
 
@@ -472,6 +495,81 @@ Click the cancel button to discard any hot keye changes made.
 
 #### Restore Defaults
 Click the Restore Defaults button to restore the default hot keys.
+
+### Filters
+FoosOBSPlus can trigger OBS Filters when certain events occur.  For instance, when a time out occurs for team 1, a filter can be triggered to show a ref calling time out.  The filter is responsible for turning itself off.    To get to the filters configuration, click on Edit, then Settings, then Filters:
+
+<img align="left" width="300" height="220" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings9.png">
+
+<img align="left" width="502" height="302" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings10.png">
+
+Below are the filters that can be configured:
+
+#### Team 1 Score
+This is the name of the filter activated when Team 1 scores.
+
+#### Team 2 Score
+This is the name of the filter activated when Team 2 scores.
+
+#### Team 1 Win Game
+This is the name of the filter activated when Team 1 wins a game.
+
+#### Team 2 Win Game
+This is the name of the filter activated when Team 2 wins a game.
+
+#### Team 1 Win Match
+This is the name of the filter activated when Team 1 wins a match.
+
+#### Team 2 Win Match
+This is the name of the filter activated when Team 2 wins a match.
+
+#### Team 1 Time Out
+This is the name of the filter activated when Team 1 calls a time out.
+
+#### Team 2 Time Out
+This is the name of the filter activated when Team 2 calls a time out.
+
+#### Team 1 Reset
+This is the name of the filter activated when the Team 1 Reset button is pressed.
+
+#### Team 2 Reset
+This is the name of the filter activated when the Team 2 Reset button is pressed.
+
+#### Team 1 Warn
+This is the name of the filter activated when the Team 1 Warn button is pressed.
+
+#### Team 2 Warn
+This is the name of the filter activated when the Team 2 Warn button is pressed.
+
+#### Team 1 Switch Positions
+This is the name of the filter activated when the Team 1 Switch Positions button is pressed.
+
+#### Team 2 Switch Positions
+This is the name of the filter activated when the Team 2 Switch Positions button is pressed.
+
+#### Team 1 Skunks
+This is the name of the filter activated when Team 1 skunks Team 2.
+
+#### Team 2 Skunks
+This is the name of the filter activated when Team 2 skunks Team 1.
+
+#### Start Match
+This is the name of the filter activated when the Start Match button is pressed.
+
+#### Start Game
+This is the name of the filter activated when the Start Game button is pressed.
+
+#### Switch Sides
+This is the name of the filter activated when the Switch Sides button is pressed.
+
+#### Save
+Click the save button to save any filter changes made.
+
+#### Cancel
+Click the cancel button to discard any filter changes made.
+
+#### Restore Defaults
+Click the Restore Defaults button to restore the default filters.
 
 ### Partner Program
 FoosOBSPlus can read player names from files.  For example, we have an Access program called Partner Program and when a match is called in this program, it writes the players' names to 4 files. The directory and filenames can be set in the Partner Program Settings window.
@@ -482,8 +580,6 @@ FoosOBSPlus can read player names from files.  For example, we have an Access pr
 
 #### Select Path
 The Select Path allows you to choose the directory that will contain the files of the players' names.  Optionally you can just type the path in the box to the right of the Select Path button.
-
-#### File Name
 
 #### Player 1
 This is the name of the file containing the name of Team 1's forward.  Default is Player1.txt.
@@ -506,11 +602,134 @@ Click the cancel button to discard any changes made.
 #### Restore Defaults
 Click the Restore Defaults button to restore the default file names.
 
+### Statistics
+This has not been implemented yet. But will contain the sources for the Statistics generated for the current game.  Probably will only complete this section if someone expresses an interest.
+
+#### Save
+Click the save button to save any changes made.
+
+#### Cancel
+Click the cancel button to discard any changes made.
+
+#### Restore Defaults
+Click the Restore Defaults button to restore the default file names.
+
+## FoosOBSPlus Main Screen
+The FoosOBSPlus Main Screen is divided into 11 panels.  Each panel has its own controls and purpose.  Below is a description of each panel.
+
+### Table Information
+#### Tournament Name
+#### Event Name
+#### Table Name
+#### Clear
+#### Load
+#### Set
+
+### Match Information
+#### Start Event
+#### Start Match
+#### Pause Match
+#### End Match
+#### Start Game
+#### Start Time
+#### Elapsed Time
+#### Game Time
+#### Game Table
+
+### Team 1 Information
+#### Team Name
+#### Forward Name
+#### Goalie Name
+#### Switch Positions
+#### Score
+#### Score -
+#### Score +
+#### Game Count
+#### Game Count -
+#### Game Count +
+#### Time Out Count
+#### Return TO
+#### Use TO
+#### Reset
+#### Warn
+#### Time Since Last Scored
+#### Clear
+
+### Team 2 Information
+This panel is identical to Team 1 Information panel but is for tracking Team 2's information.
+
+### Timer Panel
+#### Active Timer
+#### Shot Timer Start
+#### Pass Timer Start
+#### Time Out Timer Start
+#### Game Timer Start
+#### Recall Timer Start
+#### Reset Timer
+
+### OBS Panel
+#### Connect
+#### Update OBS
+#### Show Score/Hide Score
+#### Show Timer/Hide Timer
+#### Disconnect
+#### Fetch OBS
+#### Enable Skunk/Disable Skunk
+#### Start Stream
+
+### AutoScore Panel
+#### Connect
+#### Settings
+#### Disconnect
+#### Ignore Sensors
+
+### Switch Panel
+#### Switch Sides
+#### Switch Teams
+#### Switch Forward
+#### Switch Goalie
+#### Switch Scores
+#### Switch Game Counts
+#### Switch Time Outs
+#### Switch Reset/Warns
+#### Clear All
+#### Last Scored
+
+### Reset Panel
+#### Reset Names
+#### Reset Scores
+#### Reset Game Counts
+#### Reset Time Outs
+#### Reset Reset/Warns
+#### Reset All
+
+### Statistics Entry Panel
+#### Foosball Code
+#### History
+#### Clear
+#### Undo
+#### Redo
+
+### Statistics Display Panel
+#### Passing
+#### Shooting
+#### Clearing
+#### 2-Bar Passing
+#### Shots On Goal
+#### Scoring
+#### 3-Bar
+#### 5-Bar
+#### 2-Bar
+#### Breaks
+#### Stuffs
+#### Aces
+
 ## Revision History
-v1.110 11/28/2022</br>
-Move Show Timer and Show Scores from OBS Connect Panel to Sources Panel.</br>
-Make corresponding move for settings.</br>
-Update Show Scores button on OBS Panel.</br>
+v1.111 12/04/2022</br>
+Add Balls In Rack and Rack Mode to Parameters.</br>
+Add Rack Mode scoring logic.</br>
+Update README.md.</br>
+Setup the base Statistics Parameters window.</br>
 </br>
 v1.109 11/27/2022</br>
 Change Show Skunk in OBS Panel to Enable Skunk.</br>

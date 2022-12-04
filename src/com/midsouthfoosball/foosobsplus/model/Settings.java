@@ -106,6 +106,7 @@ public class Settings {
 		defaultControlProps.setProperty("ClearLastScored", "Last Scored");
 		defaultControlProps.setProperty("Side1Color", "Yellow");
 		defaultControlProps.setProperty("Side2Color", "Black");
+		defaultControlProps.setProperty("BallsInRack", "9");
 		defaultControlProps.setProperty("NameSeparator","/");
 		defaultControlProps.setProperty("ShotTime", "15");
 		defaultControlProps.setProperty("PassTime", "10");
@@ -117,6 +118,7 @@ public class Settings {
 		defaultControlProps.setProperty("WinByFinalOnly", "1");
 		defaultControlProps.setProperty("ShowSkunk",  "1");
 		defaultControlProps.setProperty("CutThroatMode", "0");
+		defaultControlProps.setProperty("RackMode", "0");
 		defaultControlProps.setProperty("LogoImageURL", "/imgs/MidsouthFoosballLogo4.png");
 		defaultControlProps.setProperty("LogoLinkURI", "https://www.facebook.com/midsouthfoosball");
 		//OBS
@@ -349,6 +351,7 @@ public class Settings {
 	}
 	public String getSide1Color() {return configControlProps.getProperty("Side1Color");}
 	public String getSide2Color() {return configControlProps.getProperty("Side2Color");}
+	public int getBallsInRack() {return Integer.parseInt(configControlProps.getProperty("BallsInRack"));}
 	public int getShotTime() {return Integer.parseInt(configControlProps.getProperty("ShotTime"));}
 	public int getPassTime() {return Integer.parseInt(configControlProps.getProperty("PassTime"));}
 	public int getTimeOutTime() {return Integer.parseInt(configControlProps.getProperty("TimeOutTime"));}
@@ -359,6 +362,7 @@ public class Settings {
 	public int getWinByFinalOnly() {return Integer.parseInt(configControlProps.getProperty("WinByFinalOnly"));}
 	public int getShowSkunk() {return Integer.parseInt(configControlProps.getProperty("ShowSkunk"));}
 	public int getCutThroatMode() {return Integer.parseInt(configControlProps.getProperty("CutThroatMode"));}
+	public int getRackMode() {return Integer.parseInt(configControlProps.getProperty("RackMode"));}
 	public String getLogoImageURL() {return configControlProps.getProperty("LogoImageURL");}
 	public String getLogoLinkURI() {return configControlProps.getProperty("LogoLinkURI");}
 	//OBS
@@ -739,6 +743,9 @@ public class Settings {
 	public void setSide2Color(String side2Color) {
 		configControlProps.setProperty("Side2Color", side2Color);
 	}
+	public void setBallsInRack(String ballsInRack) {
+		configControlProps.setProperty("BallsInRack", ballsInRack);
+	}
 	public void setShotTime(int shotTime) {
 		configControlProps.setProperty("ShotTime", Integer.toString(shotTime));
 		}
@@ -768,6 +775,9 @@ public class Settings {
 	}
 	public void setCutThroatMode(int cutThroatMode) {
 		configControlProps.setProperty("CutThroatMode", Integer.toString(cutThroatMode));
+	}
+	public void setRackMode(int rackMode) {
+		configControlProps.setProperty("RackMode", Integer.toString(rackMode));
 	}
 	public void setLogoImageURL(String logoImageURL) {
 		configControlProps.setProperty("LogoImageURL", logoImageURL);
@@ -1308,6 +1318,7 @@ public class Settings {
 	public String getDefaultClearLastScored() {return defaultControlProps.getProperty("ClearLastScored");}
 	public String getDefaultSide1Color() {return defaultControlProps.getProperty("Side1Color");}
 	public String getDefaultSide2Color() {return defaultControlProps.getProperty("Side2Color");}
+	public String getDefaultBallsInRack() {return defaultControlProps.getProperty("BallsInRack");}
 	public String getDefaultNameSeparator() {return defaultControlProps.getProperty("NameSeparator");}
 	public int getDefaultShotTime() {return Integer.parseInt(defaultControlProps.getProperty("ShotTime"));}
 	public int getDefaultPassTime() {return Integer.parseInt(defaultControlProps.getProperty("PassTime"));}
@@ -1319,6 +1330,7 @@ public class Settings {
 	public int getDefaultWinByFinalOnly() {return Integer.parseInt(defaultControlProps.getProperty("WinByFinalOnly"));}
 	public int getDefaultShowSkunk() {return Integer.parseInt(defaultControlProps.getProperty("ShowSkunk"));}
 	public int getDefaultCutThroatMode() {return Integer.parseInt(defaultControlProps.getProperty("CutThroatMode"));}
+	public int getDefaultRackMode() {return Integer.parseInt(defaultControlProps.getProperty("RackMode"));}
 	//OBS
 	public String getDefaultOBSHost() {return defaultOBSProps.getProperty("OBSHost");}
 	public String getDefaultOBSPort() {return defaultOBSProps.getProperty("OBSPort");}

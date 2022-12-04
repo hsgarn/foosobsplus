@@ -72,6 +72,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private HotKeysFrame hotKeysFrame;
 	private SourcesFrame sourcesFrame;
 	private FiltersFrame filtersFrame;
+	private StatSettingsFrame statSettingsFrame;
 	private PartnerProgramFrame partnerProgramFrame;
 	private OBSConnectFrame obsConnectFrame;
 	private AutoScoreSettingsFrame autoScoreSettingsFrame;
@@ -103,7 +104,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	
 	public MainFrame(Settings settings, TablePanel tablePanel, TimerPanel timerPanel, OBSPanel obsPanel, AutoScoreMainPanel autoScoreMainPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
 			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,
-			SourcesFrame sourcesFrame, FiltersFrame filtersFrame, PartnerProgramFrame partnerProgramFrame, OBSConnectFrame obsConnectFrame, AutoScoreSettingsFrame autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame, Main main) {
+			SourcesFrame sourcesFrame, FiltersFrame filtersFrame, StatSettingsFrame statSettingsFrame, PartnerProgramFrame partnerProgramFrame, OBSConnectFrame obsConnectFrame, AutoScoreSettingsFrame autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame, Main main) {
 
 		super(programName + ": Foosball"); //$NON-NLS-1$
 
@@ -121,7 +122,8 @@ public final class MainFrame extends JFrame implements WindowListener {
 		this.parametersFrame 		= parametersFrame;
 		this.hotKeysFrame 			= hotKeysFrame;
 		this.sourcesFrame			= sourcesFrame;
-		this.filtersFrame          = filtersFrame;
+		this.filtersFrame           = filtersFrame;
+		this.statSettingsFrame      = statSettingsFrame;
 		this.partnerProgramFrame    = partnerProgramFrame;
 		this.obsConnectFrame 		= obsConnectFrame;
 		this.autoScoreSettingsFrame = autoScoreSettingsFrame;
@@ -285,6 +287,12 @@ public final class MainFrame extends JFrame implements WindowListener {
 		settingsFilterItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				filtersFrame.setVisible(true);
+			}
+		});
+		
+		settingsStatItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				statSettingsFrame.setVisible(true);
 			}
 		});
 		
