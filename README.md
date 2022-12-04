@@ -315,7 +315,7 @@ Also include any labels that would look out of place without the above fields.
 
 #### Show Timer
 This is the source that shows the time remaining.  This should be a Window Capture source in OBS. The window should be setup as follows:
-<img width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettingsTimerWindow.png">
+<img width="500" height="200" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettingsTimerWindow.png">
 
 #### Save
 Click the save button to save any source changes made.
@@ -576,7 +576,7 @@ FoosOBSPlus can read player names from files.  For example, we have an Access pr
 
 <img align="left" width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings7.png">
 
-<img align="left" width="802" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings8.png">
+<img align="left" width="600" height="400" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings8.png">
 
 #### Select Path
 The Select Path allows you to choose the directory that will contain the files of the players' names.  Optionally you can just type the path in the box to the right of the Select Path button.
