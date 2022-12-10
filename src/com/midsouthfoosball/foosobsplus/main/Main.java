@@ -720,6 +720,9 @@ public class Main {
 	}
 	public void endMatch() {
 		matchController.endMatch();
+		if(gameClock.isStreamTimerRunning()) {
+			streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.EndMatch", settings.getGameType()) + " Pressed.\r\n");
+		}
 	}
 	public void startGame() {
 		if(gameClock.isStreamTimerRunning()) {

@@ -42,11 +42,13 @@
 <artifactId>slf4j-api</artifactId>
 <version>1.7.36</version>
 </dependency>
+<!--
 <dependency>
 <groupId>org.slf4j</groupId>
 <artifactId>slf4j-simple</artifactId>
 <version>1.7.36</version>
 </dependency>
+ -->
 </dependencies>
   <name>FoosOBSPlus</name>
   <url>https://github.com/hsgarn/foosobsplus</url>

@@ -314,7 +314,7 @@ Last Scored, Time Out 1, Time Out 2, Game Count 1, Game Count 2, Score 1, Score 
 Also include any labels that would look out of place without the above fields.
 
 #### Show Timer
-This is the source that shows the time remaining.  This should be a Window Capture source in OBS. The window should be setup as follows:
+This is the source that shows the time remaining.  This should be a Window Capture source in OBS. The window should be setup as follows:</br>
 <img width="500" height="200" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettingsTimerWindow.png">
 
 #### Save
@@ -618,113 +618,319 @@ Click the Restore Defaults button to restore the default file names.
 The FoosOBSPlus Main Screen is divided into 11 panels.  Each panel has its own controls and purpose.  Below is a description of each panel.
 
 ### Table Information
+This panel contains information pertaining to the particular tournament being played.  Tournament name and event can be displayed.
 #### Tournament Name
+This field will be sent to the source specified in the Tournament field in Sources Settings. Use this to display the name of the tournament or maybe the host venue's name.
 #### Event Name
+This field will be sent to the source specified in the Event field in Sources Settings. Use this to display the event currently being played (i.e. DYP, Singles, etc.).
 #### Table Name
+This field is intended to allow tracking more than one table, but that was back when files were the interface with OBS. So basically this is a useless field at the moment.
 #### Clear
+This button will clear all the fields in the Table Information panel.
 #### Load
+This button is currently useless.
 #### Set
-
+Yet another useless button.
 ### Match Information
+This panel provides a way to manage a match and shows a game table grid of the current match being played.
 #### Start Event
+This button is simply to drop a Start Event marker in the streamindex.txt file if Start Stream is activated.
 #### Start Match
+This button will reset all scores, game counts, time outs, reset/warns and times.  It also records the current time as the Start Time and will drop a Start Match marker in the streamindex.txt file if Start Stream is activated.
 #### Pause Match
+This button will pause the match time shown in the Elapsed Time field as well as the Game Time and Last Score Timers.  Once pressed, it will change to Unpause Match and pressing again will resume the timers.  This could be useful if something interrupts the event. But frankly, I have never used it.
 #### End Match
+This button stops the match, game, and last score timers. It will also drop an End Match marker in the streamindex.txt file if Start Stream is activated.
 #### Start Game
+This button will reset the Game Time and will unpause the Elapsed Time if the Pause Match button was pressed.  It will also drop a Start Game marker in the streamindex.txt file if Start Stream is activated.
+It does not reset the last scored timers which could be a bug or a feature.
 #### Start Time
+This displays the time when the Start Match button was pressed.
 #### Elapsed Time
+This displays the running time for the current match. It starts when the Start Match button is pressed and can be paused by the Pause Match button. The End Match button will stop the elapsed time as well.  It will also automatically stop when the program detects that a match has been won by one team or the other.
 #### Game Time
+This display the running time of the current game. The Pause Match button will pause/unpause the Game Time.  Reaching the points for winning a game will restart the game timer for the next game.  If the last game of the match is over, then the game timer will stop and have to be restarted by the Start Match or Start Game buttons.
 #### Game Table
-
+The Game Table shows the scores and time elapsed for each game.  Game winning score is highlighted in blue and match winning team is highlighted in Green.  The current game number is highlighted in gray.  The game table will only display up to 11 games and anything over 5 games won't look pretty.
 ### Team 1 Information
+This panel manages the match information specific to Team 1.
 #### Team Name
+This field will be sent to the source specified in the Team 1 field in Sources Settings. Use this to display the team name for Team 1.
 #### Forward Name
+This field will be sent to the source specified in the Team 1 Forward field in Sources Settings. Use this to display the name fo the forward for Team 1.
 #### Goalie Name
+This field will be sent to the source specified in the Team 1 Goalie field in Sources Settings. Use this to display the name fo the goalie for Team 1.
 #### Switch Positions
+The Switch Positions button will swap the Forward's and Goalie's names. Use this when Team 1 switches positions.
 #### Score
+This field is an editable field that will allow you to change the score for Team 1.  The score is sent to the source specified in the Score 1 field in Sources Settings.
 #### Score -
+This button will decrement Team 1's score by 1.  It can be assigned a hot key in Hot Keys Settings.
 #### Score +
+This button will increment Team 1's score by 1.  It can be assigned a hot key in Hot Keys Settings.
 #### Game Count
+This field is an editable field that will allow you to change the game count for Team 1.  The game count is sent to the source specified in the Game Count 1 field in Sources Settings.
 #### Game Count -
+This button will decrement Team 1's game count by 1.  It can be assigned a hot key in Hot Keys Settings.
 #### Game Count +
+This button will increment Team 1's game count by 1.  It can be assigned a hot key in Hot Keys Settings.
 #### Time Out Count
+This field is an editable field that will allow you to change the time outs for Team 1.  The time out count is sent to the source specified in the Time Out 1 field in Sources Settings.  This field can be have in two different ways depending on if Show Time Outs Used checkbox is checked or not in Parameters Settings. If checked, then the number in the Time Out Count field shows the number of time outs used. Otherwise, it shows the number of time outs remaining.
 #### Return TO
+This button will return a time out to Team 1.  This will either increment or decrement the Time Out Count depending on how the Show Time Outs Used checkbox in Parameters Settings is set. It can be assigned a hot key in Hot Keys Settings.
 #### Use TO
+This button will charge a time out to Team 1.  This will either increment or decrement the Time Out Count depending on how the Show Time Outs Used checkbox in Parameters Settings is set. It can be assigned a hot key in Hot Keys Settings.
 #### Reset
+This button will send the word RESET to the source specified in the Reset 1 field in Sources Settings.  It is a toggle button so when pressed once, it displays RESET. When pressed again, it clears the text.  A hot key can be assigned to this button in Hot Keys Settings.
 #### Warn
+This button will send the word WARNING to the source specified in the Warn 1 field in Sources Settings.  It is a toggle button so when pressed once, it displays WARNING. When pressed again, it clears the text.  A hot key can be assigned to this button in Hot Keys Settings.
 #### Time Since Last Scored
+This is the time elapsed since Team 1 scored a goal. It is reset by the Start Match button or when Team 1 scores a point.
 #### Clear
-
+This button will clear the Team Name, Forward Name, Goalie Name fields and reset the Score, Game Count and Time Out Count fields.
 ### Team 2 Information
 This panel is identical to Team 1 Information panel but is for tracking Team 2's information.
 
 ### Timer Panel
+The Timer Panel gives the ability to start and reset various timers.  Only one time is active at a time
 #### Active Timer
+The first line in the Timer Window displays which timer is currently active. This will be one of the following:
+Timer Reset - shows when no timer is currently active.
+Shot Timer
+Pass Timer
+Time Out Timer
+Game Timer
+Recall Timer
 #### Shot Timer Start
+This button starts the Shot Timer.  The amount of time allowed for a shot is defined in the Shot Time field in Parameters Settings.  A hot key can be assigned to this button in Hot Keys Settings.
 #### Pass Timer Start
+This button starts the Pass Timer.  The amount of time allowed for a pass is defined in the Pass Time field in Parameters Settings.  A hot key can be assigned to this button in Hot Keys Settings.
 #### Time Out Timer Start
+This button starts the Time Out Timer.  The amount of time allowed for a time out is defined in the Time Out Time field in Parameters Settings.  A hot key can be assigned to this button in Hot Keys Settings.
 #### Game Timer Start
+This button starts the Game Timer.  The amount of time allowed between games is defined in the Game Time field in Parameters Settings.  A hot key can be assigned to this button in Hot Keys Settings.
 #### Recall Timer Start
+This button starts the Recall Timer.  The amount of time allowed for a recall is defined in the Recall Time field in Parameters Settings.  A hot key can be assigned to this button in Hot Keys Settings.
 #### Reset Timer
-
+This button will reset the timer.  This is useful when the ball jumps off the table.  A hot key can be assigned to this button in Hot Keys Settings.
 ### OBS Panel
+The OBS Panel provides some controls to manage OBS.  OBS must be configured in the Connect item in the OBS menu for any of the OBS Panel buttons to work.
 #### Connect
+This button will connect FoosOBSPlus to OBS. Once connected, data will automatically be sent to OBS when changed in FoosOBSPlus. 
 #### Update OBS
+This button will send the current data in FoosOBSPlus to OBS.  This can be useful if you have to restart OBS and reconnect.
 #### Show Score/Hide Score
+This button will send a command to OBS to show or hide the source identified in the Show Scores field in Sources Settings. It is useful to hide the scores in OBS when no one is keeping score and to show them again when someone is available.
 #### Show Timer/Hide Timer
+This button will send a command to OBS to show or hide the source identified in the Show Timer field in Sources Settings.  It is useful to hide the timer window in OBS when no one is available to run the timers.
 #### Disconnect
+This button will disconnect OBS.
 #### Fetch OBS
+This button will read the data in OBS and show it in FoosOBSPlus.
 #### Enable Skunk/Disable Skunk
+This button will enable activating the Skunk filters identified in Team 1 Skunks and Team 2 Skunks in Filters Settings.  The Skunk filters will only be activated when the Enable Skunk button is on.
 #### Start Stream
-
+This button will start a stream timer and create a file called streamindex.txt.  Markers can be dropped in this file to show the time stamps when certain events happen.  This can be useful for indexing the stream videos.
 ### AutoScore Panel
+The AutoScore Panel controls the interaction with the AutoScore system.  This is a home grown system using lasers and a Raspberry Pico to detect when the ball is scored in one goal or the other.  When a score is detected, it sends data to FoosOBSPlus to increment the scoring team's score by one point.
 #### Connect
+This button will connect to the AutoScore system.  The AutoScore system must already be configured in the AutoScore Settings for the connection to work.
 #### Settings
+This button will bring up the AutoScore Settings window where the Server Address and Port can be configured.
 #### Disconnect
+This button will disconnect from the AutoScore system.
 #### Ignore Sensors
-
+Check this box if there is a need to temporarily ignore the input from the AutoScore system.  Uncheck it to resume letting the AutoScore system update the scores.
 ### Switch Panel
+The Switch Panel is used to swap the information between Team 1 and Team 2.
 #### Switch Sides
+The Switch Sides button is used when the teams switch sides.  The team names, player names, scores, time outs, game counts, reset/warns and last scored times will all be swapped. A hot key can be assigned to this button in Hot Keys Settings.
 #### Switch Teams
+This button will swap the Team Name, Forward Name and Goalie Name of Team 1 and Team 2. A hot key can be assigned to this button in Hot Keys Settings.
 #### Switch Forward
+This button will only swap Forward Names of Team 1 with Team 2. A hot key can be assigned to this button in Hot Keys Settings.
 #### Switch Goalie
+This button will only swap Goalie Names of Team 1 with Team 2. A hot key can be assigned to this button in Hot Keys Settings.
 #### Switch Scores
+This button will swap the scores of Team 1 with Team 2. A hot key can be assigned to this button in Hot Keys Settings.
 #### Switch Game Counts
+This button will swap the game counts of Team 1 with Team 2. A hot key can be assigned to this button in Hot Keys Settings.
 #### Switch Time Outs
+This button will swap the Time Out Counts of Team 1 with Team 2. A hot key can be assigned to this button in Hot Keys Settings.
 #### Switch Reset/Warns
+This button will swap the Reset and Warn states of Team 1 with Team 2.  A hot key can be assigned to this button in Hot Keys Settings.
 #### Clear All
+This button will clear all of Team 1 and Team 2's information.
 #### Last Scored
-
+This is a display only field that shows which team scored last.  An arrow will point to which team scored last. If no arrow, then no team has scored yet.
 ### Reset Panel
+The Reset Panel is useful for reseting information in the Team 1 and Team 2 Information panels.
 #### Reset Names
+This button will reset the Team Name, Forward Name and Goalie Name for both teams. A hot key can be assigned to this button in Hot Keys Settings.
 #### Reset Scores
+This button will set the Scores for both teams to 0. A hot key can be assigned to this button in Hot Keys Settings.
 #### Reset Game Counts
+This button will set the Game Counts for both teams to 0. A hot key can be assigned to this button in Hot Keys Settings.
 #### Reset Time Outs
+This button will reset the Time Out Counts for both teams. A hot key can be assigned to this button in Hot Keys Settings.
 #### Reset Reset/Warns
+This button will clear the Reset and Warn buttons for both teams. A hot key can be assigned to this button in Hot Keys Settings.
 #### Reset All
-
+This button will clear the Scores, Game Counts, Time Out Counts, Resets and Warns for both teams.  Note that the Name fields are not reset.  A hot key can be assigned to this button in Hot Keys Settings.
 ### Statistics Entry Panel
+The Statistics Entry Panel is intended to be used for entering codes to track statistics during the foosball match.
 #### Foosball Code
+Enter codes here.  Most of the buttons on FoosOBSPlus main screen have codes that can be entered that act the same as pressing the button itself.  These are actually commands and are preceeded with an X.  Other codes can be entered to track the ball in the foosball match. These codes are then converted into stats that will be shown in the Statistics Display Panel.  The commands and codes are explained in the Codes and Commands section.
 #### History
+All commands and codes entered are shown in the History area.  The last command/code entered is shown at the top of the box.
 #### Clear
+This button will clear the History area.
 #### Undo
+This button will undo the last command or code entered.
 #### Redo
-
+This button will redo the last command or code that was undone.
 ### Statistics Display Panel
+The Statistics Dispaly Panel displays any stats generated for the current match.  The Team Names (if any) are shown at the top of the panel.  Followed by the Forward and Goalie names for both teams.  Stats for team 1 are shown on the left and stats for team 2 are shown on the right. A description of each stat is in the middle.
 #### Passing
+The first value is the number of successful passes (5 man to 3 man). The second number is the number of pass attempts.  The third number is the pass success percentage.
 #### Shooting
+The first value is the number of successful shots. The second number is the number of shot attempts.  The third number is the shot success percentage.
 #### Clearing
+The first value is the number of successful clears. The second number is the number of clear attempts.  The third number is the clearing success percentage.
 #### 2-Bar Passing
+The first value is the number of successful passes (2 man to 3 man). The second number is the number of pass attempts.  The third number is the pass success percentage.
 #### Shots On Goal
+This is the number of shots on goalie from the goalie position.
 #### Scoring
+This is the total number of scores.
 #### 3-Bar
+This is the number of scores made from the 3 bar.
 #### 5-Bar
+This is the number of scores made from the 5 bar.
 #### 2-Bar
+This is the number of scores made from the goalie position.
 #### Breaks
+This is the number of breaks.
 #### Stuffs
+This is the number of stuffs.
 #### Aces
+This is the number of aces.
+##Codes and Commands
+The following code scheme will allow you to record every possession in a game by just learning what each position in the code designates and learning only a handful of codes.  Using these codes, the score and timers can be automatically maintained throughout the match.  Each position in the code has from 2 to 10 possible mostly intuitive values. Below is the breakdown of the code.
 
+1st position - team: which team has the ball.
+y - yellow team
+b - black team
+x - command trigger (see below for list of commands)
+
+2nd position - rod: where is the ball:
+2 - 2 bar or 3 bar goalie rod.  These rods are treated as one rod.
+3 - 3 bar forward rod.
+5 - 5 bar forward rod.
+g - goal (someone scored)
+o - off table
+d - dead ball
+
+3rd position - action: how did the ball get here:
+a - ace (used when either 5 bar shot in goal from serve, or passed to the 3 from serve and shot from the 3 without any opponent intervention and without missing both the pass and the shot)
+c - clear (from goalie 2 or 3 rod to past the same team's 5 row)
+p - pass
+s - shot
+d - drop (serving ball after a score or being knocked off the table or after time out called)
+t - time out
+r - reset
+w - reset warning
+x - penalty (see 4th position for penalty modifiers)
+y - ball placement after a technical foul shot has been taken
+e - error (turnover)
+
+4th position - detail: provides more detail for the action if needed.
+b - break - used with pass or shot to designate that the attempt was successful, but only because of a lucky break
+f - stuff - used with shot or pass to indicate shot/pass was stuffed into shooters/passers goal (y3p, ygsf)
+w - 3 walls 5 bar violation - used with 3rd position set to x
+s - spin violation - used with 3rd position set to x
+j - jarring violation - used with 3rd position set to x
+d - distraction - used with 3rd position set to x
+t - too many time outs - used with 3rd position set to x
+p - illegal pass - used with 3rd position set to x
+x - technical foul - used with 3rd position set to x
+r - ready protocol violation - used with 3rd position set to x
+o - other violation - future rules or ones just overlooked - used with 3rd position set to 
+
+
+###Examples (this is laid out in the form of an actual game taking place):
+y5d - ball is on the 5 bar of the yellow team who "has the drop" either due to winning the coin toss, ball off the table, or oppenent scored.  y5d or b5d will always be how a new point, game, and match start out.
+y3p - ball is passed to the 3 bar
+bgs - ball shot into black team's goal (score y=1, b=0)
+b5d - now black team has ball on the 5 from the drop.
+y5xw - ball on yellow 5 man because black team hit 3 walls on their 5 bar possession.
+y3p - ball successfully passed from 5 bar to 3 bar.
+y2s - ball was shot, but missed and landed on yellow 2 bar.
+y5p - ball passed to yellow 5 bar successfully.
+ygp - yellow tried to pass to 3 but was blocked into their own goal (score y=1, b=1)
+y5d - yellow has ball on 5 bar after black scored.
+y5t - yellow called time out, ball still on the 5 bar
+y5d - yellow starts play again from 5 bar
+y3p - pass to 3 bar successful
+y3r - black blocking agressively and reset is called
+bgs - ball shot into black goal (score y=2, b=1)
+
+###Commands: (These are just like hitting the corrsponding buttons in the UI)
+* xu - push undo button
+* xr - push redo button
+* xpsm - push Start Match button
+* xppm - push Pause Match button
+* xpsg - push Start Game button
+* xsst - start shot timer
+* xspt - start pass timer
+* xsgt - start game timer
+* xstt - start timeout timer
+* xsrt - start recall timer
+* xprt - push reset timer
+* xist1 - increase score team 1
+* xist2 - increase score team 2
+* xdst1 - decrease score team 1
+* xdst2 - decrease score team 2
+* xigt1 - increase game count team 1
+* xigt2 - increase game count team 2
+* xdgt1 - decrease game count team 1
+* xdgt2 - decrease game count team 2
+* xutt1 - use timeout for team 1
+* xutt2 - use timeout for team 2
+* xrtt1 - return timeout for team 1
+* xrtt2 - return timeout for team 2
+* xprt1 - push reset button for team 1
+* xprt2 - push reset button for team 2
+* xpwt1 - push warn button for team 1
+* xpwt2 - push warn button for team 2
+* xxpt1 - switch positions team 1
+* xxpt2 - switch positions team 2
+* xpss - push switch sides button
+* xpst	- switch teams
+* xxp1 - switch player 1 (forward)
+* xxp2 - switch player 2 (goalie)
+* xpssc	- switch scores
+* xpsgc	- switch game counts
+* xpsto	- switch time outs
+* xpsr	- switch reset/warns
+* xpca	- clear all (switch)
+* xpct1 - push clear team 1
+* xpct2 - push clear team 2
+* xprn - push reset names
+* xprs - push reset scores
+* xprg - push reset game counts
+* xprto - push reset time outs
+* xprr - push reset reset/warns
+* xpra - push reset all
+* xpso - push sync obs button
+* xpnb - push 9 ball button
+* xpsa - push show all button
+* xpha - push hide all button
 ## Revision History
+v1.112 12/09/2022</br>
+Fix Rack Mode scoring logic bug when winning points were less than required amount for non Rack Mode.</br>
+Update ReadME.md file with more documentation.</br>
+</br>
 v1.111 12/04/2022</br>
 Add Balls In Rack and Rack Mode to Parameters.</br>
 Add Rack Mode scoring logic.</br>

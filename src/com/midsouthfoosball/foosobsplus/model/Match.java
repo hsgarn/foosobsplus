@@ -350,21 +350,37 @@ public class Match implements Serializable {
 			team1.incrementScore();
 			setLastScored(1);
 			setCurrentScoreTeam1(team1.getScore());
-			if(checkForGameWin(team1.getScore(), team2.getScore())) {
+			int whoWon = checkForGameWin(team1.getScore(), team2.getScore());
+			if(whoWon == 1 || whoWon == 3) {
 				gameWinners[currentGameNumber-1]=1;
 				matchWon = incrementGameCount(team1);
 				if(matchWon) matchWinner=1;
 				winState = 1;
+			} else {
+				if(whoWon == 2) {
+					gameWinners[currentGameNumber-1]=2;
+					matchWon = incrementGameCount(team2);
+					if(matchWon) matchWinner=2;
+					winState = 1;
+				}
 			}
 		} else {
 			team2.incrementScore();
 			setLastScored(2);
 			setCurrentScoreTeam2(team2.getScore());
-			if(checkForGameWin(team2.getScore(), team1.getScore())) {
+			int whoWon = checkForGameWin(team2.getScore(), team1.getScore());
+			if (whoWon == 1 || whoWon == 3) {
 				gameWinners[currentGameNumber-1]=2;
 				matchWon = incrementGameCount(team2);
 				if(matchWon) matchWinner=2;
 				winState = 1;
+			} else {
+				if(whoWon == 2) {
+					gameWinners[currentGameNumber-1]=1;
+					matchWon = incrementGameCount(team1);
+					if(matchWon) matchWinner=1;
+					winState = 1;
+				}
 			}
 		}
 		if (winState>0) {
@@ -378,6 +394,40 @@ public class Match implements Serializable {
 		};
 		checkMeatball();
 		return winState;
+	}
+	private int checkForGameWin(int score1, int score2) {
+		int whoWon = 0;// rack mode returns 0, 1 or 2 (1 if scoring team won or 2 if other team won). non rack mode returns 0, 3 (3=team who called checkForGameWin won)  .
+		int pointsToWin = settings.getPointsToWin();
+		int maxWin = settings.getMaxWin();
+		int winBy = settings.getWinBy();
+		int winByFinalOnly = settings.getWinByFinalOnly();
+		int ballsInRack = settings.getBallsInRack();
+		boolean rackMode = settings.getRackMode() == 1;
+		if (settings.getAutoIncrementGame()==1) {
+			if (rackMode) {
+				if (score1 + score2 >= ballsInRack) {
+					if(score1 > score2) {
+						whoWon=1;
+					} else {
+						whoWon=2;
+					}
+					clearMeatball();
+				} else {
+					clearMatchWinner();
+				}
+			} else {
+				if (score1 >= maxWin || 
+						((score1 >= pointsToWin) && 
+								((score1 >= score2 + winBy) || ((winByFinalOnly==1) && currentGameNumber != maxGameCount)) )) 
+				{
+					clearMeatball();
+					whoWon = 3;
+				} else {
+					clearMatchWinner();
+				}
+			}
+		}
+		return whoWon;
 	}
 	public boolean incrementGameCount(Team team) {
 		team.incrementGameCount();
@@ -434,49 +484,35 @@ public class Match implements Serializable {
 		}
 		clearMeatball();
 	}
-	private boolean checkForGameWin(int score1, int score2) {
-		int pointsToWin = settings.getPointsToWin();
-		int maxWin = settings.getMaxWin();
-		int winBy = settings.getWinBy();
-		int winByFinalOnly = settings.getWinByFinalOnly();
-		boolean rackMode = settings.getRackMode() == 1;
-		if (settings.getAutoIncrementGame()==1) {
+	private boolean checkForGameWinOnly() {
+		boolean isGameWon = false;
+		if (currentGameNumber!=0) {
+			int pointsToWin = settings.getPointsToWin();
+			int maxWin = settings.getMaxWin();
+			int winBy = settings.getWinBy();
+			int winByFinalOnly = settings.getWinByFinalOnly();
+			int ballsInRack = settings.getBallsInRack();
+			boolean rackMode = settings.getRackMode() == 1;
+			int score1 = Integer.parseInt(scoresTeam1[currentGameNumber-1]);
+			int score2 = Integer.parseInt(scoresTeam2[currentGameNumber-1]);
+			if (score2 > score1) {
+				score1 = score2;
+				score2 = Integer.parseInt(scoresTeam1[currentGameNumber-1]);
+			}
 			if (rackMode) {
-				if (score1 + score2 == settings.getBallsInRack()) {
-					if (score1 > score2) {
-						clearMeatball();
-						return true;
-					} else {
-						clearMatchWinner();
-					}
+				if (score1 + score2 >= ballsInRack) {
+					isGameWon = true;
 				}
 			} else {
 				if (score1 >= maxWin || 
 						((score1 >= pointsToWin) && 
 								((score1 >= score2 + winBy) || ((winByFinalOnly==1) && currentGameNumber != maxGameCount)) )) 
 				{
-					clearMeatball();
-					return true;
-				} else {
-					clearMatchWinner();
+					isGameWon = true;
 				}
 			}
 		}
-		return false;
-	}
-	private boolean checkForGameWinOnly() {
-		if (currentGameNumber==0) return false;
-		int score = Integer.parseInt(scoresTeam1[currentGameNumber-1]);
-		int otherScore = Integer.parseInt(scoresTeam2[currentGameNumber-1]);
-		if (otherScore > score) {
-			score = otherScore;
-			otherScore = Integer.parseInt(scoresTeam1[currentGameNumber-1]);
-		}
-		if (score >= settings.getMaxWin() || (score >= settings.getPointsToWin() && score >= otherScore + settings.getWinBy())) {
-			return true;
-		} else {
-			return false;
-		}
+		return isGameWon;
 	}
 	private boolean checkForMatchWin(Team team) {
 		boolean matchWon = false;
