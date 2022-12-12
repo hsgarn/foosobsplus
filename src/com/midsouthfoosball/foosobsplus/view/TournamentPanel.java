@@ -39,7 +39,7 @@ import javax.swing.border.TitledBorder;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
-public class TablePanel extends JPanel {
+public class TournamentPanel extends JPanel {
 
 	private JLabel lblTournamentName;
 	private JLabel lblEventName;
@@ -53,7 +53,7 @@ public class TablePanel extends JPanel {
 	private Settings settings;
 	private Border innerBorder;
 	
-	public TablePanel(Settings settings) {
+	public TournamentPanel(Settings settings) {
 		
 		this.settings = settings;
 
@@ -62,15 +62,15 @@ public class TablePanel extends JPanel {
 		dim.height = 200;
 		setPreferredSize(dim);
 		
-		lblTournamentName = new JLabel(Messages.getString("TablePanel.TournamentName", settings.getGameType())); //$NON-NLS-1$
-		lblEventName = new JLabel(Messages.getString("TablePanel.EventName", settings.getGameType())); //$NON-NLS-1$
-		lblTableName = new JLabel(Messages.getString("TablePanel.TableName", settings.getGameType())); //$NON-NLS-1$
+		lblTournamentName = new JLabel(Messages.getString("TournamentPanel.TournamentName", settings.getGameType())); //$NON-NLS-1$
+		lblEventName = new JLabel(Messages.getString("TournamentPanel.EventName", settings.getGameType())); //$NON-NLS-1$
+		lblTableName = new JLabel(Messages.getString("TournamentPanel.TableName", settings.getGameType())); //$NON-NLS-1$
 		txtTournamentName = new JTextField(30);
 		txtEventName = new JTextField(30);
 		txtTableName = new JTextField(10);
-		btnLoad = new JButton(Messages.getString("TablePanel.Load", settings.getGameType())); //$NON-NLS-1$
-		btnSet = new JButton(Messages.getString("TablePanel.Set", settings.getGameType())); //$NON-NLS-1$
-		btnClear = new JButton(Messages.getString("TablePanel.Clear", settings.getGameType())); //$NON-NLS-1$
+		btnLoad = new JButton(Messages.getString("TournamentPanel.Load", settings.getGameType())); //$NON-NLS-1$
+		btnSet = new JButton(Messages.getString("TournamentPanel.Set", settings.getGameType())); //$NON-NLS-1$
+		btnClear = new JButton(Messages.getString("TournamentPanel.Clear", settings.getGameType())); //$NON-NLS-1$
 		
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
@@ -237,7 +237,7 @@ public class TablePanel extends JPanel {
 		this.setBorder(border);
 	}
 	private String buildTitle() {
-		return Messages.getString("TablePanel.TableInformation", settings.getGameType()); //$NON-NLS-1$
+		return Messages.getString("TournamentPanel.TournamentInformation", settings.getGameType()); //$NON-NLS-1$
 	}
 
 }

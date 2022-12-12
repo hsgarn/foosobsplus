@@ -25,11 +25,19 @@ import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashSet;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -44,6 +52,7 @@ import net.miginfocom.swing.MigLayout;
 public class HotKeysPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+	private JFormattedTextField formattedTxtPath;
 	private JTextField txtStartMatchHotKey;
 	private JTextField txtPauseMatchHotKey;
 	private JTextField txtStartGameHotKey;
@@ -94,10 +103,13 @@ public class HotKeysPanel extends JPanel {
 	private JTextField txtStartStreamHotKey;
 	private JButton btnSave;
 	private JButton btnGenerateHotKeyScripts;
+	private String hotKeyBaseScriptText;
 
 	public HotKeysPanel(Settings settings) throws IOException {
+		hotKeyBaseScriptText = settings.getHotKeyBaseScript();
+		if (hotKeyBaseScriptText.isEmpty()) hotKeyBaseScriptText = settings.getDefaultHotKeyBaseScript();
 		setLayout(new MigLayout("", "[][grow][10.00][][grow][10.00][][grow][10.00][][grow]", "[][][][][][][][][][][][][][][][][][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		
+
 		JLabel lblButton = new JLabel(Messages.getString("HotKeysPanel.Button")); //$NON-NLS-1$
 		lblButton.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 		add(lblButton, "cell 0 0,alignx right"); //$NON-NLS-1$
@@ -609,10 +621,73 @@ public class HotKeysPanel extends JPanel {
 				restoreDefaults(settings);
 			}
 		});
-		add(btnRestoreDefaults, "cell 9 18, spanx 2, alignx center"); //$NON-NLS-1$
+		add(btnRestoreDefaults, "cell 9 18, spanx 2, alignx trailing"); //$NON-NLS-1$
 
+		JButton btnSelectPath = new JButton(Messages.getString("HotKeysPanel.SelectPath")); //$NON-NLS-1$
+		btnSelectPath.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				final JFileChooser chooser = new JFileChooser();
+				chooser.setCurrentDirectory(new java.io.File(formattedTxtPath.getText()));
+				chooser.setDialogTitle(Messages.getString("HotKeysPanel.SelectDirectoryForPath")); //$NON-NLS-1$
+				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				chooser.setAcceptAllFileFilterUsed(false);
+
+				int returnVal = chooser.showOpenDialog(HotKeysPanel.this);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					if (chooser.getSelectedFile().exists()) {
+						formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
+					} else {
+						String directoryName = chooser.getSelectedFile().getAbsolutePath();
+						if(!Files.exists(Paths.get(directoryName))) {
+							try {
+								Files.createDirectory(Paths.get(directoryName));
+							} catch (IOException e1) {
+								System.out.println(Messages.getString("Errors.ErrorCreatingDirectory") + e1.getMessage()); //$NON-NLS-1$
+							}
+						}
+						formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
+					}
+					try {
+						settings.setHotKeyScriptPath(formattedTxtPath.getText());
+						settings.saveHotKeyConfig();;
+					} catch (IOException ex) {
+						System.out.print(Messages.getString("HotKeysPanel.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
+					}
+				}
+			}
+		});
+		add(btnSelectPath, "cell 0 19, alignx right"); //$NON-NLS-1$
+
+		formattedTxtPath = new JFormattedTextField();
+		formattedTxtPath.setText(settings.getHotKeyScriptPath());
+		formattedTxtPath.addFocusListener(new FocusAdapter() {
+			public void focusLost(FocusEvent arg0) {
+		    	try {
+					settings.setHotKeyScriptPath(formattedTxtPath.getText());
+					settings.saveHotKeyConfig();
+		    	} catch (IOException ex) {
+		    		System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
+		    	}
+			}
+		});
+		formattedTxtPath.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent evt) {
+				int key = evt.getKeyCode();
+			    if (key == KeyEvent.VK_ENTER) {
+			    	try {
+						settings.setHotKeyScriptPath(formattedTxtPath.getText());
+						settings.saveHotKeyConfig();
+			    	} catch (IOException ex) {
+			    		System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
+			    	}
+			    }
+			}
+		});
+		add(formattedTxtPath, "cell 1 19 4 1,alignx left"); //$NON-NLS-1$
+		formattedTxtPath.setColumns(50);
 	}
 	private void restoreDefaults(Settings settings) {
+		formattedTxtPath.setText(settings.getDefaultHotKeyScriptPath());
 		txtStartMatchHotKey.setText(settings.getDefaultStartMatchHotKey());
 		txtPauseMatchHotKey.setText(settings.getDefaultPauseMatchHotKey());
 		txtStartGameHotKey.setText(settings.getDefaultStartGameHotKey());
@@ -661,10 +736,12 @@ public class HotKeysPanel extends JPanel {
 		txtSwitchPlayer2HotKey.setText(settings.getDefaultSwitchPlayer2HotKey());
 		txtShowSkunkHotKey.setText(settings.getDefaultShowSkunkHotKey());
 		txtStartStreamHotKey.setText(settings.getDefaultStartStreamHotKey());
+		hotKeyBaseScriptText = settings.getDefaultHotKeyBaseScript();
 	}
 	
 	public boolean saveSettings(Settings settings) {
 		boolean okToCloseWindow = false;
+		settings.setHotKeyScriptPath(formattedTxtPath.toString());
 		if(checkForUniqueHotKeys()) {
 			settings.setStartMatchHotKey(txtStartMatchHotKey.getText());
 			settings.setPauseMatchHotKey(txtPauseMatchHotKey.getText());
@@ -714,6 +791,7 @@ public class HotKeysPanel extends JPanel {
 			settings.setSwitchPlayer2HotKey(txtSwitchPlayer2HotKey.getText());
 			settings.setShowSkunkHotKey(txtShowSkunkHotKey.getText());
 			settings.setStartStreamHotKey(txtStartStreamHotKey.getText());
+			settings.setHotKeyBaseScript(hotKeyBaseScriptText);
 			try {
 				settings.saveHotKeyConfig();
 				okToCloseWindow = true;

@@ -57,7 +57,7 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 @SuppressWarnings("serial")
 public final class MainFrame extends JFrame implements WindowListener {
 	
-	private TablePanel tablePanel;
+	private TournamentPanel tournamentPanel;
 	private TeamPanel team1Panel;
 	private TeamPanel team2Panel;
 	private SwitchPanel switchPanel;
@@ -102,13 +102,13 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private Icon imgIconAutoScoreDisconnected;	
 	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
 	
-	public MainFrame(Settings settings, TablePanel tablePanel, TimerPanel timerPanel, OBSPanel obsPanel, AutoScoreMainPanel autoScoreMainPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
+	public MainFrame(Settings settings, TournamentPanel tournamentPanel, TimerPanel timerPanel, OBSPanel obsPanel, AutoScoreMainPanel autoScoreMainPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
 			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,
 			SourcesFrame sourcesFrame, FiltersFrame filtersFrame, StatSettingsFrame statSettingsFrame, PartnerProgramFrame partnerProgramFrame, OBSConnectFrame obsConnectFrame, AutoScoreSettingsFrame autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame, Main main) {
 
 		super(programName + ": Foosball"); //$NON-NLS-1$
 
-		this.tablePanel 			= tablePanel;
+		this.tournamentPanel 			= tournamentPanel;
 		this.timerPanel 			= timerPanel;
 		this.obsPanel           	= obsPanel;
 		this.autoScoreMainPanel 	= autoScoreMainPanel;
@@ -488,8 +488,8 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		tablePanel.setPreferredSize(new Dimension(400,200));
-		add(tablePanel, gc);
+		tournamentPanel.setPreferredSize(new Dimension(400,200));
+		add(tournamentPanel, gc);
 		
 		//////// Timer Panel ////////
 		

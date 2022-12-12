@@ -487,6 +487,9 @@ This is the path to where the AutoHotKey scripts will be generated.  The default
 #### Generate AutoHotKey Scripts
 This button will generate an AutoHotKey script for each defined hot key.  The basic idea of the scripts is to bring the FoosOBSPlus window into focus and then press the hot key for the associated hot key for the action desired. It then moves the FoosOBSPlus window to the bottom of the screen so that your OBS program can stay the main focus.  The scripts will be placed into the directory specified in the AutoHotKey Script Path field.
 
+#### Select Path
+The Select Path allows you to choose the directory in which the AutoHotKey scripts will be created. Optionally you can just type the path in the box to the right of the Select Path button.
+
 #### Save
 Click the save button to save any hot key changes made.
 
@@ -927,6 +930,11 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpsa - push show all button
 * xpha - push hide all button
 ## Revision History
+v1.113 12/10/2022</br>
+Make base hotkey script a parameter instead of file.</br>
+Change TablePanel to TournamentPanel.</br>
+Add HotKey Script Path to HotKeys settings.</br>
+</br>
 v1.112 12/09/2022</br>
 Fix Rack Mode scoring logic bug when winning points were less than required amount for non Rack Mode.</br>
 Update ReadME.md file with more documentation.</br>

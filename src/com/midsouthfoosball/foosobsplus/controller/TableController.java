@@ -33,35 +33,35 @@ import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.Table;
-import com.midsouthfoosball.foosobsplus.view.TablePanel;
+import com.midsouthfoosball.foosobsplus.view.TournamentPanel;
 
 public class TableController {
 	private Settings settings;
 	private OBSInterface obsInterface;
 	private Table table;
-	private TablePanel tablePanel;
+	private TournamentPanel tournamentPanel;
 	private TeamController teamController;
-	public TableController(OBSInterface obsInterface, Settings settings, Table table, Match match, TablePanel tablePanel, TeamController teamController) {
+	public TableController(OBSInterface obsInterface, Settings settings, Table table, Match match, TournamentPanel tournamentPanel, TeamController teamController) {
 		this.settings = settings;
 		this.obsInterface = obsInterface;
 		this.table = table;
-		this.tablePanel = tablePanel;
+		this.tournamentPanel = tournamentPanel;
 		this.teamController = teamController;
 		
 		////// Table Panel Listener Methods //////
 
-		this.tablePanel.addTournamentNameListener(new TournamentNameListener());
-		this.tablePanel.addTournamentNameFocusListener(new TournamentNameFocusListener());
-		this.tablePanel.addTournamentNameMouseListener(new TournamentNameMouseListener());
-		this.tablePanel.addEventNameListener(new EventNameListener());
-		this.tablePanel.addEventNameFocusListener(new EventNameFocusListener());
-		this.tablePanel.addEventNameMouseListener(new EventNameMouseListener());
-		this.tablePanel.addTableNameListener(new TableNameListener());
-		this.tablePanel.addTableNameFocusListener(new TableNameFocusListener());
-		this.tablePanel.addTableNameMouseListener(new TableNameMouseListener());
-		this.tablePanel.addClearListener(new ClearListener());
-		this.tablePanel.addLoadListener(new LoadListener());
-		this.tablePanel.addSetListener(new SetListener());
+		this.tournamentPanel.addTournamentNameListener(new TournamentNameListener());
+		this.tournamentPanel.addTournamentNameFocusListener(new TournamentNameFocusListener());
+		this.tournamentPanel.addTournamentNameMouseListener(new TournamentNameMouseListener());
+		this.tournamentPanel.addEventNameListener(new EventNameListener());
+		this.tournamentPanel.addEventNameFocusListener(new EventNameFocusListener());
+		this.tournamentPanel.addEventNameMouseListener(new EventNameMouseListener());
+		this.tournamentPanel.addTableNameListener(new TableNameListener());
+		this.tournamentPanel.addTableNameFocusListener(new TableNameFocusListener());
+		this.tournamentPanel.addTableNameMouseListener(new TableNameMouseListener());
+		this.tournamentPanel.addClearListener(new ClearListener());
+		this.tournamentPanel.addLoadListener(new LoadListener());
+		this.tournamentPanel.addSetListener(new SetListener());
 	}
 	
 	////// Table Panel Listener Objects //////
@@ -71,7 +71,7 @@ public class TableController {
 			JTextField txt = (JTextField) e.getSource();
 			String tournamentName = txt.getText();
 			table.setTournamentName(tournamentName);
-			tablePanel.updateTournamentName(tournamentName);
+			tournamentPanel.updateTournamentName(tournamentName);
 		}
 	}
 	private class TournamentNameFocusListener extends FocusAdapter{
@@ -79,12 +79,12 @@ public class TableController {
 			JTextField txt = (JTextField) e.getSource();
 			String tournamentName = txt.getText();
 			table.setTournamentName(tournamentName);
-			tablePanel.updateTournamentName(tournamentName);
+			tournamentPanel.updateTournamentName(tournamentName);
 		}
 	}
 	private class TournamentNameMouseListener extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) {
-			tablePanel.selectTournamentName();
+			tournamentPanel.selectTournamentName();
 		}
 	}
 	private class EventNameListener implements ActionListener{
@@ -92,7 +92,7 @@ public class TableController {
 			JTextField txt = (JTextField) e.getSource();
 			String eventName = txt.getText();
 			table.setEventName(eventName);
-			tablePanel.updateEventName(eventName);
+			tournamentPanel.updateEventName(eventName);
 		}
 	}
 	private class EventNameFocusListener extends FocusAdapter{
@@ -100,12 +100,12 @@ public class TableController {
 			JTextField txt = (JTextField) e.getSource();
 			String eventName = txt.getText();
 			table.setEventName(eventName);
-			tablePanel.updateEventName(eventName);
+			tournamentPanel.updateEventName(eventName);
 		}
 	}
 	private class EventNameMouseListener extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) {
-			tablePanel.selectEventName();
+			tournamentPanel.selectEventName();
 		}
 	}
 	private class TableNameListener implements ActionListener{
@@ -114,7 +114,7 @@ public class TableController {
 			String tableName = txt.getText();
 			obsInterface.setTableName(tableName);
 			table.setTableName(tableName);
-			tablePanel.updateTableName(tableName);
+			tournamentPanel.updateTableName(tableName);
 		}
 	}
 	private class TableNameFocusListener extends FocusAdapter{
@@ -123,18 +123,18 @@ public class TableController {
 			String tableName = txt.getText();
 			obsInterface.setTableName(tableName);
 			table.setTableName(tableName);
-			tablePanel.updateTableName(tableName);
+			tournamentPanel.updateTableName(tableName);
 		}
 	}
 	private class TableNameMouseListener extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) {
-			tablePanel.selectTableName();
+			tournamentPanel.selectTableName();
 		}
 	}
 	private class ClearListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			table.clearAll();
-			tablePanel.clearAllFields();
+			tournamentPanel.clearAllFields();
 		}
 	}
 	private class LoadListener implements ActionListener{
@@ -154,13 +154,13 @@ public class TableController {
 	}
 	public void fetchAll() {
 		table.setTournamentName(obsInterface.getContents(settings.getTournamentSource()));
-		tablePanel.updateTournamentName(table.getTournamentName());
+		tournamentPanel.updateTournamentName(table.getTournamentName());
 		table.setEventName(obsInterface.getContents(settings.getEventSource()));
-		tablePanel.updateEventName(table.getEventName());
+		tournamentPanel.updateEventName(table.getEventName());
 	}
 	public void fetchAll(String tableName) {
 		table.setTableName(tableName);
-		tablePanel.updateTableName(table.getTableName());
+		tournamentPanel.updateTableName(table.getTableName());
 		fetchAll();
 	}
 	public void writeAll() {

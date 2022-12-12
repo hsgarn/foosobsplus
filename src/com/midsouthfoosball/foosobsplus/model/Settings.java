@@ -21,7 +21,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.model;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +30,6 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.Properties;
-import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
@@ -42,8 +40,6 @@ public class Settings {
 // Parameter settings
 	private String separator 			= FileSystems.getDefault().getSeparator();
 	private String[] lastScoredStrings 	= new String[3];
-	private String scriptPath           = "C:\\FoosOBSPlusScripts\\";
-	private String baseScriptFileName   = "hotkeybasescript.txt";
 	private final String gameType       = "Foosball";
 
 	// Property Settings
@@ -288,6 +284,8 @@ public class Settings {
 		defaultHotKeyProps.setProperty("AutoScoreMainConnectHotKey", "");
 		defaultHotKeyProps.setProperty("AutoScoreMainDisconnectHotKey", "");
 		defaultHotKeyProps.setProperty("AutoScoreMainSettingsHotKey", "");
+		defaultHotKeyProps.setProperty("HotKeyBaseScript", Messages.getString("Settings.HotKeyBaseScript"));
+		defaultHotKeyProps.setProperty("HotKeyScriptPath", "C:\\FoosOBSPlusScripts\\");
 		//AutoScore Settings Properties
 		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsServerAddress", "192.168.68.69");
 		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsServerPort", "5051");
@@ -670,6 +668,8 @@ public class Settings {
 	public String getAutoScoreMainConnectHotKey() {return configHotKeyProps.getProperty("AutoScoreMainConnectHotKey");}
 	public String getAutoScoreMainDisconnectHotKey() {return configHotKeyProps.getProperty("AutoScoreMainDisconnectHotKey");}
 	public String getAutoScoreMainSettingsHotKey() {return configHotKeyProps.getProperty("AutoScoreMainSettingsHotKey");}
+	public String getHotKeyBaseScript() {return configHotKeyProps.getProperty("HotKeyBaseScript");}
+	public String getHotKeyScriptPath() {return configHotKeyProps.getProperty("HotKeyScriptPath");}
 	//AutoScore Settings
 	public String getAutoScoreSettingsServerAddress() {return configAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerAddress");}
 	public int getAutoScoreSettingsServerPort() {return Integer.parseInt(configAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerPort"));}
@@ -1261,6 +1261,12 @@ public class Settings {
 	public void setStartStreamHotKey(String startStreamHotKey) {
 		configHotKeyProps.setProperty("StartStreamHotKey", startStreamHotKey);
 	}
+	public void setHotKeyBaseScript(String hotKeyBaseScript) {
+		configHotKeyProps.setProperty("HotKeyBaseScript", hotKeyBaseScript);
+	}
+	public void setHotKeyScriptPath(String hotKeyScriptPath) {
+		configHotKeyProps.setProperty("HotKeyScriptPath", hotKeyScriptPath);
+	}
 	//AutoScore Settings
 	public void setAutoScoreSettingsServerAddress(String autoScoreSettingsServerAddress) {
 		configAutoScoreSettingsProps.setProperty("AutoScoreSettingsServerAddress", autoScoreSettingsServerAddress);
@@ -1493,6 +1499,8 @@ public class Settings {
 	public String getDefaultShowTimerHotKey() {return defaultHotKeyProps.getProperty("ShowTimerHotKey");}
 	public String getDefaultShowSkunkHotKey() {return defaultHotKeyProps.getProperty("ShowSkunkHotKey");}
 	public String getDefaultStartStreamHotKey() {return defaultHotKeyProps.getProperty("StartStreamHotKey");}
+	public String getDefaultHotKeyBaseScript() {return defaultHotKeyProps.getProperty("HotKeyBaseScript");}
+	public String getDefaultHotKeyScriptPath() {return defaultHotKeyProps.getProperty("HotKeyScriptPath");}
 	//AutoScore Settings
 	public String getDefaultAutoScoreSettingsServerAddress() {return defaultAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerAddress");}
 	public int getDefaultAutoScoreSettingsServerPort() {return Integer.parseInt(defaultAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerPort"));}
@@ -1629,34 +1637,29 @@ public class Settings {
 		}
 	}
 	public void generateHotKeyScripts() {
-		configHotKeyProps.entrySet()
-			.stream()
-			.filter(e -> e.getValue().toString().length() > 0)
-			.forEach(e->createHotKeyScript(e.getKey().toString(), e.getValue().toString()));
+		String baseScriptText = getHotKeyBaseScript();
+		if (baseScriptText.isEmpty()) {
+			JOptionPane.showMessageDialog(null, Messages.getString("Errors.BaseScriptFile"), "Scripting Error", 1);
+		} else {
+			String[] baseScript = baseScriptText.split("\\r\\n");
+			configHotKeyProps.entrySet()
+				.stream()
+				.filter(e -> e.getValue().toString().length() > 0)
+				.forEach(e->createHotKeyScript(e.getKey().toString(), e.getValue().toString(), baseScript));
+		}
 	}
-	private void createHotKeyScript(String keyFunction, String hotKey) {
-		File file = new File(baseScriptFileName);
-		String ln;
+	private void createHotKeyScript(String keyFunction, String hotKey, String[] baseScript) {
 		keyFunction = keyFunction.substring(0, keyFunction.length()-6);
 		try {
-			Scanner sc = new Scanner(file);
-			if(sc != null) {
-				try {
-					File scriptFile = new File(scriptPath + keyFunction + ".ahk");
-					scriptFile.createNewFile();
-					FileWriter fileWriter = new FileWriter(scriptFile);
-					while (sc.hasNextLine()) {
-						ln = sc.nextLine().replace("~function~", keyFunction).replace("~hotkey~", hotKey);
-						fileWriter.write(ln + "\r\n");
-					}
-					fileWriter.close();
-					sc.close();
-				} catch (IOException ex) {
-					JOptionPane.showMessageDialog(null, Messages.getString("Errors.ScriptWriteFailure") + " " + keyFunction, "Scripting Error", 1);
-				}
+			File scriptFile = new File(getHotKeyScriptPath() + File.separator + keyFunction + ".ahk");
+			scriptFile.createNewFile();
+			FileWriter fileWriter = new FileWriter(scriptFile);
+			for (String ln: baseScript) {
+				fileWriter.write(ln.replace("~function~", keyFunction).replace("~hotkey~", hotKey) + "\r\n");
 			}
-		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(null, Messages.getString("Errors.BaseScriptFile") + " " + baseScriptFileName, "Scripting Error", 1);
-		} 
+			fileWriter.close();
+		} catch (IOException ex) {
+			JOptionPane.showMessageDialog(null, Messages.getString("Errors.ScriptWriteFailure") + " " + keyFunction, "Scripting Error", 1);
+		}
 	}
 }

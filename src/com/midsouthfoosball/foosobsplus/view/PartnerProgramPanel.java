@@ -110,7 +110,7 @@ public class PartnerProgramPanel extends JPanel {
 						settings.setPartnerProgramPath(formattedTxtPath.getText());
 						settings.savePartnerProgramConfig();;
 					} catch (IOException ex) {
-						System.out.print(Messages.getString("PartnerProgramPanel.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
+						System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
 					}
 				}
 			}
@@ -125,7 +125,7 @@ public class PartnerProgramPanel extends JPanel {
 					settings.setPartnerProgramPath(formattedTxtPath.getText());
 					settings.savePartnerProgramConfig();
 		    	} catch (IOException ex) {
-		    		System.out.print(Messages.getString("PartnerProgramPanel.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
+		    		System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
 		    	}
 			}
 		});
@@ -137,7 +137,7 @@ public class PartnerProgramPanel extends JPanel {
 						settings.setPartnerProgramPath(formattedTxtPath.getText());
 						settings.savePartnerProgramConfig();
 			    	} catch (IOException ex) {
-			    		System.out.print(Messages.getString("PartnerProgramPanel.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
+			    		System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
 			    	}
 			    }
 			}

@@ -153,7 +153,7 @@ import com.midsouthfoosball.foosobsplus.view.StatSettingsFrame;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
-import com.midsouthfoosball.foosobsplus.view.TablePanel;
+import com.midsouthfoosball.foosobsplus.view.TournamentPanel;
 import com.midsouthfoosball.foosobsplus.view.TeamPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
@@ -227,7 +227,7 @@ public class Main {
 	
 	////// Create the View Panels to Display (mVc) \\\\\\
 	
-	private TablePanel 			tablePanel 			= new TablePanel(settings);
+	private TournamentPanel 			tournamentPanel 			= new TournamentPanel(settings);
 	private TimerPanel 			timerPanel 			= new TimerPanel(settings);
 	private OBSPanel            obsPanel            = new OBSPanel(settings);
 	private AutoScoreMainPanel	autoScoreMainPanel  = new AutoScoreMainPanel(settings);
@@ -595,7 +595,7 @@ public class Main {
 		setSourceFilterVisibility(obs.getScene(), settings.getFiltersFilter(filter), true);
 	}
 	public void loadWindowsAndControllers() {
-		mainFrame = new MainFrame(settings, tablePanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, statsEntryPanel, 
+		mainFrame = new MainFrame(settings, tournamentPanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, statsEntryPanel, 
 				switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, sourcesFrame, filtersFrame, 
 				statSettingsFrame, partnerProgramFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, this);
 
@@ -612,7 +612,7 @@ public class Main {
 		mainController 	= new MainController(mainFrame, timerWindowFrame, lastScored1WindowFrame, lastScored2WindowFrame, gameTableWindowFrame);
 		timerController = new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock);
 		teamController 	= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, matchPanel, gameTableWindowPanel, statsDisplayPanel, timerController, lastScored1Clock, lastScored2Clock, gameClock, mainController);
-		tableController = new TableController(obsInterface, settings, table, match, tablePanel, teamController);
+		tableController = new TableController(obsInterface, settings, table, match, tournamentPanel, teamController);
 		matchController = new MatchController(settings, match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, switchPanel, gameTableWindowPanel, teamController, streamIndexer);
 		statsController = new StatsController(stats, statsDisplayPanel, teamController);
 	}
@@ -647,9 +647,9 @@ public class Main {
 		statsEntryPanel.addCodeListener(new CodeListener());
 		teamPanel1.addClearAllListener(new TeamClearAllListener());
 		teamPanel2.addClearAllListener(new TeamClearAllListener());
-		tablePanel.addClearListener(new TableClearAllListener());
-		tablePanel.addLoadListener(new TableLoadListener());
-		tablePanel.addSetListener(new TableSetListener());
+		tournamentPanel.addClearListener(new TableClearAllListener());
+		tournamentPanel.addLoadListener(new TableLoadListener());
+		tournamentPanel.addSetListener(new TableSetListener());
 		statsEntryPanel.addStatsClearListener(new StatsClearListener());
 		teamPanel1.addScoreIncreaseListener(new ScoreIncreaseListener());
 		teamPanel2.addScoreIncreaseListener(new ScoreIncreaseListener());
