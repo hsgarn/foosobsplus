@@ -732,8 +732,11 @@ This button will disconnect OBS.
 This button will read the data in OBS and show it in FoosOBSPlus.
 #### Enable Skunk/Disable Skunk
 This button will enable activating the Skunk filters identified in Team 1 Skunks and Team 2 Skunks in Filters Settings.  The Skunk filters will only be activated when the Enable Skunk button is on.
-#### Start Stream
+#### Start Stream/Stop Stream
 This button will start a stream timer and create a file called streamindex.txt.  Markers can be dropped in this file to show the time stamps when certain events happen.  This can be useful for indexing the stream videos.
+Once the Start Stream Timer button is pressed, it will toggle to Stop Stream Timer button.  This will then stop the stream timer. The next press will reset the time and start it again.
+#### Stream Time:
+This shows the running stream time when the Start Stream Timer button has been pressed.
 ### AutoScore Panel
 The AutoScore Panel controls the interaction with the AutoScore system.  This is a home grown system using lasers and a Raspberry Pico to detect when the ball is scored in one goal or the other.  When a score is detected, it sends data to FoosOBSPlus to increment the scoring team's score by one point.
 #### Connect
@@ -930,6 +933,10 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpsa - push show all button
 * xpha - push hide all button
 ## Revision History
+v1.114 12/13/2022</br>
+Make Start Stream button toggle with Stop Stream and show Stream Timer.</br>
+Update documentation.</br>
+</br>
 v1.113 12/10/2022</br>
 Make base hotkey script a parameter instead of file.</br>
 Change TablePanel to TournamentPanel.</br>

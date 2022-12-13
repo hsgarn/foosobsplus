@@ -224,7 +224,6 @@ public class Main {
 	private GameClock           gameClock           = new GameClock(obsInterface, settings);
 	private LastScoredClock  	lastScored1Clock    = new LastScoredClock();
 	private LastScoredClock		lastScored2Clock    = new LastScoredClock();
-	
 	////// Create the View Panels to Display (mVc) \\\\\\
 	
 	private TournamentPanel 			tournamentPanel 			= new TournamentPanel(settings);
@@ -615,6 +614,8 @@ public class Main {
 		tableController = new TableController(obsInterface, settings, table, match, tournamentPanel, teamController);
 		matchController = new MatchController(settings, match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, switchPanel, gameTableWindowPanel, teamController, streamIndexer);
 		statsController = new StatsController(stats, statsDisplayPanel, teamController);
+		gameClock.addGameClockTimerListener(new GameClockTimerListener());
+
 	}
 	public void loadListeners() {
 		hotKeysPanel.addSaveListener(new HotKeysSaveListener());
@@ -1206,7 +1207,19 @@ public class Main {
 	}
 	private class OBSStartStreamListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			gameClock.startStreamTimer();
+			AbstractButton abstractButton = (AbstractButton) e.getSource();
+			boolean startStreamFlag = abstractButton.getModel().isSelected();
+			obsPanel.setStartStream(startStreamFlag);
+			if (startStreamFlag) {
+				gameClock.startStreamTimer();
+			} else {
+				gameClock.stopStreamTimer();
+			}
+		}
+	}
+	private class GameClockTimerListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsPanel.updateTimerDisplay(gameClock.getStreamTime());
 		}
 	}
 	private class SettingsSaveListener implements ActionListener {

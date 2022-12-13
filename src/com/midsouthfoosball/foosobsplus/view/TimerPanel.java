@@ -234,7 +234,6 @@ public class TimerPanel extends JPanel {
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(btnResetTimer, gc);
-		gc.gridwidth = 1;
 	}
 	private void setMnemonics() {
 		if(settings.getShotTimerHotKey().isEmpty()) {

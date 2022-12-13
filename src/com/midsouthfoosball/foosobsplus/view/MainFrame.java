@@ -149,7 +149,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 			}
 		});
 		
-		setSize(1400,850);
+		setSize(1400,900);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
@@ -475,7 +475,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = -1;
 
-		//////// Table Panel ////////
+		//////// Tournament Panel ////////
 		
 		gc.gridy++;
 
@@ -484,7 +484,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		
 		gc.gridx = 0;
 		gc.gridwidth = 1;
-		gc.gridheight = 2;
+		gc.gridheight = 1;
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
@@ -517,7 +517,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(statsEntryPanel, gc);
-		statsEntryPanel.setPreferredSize(new Dimension(400,350));
+		statsEntryPanel.setPreferredSize(new Dimension(400,450));
 		gc.gridheight = 1;
 		
 		//////// Stats Display Panel ////////
@@ -531,7 +531,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		statsDisplayPanel.setPreferredSize(new Dimension(300,400));
+		statsDisplayPanel.setPreferredSize(new Dimension(300,450));
 		add(statsDisplayPanel, gc);
 		
 		////////// Match Panel  ///////////
@@ -548,13 +548,13 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		matchPanel.setPreferredSize(new Dimension(400,250));
+		matchPanel.setPreferredSize(new Dimension(400,300));
 		add(matchPanel, gc);
 
 		////////// OBS Panel  ///////////
 		
 		gc.weightx = .5;
-		gc.weighty = .25;
+		gc.weighty = .75;
 		
 		gc.gridx = 1;
 		gc.gridwidth =1;
@@ -562,7 +562,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		obsPanel.setPreferredSize(new Dimension(250,100));
+		obsPanel.setPreferredSize(new Dimension(275,175));
 		add(obsPanel, gc);
 
 		////////// AutoScore Main Panel  ///////////

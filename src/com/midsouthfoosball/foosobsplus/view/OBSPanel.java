@@ -20,6 +20,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.view;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -28,6 +29,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.border.Border;
@@ -44,7 +46,9 @@ public class OBSPanel extends JPanel {
 	private JToggleButton tglbtnShowScores;
 	private JToggleButton tglbtnShowTimer;
 	private JToggleButton tglbtnEnableSkunk;
-	private JButton btnStartStream;
+	private JToggleButton tglbtnStartStream;
+	private JLabel lblStreamTimeLabel;
+	private JLabel lblStreamTime;
 	private Settings settings;
 	private Border innerBorder;
 
@@ -52,8 +56,8 @@ public class OBSPanel extends JPanel {
 		
 		this.settings = settings;
 		Dimension dim = getPreferredSize();
-		dim.width = 350;
-		dim.height = 50;
+		dim.width = 275;
+		dim.height = 125;
 		setPreferredSize(dim);
 		String enableSkunkText;
 		boolean enableSkunkInitialState = false;
@@ -72,8 +76,11 @@ public class OBSPanel extends JPanel {
 		tglbtnShowTimer = new JToggleButton(Messages.getString("OBSPanel.ShowTimer", settings.getGameType())); //$NON-NLS-1$
 		tglbtnEnableSkunk = new JToggleButton(enableSkunkText);
 		tglbtnEnableSkunk.setSelected(enableSkunkInitialState);
-		
-		btnStartStream = new JButton(Messages.getString("OBSPanel.StartStream",settings.getGameType())); //$NON-NLS-1$
+		tglbtnStartStream = new JToggleButton(Messages.getString("OBSPanel.StartStreamTimer",settings.getGameType())); //$NON-NLS-1$
+		lblStreamTimeLabel = new JLabel(Messages.getString("OBSPanel.StreamTimeLabel",settings.getGameType())); //$NON-NLS-1$
+		lblStreamTime = new JLabel("00:00:00"); //$NON-NLS-1$
+		lblStreamTime.setOpaque(true);
+		lblStreamTime.setBackground(Color.ORANGE);
 
 		setMnemonics();
 		
@@ -105,7 +112,7 @@ public class OBSPanel extends JPanel {
 
 		//////// Disconnect ////////
 		gc.weightx = .1;
-		gc.weighty = 0.1;
+		gc.weighty = 0.0;
 		
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
@@ -177,8 +184,29 @@ public class OBSPanel extends JPanel {
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 0);
-		add(btnStartStream, gc);
+		add(tglbtnStartStream, gc);
 		
+		//////// Stream Time Label ////////
+		gc.gridy++;
+
+		gc.weightx = .1;
+		gc.weighty = 0.5;
+		
+		gc.gridx = 0;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.insets = new Insets(5, 5, 5, 5);
+		add(lblStreamTimeLabel, gc);
+
+		//////// Stream Time ////////
+		gc.weightx = .1;
+		gc.weighty = 0.5;
+		
+		gc.gridx = 1;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.LINE_END;
+		gc.insets = new Insets(5, 5, 5, 5);
+		add(lblStreamTime, gc);
 	}
 	private void setMnemonics() {
 		if(settings.getConnectHotKey().isEmpty()) {
@@ -217,9 +245,9 @@ public class OBSPanel extends JPanel {
 			tglbtnEnableSkunk.setMnemonic(settings.getShowSkunkHotKey().charAt(0));
 		};
 		if(settings.getStartStreamHotKey().isEmpty()) {
-			btnStartStream.setMnemonic(-1);
+			tglbtnStartStream.setMnemonic(-1);
 		} else {
-			btnStartStream.setMnemonic(settings.getStartStreamHotKey().charAt(0));
+			tglbtnStartStream.setMnemonic(settings.getStartStreamHotKey().charAt(0));
 		};
 	}
 	////// Listeners  //////
@@ -245,7 +273,7 @@ public class OBSPanel extends JPanel {
 		tglbtnEnableSkunk.addActionListener(listenForBtnEnableSkunk);
 	}
 	public void addStartStreamListener(ActionListener listenForBtnStartStream) {
-		btnStartStream.addActionListener(listenForBtnStartStream);
+		tglbtnStartStream.addActionListener(listenForBtnStartStream);
 	}
 
 	////// Utility Methods //////
@@ -273,6 +301,17 @@ public class OBSPanel extends JPanel {
 		} else {
 			tglbtnShowTimer.setText(Messages.getString("OBSPanel.ShowTimer", settings.getGameType())); //$NON-NLS-1$
 		}
+	}
+	public void setStartStream(boolean startStream) {
+		tglbtnStartStream.setSelected(startStream);
+		if (startStream) {
+			tglbtnStartStream.setText(Messages.getString("OBSPanel.StopStreamTimer", settings.getGameType())); //$NON-NLS-1$
+		} else {
+			tglbtnStartStream.setText(Messages.getString("OBSPanel.StartStreamTimer", settings.getGameType())); //$NON-NLS-1$
+		}
+	}
+	public void updateTimerDisplay(String timeElapsed) {
+		lblStreamTime.setText(timeElapsed);
 	}
 	public void updateMnemonics() {
 		setMnemonics();
