@@ -182,7 +182,7 @@ This is the source of a freeform text field that can be used for the name of the
 This is the source of a freeform text field that can be used for the name of the event being played (i.e. DYP, Open Singles, etc).  Default source is event.
 
 #### Time Remaining
-This is the source for the Time Remaining on the current timer.  Default source is timeremaining.
+This is the source for the Time Remaining on the current timer.  Default source is timeremaining.  An alternative and arguably better method to show time remaining is to use a Window Capture source in OBS. This will show the background color of the timer which is a nice touch since it starts green and goes red when time runs out.
 
 #### Timer
 This is the source that holds the name of the current timer that is running (Shot, Pass, Game, Timeout, Recall). Default source is timerinuse.
@@ -932,7 +932,13 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpnb - push 9 ball button
 * xpsa - push show all button
 * xpha - push hide all button
-## Revision History
+</br></br></br>
+## Revision History</br>
+v1.115 12/13/2022</br>
+Drop Load and Set buttons in Tournament Panel.</br>
+Rename TableController and Table classes to TournamentController and Tournament respectively.</br>
+Remove table name and file path logic from OBSInterface.</br>
+</br>
 v1.114 12/13/2022</br>
 Make Start Stream button toggle with Stop Stream and show Stream Timer.</br>
 Update documentation.</br>

@@ -47,8 +47,6 @@ public class TournamentPanel extends JPanel {
 	private JTextField txtTournamentName;
 	private JTextField txtEventName;
 	private JTextField txtTableName;
-	private JButton btnLoad;
-	private JButton btnSet;
 	private JButton btnClear;
 	private Settings settings;
 	private Border innerBorder;
@@ -65,11 +63,9 @@ public class TournamentPanel extends JPanel {
 		lblTournamentName = new JLabel(Messages.getString("TournamentPanel.TournamentName", settings.getGameType())); //$NON-NLS-1$
 		lblEventName = new JLabel(Messages.getString("TournamentPanel.EventName", settings.getGameType())); //$NON-NLS-1$
 		lblTableName = new JLabel(Messages.getString("TournamentPanel.TableName", settings.getGameType())); //$NON-NLS-1$
-		txtTournamentName = new JTextField(30);
-		txtEventName = new JTextField(30);
-		txtTableName = new JTextField(10);
-		btnLoad = new JButton(Messages.getString("TournamentPanel.Load", settings.getGameType())); //$NON-NLS-1$
-		btnSet = new JButton(Messages.getString("TournamentPanel.Set", settings.getGameType())); //$NON-NLS-1$
+		txtTournamentName = new JTextField(50);
+		txtEventName = new JTextField(50);
+		txtTableName = new JTextField(50);
 		btnClear = new JButton(Messages.getString("TournamentPanel.Clear", settings.getGameType())); //$NON-NLS-1$
 		
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
@@ -80,7 +76,7 @@ public class TournamentPanel extends JPanel {
 		layoutComponents();
 	}
 	
-	public void layoutComponents() {
+	private final void layoutComponents() {
 		setLayout(new GridBagLayout());
 		
 		GridBagConstraints gc = new GridBagConstraints();
@@ -88,83 +84,72 @@ public class TournamentPanel extends JPanel {
 
 		////////  Tournament Name ////////
 		gc.gridy++;
-		gc.weightx = 1;
-		gc.weighty = 1;
+		gc.weightx = .5;
+		gc.weighty = 0;
 
 		gc.gridx = 0;
-		gc.fill = GridBagConstraints.NONE;
+		gc.gridwidth = 1;
+		gc.fill = GridBagConstraints.LINE_START;
 		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = new Insets(5, 5, 5, 5);
+		gc.insets = new Insets(0, 5, 5, 5);
 		add(lblTournamentName, gc);
 		
 		gc.gridx = 1;
 		gc.gridwidth = 2;
 		gc.fill = GridBagConstraints.HORIZONTAL;
-		gc.insets = new Insets(5, 5, 5, 5);
 		gc.anchor = GridBagConstraints.LINE_START;
+		gc.insets = new Insets(5, 5, 5, 5);
 		add(txtTournamentName, gc);
 
 		////////  Event Name ////////
 		gc.gridy++;
-		gc.weightx = 1;
-		gc.weighty = 1;
+		gc.weightx = .5;
+		gc.weighty = 0;
 
 		gc.gridx = 0;
 		gc.gridwidth = 1;
-		gc.fill = GridBagConstraints.NONE;
+		gc.fill = GridBagConstraints.LINE_START;
 		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = new Insets(10, 10, 10, 10);
+		gc.insets = new Insets(0, 5, 5, 5);
 		add(lblEventName, gc);
 		
 		gc.gridx = 1;
 		gc.gridwidth = 2;
-		gc.insets = new Insets(10, 10, 0, 10);
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		gc.anchor = GridBagConstraints.LINE_START;
+		gc.insets = new Insets(5, 5, 5, 5);
 		add(txtEventName, gc);
 				
-		////////  Table Name ////////
+		////////  Tournament Name ////////
 		gc.gridy++;
-		gc.weightx = 1;
-		gc.weighty = 1;
+		gc.weightx = .5;
+		gc.weighty = 0;
 
 		gc.gridx = 0;
 		gc.gridwidth = 1;
-		gc.fill = GridBagConstraints.NONE;
+		gc.fill = GridBagConstraints.LINE_START;
 		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = new Insets(10, 10, 10, 10);
+		gc.insets = new Insets(0, 5, 5, 5);
 		add(lblTableName, gc);
 		
 		gc.gridx = 1;
 		gc.gridwidth = 2;
-		gc.insets = new Insets(10, 10, 10, 10);
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		gc.anchor = GridBagConstraints.LINE_START;
+		gc.insets = new Insets(5, 5, 5, 5);
 		add(txtTableName, gc);
 		
-		/////// Set & Clear buttons ////////
+		/////// Clear button ////////
 		gc.gridy++;
-		gc.weightx = 0;
-		gc.weighty = 1;
+		gc.weightx = .5;
+		gc.weighty = 0;
 		
 		gc.gridx = 0;
-		gc.gridwidth = 1;
-		gc.insets = new Insets(10, 10, 10, 10);
-		gc.fill = GridBagConstraints.NONE;
+		gc.gridwidth = 3;
+		gc.fill = GridBagConstraints.HORIZONTAL;
 		gc.anchor = GridBagConstraints.LINE_START;
+		gc.insets = new Insets(5, 5, 5, 5);
 		add(btnClear, gc);
-
-		gc.gridx = 1;
-		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.LINE_START;
-		gc.insets = new Insets(10, 10, 10, 10);
-		add(btnLoad, gc);
-		
-		gc.gridx = 2;
-		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.LINE_START;
-		gc.insets = new Insets(10, 10, 10, 10);
-		add(btnSet, gc);
 	}		
 
 	////// Listeners  //////
@@ -198,13 +183,7 @@ public class TournamentPanel extends JPanel {
 	public void addClearListener(ActionListener listenForBtnClear) {
 		btnClear.addActionListener(listenForBtnClear);
 	}
-	public void addLoadListener(ActionListener listenForBtnLoad) {
-		btnLoad.addActionListener(listenForBtnLoad);
-	}
-	public void addSetListener(ActionListener listenForBtnSet) {
-		btnSet.addActionListener(listenForBtnSet);
-	}
-				
+
 	////// Utility Methods //////
 	
 	public void updateTournamentName(String tournamentName) {

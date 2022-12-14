@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -32,23 +32,21 @@ import javax.swing.JTextField;
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.Settings;
-import com.midsouthfoosball.foosobsplus.model.Table;
+import com.midsouthfoosball.foosobsplus.model.Tournament;
 import com.midsouthfoosball.foosobsplus.view.TournamentPanel;
 
-public class TableController {
+public class TournamentController {
 	private Settings settings;
 	private OBSInterface obsInterface;
-	private Table table;
+	private Tournament tournament;
 	private TournamentPanel tournamentPanel;
-	private TeamController teamController;
-	public TableController(OBSInterface obsInterface, Settings settings, Table table, Match match, TournamentPanel tournamentPanel, TeamController teamController) {
+	public TournamentController(OBSInterface obsInterface, Settings settings, Tournament tournament, Match match, TournamentPanel tournamentPanel) {
 		this.settings = settings;
 		this.obsInterface = obsInterface;
-		this.table = table;
+		this.tournament = tournament;
 		this.tournamentPanel = tournamentPanel;
-		this.teamController = teamController;
 		
-		////// Table Panel Listener Methods //////
+		////// Tournament Panel Listener Methods //////
 
 		this.tournamentPanel.addTournamentNameListener(new TournamentNameListener());
 		this.tournamentPanel.addTournamentNameFocusListener(new TournamentNameFocusListener());
@@ -60,17 +58,15 @@ public class TableController {
 		this.tournamentPanel.addTableNameFocusListener(new TableNameFocusListener());
 		this.tournamentPanel.addTableNameMouseListener(new TableNameMouseListener());
 		this.tournamentPanel.addClearListener(new ClearListener());
-		this.tournamentPanel.addLoadListener(new LoadListener());
-		this.tournamentPanel.addSetListener(new SetListener());
 	}
 	
-	////// Table Panel Listener Objects //////
+	////// Tournament Panel Listener Objects //////
 
 	private class TournamentNameListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			String tournamentName = txt.getText();
-			table.setTournamentName(tournamentName);
+			tournament.setTournamentName(tournamentName);
 			tournamentPanel.updateTournamentName(tournamentName);
 		}
 	}
@@ -78,7 +74,7 @@ public class TableController {
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			String tournamentName = txt.getText();
-			table.setTournamentName(tournamentName);
+			tournament.setTournamentName(tournamentName);
 			tournamentPanel.updateTournamentName(tournamentName);
 		}
 	}
@@ -91,7 +87,7 @@ public class TableController {
 		public void actionPerformed(ActionEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			String eventName = txt.getText();
-			table.setEventName(eventName);
+			tournament.setEventName(eventName);
 			tournamentPanel.updateEventName(eventName);
 		}
 	}
@@ -99,7 +95,7 @@ public class TableController {
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			String eventName = txt.getText();
-			table.setEventName(eventName);
+			tournament.setEventName(eventName);
 			tournamentPanel.updateEventName(eventName);
 		}
 	}
@@ -112,8 +108,7 @@ public class TableController {
 		public void actionPerformed(ActionEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			String tableName = txt.getText();
-			obsInterface.setTableName(tableName);
-			table.setTableName(tableName);
+			tournament.setTableName(tableName);
 			tournamentPanel.updateTableName(tableName);
 		}
 	}
@@ -121,8 +116,7 @@ public class TableController {
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			String tableName = txt.getText();
-			obsInterface.setTableName(tableName);
-			table.setTableName(tableName);
+			tournament.setTableName(tableName);
 			tournamentPanel.updateTableName(tableName);
 		}
 	}
@@ -133,37 +127,19 @@ public class TableController {
 	}
 	private class ClearListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			table.clearAll();
+			tournament.clearAll();
 			tournamentPanel.clearAllFields();
 		}
 	}
-	private class LoadListener implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			String tableName = table.getTableName();
-			obsInterface.setTableName(tableName);
-			fetchAll(table.getTableName());
-			teamController.fetchAll();
-		}
-	}
-	private class SetListener implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			obsInterface.setTableName(table.getTableName());
-			table.writeAll();
-			teamController.writeAll();
-		}
-	}
 	public void fetchAll() {
-		table.setTournamentName(obsInterface.getContents(settings.getTournamentSource()));
-		tournamentPanel.updateTournamentName(table.getTournamentName());
-		table.setEventName(obsInterface.getContents(settings.getEventSource()));
-		tournamentPanel.updateEventName(table.getEventName());
-	}
-	public void fetchAll(String tableName) {
-		table.setTableName(tableName);
-		tournamentPanel.updateTableName(table.getTableName());
-		fetchAll();
+		tournament.setTournamentName(obsInterface.getContents(settings.getTournamentSource()));
+		tournamentPanel.updateTournamentName(tournament.getTournamentName());
+		tournament.setEventName(obsInterface.getContents(settings.getEventSource()));
+		tournamentPanel.updateEventName(tournament.getEventName());
+		tournament.setTableName(obsInterface.getContents(settings.getTableNameSource()));
+		tournamentPanel.updateTableName(tournament.getTableName());
 	}
 	public void writeAll() {
-		table.writeAll();
+		tournament.writeAll();
 	}
 }

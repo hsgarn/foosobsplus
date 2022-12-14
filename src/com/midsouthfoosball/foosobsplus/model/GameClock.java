@@ -268,7 +268,7 @@ public class GameClock implements Serializable {
 		writeData(settings.getMatchTimeSource(), getMatchTime());
 	}
     private void writeData(String source, String data) {
-		obsInterface.writeData(source, data, "Table", settings.getShowParsed());
+		obsInterface.writeData(source, data, "Tournament", settings.getShowParsed());
     }
     public void restoreState(byte[] serializedObject) {
 		GameClock tempGameClock = null;

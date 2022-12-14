@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020, 2021, 2022 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -20,13 +20,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.main;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.midsouthfoosball.foosobsplus.model.OBS;
@@ -37,52 +30,7 @@ import io.obswebsocket.community.client.message.response.inputs.GetInputSettings
 
 public class OBSInterface {
 	
-	private String txtFilePath="";
-	private String tableName="";
-	private String fileName;
-	private String separator = FileSystems.getDefault().getSeparator();
-	
 	public OBSInterface(Settings settings) {
-		txtFilePath = settings.getDatapath();
-		if(!Files.exists(Paths.get(txtFilePath))) {
-			try {
-				Files.createDirectory(Paths.get(txtFilePath));
-			} catch (IOException e) {
-				System.out.println("Could not create directory " + txtFilePath);
-				System.out.println(e.getClass().getSimpleName() + " - " + e.getMessage());
-			}
-		}
-	}
-
-	public void setFilePath(String filePath) {
-		this.txtFilePath = filePath;
-	}
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
-	}
-	
-	public String getFilePath() {return this.txtFilePath;}
-	public String getTableName() {return this.tableName;}
-
-	public void setContents(String whichFile, String theContents) throws IOException {
-		if (tableName.isEmpty()) {
-			fileName = whichFile;
-		} else {
-			fileName = tableName + "_" + whichFile;
-		}
-		String fileNamePlusPath = txtFilePath + separator + fileName;
-		if(!Files.exists(Paths.get(fileNamePlusPath))) {
-			try {
-				Files.createFile(Paths.get(fileNamePlusPath));
-			} catch (IOException e) {
-				System.out.println("Could not create file " + fileNamePlusPath);
-				System.out.println(e.getClass().getSimpleName() + " - " + e.getMessage());
-			}
-		}
-		try(BufferedWriter writer = new BufferedWriter(new FileWriter(fileNamePlusPath))) {
-			if(theContents==null) theContents="";
-			writer.write(theContents);
-		}
 	}
 
 	public String getContents(String whichSource) {

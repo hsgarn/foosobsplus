@@ -114,7 +114,7 @@ import com.midsouthfoosball.foosobsplus.commands.XPT2Command;
 import com.midsouthfoosball.foosobsplus.controller.MainController;
 import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
-import com.midsouthfoosball.foosobsplus.controller.TableController;
+import com.midsouthfoosball.foosobsplus.controller.TournamentController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
 import com.midsouthfoosball.foosobsplus.controller.TimerController;
 import com.midsouthfoosball.foosobsplus.model.Game;
@@ -124,7 +124,7 @@ import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.OBS;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.Stats;
-import com.midsouthfoosball.foosobsplus.model.Table;
+import com.midsouthfoosball.foosobsplus.model.Tournament;
 import com.midsouthfoosball.foosobsplus.model.Team;
 import com.midsouthfoosball.foosobsplus.model.TimeClock;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreConfigFrame;
@@ -205,7 +205,7 @@ public class Main {
 
 	////// Generate the Data Models (Mvc) \\\\\\
 	
-	private Table 				table 				= new Table(obsInterface, settings);
+	private Tournament 				tournament 				= new Tournament(obsInterface, settings);
 	private Team 				team1 				= new Team(obsInterface, settings, 1, settings.getSide1Color());
 	private Team 				team2 				= new Team(obsInterface, settings, 2, settings.getSide2Color());
 	private Match 				match				= new Match(obsInterface, settings, team1, team2);
@@ -272,7 +272,7 @@ public class Main {
 	private MainController 	mainController;
 	private TimerController timerController;
 	private TeamController 	teamController;
-	private TableController tableController;
+	private TournamentController tournamentController;
 	private MatchController matchController;
 	private StatsController statsController;
 	private SwingWorker<Boolean, Integer> autoScoreWorker;
@@ -281,8 +281,6 @@ public class Main {
 
 		loadWindowsAndControllers();
 		
-		obsInterface.setFilePath(settings.getDatapath());
-		obsInterface.setTableName(settings.getTableName());
 		obs.setHost(settings.getOBSHost());
 		obs.setPort(settings.getOBSPort());
 		obs.setPassword(settings.getOBSPassword());
@@ -303,8 +301,6 @@ public class Main {
 
 		loadCommands();
 
-		fetchAll(settings.getTableName());
-		
 		createAutoScoreWorker();
 		
 		if (settings.getAutoScoreSettingsAutoConnect() == 1) {
@@ -374,7 +370,7 @@ public class Main {
 		mainFrame.enableConnect(false);
 		mainFrame.setOBSIconConnected(true);
 		if(settings.getOBSUpdateOnConnect()==1) {
-			tableController.writeAll();
+			tournamentController.writeAll();
 			teamController.writeAll();
 			statsController.displayAllStats();
 		}
@@ -611,7 +607,7 @@ public class Main {
 		mainController 	= new MainController(mainFrame, timerWindowFrame, lastScored1WindowFrame, lastScored2WindowFrame, gameTableWindowFrame);
 		timerController = new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock);
 		teamController 	= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, matchPanel, gameTableWindowPanel, statsDisplayPanel, timerController, lastScored1Clock, lastScored2Clock, gameClock, mainController);
-		tableController = new TableController(obsInterface, settings, table, match, tournamentPanel, teamController);
+		tournamentController = new TournamentController(obsInterface, settings, tournament, match, tournamentPanel);
 		matchController = new MatchController(settings, match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, switchPanel, gameTableWindowPanel, teamController, streamIndexer);
 		statsController = new StatsController(stats, statsDisplayPanel, teamController);
 		gameClock.addGameClockTimerListener(new GameClockTimerListener());
@@ -649,8 +645,6 @@ public class Main {
 		teamPanel1.addClearAllListener(new TeamClearAllListener());
 		teamPanel2.addClearAllListener(new TeamClearAllListener());
 		tournamentPanel.addClearListener(new TableClearAllListener());
-		tournamentPanel.addLoadListener(new TableLoadListener());
-		tournamentPanel.addSetListener(new TableSetListener());
 		statsEntryPanel.addStatsClearListener(new StatsClearListener());
 		teamPanel1.addScoreIncreaseListener(new ScoreIncreaseListener());
 		teamPanel2.addScoreIncreaseListener(new ScoreIncreaseListener());
@@ -701,7 +695,7 @@ public class Main {
 	}
 	public void startEvent() {
 		if(gameClock.isStreamTimerRunning()) {
-			streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartEvent", settings.getGameType()) + " Pressed: " + table.getTournamentName() + ": " + table.getEventName() + "\r\n");
+			streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartEvent", settings.getGameType()) + " Pressed: " + tournament.getTournamentName() + ": " + tournament.getEventName() + "\r\n");
 		}
 	}
 	public void startMatch() {
@@ -734,11 +728,6 @@ public class Main {
 			}
 		}
 		matchController.startGame();
-	}
-	private void fetchAll(String tableNbr) {
-		tableController.fetchAll(tableNbr);
-		teamController.fetchAll();
-		statsController.displayAllStats();
 	}
 	public void switchSides() {
 		Memento tmpTeam1 = saveState(team1);
@@ -1158,7 +1147,7 @@ public class Main {
 	private class OBSPushListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (obs.getConnected()) {
-				tableController.writeAll();
+				tournamentController.writeAll();
 				teamController.writeAll();
 				statsController.displayAllStats();
 			}
@@ -1169,10 +1158,7 @@ public class Main {
 			if (obs.getConnected()) {
 				teamController.fetchAll();
 				teamController.displayAll();
-				tableController.fetchAll(settings.getTableName());
-//				tableController.writeAll();
-//				teamController.writeAll();
-//				statsController.displayAllStats();
+				tournamentController.fetchAll();
 			}
 		}
 	}
@@ -1547,16 +1533,6 @@ public class Main {
 		}
 	}
 	private class TableClearAllListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			statsEntryPanel.setFocusOnCode();
-		}
-	}
-	private class TableLoadListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			statsEntryPanel.setFocusOnCode();
-		}
-	}
-	private class TableSetListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			statsEntryPanel.setFocusOnCode();
 		}

@@ -105,9 +105,6 @@ public class TimerPanel extends JPanel {
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(lblTimerInUse, gc);
 
-		//////// Timer Display ////////
-//		gc.gridy++;
-
 		gc.weightx = .1;
 		gc.weighty = 0.1;
 		

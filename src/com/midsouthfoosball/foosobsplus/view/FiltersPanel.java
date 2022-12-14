@@ -136,7 +136,6 @@ public class FiltersPanel extends JPanel {
 						}
 						formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
 					}
-					obsInterface.setFilePath(formattedTxtPath.getText());
 					try {
 						settings.setDatapath(formattedTxtPath.getText());
 						settings.saveFilterConfig();
@@ -153,7 +152,6 @@ public class FiltersPanel extends JPanel {
 		formattedTxtPath.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent arg0) {
 		    	try {
-					obsInterface.setFilePath(formattedTxtPath.getText());
 					settings.setDatapath(formattedTxtPath.getText());
 					settings.saveFilterConfig();
 		    	} catch (IOException ex) {
@@ -166,7 +164,6 @@ public class FiltersPanel extends JPanel {
 				int key = evt.getKeyCode();
 			    if (key == KeyEvent.VK_ENTER) {
 			    	try {
-						obsInterface.setFilePath(formattedTxtPath.getText());
 						settings.setDatapath(formattedTxtPath.getText());
 						settings.saveFilterConfig();
 			    	} catch (IOException ex) {

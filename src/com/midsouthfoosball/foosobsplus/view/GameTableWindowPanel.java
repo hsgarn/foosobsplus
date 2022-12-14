@@ -103,7 +103,7 @@ public class GameTableWindowPanel extends JPanel {
 		  String tmp = "";
 		  tmp = (String) value;
 		  setHorizontalAlignment(SwingConstants.RIGHT);
-		  setBackground(UIManager.getColor("Table.background"));
+		  setBackground(UIManager.getColor("Tournament.background"));
 		  ////// Center game number columns and highlight current game number column \\\\\\
 		  if (row == 0 && column >=1 ) {
 			  setHorizontalAlignment(SwingConstants.CENTER);

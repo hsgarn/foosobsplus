@@ -127,7 +127,7 @@ public class Settings {
 		defaultOBSProps.setProperty("OBSCloseOnConnect", "1");
 		defaultOBSProps.setProperty("OBSUpdateOnConnect",  "1");
 		//Sources
-		defaultSourceProps.setProperty("Table", "tablename");
+		defaultSourceProps.setProperty("Tournament", "tablename");
 		defaultSourceProps.setProperty("Team1Name", "team1name");
 		defaultSourceProps.setProperty("Team1Forward", "team1forward");
 		defaultSourceProps.setProperty("Team1Goalie", "team1goalie");
@@ -569,7 +569,6 @@ public class Settings {
 			return configSourceProps.getProperty("Aces2");
 		}
 	}
-	public String getTableSource() {return configSourceProps.getProperty("Table");}
 	public String getTournamentSource() {return configSourceProps.getProperty("Tournament");}
 	public String getEventSource() {return configSourceProps.getProperty("Event");}
 	public String getTableNameSource() {return configSourceProps.getProperty("TableName");}
@@ -912,9 +911,6 @@ public class Settings {
 	}
 	public void setTeam2ShotsOnGoalSource(String team2ShotsOnGoalSource) {
 		configSourceProps.setProperty("Team2ShotsOnGoal", team2ShotsOnGoalSource);
-	}
-	public void setTableSource(String tableSource) {
-		configSourceProps.setProperty("Table", tableSource);
 	}
 	public void setTeam1NameSource(String team1NameSource) {
 		configSourceProps.setProperty("Team1Name", team1NameSource);
@@ -1347,7 +1343,6 @@ public class Settings {
 	public int getDefaultOBSCloseOnConnect() {return Integer.parseInt(defaultOBSProps.getProperty("OBSCloseOnConnect"));}
 	public int getDefaultOBSUpdateOnConnect() {return Integer.parseInt(defaultOBSProps.getProperty("OBSUpdateOnConnect"));}
 	//Sources
-	public String getDefaultTableSource() {return defaultSourceProps.getProperty("Table");}
 	public String getDefaultTeam1NameSource() {return defaultSourceProps.getProperty("Team1Name");}
 	public String getDefaultTeam1ForwardSource() {return defaultSourceProps.getProperty("Team1Forward");}
 	public String getDefaultTeam1GoalieSource() {return defaultSourceProps.getProperty("Team1Goalie");}

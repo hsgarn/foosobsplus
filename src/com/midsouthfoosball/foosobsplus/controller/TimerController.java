@@ -23,7 +23,6 @@ package com.midsouthfoosball.foosobsplus.controller;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.Arrays;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
@@ -66,7 +65,6 @@ public class TimerController {
 		this.lastScored2Clock.addLastScoredClockTimerListener(lastScored2ClockListener);
 	}
 	
-	
 	ActionListener timeClockListener = new ActionListener() {
 		public void actionPerformed(ActionEvent event) {
 			updateTimerDisplay();
@@ -83,7 +81,7 @@ public class TimerController {
 		}
 	};
 	
-	////// Utility Methodss //////
+	////// Utility Methods //////
 	
 	public void startShotTimer() {
 		int count = settings.getShotTime() * 10;
@@ -180,10 +178,6 @@ public class TimerController {
 		lastScored2WindowFrame.setTimerDisplay(lastScored2Clock.getLastScoredTime());
 	}
 	private void writeTimeRemaining() {
-		try {
-			obsInterface.setContents(settings.getTimeRemainingSource(), timerPanel.getTimerDisplayText());
-		} catch (IOException e2) {
-			e2.printStackTrace();
-		}
+		obsInterface.writeData(settings.getTimeRemainingSource(), timerPanel.getTimerDisplayText(),"TimerController",settings.getShowParsed());
 	}
 }

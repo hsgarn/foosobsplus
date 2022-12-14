@@ -20,11 +20,9 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.model;
 
-import java.io.IOException;
-
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
-public class Table {
+public class Tournament {
 	
 	private String tournamentName;
 	private String eventName;
@@ -34,7 +32,7 @@ public class Table {
 	private OBSInterface obsInterface;
 	private Settings settings;
 	
-	public Table(OBSInterface obsInterface, Settings settings) {
+	public Tournament(OBSInterface obsInterface, Settings settings) {
 		this.obsInterface = obsInterface;
 		this.settings = settings;
 	}
@@ -59,12 +57,6 @@ public class Table {
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
 		writeTableName();
-		settings.setTableName(tableName);
-		try {
-		settings.saveControlConfig();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	public String getSide1Color() {
 		return side1Color;
@@ -94,7 +86,7 @@ public class Table {
     	writeData(settings.getEventSource(), getEventName());
     }
     private void writeTableName() {
-   		writeData(settings.getTableSource(), getTableName());
+   		writeData(settings.getTableNameSource(), getTableName());
     }
     public void writeAll() {
     	writeTournamentName();
@@ -102,7 +94,7 @@ public class Table {
     	writeTableName();
      }
 	private void writeData(String source, String data) {
-		obsInterface.writeData(source, data, "Table", settings.getShowParsed());
+		obsInterface.writeData(source, data, "Tournament", settings.getShowParsed());
 	}
 
   }
