@@ -1261,6 +1261,9 @@ public class Settings {
 		configHotKeyProps.setProperty("HotKeyBaseScript", hotKeyBaseScript);
 	}
 	public void setHotKeyScriptPath(String hotKeyScriptPath) {
+		if (!hotKeyScriptPath.isEmpty() && hotKeyScriptPath.charAt(hotKeyScriptPath.length()-1)!='\\') {
+			hotKeyScriptPath = hotKeyScriptPath + "\\";
+		}
 		configHotKeyProps.setProperty("HotKeyScriptPath", hotKeyScriptPath);
 	}
 	//AutoScore Settings
@@ -1632,25 +1635,36 @@ public class Settings {
 		}
 	}
 	public void generateHotKeyScripts() {
+		String basePath = System.getProperty("user.dir");
 		String baseScriptText = getHotKeyBaseScript();
-		if (baseScriptText.isEmpty()) {
-			JOptionPane.showMessageDialog(null, Messages.getString("Errors.BaseScriptFile"), "Scripting Error", 1);
+		String hotKeyScriptPath = getHotKeyScriptPath();
+		if(Files.exists(Paths.get(basePath))) {
+			if(Files.exists(Paths.get(hotKeyScriptPath))) {
+				if (baseScriptText.isEmpty()) {
+					JOptionPane.showMessageDialog(null, Messages.getString("Errors.BaseScriptFile"), "Scripting Error", 1);
+				} else {
+					String[] baseScript = baseScriptText.split("\\r\\n");
+					configHotKeyProps.entrySet()
+						.stream()
+						.filter(e -> e.getValue().toString().length() > 0)
+						.forEach(e->createHotKeyScript(e.getKey().toString(), e.getValue().toString(), baseScript, basePath));
+					JOptionPane.showMessageDialog(null, "Done");
+				}
+			} else {
+				JOptionPane.showMessageDialog(null,  Messages.getString("Errors.DirectoryDoesNotExist") + " " + hotKeyScriptPath);
+			}
 		} else {
-			String[] baseScript = baseScriptText.split("\\r\\n");
-			configHotKeyProps.entrySet()
-				.stream()
-				.filter(e -> e.getValue().toString().length() > 0)
-				.forEach(e->createHotKeyScript(e.getKey().toString(), e.getValue().toString(), baseScript));
+			JOptionPane.showMessageDialog(null, Messages.getString("Errors.DirectoryDoesNotExist") + " " + basePath);
 		}
 	}
-	private void createHotKeyScript(String keyFunction, String hotKey, String[] baseScript) {
+	private void createHotKeyScript(String keyFunction, String hotKey, String[] baseScript, String basePath) {
 		keyFunction = keyFunction.substring(0, keyFunction.length()-6);
 		try {
 			File scriptFile = new File(getHotKeyScriptPath() + File.separator + keyFunction + ".ahk");
 			scriptFile.createNewFile();
 			FileWriter fileWriter = new FileWriter(scriptFile);
 			for (String ln: baseScript) {
-				fileWriter.write(ln.replace("~function~", keyFunction).replace("~hotkey~", hotKey) + "\r\n");
+				fileWriter.write(ln.replace("~function~", keyFunction).replace("~hotkey~", hotKey).replace("~basepath~", basePath) + "\r\n");
 			}
 			fileWriter.close();
 		} catch (IOException ex) {

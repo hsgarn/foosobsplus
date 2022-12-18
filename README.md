@@ -934,6 +934,12 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpha - push hide all button
 </br></br></br>
 ## Revision History</br>
+v1.116 12/17/2022</br>
+Use System user.dir property to get current path of program and use that in the autohotkey scripts.</br>
+Force autohotkey script path to end in \.</br>
+Check directories exist before created autohotkey scripts.</br>
+Remove Select Path from Filters Panel.</br>
+</br>
 v1.115 12/13/2022</br>
 Drop Load and Set buttons in Tournament Panel.</br>
 Rename TableController and Table classes to TournamentController and Tournament respectively.</br>

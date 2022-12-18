@@ -1,20 +1,32 @@
+/**
+Copyright 2021, 2022 Hugh Garner
+Permission is hereby granted, free of charge, to any person obtaining a copy 
+of this software and associated documentation files (the "Software"), to deal 
+in the Software without restriction, including without limitation the rights 
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
+copies of the Software, and to permit persons to whom the Software is 
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in 
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR 
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
+OTHER DEALINGS IN THE SOFTWARE.  
+**/
 package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -47,9 +59,7 @@ public class FiltersPanel extends JPanel {
 	private JTextField txtStartMatchFilter;
 	private JTextField txtStartGameFilter;
 	private JTextField txtSwitchSidesFilter;
-	private JFormattedTextField formattedTxtPath;
 	OBSInterface obsInterface;
-	private String defaultFilePath = "c:\\temp"; //$NON-NLS-1$
 	
 	// Create the Panel
 
@@ -57,9 +67,7 @@ public class FiltersPanel extends JPanel {
 		this.obsInterface = obsInterface;
 
 		setLayout(settings);
-
 	}
-
 	private void restoreDefaults(Settings settings) {
 		txtTeam1ScoreFilter.setText(settings.getDefaultTeam1ScoreFilter());
 		txtTeam2ScoreFilter.setText(settings.getDefaultTeam2ScoreFilter());
@@ -81,7 +89,6 @@ public class FiltersPanel extends JPanel {
 		txtStartGameFilter.setText(settings.getDefaultStartGameFilter());
 		txtSwitchSidesFilter.setText(settings.getDefaultSwitchSidesFilter());
 	}
-	
 	private void saveSettings(Settings settings) {
 		settings.setTeam1ScoreFilter(txtTeam1ScoreFilter.getText());
 		settings.setTeam2ScoreFilter(txtTeam2ScoreFilter.getText());
@@ -111,69 +118,6 @@ public class FiltersPanel extends JPanel {
 	public void setLayout(Settings settings) {
 		setBounds(100, 100, 900, 489);
 		setLayout(new MigLayout("", "[][][174.00,grow][27.00][91.00][grow][][][grow][14.00][][grow]", "[][][][][][][][][][][][][][][][][][][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-		JButton btnSelectPath = new JButton(Messages.getString("FiltersPanel.SelectPath")); //$NON-NLS-1$
-		btnSelectPath.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				final JFileChooser chooser = new JFileChooser();
-				chooser.setCurrentDirectory(new java.io.File(formattedTxtPath.getText()));
-				chooser.setDialogTitle(Messages.getString("FiltersPanel.SelectDirectoryForPath")); //$NON-NLS-1$
-				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				chooser.setAcceptAllFileFilterUsed(false);
-
-				int returnVal = chooser.showOpenDialog(FiltersPanel.this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					if (chooser.getSelectedFile().exists()) {
-						formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
-					} else {
-						String directoryName = chooser.getSelectedFile().getAbsolutePath();
-						if(!Files.exists(Paths.get(directoryName))) {
-							try {
-								Files.createDirectory(Paths.get(directoryName));
-							} catch (IOException e1) {
-								System.out.println(Messages.getString("Errors.ErrorCreatingDirectory") + e1.getMessage()); //$NON-NLS-1$
-							}
-						}
-						formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
-					}
-					try {
-						settings.setDatapath(formattedTxtPath.getText());
-						settings.saveFilterConfig();
-					} catch (IOException ex) {
-						System.out.print(Messages.getString("FiltersPanel.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
-					}
-				}
-			}
-		});
-		add(btnSelectPath, "cell 1 0"); //$NON-NLS-1$
-
-		formattedTxtPath = new JFormattedTextField(defaultFilePath);
-		formattedTxtPath.setText(settings.getDatapath());
-		formattedTxtPath.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent arg0) {
-		    	try {
-					settings.setDatapath(formattedTxtPath.getText());
-					settings.saveFilterConfig();
-		    	} catch (IOException ex) {
-		    		System.out.print(Messages.getString("FiltersPanel.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
-		    	}
-			}
-		});
-		formattedTxtPath.addKeyListener(new KeyAdapter() {
-			public void keyPressed(KeyEvent evt) {
-				int key = evt.getKeyCode();
-			    if (key == KeyEvent.VK_ENTER) {
-			    	try {
-						settings.setDatapath(formattedTxtPath.getText());
-						settings.saveFilterConfig();
-			    	} catch (IOException ex) {
-			    		System.out.print(Messages.getString("FiltersPanel.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
-			    	}
-			    }
-			}
-		});
-		add(formattedTxtPath, "cell 2 0 4 1,alignx left"); //$NON-NLS-1$
-		formattedTxtPath.setColumns(50);
 
 		JLabel lblFilter = new JLabel(Messages.getString("FiltersPanel.Filter")); //$NON-NLS-1$
 		add(lblFilter, "cell 2 1,alignx left"); //$NON-NLS-1$
@@ -362,5 +306,4 @@ public class FiltersPanel extends JPanel {
 		});
 		add(btnRestoreDefaults, "cell 5 19,alignx center"); //$NON-NLS-1$
 	}
-
 }

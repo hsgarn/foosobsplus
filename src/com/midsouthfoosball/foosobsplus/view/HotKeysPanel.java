@@ -597,7 +597,6 @@ public class HotKeysPanel extends JPanel {
 		btnGenerateHotKeyScripts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				settings.generateHotKeyScripts();
-				JOptionPane.showMessageDialog(null, "Done");
 			}
 		});
 		add(btnGenerateHotKeyScripts, "cell 0 18, spanx 2, alignx center"); //$NON-NLS-1$
