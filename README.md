@@ -157,6 +157,9 @@ This is the source for the game clock time.  Default source is gametime.
 #### Match Time
 This is the source for the match time.  Default source is matchtime.
 
+#### Stream Time
+This is the source for the stream time. Default source is streamtime.
+
 #### Table Name
 This is the source for the table name.  Default source is tablename.
 
@@ -934,6 +937,10 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpha - push hide all button
 </br></br></br>
 ## Revision History</br>
+v1.117 12/18/2022</br>
+Timers now use System.currentTimeMillis() for better accuracy.</br>
+Add Stream Time source to Sources.</br>
+</br>
 v1.116 12/17/2022</br>
 Use System user.dir property to get current path of program and use that in the autohotkey scripts.</br>
 Force autohotkey script path to end in \.</br>

@@ -34,6 +34,12 @@ import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 public class GameClock implements Serializable {
 	private static final long serialVersionUID = -4482700813986069170L;
 	private transient Timer timer;
+	private transient long gameStartTime;
+	private transient long matchStartTime;
+	private transient long streamStartTime;
+	private transient long currentTime;
+	private transient long pauseStartTime;
+
 	private int gameSeconds;
 	private int gameMinutes;
 	private int gameHours;
@@ -49,7 +55,6 @@ public class GameClock implements Serializable {
 	private transient OBSInterface obsInterface;
 	private transient Settings settings;
 	private transient DecimalFormat df = new DecimalFormat("00");
- 
 	
 	public GameClock(OBSInterface obsInterface, Settings settings) {
 
@@ -58,40 +63,30 @@ public class GameClock implements Serializable {
 		
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
+				currentTime = System.currentTimeMillis();
 				if(gameTimerRunning) {
-					gameSeconds++;
-					if (gameSeconds>=60) {
-						gameMinutes++;
-						gameSeconds=0;
-					}
-					if (gameMinutes>=60) {
-						gameHours++;
-						gameMinutes=0;
-					}
+					long checkTimeDiff = (currentTime - gameStartTime);
+					int checkTimeDiffSeconds = (int) (checkTimeDiff / 1000);
+					gameHours = checkTimeDiffSeconds / 3600;
+					gameMinutes = checkTimeDiffSeconds % 3600 / 60;
+					gameSeconds = checkTimeDiffSeconds % 3600 % 60;
 					writeGameTime();
 				}
 				if(matchTimerRunning) {
-					matchSeconds++;
-					if (matchSeconds>=60) {
-						matchMinutes++;
-						matchSeconds=0;
-					}
-					if (matchMinutes>=60) {
-						matchHours++;
-						matchMinutes=0;
-					}
+					long checkTimeDiff = (currentTime - matchStartTime);
+					int checkTimeDiffSeconds = (int) (checkTimeDiff / 1000);
+					matchHours = checkTimeDiffSeconds / 3600;
+					matchMinutes = checkTimeDiffSeconds % 3600 / 60;
+					matchSeconds = checkTimeDiffSeconds % 3600 % 60;
 					writeMatchTime();
 				}
 				if(streamTimerRunning) {
-					streamSeconds++;
-					if (streamSeconds>=60) {
-						streamMinutes++;
-						streamSeconds=0;
-					}
-					if (streamMinutes>=60) {
-						streamHours++;
-						streamMinutes=0;
-					}
+					long checkTimeDiff = (currentTime - streamStartTime);
+					int checkTimeDiffSeconds = (int) (checkTimeDiff / 1000);
+					streamHours = checkTimeDiffSeconds / 3600;
+					streamMinutes = checkTimeDiffSeconds % 3600 / 60;
+					streamSeconds = checkTimeDiffSeconds % 3600 % 60;
+					writeStreamTime();
 				}
 			}
 		};
@@ -216,6 +211,8 @@ public class GameClock implements Serializable {
 		return df.format(streamHours) + ":" + df.format(streamMinutes) + ":" + df.format(streamSeconds);
 	}
 	public void startGameTimer() {
+		gameStartTime = System.currentTimeMillis();
+		pauseStartTime = System.currentTimeMillis();
 		gameSeconds=0;
 		gameMinutes=0;
 		gameHours=0;
@@ -228,11 +225,16 @@ public class GameClock implements Serializable {
 	public void pauseGameTimer(boolean pause) {
 		if (pause) {
 			gameTimerRunning=false;
+			pauseStartTime=System.currentTimeMillis();
 		} else {
+			long diff = System.currentTimeMillis() - pauseStartTime;
+			gameStartTime = gameStartTime + diff;
+			matchStartTime = matchStartTime + diff;
 			gameTimerRunning=true;
 		}
 	}
 	public void startMatchTimer() {
+		matchStartTime = System.currentTimeMillis();
 		matchSeconds=0;
 		matchMinutes=0;
 		matchHours=0;
@@ -250,6 +252,7 @@ public class GameClock implements Serializable {
 		}
 	}
 	public void startStreamTimer() {
+		streamStartTime = System.currentTimeMillis();
 		streamSeconds=0;
 		streamMinutes=0;
 		streamHours=0;
@@ -266,6 +269,9 @@ public class GameClock implements Serializable {
 	}
 	private void writeMatchTime() {
 		writeData(settings.getMatchTimeSource(), getMatchTime());
+	}
+	private void writeStreamTime() {
+		writeData(settings.getStreamTimeSource(), getStreamTime());
 	}
     private void writeData(String source, String data) {
 		obsInterface.writeData(source, data, "Tournament", settings.getShowParsed());

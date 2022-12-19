@@ -74,6 +74,7 @@ public class SourcesPanel extends JPanel {
 	private JTextField txtLastScoredSource;
 	private JTextField txtGameTimeSource;
 	private JTextField txtMatchTimeSource;
+	private JTextField txtStreamTimeSource;
 	private JTextField txtStuffs1Source;
 	private JTextField txtStuffs2Source;
 	private JTextField txtBreaks1Source;
@@ -154,6 +155,7 @@ public class SourcesPanel extends JPanel {
 		txtLastScoredSource.setText(settings.getDefaultLastScoredSource());
 		txtGameTimeSource.setText(settings.getDefaultGameTimeSource());
 		txtMatchTimeSource.setText(settings.getDefaultMatchTimeSource());
+		txtStreamTimeSource.setText(settings.getDefaultStreamTimeSource());
 		txtStuffs1Source.setText(settings.getDefaultStuffs1Source());
 		txtStuffs2Source.setText(settings.getDefaultStuffs2Source());
 		txtBreaks1Source.setText(settings.getDefaultBreaks1Source());
@@ -219,6 +221,7 @@ public class SourcesPanel extends JPanel {
 		settings.setLastScoredSource(txtLastScoredSource.getText());
 		settings.setGameTimeSource(txtGameTimeSource.getText());
 		settings.setMatchTimeSource(txtMatchTimeSource.getText());
+		settings.setStreamTimeSource(txtStreamTimeSource.getText());
 		settings.setStuffs1Source(txtStuffs1Source.getText());
 		settings.setStuffs2Source(txtStuffs2Source.getText());
 		settings.setBreaks1Source(txtBreaks1Source.getText());
@@ -517,11 +520,11 @@ public class SourcesPanel extends JPanel {
 		txtEventSource.setColumns(10);
 		
 		JLabel lblTableNameSource = new JLabel(Messages.getString("SourcesPanel.TableName", settings.getGameType())); //$NON-NLS-1$
-		add(lblTableNameSource, "cell 1 16,alignx right"); //$NON-NLS-1$
+		add(lblTableNameSource, "cell 1 17,alignx right"); //$NON-NLS-1$
 		
 		txtTableNameSource = new JTextField();
 		txtTableNameSource.setText(settings.getTableNameSource());
-		add(txtTableNameSource, "cell 2 16,alignx left");
+		add(txtTableNameSource, "cell 2 17,alignx left");
 		txtTableNameSource.setColumns(10);
 
 		JLabel lblTeam1ShotCompletesSource = new JLabel(Messages.getString("SourcesPanel.Team1ShotCompletes", settings.getGameType())); //$NON-NLS-1$
@@ -677,11 +680,11 @@ public class SourcesPanel extends JPanel {
 		txtWarn1Source.setColumns(10);
 
 		JLabel lblLastScoredSource = new JLabel(Messages.getString("SourcesPanel.LastScored", settings.getGameType())); //$NON-NLS-1$
-		add(lblLastScoredSource, "cell 1 17,alignx right"); //$NON-NLS-1$
+		add(lblLastScoredSource, "cell 1 18,alignx right"); //$NON-NLS-1$
 
 		txtLastScoredSource = new JTextField();
 		txtLastScoredSource.setText(settings.getLastScoredSource());
-		add(txtLastScoredSource, "cell 2 17,alignx left"); //$NON-NLS-1$
+		add(txtLastScoredSource, "cell 2 18,alignx left"); //$NON-NLS-1$
 		txtLastScoredSource.setColumns(10);
 
 		JLabel lblTeam2ClearAttemptsSource = new JLabel(Messages.getString("SourcesPanel.Team2ClearAttempts", settings.getGameType())); //$NON-NLS-1$
@@ -723,17 +726,6 @@ public class SourcesPanel extends JPanel {
 		txtTeam2ClearCompletesSource.setText(settings.getClearCompletesSource(2));		add(txtTeam2ClearCompletesSource, "cell 8 13,alignx left"); //$NON-NLS-1$
 		txtTeam2ClearCompletesSource.setColumns(20);
 
-		JButton btnSaveSources = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
-		btnSaveSources.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveSettings(settings);
-				JComponent comp = (JComponent) e.getSource();
-				Window win = SwingUtilities.getWindowAncestor(comp);
-				win.dispose();
-			}
-		});
-		add(btnSaveSources, "cell 2 19,alignx center"); //$NON-NLS-1$
-		
 		JLabel lblTeam1SOG = new JLabel(Messages.getString("SourcesPanel.Team1ShotsOnGoal", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam1SOG, "cell 10 16,alignx trailing"); //$NON-NLS-1$
 		
@@ -781,6 +773,14 @@ public class SourcesPanel extends JPanel {
 		txtGameTimeSource.setText(settings.getGameTimeSource());
 		add(txtGameTimeSource, "cell 2 14,alignx left"); //$NON-NLS-1$
 		txtGameTimeSource.setColumns(10);
+		
+		JLabel lblStreamTimeSource = new JLabel(Messages.getString("SourcesPanel.StreamTime", settings.getGameType())); //$NON-NLS-1$
+		add(lblStreamTimeSource, "cell 1 16,alignx right"); //$NON-NLS-1$
+		
+		txtStreamTimeSource = new JTextField();
+		txtStreamTimeSource.setText(settings.getStreamTimeSource());
+		add(txtStreamTimeSource, "cell 2 16,alignx left"); //$NON-NLS-1$
+		txtStreamTimeSource.setColumns(10);
 		
 		JLabel lblStuffs2Source = new JLabel(Messages.getString("SourcesPanel.Stuffs2", settings.getGameType())); //$NON-NLS-1$
 		add(lblStuffs2Source, "cell 4 15,alignx right"); //$NON-NLS-1$
@@ -878,6 +878,17 @@ public class SourcesPanel extends JPanel {
 		txtTeam2TwoBarPassCompletesSource.setColumns(20);
 		add(txtTeam2TwoBarPassCompletesSource, "cell 8 17,alignx left"); //$NON-NLS-1$
 
+		JButton btnSaveSources = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
+		btnSaveSources.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveSettings(settings);
+				JComponent comp = (JComponent) e.getSource();
+				Window win = SwingUtilities.getWindowAncestor(comp);
+				win.dispose();
+			}
+		});
+		add(btnSaveSources, "cell 2 19,alignx center"); //$NON-NLS-1$
+		
 		JButton btnCancelSources = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
 		btnCancelSources.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

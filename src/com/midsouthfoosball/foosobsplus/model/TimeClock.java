@@ -30,6 +30,8 @@ import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 public class TimeClock {
 	private int nbrOfSeconds;
 	private int timeRemaining;
+	private transient long currentTime;
+	private transient long startTime;
 	private Timer timer;
 	private String timerInUse;
 	private OBSInterface obsInterface;
@@ -42,7 +44,10 @@ public class TimeClock {
 		
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				timeRemaining--;
+				currentTime = System.currentTimeMillis();
+				long checkTimeDiff = (currentTime - startTime);
+				int checkTimeDiffTenthSeconds = (int) (checkTimeDiff / 100);
+				timeRemaining = nbrOfSeconds - checkTimeDiffTenthSeconds;
  				if(timeRemaining < 0) {
  					timer.stop();
  				} else if(timeRemaining < 1 ) {
@@ -62,6 +67,7 @@ public class TimeClock {
 		writeTimerInUse();
 	}
 	public void setTimer(int nbrOfSeconds) {
+		this.startTime = System.currentTimeMillis();
 		this.nbrOfSeconds = nbrOfSeconds;
 		this.timeRemaining = this.nbrOfSeconds;
 		timer.restart();

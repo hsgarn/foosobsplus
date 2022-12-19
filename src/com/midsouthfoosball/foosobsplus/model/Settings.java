@@ -154,6 +154,7 @@ public class Settings {
 		defaultSourceProps.setProperty("LastScored","lastscored");
 		defaultSourceProps.setProperty("GameTime", "gametime");
 		defaultSourceProps.setProperty("MatchTime", "matchtime");
+		defaultSourceProps.setProperty("StreamTime", "streamtime");
 		defaultSourceProps.setProperty("Stuffs1", "stuffs1");
 		defaultSourceProps.setProperty("Stuffs2", "stuffs2");
 		defaultSourceProps.setProperty("Breaks1", "breaks1");
@@ -579,6 +580,7 @@ public class Settings {
 	public String getLastScoredSource() {return configSourceProps.getProperty("LastScored");}
 	public String getGameTimeSource() {return configSourceProps.getProperty("GameTime");}
 	public String getMatchTimeSource() {return configSourceProps.getProperty("MatchTime");}
+	public String getStreamTimeSource() {return configSourceProps.getProperty("StreamTime");}
 	public String getSide1ColorSource() {return configSourceProps.getProperty("Side1Color");}
 	public String getSide2ColorSource() {return configSourceProps.getProperty("Side2Color");}
 	public String getShowScoresSource() {return configSourceProps.getProperty("ShowScoresSource");}
@@ -988,7 +990,10 @@ public class Settings {
 		configSourceProps.setProperty("GameTime", gameTimeSource);
 	}
 	public void setMatchTimeSource(String matchTimeSource) {
-		configSourceProps.setProperty("MatchTime", matchTimeSource);
+		configSourceProps.setProperty("StreamTime", matchTimeSource);
+	}
+	public void setStreamTimeSource(String streamTimeSource) {
+		configSourceProps.setProperty("GameTime", streamTimeSource);
 	}
 	public void setStuffs1Source(String stuffs1Source) {
 		configSourceProps.setProperty("Stuffs1", stuffs1Source);
@@ -1372,6 +1377,7 @@ public class Settings {
 	public String getDefaultLastScoredSource() {return defaultSourceProps.getProperty("LastScored");}
 	public String getDefaultGameTimeSource() {return defaultSourceProps.getProperty("GameTime");}
 	public String getDefaultMatchTimeSource() {return defaultSourceProps.getProperty("MatchTime");}
+	public String getDefaultStreamTimeSource() {return defaultSourceProps.getProperty("StreamTime");}
 	public String getDefaultStuffs1Source() {return defaultSourceProps.getProperty("Stuffs1");}
 	public String getDefaultStuffs2Source() {return defaultSourceProps.getProperty("Stuffs2");}
 	public String getDefaultBreaks1Source() {return defaultSourceProps.getProperty("Breaks1");}
