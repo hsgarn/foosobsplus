@@ -1,5 +1,5 @@
 /**
-Copyright 2022 Hugh Garner
+Copyright 2022-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -25,6 +25,9 @@ import java.io.IOException;
 
 import javax.swing.JFrame;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
@@ -32,6 +35,10 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 public class StatSettingsFrame extends JFrame {
 	private StatSettingsPanel statSettingsPanel;
 	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
+	private static Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 	
 	public StatSettingsFrame(Settings settings, OBSInterface obsInterface) {
 		super(programName + " " + Messages.getString("StatSettingsFrame.StatSettingsSettings")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -42,8 +49,8 @@ public class StatSettingsFrame extends JFrame {
 		try {
 			statSettingsPanel = new StatSettingsPanel(settings, obsInterface);
 		} catch (IOException e) {
-			System.out.println(Messages.getString("Errors.LoadSettingsError")); //$NON-NLS-1$
-			e.printStackTrace();
+			logger.error(Messages.getString("Errors.LoadSettingsError")); //$NON-NLS-1$
+			logger.error(e.toString());
 		}
 		statSettingsPanel.setPreferredSize(new Dimension(1100, 650));
 		

@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021, 2022 Hugh Garner
+Copyright 2020-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -44,6 +44,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
@@ -104,6 +107,10 @@ public class HotKeysPanel extends JPanel {
 	private JButton btnSave;
 	private JButton btnGenerateHotKeyScripts;
 	private String hotKeyBaseScriptText;
+	private static Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 
 	public HotKeysPanel(Settings settings) throws IOException {
 		hotKeyBaseScriptText = settings.getHotKeyBaseScript();
@@ -641,7 +648,8 @@ public class HotKeysPanel extends JPanel {
 							try {
 								Files.createDirectory(Paths.get(directoryName));
 							} catch (IOException e1) {
-								System.out.println(Messages.getString("Errors.ErrorCreatingDirectory") + e1.getMessage()); //$NON-NLS-1$
+								logger.error(e1.toString()); //$NON-NLS-1$
+								JOptionPane.showMessageDialog(null, Messages.getString("Errors.ErrorCreatingDirectory") + e1.getMessage(), "Hot Keys Error", 1); //$NON-NLS-1$
 							}
 						}
 						formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
@@ -650,7 +658,8 @@ public class HotKeysPanel extends JPanel {
 						settings.setHotKeyScriptPath(formattedTxtPath.getText());
 						settings.saveHotKeyConfig();;
 					} catch (IOException ex) {
-						System.out.print(Messages.getString("HotKeysPanel.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
+						logger.error(ex.toString());
+						JOptionPane.showMessageDialog(null, Messages.getString("HotKeysPanel.ErrorSavingPropertiesFile") + ex.getMessage(), "Hot Keys Error", 1); //$NON-NLS-1$
 					}
 				}
 			}
@@ -665,7 +674,8 @@ public class HotKeysPanel extends JPanel {
 					settings.setHotKeyScriptPath(formattedTxtPath.getText());
 					settings.saveHotKeyConfig();
 		    	} catch (IOException ex) {
-		    		System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
+		    		logger.error(ex.toString());
+		    		JOptionPane.showMessageDialog(null, Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage(), "Hot Keys Error", 1);		 //$NON-NLS-1$
 		    	}
 			}
 		});
@@ -677,7 +687,8 @@ public class HotKeysPanel extends JPanel {
 						settings.setHotKeyScriptPath(formattedTxtPath.getText());
 						settings.saveHotKeyConfig();
 			    	} catch (IOException ex) {
-			    		System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
+			    		logger.error(ex.toString());
+			    		JOptionPane.showMessageDialog(null, Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage(), "Hot Keys Error", 1);		 //$NON-NLS-1$
 			    	}
 			    }
 			}
@@ -795,6 +806,7 @@ public class HotKeysPanel extends JPanel {
 				settings.saveHotKeyConfig();
 				okToCloseWindow = true;
 			} catch (IOException ex) {
+				logger.error(ex.toString());
 				JOptionPane.showMessageDialog(null, Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage(), "Settings Error", 1);		 //$NON-NLS-1$
 			}
 		}
@@ -811,7 +823,8 @@ public class HotKeysPanel extends JPanel {
 					if(!checkUnique.add(text)) {
 						allClear = false;
 						i = componentArray.length + 1;
-						JOptionPane.showMessageDialog(null, Messages.getString("Errors.DuplicateHotKey") + " " + text, "Settings Error", 1);
+						logger.warn(Messages.getString("Errors.DuplicateHotKey") + " " + text);
+						JOptionPane.showMessageDialog(null, Messages.getString("Errors.DuplicateHotKey") + " " + text, "Hot Keys Error", 1);
 					}
 				}
 			}

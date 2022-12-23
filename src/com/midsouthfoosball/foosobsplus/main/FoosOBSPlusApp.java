@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -23,7 +23,11 @@ import java.io.IOException;
 
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class FoosOBSPlusApp {
+	private static final Logger logger = LoggerFactory.getLogger(FoosOBSPlusApp.class);
 
 	public static void main(String[] args) {	
 		SwingUtilities.invokeLater(new Runnable() {
@@ -31,7 +35,7 @@ public class FoosOBSPlusApp {
 				try {
 					new Main();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.toString());
 				}
 			}
 		});

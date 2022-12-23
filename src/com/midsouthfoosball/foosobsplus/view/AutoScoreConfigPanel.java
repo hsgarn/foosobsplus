@@ -1,5 +1,5 @@
 /**
-Copyright 2022 Hugh Garner
+Copyright 2022-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -35,6 +35,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 import net.miginfocom.swing.MigLayout;
@@ -64,6 +67,10 @@ public class AutoScoreConfigPanel extends JPanel {
 	private JButton btnSendConfig;
 	private JButton btnSave;
 	private Settings settings;
+	private static Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 
 	public AutoScoreConfigPanel(Settings settings) throws IOException {
 		this.settings = settings;
@@ -203,7 +210,8 @@ public class AutoScoreConfigPanel extends JPanel {
 		try {
 			settings.saveAutoScoreConfigConfig();
 		} catch (IOException ex) {
-			System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
+			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile"));		 //$NON-NLS-1$
+			logger.error(ex.toString());
 		}
 	}
 	public class IntegerPinInputVerifier extends InputVerifier {
@@ -215,11 +223,14 @@ public class AutoScoreConfigPanel extends JPanel {
 				if ((value > -1) && (value < 41)) {
 					return true;
 				} else {
-					JOptionPane.showMessageDialog(null, "Only 0 - 40 accepted. 0 to disable pin", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+					logger.error("Invalid pin [" + text + "]. Only 0 - 40 accepted. 0 to disable pin");
+					JOptionPane.showMessageDialog(null, "Invalid pin [\" + text + \"]. Only 0 - 40 accepted. 0 to disable pin", "Invalid Input", JOptionPane.WARNING_MESSAGE);
 					return false;
 				}
 			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(null, "Only 0 - 40 accepted. 0 to disable pin", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+				logger.error("Invalid pin [" + text + "]. Only 0 - 40 accepted. 0 to disable pin");
+				logger.error(e.toString());
+				JOptionPane.showMessageDialog(null, "Invalid pin [\" + text + \"]. Only 0 - 40 accepted. 0 to disable pin", "Invalid Input", JOptionPane.WARNING_MESSAGE);
 				return false;
 			}
 		}
@@ -233,11 +244,13 @@ public class AutoScoreConfigPanel extends JPanel {
 				if (value > -1) {
 					return true;
 				} else {
-					JOptionPane.showMessageDialog(null, "Reset Seconds must be a positive integer less than " + Integer.MAX_VALUE + " or 0.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+					logger.error("Invalid value [" + text + "]. Reset Seconds must be a positive integer less than " + Integer.MAX_VALUE + " or 0.");
+					JOptionPane.showMessageDialog(null, "Invalid value [\" + text + \"]. Reset Seconds must be a positive integer less than " + Integer.MAX_VALUE + " or 0.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
 					return false;
 				}
 			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(null, "Reset Seconds must be a positive integer less than " + Integer.MAX_VALUE + " or 0.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+				logger.error("Invalid value [" + text + "]. Reset Seconds must be a positive integer less than " + Integer.MAX_VALUE + " or 0.");
+				JOptionPane.showMessageDialog(null, "Invalid value [\" + text + \"]. Reset Seconds must be a positive integer less than " + Integer.MAX_VALUE + " or 0.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
 				return false;
 			}
 		}

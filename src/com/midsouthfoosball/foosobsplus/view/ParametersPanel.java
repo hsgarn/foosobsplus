@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021, 2022 Hugh Garner
+Copyright 2020-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -35,6 +35,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
@@ -75,6 +78,10 @@ public class ParametersPanel extends JPanel {
 	private JButton btnCancel;
 	private JButton btnRestoreDefaults;
 	private final Integer maxGamesToWin = 6;
+	private static Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 
 	public ParametersPanel(Settings settings) throws IOException {
 
@@ -540,6 +547,8 @@ public class ParametersPanel extends JPanel {
 		try {
 			settings.saveControlConfig();
 		} catch (IOException ex) {
+			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile"));
+			logger.error(ex.toString());
 			JOptionPane.showMessageDialog(null, ex.getMessage(), Messages.getString("Errors.ErrorSavingPropertiesFile"), 1);//$NON-NLS-1$
 		}
 	}
@@ -549,6 +558,7 @@ public class ParametersPanel extends JPanel {
     		Integer.parseInt(checkString);
     		return true;
     	} catch (NumberFormatException e) {
+    		logger.error(e.toString());
     		return false;
     	}
 	}

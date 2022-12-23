@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021, 2022 Hugh Garner
+Copyright 2020-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -32,6 +32,9 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 import javax.swing.JOptionPane;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.view.Messages;
 
@@ -69,6 +72,10 @@ public class Settings {
 	private String configOBSFileName        		= "obs.properties";
 	private String configAutoScoreSettingsFileName	= "autoscoresettings.properties";
 	private String configAutoScoreConfigFileName	= "autoscoreconfig.properties";
+	private static Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 
 	//////////////////////////////////////////////////////
 	
@@ -1524,6 +1531,7 @@ public class Settings {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configControlFileName))) {
 			configControlProps.load(inputStream);
 		} catch (NoSuchFileException e) {
+			logger.info(Paths.get(configControlFileName) + " not found. Writing defaults.");
 			Files.createFile(Paths.get(configControlFileName));
 			configControlProps = defaultControlProps;
 			saveControlConfig();
@@ -1533,6 +1541,7 @@ public class Settings {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configOBSFileName))) {
 			configOBSProps.load(inputStream);
 		} catch (NoSuchFileException e) {
+			logger.info(Paths.get(configOBSFileName) + " not found. Writing defaults.");
 			Files.createFile(Paths.get(configOBSFileName));
 			configOBSProps = defaultOBSProps;
 			saveOBSConfig();
@@ -1542,6 +1551,7 @@ public class Settings {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configSourceFileName))) {
 			configSourceProps.load(inputStream);
 		} catch (NoSuchFileException e) {
+			logger.info(Paths.get(configSourceFileName) + " not found. Writing defaults.");
 			Files.createFile(Paths.get(configSourceFileName));
 			configSourceProps = defaultSourceProps;
 			saveSourceConfig();
@@ -1551,6 +1561,7 @@ public class Settings {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configFilterFileName))) {
 			configFilterProps.load(inputStream);
 		} catch (NoSuchFileException e) {
+			logger.info(Paths.get(configFilterFileName) + " not found. Writing defaults.");
 			Files.createFile(Paths.get(configFilterFileName));
 			configFilterProps = defaultFilterProps;
 			saveFilterConfig();
@@ -1560,6 +1571,7 @@ public class Settings {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configPartnerProgramFileName))) {
 			configPartnerProgramProps.load(inputStream);
 		} catch (NoSuchFileException e) {
+			logger.info(Paths.get(configPartnerProgramFileName) + " not found. Writing defaults.");
 			Files.createFile(Paths.get(configPartnerProgramFileName));
 			configPartnerProgramProps = defaultPartnerProgramProps;
 			savePartnerProgramConfig();
@@ -1569,6 +1581,7 @@ public class Settings {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configHotKeyFileName))) {
 			configHotKeyProps.load(inputStream);
 		} catch (NoSuchFileException e) {
+			logger.info(Paths.get(configHotKeyFileName) + " not found. Writing defaults.");
 			Files.createFile(Paths.get(configHotKeyFileName));
 			configHotKeyProps = defaultHotKeyProps;
 			saveHotKeyConfig();
@@ -1578,6 +1591,7 @@ public class Settings {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configAutoScoreSettingsFileName))) {
 			configAutoScoreSettingsProps.load(inputStream);
 		} catch (NoSuchFileException e) {
+			logger.info(Paths.get(configAutoScoreSettingsFileName) + " not found. Writing defaults.");
 			Files.createFile(Paths.get(configAutoScoreSettingsFileName));
 			configAutoScoreSettingsProps = defaultAutoScoreSettingsProps;
 			saveAutoScoreSettingsConfig();
@@ -1587,6 +1601,7 @@ public class Settings {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configAutoScoreConfigFileName))) {
 			configAutoScoreConfigProps.load(inputStream);
 		} catch (NoSuchFileException e) {
+			logger.info(Paths.get(configAutoScoreConfigFileName) + " not found. Writing defaults.");
 			Files.createFile(Paths.get(configAutoScoreConfigFileName));
 			configAutoScoreConfigProps = defaultAutoScoreConfigProps;
 			saveAutoScoreConfigConfig();
@@ -1596,48 +1611,64 @@ public class Settings {
 		//Control Parameters
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configControlFileName))) {
 			configControlProps.store(outputStream, "FoosOBSPlus Control settings");
+		} catch (Exception e) {
+			logger.error("Could not write to " + Paths.get(configControlFileName));
 		}
 	}
 	public void saveOBSConfig() throws IOException {
 		//OBS
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configOBSFileName))) {
 			configOBSProps.store(outputStream, "FoosOBSPlus OBS Settings");
+		} catch (Exception e) {
+			logger.error("Could not write to " + Paths.get(configOBSFileName));
 		}
 	}
 	public void saveSourceConfig() throws IOException {
 		//Source
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configSourceFileName))) {
 			configSourceProps.store(outputStream, "FoosOBSPlus Source Settings");
+		} catch (Exception e) {
+			logger.error("Could not write to " + Paths.get(configSourceFileName));
 		}
 	}
 	public void saveFilterConfig() throws IOException {
 		//Filter
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configFilterFileName))) {
 			configFilterProps.store(outputStream, "FoosOBSPlus Filter Settings");
+		} catch (Exception e) {
+			logger.error("Could not write to " + Paths.get(configFilterFileName));
 		}
 	}
 	public void savePartnerProgramConfig() throws IOException {
 		//PartnerProgram
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configPartnerProgramFileName))) {
 			configPartnerProgramProps.store(outputStream, "FoosOBSPlus Partner Program Settings");
+		} catch (Exception e) {
+			logger.error("Could not write to " + Paths.get(configPartnerProgramFileName));
 		}
 	}
 	public void saveHotKeyConfig() throws IOException {
 		//HotKeys
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configHotKeyFileName))) {
 			configHotKeyProps.store(outputStream, "FoosOBSPlus Hot Key Settings");
+		} catch (Exception e) {
+			logger.error("Could not write to " + Paths.get(configHotKeyFileName));
 		}
 	}
 	public void saveAutoScoreSettingsConfig() throws IOException {
 		//AutoScore Settings
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configAutoScoreSettingsFileName))) {
 			configAutoScoreSettingsProps.store(outputStream, "FoosOBSPlus AutoScore Settings");
+		} catch (Exception e) {
+			logger.error("Could not write to " + Paths.get(configAutoScoreSettingsFileName));
 		}
 	}
 	public void saveAutoScoreConfigConfig() throws IOException {
 		//AutoScore Config
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configAutoScoreConfigFileName))) {
 			configAutoScoreConfigProps.store(outputStream, "FoosOBSPlus AutoScore Config");
+		} catch (Exception e) {
+			logger.error("Could not write to " + Paths.get(configAutoScoreConfigFileName));
 		}
 	}
 	public void generateHotKeyScripts() {
@@ -1658,9 +1689,11 @@ public class Settings {
 				}
 			} else {
 				JOptionPane.showMessageDialog(null,  Messages.getString("Errors.DirectoryDoesNotExist") + " " + hotKeyScriptPath);
+				logger.error("Could not write to " + hotKeyScriptPath);
 			}
 		} else {
 			JOptionPane.showMessageDialog(null, Messages.getString("Errors.DirectoryDoesNotExist") + " " + basePath);
+			logger.error("Could not find " + basePath);
 		}
 	}
 	private void createHotKeyScript(String keyFunction, String hotKey, String[] baseScript, String basePath) {
@@ -1675,6 +1708,7 @@ public class Settings {
 			fileWriter.close();
 		} catch (IOException ex) {
 			JOptionPane.showMessageDialog(null, Messages.getString("Errors.ScriptWriteFailure") + " " + keyFunction, "Scripting Error", 1);
+			logger.error("Could not write to " + getHotKeyScriptPath() + File.separator + keyFunction + ".ahk");
 		}
 	}
 }

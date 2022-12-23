@@ -1,5 +1,5 @@
 /**
-Copyright 2022 Hugh Garner
+Copyright 2022-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -24,6 +24,9 @@ import java.awt.Dimension;
 import java.io.IOException;
 import javax.swing.JFrame;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
@@ -31,6 +34,10 @@ public class AutoScoreConfigFrame extends JFrame {
 
 	private AutoScoreConfigPanel autoScoreConfigPanel;
 	private static final String programName = "FoosOBSPlus"; //$NON-NLS-1$
+	private static Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 	
 	public AutoScoreConfigFrame(Settings settings) {
 		super(programName + " " + Messages.getString("AutoScoreConfigFrame.Title")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -40,8 +47,8 @@ public class AutoScoreConfigFrame extends JFrame {
 		try {
 			autoScoreConfigPanel = new AutoScoreConfigPanel(settings);
 		} catch (IOException e) {
-			System.out.println(Messages.getString("AutoScoreConfigFrame.ErrorLoadingConfig")); //$NON-NLS-1$
-			e.printStackTrace();
+			logger.error(Messages.getString("AutoScoreConfigFrame.ErrorLoadingConfig")); //$NON-NLS-1$
+			logger.error(e.toString());
 		}
 		autoScoreConfigPanel.setPreferredSize(new Dimension(500, 400));
 		

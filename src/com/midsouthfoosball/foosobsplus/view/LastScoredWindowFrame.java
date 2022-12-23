@@ -1,5 +1,5 @@
 /**
-Copyright 2021 Hugh Garner
+Copyright 2021-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -28,11 +28,18 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @SuppressWarnings("serial")
 public class LastScoredWindowFrame extends JFrame {
 	
 	private LastScoredWindowPanel lastScoredWindowPanel;
 	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
+	private static Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 
 	public LastScoredWindowFrame(MainFrame mainFrame, int teamNbr) {
 		super(programName + " " + Messages.getString("LastScoredWindowFrame.Team" + teamNbr + "LastScoredTimerWindow")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -44,11 +51,11 @@ public class LastScoredWindowFrame extends JFrame {
 		        }
 		    }
 		} catch (Exception e) {
-		    System.out.println(Messages.getString("Errors.LookAndFeelException")); //$NON-NLS-1$
+		    logger.error(Messages.getString("Errors.LookAndFeelException")); //$NON-NLS-1$
+		    logger.error(e.toString());
 		}
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//		setAlwaysOnTop(true);
 		
 		lastScoredWindowPanel = new LastScoredWindowPanel("0",Color.CYAN); //$NON-NLS-1$
 		lastScoredWindowPanel.setPreferredSize(new Dimension(256, 70));

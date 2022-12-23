@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021, 2022 Hugh Garner
+Copyright 2020-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -20,6 +20,9 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.main;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.midsouthfoosball.foosobsplus.model.OBS;
@@ -29,6 +32,10 @@ import io.obswebsocket.community.client.OBSRemoteController;
 import io.obswebsocket.community.client.message.response.inputs.GetInputSettingsResponse;
 
 public class OBSInterface {
+	private static Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 	
 	public OBSInterface(Settings settings) {
 	}
@@ -58,9 +65,9 @@ public class OBSInterface {
 			JsonObject jsonObject = (JsonObject) JsonParser.parseString(jsonString);
 	
 			obsRemoteController.setInputSettings(source, jsonObject, true, response -> {
-		   			if(showParsed)
-		   				System.out.println(className + " class: Source: [" + source + "] Text: [" + data + "] " + response.getMessageData().getRequestStatus() + "]");
-		   			});
+		   		if(showParsed)
+		   			logger.info(className + " class: Source: [" + source + "] Text: [" + data + "] " + response.getMessageData().getRequestStatus() + "]");
+		   		});
 		}
 	}
 }

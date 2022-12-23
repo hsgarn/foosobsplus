@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021, 2022 Hugh Garner
+Copyright 2020-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -24,6 +24,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.text.DecimalFormat;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
@@ -69,6 +72,10 @@ public class Team implements Serializable {
 	private int breaks = 0;
 	private int stuffs = 0;
 	private DecimalFormat df = new DecimalFormat("###.#");
+	private static Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 	
 	public Team(OBSInterface obsInterface, Settings settings, Integer teamNbr, String teamColor) {
 		this.obsInterface = obsInterface;
@@ -846,7 +853,7 @@ public class Team implements Serializable {
 			ObjectInputStream si = new ObjectInputStream(bi);
 			tempTeam = (Team) si.readObject();
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error(e.toString());
 		}
 		this.setTeamNbr(tempTeam.getTeamNbr());
 		this.setTeamName(tempTeam.getTeamName());

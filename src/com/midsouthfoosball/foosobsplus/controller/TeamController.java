@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021, 2022 Hugh Garner
+Copyright 2020-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -34,6 +34,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.JTextField;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 import com.midsouthfoosball.foosobsplus.model.GameClock;
@@ -70,7 +73,11 @@ public class TeamController {
 	private Team teams[] = new Team[] {null,null};
 	private TeamPanel teamPanels[] = new TeamPanel[] {null,null};
     private MainController mainController;
-    
+	private static transient Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
+   
 	public TeamController(OBSInterface obsInterface, Settings settings, Team team1, Team team2, Match match, TeamPanel teamPanel1, TeamPanel teamPanel2, SwitchPanel switchPanel, MatchPanel matchPanel, GameTableWindowPanel gameTableWindowPanel, StatsDisplayPanel statsDisplayPanel, TimerController timerController, LastScoredClock lastScored1Clock, LastScoredClock lastScored2Clock, GameClock gameClock, MainController mainController) {
 		this.obsInterface = obsInterface;
 		this.settings = settings;
@@ -872,30 +879,30 @@ public class TeamController {
 				Method method = methodMapEntry.getKey().getClass().getMethod(methodMapEntry.getValue(), boolean.class);
 				method.invoke(methodMapEntry.getKey(), text.length()>0);
 			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
+				logger.error(e.toString());
 			} catch (SecurityException e) {
-				e.printStackTrace();
+				logger.error(e.toString());
 			} catch (IllegalAccessException e) {
-				e.printStackTrace();
+				logger.error(e.toString());
 			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
+				logger.error(e.toString());
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+				logger.error(e.toString());
 			}			
 		} else {
 			try {
 				Method method = methodMapEntry.getKey().getClass().getMethod(methodMapEntry.getValue(), String.class);
 				method.invoke(methodMapEntry.getKey(), text);
 			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
+				logger.error(e.toString());
 			} catch (SecurityException e) {
-				e.printStackTrace();
+				logger.error(e.toString());
 			} catch (IllegalAccessException e) {
-				e.printStackTrace();
+				logger.error(e.toString());
 			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
+				logger.error(e.toString());
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+				logger.error(e.toString());
 			}
 		}
 	}

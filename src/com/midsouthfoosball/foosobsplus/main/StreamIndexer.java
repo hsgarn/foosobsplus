@@ -1,5 +1,5 @@
 /**
-Copyright 2022 Hugh Garner
+Copyright 2022-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -24,10 +24,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class StreamIndexer {
 	
 	private String dataPath;
 	private String separator = FileSystems.getDefault().getSeparator();
+	private static Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 	
 	public StreamIndexer(String dataPath) {
 		this.dataPath = dataPath;
@@ -43,7 +50,7 @@ public class StreamIndexer {
 			bw.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			System.out.println(e);
+			logger.error(e.toString());
 		}
 		
 	}

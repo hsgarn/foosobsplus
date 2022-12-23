@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021, 2022 Hugh Garner
+Copyright 2020-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -29,6 +29,9 @@ import java.text.DecimalFormat;
 
 import javax.swing.Timer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
 public class GameClock implements Serializable {
@@ -55,6 +58,10 @@ public class GameClock implements Serializable {
 	private transient OBSInterface obsInterface;
 	private transient Settings settings;
 	private transient DecimalFormat df = new DecimalFormat("00");
+	private static transient Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 	
 	public GameClock(OBSInterface obsInterface, Settings settings) {
 
@@ -284,7 +291,7 @@ public class GameClock implements Serializable {
 			ObjectInputStream si = new ObjectInputStream(bi);
 			tempGameClock = (GameClock) si.readObject();
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error(e.toString());
 		}
 		this.setGameSeconds(tempGameClock.getGameSeconds());
 		this.setGameMinutes(tempGameClock.getGameMinutes());

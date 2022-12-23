@@ -1,5 +1,5 @@
 /**
-Copyright 2021, 2022 Hugh Garner
+Copyright 2021-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -32,6 +32,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
@@ -59,6 +62,10 @@ public class FiltersPanel extends JPanel {
 	private JTextField txtStartMatchFilter;
 	private JTextField txtStartGameFilter;
 	private JTextField txtSwitchSidesFilter;
+	private static Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 	OBSInterface obsInterface;
 	
 	// Create the Panel
@@ -112,7 +119,8 @@ public class FiltersPanel extends JPanel {
 		try {
 			settings.saveFilterConfig();
 		} catch (IOException ex) {
-			System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
+			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
+			logger.error(ex.toString());
 		}
 	}
 	public void setLayout(Settings settings) {

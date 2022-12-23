@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021, 2022 Hugh Garner
+Copyright 2020-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -27,6 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Stats implements Serializable {
 	private static final long serialVersionUID = -3545984674770731270L;
@@ -110,6 +113,10 @@ public class Stats implements Serializable {
 	private transient Settings settings;
 	private transient Team team1;
 	private transient Team team2;
+	private static transient Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 
 	public Stats(Settings settings, Team team1, Team team2) {
 		codeHistory = new DefaultListModel<String>();
@@ -342,9 +349,8 @@ public class Stats implements Serializable {
 			}
 		}
 		if (settings.getShowParsed()) {
-			System.out.println("ErrorMsg: " + errorMsg);
+			logger.warn("ErrorMsg: " + errorMsg);
 		}
-//		return isError;
 	}
 	private void resetFlags() {
 		isTeam1 = false;
@@ -717,40 +723,40 @@ public class Stats implements Serializable {
 		if (!settings.getShowParsed()) {
 			return;
 		}
-		System.out.println("----------------------------------------");
-		System.out.println("Previous Code: " + previousCode + "       Current Code: " + code);
-		System.out.println("Previous Team: " + previousTeam + "         Current Team: " + currentTeam);
-		System.out.println("Previous Pos.: " + previousPosition + "         Current Pos.: " + currentPosition);
-		System.out.println("Previous Act.: " + previousAction + "         Current Act.: " + currentAction);
-		System.out.println("Previous Mod.: " + previousModifier + "         Current Mod.: " + currentModifier);
-		System.out.println("teamScored[0]: " + teamScored[0] + "       teamScored[1]: " + teamScored[1]);
-		System.out.println("teamTimeOut[0]: " + teamTimeOut[0] + "      teamTimeOut[1]: " + teamTimeOut[1]);
-		System.out.println(" IsTeam1: " + isTeam1 + "         IsTeam2: " + isTeam2);
-		System.out.println(" IsSameTeam: " + isSameTeam + "     IsSameRod: " + isSameRod);
-		System.out.println(" IsTeamScored: " + isTeamScored + "   IsBreak: " + isBreak);
-		System.out.println(" IsPenalty: " + isPenalty + "      IsStuff: " + isStuff);
-		System.out.println(" IsPass: " + isPass + "          IsShot: " + isShot);
-		System.out.println(" IsClear: " + isClear + "         IsTimeOut: " + isTimeOut);
-		System.out.println(" IsForwardDirection: " + isForwardDirection);
-		System.out.println(" IsTwoRod: " + isTwoRod + "    wasTwoRod: " + wasTwoRod);
-		System.out.println(" IsFiveRod: " + isFiveRod + "    wasFiveRod: " + wasFiveRod);
-		System.out.println(" IsThreeRod: " + isThreeRod + "    wasThreeRod: " + wasThreeRod);
-		System.out.println(" IsShotOnGoal: "  + isShotOnGoal + "    isOffTable: " + isOffTable);
-		System.out.println(" IsDeadBall: " + isDeadBall + "    isAce: " + isAce);
-		System.out.println("Team1PassAttempts: " + team1.getPassAttempts() + "  Completes: " + team1.getPassCompletes());
-		System.out.println("Team2PassAttempts: " + team2.getPassAttempts() + "  Completes: " + team2.getPassCompletes());
-		System.out.println("Team1ShotAttempts: " + team1.getShotAttempts() + "  Completes: " + team1.getShotCompletes());
-		System.out.println("Team2ShotAttempts: " + team2.getShotAttempts() + "  Completes: " + team2.getShotCompletes());
-		System.out.println("Team1ClearAttempts: " + team1.getClearAttempts() + "  Completes: " + team1.getClearCompletes());
-		System.out.println("Team2ClearAttempts: " + team2.getClearAttempts() + "  Completes: " + team2.getClearCompletes());
-		System.out.println("Team1TwoBarPassAttempts: " + team1.getTwoBarPassAttempts() + "  Completes: " + team1.getTwoBarPassCompletes());
-		System.out.println("Team2TwoBarPassAttempts: " + team2.getTwoBarPassAttempts() + "  Completes: " + team2.getTwoBarPassCompletes());
-		System.out.println("Team1ShotsOnGoal: " + team1.getShotsOnGoal());
-		System.out.println("Team2ShotsOnGoal: " + team2.getShotsOnGoal());
-		System.out.println("Team1Stuffs: " + team1.getStuffs() + "       Team2Stuffs: " + team2.getStuffs());
-		System.out.println("Team1Breaks: " + team1.getBreaks() + "       Team2Breaks: " + team2.getBreaks());
-//		System.out.println("Team1Errors: " + team1.getErrors() + "       Team2Errors: " + team2.getErrors());
-		System.out.println("");
+		logger.info("----------------------------------------");
+		logger.info("Previous Code: " + previousCode + "       Current Code: " + code);
+		logger.info("Previous Team: " + previousTeam + "         Current Team: " + currentTeam);
+		logger.info("Previous Pos.: " + previousPosition + "         Current Pos.: " + currentPosition);
+		logger.info("Previous Act.: " + previousAction + "         Current Act.: " + currentAction);
+		logger.info("Previous Mod.: " + previousModifier + "         Current Mod.: " + currentModifier);
+		logger.info("teamScored[0]: " + teamScored[0] + "       teamScored[1]: " + teamScored[1]);
+		logger.info("teamTimeOut[0]: " + teamTimeOut[0] + "      teamTimeOut[1]: " + teamTimeOut[1]);
+		logger.info(" IsTeam1: " + isTeam1 + "         IsTeam2: " + isTeam2);
+		logger.info(" IsSameTeam: " + isSameTeam + "     IsSameRod: " + isSameRod);
+		logger.info(" IsTeamScored: " + isTeamScored + "   IsBreak: " + isBreak);
+		logger.info(" IsPenalty: " + isPenalty + "      IsStuff: " + isStuff);
+		logger.info(" IsPass: " + isPass + "          IsShot: " + isShot);
+		logger.info(" IsClear: " + isClear + "         IsTimeOut: " + isTimeOut);
+		logger.info(" IsForwardDirection: " + isForwardDirection);
+		logger.info(" IsTwoRod: " + isTwoRod + "    wasTwoRod: " + wasTwoRod);
+		logger.info(" IsFiveRod: " + isFiveRod + "    wasFiveRod: " + wasFiveRod);
+		logger.info(" IsThreeRod: " + isThreeRod + "    wasThreeRod: " + wasThreeRod);
+		logger.info(" IsShotOnGoal: "  + isShotOnGoal + "    isOffTable: " + isOffTable);
+		logger.info(" IsDeadBall: " + isDeadBall + "    isAce: " + isAce);
+		logger.info("Team1PassAttempts: " + team1.getPassAttempts() + "  Completes: " + team1.getPassCompletes());
+		logger.info("Team2PassAttempts: " + team2.getPassAttempts() + "  Completes: " + team2.getPassCompletes());
+		logger.info("Team1ShotAttempts: " + team1.getShotAttempts() + "  Completes: " + team1.getShotCompletes());
+		logger.info("Team2ShotAttempts: " + team2.getShotAttempts() + "  Completes: " + team2.getShotCompletes());
+		logger.info("Team1ClearAttempts: " + team1.getClearAttempts() + "  Completes: " + team1.getClearCompletes());
+		logger.info("Team2ClearAttempts: " + team2.getClearAttempts() + "  Completes: " + team2.getClearCompletes());
+		logger.info("Team1TwoBarPassAttempts: " + team1.getTwoBarPassAttempts() + "  Completes: " + team1.getTwoBarPassCompletes());
+		logger.info("Team2TwoBarPassAttempts: " + team2.getTwoBarPassAttempts() + "  Completes: " + team2.getTwoBarPassCompletes());
+		logger.info("Team1ShotsOnGoal: " + team1.getShotsOnGoal());
+		logger.info("Team2ShotsOnGoal: " + team2.getShotsOnGoal());
+		logger.info("Team1Stuffs: " + team1.getStuffs() + "       Team2Stuffs: " + team2.getStuffs());
+		logger.info("Team1Breaks: " + team1.getBreaks() + "       Team2Breaks: " + team2.getBreaks());
+//		logger.info("Team1Errors: " + team1.getErrors() + "       Team2Errors: " + team2.getErrors());
+		logger.info("");
 	}
 	public void restoreState(byte[] serializedObject) {
 
@@ -761,7 +767,7 @@ public class Stats implements Serializable {
 			ObjectInputStream si = new ObjectInputStream(bi);
 			tempStats = (Stats) si.readObject();
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error(e.toString());
 		}
 		this.setCodeHistory(tempStats.getCodeHistory());
 		this.setPreviousCode(tempStats.getPreviousCode());

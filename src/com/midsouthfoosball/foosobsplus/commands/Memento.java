@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -24,7 +24,14 @@ package com.midsouthfoosball.foosobsplus.commands;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Memento {
+	private static transient Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 	byte[] serializedObject;
 
 	public Memento(Object object) {
@@ -35,7 +42,7 @@ public class Memento {
 			so.flush();
 			serializedObject = bo.toByteArray();
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error(e.toString());
 		}
 	}
 	public byte[] getState() {

@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021, 2022 Hugh Garner
+Copyright 2020-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -25,6 +25,9 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
@@ -61,6 +64,10 @@ public class Match implements Serializable {
 //	private transient int[] shotsOnGoal;
 //	private transient int[] breaks;
 //	private transient int[] stuffs;
+	private static transient Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 
 	public Match(OBSInterface obsInterface, Settings settings, Team team1, Team team2) {
 		this.team1 = team1;
@@ -572,7 +579,7 @@ public class Match implements Serializable {
 			ObjectInputStream si = new ObjectInputStream(bi);
 			tempMatch = (Match) si.readObject();
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error(e.toString());
 		}
 		this.setLastScored(tempMatch.getLastScored());
 		this.setMatchPaused(tempMatch.isMatchPaused());

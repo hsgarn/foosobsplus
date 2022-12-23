@@ -1,5 +1,5 @@
 /**
-Copyright 2022 Hugh Garner
+Copyright 2022-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -43,6 +43,9 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.net.InetAddresses;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
@@ -62,6 +65,10 @@ public class AutoScoreSettingsPanel extends JPanel {
 	private JList<String> lstMessageHistory;
 	private DefaultListModel<String> mdlMessageHistory;
 	private JScrollPane scrMessageHistory;
+	private static Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 
 	public AutoScoreSettingsPanel(Settings settings) throws IOException {
 		this.settings = settings;
@@ -199,7 +206,8 @@ public class AutoScoreSettingsPanel extends JPanel {
 		try {
 			settings.saveAutoScoreSettingsConfig();
 		} catch (IOException ex) {
-			System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
+			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
+			logger.error(ex.toString());
 		}
 	}
 	public class IPAddrInputVerifier extends InputVerifier {
@@ -210,11 +218,14 @@ public class AutoScoreSettingsPanel extends JPanel {
 				if (InetAddresses.isInetAddress(text)) {
 					return true;
 				} else {
+					logger.warn("Invalid input: [" + text + "]. Must be valid IP Address: ###.###.###.###");
 					JOptionPane.showMessageDialog(null, "Must be valid IP Address: ###.###.###.###", "Invalid Input", JOptionPane.WARNING_MESSAGE);
 					return false;
 				}
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(null, "Must be valid IP Address: ###.###.###.###", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+				logger.error("Invalid input: [" + text + "]. Must be valid IP Address: ###.###.###.###");
+				logger.error(e.toString());
 				return false;
 			}
 		}

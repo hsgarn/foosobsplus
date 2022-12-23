@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021, 2022 Hugh Garner
+Copyright 2020-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -51,6 +51,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.midsouthfoosball.foosobsplus.main.Main;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
@@ -101,6 +104,10 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private Icon imgIconAutoScoreConnected;
 	private Icon imgIconAutoScoreDisconnected;	
 	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
+	private static Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 	
 	public MainFrame(Settings settings, TournamentPanel tournamentPanel, TimerPanel timerPanel, OBSPanel obsPanel, AutoScoreMainPanel autoScoreMainPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
 			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,
@@ -315,10 +322,12 @@ public final class MainFrame extends JFrame implements WindowListener {
 					try {
 						java.awt.Desktop.getDesktop().browse(helpURI);
 					} catch (IOException ex) {
-						System.out.print(Messages.getString("Errors.URICallingError") + ex.getMessage());		 //$NON-NLS-1$
+						logger.error(Messages.getString("Errors.URICallingError"));		 //$NON-NLS-1$
+						logger.error(ex.toString());
 					}
 		    	} catch (URISyntaxException ex) {
-					System.out.print(Messages.getString("Errors.URISyntaxError") + ex.getMessage());		 //$NON-NLS-1$
+					logger.error(Messages.getString("Errors.URISyntaxError"));		 //$NON-NLS-1$
+					logger.error(ex.toString());
 				}
 			}
 		});
@@ -373,7 +382,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 					String fileNameAndPath = chooser.getSelectedFile().toString();
 					importStatsFile(fileNameAndPath);
 				} else {
-					System.out.println(Messages.getString("MainFrame.CancelledByUser")); //$NON-NLS-1$
+					logger.info(Messages.getString("MainFrame.CancelledByUser")); //$NON-NLS-1$
 				}
 
 			}
@@ -391,7 +400,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 					String fileNameAndPath = chooser.getSelectedFile().toString();
 					exportStatsFile(fileNameAndPath);
 				} else {
-					System.out.println(Messages.getString("MainFrame.CancelledByUser")); //$NON-NLS-1$
+					logger.info(Messages.getString("MainFrame.CancelledByUser")); //$NON-NLS-1$
 				}
 
 			}
@@ -420,8 +429,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 		List<String> lines = Collections.emptyList();
 		try {lines = Files.readAllLines(Paths.get(file)); }
 		catch (IOException e) {
-			System.out.println(Messages.getString("Errors.ReadFileError") + file); //$NON-NLS-1$
-			e.printStackTrace();
+			logger.error(Messages.getString("Errors.ReadFileError") + file); //$NON-NLS-1$
+			logger.error(e.toString());
+			JOptionPane.showMessageDialog(null, Messages.getString("Errors.ReadFileError") + file, "Import Error", 1);
 		}
 		lines.forEach(line -> main.processCode(line.toUpperCase(), false));
 	}
@@ -434,8 +444,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 				bw.newLine();
 			}
 		} catch (IOException e) {
-			System.out.println(Messages.getString("Errors.WriteFileError") + file); //$NON-NLS-1$
-			e.printStackTrace();
+			logger.error(Messages.getString("Errors.WriteFileError") + file); //$NON-NLS-1$
+			logger.error(e.toString());
+			JOptionPane.showMessageDialog(null, Messages.getString("Errors.WriteFileError") + file, "Export Error", 1);
 		}
 	}
 	public void closeWindow() {

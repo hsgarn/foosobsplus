@@ -42,6 +42,21 @@
 <artifactId>slf4j-api</artifactId>
 <version>1.7.36</version>
 </dependency>
+<dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-api</artifactId>
+    <version>2.19.0</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-core</artifactId>
+    <version>2.19.0</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-slf4j-impl</artifactId>
+    <version>2.19.0</version>
+</dependency>
 <!--
 <dependency>
 <groupId>org.slf4j</groupId>
@@ -49,7 +64,7 @@
 <version>1.7.36</version>
 </dependency>
  -->
-</dependencies>
+  </dependencies>
   <name>FoosOBSPlus</name>
   <url>https://github.com/hsgarn/foosobsplus</url>
   <description>FoosOBSPlus is a flexible foosball score keeper and statistics program compatible with OBS Studio (Version 28 or higher) using web sockets and also plays well with Elagto's Stream Deck products.</description>

@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021, 2022 Hugh Garner
+Copyright 2020-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -24,10 +24,16 @@ package com.midsouthfoosball.foosobsplus.view;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Messages {
 	private static final String BUNDLE_NAME = "com.midsouthfoosball.foosobsplus.view.messages"; //$NON-NLS-1$
-
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+	private static Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 
 	private Messages() {
 	}
@@ -41,6 +47,7 @@ public class Messages {
 		try {
 			return RESOURCE_BUNDLE.getString(key);
 		} catch (MissingResourceException e) {
+			logger.error(e.toString());
 			return '!' + key + '!';
 		}
 		

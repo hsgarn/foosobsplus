@@ -1,5 +1,5 @@
 /**
-Copyright 2020 Hugh Garner
+Copyright 2020-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -23,8 +23,15 @@ package com.midsouthfoosball.foosobsplus.commands;
 
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CommandSwitch {
 	public final HashMap<String, Command> commandMap = new HashMap<>();
+	private static Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 	
 	public void register(String commandName, Command command) {
 		commandMap.put(commandName, command);
@@ -32,9 +39,9 @@ public class CommandSwitch {
 	
 	public Command execute(String commandName) {
 		Command command = commandMap.get(commandName);
-		if (command != null) {
-//			throw new IllegalStateException("no command registered for " + commandName);
-//		}
+		if (command == null) {
+			logger.error("No command registered for commandName [" + commandName + "].");
+		} else {
 			command.execute();
 		}
 		return command;

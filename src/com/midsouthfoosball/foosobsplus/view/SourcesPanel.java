@@ -1,5 +1,5 @@
 /**
-Copyright 2021, 2022 Hugh Garner
+Copyright 2021-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -39,6 +39,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 import com.midsouthfoosball.foosobsplus.model.Settings;
@@ -118,6 +121,10 @@ public class SourcesPanel extends JPanel {
 	private JTextField txtShowTimerSource;
 	OBSInterface obsInterface;
 	private String defaultFilePath = "c:\\temp"; //$NON-NLS-1$
+	private static transient Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 
 	// Create the Panel.
 
@@ -125,7 +132,6 @@ public class SourcesPanel extends JPanel {
 		this.obsInterface = obsInterface;
 
 		setLayout(settings);
-
 	}
 
 	private void restoreDefaults(Settings settings) {
@@ -261,7 +267,8 @@ public class SourcesPanel extends JPanel {
 		try {
 			settings.saveSourceConfig();
 		} catch (IOException ex) {
-			System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
+			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile")); //$NON-NLS-1$
+			logger.error(ex.toString());
 		}
 	}
 	public void setLayout(Settings settings) {	
@@ -287,7 +294,8 @@ public class SourcesPanel extends JPanel {
 							try {
 								Files.createDirectory(Paths.get(directoryName));
 							} catch (IOException e1) {
-								System.out.println(Messages.getString("Errors.ErrorCreatingDirectory") + e1.getMessage()); //$NON-NLS-1$
+								logger.error(Messages.getString("Errors.ErrorCreatingDirectory")); //$NON-NLS-1$
+								logger.error(e1.toString());
 							}
 						}
 						formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
@@ -296,7 +304,8 @@ public class SourcesPanel extends JPanel {
 						settings.setDatapath(formattedTxtPath.getText());
 						settings.saveSourceConfig();
 					} catch (IOException ex) {
-						System.out.print(Messages.getString("SourcesPanel.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
+						logger.error(Messages.getString("SourcesPanel.ErrorSavingPropertiesFile")); //$NON-NLS-1$
+						logger.error(ex.toString());
 					}
 				}
 			}
@@ -311,7 +320,8 @@ public class SourcesPanel extends JPanel {
 					settings.setDatapath(formattedTxtPath.getText());
 					settings.saveSourceConfig();
 		    	} catch (IOException ex) {
-		    		System.out.print(Messages.getString("SourcesPanel.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
+		    		logger.error(Messages.getString("SourcesPanel.ErrorSavingPropertiesFile"));		 //$NON-NLS-1$
+		    		logger.error(ex.toString());
 		    	}
 			}
 		});
@@ -323,7 +333,8 @@ public class SourcesPanel extends JPanel {
 						settings.setDatapath(formattedTxtPath.getText());
 						settings.saveSourceConfig();
 			    	} catch (IOException ex) {
-			    		System.out.print(Messages.getString("SourcesPanel.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
+			    		logger.error(Messages.getString("SourcesPanel.ErrorSavingPropertiesFile"));		 //$NON-NLS-1$
+			    		logger.error(ex.toString());
 			    	}
 			    }
 			}
@@ -723,7 +734,8 @@ public class SourcesPanel extends JPanel {
 		add(lblTeam2ClearCompletesSource, "cell 7 13,alignx right"); //$NON-NLS-1$
 		
 		txtTeam2ClearCompletesSource = new JTextField();
-		txtTeam2ClearCompletesSource.setText(settings.getClearCompletesSource(2));		add(txtTeam2ClearCompletesSource, "cell 8 13,alignx left"); //$NON-NLS-1$
+		txtTeam2ClearCompletesSource.setText(settings.getClearCompletesSource(2));
+		add(txtTeam2ClearCompletesSource, "cell 8 13,alignx left"); //$NON-NLS-1$
 		txtTeam2ClearCompletesSource.setColumns(20);
 
 		JLabel lblTeam1SOG = new JLabel(Messages.getString("SourcesPanel.Team1ShotsOnGoal", settings.getGameType())); //$NON-NLS-1$

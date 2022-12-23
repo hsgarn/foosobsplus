@@ -1,5 +1,5 @@
 /**
-Copyright 2022 Hugh Garner
+Copyright 2022-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -40,6 +40,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 import net.miginfocom.swing.MigLayout;
@@ -52,6 +55,10 @@ public class PartnerProgramPanel extends JPanel {
 	private JTextField txtPlayer2FileName;
 	private JTextField txtPlayer3FileName;
 	private JTextField txtPlayer4FileName;
+	private static Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 
 	// Create the Panel.
 
@@ -76,7 +83,8 @@ public class PartnerProgramPanel extends JPanel {
 		try {
 			settings.savePartnerProgramConfig();
 		} catch (IOException ex) {
-			System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
+			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile")); //$NON-NLS-1$
+			logger.error(ex.toString());
 		}
 	}
 	public void setLayout(Settings settings) {	
@@ -101,7 +109,8 @@ public class PartnerProgramPanel extends JPanel {
 							try {
 								Files.createDirectory(Paths.get(directoryName));
 							} catch (IOException e1) {
-								System.out.println(Messages.getString("Errors.ErrorCreatingDirectory") + e1.getMessage()); //$NON-NLS-1$
+								logger.error(Messages.getString("Errors.ErrorCreatingDirectory")); //$NON-NLS-1$
+								logger.error(e1.toString());
 							}
 						}
 						formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
@@ -110,7 +119,8 @@ public class PartnerProgramPanel extends JPanel {
 						settings.setPartnerProgramPath(formattedTxtPath.getText());
 						settings.savePartnerProgramConfig();;
 					} catch (IOException ex) {
-						System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
+						logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile")); //$NON-NLS-1$
+						logger.error(ex.toString());
 					}
 				}
 			}
@@ -125,7 +135,8 @@ public class PartnerProgramPanel extends JPanel {
 					settings.setPartnerProgramPath(formattedTxtPath.getText());
 					settings.savePartnerProgramConfig();
 		    	} catch (IOException ex) {
-		    		System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
+		    		logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile"));		 //$NON-NLS-1$
+		    		logger.error(ex.toString());
 		    	}
 			}
 		});
@@ -137,7 +148,8 @@ public class PartnerProgramPanel extends JPanel {
 						settings.setPartnerProgramPath(formattedTxtPath.getText());
 						settings.savePartnerProgramConfig();
 			    	} catch (IOException ex) {
-			    		System.out.print(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
+			    		logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile"));		 //$NON-NLS-1$
+			    		logger.error(ex.toString());
 			    	}
 			    }
 			}

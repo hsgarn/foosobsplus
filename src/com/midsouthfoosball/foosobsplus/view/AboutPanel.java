@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021, 2022 Hugh Garner
+Copyright 2020-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -34,7 +34,7 @@ import net.miginfocom.swing.MigLayout;
 public class AboutPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private static final String versionNumber = "1.117"; //$NON-NLS-1$
+	private static final String versionNumber = "1.118"; //$NON-NLS-1$
 
 	public AboutPanel(JFrame aboutFrame) {
 		setLayout(new MigLayout("", "[127.00][50.00:87.00,grow,left]", "[][][][][grow][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -54,7 +54,7 @@ public class AboutPanel extends JPanel {
 		JLabel lblReleaseDate = new JLabel(Messages.getString("AboutPanel.ReleaseDate")); //$NON-NLS-1$
 		add(lblReleaseDate, "cell 0 2,alignx right"); //$NON-NLS-1$
 		
-		JLabel lblReleaseDateValue = new JLabel("12/18/2022");
+		JLabel lblReleaseDateValue = new JLabel("12/23/2022");
 		add(lblReleaseDateValue, "cell 1 2"); //$NON-NLS-1$
 		
 		JLabel lblAuthor = new JLabel(Messages.getString("AboutPanel.Author")); //$NON-NLS-1$

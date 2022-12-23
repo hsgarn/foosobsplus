@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021, 2022 Hugh Garner
+Copyright 2020-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -38,6 +38,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.midsouthfoosball.foosobsplus.model.OBS;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
@@ -62,8 +65,11 @@ public class OBSConnectPanel extends JPanel {
 	private OBS obs;
 	private JList<String> lstMessageHistory;
 	private DefaultListModel<String> mdlMessageHistory;
-	
 	private JScrollPane scrMessageHistory;
+	private static Logger logger;
+	{
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
 	
 	public OBSConnectPanel(Settings settings, OBS obs) throws IOException {
 		this.settings = settings;
@@ -227,12 +233,15 @@ public class OBSConnectPanel extends JPanel {
 				chckbxAutoLogin.setSelected(false);
 				String msg = Messages.getString("Errors.OBSConnectPanel.AutoLogin");
 				String ttl = Messages.getString("Errors.OBSConnectPanel.AutoLogin.Title");
+				logger.error(msg);
 				JOptionPane.showMessageDialog(null, msg, ttl,1);
 			}
 		}
 		try {
 			settings.saveOBSConfig();
 		} catch (IOException ex) {
+			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile"));
+			logger.error(ex.toString());
 			JOptionPane.showMessageDialog(null, ex.getMessage(), Messages.getString("Errors.ErrorSavingPropertiesFile"),1);
 		}
 	}

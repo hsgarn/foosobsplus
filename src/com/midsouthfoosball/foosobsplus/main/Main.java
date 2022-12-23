@@ -1,5 +1,5 @@
 /**
-Copyright 2020, 2021, 2022 Hugh Garner
+Copyright 2020-2023 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -60,6 +60,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.commands.CodeCommand;
 import com.midsouthfoosball.foosobsplus.commands.Command;
@@ -166,6 +169,8 @@ import io.obswebsocket.community.client.message.event.sceneitems.SceneItemEnable
 import io.obswebsocket.community.client.message.response.scenes.GetCurrentProgramSceneResponse;
 
 public class Main {
+	private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
 	{
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -175,7 +180,8 @@ public class Main {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("Can't set look and feel.");
+			logger.info("Can't set look and feel.");
+			logger.error(e.toString());
 		}
 	}	
 	////// Settings and OBSInterface setup \\\\\\
@@ -205,7 +211,7 @@ public class Main {
 
 	////// Generate the Data Models (Mvc) \\\\\\
 	
-	private Tournament 				tournament 				= new Tournament(obsInterface, settings);
+	private Tournament			tournament			= new Tournament(obsInterface, settings);
 	private Team 				team1 				= new Team(obsInterface, settings, 1, settings.getSide1Color());
 	private Team 				team2 				= new Team(obsInterface, settings, 2, settings.getSide2Color());
 	private Match 				match				= new Match(obsInterface, settings, team1, team2);
@@ -291,6 +297,7 @@ public class Main {
 			if (obs.getPassword().isEmpty() || obs.getHost().isEmpty() || obs.getPort().isEmpty()) {
 				String msg = Messages.getString("Errors.Main.AutoLogin");
 				String ttl = Messages.getString("Errors.Main.AutoLogin.Title");
+				logger.warn(msg);
 				JOptionPane.showMessageDialog(null, msg, ttl, 1);
 			} else {
 				connectToOBS();
@@ -444,6 +451,7 @@ public class Main {
 		        {
 		            skt = new Socket(address, port);
 		            autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Connected to " + address + ": " + port);
+		            logger.info("Auto Score connected from " + address + ": " + port);
 		        	dataIn = new BufferedReader(new InputStreamReader(skt.getInputStream()));
 		        	isConnected = true;
 		    		mainFrame.setAutoScoreIconConnected(true);
@@ -452,10 +460,12 @@ public class Main {
 		        catch(UnknownHostException uh)
 		        {
 		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + uh.toString());
+		        	logger.error(uh.toString());
 		        }
 		        catch(IOException io)
 		        {
 		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString());
+		        	logger.error(io.toString());
 		        }
 		    	String raw = "";
 		        String str[];
@@ -483,10 +493,12 @@ public class Main {
 		            catch(IOException io)
 		            {
 		            	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString());
-		                isConnected = false;
+			        	logger.error(io.toString());
+			        	isConnected = false;
 		            }
 		        }
 		        autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Connection Terminated!!");
+		        logger.info("Auto Score Connection Terminated!!");
 		        try
 		        {
 		            dataIn.close();
@@ -496,6 +508,7 @@ public class Main {
 		        catch(IOException io)
 		        {
 		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString());
+		        	logger.error(io.toString());
 		        }
 		        return isConnected;
 			}
@@ -508,8 +521,10 @@ public class Main {
 			     autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Worker completed with isConnected: " + status);
 			    } catch (InterruptedException e) {
 			    	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString());
+		        	logger.error(e.toString());
 			    } catch (ExecutionException e) {
 			    	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString());
+		        	logger.error(e.toString());
 			    }
 			}
 			@Override
@@ -744,7 +759,7 @@ public class Main {
 		try {
 			settings.saveControlConfig();
 		} catch (IOException e) {
-			e.printStackTrace();
+        	logger.error(e.toString());
 		}
 	}
 	private String createMatchId() {
@@ -1611,7 +1626,7 @@ public class Main {
 		        		for (WatchEvent<?> watchEvent : watchKey.pollEvents()) {
 		        			final Kind<?> kind = watchEvent.kind();
 		        			if (kind==StandardWatchEventKinds.OVERFLOW) {
-		        				System.out.println("Got ourselves an overflow in createFileWatchWorker doInBackground");
+		    		        	logger.error("Overflow in createFileWatchWorker doInBackground.");
 		        				continue;
 		        			}
 		        			if (kind == StandardWatchEventKinds.ENTRY_CREATE || kind == StandardWatchEventKinds.ENTRY_MODIFY) {
@@ -1634,18 +1649,16 @@ public class Main {
 				        				}
 				        				fileReader.close();
 				        			} catch (FileNotFoundException e) {
-				        				System.out.println("FileNotFoundException occurred");
-				        				e.printStackTrace();
+				    		        	logger.error(e.toString());
 				        			} catch (Exception ee) {
-				        				System.out.println("general exception");
-				        				ee.printStackTrace();
+				    		        	logger.error(ee.toString());
 				        			}
 			        			}
 		        			}
 		        		}
 			        	boolean valid = watchKey.reset();
 			        	if (!valid) {
-			        		System.out.println("watchKey wasn't valid so made a break for it");
+			        		logger.error("watchKey wasn\'t valid so made a break for it");
 			        		break;
 			        	}
 	        		}
@@ -1659,11 +1672,11 @@ public class Main {
 				if (isCancelled()) return;
 			    try {
 			     status = get();
-			     System.out.println(dtf.format(LocalDateTime.now()) + ": Worker completed with isConnected: " + status);
+			     logger.info("Worker completed with isConnected: " + status);
 			    } catch (InterruptedException e) {
-			    	System.out.println(dtf.format(LocalDateTime.now()) + ": " + e.toString());
+		        	logger.error(e.toString());
 			    } catch (ExecutionException e) {
-			    	System.out.println(dtf.format(LocalDateTime.now()) + ": " + e.toString());
+		        	logger.error(e.toString());
 			    }
 			}
 			@Override
