@@ -937,6 +937,10 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpha - push hide all button
 </br></br></br>
 ## Revision History</br>
+v1.119 12/24/2022</br>
+Put log4j2.properties in src folder and set path to ./ so logs are created in same directory as program runs.</br>
+Fix HotKeysBaseScript default script in messages.properties.</br>
+</br>
 v1.118 12/23/2022</br>
 Add logging using log4j2 and rollingfile appender.</br>
 Update copyright on all files.</br>

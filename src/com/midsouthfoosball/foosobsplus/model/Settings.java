@@ -1676,6 +1676,17 @@ public class Settings {
 		String baseScriptText = getHotKeyBaseScript();
 		String hotKeyScriptPath = getHotKeyScriptPath();
 		if(Files.exists(Paths.get(basePath))) {
+			if(!Files.exists(Paths.get(hotKeyScriptPath))) {
+				try {
+					Files.createDirectory(Paths.get(hotKeyScriptPath));
+				} catch (IOException e1) {
+					logger.error(Messages.getString("Errors.ErrorCreatingDirectory") + " " + hotKeyScriptPath);
+					logger.error(e1.toString());
+					JOptionPane.showMessageDialog(null,  Messages.getString("Errors.ErrorCreatingDirectory") + " " + hotKeyScriptPath);
+					return;
+				}
+				logger.error("Hot key script directory " + hotKeyScriptPath + " successfully created.");
+			}
 			if(Files.exists(Paths.get(hotKeyScriptPath))) {
 				if (baseScriptText.isEmpty()) {
 					JOptionPane.showMessageDialog(null, Messages.getString("Errors.BaseScriptFile"), "Scripting Error", 1);
@@ -1685,15 +1696,16 @@ public class Settings {
 						.stream()
 						.filter(e -> e.getValue().toString().length() > 0)
 						.forEach(e->createHotKeyScript(e.getKey().toString(), e.getValue().toString(), baseScript, basePath));
+					logger.error("Hot key scripts generated successfully to " + hotKeyScriptPath + ".");
 					JOptionPane.showMessageDialog(null, "Done");
 				}
 			} else {
-				JOptionPane.showMessageDialog(null,  Messages.getString("Errors.DirectoryDoesNotExist") + " " + hotKeyScriptPath);
-				logger.error("Could not write to " + hotKeyScriptPath);
+				logger.error("Could not find " + hotKeyScriptPath + " when trying to generate hot key scripts.");
+				JOptionPane.showMessageDialog(null, Messages.getString("Errors.DirectoryDoesNotExist") + " " + hotKeyScriptPath);
 			}
 		} else {
+			logger.error("Could not find " + basePath + " when trying to generate hot key scripts.");
 			JOptionPane.showMessageDialog(null, Messages.getString("Errors.DirectoryDoesNotExist") + " " + basePath);
-			logger.error("Could not find " + basePath);
 		}
 	}
 	private void createHotKeyScript(String keyFunction, String hotKey, String[] baseScript, String basePath) {
@@ -1707,8 +1719,9 @@ public class Settings {
 			}
 			fileWriter.close();
 		} catch (IOException ex) {
-			JOptionPane.showMessageDialog(null, Messages.getString("Errors.ScriptWriteFailure") + " " + keyFunction, "Scripting Error", 1);
 			logger.error("Could not write to " + getHotKeyScriptPath() + File.separator + keyFunction + ".ahk");
+			logger.error(ex.toString());
+			JOptionPane.showMessageDialog(null, Messages.getString("Errors.ScriptWriteFailure") + " " + keyFunction, "Scripting Error", 1);
 		}
 	}
 }
