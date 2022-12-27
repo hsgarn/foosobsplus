@@ -634,6 +634,18 @@ public class TeamController {
 		updateGameTables();
 	}
 	public void resetScores() {
+		resetTheScores();
+		updateGameTables();
+		displayAll();
+	}
+	public void resetScoresFromButton() {
+		resetTheScores();
+		match.setCurrentScoreTeam1(team1.getScore());
+		match.setCurrentScoreTeam2(team2.getScore());
+		updateGameTables();
+		displayAll();
+	}
+	private void resetTheScores() {
 		team1.setScore(0);
 		team2.setScore(0);
 		team1.setForwardScore(0);
@@ -642,9 +654,8 @@ public class TeamController {
 		team2.setGoalieScore(0);
 		teamPanel1.updateScore(team1.getScore());
 		teamPanel2.updateScore(team2.getScore());
-		updateGameTables();
-		displayAll();
 	}
+
 	public void resetGameCounts() {
 		team1.setGameCount(0);
 		team2.setGameCount(0);

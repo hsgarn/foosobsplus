@@ -34,7 +34,7 @@ public class PRSCommand implements Command {
 	}
 	
 	public void execute() {
-		teamController.resetScores();
+		teamController.resetScoresFromButton();
 	}
 
 	public String getCode() {

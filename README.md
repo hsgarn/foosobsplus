@@ -1,8 +1,8 @@
 # FoosOBSPlus
-FoosOBSPlus is a flexible foosball score keeper and statistics program compatible with OBS Studio (Version 28 or higher) using web sockets and also plays well with Elagto's Stream Deck products.
+FoosOBSPlus is a tool to enhance your foosball streaming experience.  It is a flexible foosball score keeper and statistics program that will send the match information to your OBS Studio (Version 28 or higher) streaming software. It also plays well with Elagto's Stream Deck products so updating the score, switching sides, calling times out can all be done with a simple button presses..
 
 ## Overview
-FoosOBSPlus sends your Foosball game data (Players, scores, game counts, time outs, etc.) to OBS Studio using OBS Studio's web sockets protocol.  Almost every field displayed in FoosOBSPlus can be sent OBS Studio and displayed to your live stream. FoosOBSPlus can also connect to an auto scoring system using a Raspberry Pico W and some lasers (see https://github.com/hsgarn/FoosScore for more information.)
+FoosOBSPlus sends your Foosball game data (Players, scores, game counts, time outs, etc.) to OBS Studio using OBS Studio's web sockets protocol.  Almost every field displayed in FoosOBSPlus can be sent to OBS Studio and displayed to your live stream. FoosOBSPlus can also connect to an auto scoring system using a Raspberry Pico W and some lasers (see https://github.com/hsgarn/FoosScore for more information.  A Stream Deck can be used in combination with Auto Hot Keys to control most functions in FoosOBSPlus.)
 
 FoosOBSPlus Main Screen:
 <img align="left" width="850" height="630" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusScreen1.png">
@@ -11,7 +11,7 @@ OBS Studio scene utilizing FoosOBSPlus to display various data:
 <img align="left" width="1920" height="1090" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusScreen2.png">
 
 ## Setup
-FoosOBSPlus is a java program.  You can download the executable jar file from the Releases section. You will need to have at least Java 1.8 loaded and set to associate jar files with java. There are many resources on the web for how to load java and set windows up to run the jar file.  (see https://www.howtogeek.com/812583/how-to-open-jar-files-windows/ for example.)
+FoosOBSPlus is a java program.  You can download the executable jar file from the Releases section. You will need to have at least Java 1.8 loaded and windows set up to associate jar files with java. There are many resources on the web for how to load java and set windows up to run the jar file.  (see https://www.howtogeek.com/812583/how-to-open-jar-files-windows/ for example.  The executable jar file will run in the directory you placed it. )
 
 ## Settings
 If running FoosOBSPlus for the first time, it will create a set of properties files with the default properties in the folder in which the program is running. These property files contain the settings for the operating parameters, sources, hot keys and more.
@@ -937,6 +937,10 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpha - push hide all button
 </br></br></br>
 ## Revision History</br>
+v1.120 12/27/2022</br>
+Update README.md.</br>
+Make Reset Scores button update game table properly.</br>
+</br>
 v1.119 12/24/2022</br>
 Put log4j2.properties in src folder and set path to ./ so logs are created in same directory as program runs.</br>
 Fix HotKeysBaseScript default script in messages.properties.</br>
