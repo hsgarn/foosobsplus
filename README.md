@@ -109,10 +109,10 @@ When checked, the program activates CutThroat Mode to support the game of CutThr
 ### Sources
 FoosOBSPlus sends most of its data to sources in OBS Studio so it can be displayed in a live stream.  The names of these sources are configurable if the default names do not suit you. The vast majority of these sources should be Text (GDI+) sources with the Read from file checkbox unchecked.  Exceptions to this will be specifically noted below.  To get to the sources configuration, click on Edit, then Settings, then Sources:
 
-<img align="left" width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings3.png">
+<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings3.png">
 
 Sources Settings Page:</br>
-<img align="left" width="542" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings5.png">
+<img width="542" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings5.png">
 
 Below are the sources that can be configured:
 
@@ -333,10 +333,10 @@ Click the Restore Defaults button to restore the default sources.
 ### Hot Keys
 FoosOBSPlus uses buttons to do various functions such as increase or decrease scores, switch sides, reset game counts, start timers, etc.  Each button can have a Hot Key assigned to it.  Pressing ALT plus the assigned Hot Key for the button will function just like pressing the actual button.  Unfortunately, there are more buttons than available hot keys so you can not assign a hot key to every button. The hot keys can be used in Stream Deck commands to make operating FoosOBSPlus a simple push button affair.  TouchPortal is another program that can be used to activate the buttons in FoosOBSPlus.  These will require that AutoHotKey be installed. (See https://www.autohotkey.com/docs/Tutorial.htm).  FoosOBSPlus will generate the AutoHotKey scripts for any hot keys defined (see the Generate AutoHotKey Scripts button below).
 
-<img align="left" width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings4.png">
+<img  width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings4.png">
 
 Hot Key Settings Page:</br>
-<img align="left" width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings6.png">
+<img width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings6.png">
 
 #### Start Match
 Assigns the hot key for the Start Match button.  Default hot key is b.
@@ -507,10 +507,10 @@ Click the Restore Defaults button to restore the default hot keys.
 ### Filters
 FoosOBSPlus can trigger OBS Filters when certain events occur.  For instance, when a time out occurs for team 1, a filter can be triggered to show a ref calling time out.  The filter is responsible for turning itself off.    To get to the filters configuration, click on Edit, then Settings, then Filters:
 
-<img align="left" width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings9.png">
+<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings9.png">
 
 Filters Settings Page:</br>
-<img align="left" width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings10.png">
+<img width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings10.png">
 
 Below are the filters that can be configured:
 
@@ -583,10 +583,10 @@ Click the Restore Defaults button to restore the default filters.
 ### Partner Program
 FoosOBSPlus can read player names from files.  For example, we have an Access program called Partner Program and when a match is called in this program, it writes the players' names to 4 files. The directory and filenames can be set in the Partner Program Settings window.
 
-<img align="left" width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings7.png">
+<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings7.png">
 
 Partner Program Settings Page:</br>
-<img align="left" width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings8.png">
+<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings8.png">
 
 #### Select Path
 The Select Path allows you to choose the directory that will contain the files of the players' names.  Optionally you can just type the path in the box to the right of the Select Path button.
