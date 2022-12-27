@@ -1,8 +1,8 @@
 # FoosOBSPlus
-FoosOBSPlus is a tool to enhance your foosball streaming experience.  It is a flexible foosball score keeper and statistics program that will send the match information to your OBS Studio (Version 28 or higher) streaming software. It also plays well with Elagto's Stream Deck products so updating the score, switching sides, calling times out can all be done with a simple button presses..
+FoosOBSPlus is a tool to enhance your foosball streaming experience.  It is a flexible foosball score keeper and statistics program that will send the match information to your OBS Studio (Version 28 or higher) streaming software. It also plays well with Elagto's Stream Deck products so updating the score, switching sides, calling times out can all be done with simple button presses.
 
 ## Overview
-FoosOBSPlus sends your Foosball game data (Players, scores, game counts, time outs, etc.) to OBS Studio using OBS Studio's web sockets protocol.  Almost every field displayed in FoosOBSPlus can be sent to OBS Studio and displayed to your live stream. FoosOBSPlus can also connect to an auto scoring system using a Raspberry Pico W and some lasers (see https://github.com/hsgarn/FoosScore for more information.  A Stream Deck can be used in combination with Auto Hot Keys to control most functions in FoosOBSPlus.)
+FoosOBSPlus sends your Foosball game data (Players, scores, game counts, time outs, etc.) to OBS Studio using OBS Studio's web sockets protocol.  Almost every field displayed in FoosOBSPlus can be sent to OBS Studio and displayed to your live stream. FoosOBSPlus can also connect to an auto scoring system using a Raspberry Pico W and some lasers (see https://github.com/hsgarn/FoosScore for more information).  Also a Stream Deck can be used in combination with Auto Hot Keys to control most functions in FoosOBSPlus.
 
 FoosOBSPlus Main Screen:
 <img align="left" width="850" height="630" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusScreen1.png">
@@ -19,9 +19,9 @@ If running FoosOBSPlus for the first time, it will create a set of properties fi
 ### Operating Parameters
 FoosOBSPlus tries to make keeping track of a foosball match's progress as simple as possible.  To that end, there is a settings screen that contains parameters that affect how FoosOBSPlus will behave.  Click Edit then Settings then Parameters to get to the Parameter Settings screen.
 
-<img width="640" height="480" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings1.png">
+<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings1.png">
 
-Parameter Settings Page:
+Parameter Settings Page:</br>
 <img width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings2.png">
 
 #### Points to Win
@@ -109,9 +109,10 @@ When checked, the program activates CutThroat Mode to support the game of CutThr
 ### Sources
 FoosOBSPlus sends most of its data to sources in OBS Studio so it can be displayed in a live stream.  The names of these sources are configurable if the default names do not suit you. The vast majority of these sources should be Text (GDI+) sources with the Read from file checkbox unchecked.  Exceptions to this will be specifically noted below.  To get to the sources configuration, click on Edit, then Settings, then Sources:
 
-<img align="left" width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings3.png">
+<img align="left" width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings3.png">
 
-<img align="left" width="502" height="302" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings5.png">
+Sources Settings Page:</br>
+<img align="left" width="542" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings5.png">
 
 Below are the sources that can be configured:
 
@@ -332,9 +333,10 @@ Click the Restore Defaults button to restore the default sources.
 ### Hot Keys
 FoosOBSPlus uses buttons to do various functions such as increase or decrease scores, switch sides, reset game counts, start timers, etc.  Each button can have a Hot Key assigned to it.  Pressing ALT plus the assigned Hot Key for the button will function just like pressing the actual button.  Unfortunately, there are more buttons than available hot keys so you can not assign a hot key to every button. The hot keys can be used in Stream Deck commands to make operating FoosOBSPlus a simple push button affair.  TouchPortal is another program that can be used to activate the buttons in FoosOBSPlus.  These will require that AutoHotKey be installed. (See https://www.autohotkey.com/docs/Tutorial.htm).  FoosOBSPlus will generate the AutoHotKey scripts for any hot keys defined (see the Generate AutoHotKey Scripts button below).
 
-<img align="left" width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings4.png">
+<img align="left" width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings4.png">
 
-<img align="left" width="802" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings6.png">
+Hot Key Settings Page:</br>
+<img align="left" width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings6.png">
 
 #### Start Match
 Assigns the hot key for the Start Match button.  Default hot key is b.
@@ -505,9 +507,10 @@ Click the Restore Defaults button to restore the default hot keys.
 ### Filters
 FoosOBSPlus can trigger OBS Filters when certain events occur.  For instance, when a time out occurs for team 1, a filter can be triggered to show a ref calling time out.  The filter is responsible for turning itself off.    To get to the filters configuration, click on Edit, then Settings, then Filters:
 
-<img align="left" width="300" height="220" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings9.png">
+<img align="left" width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings9.png">
 
-<img align="left" width="502" height="302" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings10.png">
+Filters Settings Page:</br>
+<img align="left" width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings10.png">
 
 Below are the filters that can be configured:
 
@@ -580,9 +583,10 @@ Click the Restore Defaults button to restore the default filters.
 ### Partner Program
 FoosOBSPlus can read player names from files.  For example, we have an Access program called Partner Program and when a match is called in this program, it writes the players' names to 4 files. The directory and filenames can be set in the Partner Program Settings window.
 
-<img align="left" width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings7.png">
+<img align="left" width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings7.png">
 
-<img align="left" width="600" height="400" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings8.png">
+Partner Program Settings Page:</br>
+<img align="left" width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings8.png">
 
 #### Select Path
 The Select Path allows you to choose the directory that will contain the files of the players' names.  Optionally you can just type the path in the box to the right of the Select Path button.
@@ -824,50 +828,51 @@ This is the number of breaks.
 This is the number of stuffs.
 #### Aces
 This is the number of aces.
-##Codes and Commands
+
+## Codes and Commands
 The following code scheme will allow you to record every possession in a game by just learning what each position in the code designates and learning only a handful of codes.  Using these codes, the score and timers can be automatically maintained throughout the match.  Each position in the code has from 2 to 10 possible mostly intuitive values. Below is the breakdown of the code.
 
-1st position - team: which team has the ball.
-y - yellow team
-b - black team
-x - command trigger (see below for list of commands)
+1st position - team: which team has the ball.</br>
+y - yellow team</br>
+b - black team</br>
+x - command trigger (see below for list of commands)</br>
 
-2nd position - rod: where is the ball:
-2 - 2 bar or 3 bar goalie rod.  These rods are treated as one rod.
-3 - 3 bar forward rod.
-5 - 5 bar forward rod.
-g - goal (someone scored)
-o - off table
-d - dead ball
+2nd position - rod: where is the ball:</br>
+2 - 2 bar or 3 bar goalie rod.  These rods are treated as one rod.</br>
+3 - 3 bar forward rod.</br>
+5 - 5 bar forward rod.</br>
+g - goal (someone scored)</br>
+o - off table</br>
+d - dead ball</br>
 
-3rd position - action: how did the ball get here:
-a - ace (used when either 5 bar shot in goal from serve, or passed to the 3 from serve and shot from the 3 without any opponent intervention and without missing both the pass and the shot)
-c - clear (from goalie 2 or 3 rod to past the same team's 5 row)
-p - pass
-s - shot
-d - drop (serving ball after a score or being knocked off the table or after time out called)
-t - time out
-r - reset
-w - reset warning
-x - penalty (see 4th position for penalty modifiers)
-y - ball placement after a technical foul shot has been taken
-e - error (turnover)
+3rd position - action: how did the ball get here:</br>
+a - ace (used when either 5 bar shot in goal from serve, or passed to the 3 from serve and shot from the 3 without any opponent intervention and without missing both the pass and the shot)</br>
+c - clear (from goalie 2 or 3 rod to past the same team's 5 row)</br>
+p - pass</br>
+s - shot</br>
+d - drop (serving ball after a score or being knocked off the table or after time out called)</br>
+t - time out</br>
+r - reset</br>
+w - reset warning</br>
+x - penalty (see 4th position for penalty modifiers)</br>
+y - ball placement after a technical foul shot has been taken</br>
+e - error (turnover)</br>
 
-4th position - detail: provides more detail for the action if needed.
-b - break - used with pass or shot to designate that the attempt was successful, but only because of a lucky break
-f - stuff - used with shot or pass to indicate shot/pass was stuffed into shooters/passers goal (y3p, ygsf)
-w - 3 walls 5 bar violation - used with 3rd position set to x
-s - spin violation - used with 3rd position set to x
-j - jarring violation - used with 3rd position set to x
-d - distraction - used with 3rd position set to x
-t - too many time outs - used with 3rd position set to x
-p - illegal pass - used with 3rd position set to x
-x - technical foul - used with 3rd position set to x
-r - ready protocol violation - used with 3rd position set to x
-o - other violation - future rules or ones just overlooked - used with 3rd position set to 
+4th position - detail: provides more detail for the action if needed.</br>
+b - break - used with pass or shot to designate that the attempt was successful, but only because of a lucky break</br>
+f - stuff - used with shot or pass to indicate shot/pass was stuffed into shooters/passers goal (y3p, ygsf)</br>
+w - 3 walls 5 bar violation - used with 3rd position set to x</br>
+s - spin violation - used with 3rd position set to x</br>
+j - jarring violation - used with 3rd position set to x</br>
+d - distraction - used with 3rd position set to x</br>
+t - too many time outs - used with 3rd position set to x</br>
+p - illegal pass - used with 3rd position set to x</br>
+x - technical foul - used with 3rd position set to x</br>
+r - ready protocol violation - used with 3rd position set to x</br>
+o - other violation - future rules or ones just overlooked - used with 3rd position set to </br>
 
 
-###Examples (this is laid out in the form of an actual game taking place):
+### Examples (this is laid out in the form of an actual game taking place):
 y5d - ball is on the 5 bar of the yellow team who "has the drop" either due to winning the coin toss, ball off the table, or oppenent scored.  y5d or b5d will always be how a new point, game, and match start out.
 y3p - ball is passed to the 3 bar
 bgs - ball shot into black team's goal (score y=1, b=0)
@@ -884,7 +889,7 @@ y3p - pass to 3 bar successful
 y3r - black blocking agressively and reset is called
 bgs - ball shot into black goal (score y=2, b=1)
 
-###Commands: (These are just like hitting the corrsponding buttons in the UI)
+### Commands: (These are just like hitting the corresponding buttons in the UI)
 * xu - push undo button
 * xr - push redo button
 * xpsm - push Start Match button
