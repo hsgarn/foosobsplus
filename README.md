@@ -625,7 +625,7 @@ The FoosOBSPlus Main Screen is divided into 11 panels.  Each panel has its own c
 ### Tournament Information
 This panel contains information pertaining to the particular tournament being played.  Tournament name, event name and table name can be displayed.
 
-<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusTournamentInformation.png">
+<img width="320" height="270" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusTournamentInformation.png">
 
 #### Tournament Name
 This field will be sent to the source specified in the Tournament field in Sources Settings. Use this to display the name of the tournament or maybe the host venue's name.
@@ -666,7 +666,7 @@ The Game Table shows the scores and time elapsed for each game.  Game winning sc
 ### Team 1 Information & Team 2 Information
 These panels manage the information specific to Team 1 and Team 2 for the current match.
 
-<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusTeamInformation.png">
+<img width="520" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusTeamInformation.png">
 
 #### Team Name
 This field will be sent to the source specified in the Team 1 field in Sources Settings. Use this to display the team name for Team 1.
@@ -792,7 +792,7 @@ This is a display only field that shows which team scored last.  An arrow will p
 ### Reset Panel
 The Reset Panel is useful for reseting information in the Team 1 and Team 2 Information panels.
 
-<img width="320" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusResetPanel.png">
+<img width="270" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusResetPanel.png">
 
 #### Reset Names
 This button will reset the Team Name, Forward Name and Goalie Name for both teams. A hot key can be assigned to this button in Hot Keys Settings.
