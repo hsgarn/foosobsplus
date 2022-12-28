@@ -624,7 +624,9 @@ The FoosOBSPlus Main Screen is divided into 11 panels.  Each panel has its own c
 
 ### Tournament Information
 This panel contains information pertaining to the particular tournament being played.  Tournament name, event name and table name can be displayed.
+
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusTournamentInformation.png">
+
 #### Tournament Name
 This field will be sent to the source specified in the Tournament field in Sources Settings. Use this to display the name of the tournament or maybe the host venue's name.
 #### Event Name
@@ -639,7 +641,9 @@ This button is currently useless.
 Yet another useless button.
 ### Match Information
 This panel provides a way to manage a match and shows a game table grid of the current match being played.
+
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusMatchInformation.png">
+
 #### Start Event
 This button is simply to drop a Start Event marker in the streamindex.txt file if Start Stream is activated.
 #### Start Match
@@ -660,8 +664,10 @@ This display the running time of the current game. The Pause Match button will p
 #### Game Table
 The Game Table shows the scores and time elapsed for each game.  Game winning score is highlighted in blue and match winning team is highlighted in Green.  The current game number is highlighted in gray.  The game table will only display up to 11 games and anything over 5 games won't look pretty.
 ### Team 1 Information & Team 2 Information
-These panels manage the match information specific to Team 1 and Team 2.
+These panels manage the information specific to Team 1 and Team 2 for the current match.
+
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusTeamInformation.png">
+
 #### Team Name
 This field will be sent to the source specified in the Team 1 field in Sources Settings. Use this to display the team name for Team 1.
 #### Forward Name
@@ -698,7 +704,9 @@ This is the time elapsed since Team 1 scored a goal. It is reset by the Start Ma
 This panel is identical to Team 1 Information panel but is for tracking Team 2's information.
 ### Timer Panel
 The Timer Panel gives the ability to start and reset various timers.  Only one time is active at a time
+
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusTimerPanel.png">
+
 #### Active Timer
 The first line in the Timer Window displays which timer is currently active. This will be one of the following:
 Timer Reset - shows when no timer is currently active.
@@ -721,7 +729,9 @@ This button starts the Recall Timer.  The amount of time allowed for a recall is
 This button will reset the timer.  This is useful when the ball jumps off the table.  A hot key can be assigned to this button in Hot Keys Settings.
 ### OBS Panel
 The OBS Panel provides some controls to manage OBS.  OBS must be configured in the Connect item in the OBS menu for any of the OBS Panel buttons to work.
+
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusOBSPanel.png">
+
 #### Connect
 This button will connect FoosOBSPlus to OBS. Once connected, data will automatically be sent to OBS when changed in FoosOBSPlus. 
 #### Update OBS
@@ -743,7 +753,9 @@ Once the Start Stream Timer button is pressed, it will toggle to Stop Stream Tim
 This shows the running stream time when the Start Stream Timer button has been pressed.
 ### AutoScore Panel
 The AutoScore Panel controls the interaction with the AutoScore system.  This is a home grown system using lasers and a Raspberry Pico to detect when the ball is scored in one goal or the other.  When a score is detected, it sends data to FoosOBSPlus to increment the scoring team's score by one point.
-<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScorePanel.png">
+
+<img width="320" height="220" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScorePanel.png">
+
 #### Connect
 This button will connect to the AutoScore system.  The AutoScore system must already be configured in the AutoScore Settings for the connection to work.
 #### Settings
@@ -754,7 +766,9 @@ This button will disconnect from the AutoScore system.
 Check this box if there is a need to temporarily ignore the input from the AutoScore system.  Uncheck it to resume letting the AutoScore system update the scores.
 ### Switch Panel
 The Switch Panel is used to swap the information between Team 1 and Team 2.
-<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSwitchPanel.png">
+
+<img width="320" height="370" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSwitchPanel.png">
+
 #### Switch Sides
 The Switch Sides button is used when the teams switch sides.  The team names, player names, scores, time outs, game counts, reset/warns and last scored times will all be swapped. A hot key can be assigned to this button in Hot Keys Settings.
 #### Switch Teams
@@ -777,7 +791,9 @@ This button will clear all of Team 1 and Team 2's information.
 This is a display only field that shows which team scored last.  An arrow will point to which team scored last. If no arrow, then no team has scored yet.
 ### Reset Panel
 The Reset Panel is useful for reseting information in the Team 1 and Team 2 Information panels.
-<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusResetPanel.png">
+
+<img width="320" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusResetPanel.png">
+
 #### Reset Names
 This button will reset the Team Name, Forward Name and Goalie Name for both teams. A hot key can be assigned to this button in Hot Keys Settings.
 #### Reset Scores
@@ -792,7 +808,9 @@ This button will clear the Reset and Warn buttons for both teams. A hot key can 
 This button will clear the Scores, Game Counts, Time Out Counts, Resets and Warns for both teams.  Note that the Name fields are not reset.  A hot key can be assigned to this button in Hot Keys Settings.
 ### Statistics Entry Panel
 The Statistics Entry Panel is intended to be used for entering codes to track statistics during the foosball match.
-<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusStatisticsEntryPanel.png">
+
+<img width="320" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusStatisticsEntryPanel.png">
+
 #### Foosball Code
 Enter codes here.  Most of the buttons on FoosOBSPlus main screen have codes that can be entered that act the same as pressing the button itself.  These are actually commands and are preceeded with an X.  Other codes can be entered to track the ball in the foosball match. These codes are then converted into stats that will be shown in the Statistics Display Panel.  The commands and codes are explained in the Codes and Commands section.
 #### History
@@ -805,7 +823,9 @@ This button will undo the last command or code entered.
 This button will redo the last command or code that was undone.
 ### Statistics Display Panel
 The Statistics Dispaly Panel displays any stats generated for the current match.  The Team Names (if any) are shown at the top of the panel.  Followed by the Forward and Goalie names for both teams.  Stats for team 1 are shown on the left and stats for team 2 are shown on the right. A description of each stat is in the middle.
-<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusStatisticsDisplayPanel.png">
+
+<img width="320" height="370" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusStatisticsDisplayPanel.png">
+
 #### Passing
 The first value is the number of successful passes (5 man to 3 man). The second number is the number of pass attempts.  The third number is the pass success percentage.
 #### Shooting
