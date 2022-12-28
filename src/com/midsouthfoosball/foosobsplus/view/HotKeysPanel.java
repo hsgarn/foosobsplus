@@ -59,9 +59,7 @@ public class HotKeysPanel extends JPanel {
 	private JTextField txtStartMatchHotKey;
 	private JTextField txtPauseMatchHotKey;
 	private JTextField txtStartGameHotKey;
-	private JTextField txtTeam1ClearHotKey;
 	private JTextField txtTeam1SwitchPositionsHotKey;
-	private JTextField txtTeam2ClearHotKey;
 	private JTextField txtTeam2SwitchPositionsHotKey;
 	private JTextField txtSwitchTeamsHotKey;
 	private JTextField txtGameCount1MinusHotKey;
@@ -240,12 +238,12 @@ public class HotKeysPanel extends JPanel {
 		add(lblScores, "cell 3 5,alignx right"); //$NON-NLS-1$
 		
 		JLabel lblSwitchResetWarnsHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchResetWarns", settings.getGameType())); //$NON-NLS-1$
-		add(lblSwitchResetWarnsHotKey, "cell 6 5,alignx trailing"); //$NON-NLS-1$
+		add(lblSwitchResetWarnsHotKey, "cell 6 6,alignx trailing"); //$NON-NLS-1$
 		
 		txtSwitchResetWarnsHotKey = new JTextField();
 		txtSwitchResetWarnsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
 		txtSwitchResetWarnsHotKey.setText(settings.getSwitchResetWarnsHotKey());
-		add(txtSwitchResetWarnsHotKey, "cell 7 5,alignx left"); //$NON-NLS-1$
+		add(txtSwitchResetWarnsHotKey, "cell 7 6,alignx left"); //$NON-NLS-1$
 		txtSwitchResetWarnsHotKey.setColumns(10);
 		
 		JLabel lblTimeOutTimerHotKey = new JLabel(Messages.getString("HotKeysPanel.StartTimeOut", settings.getGameType())); //$NON-NLS-1$
@@ -256,15 +254,6 @@ public class HotKeysPanel extends JPanel {
 		txtTimeOutTimerHotKey.setText(settings.getTimeOutTimerHotKey());
 		add(txtTimeOutTimerHotKey, "cell 10 5,alignx left"); //$NON-NLS-1$
 		txtTimeOutTimerHotKey.setColumns(10);
-		
-		JLabel lblTeam1ClearHotKey = new JLabel(Messages.getString("HotKeysPanel.ClearTeam1", settings.getGameType())); //$NON-NLS-1$
-		add(lblTeam1ClearHotKey, "cell 0 6,alignx trailing"); //$NON-NLS-1$
-		
-		txtTeam1ClearHotKey = new JTextField();
-		txtTeam1ClearHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtTeam1ClearHotKey.setText(settings.getTeam1ClearHotKey());
-		add(txtTeam1ClearHotKey, "cell 1 6,alignx left"); //$NON-NLS-1$
-		txtTeam1ClearHotKey.setColumns(10);
 		
 		JLabel lblScore1MinusHotKey = new JLabel(Messages.getString("HotKeysPanel.DecrementScoreTeam1", settings.getGameType())); //$NON-NLS-1$
 		add(lblScore1MinusHotKey, "cell 3 6,alignx trailing"); //$NON-NLS-1$
@@ -285,12 +274,12 @@ public class HotKeysPanel extends JPanel {
 		txtGameTimerHotKey.setColumns(10);
 		
 		JLabel lblTeam1SwitchPositionsHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchPositionsTeam1", settings.getGameType())); //$NON-NLS-1$
-		add(lblTeam1SwitchPositionsHotKey, "cell 0 7,alignx trailing"); //$NON-NLS-1$
+		add(lblTeam1SwitchPositionsHotKey, "cell 0 6,alignx trailing"); //$NON-NLS-1$
 		
 		txtTeam1SwitchPositionsHotKey = new JTextField();
 		txtTeam1SwitchPositionsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTeam1SwitchPositionsHotKey.setText(settings.getTeam1SwitchPositionsHotKey());
-		add(txtTeam1SwitchPositionsHotKey, "cell 1 7,alignx left"); //$NON-NLS-1$
+		add(txtTeam1SwitchPositionsHotKey, "cell 1 6,alignx left"); //$NON-NLS-1$
 		txtTeam1SwitchPositionsHotKey.setColumns(10);
 		
 		JLabel lblScore1PlusHotKey = new JLabel(Messages.getString("HotKeysPanel.IncrementScoreTeam1", settings.getGameType())); //$NON-NLS-1$
@@ -320,15 +309,6 @@ public class HotKeysPanel extends JPanel {
 		add(txtRecallTimerHotKey, "cell 10 7,alignx left"); //$NON-NLS-1$
 		txtRecallTimerHotKey.setColumns(10);
 		
-		JLabel lblTeam2ClearHotKey = new JLabel(Messages.getString("HotKeysPanel.ClearTeam2", settings.getGameType())); //$NON-NLS-1$
-		add(lblTeam2ClearHotKey, "cell 0 8,alignx trailing"); //$NON-NLS-1$
-		
-		txtTeam2ClearHotKey = new JTextField();
-		txtTeam2ClearHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtTeam2ClearHotKey.setText(settings.getTeam2ClearHotKey());
-		add(txtTeam2ClearHotKey, "cell 1 8,alignx left"); //$NON-NLS-1$
-		txtTeam2ClearHotKey.setColumns(10);
-		
 		JLabel lblScore2MinusHotKey = new JLabel(Messages.getString("HotKeysPanel.DecrementScoreTeam2", settings.getGameType())); //$NON-NLS-1$
 		add(lblScore2MinusHotKey, "cell 3 8,alignx trailing"); //$NON-NLS-1$
 		
@@ -357,12 +337,12 @@ public class HotKeysPanel extends JPanel {
 		txtResetTimersHotKey.setColumns(10);
 		
 		JLabel lblTeam2SwitchPositionsHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchPositionsTeam2", settings.getGameType())); //$NON-NLS-1$
-		add(lblTeam2SwitchPositionsHotKey, "cell 0 9,alignx trailing"); //$NON-NLS-1$
+		add(lblTeam2SwitchPositionsHotKey, "cell 0 7,alignx trailing"); //$NON-NLS-1$
 		
 		txtTeam2SwitchPositionsHotKey = new JTextField();
 		txtTeam2SwitchPositionsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTeam2SwitchPositionsHotKey.setText(settings.getTeam2SwitchPositionsHotKey());
-		add(txtTeam2SwitchPositionsHotKey, "cell 1 9,alignx left"); //$NON-NLS-1$
+		add(txtTeam2SwitchPositionsHotKey, "cell 1 7,alignx left"); //$NON-NLS-1$
 		txtTeam2SwitchPositionsHotKey.setColumns(10);
 		
 		JLabel lblScore2PlusHotKey = new JLabel(Messages.getString("HotKeysPanel.IncrementScoreTeam2", settings.getGameType())); //$NON-NLS-1$
@@ -701,9 +681,7 @@ public class HotKeysPanel extends JPanel {
 		txtStartMatchHotKey.setText(settings.getDefaultStartMatchHotKey());
 		txtPauseMatchHotKey.setText(settings.getDefaultPauseMatchHotKey());
 		txtStartGameHotKey.setText(settings.getDefaultStartGameHotKey());
-		txtTeam1ClearHotKey.setText(settings.getDefaultTeam1ClearHotKey());
 		txtTeam1SwitchPositionsHotKey.setText(settings.getDefaultTeam1SwitchPositionsHotKey());
-		txtTeam2ClearHotKey.setText(settings.getDefaultTeam2ClearHotKey());
 		txtTeam2SwitchPositionsHotKey.setText(settings.getDefaultTeam2SwitchPositionsHotKey());
 		txtSwitchTeamsHotKey.setText(settings.getDefaultSwitchTeamsHotKey());
 		txtGameCount1MinusHotKey.setText(settings.getDefaultGameCount1MinusHotKey());
@@ -756,9 +734,7 @@ public class HotKeysPanel extends JPanel {
 			settings.setStartMatchHotKey(txtStartMatchHotKey.getText());
 			settings.setPauseMatchHotKey(txtPauseMatchHotKey.getText());
 			settings.setStartGameHotKey(txtStartGameHotKey.getText());
-			settings.setTeam1ClearHotKey(txtTeam1ClearHotKey.getText());
 			settings.setTeam1SwitchPositionsHotKey(txtTeam1SwitchPositionsHotKey.getText());
-			settings.setTeam2ClearHotKey(txtTeam2ClearHotKey.getText());
 			settings.setTeam2SwitchPositionsHotKey(txtTeam2SwitchPositionsHotKey.getText());
 			settings.setSwitchTeamsHotKey(txtSwitchTeamsHotKey.getText());
 			settings.setGameCount1MinusHotKey(txtGameCount1MinusHotKey.getText());

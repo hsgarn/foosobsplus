@@ -69,7 +69,6 @@ public class TeamPanel extends JPanel {
 	private JButton btnTimeOutCountDecrease;
 	private JToggleButton btnReset;
 	private JToggleButton btnWarn;
-	private JButton btnClear;
 	private Settings settings;
 	private int teamNbr;
 	private Border innerBorder;
@@ -136,8 +135,6 @@ public class TeamPanel extends JPanel {
 		lblLastScoredTime.setBackground(Color.CYAN);
 		btnWarn = new JToggleButton(Messages.getString("TeamPanel.Warn",settings.getGameType())); //$NON-NLS-1$
 		btnWarn.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
-		btnClear = new JButton(Messages.getString("TeamPanel.Clear",settings.getGameType())); //$NON-NLS-1$
-		btnClear.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
 		setMnemonics(teamNbr);
 
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
@@ -160,18 +157,12 @@ public class TeamPanel extends JPanel {
         order.add(btnTimeOutCountIncrease);
         order.add(btnReset);
         order.add(btnWarn);
-        order.add(btnClear);
         customTraversalPolicy = new CustomFocusTraversalPolicy(order);
         this.setFocusTraversalPolicy(customTraversalPolicy);
         this.setFocusCycleRoot(true);
 	}
 	private void setMnemonics(int teamNbr) {
 		if (teamNbr == 1) {
-			if(settings.getTeam1ClearHotKey().isEmpty()) {
-				btnClear.setMnemonic(-1);
-			} else {
-				btnClear.setMnemonic(settings.getTeam1ClearHotKey().charAt(0));
-			};
 			if(settings.getTeam1SwitchPositionsHotKey().isEmpty()) {
 				btnSwitchPositions.setMnemonic(-1);
 			} else {
@@ -218,11 +209,6 @@ public class TeamPanel extends JPanel {
 				btnWarn.setMnemonic(settings.getWarn1HotKey().charAt(0));
 			};
 		} else {
-			if(settings.getTeam2ClearHotKey().isEmpty()) {
-				btnClear.setMnemonic(-1);
-			} else {
-				btnClear.setMnemonic(settings.getTeam2ClearHotKey().charAt(0));
-			};
 			if(settings.getTeam2SwitchPositionsHotKey().isEmpty()) {
 				btnSwitchPositions.setMnemonic(-1);
 			} else {
@@ -458,19 +444,6 @@ public class TeamPanel extends JPanel {
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(btnWarn, gc);
-		
-		////////// Clear Team ////////////////
-		gc.gridy++;
-		
-		gc.weightx = 1;
-		gc.weighty = 1;
-		
-		gc.gridx = 0;
-		gc.gridwidth = 3;
-		gc.insets = new Insets(0, 0, 0, 0);
-		gc.fill = GridBagConstraints.HORIZONTAL;
-		gc.anchor = GridBagConstraints.CENTER;
-		add(btnClear, gc);
 	}
 	
 	////// Listener Methods //////
@@ -545,9 +518,6 @@ public class TeamPanel extends JPanel {
 	}
 	public void addWarnListener(ActionListener listenForBtnWarn) {
 		btnWarn.addActionListener(listenForBtnWarn);
-	}
-	public void addClearAllListener(ActionListener listenForBtnClearAll) {
-		btnClear.addActionListener(listenForBtnClearAll);
 	}
 	
 	////// Utility Methods //////

@@ -77,8 +77,6 @@ import com.midsouthfoosball.foosobsplus.commands.IST1Command;
 import com.midsouthfoosball.foosobsplus.commands.IST2Command;
 import com.midsouthfoosball.foosobsplus.commands.Memento;
 import com.midsouthfoosball.foosobsplus.commands.PCACommand;
-import com.midsouthfoosball.foosobsplus.commands.PCT1Command;
-import com.midsouthfoosball.foosobsplus.commands.PCT2Command;
 import com.midsouthfoosball.foosobsplus.commands.PEMCommand;
 import com.midsouthfoosball.foosobsplus.commands.PPMCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRACommand;
@@ -635,7 +633,7 @@ public class Main {
 		autoScoreSettingsPanel.addDisconnectListener(new AutoScoreSettingsDisconnectListener());
 		autoScoreConfigPanel.addSaveListener(new AutoScoreConfigSaveListener());
 		autoScoreConfigPanel.addSendConfigListener(new AutoScoreConfigSendConfigListener());
-		parametersPanel.addSaveListener(new SettingsSaveListener());
+		parametersPanel.addSaveListener(new ParametersSaveListener());
 		parametersPanel.addEnableShowSkunkListener(new OBSEnableSkunkListener());
 		obsConnectPanel.addSetSceneListener(new OBSSetSceneListener());
 		obsConnectPanel.addConnectListener(new OBSConnectListener());
@@ -657,8 +655,6 @@ public class Main {
 		statsEntryPanel.addUndoListener(new StatsEntryUndoListener());
 		statsEntryPanel.addRedoListener(new StatsEntryRedoListener());
 		statsEntryPanel.addCodeListener(new CodeListener());
-		teamPanel1.addClearAllListener(new TeamClearAllListener());
-		teamPanel2.addClearAllListener(new TeamClearAllListener());
 		tournamentPanel.addClearListener(new TableClearAllListener());
 		statsEntryPanel.addStatsClearListener(new StatsClearListener());
 		teamPanel1.addScoreIncreaseListener(new ScoreIncreaseListener());
@@ -918,8 +914,6 @@ public class Main {
 		Command psto = new PSTOCommand(statsController, teamController);
 		Command psr = new PSRCommand(statsController, teamController);
 		Command pca = new PCACommand(statsController, teamController);
-		Command pct1 = new PCT1Command(statsController, teamController, team1, match, switchPanel, settings);
-		Command pct2 = new PCT2Command(statsController, teamController, team2, match, switchPanel, settings);
 		Command prn= new PRNCommand(statsController, teamController);
 		Command prs = new PRSCommand(statsController, teamController);
 		Command prg = new PRGCommand(statsController, teamController);
@@ -967,8 +961,6 @@ public class Main {
 		mySwitch.register("PSTO", psto);
 		mySwitch.register("PSR", psr);
 		mySwitch.register("PCA", pca);
-		mySwitch.register("PCT1", pct1);
-		mySwitch.register("PCT2", pct2);
 		mySwitch.register("PRN", prn);
 		mySwitch.register("PRS", prs);
 		mySwitch.register("PRG", prg);
@@ -1223,7 +1215,7 @@ public class Main {
 			obsPanel.updateTimerDisplay(gameClock.getStreamTime());
 		}
 	}
-	private class SettingsSaveListener implements ActionListener {
+	private class ParametersSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			int oldGamesToWin = settings.getGamesToWin();
 			parametersPanel.saveSettings(settings);
@@ -1231,6 +1223,7 @@ public class Main {
 			if (oldGamesToWin != newGamesToWin) {
 				matchPanel.resizeGameTable();
 				gameTableWindowPanel.resizeGameTable();
+				match.setMaxPossibleGames(newGamesToWin * 2 - 1);
 			}
 			teamPanel1.setTitle();
 			teamPanel2.setTitle();
@@ -1532,18 +1525,6 @@ public class Main {
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRA",false);
 			statsController.displayAllStats();
-			statsEntryPanel.setFocusOnCode();
-		}
-	}
-	private class TeamClearAllListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			JButton btn = (JButton) e.getSource();
-			String name = btn.getName();
-			if(name.equals("Team 1")) {
-				processCode("XPCT1",false);
-			} else {
-				processCode("XPCT2",false);
-			}
 			statsEntryPanel.setFocusOnCode();
 		}
 	}

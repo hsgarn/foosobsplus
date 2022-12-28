@@ -237,9 +237,7 @@ public class Settings {
 		defaultHotKeyProps.setProperty("PauseMatchHotKey", ",");
 		defaultHotKeyProps.setProperty("StartGameHotKey", ".");
 		defaultHotKeyProps.setProperty("TournamentNameClearHotKey", "");
-		defaultHotKeyProps.setProperty("Team1ClearHotKey", "f");
 		defaultHotKeyProps.setProperty("Team1SwitchPositionsHotKey", "t");
-		defaultHotKeyProps.setProperty("Team2ClearHotKey", "h");
 		defaultHotKeyProps.setProperty("Team2SwitchPositionsHotKey", "m");
 		defaultHotKeyProps.setProperty("SwitchTeamsHotKey", "e");
 		defaultHotKeyProps.setProperty("SwitchPlayer1HotKey", ";");
@@ -622,9 +620,7 @@ public class Settings {
 	public String getStartMatchHotKey() {return configHotKeyProps.getProperty("StartMatchHotKey");}
 	public String getPauseMatchHotKey() {return configHotKeyProps.getProperty("PauseMatchHotKey");}
 	public String getStartGameHotKey() {return configHotKeyProps.getProperty("StartGameHotKey");}
-	public String getTeam1ClearHotKey() {return configHotKeyProps.getProperty("Team1ClearHotKey");}
 	public String getTeam1SwitchPositionsHotKey() {return configHotKeyProps.getProperty("Team1SwitchPositionsHotKey");}
-	public String getTeam2ClearHotKey() {return configHotKeyProps.getProperty("Team2ClearHotKey");}
 	public String getTeam2SwitchPositionsHotKey() {return configHotKeyProps.getProperty("Team2SwitchPositionsHotKey");}
 	public String getSwitchTeamsHotKey() {return configHotKeyProps.getProperty("SwitchTeamsHotKey");}
 	public String getSwitchPlayer1HotKey() {return configHotKeyProps.getProperty("SwitchPlayer1HotKey");}
@@ -1116,14 +1112,8 @@ public class Settings {
 	public void setStartGameHotKey(String startGameHotKey) {
 		configHotKeyProps.setProperty("StartGameHotKey", startGameHotKey);
 	}
-	public void setTeam1ClearHotKey(String team1ClearHotKey) {
-		configHotKeyProps.setProperty("Team1ClearHotKey", team1ClearHotKey);
-	}
 	public void setTeam1SwitchPositionsHotKey(String team1SwitchPositionsHotKey) {
 		configHotKeyProps.setProperty("Team1SwitchPositionsHotKey", team1SwitchPositionsHotKey);
-	}
-	public void setTeam2ClearHotKey(String team2ClearHotKey) {
-		configHotKeyProps.setProperty("Team2ClearHotKey", team2ClearHotKey);
 	}
 	public void setTeam2SwitchPositionsHotKey(String team2SwitchPositionsHotKey) {
 		configHotKeyProps.setProperty("Team2SwitchPositionsHotKey", team2SwitchPositionsHotKey);
@@ -1459,9 +1449,7 @@ public class Settings {
 	public String getDefaultStartMatchHotKey() {return defaultHotKeyProps.getProperty("StartMatchHotKey");}
 	public String getDefaultPauseMatchHotKey() {return defaultHotKeyProps.getProperty("PauseMatchHotKey");}
 	public String getDefaultStartGameHotKey() {return defaultHotKeyProps.getProperty("StartGameHotKey");}
-	public String getDefaultTeam1ClearHotKey() {return defaultHotKeyProps.getProperty("Team1ClearHotKey");}
 	public String getDefaultTeam1SwitchPositionsHotKey() {return defaultHotKeyProps.getProperty("Team1SwitchPositionsHotKey");}
-	public String getDefaultTeam2ClearHotKey() {return defaultHotKeyProps.getProperty("Team2ClearHotKey");}
 	public String getDefaultTeam2SwitchPositionsHotKey() {return defaultHotKeyProps.getProperty("Team2SwitchPositionsHotKey");}
 	public String getDefaultSwitchTeamsHotKey() {return defaultHotKeyProps.getProperty("SwitchTeamsHotKey");}
 	public String getDefaultSwitchPlayer1HotKey() {return defaultHotKeyProps.getProperty("SwitchPlayer1HotKey");}

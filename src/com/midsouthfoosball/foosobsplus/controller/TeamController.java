@@ -713,6 +713,19 @@ public class TeamController {
 		match.resetMatch(); // probably should go through matchController, but it is not accessible here
 		updateGameTables();
 	}
+	public void clearTeamFromButton(int teamNbr) {
+		if (teamNbr==1) {
+			team1.clearAll();
+			match.setCurrentScoreTeam1(team1.getScore());
+		} else {
+			team2.clearAll();
+			match.setCurrentScoreTeam2(team2.getScore());
+		}
+		displayAll();
+		match.clearAll();
+		updateGameTables();
+		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
+	}
 	private void resetLastScored() {
 		match.setLastScored(0);
 		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
