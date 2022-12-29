@@ -13,10 +13,22 @@ OBS Studio scene utilizing FoosOBSPlus to display various data:
 ## Setup
 FoosOBSPlus is a java program.  You can download the executable jar file from the Releases section. You will need to have at least Java 1.8 loaded and windows set up to associate jar files with java. There are many resources on the web for how to load java and set windows up to run the jar file.  (see https://www.howtogeek.com/812583/how-to-open-jar-files-windows/ for example.  The executable jar file will run in the directory you placed it. )
 
-## Settings
-If running FoosOBSPlus for the first time, it will create a set of properties files with the default properties in the folder in which the program is running. These property files contain the settings for the operating parameters, sources, hot keys and more.
+## Toolbar Items
+## File
+### Import Stats
+This opens up a window for you to select a stats file to import.  A stats file is a simple text file with one code per line.  The file will be read in and the stats will be displayed in the Statistics Display Panel.  The idea is that you can just write the codes in a text editor as a game is being played and then later import them into FoosOBSPlus for it to generate the stats.
 
-### Operating Parameters
+### Export Stats
+This option writes the current codes in the Statistics Entry Panel History window to a file so that they can be imported later.  Not sure what the practicality of this is, but the option is here if you ever need it. :)
+
+### Exit
+This option can be used to exit the program.  A confirmation window will ask if you really want to exit the application.  Just click OK to exit or Cancel to return to the program.
+
+## Edit
+## Settings
+If running FoosOBSPlus for the first time, it will create a set of properties files with the default properties in the folder in which the program is running. These property files contain the settings for the operating parameters, sources, filters, hot keys and more.  Below are the options under Settings:
+
+### Parameters
 FoosOBSPlus tries to make keeping track of a foosball match's progress as simple as possible.  To that end, there is a settings screen that contains parameters that affect how FoosOBSPlus will behave.  Click Edit then Settings then Parameters to get to the Parameter Settings screen.
 
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings1.png">
@@ -618,6 +630,112 @@ Click the cancel button to discard any changes made.
 
 #### Restore Defaults
 Click the Restore Defaults button to restore the default file names.
+
+## OBS
+This is the menu item for OBS Studio related activity.  A green solid circle will show before OBS to indicate that a connection has been established.  A red solid circle indicates that OBS Studio is currently disconnected.
+
+### Connect...
+This opens the OBS Connect window.  Here you can set the connection details for your OBS instance along with a few options.
+
+<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusOBSConnect.png">
+
+#### Host
+This is the host name or ip address of the computer running OBS Studio. FoosOBSPlus must be running on the same network as OBS Studio.  If they are running on the same computer, then you can use localhost as the host name.  OBS Studio will provide the connection details by going to Tools -> obs-websocket Settings -> Show Connect Info.
+
+#### Port
+This is the port that OBS Studio is listening too for connections.  OBS Studio will provide the connection details by going to Tools -> obs-websocket Settings -> Show Connect Info.
+
+#### Password
+This is the password for OBS Studio.  OBS Studio will provide the connection details by going to Tools -> obs-websocket Settings -> Show Connect Info.
+
+#### Scene
+THis is the name of the scene in OBS Studio that FoosOBSPlus will be sending it's data to.
+
+#### Set Scene
+Press the Set Scene button to get OBS Studio to show the scene in the Scene box.
+
+#### Save Password
+Check this box if you want FoosOBSPlus to save the password when it exits.  Otherwise, you will have to enter each time you run FoosOBSPlus and wnat to connect to OBS Studio.
+
+#### Auto Login on Start
+If this box is checked, then when FoosOBSPlus first starts, it will try to connect to OBS Studio using the details saved in the OBS Connect window.
+
+#### Close on Connect
+If this box is checked, then the OBS Connect window will close when FoosOBSPlus successfully connects to OBS Studio.
+
+#### Update on Connect
+If this box is checked, then when FoosOBSPlus connects to OBS Studio, it will immediately send the current data in FoosOBSPlus to OBS Studio. Otherwise, data will only be sent when fields change in FoosOBSPlus.
+
+#### Connect
+This button attempts to connect FoosOBSPlus to OBS Studio.  The Host, Port and Password fields must be set correctly and OBS Studio must be running on the same network for a successful connection.
+
+#### Disconnect
+This button will disconnect FoosOBSPlus from OBS Studio.
+
+#### Save
+This button will save the current settings in the OBS Connect window.
+
+#### Message
+This window will show any messages relevant to communicating with OBS Studio.
+
+### Disconnect
+Click this menu item to disconnect from OBS Studio.
+
+### Show Scores
+When checked, a command is sent to OBS to show scores. When unchecked, the scores will be hidden.  The score fields are determined by the source identified in the Show Scores field in Sources Settings. It is useful to hide the scores in OBS when no one is keeping score and to show them again when someone is available to update the scores (when not using AutoScore).
+
+## AutoScore
+This is the menu item for AutoScore related activity.  A green solid circle will show before AutoScore to indicate that a connection has been established to the AutoScore system.  A red solid circle indicates that AutoScore is currently disconnected.
+
+<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScoreSettings.png">
+
+## Settings
+
+### Server Address
+### Server Port
+### Auto Connect on Start Up
+### Detail Log
+### Connect
+### Disconnect
+### Message
+### Save
+### Cancel
+### Restore Defaults
+
+## Configuration
+
+<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScoreConfig.png">
+
+## Team 1
+### Sensor 1 Pin
+### Sensor 2 Pin
+### LED Pin
+### Switch Pin
+### Reset Seconds
+
+## Team 2
+### Sensor 1 Pin
+### Sensor 2 Pin
+### LED Pin
+
+### Send Config
+### Save
+### Cancel
+### Restore Defaults
+
+## View
+### Always on Top
+### Timer Window
+### Team 1 Last Scored Window
+### Team 2 Last Scored Window
+### Game Table Window
+### Show All Windows
+
+## Help
+### FoosOBSPlus Help
+### Show Parsed
+### About
+Shows details about the current version of the program.
 
 ## FoosOBSPlus Main Screen
 The FoosOBSPlus Main Screen is divided into 11 panels.  Each panel has its own controls and purpose.  Below is a description of each panel.
