@@ -33,6 +33,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.file.FileSystems;
@@ -45,6 +46,8 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
@@ -190,6 +193,8 @@ public class Main {
 	public  String				matchId				= "";
 	private DateTimeFormatter dtf 					= DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 	private boolean autoScoreConnected				= false;
+	private Socket autoScoreSocket;
+	private PrintWriter autoScoreSocketWriter;
 	private StreamIndexer streamIndexer             = new StreamIndexer(settings.getDatapath());
 
 	////// Watch Service for File changes \\\\\\
@@ -256,7 +261,7 @@ public class Main {
 	private OBSConnectPanel		obsConnectPanel		= obsConnectFrame.getOBSConnectPanel();
 	private AutoScoreSettingsFrame		autoScoreSettingsFrame		= new AutoScoreSettingsFrame(settings);
 	private AutoScoreSettingsPanel		autoScoreSettingsPanel		= autoScoreSettingsFrame.getAutoScoreSettingsPanel();
-	private AutoScoreConfigFrame		autoScoreConfigFrame		= new AutoScoreConfigFrame(settings);
+	private AutoScoreConfigFrame		autoScoreConfigFrame		= new AutoScoreConfigFrame();
 	private AutoScoreConfigPanel		autoScoreConfigPanel		= autoScoreConfigFrame.getAutoScoreConfigPanel();
 	
 	////// Display the View Panels on a JFrame \\\\\\
@@ -366,6 +371,7 @@ public class Main {
 		}
 	}
 	public void connectToOBS() {
+		logger.info("Trying to connect to OBS...");
 		buildOBSController();
 		obs.getController().connect();
 	}
@@ -436,10 +442,7 @@ public class Main {
 	}
 	private void createAutoScoreWorker() {
 		autoScoreWorker = new SwingWorker<Boolean, Integer>() {
-			Socket skt;
 			BufferedReader dataIn;
-			String team1Label = "Team1";
-			String team2Label = "Team2";
 			@Override
 			protected Boolean doInBackground() throws Exception {
 		    	boolean isConnected = false;
@@ -447,60 +450,82 @@ public class Main {
 		    	int port = settings.getAutoScoreSettingsServerPort();
 		    	try
 		        {
-		            skt = new Socket(address, port);
+		            autoScoreSocket = new Socket(address, port);
 		            autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Connected to " + address + ": " + port);
-		            logger.info("Auto Score connected from " + address + ": " + port);
-		        	dataIn = new BufferedReader(new InputStreamReader(skt.getInputStream()));
+		            logger.info("Auto Score connected to " + address + ": " + port);
+		        	dataIn = new BufferedReader(new InputStreamReader(autoScoreSocket.getInputStream()));
+					try {
+						autoScoreSocketWriter = new PrintWriter(autoScoreSocket.getOutputStream());
+						if (autoScoreSocketWriter.checkError()) {
+							logger.error("createAutoScoreWork doInBackground new PrintWriter error:");
+						}
+					} catch(IOException ex) {
+						logger.error("createAutoScoreWork doInBackground PrintWriter exception:");
+						logger.error(ex.toString());
+					}
 		        	isConnected = true;
 		    		mainFrame.setAutoScoreIconConnected(true);
 		    		autoScoreConnected = true;
 		        }
 		        catch(UnknownHostException uh)
 		        {
-		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + uh.toString());
+		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Auto Score UnknownHostException");
+		        	logger.error("Auto Score new Socket UnknownHostException");
 		        	logger.error(uh.toString());
 		        }
 		        catch(IOException io)
 		        {
-		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString());
+		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Auto Score IOException");
+		        	logger.error("Auto Score new Socket IOException");
 		        	logger.error(io.toString());
 		        }
 		    	String raw = "";
 		        String str[];
+		        String cmd[];
 		        while (isConnected)
 		        {
-		        	try
-		            {
-		        		raw = dataIn.readLine();
-		                str = raw.split("[,]",0);
-	                	if (settings.getAutoScoreSettingsDetailLog()==1) {
-	                		autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Received " + raw);
-	                	}
-		                if (str[0].equals(team1Label))
-		                {
-		                	publish(1);
-		                } else {
-			                if (str[0].equals(team2Label)) {
-			                	publish(2);
-			                }
-		                }
-		                if (isCancelled()) {
-		                	break;
-		                }
-		            }
-		            catch(IOException io)
-		            {
+            		try {
+            			raw = dataIn.readLine();
+		            } catch(IOException io) {
 		            	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString());
 			        	logger.error(io.toString());
 			        	isConnected = false;
 		            }
+            		logger.info("Received raw data: [" + raw + "]");
+            		if (!raw.isEmpty()) {
+		        		cmd = raw.split(":");
+		        		logger.info("Parse command: " + cmd[0]);
+	                	if (settings.getAutoScoreSettingsDetailLog()==1) {
+	                		autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Received " + raw);
+	                	}
+	                	if (cmd[0].equals("Team")) {
+	    	                str = cmd[1].split("[,]",0);
+			                if (str[0].equals("1")) {
+			                	publish(1);
+			                } else {
+				                if (str[0].equals("2")) {
+				                	publish(2);
+				                }
+			                }
+	                	}
+	                	if (cmd[0].equals("Read")) {
+	                		autoScoreConfigPanel.clearConfigTextArea();
+	                	}
+	                	if (cmd[0].equals("Line")) {
+	                		String line = cmd[1] + "\n";
+	                		autoScoreConfigPanel.appendConfigTextArea(line);
+	                	}
+            		}
+	                if (isCancelled()) {
+	                	break;
+	                }
 		        }
 		        autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Connection Terminated!!");
 		        logger.info("Auto Score Connection Terminated!!");
 		        try
 		        {
 		            dataIn.close();
-		            skt.close();
+		            autoScoreSocket.close();
 		            isConnected = false;
 		        }
 		        catch(IOException io)
@@ -524,6 +549,8 @@ public class Main {
 			    	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString());
 		        	logger.error(e.toString());
 			    }
+	    		mainFrame.setAutoScoreIconConnected(false);
+	    		autoScoreConnected = false;			    	
 			}
 			@Override
 			protected void process(List<Integer> chunks) {
@@ -631,8 +658,11 @@ public class Main {
 		autoScoreSettingsPanel.addSaveListener(new AutoScoreSettingsSaveListener());
 		autoScoreSettingsPanel.addConnectListener(new AutoScoreSettingsConnectListener());
 		autoScoreSettingsPanel.addDisconnectListener(new AutoScoreSettingsDisconnectListener());
-		autoScoreConfigPanel.addSaveListener(new AutoScoreConfigSaveListener());
-		autoScoreConfigPanel.addSendConfigListener(new AutoScoreConfigSendConfigListener());
+		autoScoreConfigPanel.addReadConfigListener(new AutoScoreConfigReadListener());
+		autoScoreConfigPanel.addWriteConfigListener(new AutoScoreConfigWriteListener());
+		autoScoreConfigPanel.addValidateConfigListener(new AutoScoreConfigValidateListener());
+		autoScoreConfigPanel.addResetConfigListener(new AutoScoreConfigResetListener());
+		autoScoreConfigPanel.addClearConfigListener(new AutoScoreConfigClearListener());
 		parametersPanel.addSaveListener(new ParametersSaveListener());
 		parametersPanel.addEnableShowSkunkListener(new OBSEnableSkunkListener());
 		obsConnectPanel.addSetSceneListener(new OBSSetSceneListener());
@@ -1018,7 +1048,8 @@ public class Main {
 		}
 	}
 	private void connectAutoScore() {
-		autoScoreSettingsPanel.addMessage("Trying to connect...");
+		autoScoreSettingsPanel.addMessage("Trying to connect to AutoScore...");
+		logger.info("Trying to connect to AutoScore...");
 		createAutoScoreWorker();
 		autoScoreWorker.execute();
 	}
@@ -1028,11 +1059,146 @@ public class Main {
 		mainFrame.setAutoScoreIconConnected(false);
 		autoScoreConnected = false;
 	}
-	private void sendAutoScoreConfig() {
+	private void readAutoScoreConfig() {
 		if(autoScoreConnected) {
-			
+			autoScoreSocketWriter.println("read:");
+			if (autoScoreSocketWriter.checkError()) {
+				logger.error("readAutoScoreConfig println error");
+			}
 		}
 	}
+	private boolean validateAutoScoreConfig() {
+		boolean validated = true;
+		String configErrors = "";
+		String[] paramNames = {"PORT","SENSOR1","SENSOR2","SENSOR3","LED1","LED2","DELAY_TIME"};
+		String[] paramTests = {"PORT","PIN","PIN","PIN","PIN","PIN","TIME"};
+		List<String> copyNames = new ArrayList<>(Arrays.asList(paramNames));
+		List<String> copyTests = new ArrayList<>(Arrays.asList(paramTests));
+
+		String config = autoScoreConfigPanel.getConfigTextArea();
+		String[] lines = config.split("\n");
+		for(String line:lines) {
+			if(line.contains("=")) {
+				String[] pair = line.split("=");
+				String name = pair[0].trim();
+				String testValue = pair[1].trim();
+				if(copyNames.contains(name)) {
+					int pos = -1;
+					boolean found = false; 
+					for(String param:copyNames) {
+						pos += 1;
+						if(param.equals(name)) {
+							found = true;
+							break;
+						}
+					}
+					if(found) {
+						String test = copyTests.get(pos);
+						copyNames.remove(pos);
+						copyTests.remove(pos);
+						if (test.equals("PORT")) {
+							try {
+								int value = Integer.parseInt(testValue);
+								if (!((value > 0) && (value < 65535)) ) {
+									String msg = "Validation failed on " + name + ". Invalid port [" + testValue + "].  Must be between 0 and 65535.";
+									configErrors = configErrors + msg + "\r\n";
+									logger.info(msg);
+									validated = false;
+								}
+							} catch (NumberFormatException e) {
+								String msg = "Validation failed on " + name + ". Invalid port [" + testValue + "]. Must be between 0 and 65535.";
+								configErrors = configErrors + msg + "\r\n";
+								logger.error(msg);
+								logger.error(e.toString());
+								validated = false;
+							}
+						} else {
+							if (test.equals("PIN")) {
+								try {
+									int value = Integer.parseInt(testValue);
+									if (!(((value > -1) && (value < 23)) || ((value > 25) && (value < 29)))) {
+										String msg = "Validation failed on " + name + ". Invalid pin [" + testValue + "].  Must be 0-23,26,27,28."; 
+										configErrors = configErrors + msg + "\r\n";
+										logger.info(msg);
+										validated = false;
+									}
+								} catch (NumberFormatException e) {
+									String msg = "Validation failed on " + name + ". Invalid pin [" + testValue + "].  Must be 0-23,26,27,28.";
+									configErrors = configErrors + msg + "\r\n";
+									logger.error(msg);
+									logger.error(e.toString());
+									validated = false;
+								}
+							} else {
+								if (test.equals("TIME")) {
+									try {
+										int value = Integer.parseInt(testValue);
+										if (!((value > 0) && (value < 60000)) ) {
+											String msg = "Validation failed on " + name + ". Invalid time [" + testValue + "].  Must be between 0 and 60000."; 
+											configErrors = configErrors + msg + "\r\n";
+											logger.info(msg);
+											validated = false;
+										}
+									} catch (NumberFormatException e) {
+										String msg = "Validation failed on " + name + ". Invalid time [" + testValue + "]. Must be between 0 and 60000.";
+										configErrors = configErrors + msg + "\r\n";
+										logger.error(msg);
+										logger.error(e.toString());
+										validated = false;
+									}
+								}
+							}
+						}
+					}
+				}
+					
+			}
+				
+		}
+		if (!copyNames.isEmpty()) {
+			String msg = "Validation Failed. Missing parameters:\r\n"; 
+			for(String missing:copyNames) {
+				msg = msg + missing + "\r\n";
+			}
+			configErrors = configErrors + msg + "\r\n";
+			logger.info(msg);
+			validated = false;
+		}
+		if (validated) {
+			logger.info("Validation passed.");
+		} else {
+			JOptionPane.showMessageDialog(null, "Invalid Configuration: " + configErrors, "Validation Results", 1);
+		}
+		return validated;
+	}
+	private void resetAutoScoreConfig() {
+		if(autoScoreConnected) {
+			autoScoreSocketWriter.println("reset:");
+			if (autoScoreSocketWriter.checkError()) {
+				logger.error("readAutoScoreConfig println error");
+			}
+		}
+	}
+	private void clearAutoScoreConfig() {
+		autoScoreConfigPanel.clearConfigTextArea();
+	}
+	private void writeAutoScoreConfig() {
+		if(validateAutoScoreConfig()) {
+			if(autoScoreConnected) {
+				String config = autoScoreConfigPanel.getConfigTextArea();
+				String dateStamp = dtf.format(LocalDateTime.now()) + "\r\n";
+				dateStamp = dateStamp.replace(":","");
+				dateStamp = dateStamp.replace("/","");
+				dateStamp = dateStamp.replace(" ", "");
+				dateStamp = "date = " + dateStamp;
+				autoScoreSocketWriter.println("save:" + dateStamp + config + "End");
+				if (autoScoreSocketWriter.checkError()) {
+					logger.error("saveAutoScoreConfig println error");
+				}
+			}
+		}
+	}
+
 	////// Listeners \\\\\\
 	private class CodeListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
@@ -1101,14 +1267,32 @@ public class Main {
 			disconnectAutoScore();
 		}
 	}
-	private class AutoScoreConfigSaveListener implements ActionListener {
+	private class AutoScoreConfigReadListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			autoScoreConfigPanel.saveSettings();
+			readAutoScoreConfig();
 		}
 	}
-	private class AutoScoreConfigSendConfigListener implements ActionListener {
+	private class AutoScoreConfigWriteListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			sendAutoScoreConfig();
+			writeAutoScoreConfig();
+		}
+	}
+	private class AutoScoreConfigValidateListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if (validateAutoScoreConfig()) {
+				logger.info("Validation passed.");
+				JOptionPane.showMessageDialog(null, "Validation passed.", "Validation Results", 1);
+			}
+		}
+	}
+	private class AutoScoreConfigResetListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			resetAutoScoreConfig();
+		}
+	}
+	private class AutoScoreConfigClearListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			clearAutoScoreConfig();
 		}
 	}
 	private class OBSSceneListener implements ActionListener {

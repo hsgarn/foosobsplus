@@ -685,55 +685,81 @@ Click this menu item to disconnect from OBS Studio.
 When checked, a command is sent to OBS to show scores. When unchecked, the scores will be hidden.  The score fields are determined by the source identified in the Show Scores field in Sources Settings. It is useful to hide the scores in OBS when no one is keeping score and to show them again when someone is available to update the scores (when not using AutoScore).
 
 ## AutoScore
-This is the menu item for AutoScore related activity.  A green solid circle will show before AutoScore to indicate that a connection has been established to the AutoScore system.  A red solid circle indicates that AutoScore is currently disconnected.
+This is the menu item for FoosScore AutoScore related activity.  A green solid circle will show before AutoScore to indicate that a connection has been established to the FoosScore AutoScore system.  A red solid circle indicates that FoosScore AutoScore is currently disconnected.
 
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScoreSettings.png">
 
 ## Settings
 
 ### Server Address
+This is the IP Address of the FoosScore AutoScore server.  The AutoScore server will need to be on the same network as FoosOBSPlus in order to successfully communicate with FoosOBSPlus.
 ### Server Port
+This is the port number that the FoosScore AutoScore server is listening to.
 ### Auto Connect on Start Up
+When checked, FoosOBSPlus will attempt to automatically connect to the FoosScore AutoScore system when FoosOBSPlus if first started.  The Server Address and Server Port fields should be populated for Auto Connect to work. If unchecked, you must manually connect using the Connect button.
 ### Detail Log
+When checked, details sent from the FoosScore AutoScore system can be seen in the Message window.
 ### Connect
+This button will connect to the FoosScore AutoScore system at the given Server Address and Server Port.
 ### Disconnect
+This button will disconnect the current active FoosScore AutoScore session.
 ### Message
+This box shows communication and information for the FoosScore AutoScore system.
 ### Save
+This button will save the current settings in the AutoScore Settings window.  New settings will not take affect until the Save button is pressed.
 ### Cancel
+This button will close the AutoScore Settings window without permanently saving any changes.  If you reopen the window, you may see your changes still there, but they will not be permanently stored until the Save button is pressed.
 ### Restore Defaults
-
-## Configuration
+This button will restore the AutoScore Settings defaults.  The Save button must be pressed to make these changes permanent.
 
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScoreConfig.png">
 
-## Team 1
-### Sensor 1 Pin
-### Sensor 2 Pin
-### LED Pin
-### Switch Pin
-### Reset Seconds
+## Configuration
 
-## Team 2
-### Sensor 1 Pin
-### Sensor 2 Pin
-### LED Pin
+### AutoScore Configuration:
+This window is where you can edit the FoosScore AutoScore configuration.  Typically you would press the Read Configuration to see the current configuration.  Then make any changes desired.  THen press the Validate Configuration button to verify changes are acceptable. Then press Write Configuration to send the changes to the FoosScore AutoScore system (Raspberry Pico).  Lastly, press Reset Pico for the changes to take affect. You will have to reconnect after the Pico resets.
 
-### Send Config
-### Save
-### Cancel
-### Restore Defaults
+These are the following parameters that can be changed:</br></br>
+PORT:  This is the port that the FoosScore AutoScore system will communicate on.</br>
+SENSOR1:  This is the Pico GPIO Pin number for sensor 1.  Note, this should only be changed if the sensor is physically moved to another pin.</br>
+SENSOR2:  This is the Pico GPIO Pin number for sensor 2.  Note, this should only be changed if the sensor is physically moved to another pin.</br>
+SENSOR3:  This is the Pico GPIO Pin number for sensor 3.  Note, this should only be changed if the sensor is physically moved to another pin.</br>
+LED1:  This is the Pico GPIO Pin number for LED 1.  Note, this should only be changed if the LED is physically moved to another pin.</br>
+LED2:  This is the Pico GPIO Pin number for LED 2.  Note, this should only be changed if the LED is physically moved to another pin.</br>
+DELAY_TIME:  This is the amount of time in milliseconds that the FoosScore AutoScore will ignore the sensors after a sensor has been triggered.  If this time is too short, the ball could bounce around and hit the sensors again causing an extra point to be sent.  If this time is too long, then two quick points back to back may only count once.  5000 milliseconds (5 seconds) has served us well so far.</br>
+### Read Configuration
+This button retrieves the current FoosScore AutoScore configuration from the Raspberry Pico device and displays it in the AutoScore Configuration window.
+
+<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScoreConfig2.png">
+
+### Clear Configuration
+This button will clear the AutoScore Configuration window.
+### Validate Configuration
+This button will check each line of the configuration in the AutoScore Configuration window. Any errors will be reported and will prevent you from saving the bad configuration.
+### Write Configuration
+This button will first validate the configuration. If validated successfully, then it will send the configuration data to the FoosScore AutoScore system.  The new configuration will take affect the next time the FoosScore AutoScore system is restarted.  (This can be done by the Reset Pico button or by turning the Pico off and back on again.)
+### Reset Pico
+This will cause the FoosScore AutoScore system to restart allowing any configuration changes to take affect.
 
 ## View
 ### Always on Top
+When checked, the main FoosOBSPlus program window will stay on top of other programs.
 ### Timer Window
+When checked, the main timer window is displayed.  This is a window that can be used in OBS to display the time of the current timer running (shot, pass, time out, game, recall).  In OBS create a Window Capture source and set Window to "[javaw.exe]:FoosOBSPlus Timer Window", Capture Method to Automatic and  WIndow Match Priority to "Window title must match".
 ### Team 1 Last Scored Window
+When checked, the Team 1 Last Scored Timer Window will display.  This shows how long it has been since Team 1 has scored.  To show in OBS, create a Window Capture source and set Window to "[javaw.exe]:FoosOBSPlus Team 1 Last Scored Timer Window", Capture Method to Automatic and  WIndow Match Priority to "Window title must match".w
 ### Team 2 Last Scored Window
+When checked, the Team 2 Last Scored Timer Window will display.  This shows how long it has been since Team 2 has scored.  To show in OBS, create a Window Capture source and set Window to "[javaw.exe]:FoosOBSPlus Team 2 Last Scored Timer Window", Capture Method to Automatic and  Window Match Priority to "Window title must match".
 ### Game Table Window
+When checked, the Game Table Window will display.  This shows the games for the current match being played. To show in OBS, create a Window Capture source and set Window to "[javaw.exe]:FoosOBSPlus Game Table Window", Capture Method to Automatic and  Window Match Priority to "Window title must match".
 ### Show All Windows
+When checked, all the above windows will display.  Unchecking the box will close all the above windows.
 
 ## Help
 ### FoosOBSPlus Help
+Clicking this entry will take you to the FoosOBSPlus Github page containing this README.md file.
 ### Show Parsed
+When checked, more detailed data is shown in some cases. This is mainly for debugging and since logging has been added, this may go away in the future.
 ### About
 Shows details about the current version of the program.
 
@@ -1082,6 +1108,14 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpha - push hide all button
 </br></br></br>
 ## Revision History</br>
+v2.000 </br>
+Caution: Must use AutoScore v2.0 or above starting with this version of FoosOBSPlus.</br>
+Send config to AutoScore when Send Config button pressed.</br>
+Rework AutoScore interface and AutoScore Config screen.</br>
+Send/Receive AutoScore config.</br>
+Validate AutoScore config.</br>
+Set connect false when auto score connection drops from auto score end.</br>
+</br>
 v1.121 12/28/2022</br>
 Remove Team Clear buttons.</br>
 Fix bug in MaxPossibleGamesToWin when Games To Win changes.</br>

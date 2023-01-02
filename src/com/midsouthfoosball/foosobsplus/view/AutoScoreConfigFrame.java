@@ -22,12 +22,11 @@ package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Dimension;
 import java.io.IOException;
+
 import javax.swing.JFrame;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
 public class AutoScoreConfigFrame extends JFrame {
@@ -39,13 +38,13 @@ public class AutoScoreConfigFrame extends JFrame {
 		logger = LoggerFactory.getLogger(this.getClass());
 	}
 	
-	public AutoScoreConfigFrame(Settings settings) {
+	public AutoScoreConfigFrame() {
 		super(programName + " " + Messages.getString("AutoScoreConfigFrame.Title")); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
 		try {
-			autoScoreConfigPanel = new AutoScoreConfigPanel(settings);
+			autoScoreConfigPanel = new AutoScoreConfigPanel();
 		} catch (IOException e) {
 			logger.error(Messages.getString("AutoScoreConfigFrame.ErrorLoadingConfig")); //$NON-NLS-1$
 			logger.error(e.toString());
