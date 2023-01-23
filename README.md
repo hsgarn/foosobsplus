@@ -1108,7 +1108,12 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpha - push hide all button
 </br></br></br>
 ## Revision History</br>
-v2.000 </br>
+v2.001 01/22/2023
+Don't send empty/null source to OBS.</br>
+Correct GameClock log class.</br>
+Correct GameTime,MatchTime,StreamTime sources in Settings.</br>
+</br>
+v2.000 01/01/2023</br>
 Caution: Must use AutoScore v2.0 or above starting with this version of FoosOBSPlus.</br>
 Send config to AutoScore when Send Config button pressed.</br>
 Rework AutoScore interface and AutoScore Config screen.</br>

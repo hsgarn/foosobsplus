@@ -969,10 +969,10 @@ public class Settings {
 		configSourceProps.setProperty("GameTime", gameTimeSource);
 	}
 	public void setMatchTimeSource(String matchTimeSource) {
-		configSourceProps.setProperty("StreamTime", matchTimeSource);
+		configSourceProps.setProperty("MatchTime", matchTimeSource);
 	}
 	public void setStreamTimeSource(String streamTimeSource) {
-		configSourceProps.setProperty("GameTime", streamTimeSource);
+		configSourceProps.setProperty("StreamTime", streamTimeSource);
 	}
 	public void setStuffs1Source(String stuffs1Source) {
 		configSourceProps.setProperty("Stuffs1", stuffs1Source);

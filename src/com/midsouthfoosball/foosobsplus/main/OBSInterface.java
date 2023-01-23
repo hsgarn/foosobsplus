@@ -58,16 +58,16 @@ public class OBSInterface {
 	}
 	
 	public void writeData(String source, String data, String className, Boolean showParsed) {
+		if (source == "" || source == null) return;
 		OBS obs = OBS.getInstance();
 		OBSRemoteController obsRemoteController = obs.getController();
 		if (obsRemoteController != null && obs.getConnected()) {
 			String jsonString = "{'text':'" + data + "'}";
 			JsonObject jsonObject = (JsonObject) JsonParser.parseString(jsonString);
-	
 			obsRemoteController.setInputSettings(source, jsonObject, true, response -> {
 		   		if(showParsed)
 		   			logger.info(className + " class: Source: [" + source + "] Text: [" + data + "] " + response.getMessageData().getRequestStatus() + "]");
-		   		});
+		   	});
 		}
 	}
 }
