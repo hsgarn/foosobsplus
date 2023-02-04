@@ -1108,7 +1108,11 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpha - push hide all button
 </br></br></br>
 ## Revision History</br>
-v2.001 01/22/2023
+v2.002 02/04/2023</br>
+Add logic to handle Time Out commands from Auto Score.</br>
+Update the Auto Score configuration validation for new settings.</br>
+</br>
+v2.001 01/22/2023</br>
 Don't send empty/null source to OBS.</br>
 Correct GameClock log class.</br>
 Correct GameTime,MatchTime,StreamTime sources in Settings.</br>

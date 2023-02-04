@@ -507,6 +507,17 @@ public class Main {
 				                	publish(2);
 				                }
 			                }
+	                	} else {
+	                		if (cmd[0].equals("TO")) {
+	                			str = cmd[1].split("[,]",0);
+				                if (str[0].equals("1")) {
+				                	publish(3);
+				                } else {
+					                if (str[0].equals("2")) {
+					                	publish(4);
+					                }
+				                }
+	                		}
 	                	}
 	                	if (cmd[0].equals("Read")) {
 	                		autoScoreConfigPanel.clearConfigTextArea();
@@ -559,9 +570,17 @@ public class Main {
 				boolean ignoreSensors = autoScoreMainPanel.isIgnored();
             	if (settings.getAutoScoreSettingsDetailLog()==1) {
             		if (ignoreSensors) {
-            			autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team "+mostRecentValue+ " scored! but ignored!");
+            			if (mostRecentValue == 1 || mostRecentValue == 2) {
+            				autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team "+mostRecentValue+ " scored! but ignored!");
+            			} else {
+            				autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team "+(mostRecentValue-2)+ " called Time Out.");
+            			}
             		} else {
-            			autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team "+mostRecentValue+ " scored!");
+            			if (mostRecentValue == 1 || mostRecentValue == 2) {
+            				autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team "+mostRecentValue+ " scored!");
+            			} else {
+            				autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team "+(mostRecentValue-2)+ " called Time Out.");
+            			}
             		}
             	}
 				if (!ignoreSensors && (mostRecentValue == 1)) {
@@ -571,7 +590,14 @@ public class Main {
 							processCode("XIST2", false);
 						}
 				}
-				if (!ignoreSensors && (mostRecentValue > 0)) {
+				if (mostRecentValue == 3) {
+					processCode("XUTT1", false);
+				} else {
+					if (mostRecentValue == 4) {
+						processCode("XUTT2", false);
+					}
+				}
+				if (!ignoreSensors && (mostRecentValue > 0) && (mostRecentValue < 3)) {
 					checkFilters(mostRecentValue);
 				}
 			}
@@ -1070,8 +1096,8 @@ public class Main {
 	private boolean validateAutoScoreConfig() {
 		boolean validated = true;
 		String configErrors = "";
-		String[] paramNames = {"PORT","SENSOR1","SENSOR2","SENSOR3","LED1","LED2","DELAY_TIME"};
-		String[] paramTests = {"PORT","PIN","PIN","PIN","PIN","PIN","TIME"};
+		String[] paramNames = {"PORT","SENSOR1","SENSOR2","SENSOR3","LED1","LED2","DELAY_SENSOR","DELAY_PB","PB1","PB2"};
+		String[] paramTests = {"PORT","PIN","PIN","PIN","PIN","PIN","TIME","TIME","PIN","PIN"};
 		List<String> copyNames = new ArrayList<>(Arrays.asList(paramNames));
 		List<String> copyTests = new ArrayList<>(Arrays.asList(paramTests));
 
@@ -1177,6 +1203,7 @@ public class Main {
 			if (autoScoreSocketWriter.checkError()) {
 				logger.error("readAutoScoreConfig println error");
 			}
+			disconnectAutoScore();
 		}
 	}
 	private void clearAutoScoreConfig() {
