@@ -411,6 +411,18 @@ public class TeamController {
 		displayAll();
 		updateGameTables();
 	};
+	public void cutThroatGameRotate() {
+		String tmp = team2.getForwardName();
+		team2.setForwardName(team2.getGoalieName());
+		team2.setGoalieName(tmp);
+		int tmpScore = team2.getForwardScore();
+		team2.setForwardScore(team2.getGoalieScore());
+		team2.setGoalieScore(tmpScore);
+		int tmpGameCount = team2.getForwardGameCount();
+		team2.setForwardGameCount(team2.getGoalieGameCount());
+		team2.setGoalieGameCount(tmpGameCount);
+		displayAll();
+	};
 	public int incrementScore(int teamNumber) {
 		int winState = 0;
 		if(teamNumber == 1) {
@@ -428,7 +440,8 @@ public class TeamController {
 		displayAll();
 		return winState;
 	}
-	public void incrementForwardScore(int teamNumber) {
+	public boolean incrementForwardScore(int teamNumber) {
+		boolean won = false;
 		if(teamNumber == 1) {
 			team1.incrementForwardScore();
 			if(team1.getForwardScore()>=settings.getPointsToWin()) {
@@ -436,11 +449,13 @@ public class TeamController {
 				team2.setForwardScore(0);
 				team2.setGoalieScore(0);
 				team1.incrementForwardGameCount();
+				won = true;
 			}
 		} else {
 			team2.incrementForwardScore();
 		}
 		displayAll();
+		return won;
 	}
 	public void incrementForwardGameCount(int teamNumber) {
 		if(teamNumber == 1) {
@@ -770,7 +785,7 @@ public class TeamController {
 		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
 		updateGameTables();
 	}
-	public void cutThroatRotate() {
+	public void cutThroatPointRotate() {
 		String tmp = team1.getForwardName();
 		team1.setForwardName(team2.getForwardName());
 		team2.setForwardName(team2.getGoalieName());

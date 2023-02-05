@@ -605,6 +605,8 @@ public class Main {
 	}
 	private void checkFilters(int teamNbr) {
 		String filter = "";
+		filter = "Team" + teamNbr + "Score";
+		activateFilter(filter);
 		int winState = match.getWinState();
 		if (winState == 1) {
 			int gn = match.getCurrentGameNumber();
@@ -614,11 +616,11 @@ public class Main {
 				if (a == 0 || b == 0) {
 					if(settings.getShowSkunk()==1) {
 						filter = "Team" + teamNbr + "Skunk";
+						activateFilter(filter);
 					}
 				}
-				if (filter.isEmpty()) {
-					filter = "Team" + teamNbr + "WinGame";
-				}
+				filter = "Team" + teamNbr + "WinGame";
+				activateFilter(filter);
 				if(gameClock.isStreamTimerRunning()) {
 					if(settings.getCutThroatMode()==1) {
 						streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Game end: " + team1.getForwardName() + " vs " + team2.getForwardName() + " vs " + team2.getGoalieName() + "\r\n");
@@ -634,11 +636,11 @@ public class Main {
 				if (a == 0 || b == 0) {
 					if(settings.getShowSkunk()==1) {
 						filter = "Team" + teamNbr + "Skunk";
+						activateFilter(filter);
 					}
 				}
-				if (filter.isEmpty()) {
-					filter = "Team" + teamNbr + "WinMatch";
-				}
+				filter = "Team" + teamNbr + "WinMatch";
+				activateFilter(filter);
 				if(gameClock.isStreamTimerRunning()) {
 					if(settings.getCutThroatMode()==1) {
 						streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Match end: " + team1.getForwardName() + " vs " + team2.getForwardName() + " vs " + team2.getGoalieName() + "\r\n");
@@ -646,11 +648,8 @@ public class Main {
 						streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Match end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + ": " + a + " to " + b + "\r\n");
 					}
 				}
-			} else {
-				filter = "Team" + teamNbr + "Score";
 			}
 		}
-		activateFilter(filter);
 	}
 	private void activateFilter(String filter) {
 		setSourceFilterVisibility(obs.getScene(), settings.getFiltersFilter(filter), true);

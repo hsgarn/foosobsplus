@@ -85,12 +85,16 @@ public class MatchController {
 	}
 	public void incrementScore(int teamNumber) {
 		if (settings.getCutThroatMode()==1) {
+			boolean won = false;
 			if (teamNumber == 1) {
 				//Single player scores
-				teamController.incrementForwardScore(teamNumber);
+				won = teamController.incrementForwardScore(teamNumber);
+				if (won) {
+					teamController.cutThroatGameRotate();
+				}
 			} else {
 				//Rotate players and scores
-				teamController.cutThroatRotate(); 
+				teamController.cutThroatPointRotate(); 
 			}
 		} else {
 			if (match.getMatchWon()) {
@@ -98,12 +102,7 @@ public class MatchController {
 				teamController.resetScores();
 				teamController.resetGameCounts();
 				startMatch(createMatchId());
-				if(settings.getCutThroatMode()==1) {
-					streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + " vs " + teamController.getForwardName(2) + " vs " + teamController.getGoalieName(2) + "\r\n");
-				} else {
-					streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + "\r\n");
-				}
-
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + "\r\n");
 			}
 			int winState = teamController.incrementScore(teamNumber);
 			if (winState==1) {
