@@ -1108,6 +1108,10 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpha - push hide all button
 </br></br></br>
 ## Revision History</br>
+v2.004 03/04/2023</br>
+Fix TimeOut filter not being called from Auto FoosScore</br>
+Rework checkFilters so it is called from processCode</br>
+</br>
 v2.003 02/04/2023</br>
 Allow Score, Game/Match, Skunk filters to be shown simultaneously.</br>
 Auto switch team 2 players after game won in cutthroat.</br>

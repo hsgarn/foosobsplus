@@ -597,58 +597,71 @@ public class Main {
 						processCode("XUTT2", false);
 					}
 				}
-				if (!ignoreSensors && (mostRecentValue > 0) && (mostRecentValue < 3)) {
-					checkFilters(mostRecentValue);
-				}
 			}
 		};
 	}
-	private void checkFilters(int teamNbr) {
+	private void checkFilters(String code) {
 		String filter = "";
-		filter = "Team" + teamNbr + "Score";
-		activateFilter(filter);
-		int winState = match.getWinState();
-		if (winState == 1) {
-			int gn = match.getCurrentGameNumber();
-			if (gn > 1) {
-				int a = Integer.parseInt(match.getScoresTeam1()[gn-2]); 
-				int b = Integer.parseInt(match.getScoresTeam2()[gn-2]);
-				if (a == 0 || b == 0) {
-					if(settings.getShowSkunk()==1) {
-						filter = "Team" + teamNbr + "Skunk";
-						activateFilter(filter);
+		Integer teamNbr = 0;
+		if (code.equals("XIST1") || code.equals("XIST2")) {
+			if (code.equals("XIST1")) {
+				teamNbr = 1;
+			} else {
+				teamNbr = 2;
+			}
+			filter = "Team" + teamNbr + "Score";
+			activateFilter(filter);
+			int winState = match.getWinState();
+			if (winState == 1) {
+				int gn = match.getCurrentGameNumber();
+				if (gn > 1) {
+					int a = Integer.parseInt(match.getScoresTeam1()[gn-2]); 
+					int b = Integer.parseInt(match.getScoresTeam2()[gn-2]);
+					if (a == 0 || b == 0) {
+						if(settings.getShowSkunk()==1) {
+							filter = "Team" + teamNbr + "Skunk";
+							activateFilter(filter);
+						}
+					}
+					filter = "Team" + teamNbr + "WinGame";
+					activateFilter(filter);
+					if(gameClock.isStreamTimerRunning()) {
+						if(settings.getCutThroatMode()==1) {
+							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Game end: " + team1.getForwardName() + " vs " + team2.getForwardName() + " vs " + team2.getGoalieName() + "\r\n");
+						} else {
+							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Game end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + ": " + a + " to " + b + "\r\n");
+						}
 					}
 				}
-				filter = "Team" + teamNbr + "WinGame";
-				activateFilter(filter);
-				if(gameClock.isStreamTimerRunning()) {
-					if(settings.getCutThroatMode()==1) {
-						streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Game end: " + team1.getForwardName() + " vs " + team2.getForwardName() + " vs " + team2.getGoalieName() + "\r\n");
-					} else {
-						streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Game end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + ": " + a + " to " + b + "\r\n");
+			} else {
+				if (winState == 2) {
+					int a = team1.getScore();
+					int b = team2.getScore();
+					if (a == 0 || b == 0) {
+						if(settings.getShowSkunk()==1) {
+							filter = "Team" + teamNbr + "Skunk";
+							activateFilter(filter);
+						}
+					}
+					filter = "Team" + teamNbr + "WinMatch";
+					activateFilter(filter);
+					if(gameClock.isStreamTimerRunning()) {
+						if(settings.getCutThroatMode()==1) {
+							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Match end: " + team1.getForwardName() + " vs " + team2.getForwardName() + " vs " + team2.getGoalieName() + "\r\n");
+						} else {
+							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Match end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + ": " + a + " to " + b + "\r\n");
+						}
 					}
 				}
 			}
 		} else {
-			if (winState == 2) {
-				int a = team1.getScore();
-				int b = team2.getScore();
-				if (a == 0 || b == 0) {
-					if(settings.getShowSkunk()==1) {
-						filter = "Team" + teamNbr + "Skunk";
-						activateFilter(filter);
-					}
+			if (code.equals("XUTT1") || code.equals("XUTT2")) {
+				if (code.equals("XUTT1")) {
+					activateFilter("Team1TimeOut");
+				} else {
+					activateFilter("Team2TimeOut");
 				}
-				filter = "Team" + teamNbr + "WinMatch";
-				activateFilter(filter);
-				if(gameClock.isStreamTimerRunning()) {
-					if(settings.getCutThroatMode()==1) {
-						streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Match end: " + team1.getForwardName() + " vs " + team2.getForwardName() + " vs " + team2.getGoalieName() + "\r\n");
-					} else {
-						streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Match end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + ": " + a + " to " + b + "\r\n");
-					}
-				}
-			}
+			}	
 		}
 	}
 	private void activateFilter(String filter) {
@@ -831,6 +844,8 @@ public class Main {
 				commandStatus = commandStack.push(mySwitch.execute(stats.getCommand()));
 				if (commandStatus == null) {
 					statsEntryPanel.errorCodeHistory();;
+				} else {
+					checkFilters(code);
 				}
 				undoRedoPointer++;
 			}
@@ -1462,15 +1477,14 @@ public class Main {
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String name = btn.getName();
-			int teamNbr;
+			String code;
 			if(name.equals("Team 1")) {
-				teamNbr = 1;
-				processCode("XIST1",false);
+				code = "XIST1";
 			} else {
-				teamNbr = 2;
-				processCode("XIST2",false);
+				code = "XIST2";
 			}
-			checkFilters(teamNbr);
+			processCode(code,false);
+//			checkFilters(code);
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
@@ -1516,10 +1530,8 @@ public class Main {
 			String name = btn.getName();
 			if(name.equals("Team 1")) {
 				processCode("XUTT1",false);
-				activateFilter("Team1TimeOut");
 			} else {
 				processCode("XUTT2",false);
-				activateFilter("Team2TimeOut");
 			}
 			statsEntryPanel.setFocusOnCode();
 		}
