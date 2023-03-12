@@ -224,14 +224,14 @@ public class Team implements Serializable {
 	public int callTimeOut() {
 		if(settings.getShowTimeOutsUsed() == 1) {
 			timeOutCount++;
-			if(timeOutCount>settings.getMaxTimeOuts()) {
-				timeOutCount=settings.getMaxTimeOuts();
-			}
+//			if(timeOutCount>settings.getMaxTimeOuts()) {
+//				timeOutCount=settings.getMaxTimeOuts();
+//			}
 		} else {
 			timeOutCount--;
-			if(timeOutCount<0) {
-				timeOutCount=0;
-			}
+//			if(timeOutCount<0) {
+//				timeOutCount=0;
+//			}
 		}
 		writeTimeOuts();
 		return timeOutCount;

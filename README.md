@@ -1108,6 +1108,9 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpha - push hide all button
 </br></br></br>
 ## Revision History</br>
+v2.005 03/12/2023</br>
+Allow timeouts to exceed limits.</br>
+</br>
 v2.004 03/04/2023</br>
 Fix TimeOut filter not being called from Auto FoosScore</br>
 Rework checkFilters so it is called from processCode</br>
