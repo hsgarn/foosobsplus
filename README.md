@@ -1108,6 +1108,10 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpha - push hide all button
 </br></br></br>
 ## Revision History</br>
+v2.006 04/05/2023</br>
+Add more INFO logging for AutoScore disconnects.</br>
+Add auto reconnect AutoScore logic.</br>
+</br>
 v2.005 03/12/2023</br>
 Allow timeouts to exceed limits.</br>
 </br>

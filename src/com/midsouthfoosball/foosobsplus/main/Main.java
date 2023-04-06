@@ -27,6 +27,8 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -196,6 +198,8 @@ public class Main {
 	private Socket autoScoreSocket;
 	private PrintWriter autoScoreSocketWriter;
 	private StreamIndexer streamIndexer             = new StreamIndexer(settings.getDatapath());
+	private Boolean allowAutoScoreReconnect         = true;
+	private Boolean blockAutoScoreReconnect         = false;
 
 	////// Watch Service for File changes \\\\\\
 	WatchService watchService;
@@ -485,7 +489,7 @@ public class Main {
 		        while (isConnected)
 		        {
             		try {
-            			raw = dataIn.readLine();
+           				raw = dataIn.readLine();
 		            } catch(IOException io) {
 		            	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString());
 			        	logger.error(io.toString());
@@ -544,7 +548,7 @@ public class Main {
 		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString());
 		        	logger.error(io.toString());
 		        }
-		        return isConnected;
+		    	return isConnected;
 			}
 			@Override
 			protected void done() {
@@ -599,6 +603,7 @@ public class Main {
 				}
 			}
 		};
+		autoScoreWorker.addPropertyChangeListener(new AutoScoreWorkerStateChangeListener());
 	}
 	private void checkFilters(String code) {
 		String filter = "";
@@ -1103,7 +1108,7 @@ public class Main {
 		if(autoScoreConnected) {
 			autoScoreSocketWriter.println("read:");
 			if (autoScoreSocketWriter.checkError()) {
-				logger.error("readAutoScoreConfig println error");
+				logger.error("readAutoScoreConfig println error sending read:");
 			}
 		}
 	}
@@ -1215,7 +1220,7 @@ public class Main {
 		if(autoScoreConnected) {
 			autoScoreSocketWriter.println("reset:");
 			if (autoScoreSocketWriter.checkError()) {
-				logger.error("readAutoScoreConfig println error");
+				logger.error("readAutoScoreConfig println error sending reset:");
 			}
 			disconnectAutoScore();
 		}
@@ -1234,7 +1239,7 @@ public class Main {
 				dateStamp = "date = " + dateStamp;
 				autoScoreSocketWriter.println("save:" + dateStamp + config + "End");
 				if (autoScoreSocketWriter.checkError()) {
-					logger.error("saveAutoScoreConfig println error");
+					logger.error("saveAutoScoreConfig println error sending save:" + dateStamp + config + "End");
 				}
 			}
 		}
@@ -1300,11 +1305,14 @@ public class Main {
 	}
 	private class AutoScoreSettingsConnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			blockAutoScoreReconnect = false;
 			connectAutoScore();
 		}
 	}
 	private class AutoScoreSettingsDisconnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			logger.info("AutoScore Settings Window Disconnect Button Pressed.");
+			blockAutoScoreReconnect = true;
 			disconnectAutoScore();
 		}
 	}
@@ -1328,6 +1336,7 @@ public class Main {
 	}
 	private class AutoScoreConfigResetListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			logger.info("AutoScore Configuration Reset Pico Button Pressed.");
 			resetAutoScoreConfig();
 		}
 	}
@@ -1460,11 +1469,14 @@ public class Main {
 	}
 	private class AutoScoreMainPanelConnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			blockAutoScoreReconnect = false;
 			connectAutoScore();
 		}
 	}
 	private class AutoScoreMainPanelDisconnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			blockAutoScoreReconnect = true;
+			logger.info("AutoScore Main Panel Disconnect Button Pressed.");
 			disconnectAutoScore();
 		}
 	}
@@ -1770,6 +1782,22 @@ public class Main {
 		public void windowIconified(WindowEvent e) {
 		}
 		public void windowOpened(WindowEvent e) {
+		}
+	}
+	private class AutoScoreWorkerStateChangeListener implements PropertyChangeListener {
+		public void propertyChange(PropertyChangeEvent e) {
+			SwingWorker.StateValue state = null;
+			Object source = e.getSource();
+			if (source == autoScoreWorker) {
+				state = autoScoreWorker.getState();
+			}
+			logger.info("AutoScoreWorker state changed to: " + state.toString());
+			if (state == SwingWorker.StateValue.DONE) {
+				if (allowAutoScoreReconnect && !blockAutoScoreReconnect) {
+					logger.info("Attempt reconnect to AutoScore...");
+					connectAutoScore();
+				}
+			}
 		}
 	}
 
