@@ -102,6 +102,7 @@ import com.midsouthfoosball.foosobsplus.commands.PSSCCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSSCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSTCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSTOCommand;
+import com.midsouthfoosball.foosobsplus.commands.PTCACommand;
 import com.midsouthfoosball.foosobsplus.commands.PWT1Command;
 import com.midsouthfoosball.foosobsplus.commands.PWT2Command;
 import com.midsouthfoosball.foosobsplus.commands.RTT1Command;
@@ -996,6 +997,7 @@ public class Main {
 		Command prr = new PRRCommand(statsController, teamController);
 		Command pra = new PRACommand(statsController, teamController);
 		Command codeCommand = new CodeCommand(statsController);
+		Command ptca = new PTCACommand(statsController, tournamentController);
 
 		mySwitch = new CommandSwitch();
 		mySwitch.register("PSE", pse);
@@ -1043,6 +1045,7 @@ public class Main {
 		mySwitch.register("PRR", prr);
 		mySwitch.register("PRA", pra);
 		mySwitch.register("code", codeCommand);
+		mySwitch.register("PTCA", ptca);
 	}
 	public void showScores(boolean show) {
 		obsPanel.setShowScores(show);
@@ -1764,6 +1767,7 @@ public class Main {
 	}
 	private class TableClearAllListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			processCode("XPTCA",false);
 			statsEntryPanel.setFocusOnCode();
 		}
 	}

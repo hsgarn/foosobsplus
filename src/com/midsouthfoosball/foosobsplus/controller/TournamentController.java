@@ -127,8 +127,9 @@ public class TournamentController {
 	}
 	private class ClearListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			tournament.clearAll();
-			tournamentPanel.clearAllFields();
+			clearAll();
+//			tournament.clearAll();
+//			tournamentPanel.clearAllFields();
 		}
 	}
 	public void fetchAll() {
@@ -141,5 +142,9 @@ public class TournamentController {
 	}
 	public void writeAll() {
 		tournament.writeAll();
+	}
+	public void clearAll() {
+		tournament.clearAll();
+		tournamentPanel.clearAllFields();
 	}
 }

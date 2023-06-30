@@ -78,6 +78,7 @@ public class Tournament {
 		tournamentName = "";
 		eventName = "";
 		tableName = "";
+		writeAll();
 	}
 	private void writeTournamentName() {
    		writeData(settings.getTournamentSource(), getTournamentName());

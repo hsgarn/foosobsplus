@@ -1106,8 +1106,12 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpnb - push 9 ball button
 * xpsa - push show all button
 * xpha - push hide all button
+* xptca - push tournment clear all button
 </br></br></br>
 ## Revision History</br>
+v2.007 06/30/2023</br>
+Clear button in Tournament panel now clears related fields in OBS.</br>
+</br>
 v2.006 04/05/2023</br>
 Add more INFO logging for AutoScore disconnects.</br>
 Add auto reconnect AutoScore logic.</br>
