@@ -1945,6 +1945,13 @@ public class Main {
 							}
 						}
 					}
+					if (match.getMatchWon()) {
+						match.resetMatch();
+						teamController.resetScores();
+						teamController.resetGameCounts();
+						matchController.startMatch(createMatchId());
+						streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match from Name Change: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + "\r\n");
+					}
 				}
 			}
 		};

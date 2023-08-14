@@ -1107,8 +1107,11 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpsa - push show all button
 * xpha - push hide all button
 * xptca - push tournment clear all button
-</br></br></br>
+
 ## Revision History</br>
+v2.008 08/13/2023</br>
+Start new match if match won is set and file watch worker sees a new name.</br>
+</br>
 v2.007 06/30/2023</br>
 Clear button in Tournament panel now clears related fields in OBS.</br>
 </br>
