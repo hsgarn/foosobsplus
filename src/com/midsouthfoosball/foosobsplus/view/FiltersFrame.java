@@ -58,4 +58,7 @@ public class FiltersFrame extends JFrame {
 		getContentPane().add(filtersPanel);
 		pack();
 	}
+	public FiltersPanel getFiltersPanel() {
+		return filtersPanel;
+	}
 }

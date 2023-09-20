@@ -62,6 +62,25 @@ public class FiltersPanel extends JPanel {
 	private JTextField txtStartMatchFilter;
 	private JTextField txtStartGameFilter;
 	private JTextField txtSwitchSidesFilter;
+	private JButton btnTeam1ScoreFilter;
+	private JButton btnTeam2ScoreFilter;
+	private JButton btnTeam1WinGameFilter;
+	private JButton btnTeam2WinGameFilter;
+	private JButton btnTeam1WinMatchFilter;
+	private JButton btnTeam2WinMatchFilter;
+	private JButton btnTeam1TimeOutFilter;
+	private JButton btnTeam2TimeOutFilter;
+	private JButton btnTeam1ResetFilter;
+	private JButton btnTeam2ResetFilter;
+	private JButton btnTeam1WarnFilter;
+	private JButton btnTeam2WarnFilter;
+	private JButton btnTeam1SwitchPositionsFilter;
+	private JButton btnTeam2SwitchPositionsFilter;
+	private JButton btnTeam1SkunkFilter;
+	private JButton btnTeam2SkunkFilter;
+	private JButton btnStartMatchFilter;
+	private JButton btnStartGameFilter;
+	private JButton btnSwitchSidesFilter;
 	private static Logger logger;
 	{
 		logger = LoggerFactory.getLogger(this.getClass());
@@ -140,6 +159,9 @@ public class FiltersPanel extends JPanel {
 		txtTeam1ScoreFilter.setText(settings.getTeam1ScoreFilter());
 		add(txtTeam1ScoreFilter, "cell 2 2,alignx left"); //$NON-NLS-1$
 		txtTeam1ScoreFilter.setColumns(20);
+		
+		btnTeam1ScoreFilter = new JButton("Test");
+		add(btnTeam1ScoreFilter, "cell 3 2, alignx left");
 
 		JLabel lblTeam2ScoreFilter = new JLabel(Messages.getString("FiltersPanel.Team2Score", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam2ScoreFilter, "cell 1 3,alignx right"); //$NON-NLS-1$
@@ -148,6 +170,9 @@ public class FiltersPanel extends JPanel {
 		txtTeam2ScoreFilter.setText(settings.getTeam2ScoreFilter());
 		add(txtTeam2ScoreFilter, "cell 2 3,alignx left"); //$NON-NLS-1$
 		txtTeam2ScoreFilter.setColumns(20);
+		
+		btnTeam2ScoreFilter = new JButton("Test");
+		add(btnTeam2ScoreFilter, "cell 3 3, alignx left");
 
 		JLabel lblTeam1WinGameFilter = new JLabel(Messages.getString("FiltersPanel.Team1WinGame", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam1WinGameFilter, "cell 1 4,alignx right"); //$NON-NLS-1$
@@ -156,6 +181,9 @@ public class FiltersPanel extends JPanel {
 		txtTeam1WinGameFilter.setText(settings.getTeam1WinGameFilter());
 		add(txtTeam1WinGameFilter, "cell 2 4,alignx left"); //$NON-NLS-1$
 		txtTeam1WinGameFilter.setColumns(20);
+		
+		btnTeam1WinGameFilter = new JButton("Test");
+		add(btnTeam1WinGameFilter, "cell 3 4, alignx left");
 
 		JLabel lblTeam2WinGameFilter = new JLabel(Messages.getString("FiltersPanel.Team2WinGame", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam2WinGameFilter, "cell 1 5,alignx right"); //$NON-NLS-1$
@@ -164,6 +192,9 @@ public class FiltersPanel extends JPanel {
 		txtTeam2WinGameFilter.setText(settings.getTeam2WinGameFilter());
 		add(txtTeam2WinGameFilter, "cell 2 5,alignx left"); //$NON-NLS-1$
 		txtTeam2WinGameFilter.setColumns(20);
+		
+		btnTeam2WinGameFilter = new JButton("Test");
+		add(btnTeam2WinGameFilter, "cell 3 5, alignx left");
 
 		JLabel lblTeam1WinMatchFilter = new JLabel(Messages.getString("FiltersPanel.Team1WinMatch", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam1WinMatchFilter, "cell 1 6,alignx right"); //$NON-NLS-1$
@@ -172,6 +203,9 @@ public class FiltersPanel extends JPanel {
 		txtTeam1WinMatchFilter.setText(settings.getTeam1WinMatchFilter());
 		add(txtTeam1WinMatchFilter, "cell 2 6,alignx left"); //$NON-NLS-1$
 		txtTeam1WinMatchFilter.setColumns(20);
+		
+		btnTeam1WinMatchFilter = new JButton("Test");
+		add(btnTeam1WinMatchFilter, "cell 3 6, alignx left");
 
 		JLabel lblTeam2WinMatchFilter = new JLabel(Messages.getString("FiltersPanel.Team2WinMatch", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam2WinMatchFilter, "cell 1 7,alignx right"); //$NON-NLS-1$
@@ -180,6 +214,9 @@ public class FiltersPanel extends JPanel {
 		txtTeam2WinMatchFilter.setText(settings.getTeam2WinMatchFilter());
 		add(txtTeam2WinMatchFilter, "cell 2 7,alignx left"); //$NON-NLS-1$
 		txtTeam2WinMatchFilter.setColumns(20);
+		
+		btnTeam2WinMatchFilter = new JButton("Test");
+		add(btnTeam2WinMatchFilter, "cell 3 7, alignx left");
 
 		JLabel lblTeam1TimeOutFilter = new JLabel(Messages.getString("FiltersPanel.Team1TimeOut", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam1TimeOutFilter, "cell 1 8,alignx right"); //$NON-NLS-1$
@@ -188,6 +225,9 @@ public class FiltersPanel extends JPanel {
 		txtTeam1TimeOutFilter.setText(settings.getTeam1TimeOutFilter());
 		add(txtTeam1TimeOutFilter, "cell 2 8,alignx left"); //$NON-NLS-1$
 		txtTeam1TimeOutFilter.setColumns(20);
+		
+		btnTeam1TimeOutFilter = new JButton("Test");
+		add(btnTeam1TimeOutFilter, "cell 3 8, alignx left");
 
 		JLabel lblTeam2TimeOutFilter = new JLabel(Messages.getString("FiltersPanel.Team2TimeOut", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam2TimeOutFilter, "cell 1 9,alignx right"); //$NON-NLS-1$
@@ -196,6 +236,9 @@ public class FiltersPanel extends JPanel {
 		txtTeam2TimeOutFilter.setText(settings.getTeam2TimeOutFilter());
 		add(txtTeam2TimeOutFilter, "cell 2 9,alignx left"); //$NON-NLS-1$
 		txtTeam2TimeOutFilter.setColumns(20);
+		
+		btnTeam2TimeOutFilter = new JButton("Test");
+		add(btnTeam2TimeOutFilter, "cell 3 9, alignx left");
 
 		JLabel lblTeam1ResetFilter = new JLabel(Messages.getString("FiltersPanel.Team1Reset", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam1ResetFilter, "cell 1 10,alignx right"); //$NON-NLS-1$
@@ -204,6 +247,9 @@ public class FiltersPanel extends JPanel {
 		txtTeam1ResetFilter.setText(settings.getTeam1ResetFilter());
 		add(txtTeam1ResetFilter, "cell 2 10,alignx left"); //$NON-NLS-1$
 		txtTeam1ResetFilter.setColumns(20);
+		
+		btnTeam1ResetFilter = new JButton("Test");
+		add(btnTeam1ResetFilter, "cell 3 10, alignx left");
 
 		JLabel lblTeam2ResetFilter = new JLabel(Messages.getString("FiltersPanel.Team2Reset", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam2ResetFilter, "cell 1 11,alignx right"); //$NON-NLS-1$
@@ -212,6 +258,9 @@ public class FiltersPanel extends JPanel {
 		txtTeam2ResetFilter.setText(settings.getTeam2ResetFilter());
 		add(txtTeam2ResetFilter, "cell 2 11,alignx left"); //$NON-NLS-1$
 		txtTeam2ResetFilter.setColumns(20);
+		
+		btnTeam2ResetFilter = new JButton("Test");
+		add(btnTeam2ResetFilter, "cell 3 11, alignx left");
 
 		JLabel lblTeam1WarnFilter = new JLabel(Messages.getString("FiltersPanel.Team1Warn", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam1WarnFilter, "cell 1 12,alignx right"); //$NON-NLS-1$
@@ -220,6 +269,9 @@ public class FiltersPanel extends JPanel {
 		txtTeam1WarnFilter.setText(settings.getTeam1WarnFilter());
 		add(txtTeam1WarnFilter, "cell 2 12,alignx left"); //$NON-NLS-1$
 		txtTeam1WarnFilter.setColumns(20);
+		
+		btnTeam1WarnFilter = new JButton("Test");
+		add(btnTeam1WarnFilter, "cell 3 12, alignx left");
 
 		JLabel lblTeam2WarnFilter = new JLabel(Messages.getString("FiltersPanel.Team2Warn", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam2WarnFilter, "cell 1 13,alignx right"); //$NON-NLS-1$
@@ -228,6 +280,9 @@ public class FiltersPanel extends JPanel {
 		txtTeam2WarnFilter.setText(settings.getTeam2WarnFilter());
 		add(txtTeam2WarnFilter, "cell 2 13,alignx left"); //$NON-NLS-1$
 		txtTeam2WarnFilter.setColumns(20);
+		
+		btnTeam2WarnFilter = new JButton("Test");
+		add(btnTeam2WarnFilter, "cell 3 13, alignx left");
 
 		JLabel lblTeam1SwitchPositionsFilter = new JLabel(Messages.getString("FiltersPanel.Team1SwitchPositions", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam1SwitchPositionsFilter, "cell 1 14,alignx right"); //$NON-NLS-1$
@@ -236,6 +291,9 @@ public class FiltersPanel extends JPanel {
 		txtTeam1SwitchPositionsFilter.setText(settings.getTeam1SwitchPositionsFilter());
 		add(txtTeam1SwitchPositionsFilter, "cell 2 14,alignx left"); //$NON-NLS-1$
 		txtTeam1SwitchPositionsFilter.setColumns(20);
+		
+		btnTeam1SwitchPositionsFilter = new JButton("Test");
+		add(btnTeam1SwitchPositionsFilter, "cell 3 14, alignx left");
 
 		JLabel lblTeam2SwitchPositionsFilter = new JLabel(Messages.getString("FiltersPanel.Team2SwitchPositions", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam2SwitchPositionsFilter, "cell 1 15,alignx right"); //$NON-NLS-1$
@@ -244,6 +302,9 @@ public class FiltersPanel extends JPanel {
 		txtTeam2SwitchPositionsFilter.setText(settings.getTeam2SwitchPositionsFilter());
 		add(txtTeam2SwitchPositionsFilter, "cell 2 15,alignx left"); //$NON-NLS-1$
 		txtTeam2SwitchPositionsFilter.setColumns(20);
+		
+		btnTeam2SwitchPositionsFilter = new JButton("Test");
+		add(btnTeam2SwitchPositionsFilter, "cell 3 15, alignx left");
 
 		JLabel lblTeam1SkunkFilter = new JLabel(Messages.getString("FiltersPanel.Team1Skunk", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam1SkunkFilter, "cell 1 16,alignx right"); //$NON-NLS-1$
@@ -252,6 +313,9 @@ public class FiltersPanel extends JPanel {
 		txtTeam1SkunkFilter.setText(settings.getTeam1SkunkFilter());
 		add(txtTeam1SkunkFilter, "cell 2 16,alignx left"); //$NON-NLS-1$
 		txtTeam1SkunkFilter.setColumns(20);
+		
+		btnTeam1SkunkFilter = new JButton("Test");
+		add(btnTeam1SkunkFilter, "cell 3 16, alignx left");
 
 		JLabel lblTeam2SkunkFilter = new JLabel(Messages.getString("FiltersPanel.Team2Skunk", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam2SkunkFilter, "cell 1 17,alignx right"); //$NON-NLS-1$
@@ -260,6 +324,9 @@ public class FiltersPanel extends JPanel {
 		txtTeam2SkunkFilter.setText(settings.getTeam2SkunkFilter());
 		add(txtTeam2SkunkFilter, "cell 2 17,alignx left"); //$NON-NLS-1$
 		txtTeam2SkunkFilter.setColumns(20);
+		
+		btnTeam2SkunkFilter = new JButton("Test");
+		add(btnTeam2SkunkFilter, "cell 3 17, alignx left");
 
 		JLabel lblStartMatchFilter = new JLabel(Messages.getString("FiltersPanel.StartMatch", settings.getGameType())); //$NON-NLS-1$
 		add(lblStartMatchFilter, "cell 4 2,alignx right"); //$NON-NLS-1$
@@ -268,6 +335,9 @@ public class FiltersPanel extends JPanel {
 		txtStartMatchFilter.setText(settings.getStartMatchFilter());
 		add(txtStartMatchFilter, "cell 5 2,alignx left"); //$NON-NLS-1$
 		txtStartMatchFilter.setColumns(20);
+		
+		btnStartMatchFilter = new JButton("Test");
+		add(btnStartMatchFilter, "cell 6 2, alignx left");
 
 		JLabel lblStartGameFilter = new JLabel(Messages.getString("FiltersPanel.StartGame", settings.getGameType())); //$NON-NLS-1$
 		add(lblStartGameFilter, "cell 4 3,alignx right"); //$NON-NLS-1$
@@ -276,6 +346,9 @@ public class FiltersPanel extends JPanel {
 		txtStartGameFilter.setText(settings.getStartGameFilter());
 		add(txtStartGameFilter, "cell 5 3,alignx left"); //$NON-NLS-1$
 		txtStartGameFilter.setColumns(20);
+		
+		btnStartGameFilter = new JButton("Test");
+		add(btnStartGameFilter, "cell 6 3, alignx left");
 
 		JLabel lblSwitchSidesFilter = new JLabel(Messages.getString("FiltersPanel.SwitchSides", settings.getGameType())); //$NON-NLS-1$
 		add(lblSwitchSidesFilter, "cell 4 4,alignx right"); //$NON-NLS-1$
@@ -284,6 +357,9 @@ public class FiltersPanel extends JPanel {
 		txtSwitchSidesFilter.setText(settings.getSwitchSidesFilter());
 		add(txtSwitchSidesFilter, "cell 5 4,alignx left"); //$NON-NLS-1$
 		txtSwitchSidesFilter.setColumns(20);
+		
+		btnSwitchSidesFilter = new JButton("Test");
+		add(btnSwitchSidesFilter, "cell 6 4, alignx left");
 
 		JButton btnSaveFilters = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		btnSaveFilters.addActionListener(new ActionListener() {
@@ -313,5 +389,63 @@ public class FiltersPanel extends JPanel {
 			}
 		});
 		add(btnRestoreDefaults, "cell 5 19,alignx center"); //$NON-NLS-1$
+	}
+	////// Listeners  //////
+	public void addTeam1ScoreFilterListener(ActionListener listenForBtnTeam1ScoreFilter) {
+		btnTeam1ScoreFilter.addActionListener(listenForBtnTeam1ScoreFilter);
+	}
+	public void addTeam2ScoreFilterListener(ActionListener listenForBtnTeam2ScoreFilter) {
+		btnTeam2ScoreFilter.addActionListener(listenForBtnTeam2ScoreFilter);
+	}
+	public void addTeam1WinGameFilterListener(ActionListener listenForBtnTeam1WinGameFilter) {
+		btnTeam1WinGameFilter.addActionListener(listenForBtnTeam1WinGameFilter);
+	}
+	public void addTeam2WinGameFilterListener(ActionListener listenForBtnTeam2WinGameFilter) {
+		btnTeam2WinGameFilter.addActionListener(listenForBtnTeam2WinGameFilter);
+	}
+	public void addTeam1WinMatchFilterListener(ActionListener listenForBtnTeam1WinMatchFilter) {
+		btnTeam1WinMatchFilter.addActionListener(listenForBtnTeam1WinMatchFilter);
+	}
+	public void addTeam2WinMatchFilterListener(ActionListener listenForBtnTeam2WinMatchFilter) {
+		btnTeam2WinMatchFilter.addActionListener(listenForBtnTeam2WinMatchFilter);
+	}
+	public void addTeam1TimeOutFilterListener(ActionListener listenForBtnTeam1TimeOutFilter) {
+		btnTeam1TimeOutFilter.addActionListener(listenForBtnTeam1TimeOutFilter);
+	}
+	public void addTeam2TimeOutFilterListener(ActionListener listenForBtnTeam2TimeOutFilter) {
+		btnTeam2TimeOutFilter.addActionListener(listenForBtnTeam2TimeOutFilter);
+	}
+	public void addTeam1ResetFilterListener(ActionListener listenForBtnTeam1ResetFilter) {
+		btnTeam1ResetFilter.addActionListener(listenForBtnTeam1ResetFilter);
+	}
+	public void addTeam2ResetFilterListener(ActionListener listenForBtnTeam2ResetFilter) {
+		btnTeam2ResetFilter.addActionListener(listenForBtnTeam2ResetFilter);
+	}
+	public void addTeam1WarnFilterListener(ActionListener listenForBtnTeam1WarnFilter) {
+		btnTeam1WarnFilter.addActionListener(listenForBtnTeam1WarnFilter);
+	}
+	public void addTeam2WarnFilterListener(ActionListener listenForBtnTeam2WarnFilter) {
+		btnTeam2WarnFilter.addActionListener(listenForBtnTeam2WarnFilter);
+	}
+	public void addTeam1SwitchPositionsFilterListener(ActionListener listenForBtnTeam1SwitchPositionsFilter) {
+		btnTeam1SwitchPositionsFilter.addActionListener(listenForBtnTeam1SwitchPositionsFilter);
+	}
+	public void addTeam2SwitchPositionsFilterListener(ActionListener listenForBtnTeam2SwitchPositionsFilter) {
+		btnTeam2SwitchPositionsFilter.addActionListener(listenForBtnTeam2SwitchPositionsFilter);
+	}
+	public void addTeam1SkunkFilterListener(ActionListener listenForBtnTeam1SkunkFilter) {
+		btnTeam1SkunkFilter.addActionListener(listenForBtnTeam1SkunkFilter);
+	}
+	public void addTeam2SkunkFilterListener(ActionListener listenForBtnTeam2SkunkFilter) {
+		btnTeam2SkunkFilter.addActionListener(listenForBtnTeam2SkunkFilter);
+	}
+	public void addStartMatchFilterListener(ActionListener listenForBtnStartMatchFilter) {
+		btnStartMatchFilter.addActionListener(listenForBtnStartMatchFilter);
+	}
+	public void addStartGameFilterListener(ActionListener listenForBtnStartGameFilter) {
+		btnStartGameFilter.addActionListener(listenForBtnStartGameFilter);
+	}
+	public void addSwitchSidesFilterListener(ActionListener listenForBtnSwitchSidesFilter) {
+		btnSwitchSidesFilter.addActionListener(listenForBtnSwitchSidesFilter);
 	}
 }

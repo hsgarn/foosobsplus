@@ -140,6 +140,7 @@ import com.midsouthfoosball.foosobsplus.view.AutoScoreMainPanel;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsFrame;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsPanel;
 import com.midsouthfoosball.foosobsplus.view.FiltersFrame;
+import com.midsouthfoosball.foosobsplus.view.FiltersPanel;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowPanel;
 import com.midsouthfoosball.foosobsplus.view.HotKeysFrame;
@@ -260,6 +261,7 @@ public class Main {
 	private HotKeysPanel 		hotKeysPanel		= hotKeysFrame.getHotKeysPanel();
 	private SourcesFrame		sourcesFrame		= new SourcesFrame(settings, obsInterface);
 	private FiltersFrame        filtersFrame        = new FiltersFrame(settings, obsInterface);
+	private FiltersPanel        filtersPanel        = filtersFrame.getFiltersPanel();
 	private StatSettingsFrame   statSettingsFrame   = new StatSettingsFrame(settings, obsInterface);
 	private PartnerProgramFrame partnerProgramFrame = new PartnerProgramFrame(settings);
 	private OBSConnectFrame		obsConnectFrame		= new OBSConnectFrame(settings, obs);
@@ -777,6 +779,25 @@ public class Main {
 		resetPanel.addResetAllListener(new ResetAllListener());
 		mainFrame.addOBSDisconnectItemListener(new OBSDisconnectItemListener());
 		timerWindowFrame.addTimerWindowClosedListener(new TimerWindowCloseListener());
+		filtersPanel.addTeam1ScoreFilterListener(new Team1ScoreFilterListener());
+		filtersPanel.addTeam2ScoreFilterListener(new Team2ScoreFilterListener());
+		filtersPanel.addTeam1WinGameFilterListener(new Team1WinGameFilterListener());
+		filtersPanel.addTeam2WinGameFilterListener(new Team2WinGameFilterListener());
+		filtersPanel.addTeam1WinMatchFilterListener(new Team1WinMatchFilterListener());
+		filtersPanel.addTeam2WinMatchFilterListener(new Team2WinMatchFilterListener());
+		filtersPanel.addTeam1TimeOutFilterListener(new Team1TimeOutFilterListener());
+		filtersPanel.addTeam2TimeOutFilterListener(new Team2TimeOutFilterListener());
+		filtersPanel.addTeam1ResetFilterListener(new Team1ResetFilterListener());
+		filtersPanel.addTeam2ResetFilterListener(new Team2ResetFilterListener());
+		filtersPanel.addTeam1WarnFilterListener(new Team1WarnFilterListener());
+		filtersPanel.addTeam2WarnFilterListener(new Team2WarnFilterListener());
+		filtersPanel.addTeam1SwitchPositionsFilterListener(new Team1SwitchPositionsFilterListener());
+		filtersPanel.addTeam2SwitchPositionsFilterListener(new Team2SwitchPositionsFilterListener());
+		filtersPanel.addTeam1SkunkFilterListener(new Team1SkunkFilterListener());
+		filtersPanel.addTeam2SkunkFilterListener(new Team2SkunkFilterListener());
+		filtersPanel.addStartMatchFilterListener(new StartMatchFilterListener());
+		filtersPanel.addStartGameFilterListener(new StartGameFilterListener());
+		filtersPanel.addSwitchSidesFilterListener(new SwitchSidesFilterListener());
 	}
 	public void startEvent() {
 		if(gameClock.isStreamTimerRunning()) {
@@ -1804,7 +1825,101 @@ public class Main {
 			}
 		}
 	}
-
+	private class Team1ScoreFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("Team1Score");
+		}
+	}
+	private class Team2ScoreFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("Team2Score");
+		}
+	}
+	private class Team1WinGameFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("Team1WinGame");
+		}
+	}
+	private class Team2WinGameFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("Team2WinGame");
+		}
+	}
+	private class Team1WinMatchFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("Team1WinMatch");
+		}
+	}
+	private class Team2WinMatchFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("Team2WinMatch");
+		}
+	}
+	private class Team1TimeOutFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("Team1TimeOut");
+		}
+	}
+	private class Team2TimeOutFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("Team2TimeOut");
+		}
+	}
+	private class Team1ResetFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("Team1Reset");
+		}
+	}
+	private class Team2ResetFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("Team2Reset");
+		}
+	}
+	private class Team1WarnFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("Team1Warn");
+		}
+	}
+	private class Team2WarnFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("Team2Warn");
+		}
+	}
+	private class Team1SwitchPositionsFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("Team1SwitchPositions");
+		}
+	}
+	private class Team2SwitchPositionsFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("Team2SwitchPositions");
+		}
+	}
+	private class Team1SkunkFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("Team1Skunk");
+		}
+	}
+	private class Team2SkunkFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("Team2Skunk");
+		}
+	}
+	private class StartMatchFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("StartMatch");
+		}
+	}
+	private class StartGameFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("StartGame");
+		}
+	}
+	private class SwitchSidesFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("SwitchSides");
+		}
+	}
 //	private void testProcessCodes() {
 //		String codes[] = {"XPSE", "XPSM", "Y5D", "Y3P", "BGS", "B5D", "B3P", "YGS" };
 //		autoProcessCodes(codes);
