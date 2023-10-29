@@ -24,9 +24,9 @@ import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
 public class Tournament {
 	
-	private String tournamentName;
-	private String eventName;
-	private String tableName;
+	private String tournamentName = "";
+	private String eventName = "";
+	private String tableName = "";
 	private String side1Color;
 	private String side2Color;
 	private OBSInterface obsInterface;
@@ -36,7 +36,6 @@ public class Tournament {
 		this.obsInterface = obsInterface;
 		this.settings = settings;
 	}
-	
 	public String getTournamentName() {
 		return tournamentName;
 	}
@@ -61,19 +60,15 @@ public class Tournament {
 	public String getSide1Color() {
 		return side1Color;
 	}
-
 	public void setSide1Color(String side1Color) {
 		this.side1Color = side1Color;
 	}
-
 	public String getSide2Color() {
 		return side2Color;
 	}
-
 	public void setSide2Color(String side2Color) {
 		this.side2Color = side2Color;
 	}
-
 	public void clearAll() {
 		tournamentName = "";
 		eventName = "";
@@ -97,5 +92,4 @@ public class Tournament {
 	private void writeData(String source, String data) {
 		obsInterface.writeData(source, data, "Tournament", settings.getShowParsed());
 	}
-
   }

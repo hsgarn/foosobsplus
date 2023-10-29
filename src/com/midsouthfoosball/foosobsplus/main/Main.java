@@ -682,6 +682,7 @@ public class Main {
 
 		////// Set up independent Windows \\\\\\
 		
+		mainFrame.windowActivated(null);
 		gameTableWindowPanel	= new GameTableWindowPanel(settings);
 		gameTableWindowFrame	= new GameTableWindowFrame(gameTableWindowPanel, mainFrame);
 		timerWindowFrame 		= new TimerWindowFrame(mainFrame);

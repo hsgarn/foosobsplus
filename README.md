@@ -1109,6 +1109,9 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xptca - push tournament clear all button
 
 ## Revision History</br>
+v2.010 10/29/2023</br>
+Initialize Tournament, Event and set cursor in Code input on start up.</br>
+</br>
 v2.009 09/19/2023</br>
 Add test buttons to Filter settings screen.</br>
 </br>
