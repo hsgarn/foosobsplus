@@ -1,5 +1,5 @@
 /**
-Copyright 2020-2023 Hugh Garner
+Copyright 2020-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -127,11 +127,11 @@ public class MatchController {
 		statsDisplayPanel.updateTeams(2,teamController.getForwardName(2) + "/" + teamController.getGoalieName(2),teamController.getTeamName(2));
 		matchPanel.setGameWinners(match.getGameWinners());
 		matchPanel.setMatchWinner(match.getMatchWinner());
-		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(), match.getCurrentGameNumber());
-		gameTableWindowPanel.setTeams(teamController.getForwardName(1) + " / " + teamController.getGoalieName(1) + ":",teamController.getForwardName(2) + " / " + teamController.getGoalieName(2) + ":");
+		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getScoresTeam3(), match.getTimes(), match.getCurrentGameNumber());
+		gameTableWindowPanel.setTeams(teamController.getForwardName(1) + " / " + teamController.getGoalieName(1) + ":",teamController.getForwardName(2) + " / " + teamController.getGoalieName(2) + ":",teamController.getForwardName(3) + " / " + teamController.getGoalieName(3) + ":");
 		gameTableWindowPanel.setGameWinners(match.getGameWinners());
 		gameTableWindowPanel.setMatchWinner(match.getMatchWinner());
-		gameTableWindowPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getTimes(),match.getCurrentGameNumber());
+		gameTableWindowPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getScoresTeam3(), match.getTimes(),match.getCurrentGameNumber());
 	}
 	public void switchSides() {
 		match.switchSides();

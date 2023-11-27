@@ -1,5 +1,5 @@
 /**
-Copyright 2022-2023 Hugh Garner
+Copyright 2022-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -191,18 +191,10 @@ public class AutoScoreSettingsPanel extends JPanel {
 	}
 	
 	public void saveSettings() {
-		settings.setAutoScoreSettingsServerAddress(txtServerAddress.getText());
-		settings.setAutoScoreSettingsServerPort(txtServerPort.getText());
-		if (chckbxAutoConnect.isSelected()) {
-			settings.setAutoScoreSettingsAutoConnect(1);
-		} else {
-			settings.setAutoScoreSettingsAutoConnect(0);
-		}
-		if (chckbxDetailLog.isSelected()) {
-			settings.setAutoScoreSettingsDetailLog(1);
-		} else {
-			settings.setAutoScoreSettingsDetailLog(0);
-		}
+		settings.setAutoScore("AutoScoreSettingsServerAddress",txtServerAddress.getText());
+		settings.setAutoScore("AutoScoreSettingsServerPort",txtServerPort.getText());
+		settings.setAutoScore("AutoScoreSettingsAutoConnect",chckbxAutoConnect.isSelected() ? 1 : 0);
+		settings.setAutoScore("AutoScoreSettingsDetailLog",chckbxDetailLog.isSelected() ? 1 : 0);
 		try {
 			settings.saveAutoScoreSettingsConfig();
 		} catch (IOException ex) {

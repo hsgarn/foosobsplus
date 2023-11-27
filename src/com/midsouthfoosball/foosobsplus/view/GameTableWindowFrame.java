@@ -1,5 +1,5 @@
 /**
-Copyright 2020-2023 Hugh Garner
+Copyright 2020-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -30,6 +30,8 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.midsouthfoosball.foosobsplus.model.Settings;
+
 @SuppressWarnings("serial")
 public class GameTableWindowFrame extends JFrame {
 	
@@ -39,7 +41,7 @@ public class GameTableWindowFrame extends JFrame {
 		logger = LoggerFactory.getLogger(this.getClass());
 	}
 	
-	public GameTableWindowFrame(GameTableWindowPanel gameTableWindowPanel, MainFrame mainFrame) {
+	public GameTableWindowFrame(Settings settings, GameTableWindowPanel gameTableWindowPanel, MainFrame mainFrame) {
 		super(programName + " " + Messages.getString("GameTableWindowFrame.GameTableWindow")); //$NON-NLS-1$ //$NON-NLS-2$
 		try {
 		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -56,7 +58,11 @@ public class GameTableWindowFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 //		setAlwaysOnTop(true);
 		
-		gameTableWindowPanel.setPreferredSize(new Dimension(440, 80));
+		if (settings.getCutThroatMode()==1) {
+			gameTableWindowPanel.setPreferredSize(new Dimension(440, 100));
+		} else {
+			gameTableWindowPanel.setPreferredSize(new Dimension(440, 100));
+		}
 
 		getContentPane().add(gameTableWindowPanel);
 		setLocation(513,0);

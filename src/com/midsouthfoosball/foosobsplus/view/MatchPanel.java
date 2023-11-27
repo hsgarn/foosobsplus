@@ -1,5 +1,5 @@
 /**
-Copyright 2020-2023 Hugh Garner
+Copyright 2020-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -67,7 +67,7 @@ public class MatchPanel extends JPanel {
 	public MatchPanel(Settings settings) {
 
 		this.settings = settings;
-		this.maxGameCount = settings.getGamesToWin()*2-1; 
+		this.maxGameCount = settings.getMaxGameNumber(); 
 		
 		Dimension dim = getPreferredSize();
 		dim.width = 550;
@@ -85,7 +85,7 @@ public class MatchPanel extends JPanel {
 		lblStartTime = new JLabel("00:00:00"); //$NON-NLS-1$
 		lblElapsedTime = new JLabel("00:00:00"); //$NON-NLS-1$
 		lblGameTime = new JLabel("00:00:00"); //$NON-NLS-1$
-		gameTable = new JTable(new GameTableModel(maxGameCount));
+		gameTable = new JTable(new GameTableModel(maxGameCount,settings.getCutThroatMode()));
 		gameTable.setDefaultRenderer(Object.class, new GameTableCellRenderer());
 		
 		setMnemonics();
@@ -109,9 +109,9 @@ public class MatchPanel extends JPanel {
 		setTitle();
 	}
 	public void resizeGameTable() {
-		GameTableModel tableModel = new GameTableModel(settings.getGamesToWin()*2-1);
+		maxGameCount = settings.getMaxGameNumber();
+		GameTableModel tableModel = new GameTableModel(maxGameCount,settings.getCutThroatMode());
 		gameTable.setModel(tableModel);
-		maxGameCount = settings.getGamesToWin()*2-1;
 		return;
 	}
 	public void layoutComponents() {
@@ -161,7 +161,7 @@ public class MatchPanel extends JPanel {
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(lblStartTime, gc);
 
-		////////  Elapsed Time ////////
+		////////  Pause Match ////////
 		gc.gridy++;
 		
 		gc.weightx = 1;
@@ -232,7 +232,7 @@ public class MatchPanel extends JPanel {
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(lblGameTime, gc);
 		
-		////// Game Tournament \\\\\\
+		////// Game Table \\\\\\
 		gc.gridy++;
 		
 		gc.weightx = 1;
@@ -275,9 +275,10 @@ public class MatchPanel extends JPanel {
 	}
 	public void setTime(String time) {
 		int gameNumber = currentGameNumber;
-		int maxGameNumber = settings.getGamesToWin()*2-1;
+		int maxGameNumber = settings.getMaxGameNumber();
+		int row = settings.getCutThroatMode() + 3;
 		if (gameNumber > maxGameNumber) gameNumber = maxGameNumber;
-		gameTable.setValueAt(time, 3, gameNumber);
+		gameTable.setValueAt(time, row, gameNumber);
 		gameTable.repaint();
 	}
 	
@@ -317,12 +318,21 @@ public class MatchPanel extends JPanel {
 	public void setMatchWinner(int matchWinner) {
 		this.matchWinner = matchWinner;
 	}
-	public void updateGameTable(String[] scoresTeam1, String[] scoresTeam2, String[] times, int currentGameNumber) {
+	public void updateGameTable(String[] scoresTeam1, String[] scoresTeam2, String[] scoresTeam3, String[] times, int currentGameNumber) {
 		this.currentGameNumber = currentGameNumber;
-		for (int i = 1; i <= maxGameCount; ++i) {
-			gameTable.setValueAt(scoresTeam1[i-1], 1, i);
-			gameTable.setValueAt(scoresTeam2[i-1], 2, i);
-			gameTable.setValueAt(times[i-1], 3, i);
+		if (settings.getCutThroatMode()==1) {
+			for (int i = 1; i <= maxGameCount; ++i) {
+				gameTable.setValueAt(scoresTeam1[i-1], 1, i);
+				gameTable.setValueAt(scoresTeam2[i-1], 2, i);
+				gameTable.setValueAt(scoresTeam3[i-1], 3, i);
+				gameTable.setValueAt(times[i-1], 4, i);
+			}
+		} else {
+			for (int i = 1; i <= maxGameCount; ++i) {
+				gameTable.setValueAt(scoresTeam1[i-1], 1, i);
+				gameTable.setValueAt(scoresTeam2[i-1], 2, i);
+				gameTable.setValueAt(times[i-1], 3, i);
+			}
 		}
 		gameTable.repaint();
 	}
@@ -356,15 +366,21 @@ public class MatchPanel extends JPanel {
 				  setBackground(Color.GREEN);
 			  }
 		  }
+		  ////// Highlight team3 name cell if they won the match \\\\\\
+		  if (row == 3 && column == 0 && settings.getCutThroatMode()==1) {
+			  if (matchWinner == 3) {
+				  setBackground(Color.GREEN);
+			  }
+		  }
 		  ////// Set score cells to center alignment and highlight winning scores \\\\\\
-		  if ((row==1 || row==2) && column>= 1 ) {
+          if ((row==1 || row==2 || (row==3 && settings.getCutThroatMode()==1)) && column>= 1 ) {
         	  if ( gameWinners[column-1] == row) {
         		  setBackground(Color.CYAN);
         	  }
         	  setHorizontalAlignment(SwingConstants.CENTER);
           }
           ////// Center time cells \\\\\\
-          if (row==3 && column>=1) setHorizontalAlignment(SwingConstants.CENTER);
+          if (((row==3 && settings.getCutThroatMode()==0) || (row==4 && settings.getCutThroatMode()==1)) && column>=1) setHorizontalAlignment(SwingConstants.CENTER);
           setText(tmp);
           return this;
 	  }

@@ -1,5 +1,5 @@
 /**
-Copyright 2020-2023 Hugh Garner
+Copyright 2020-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -26,25 +26,39 @@ import javax.swing.table.AbstractTableModel;
 public class GameTableModel extends AbstractTableModel {
 	static int defaultMaxGameCount = 5;
 	static int maxGamesToShow = 12;
+	static int defaultCutthroatMode = 0;
 	private String[] columnNames;
 	private Object[][] data;
 	public GameTableModel() {
-		this(defaultMaxGameCount);
+		this(defaultMaxGameCount,defaultCutthroatMode);
 	}
-	public GameTableModel(int maxGameCount) {
+	public GameTableModel(int maxGameCount, int cutthroatMode) {
 		this.columnNames = new String[maxGameCount+1];
-		this.data = new Object[4][maxGameCount+1];
+		this.data = new Object[5][maxGameCount+1];
 		this.columnNames[0] = "Game:";
 		this.data[0][0] = (Object) "Game:";
 		this.data[1][0] = (Object) "Team 1:";
 		this.data[2][0] = (Object) "Team 2:";
-		this.data[3][0] = (Object) "Time:";
-		for(int i=1;i <= maxGameCount;i++) {
-			this.columnNames[i] = Integer.toString(i);
-			this.data[0][i] = (Object) Integer.toString(i);
-			this.data[1][i] = (Object) "0";
-			this.data[2][i] = (Object) "0";
-			this.data[3][i] = (Object) "00:00:00";
+		if (cutthroatMode==0) {
+			this.data[3][0] = (Object) "Time:";
+			for(int i=1;i <= maxGameCount;i++) {
+				this.columnNames[i] = Integer.toString(i);
+				this.data[0][i] = (Object) Integer.toString(i);
+				this.data[1][i] = (Object) "0";
+				this.data[2][i] = (Object) "0";
+				this.data[3][i] = (Object) "00:00:00";
+			}
+		} else {
+			this.data[3][0] = (Object) "Team 3:";
+			this.data[4][0] = (Object) "Time:";
+			for(int i=1;i <= maxGameCount;i++) {
+				this.columnNames[i] = Integer.toString(i);
+				this.data[0][i] = (Object) Integer.toString(i);
+				this.data[1][i] = (Object) "0";
+				this.data[2][i] = (Object) "0";
+				this.data[3][i] = (Object) "0";
+				this.data[4][i] = (Object) "00:00:00";
+			}
 		}
 	}
     public int getColumnCount() {

@@ -25,6 +25,7 @@ package com.midsouthfoosball.foosobsplus.model;
 public class Game {
 	private Team team1;
 	private Team team2;
+	private Team team3;
 //	private Date startTime;
 //	private Date endTime;
 //	private int elapsedTime;
@@ -39,13 +40,20 @@ public class Game {
 	private int maxGames;
 	private int finalScoreTeam1;
 	private int finalScoreTeam2;
+	private int finalScoreTeam3;
 	private String finalTime;
 	private String matchId;
 
-	
-	public Game(Team team1, Team team2, int gameNumber) {
+//	public Game(Team team1, Team team2, int gameNumber) {
+//		this.team1 = team1;
+//		this.team2 = team2;
+//		this.team3 = null;
+//		this.gameNumber = gameNumber;
+//	}
+	public Game(Team team1, Team team2, Team team3, int gameNumber) {
 		this.team1 = team1;
 		this.team2 = team2;
+		this.team3 = team3;
 		this.gameNumber = gameNumber;
 	}
 	public Team getTeam1() {
@@ -59,6 +67,12 @@ public class Game {
 	}
 	public void setTeam2(Team team2) {
 		this.team2 = team2;
+	}
+	public Team getTeam3() {
+		return team3;
+	}
+	public void setTeam3(Team team3) {
+		this.team3 = team3;
 	}
 	public int getGameNumber() {
 		return gameNumber;
@@ -84,6 +98,12 @@ public class Game {
 	public void setFinalScoreTeam2(int finalScoreTeam2) {
 		this.finalScoreTeam2 = finalScoreTeam2;
 	}
+	public int getFinalScoreTeam3() {
+		return finalScoreTeam3;
+	}
+	public void setFinalScoreTeam3(int finalScoreTeam3) {
+		this.finalScoreTeam3 = finalScoreTeam3;
+	}
 	public String getFinalTime() {
 		return finalTime;
 	}
@@ -101,6 +121,7 @@ public class Game {
 		maxGames = 0;
 		finalScoreTeam1 = 0;
 		finalScoreTeam2 = 0;
+		finalScoreTeam3 = 0;
 		finalTime = "";
 	}
 

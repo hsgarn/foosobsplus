@@ -1,5 +1,5 @@
 /**
-Copyright 2020-2023 Hugh Garner
+Copyright 2020-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -43,11 +43,13 @@ public class TimerController {
 	private LastScoredClock lastScored1Clock;
 	private LastScoredWindowFrame lastScored2WindowFrame;
 	private LastScoredClock lastScored2Clock;
+	private LastScoredWindowFrame lastScored3WindowFrame;
+	private LastScoredClock lastScored3Clock;
 	private int displayWidth = 9;
 	private int prefixWidth;
 	private int suffixWidth = 3;
 	
-	public TimerController(OBSInterface obsInterface, Settings settings, TimerPanel timerPanel, TimerWindowFrame timerWindowFrame, TimeClock timeClock, LastScoredWindowFrame lastScored1WindowFrame, LastScoredClock lastScored1Clock, LastScoredWindowFrame lastScored2WindowFrame, LastScoredClock lastScored2Clock) {
+	public TimerController(OBSInterface obsInterface, Settings settings, TimerPanel timerPanel, TimerWindowFrame timerWindowFrame, TimeClock timeClock, LastScoredWindowFrame lastScored1WindowFrame, LastScoredClock lastScored1Clock, LastScoredWindowFrame lastScored2WindowFrame, LastScoredClock lastScored2Clock, LastScoredWindowFrame lastScored3WindowFrame, LastScoredClock lastScored3Clock) {
 		this.obsInterface = obsInterface;
 		this.settings = settings;
 		this.timerPanel = timerPanel;
@@ -57,12 +59,15 @@ public class TimerController {
 		this.lastScored1Clock = lastScored1Clock;
 		this.lastScored2WindowFrame = lastScored2WindowFrame;
 		this.lastScored2Clock = lastScored2Clock;
+		this.lastScored3WindowFrame = lastScored3WindowFrame;
+		this.lastScored3Clock = lastScored3Clock;
 		
 		////// Timer Listener Methods //////
 	
 		this.timeClock.addTimeClockTimerListener(timeClockListener);
 		this.lastScored1Clock.addLastScoredClockTimerListener(lastScored1ClockListener);
 		this.lastScored2Clock.addLastScoredClockTimerListener(lastScored2ClockListener);
+		this.lastScored3Clock.addLastScoredClockTimerListener(lastScored3ClockListener);
 	}
 	
 	ActionListener timeClockListener = new ActionListener() {
@@ -78,6 +83,11 @@ public class TimerController {
 	ActionListener lastScored2ClockListener = new ActionListener() {
 		public void actionPerformed(ActionEvent event) {
 			updateLastScored2Display();
+		}
+	};
+	ActionListener lastScored3ClockListener = new ActionListener() {
+		public void actionPerformed(ActionEvent event) {
+			updateLastScored3Display();
 		}
 	};
 	
@@ -176,6 +186,9 @@ public class TimerController {
 	}
 	private void updateLastScored2Display() {
 		lastScored2WindowFrame.setTimerDisplay(lastScored2Clock.getLastScoredTime());
+	}
+	private void updateLastScored3Display() {
+		lastScored3WindowFrame.setTimerDisplay(lastScored3Clock.getLastScoredTime());
 	}
 	private void writeTimeRemaining() {
 		obsInterface.writeData(settings.getTimeRemainingSource(), timerPanel.getTimerDisplayText(),"TimerController",settings.getShowParsed());

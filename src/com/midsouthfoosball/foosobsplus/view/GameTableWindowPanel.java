@@ -1,5 +1,5 @@
 /**
-Copyright 2020-2023 Hugh Garner
+Copyright 2020-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -49,10 +49,14 @@ public class GameTableWindowPanel extends JPanel {
 	 */
 	public GameTableWindowPanel(Settings settings) {
 		this.settings = settings;
-		this.maxGameCount = settings.getGamesToWin()*2-1;
-		setLayout(new MigLayout("", "[430.00]", "[80.00]"));
+		this.maxGameCount = settings.getMaxGameNumber();
+		if (settings.getCutThroatMode()==1) {
+			setLayout(new MigLayout("", "[430.00]", "[100.00]"));
+		} else {
+			setLayout(new MigLayout("", "[430.00]", "[100.00]"));
+		}
 		gameWinners = new int[maxGameCount];
-		gameTable = new JTable(new GameTableModel(maxGameCount));
+		gameTable = new JTable(new GameTableModel(maxGameCount, settings.getCutThroatMode()));
 		gameTable.setDefaultRenderer(Object.class, new GameTableCellRenderer());
 		TableColumnModel gameTableColumnModel = gameTable.getColumnModel();
 		
@@ -62,9 +66,12 @@ public class GameTableWindowPanel extends JPanel {
 		}
 		add(gameTable);
 	}
-	public void setTeams(String name1, String name2) {
+	public void setTeams(String name1, String name2, String name3) {
 		gameTable.setValueAt(name1, 1, 0);
 		gameTable.setValueAt(name2, 2, 0);
+		if (settings.getCutThroatMode()==1) {
+			gameTable.setValueAt(name3, 3, 0);
+		}
 	}
 	public void setGameWinners(int[] gameWinners) {
 		this.gameWinners = gameWinners;
@@ -74,24 +81,34 @@ public class GameTableWindowPanel extends JPanel {
 	}
 	public void setTime(String time) {
 		int gameNumber = currentGameNumber;
-		int maxGameNumber = settings.getGamesToWin()*2-1;
+		int maxGameNumber = settings.getMaxGameNumber();
 		if (gameNumber > maxGameNumber) gameNumber = maxGameNumber;
-		gameTable.setValueAt(time, 3, gameNumber);
+		int row = settings.getCutThroatMode() + 3;
+		gameTable.setValueAt(time, row, gameNumber);
 		gameTable.repaint();
 	}
-	public void updateGameTable(String[] scoresTeam1, String[] scoresTeam2, String[] times, int currentGameNumber) {
+	public void updateGameTable(String[] scoresTeam1, String[] scoresTeam2, String[] scoresTeam3, String[] times, int currentGameNumber) {
 		this.currentGameNumber = currentGameNumber;
-		for (int i = 1; i <= maxGameCount; ++i) {
-			gameTable.setValueAt(scoresTeam1[i-1], 1, i);
-			gameTable.setValueAt(scoresTeam2[i-1], 2, i);
-			gameTable.setValueAt(times[i-1], 3, i);
+		if (settings.getCutThroatMode()==1) {
+			for (int i = 1; i <= maxGameCount; ++i) {
+				gameTable.setValueAt(scoresTeam1[i-1], 1, i);
+				gameTable.setValueAt(scoresTeam2[i-1], 2, i);
+				gameTable.setValueAt(scoresTeam3[i-1], 3, i);
+				gameTable.setValueAt(times[i-1], 4, i);
+			}
+		} else {
+			for (int i = 1; i <= maxGameCount; ++i) {
+				gameTable.setValueAt(scoresTeam1[i-1], 1, i);
+				gameTable.setValueAt(scoresTeam2[i-1], 2, i);
+				gameTable.setValueAt(times[i-1], 3, i);
+			}
 		}
 		gameTable.repaint();
 	}
 	public void resizeGameTable() {
-		GameTableModel tableModel = new GameTableModel(settings.getGamesToWin()*2-1);
+		GameTableModel tableModel = new GameTableModel(settings.getMaxGameNumber(),settings.getCutThroatMode());
 		gameTable.setModel(tableModel);
-		maxGameCount = settings.getGamesToWin()*2-1;
+		maxGameCount = settings.getMaxGameNumber();
 	}
 	public class GameTableCellRenderer extends DefaultTableCellRenderer 
     {
@@ -123,15 +140,21 @@ public class GameTableWindowPanel extends JPanel {
 				  setBackground(Color.GREEN);
 			  }
 		  }
+		  ////// Highlight team3 name cell if they won the match \\\\\\
+		  if (row == 3 && column == 0 && settings.getCutThroatMode()==1) {
+			  if (matchWinner == 3) {
+				  setBackground(Color.GREEN);
+			  }
+		  }
 		  ////// Set score cells to center alignment and highlight winning scores \\\\\\
-          if ((row==1 || row==2) && column>= 1 ) {
+          if ((row==1 || row==2 || (row==3 && settings.getCutThroatMode()==1)) && column>= 1 ) {
         	  if ( gameWinners[column-1] == row) {
         		  setBackground(Color.CYAN);
         	  }
         	  setHorizontalAlignment(SwingConstants.CENTER);
           }
           ////// Center time cells \\\\\\
-          if (row==3 && column>=1) setHorizontalAlignment(SwingConstants.CENTER);
+          if (((row==3 && settings.getCutThroatMode()==0) || (row==4 && settings.getCutThroatMode()==1)) && column>=1) setHorizontalAlignment(SwingConstants.CENTER);
           setText(tmp);
           return this;
 	  }

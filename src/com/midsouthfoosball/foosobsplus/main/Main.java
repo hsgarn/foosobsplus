@@ -1,5 +1,5 @@
 /**
-Copyright 2020-2023 Hugh Garner
+Copyright 2020-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -74,12 +74,16 @@ import com.midsouthfoosball.foosobsplus.commands.Command;
 import com.midsouthfoosball.foosobsplus.commands.CommandSwitch;
 import com.midsouthfoosball.foosobsplus.commands.DGT1Command;
 import com.midsouthfoosball.foosobsplus.commands.DGT2Command;
+import com.midsouthfoosball.foosobsplus.commands.DGT3Command;
 import com.midsouthfoosball.foosobsplus.commands.DST1Command;
 import com.midsouthfoosball.foosobsplus.commands.DST2Command;
+import com.midsouthfoosball.foosobsplus.commands.DST3Command;
 import com.midsouthfoosball.foosobsplus.commands.IGT1Command;
 import com.midsouthfoosball.foosobsplus.commands.IGT2Command;
+import com.midsouthfoosball.foosobsplus.commands.IGT3Command;
 import com.midsouthfoosball.foosobsplus.commands.IST1Command;
 import com.midsouthfoosball.foosobsplus.commands.IST2Command;
+import com.midsouthfoosball.foosobsplus.commands.IST3Command;
 import com.midsouthfoosball.foosobsplus.commands.Memento;
 import com.midsouthfoosball.foosobsplus.commands.PCACommand;
 import com.midsouthfoosball.foosobsplus.commands.PEMCommand;
@@ -91,6 +95,7 @@ import com.midsouthfoosball.foosobsplus.commands.PRRCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRSCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRT1Command;
 import com.midsouthfoosball.foosobsplus.commands.PRT2Command;
+import com.midsouthfoosball.foosobsplus.commands.PRT3Command;
 import com.midsouthfoosball.foosobsplus.commands.PRTCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRTOCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSECommand;
@@ -105,8 +110,10 @@ import com.midsouthfoosball.foosobsplus.commands.PSTOCommand;
 import com.midsouthfoosball.foosobsplus.commands.PTCACommand;
 import com.midsouthfoosball.foosobsplus.commands.PWT1Command;
 import com.midsouthfoosball.foosobsplus.commands.PWT2Command;
+import com.midsouthfoosball.foosobsplus.commands.PWT3Command;
 import com.midsouthfoosball.foosobsplus.commands.RTT1Command;
 import com.midsouthfoosball.foosobsplus.commands.RTT2Command;
+import com.midsouthfoosball.foosobsplus.commands.RTT3Command;
 import com.midsouthfoosball.foosobsplus.commands.SGTCommand;
 import com.midsouthfoosball.foosobsplus.commands.SPTCommand;
 import com.midsouthfoosball.foosobsplus.commands.SRTCommand;
@@ -114,10 +121,12 @@ import com.midsouthfoosball.foosobsplus.commands.SSTCommand;
 import com.midsouthfoosball.foosobsplus.commands.STTCommand;
 import com.midsouthfoosball.foosobsplus.commands.UTT1Command;
 import com.midsouthfoosball.foosobsplus.commands.UTT2Command;
+import com.midsouthfoosball.foosobsplus.commands.UTT3Command;
 import com.midsouthfoosball.foosobsplus.commands.XP1Command;
 import com.midsouthfoosball.foosobsplus.commands.XP2Command;
 import com.midsouthfoosball.foosobsplus.commands.XPT1Command;
 import com.midsouthfoosball.foosobsplus.commands.XPT2Command;
+import com.midsouthfoosball.foosobsplus.commands.XPT3Command;
 import com.midsouthfoosball.foosobsplus.controller.MainController;
 import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
@@ -212,6 +221,7 @@ public class Main {
 	private Stack<Command> commandStack 			= new Stack<>();
 	private Stack<Memento> mementoStackTeam1 		= new Stack<>();
 	private Stack<Memento> mementoStackTeam2		= new Stack<>();
+	private Stack<Memento> mementoStackTeam3        = new Stack<>();
 	private Stack<Memento> mementoStackStats 		= new Stack<>();
 	private Stack<Memento> mementoStackMatch		= new Stack<>();
 	private Stack<Memento> mementoStackGameClock	= new Stack<>();
@@ -223,12 +233,13 @@ public class Main {
 	private Tournament			tournament			= new Tournament(obsInterface, settings);
 	private Team 				team1 				= new Team(obsInterface, settings, 1, settings.getSide1Color());
 	private Team 				team2 				= new Team(obsInterface, settings, 2, settings.getSide2Color());
-	private Match 				match				= new Match(obsInterface, settings, team1, team2);
-	private Game				games[]	 			= new Game[] {	new Game(team1, team2, 1), 
-																	new Game(team1, team2, 2), 
-																	new Game(team1, team2, 3), 
-																	new Game(team1, team2, 4), 
-																	new Game(team1, team2, 5)
+	private Team                team3               = new Team(obsInterface, settings, 3, "None");
+	private Match 				match				= new Match(obsInterface, settings, team1, team2, team3);
+	private Game				games[]	 			= new Game[] {	new Game(team1, team2, team3, 1), 
+																	new Game(team1, team2, team3, 2), 
+																	new Game(team1, team2, team3, 3), 
+																	new Game(team1, team2, team3, 4), 
+																	new Game(team1, team2, team3, 5)
 																};
 
 	private Stats 				stats 				= new Stats(settings, team1, team2);
@@ -239,6 +250,7 @@ public class Main {
 	private GameClock           gameClock           = new GameClock(obsInterface, settings);
 	private LastScoredClock  	lastScored1Clock    = new LastScoredClock();
 	private LastScoredClock		lastScored2Clock    = new LastScoredClock();
+	private LastScoredClock    	lastScored3Clock	= new LastScoredClock();
 	////// Create the View Panels to Display (mVc) \\\\\\
 	
 	private TournamentPanel 			tournamentPanel 			= new TournamentPanel(settings);
@@ -248,6 +260,7 @@ public class Main {
 	private MatchPanel			matchPanel			= new MatchPanel(settings);
 	private TeamPanel 			teamPanel1 			= new TeamPanel(1, settings.getSide1Color(), settings);
 	private TeamPanel 			teamPanel2 			= new TeamPanel(2, settings.getSide2Color(), settings);
+	private TeamPanel			teamPanel3			= new TeamPanel(3, "None", settings);
 	private StatsEntryPanel 	statsEntryPanel 	= new StatsEntryPanel(settings);
 	private SwitchPanel 		switchPanel 		= new SwitchPanel(settings);
 	private ResetPanel 			resetPanel 			= new ResetPanel(settings);
@@ -277,11 +290,12 @@ public class Main {
 
 	////// Set up independent Windows \\\\\\
 	
-	private GameTableWindowPanel	gameTableWindowPanel;
-	private GameTableWindowFrame	gameTableWindowFrame;
-	private TimerWindowFrame 		timerWindowFrame;
-	private LastScoredWindowFrame 	lastScored1WindowFrame;
-	private LastScoredWindowFrame 	lastScored2WindowFrame;
+	private GameTableWindowPanel		gameTableWindowPanel;
+	private GameTableWindowFrame		gameTableWindowFrame;
+	private TimerWindowFrame 			timerWindowFrame;
+	private LastScoredWindowFrame 		lastScored1WindowFrame;
+	private LastScoredWindowFrame 		lastScored2WindowFrame;
+	private LastScoredWindowFrame   	lastScored3WindowFrame;
 
 	////// Build and Start the Controllers (mvC) \\\\\\
 	
@@ -676,27 +690,28 @@ public class Main {
 		setSourceFilterVisibility(obs.getScene(), settings.getFiltersFilter(filter), true);
 	}
 	public void loadWindowsAndControllers() {
-		mainFrame = new MainFrame(settings, tournamentPanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, statsEntryPanel, 
+		mainFrame = new MainFrame(settings, tournamentPanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, teamPanel3, statsEntryPanel, 
 				switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, sourcesFrame, filtersFrame, 
 				statSettingsFrame, partnerProgramFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, this);
 
 		////// Set up independent Windows \\\\\\
 		
 		mainFrame.windowActivated(null);
-		gameTableWindowPanel	= new GameTableWindowPanel(settings);
-		gameTableWindowFrame	= new GameTableWindowFrame(gameTableWindowPanel, mainFrame);
-		timerWindowFrame 		= new TimerWindowFrame(mainFrame);
-		lastScored1WindowFrame 	= new LastScoredWindowFrame(mainFrame, 1);
-		lastScored2WindowFrame 	= new LastScoredWindowFrame(mainFrame, 2);
+		gameTableWindowPanel		= new GameTableWindowPanel(settings);
+		gameTableWindowFrame		= new GameTableWindowFrame(settings, gameTableWindowPanel, mainFrame);
+		timerWindowFrame 			= new TimerWindowFrame(mainFrame);
+		lastScored1WindowFrame 		= new LastScoredWindowFrame(mainFrame, 1);
+		lastScored2WindowFrame 		= new LastScoredWindowFrame(mainFrame, 2);
+		lastScored3WindowFrame  	= new LastScoredWindowFrame(mainFrame, 3);
 
 		////// Build and Start the Controllers (mvC) \\\\\\
 		
-		mainController 	= new MainController(mainFrame, timerWindowFrame, lastScored1WindowFrame, lastScored2WindowFrame, gameTableWindowFrame);
-		timerController = new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock);
-		teamController 	= new TeamController(obsInterface, settings, team1, team2, match, teamPanel1, teamPanel2, switchPanel, matchPanel, gameTableWindowPanel, statsDisplayPanel, timerController, lastScored1Clock, lastScored2Clock, gameClock, mainController);
-		tournamentController = new TournamentController(obsInterface, settings, tournament, match, tournamentPanel);
-		matchController = new MatchController(settings, match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, switchPanel, gameTableWindowPanel, teamController, streamIndexer);
-		statsController = new StatsController(stats, statsDisplayPanel, teamController);
+		mainController 			= new MainController(mainFrame, timerWindowFrame, lastScored1WindowFrame, lastScored2WindowFrame, lastScored3WindowFrame, gameTableWindowFrame);
+		timerController 		= new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock, lastScored3WindowFrame, lastScored3Clock);
+		teamController 			= new TeamController(obsInterface, settings, team1, team2, team3, match, teamPanel1, teamPanel2, teamPanel3, switchPanel, matchPanel, gameTableWindowPanel, statsDisplayPanel, timerController, lastScored1Clock, lastScored2Clock, lastScored3Clock, gameClock, mainController);
+		tournamentController 	= new TournamentController(obsInterface, settings, tournament, match, tournamentPanel);
+		matchController 		= new MatchController(settings, match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, switchPanel, gameTableWindowPanel, teamController, streamIndexer);
+		statsController 		= new StatsController(stats, statsDisplayPanel, teamController);
 		gameClock.addGameClockTimerListener(new GameClockTimerListener());
 
 	}
@@ -736,22 +751,31 @@ public class Main {
 		statsEntryPanel.addStatsClearListener(new StatsClearListener());
 		teamPanel1.addScoreIncreaseListener(new ScoreIncreaseListener());
 		teamPanel2.addScoreIncreaseListener(new ScoreIncreaseListener());
+		teamPanel3.addScoreIncreaseListener(new ScoreIncreaseListener());
 		teamPanel1.addScoreDecreaseListener(new ScoreDecreaseListener());
 		teamPanel2.addScoreDecreaseListener(new ScoreDecreaseListener());
+		teamPanel3.addScoreDecreaseListener(new ScoreDecreaseListener());
 		teamPanel1.addGameCountIncreaseListener(new GameCountIncreaseListener());
 		teamPanel2.addGameCountIncreaseListener(new GameCountIncreaseListener());
+		teamPanel3.addGameCountIncreaseListener(new GameCountIncreaseListener());
 		teamPanel1.addGameCountDecreaseListener(new GameCountDecreaseListener());
 		teamPanel2.addGameCountDecreaseListener(new GameCountDecreaseListener());
+		teamPanel3.addGameCountDecreaseListener(new GameCountDecreaseListener());
 		teamPanel1.addTimeOutCountIncreaseListener(new TimeOutCountIncreaseListener());
 		teamPanel2.addTimeOutCountIncreaseListener(new TimeOutCountIncreaseListener());
+		teamPanel3.addTimeOutCountIncreaseListener(new TimeOutCountIncreaseListener());
 		teamPanel1.addTimeOutCountDecreaseListener(new TimeOutCountDecreaseListener());
 		teamPanel2.addTimeOutCountDecreaseListener(new TimeOutCountDecreaseListener());
+		teamPanel3.addTimeOutCountDecreaseListener(new TimeOutCountDecreaseListener());
 		teamPanel1.addResetListener(new ResetListener());
 		teamPanel2.addResetListener(new ResetListener());
+		teamPanel3.addResetListener(new ResetListener());
 		teamPanel1.addWarnListener(new WarnListener());
 		teamPanel2.addWarnListener(new WarnListener());
+		teamPanel3.addWarnListener(new WarnListener());
 		teamPanel1.addSwitchPositionsListener(new SwitchPositionsListener());
 		teamPanel2.addSwitchPositionsListener(new SwitchPositionsListener());
+		teamPanel3.addSwitchPositionsListener(new SwitchPositionsListener());
 		switchPanel.addSwitchSidesListener(new SwitchSidesListener());
 		timerPanel.addShotTimerListener(new ShotTimerListener());
 		timerPanel.addPassTimerListener(new PassTimerListener());
@@ -905,6 +929,7 @@ public class Main {
 		deleteElementsAfterPointer(undoRedoPointer);
 		mementoStackTeam1.push(saveState(team1));
 		mementoStackTeam2.push(saveState(team2));
+		mementoStackTeam3.push(saveState(team3));
 		mementoStackStats.push(saveState(stats));
 		mementoStackMatch.push(saveState(match));
 		mementoStackGameClock.push(saveState(gameClock));
@@ -921,6 +946,8 @@ public class Main {
 	    team1.restoreState(mementoTeam1.getState());
 	    Memento mementoTeam2 = mementoStackTeam2.get(undoRedoPointer);
 	    team2.restoreState(mementoTeam2.getState());
+	    Memento mementoTeam3 = mementoStackTeam3.get(undoRedoPointer);
+	    team3.restoreState(mementoTeam3.getState());
 	    Memento mementoStats = mementoStackStats.get(undoRedoPointer);
 	    stats.restoreState(mementoStats.getState());
 	    Memento mementoMatch = mementoStackMatch.get(undoRedoPointer);
@@ -967,6 +994,7 @@ public class Main {
 		        codeStack.remove(i);
 		        mementoStackTeam1.remove(i);
 		        mementoStackTeam2.remove(i);
+		        mementoStackTeam3.remove(i);
 		        mementoStackStats.remove(i);
 		        mementoStackMatch.remove(i);
 		        mementoStackGameClock.remove(i);
@@ -987,23 +1015,32 @@ public class Main {
 		Command prt = new PRTCommand(statsController, teamController);
 		Command ist1 = new IST1Command(statsController, matchController);
 		Command ist2 = new IST2Command(statsController, matchController);
+		Command ist3 = new IST3Command(statsController, matchController);
 		Command dst1 = new DST1Command(statsController, matchController);
 		Command dst2 = new DST2Command(statsController, matchController);
+		Command dst3 = new DST3Command(statsController, matchController);
 		Command igt1 = new IGT1Command(statsController, teamController);
 		Command igt2 = new IGT2Command(statsController, teamController);
+		Command igt3 = new IGT3Command(statsController, teamController);
 		Command dgt1 = new DGT1Command(statsController, teamController);
 		Command dgt2 = new DGT2Command(statsController, teamController);
+		Command dgt3 = new DGT3Command(statsController, teamController);
 		Command utt1 = new UTT1Command(statsController, teamController);
 		Command utt2 = new UTT2Command(statsController, teamController);
+		Command utt3 = new UTT3Command(statsController, teamController);
 		Command rtt1 = new RTT1Command(statsController, teamController);
 		Command rtt2 = new RTT2Command(statsController, teamController);
+		Command rtt3 = new RTT3Command(statsController, teamController);
 		Command prt1 = new PRT1Command(statsController, teamController);
 		Command prt2 = new PRT2Command(statsController, teamController);
+		Command prt3 = new PRT3Command(statsController, teamController);
 		Command pwt1 = new PWT1Command(statsController, teamController);
 		Command pwt2 = new PWT2Command(statsController, teamController);
+		Command pwt3 = new PWT3Command(statsController, teamController);
 		Command pss = new PSSCommand(statsController, this);
 		Command xpt1 = new XPT1Command(statsController, teamController);
 		Command xpt2 = new XPT2Command(statsController, teamController);
+		Command xpt3 = new XPT3Command(statsController, teamController);
 		Command pst = new PSTCommand(statsController, teamController);
 		Command xp1 = new XP1Command(statsController, teamController);
 		Command xp2 = new XP2Command(statsController, teamController);
@@ -1035,23 +1072,32 @@ public class Main {
 		mySwitch.register("PRT", prt);
 		mySwitch.register("IST1", ist1);
 		mySwitch.register("IST2", ist2);
+		mySwitch.register("IST3", ist3);
 		mySwitch.register("DST1", dst1);
 		mySwitch.register("DST2", dst2);
+		mySwitch.register("DST3", dst3);
 		mySwitch.register("IGT1", igt1);
 		mySwitch.register("IGT2", igt2);
+		mySwitch.register("IGT3", igt3);
 		mySwitch.register("DGT1", dgt1);
 		mySwitch.register("DGT2", dgt2);
+		mySwitch.register("DGT3", dgt3);
 		mySwitch.register("UTT1", utt1);
 		mySwitch.register("UTT2", utt2);
+		mySwitch.register("UTT3", utt3);
 		mySwitch.register("RTT1", rtt1);
 		mySwitch.register("RTT2", rtt2);
+		mySwitch.register("RTT3", rtt3);
 		mySwitch.register("PRT1", prt1);
 		mySwitch.register("PRT2", prt2);
+		mySwitch.register("PRT3", prt3);
 		mySwitch.register("PWT1", pwt1);
 		mySwitch.register("PWT2", pwt2);
+		mySwitch.register("PWT3", pwt3);
 		mySwitch.register("PSS", pss);
 		mySwitch.register("XPT1", xpt1);
 		mySwitch.register("XPT2", xpt2);
+		mySwitch.register("XPT3", xpt3);
 		mySwitch.register("PST", pst);
 		mySwitch.register("XP1", xp1);
 		mySwitch.register("XP2", xp2);
@@ -1269,6 +1315,9 @@ public class Main {
 			}
 		}
 	}
+	private static String ripTeamNumber(String name) {
+		return name.replaceAll("[^0-9]", "");
+	}
 
 	////// Listeners \\\\\\
 	private class CodeListener implements ActionListener {
@@ -1477,15 +1526,18 @@ public class Main {
 	private class ParametersSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			int oldGamesToWin = settings.getGamesToWin();
+			int oldCutthroatMode = settings.getCutThroatMode();
 			parametersPanel.saveSettings(settings);
 			int newGamesToWin = settings.getGamesToWin();
-			if (oldGamesToWin != newGamesToWin) {
+			int newCutthroatMode = settings.getCutThroatMode();
+			if (oldGamesToWin != newGamesToWin || oldCutthroatMode != newCutthroatMode) {
 				matchPanel.resizeGameTable();
 				gameTableWindowPanel.resizeGameTable();
-				match.setMaxPossibleGames(newGamesToWin * 2 - 1);
+				match.setMaxPossibleGames(settings.getMaxGameNumber());
 			}
 			teamPanel1.setTitle();
 			teamPanel2.setTitle();
+			teamPanel3.setTitle();
 			teamController.displayAll();
 			JComponent comp = (JComponent) e.getSource();
 			Window win = SwingUtilities.getWindowAncestor(comp);
@@ -1513,13 +1565,8 @@ public class Main {
 	private class ScoreIncreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String name = btn.getName();
-			String code;
-			if(name.equals("Team 1")) {
-				code = "XIST1";
-			} else {
-				code = "XIST2";
-			}
+			String teamNumber = ripTeamNumber(btn.getName());
+			String code = "XIST" + teamNumber;//XIST1
 			processCode(code,false);
 //			checkFilters(code);
 			statsEntryPanel.setFocusOnCode();
@@ -1528,102 +1575,78 @@ public class Main {
 	private class ScoreDecreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String name = btn.getName();
-			if(name.equals("Team 1")) {
-				processCode("XDST1",false);
-			} else {
-				processCode("XDST2",false);
-			}
+			String teamNumber = ripTeamNumber(btn.getName());
+			String code = "XDST" + teamNumber;//XDST1
+			processCode(code,false);
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class GameCountIncreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String name = btn.getName();
-			if(name.equals("Team 1")) {
-				processCode("XIGT1",false);
-			} else {
-				processCode("XIGT2",false);
-			}
+			String teamNumber = ripTeamNumber(btn.getName());
+			String code = "XIGT" + teamNumber;//XIGT1
+			processCode(code,false);
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class GameCountDecreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String name = btn.getName();
-			if(name.equals("Team 1")) {
-				processCode("XDGT1",false);
-			} else {
-				processCode("XDGT2",false);
-			}
+			String teamNumber = ripTeamNumber(btn.getName());
+			String code = "XDGT" + teamNumber;//XDGT1
+			processCode(code,false);
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class TimeOutCountIncreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String name = btn.getName();
-			if(name.equals("Team 1")) {
-				processCode("XUTT1",false);
-			} else {
-				processCode("XUTT2",false);
-			}
+			String teamNumber = ripTeamNumber(btn.getName());
+			String code = "XUTT" + teamNumber;//XUTT1
+			processCode(code,false);
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class TimeOutCountDecreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String name = btn.getName();
-			if(name.equals("Team 1")) {
-				processCode("XRTT1",false);
-			} else {
-				processCode("XRTT2",false);
-			}
+			String teamNumber = ripTeamNumber(btn.getName());
+			String code = "XRTT" + teamNumber;//XRTT1
+			processCode(code,false);
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class ResetListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JToggleButton btn = (JToggleButton) e.getSource();
-			String name = btn.getName();
-			if(name.equals("Team 1")) {
-				processCode("XPRT1",false);
-				if (btn.isSelected()) activateFilter("Team1Reset");
-			} else {
-				processCode("XPRT2",false);
-				if (btn.isSelected()) activateFilter("Team2Reset");
-			}
+			String teamNumber = ripTeamNumber(btn.getName());
+			String code = "XPRT" + teamNumber;//XPRT1
+			String filter = "Team" + teamNumber + "Reset";//Team1Reset
+			processCode(code,false);
+			if (btn.isSelected()) activateFilter(filter);
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class WarnListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JToggleButton btn = (JToggleButton) e.getSource();
-			String name = btn.getName();
-			if(name.equals("Team 1")) {
-				processCode("XPWT1",false);
-				if (btn.isSelected()) activateFilter("Team1Warn");
-			} else {
-				processCode("XPWT2",false);
-				if (btn.isSelected()) activateFilter("Team2Warn");
-			}
+			String teamNumber = ripTeamNumber(btn.getName());
+			String code = "XPWT" + teamNumber;//XPWT1
+			String filter = "Team" + teamNumber + "Warn";//Team1Warn
+			processCode(code,false);
+			if (btn.isSelected()) activateFilter(filter);
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class SwitchPositionsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String name = btn.getName();
-			if(name.equals("Team 1")) {
-				processCode("XXPT1",false);
-				activateFilter("Team1SwitchPositions");
-			} else {
-				processCode("XXPT2",false);
-				activateFilter("Team2SwitchPositions");
-			}
+			String teamNumber = ripTeamNumber(btn.getName());
+			String code = "XXPT" + teamNumber;//XXPT1
+			String filter = "Team" + teamNumber + "SwitchPositions";//Team1SwitchPositions
+			processCode(code,false);
+			activateFilter(filter);
 			statsEntryPanel.setFocusOnCode();
 		}
 	}

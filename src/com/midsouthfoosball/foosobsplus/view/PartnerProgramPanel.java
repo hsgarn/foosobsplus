@@ -1,5 +1,5 @@
 /**
-Copyright 2022-2023 Hugh Garner
+Copyright 2022-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -76,10 +76,10 @@ public class PartnerProgramPanel extends JPanel {
 	}
 
 	private void saveSettings(Settings settings) {
-		settings.setPlayer1FileName(txtPlayer1FileName.getText());
-		settings.setPlayer2FileName(txtPlayer2FileName.getText());
-		settings.setPlayer3FileName(txtPlayer3FileName.getText());
-		settings.setPlayer4FileName(txtPlayer4FileName.getText());
+		settings.setPartnerProgram("Player1FileName",txtPlayer1FileName.getText());
+		settings.setPartnerProgram("Player2FileName",txtPlayer2FileName.getText());
+		settings.setPartnerProgram("Player3FileName",txtPlayer3FileName.getText());
+		settings.setPartnerProgram("Player4FileName",txtPlayer4FileName.getText());
 		try {
 			settings.savePartnerProgramConfig();
 		} catch (IOException ex) {

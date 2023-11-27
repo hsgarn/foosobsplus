@@ -1,5 +1,5 @@
 /**
-Copyright 2020-2023 Hugh Garner
+Copyright 2020-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -200,35 +200,23 @@ public class OBSConnectPanel extends JPanel {
 	}
 	public void saveSettings() {
 		updateOBS();
-		settings.setOBSHost(txtHost.getText());
-		settings.setOBSPort(txtPort.getText());
-		settings.setOBSScene(txtScene.getText());
+		settings.setOBS("OBSHost",txtHost.getText());
+		settings.setOBS("OBSPort",txtPort.getText());
+		settings.setOBS("OBSScene",txtScene.getText());
 		obs.setScene(txtScene.getText());
 		if (chckbxSavePassword.isSelected()) {
-			settings.setOBSSavePassword(1);
-			settings.setOBSPassword(txtPassword.getText());
+			settings.setOBS("OBSSavePassword",1);
+			settings.setOBS("OBSPassword",txtPassword.getText());
 		} else {
-			settings.setOBSSavePassword(0);
-			settings.setOBSPassword("");
+			settings.setOBS("OBSSavePassword",0);
+			settings.setOBS("OBSPassword","");
 		}
-		if (chckbxAutoLogin.isSelected()) {
-			settings.setOBSAutoLogin(1);
-		} else {
-			settings.setOBSAutoLogin(0);
-		}
-		if (chckbxUpdateOnConnect.isSelected()) {
-			settings.setOBSUpdateOnConnect(1);
-		} else {
-			settings.setOBSUpdateOnConnect(0);
-		}
-		if (chckbxCloseOnConnect.isSelected()) {
-			settings.setOBSCloseOnConnect(1);
-		} else {
-			settings.setOBSCloseOnConnect(0);
-		}
+		settings.setOBS("OBSAutoLogin", chckbxAutoLogin.isSelected() ? 1 : 0);
+		settings.setOBS("OBSUpdateOnConnect", chckbxUpdateOnConnect.isSelected() ? 1 : 0);
+		settings.setOBS("OBSCloseOnConnect", chckbxCloseOnConnect.isSelected() ? 1 : 0);
 		if (settings.getOBSAutoLogin()==1) {
 			if (settings.getOBSHost().isEmpty() || settings.getOBSPassword().isEmpty() || settings.getOBSPort().isEmpty() || settings.getOBSSavePassword() == 0) {
-				settings.setOBSAutoLogin(0);
+				settings.setOBS("OBSAutoLogin",0);
 				obs.setAutoLogin(false);
 				chckbxAutoLogin.setSelected(false);
 				String msg = Messages.getString("Errors.OBSConnectPanel.AutoLogin");

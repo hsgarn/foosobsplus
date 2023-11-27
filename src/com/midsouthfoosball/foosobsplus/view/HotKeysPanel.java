@@ -1,5 +1,5 @@
 /**
-Copyright 2020-2023 Hugh Garner
+Copyright 2020-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -731,53 +731,53 @@ public class HotKeysPanel extends JPanel {
 		boolean okToCloseWindow = false;
 		settings.setHotKeyScriptPath(formattedTxtPath.toString());
 		if(checkForUniqueHotKeys()) {
-			settings.setStartMatchHotKey(txtStartMatchHotKey.getText());
-			settings.setPauseMatchHotKey(txtPauseMatchHotKey.getText());
-			settings.setStartGameHotKey(txtStartGameHotKey.getText());
-			settings.setTeam1SwitchPositionsHotKey(txtTeam1SwitchPositionsHotKey.getText());
-			settings.setTeam2SwitchPositionsHotKey(txtTeam2SwitchPositionsHotKey.getText());
-			settings.setSwitchTeamsHotKey(txtSwitchTeamsHotKey.getText());
-			settings.setGameCount1MinusHotKey(txtGameCount1MinusHotKey.getText());
-			settings.setGameCount1PlusHotKey(txtGameCount1PlusHotKey.getText());
-			settings.setGameCount2MinusHotKey(txtGameCount2MinusHotKey.getText());
-			settings.setGameCount2PlusHotKey(txtGameCount2PlusHotKey.getText());
-			settings.setSwitchGameCountsHotKey(txtSwitchGameCountsHotKey.getText());
-			settings.setScore1MinusHotKey(txtScore1MinusHotKey.getText());
-			settings.setScore1PlusHotKey(txtScore1PlusHotKey.getText());
-			settings.setScore2MinusHotKey(txtScore2MinusHotKey.getText());
-			settings.setScore2PlusHotKey(txtScore2PlusHotKey.getText());
-			settings.setSwitchScoresHotKey(txtSwitchScoresHotKey.getText());
-			settings.setTimeOut1MinusHotKey(txtTimeOut1MinusHotKey.getText());
-			settings.setTimeOut1PlusHotKey(txtTimeOut1PlusHotKey.getText());
-			settings.setTimeOut2MinusHotKey(txtTimeOut2MinusHotKey.getText());
-			settings.setTimeOut2PlusHotKey(txtTimeOut2PlusHotKey.getText());
-			settings.setSwitchTimeOutsHotKey(txtSwitchTimeOutsHotKey.getText());
-			settings.setReset1HotKey(txtReset1HotKey.getText());
-			settings.setReset2HotKey(txtReset2HotKey.getText());
-			settings.setWarn1HotKey(txtWarn1HotKey.getText());
-			settings.setWarn2HotKey(txtWarn2HotKey.getText());
-			settings.setSwitchResetWarnsHotKey(txtSwitchResetWarnsHotKey.getText());
-			settings.setSwitchSidesHotKey(txtSwitchSidesHotKey.getText());
-			settings.setResetNamesHotKey(txtResetNamesHotKey.getText());
-			settings.setResetGameCountsHotKey(txtResetGameCountsHotKey.getText());
-			settings.setResetScoresHotKey(txtResetScoresHotKey.getText());
-			settings.setResetTimeOutsHotKey(txtResetTimeOutsHotKey.getText());
-			settings.setResetResetWarnHotKey(txtResetResetWarnHotKey.getText());
-			settings.setResetAllHotKey(txtResetAllHotKey.getText());
-			settings.setClearAllHotKey(txtClearAllHotKey.getText());
-			settings.setShotTimerHotKey(txtShotTimerHotKey.getText());
-			settings.setPassTimerHotKey(txtPassTimerHotKey.getText());
-			settings.setTimeOutTimerHotKey(txtTimeOutTimerHotKey.getText());
-			settings.setGameTimerHotKey(txtGameTimerHotKey.getText());
-			settings.setRecallTimerHotKey(txtRecallTimerHotKey.getText());
-			settings.setResetTimersHotKey(txtResetTimersHotKey.getText());
-			settings.setUndoHotKey(txtUndoHotKey.getText());
-			settings.setRedoHotKey(txtRedoHotKey.getText());
-			settings.setSwitchPlayer1HotKey(txtSwitchPlayer1HotKey.getText());
-			settings.setSwitchPlayer2HotKey(txtSwitchPlayer2HotKey.getText());
-			settings.setShowSkunkHotKey(txtShowSkunkHotKey.getText());
-			settings.setStartStreamHotKey(txtStartStreamHotKey.getText());
-			settings.setHotKeyBaseScript(hotKeyBaseScriptText);
+			settings.setHotKey("StartMatchHotKey",txtStartMatchHotKey.getText());
+			settings.setHotKey("PauseMatchHotKey",txtPauseMatchHotKey.getText());
+			settings.setHotKey("StartGameHotKey",txtStartGameHotKey.getText());
+			settings.setHotKey("Team1SwitchPositionsHotKey",txtTeam1SwitchPositionsHotKey.getText());
+			settings.setHotKey("Team2SwitchPositionsHotKey",txtTeam2SwitchPositionsHotKey.getText());
+			settings.setHotKey("SwitchTeamsHotKey",txtSwitchTeamsHotKey.getText());
+			settings.setHotKey("GameCount1MinusHotKey",txtGameCount1MinusHotKey.getText());
+			settings.setHotKey("GameCount1PlusHotKey",txtGameCount1PlusHotKey.getText());
+			settings.setHotKey("GameCount2MinusHotKey",txtGameCount2MinusHotKey.getText());
+			settings.setHotKey("GameCount2PlusHotKey",txtGameCount2PlusHotKey.getText());
+			settings.setHotKey("SwitchGameCountsHotKey",txtSwitchGameCountsHotKey.getText());
+			settings.setHotKey("Score1MinusHotKey",txtScore1MinusHotKey.getText());
+			settings.setHotKey("Score1PlusHotKey",txtScore1PlusHotKey.getText());
+			settings.setHotKey("Score2MinusHotKey",txtScore2MinusHotKey.getText());
+			settings.setHotKey("Score2PlusHotKey",txtScore2PlusHotKey.getText());
+			settings.setHotKey("SwitchScoresHotKey",txtSwitchScoresHotKey.getText());
+			settings.setHotKey("TimeOut1MinusHotKey",txtTimeOut1MinusHotKey.getText());
+			settings.setHotKey("TimeOut1PlusHotKey",txtTimeOut1PlusHotKey.getText());
+			settings.setHotKey("TimeOut2MinusHotKey",txtTimeOut2MinusHotKey.getText());
+			settings.setHotKey("TimeOut2PlusHotKey",txtTimeOut2PlusHotKey.getText());
+			settings.setHotKey("SwitchTimeOutsHotKey",txtSwitchTimeOutsHotKey.getText());
+			settings.setHotKey("Reset1HotKey",txtReset1HotKey.getText());
+			settings.setHotKey("Reset2HotKey",txtReset2HotKey.getText());
+			settings.setHotKey("Warn1HotKey",txtWarn1HotKey.getText());
+			settings.setHotKey("Warn2HotKey",txtWarn2HotKey.getText());
+			settings.setHotKey("SwitchResetWarnsHotKey",txtSwitchResetWarnsHotKey.getText());
+			settings.setHotKey("SwitchSidesHotKey",txtSwitchSidesHotKey.getText());
+			settings.setHotKey("ResetNamesHotKey",txtResetNamesHotKey.getText());
+			settings.setHotKey("ResetGameCountsHotKey",txtResetGameCountsHotKey.getText());
+			settings.setHotKey("ResetScoresHotKey",txtResetScoresHotKey.getText());
+			settings.setHotKey("ResetTimeOutsHotKey",txtResetTimeOutsHotKey.getText());
+			settings.setHotKey("ResetResetWarnHotKey",txtResetResetWarnHotKey.getText());
+			settings.setHotKey("ResetAllHotKey",txtResetAllHotKey.getText());
+			settings.setHotKey("ClearAllHotKey",txtClearAllHotKey.getText());
+			settings.setHotKey("ShotTimerHotKey",txtShotTimerHotKey.getText());
+			settings.setHotKey("PassTimerHotKey",txtPassTimerHotKey.getText());
+			settings.setHotKey("TimeOutTimerHotKey",txtTimeOutTimerHotKey.getText());
+			settings.setHotKey("GameTimerHotKey",txtGameTimerHotKey.getText());
+			settings.setHotKey("RecallTimerHotKey",txtRecallTimerHotKey.getText());
+			settings.setHotKey("ResetTimersHotKey",txtResetTimersHotKey.getText());
+			settings.setHotKey("UndoHotKey",txtUndoHotKey.getText());
+			settings.setHotKey("RedoHotKey",txtRedoHotKey.getText());
+			settings.setHotKey("SwitchPlayer1HotKey",txtSwitchPlayer1HotKey.getText());
+			settings.setHotKey("SwitchPlayer2HotKey",txtSwitchPlayer2HotKey.getText());
+			settings.setHotKey("ShowSkunkHotKey",txtShowSkunkHotKey.getText());
+			settings.setHotKey("StartStreamHotKey",txtStartStreamHotKey.getText());
+			settings.setHotKey("HotKeyBaseScript", hotKeyBaseScriptText);
 			try {
 				settings.saveHotKeyConfig();
 				okToCloseWindow = true;

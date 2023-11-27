@@ -579,7 +579,6 @@ public class TeamPanel extends JPanel {
 	}
 
 	public void setTitle(String title) {
-//		if (title.isEmpty()) title=buildTitle();
 		title=buildTitle();
 		TitledBorder border = BorderFactory.createTitledBorder(title);
 		border.setTitleJustification(TitledBorder.CENTER);
@@ -612,6 +611,8 @@ public class TeamPanel extends JPanel {
 		String theColor;
 		if (teamNbr==1) {
 			theColor = settings.getSide1Color();
+		} else if (teamNbr==2) {
+			theColor = settings.getSide2Color();
 		} else {
 			theColor = settings.getSide2Color();
 		}

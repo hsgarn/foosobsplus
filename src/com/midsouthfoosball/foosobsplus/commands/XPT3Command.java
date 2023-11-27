@@ -24,21 +24,20 @@ package com.midsouthfoosball.foosobsplus.commands;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
 
-public class XP1Command implements Command {
+public class XPT3Command implements Command {
 	private StatsController statsController;
 	private TeamController teamController;
 	
-	public XP1Command(StatsController statsController, TeamController teamController) {
+	public XPT3Command(StatsController statsController, TeamController teamController) {
 		this.statsController = statsController;
 		this.teamController = teamController;
 	}
 	
 	public void execute() {
-		teamController.switchPlayer1();
+		teamController.switchPositions("Team 3");
 	}
 
 	public String getCode() {
 		return statsController.getLastCode();
 	}
-
 }

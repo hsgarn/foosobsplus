@@ -1,5 +1,5 @@
 /**
-Copyright 2021-2023 Hugh Garner
+Copyright 2021-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -116,25 +116,25 @@ public class FiltersPanel extends JPanel {
 		txtSwitchSidesFilter.setText(settings.getDefaultSwitchSidesFilter());
 	}
 	private void saveSettings(Settings settings) {
-		settings.setTeam1ScoreFilter(txtTeam1ScoreFilter.getText());
-		settings.setTeam2ScoreFilter(txtTeam2ScoreFilter.getText());
-		settings.setTeam1WinGameFilter(txtTeam1WinGameFilter.getText());
-		settings.setTeam2WinGameFilter(txtTeam2WinGameFilter.getText());
-		settings.setTeam1WinMatchFilter(txtTeam1WinMatchFilter.getText());
-		settings.setTeam2WinMatchFilter(txtTeam2WinMatchFilter.getText());
-		settings.setTeam1TimeOutFilter(txtTeam1TimeOutFilter.getText());
-		settings.setTeam2TimeOutFilter(txtTeam2TimeOutFilter.getText());
-		settings.setTeam1ResetFilter(txtTeam1ResetFilter.getText());
-		settings.setTeam2ResetFilter(txtTeam2ResetFilter.getText());
-		settings.setTeam1WarnFilter(txtTeam1WarnFilter.getText());
-		settings.setTeam2WarnFilter(txtTeam2WarnFilter.getText());
-		settings.setTeam1SwitchPositionsFilter(txtTeam1SwitchPositionsFilter.getText());
-		settings.setTeam2SwitchPositionsFilter(txtTeam2SwitchPositionsFilter.getText());
-		settings.setTeam1SkunkFilter(txtTeam1SkunkFilter.getText());
-		settings.setTeam2SkunkFilter(txtTeam2SkunkFilter.getText());
-		settings.setStartMatchFilter(txtStartMatchFilter.getText());
-		settings.setStartGameFilter(txtStartGameFilter.getText());
-		settings.setSwitchSidesFilter(txtSwitchSidesFilter.getText());
+		settings.setFilter("Team1ScoreFilter",txtTeam1ScoreFilter.getText());
+		settings.setFilter("Team2ScoreFilter",txtTeam2ScoreFilter.getText());
+		settings.setFilter("Team1WinGameFilter",txtTeam1WinGameFilter.getText());
+		settings.setFilter("Team2WinGameFilter",txtTeam2WinGameFilter.getText());
+		settings.setFilter("Team1WinMatchFilter",txtTeam1WinMatchFilter.getText());
+		settings.setFilter("Team2WinMatchFilter",txtTeam2WinMatchFilter.getText());
+		settings.setFilter("Team1TimeOutFilter",txtTeam1TimeOutFilter.getText());
+		settings.setFilter("Team2TimeOutFilter",txtTeam2TimeOutFilter.getText());
+		settings.setFilter("Team1ResetFilter",txtTeam1ResetFilter.getText());
+		settings.setFilter("Team2ResetFilter",txtTeam2ResetFilter.getText());
+		settings.setFilter("Team1WarnFilter",txtTeam1WarnFilter.getText());
+		settings.setFilter("Team2WarnFilter",txtTeam2WarnFilter.getText());
+		settings.setFilter("Team1SwitchPositionsFilter",txtTeam1SwitchPositionsFilter.getText());
+		settings.setFilter("Team2SwitchPositionsFilter",txtTeam2SwitchPositionsFilter.getText());
+		settings.setFilter("Team1SkunkFilter",txtTeam1SkunkFilter.getText());
+		settings.setFilter("Team2SkunkFilter",txtTeam2SkunkFilter.getText());
+		settings.setFilter("StartMatchFilter",txtStartMatchFilter.getText());
+		settings.setFilter("StartGameFilter",txtStartGameFilter.getText());
+		settings.setFilter("SwitchSidesFilter",txtSwitchSidesFilter.getText());
 		try {
 			settings.saveFilterConfig();
 		} catch (IOException ex) {

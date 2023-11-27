@@ -1,5 +1,5 @@
 /**
-Copyright 2020-2023 Hugh Garner
+Copyright 2020-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -63,6 +63,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private TournamentPanel tournamentPanel;
 	private TeamPanel team1Panel;
 	private TeamPanel team2Panel;
+	private TeamPanel team3Panel;
 	private SwitchPanel switchPanel;
 	private ResetPanel resetPanel;
 	private TimerPanel timerPanel;
@@ -85,6 +86,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private JCheckBoxMenuItem viewAlwaysOnTop;
 	private JCheckBoxMenuItem viewLastScored1Window;
 	private JCheckBoxMenuItem viewLastScored2Window;
+	private JCheckBoxMenuItem viewLastScored3Window;
 	private JCheckBoxMenuItem viewGameTableWindow;
 	private JCheckBoxMenuItem viewAllWindows;
 	private JCheckBoxMenuItem helpShowParsed;
@@ -109,18 +111,21 @@ public final class MainFrame extends JFrame implements WindowListener {
 		logger = LoggerFactory.getLogger(this.getClass());
 	}
 	
-	public MainFrame(Settings settings, TournamentPanel tournamentPanel, TimerPanel timerPanel, OBSPanel obsPanel, AutoScoreMainPanel autoScoreMainPanel, TeamPanel team1Panel, TeamPanel team2Panel, StatsEntryPanel statsEntryPanel,
-			SwitchPanel switchPanel, ResetPanel resetPanel, StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,
-			SourcesFrame sourcesFrame, FiltersFrame filtersFrame, StatSettingsFrame statSettingsFrame, PartnerProgramFrame partnerProgramFrame, OBSConnectFrame obsConnectFrame, AutoScoreSettingsFrame autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame, Main main) {
+	public MainFrame(Settings settings, TournamentPanel tournamentPanel, TimerPanel timerPanel, OBSPanel obsPanel, AutoScoreMainPanel autoScoreMainPanel,
+			TeamPanel team1Panel, TeamPanel team2Panel, TeamPanel team3Panel, StatsEntryPanel statsEntryPanel, SwitchPanel switchPanel, ResetPanel resetPanel, 
+			StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,	SourcesFrame sourcesFrame, 
+			FiltersFrame filtersFrame, StatSettingsFrame statSettingsFrame, PartnerProgramFrame partnerProgramFrame, OBSConnectFrame obsConnectFrame, 
+			AutoScoreSettingsFrame autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame, Main main) {
 
 		super(programName + ": Foosball"); //$NON-NLS-1$
 
-		this.tournamentPanel 			= tournamentPanel;
+		this.tournamentPanel 		= tournamentPanel;
 		this.timerPanel 			= timerPanel;
 		this.obsPanel           	= obsPanel;
 		this.autoScoreMainPanel 	= autoScoreMainPanel;
 		this.team1Panel 			= team1Panel;
 		this.team2Panel 			= team2Panel;
+		this.team3Panel             = team3Panel;
 		this.statsEntryPanel 		= statsEntryPanel;
 		this.switchPanel 			= switchPanel;
 		this.resetPanel 			= resetPanel;
@@ -137,8 +142,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 		this.autoScoreConfigFrame 	= autoScoreConfigFrame;
 		this.main 					= main;
 		
-		viewLastScored2Window 	= new JCheckBoxMenuItem(Messages.getString("MainFrame.Team1LastScoredWindow")); //$NON-NLS-1$
-		viewLastScored1Window 	= new JCheckBoxMenuItem(Messages.getString("MainFrame.Team2LastScoredWindow")); //$NON-NLS-1$
+		viewLastScored1Window 	= new JCheckBoxMenuItem(Messages.getString("MainFrame.Team1LastScoredWindow")); //$NON-NLS-1$
+		viewLastScored2Window 	= new JCheckBoxMenuItem(Messages.getString("MainFrame.Team2LastScoredWindow")); //$NON-NLS-1$
+		viewLastScored3Window   = new JCheckBoxMenuItem(Messages.getString("MainFrame.Team3LastScoredWindow")); //$NON-NLS-1$
 		viewTimerWindow 		= new JCheckBoxMenuItem(Messages.getString("MainFrame.TimerWindow")); //$NON-NLS-1$
 		viewGameTableWindow 	= new JCheckBoxMenuItem(Messages.getString("MainFrame.GameTableWIndow")); //$NON-NLS-1$
 		viewAllWindows 			= new JCheckBoxMenuItem(Messages.getString("MainFrame.ShowAllWindows")); //$NON-NLS-1$
@@ -230,6 +236,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewMenu.add(viewTimerWindow);
 		viewMenu.add(viewLastScored1Window);
 		viewMenu.add(viewLastScored2Window);
+		viewMenu.add(viewLastScored3Window);
 		viewMenu.add(viewGameTableWindow);
 		viewMenu.add(viewAllWindows);
 
@@ -464,6 +471,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 	public boolean getLastScored2WindowSelected() { 
 		return viewLastScored2Window.isSelected();
 	}
+	public boolean getLastScored3WindowSelected() { 
+		return viewLastScored3Window.isSelected();
+	}
 	public boolean getAllWindowsSelected() {
 		return viewAllWindows.isSelected();
 	}
@@ -478,6 +488,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 	}
 	public void setLastScored2WindowSelected(Boolean state) {
 		viewLastScored2Window.setSelected(state);
+	}
+	public void setLastScored3WindowSelected(Boolean state) { 
+		viewLastScored3Window.setSelected(state);
 	}
 	public void setAllWindowsSelected(Boolean state) {
 		viewAllWindows.setSelected(state);
@@ -499,7 +512,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		tournamentPanel.setPreferredSize(new Dimension(400,200));
+		tournamentPanel.setPreferredSize(new Dimension(350,200));
 		add(tournamentPanel, gc);
 		
 		//////// Timer Panel ////////
@@ -513,7 +526,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		timerPanel.setPreferredSize(new Dimension(250,200));
+		timerPanel.setPreferredSize(new Dimension(270,200));
 		add(timerPanel, gc);
 
 		//////// Stats Entry Panel ////////
@@ -528,7 +541,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(statsEntryPanel, gc);
-		statsEntryPanel.setPreferredSize(new Dimension(400,450));
+		statsEntryPanel.setPreferredSize(new Dimension(350,450));
 		gc.gridheight = 1;
 		
 		//////// Stats Display Panel ////////
@@ -537,7 +550,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.weighty = .5;
 		
 		gc.gridx = 3;
-		gc.gridwidth =1;
+		gc.gridwidth =2;
 		gc.gridheight = 4;
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -559,7 +572,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		matchPanel.setPreferredSize(new Dimension(400,300));
+		matchPanel.setPreferredSize(new Dimension(350,300));
 		add(matchPanel, gc);
 
 		////////// OBS Panel  ///////////
@@ -573,7 +586,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		obsPanel.setPreferredSize(new Dimension(275,175));
+		obsPanel.setPreferredSize(new Dimension(270,175));
 		add(obsPanel, gc);
 
 		////////// AutoScore Main Panel  ///////////
@@ -588,7 +601,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		autoScoreMainPanel.setPreferredSize(new Dimension(250,100));
+		autoScoreMainPanel.setPreferredSize(new Dimension(270,100));
 		add(autoScoreMainPanel, gc);
 
 		////////// Team 1 Panel ///////////
@@ -604,7 +617,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		team1Panel.setPreferredSize(new Dimension(400,400));
+		team1Panel.setPreferredSize(new Dimension(350,400));
 		add(team1Panel, gc);
 		
 		////////// Switch Panel ///////////
@@ -618,7 +631,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		switchPanel.setPreferredSize(new Dimension(250,400));
+		switchPanel.setPreferredSize(new Dimension(270,400));
 		add(switchPanel, gc);
 
 		//////// Team 2 Panel ////////
@@ -632,7 +645,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		team2Panel.setPreferredSize(new Dimension(400,400));
+		team2Panel.setPreferredSize(new Dimension(350,400));
 		add(team2Panel, gc);
 
 		//////// Reset Panel ////////
@@ -646,8 +659,23 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		resetPanel.setPreferredSize(new Dimension(300,400));
+		resetPanel.setPreferredSize(new Dimension(200,400));
 		add(resetPanel, gc);
+		
+		////////// Team 1 Panel ///////////
+		
+		gc.weightx = .5;
+		gc.weighty = .5;
+		
+		gc.gridx = 4;
+		gc.gridwidth =1;
+		gc.gridheight = 1;
+		gc.fill = GridBagConstraints.BOTH;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.insets = new Insets(0, 0, 0, 0);
+		team3Panel.setPreferredSize(new Dimension(350,400));
+		add(team3Panel, gc);
+
 	}
 	
 	////// Listeners //////
@@ -660,6 +688,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 	}
 	public void addLastScored2WindowListener(ActionListener listenForChkBoxLastScored2Window) {
 		viewLastScored2Window.addActionListener(listenForChkBoxLastScored2Window);
+	}
+	public void addLastScored3WindowListener(ActionListener listenForChkBoxLastScored3Window) {
+		viewLastScored3Window.addActionListener(listenForChkBoxLastScored3Window);
 	}
 	public void addGameTableWindowListener(ActionListener listenForChkBoxGameTableWindow) {
 		viewGameTableWindow.addActionListener(listenForChkBoxGameTableWindow);
@@ -675,6 +706,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 	}
 	public void addLastScored2WindowItemListener(ItemListener listenForLastScored2WindowItem) {
 		viewLastScored2Window.addItemListener(listenForLastScored2WindowItem);
+	}
+	public void addLastScored3WindowItemListener(ItemListener listenForLastScored3WindowItem) {
+		viewLastScored3Window.addItemListener(listenForLastScored3WindowItem);
 	}
 	public void addGameTableWindowItemListener(ItemListener listenForGameTableWindowItem) {
 		viewGameTableWindow.addItemListener(listenForGameTableWindowItem);
