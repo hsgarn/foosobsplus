@@ -21,24 +21,30 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 package com.midsouthfoosball.foosobsplus.commands;
 
+import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
-import com.midsouthfoosball.foosobsplus.controller.TeamController;
+import com.midsouthfoosball.foosobsplus.main.Main;
 
-public class XP1Command implements Command {
+public class ISTCommand implements Command {
 	private StatsController statsController;
-	private TeamController teamController;
+	private MatchController matchController;
+	private Main main;
+	private int teamNumber;
 	
-	public XP1Command(StatsController statsController, TeamController teamController) {
+	public ISTCommand(Main main, StatsController statsController, MatchController matchController, int teamNumber) {
+		this.main = main;
 		this.statsController = statsController;
-		this.teamController = teamController;
+		this.matchController = matchController;
+		this.teamNumber = teamNumber;
 	}
 	
 	public void execute() {
-		teamController.switchPlayer1();
+		int rotate = 0;
+		rotate = matchController.incrementScore(teamNumber);
+		if (rotate > 0) main.cutthroatRotate(rotate); 
 	}
 
 	public String getCode() {
 		return statsController.getLastCode();
 	}
-
 }

@@ -418,15 +418,18 @@ public class TeamController {
 		}
 	};
 	public void cutThroatGameRotate() {
-		String tmp = team2.getForwardName();
-		team2.setForwardName(team2.getGoalieName());
-		team2.setGoalieName(tmp);
-		int tmpScore = team2.getForwardScore();
-		team2.setForwardScore(team2.getGoalieScore());
-		team2.setGoalieScore(tmpScore);
-		int tmpGameCount = team2.getForwardGameCount();
-		team2.setForwardGameCount(team2.getGoalieGameCount());
-		team2.setGoalieGameCount(tmpGameCount);
+//		String tmp = team2.getForwardName();
+//		team2.setForwardName(team2.getGoalieName());
+//		team2.setGoalieName(tmp);
+//		int tmpScore = team2.getForwardScore();
+//		team2.setForwardScore(team2.getGoalieScore());
+//		team2.setGoalieScore(tmpScore);
+//		int tmpGameCount = team2.getForwardGameCount();
+//		team2.setForwardGameCount(team2.getGoalieGameCount());
+//		team2.setGoalieGameCount(tmpGameCount);
+		Team tmp = team2;
+		team2 = team3;
+		team3 = tmp;
 		displayAll();
 	};
 	public int incrementScore(int teamNumber) {
@@ -445,26 +448,26 @@ public class TeamController {
 		displayAll();
 		return winState;
 	}
-	public boolean incrementForwardScore(int teamNumber) {
-		boolean won = false;
-		if(teamNumber == 1) {
-			team1.incrementForwardScore();
-			if(team1.getForwardScore()>=settings.getPointsToWin()) {
-				team1.setForwardScore(0);
-				team2.setForwardScore(0);
-				team3.setForwardScore(0);
-				team2.setGoalieScore(0);
-				team1.incrementForwardGameCount();
-				won = true;
-			}
-		} else if(teamNumber == 2) {
-			team2.incrementForwardScore();
-		} else {
-			team3.incrementForwardScore();
-		}
-		displayAll();
-		return won;
-	}
+//	public boolean incrementForwardScore(int teamNumber) {
+//		boolean won = false;
+//		if(teamNumber == 1) {
+//			team1.incrementForwardScore();
+//			if(team1.getForwardScore()>=settings.getPointsToWin()) {
+//				team1.setForwardScore(0);
+//				team2.setForwardScore(0);
+//				team3.setForwardScore(0);
+//				team2.setGoalieScore(0);
+//				team1.incrementForwardGameCount();
+//				won = true;
+//			}
+//		} else if(teamNumber == 2) {
+//			team2.incrementForwardScore();
+//		} else {
+//			team3.incrementForwardScore();
+//		}
+//		displayAll();
+//		return won;
+//	}
 	public void incrementForwardGameCount(int teamNumber) {
 		Team team = teamsMap.getOrDefault(teamNumber, null);
 		if (team != null) {
@@ -591,23 +594,23 @@ public class TeamController {
 		teamPanel2.updateGoalieName(team2.getGoalieName());
 		updateGameTables();
 	}
-	public void switchPlayer1() {
+	public void switchPlayer(int playerNumber) {
 		checkResetForNewGame();
-		String tmp = team1.getForwardName();
-		team1.setForwardName(team2.getForwardName());
-		team2.setForwardName(tmp);
-		teamPanel1.updateForwardName(team1.getForwardName());
-		teamPanel2.updateForwardName(team2.getForwardName());
+		if (playerNumber == 1) {
+			String tmp = team1.getForwardName();
+			team1.setForwardName(team2.getForwardName());
+			team2.setForwardName(tmp);
+			teamPanel1.updateForwardName(team1.getForwardName());
+			teamPanel2.updateForwardName(team2.getForwardName());
+		} else {
+			String tmp2 = team1.getGoalieName();
+			team1.setGoalieName(team2.getGoalieName());
+			team2.setGoalieName(tmp2);
+			teamPanel1.updateGoalieName(team1.getGoalieName());
+			teamPanel2.updateGoalieName(team2.getGoalieName());
+		}
 		updateGameTables();
-	}
-	public void switchPlayer2() {
-		checkResetForNewGame();
-		String tmp2 = team1.getGoalieName();
-		team1.setGoalieName(team2.getGoalieName());
-		team2.setGoalieName(tmp2);
-		teamPanel1.updateGoalieName(team1.getGoalieName());
-		teamPanel2.updateGoalieName(team2.getGoalieName());
-		updateGameTables();
+		
 	}
 	public void switchScores() {
 		int tmp = team1.getScore();
@@ -809,21 +812,21 @@ public class TeamController {
 		int timeOutCount3 = team3.getTimeOutCount();
 		boolean isReset3 = team3.getReset();
 		boolean isWarn3 = team3.getWarn();
-		if (settings.getCutThroatMode()==1) {
-			forwardName1 = team1.getForwardGameCount() + " " + team1.getForwardName() + " " + team1.getForwardScore();
-			goalieName1 = team1.getGoalieName();
-			forwardName2 = team2.getForwardGameCount() + " " + team2.getForwardName() + " " + team2.getForwardScore();
-			goalieName2 = team2.getGoalieGameCount() + " " + team2.getGoalieName() + " " + team2.getGoalieScore();
-			forwardName3 = team3.getForwardName();
-			goalieName3 = team3.getGoalieName();
-		} else {
+//		if (settings.getCutThroatMode()==1) {
+//			forwardName1 = team1.getForwardGameCount() + " " + team1.getForwardName() + " " + team1.getForwardScore();
+//			goalieName1 = team1.getGoalieName();
+//			forwardName2 = team2.getForwardGameCount() + " " + team2.getForwardName() + " " + team2.getForwardScore();
+//			goalieName2 = team2.getGoalieGameCount() + " " + team2.getGoalieName() + " " + team2.getGoalieScore();
+//			forwardName3 = team3.getForwardName();
+//			goalieName3 = team3.getGoalieName();
+//		} else {
 			forwardName1 = team1.getForwardName();
 			goalieName1 = team1.getGoalieName();
 			forwardName2 = team2.getForwardName();
 			goalieName2 = team2.getGoalieName();
 			forwardName3 = team3.getForwardName();
 			goalieName3 = team3.getGoalieName();
-		}
+//		}
 		team1.writeAll();
 		team2.writeAll();
 		team3.writeAll();
@@ -834,18 +837,22 @@ public class TeamController {
 		updateGameTables();
 	}
 	public void cutThroatPointRotate() {
-		String tmp = team1.getForwardName();
-		team1.setForwardName(team2.getForwardName());
-		team2.setForwardName(team2.getGoalieName());
-		team2.setGoalieName(tmp);
-		int tmpScore = team1.getForwardScore();
-		team1.setForwardScore(team2.getForwardScore());
-		team2.setForwardScore(team2.getGoalieScore());
-		team2.setGoalieScore(tmpScore);
-		int tmpGameCount = team1.getForwardGameCount();
-		team1.setForwardGameCount(team2.getForwardGameCount());
-		team2.setForwardGameCount(team2.getGoalieGameCount());
-		team2.setGoalieGameCount(tmpGameCount);
+//		String tmp = team1.getForwardName();
+//		team1.setForwardName(team2.getForwardName());
+//		team2.setForwardName(team2.getGoalieName());
+//		team2.setGoalieName(tmp);
+//		int tmpScore = team1.getForwardScore();
+//		team1.setForwardScore(team2.getForwardScore());
+//		team2.setForwardScore(team2.getGoalieScore());
+//		team2.setGoalieScore(tmpScore);
+//		int tmpGameCount = team1.getForwardGameCount();
+//		team1.setForwardGameCount(team2.getForwardGameCount());
+//		team2.setForwardGameCount(team2.getGoalieGameCount());
+//		team2.setGoalieGameCount(tmpGameCount);
+		Team tmp = team1;
+		team1 = team2;
+		team2 = team3;
+		team3 = tmp;
 		displayAll();
 	}
 	public void updateGameTables() {

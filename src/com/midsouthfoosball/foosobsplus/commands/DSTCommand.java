@@ -24,17 +24,19 @@ package com.midsouthfoosball.foosobsplus.commands;
 import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 
-public class DST3Command implements Command {
+public class DSTCommand implements Command {
 	private StatsController statsController;
 	private MatchController matchController;
+	private int teamNumber;
 	
-	public DST3Command(StatsController statsController, MatchController matchController) {
+	public DSTCommand(StatsController statsController, MatchController matchController, int teamNumber) {
 		this.statsController = statsController;
 		this.matchController = matchController;
+		this.teamNumber = teamNumber;
 	}
 	
 	public void execute() {
-		matchController.decrementScore(3);
+		matchController.decrementScore(teamNumber);
 	}
 
 	public String getCode() {

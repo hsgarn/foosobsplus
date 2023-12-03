@@ -83,18 +83,22 @@ public class MatchController {
 			gameTableWindowPanel.setTime(time);
 		}
 	}
-	public void incrementScore(int teamNumber) {
+	public int incrementScore(int teamNumber) {
+		// return 1 to rotate after team1 wins (Cutthroat)
+		// return 2 to rotate after team2 or team3 scores (Cutthroat)
+		int rotate = 0;
 		if (settings.getCutThroatMode()==1) {
-			boolean won = false;
+			int won = 0;
 			if (teamNumber == 1) {
 				//Single player scores
-				won = teamController.incrementForwardScore(teamNumber);
-				if (won) {
-					teamController.cutThroatGameRotate();
+				won = teamController.incrementScore(teamNumber);
+				if (won > 0) {
+					//Rotate teams 2 & 3
+					rotate = 1;
 				}
 			} else {
-				//Rotate players and scores
-				teamController.cutThroatPointRotate(); 
+				//Rotate all players and scores
+				rotate = 2;
 			}
 		} else {
 			if (match.getMatchWon()) {
@@ -116,6 +120,7 @@ public class MatchController {
 			switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
 			updateGameTables();
 		}
+		return rotate;
 	}
 	public void decrementScore(int teamNumber) {
 		teamController.decrementScore(teamNumber);

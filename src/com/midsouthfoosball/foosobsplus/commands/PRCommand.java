@@ -24,17 +24,19 @@ package com.midsouthfoosball.foosobsplus.commands;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
 
-public class RTT3Command implements Command {
+public class PRCommand implements Command {
 	private StatsController statsController;
 	private TeamController teamController;
+	private int teamNumber;
 	
-	public RTT3Command(StatsController statsController, TeamController teamController) {
+	public PRCommand(StatsController statsController, TeamController teamController, int teamNumber) {
 		this.statsController = statsController;
 		this.teamController = teamController;
+		this.teamNumber = teamNumber;
 	}
 	
 	public void execute() {
-		teamController.restoreTimeOut(3);
+		teamController.toggleReset(teamNumber);
 	}
 
 	public String getCode() {

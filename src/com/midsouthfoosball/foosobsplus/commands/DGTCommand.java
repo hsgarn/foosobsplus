@@ -24,17 +24,19 @@ package com.midsouthfoosball.foosobsplus.commands;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
 
-public class DGT3Command implements Command {
+public class DGTCommand implements Command {
 	private StatsController statsController;
 	private TeamController teamController;
+	private int teamNumber;
 	
-	public DGT3Command(StatsController statsController, TeamController teamController) {
+	public DGTCommand(StatsController statsController, TeamController teamController, int teamNumber) {
 		this.statsController = statsController;
 		this.teamController = teamController;
+		this.teamNumber = teamNumber;
 	}
 	
 	public void execute() {
-		teamController.decrementGameCount(3);
+		teamController.decrementGameCount(teamNumber);
 	}
 
 	public String getCode() {

@@ -24,21 +24,22 @@ package com.midsouthfoosball.foosobsplus.commands;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
 
-public class XP2Command implements Command {
+public class UTTCommand implements Command {
 	private StatsController statsController;
 	private TeamController teamController;
+	private int teamNumber;
 	
-	public XP2Command(StatsController statsController, TeamController teamController) {
+	public UTTCommand(StatsController statsController, TeamController teamController, int teamNumber) {
 		this.statsController = statsController;
 		this.teamController = teamController;
+		this.teamNumber = teamNumber;
 	}
 	
 	public void execute() {
-		teamController.switchPlayer2();
+		teamController.callTimeOut(teamNumber);
 	}
 
 	public String getCode() {
 		return statsController.getLastCode();
 	}
-
 }

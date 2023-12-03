@@ -24,17 +24,19 @@ package com.midsouthfoosball.foosobsplus.commands;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
 
-public class XPT3Command implements Command {
+public class PWCommand implements Command {
 	private StatsController statsController;
 	private TeamController teamController;
+	private int teamNumber;
 	
-	public XPT3Command(StatsController statsController, TeamController teamController) {
+	public PWCommand(StatsController statsController, TeamController teamController, int teamNumber) {
 		this.statsController = statsController;
 		this.teamController = teamController;
+		this.teamNumber = teamNumber;
 	}
 	
 	public void execute() {
-		teamController.switchPositions("Team 3");
+		teamController.toggleWarn(teamNumber);
 	}
 
 	public String getCode() {

@@ -67,8 +67,8 @@ public class Stats implements Serializable {
 	private transient boolean isForwardDirection;
 	private transient boolean isTeam1;
 	private transient boolean isTeam2;
-	private transient boolean[] teamScored = {false, false};
-	private transient boolean[] teamTimeOut = {false, false};
+	private transient boolean[] teamScored = {false, false, false};
+	private transient boolean[] teamTimeOut = {false, false, false};
 	private transient boolean isCommand;
 	private transient boolean isPassComplete;
 	private transient boolean isClearComplete;
@@ -113,16 +113,18 @@ public class Stats implements Serializable {
 	private transient Settings settings;
 	private transient Team team1;
 	private transient Team team2;
+//	private transient Team team3;
 	private static transient Logger logger;
 	{
 		logger = LoggerFactory.getLogger(this.getClass());
 	}
 
-	public Stats(Settings settings, Team team1, Team team2) {
+	public Stats(Settings settings, Team team1, Team team2, Team team3) {
 		codeHistory = new DefaultListModel<String>();
 		this.settings = settings;
 		this.team1 = team1;
 		this.team2 = team2;
+//		this.team3 = team3;
 	}
 
 	public String getCode() {
@@ -218,6 +220,7 @@ public class Stats implements Serializable {
 		}
 		teamScored[0]=false;
 		teamScored[1]=false;
+		teamScored[2]=false;
 		if(isTeamScored) {
 			scoringLogic();
 		}
@@ -396,11 +399,9 @@ public class Stats implements Serializable {
 		if(isTeam1) {
 			teamScored[1]=true;
 			team2.setScoring(team2.getScoring()+1);
-		} else {
-			if(isTeam2) {
-				teamScored[0]=true;
-				team1.setScoring(team1.getScoring()+1);
-			}
+		} else if (isTeam2) {
+			teamScored[0]=true;
+			team1.setScoring(team1.getScoring()+1);
 		}
 		if(!isSameTeam) {
 			if(wasThreeRod) {

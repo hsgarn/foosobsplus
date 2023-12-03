@@ -21,20 +21,22 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 package com.midsouthfoosball.foosobsplus.commands;
 
-import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
+import com.midsouthfoosball.foosobsplus.controller.TeamController;
 
-public class IST3Command implements Command {
+public class RTTCommand implements Command {
 	private StatsController statsController;
-	private MatchController matchController;
+	private TeamController teamController;
+	private int teamNumber;
 	
-	public IST3Command(StatsController statsController, MatchController matchController) {
+	public RTTCommand(StatsController statsController, TeamController teamController, int teamNumber) {
 		this.statsController = statsController;
-		this.matchController = matchController;
+		this.teamController = teamController;
+		this.teamNumber = teamNumber;
 	}
 	
 	public void execute() {
-		matchController.incrementScore(3);
+		teamController.restoreTimeOut(teamNumber);
 	}
 
 	public String getCode() {

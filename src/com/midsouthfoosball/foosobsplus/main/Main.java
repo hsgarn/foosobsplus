@@ -72,30 +72,20 @@ import org.slf4j.LoggerFactory;
 import com.midsouthfoosball.foosobsplus.commands.CodeCommand;
 import com.midsouthfoosball.foosobsplus.commands.Command;
 import com.midsouthfoosball.foosobsplus.commands.CommandSwitch;
-import com.midsouthfoosball.foosobsplus.commands.DGT1Command;
-import com.midsouthfoosball.foosobsplus.commands.DGT2Command;
-import com.midsouthfoosball.foosobsplus.commands.DGT3Command;
-import com.midsouthfoosball.foosobsplus.commands.DST1Command;
-import com.midsouthfoosball.foosobsplus.commands.DST2Command;
-import com.midsouthfoosball.foosobsplus.commands.DST3Command;
-import com.midsouthfoosball.foosobsplus.commands.IGT1Command;
-import com.midsouthfoosball.foosobsplus.commands.IGT2Command;
-import com.midsouthfoosball.foosobsplus.commands.IGT3Command;
-import com.midsouthfoosball.foosobsplus.commands.IST1Command;
-import com.midsouthfoosball.foosobsplus.commands.IST2Command;
-import com.midsouthfoosball.foosobsplus.commands.IST3Command;
+import com.midsouthfoosball.foosobsplus.commands.DGTCommand;
+import com.midsouthfoosball.foosobsplus.commands.DSTCommand;
+import com.midsouthfoosball.foosobsplus.commands.IGTCommand;
+import com.midsouthfoosball.foosobsplus.commands.ISTCommand;
 import com.midsouthfoosball.foosobsplus.commands.Memento;
 import com.midsouthfoosball.foosobsplus.commands.PCACommand;
 import com.midsouthfoosball.foosobsplus.commands.PEMCommand;
 import com.midsouthfoosball.foosobsplus.commands.PPMCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRACommand;
+import com.midsouthfoosball.foosobsplus.commands.PRCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRGCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRNCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRRCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRSCommand;
-import com.midsouthfoosball.foosobsplus.commands.PRT1Command;
-import com.midsouthfoosball.foosobsplus.commands.PRT2Command;
-import com.midsouthfoosball.foosobsplus.commands.PRT3Command;
 import com.midsouthfoosball.foosobsplus.commands.PRTCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRTOCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSECommand;
@@ -108,25 +98,16 @@ import com.midsouthfoosball.foosobsplus.commands.PSSCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSTCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSTOCommand;
 import com.midsouthfoosball.foosobsplus.commands.PTCACommand;
-import com.midsouthfoosball.foosobsplus.commands.PWT1Command;
-import com.midsouthfoosball.foosobsplus.commands.PWT2Command;
-import com.midsouthfoosball.foosobsplus.commands.PWT3Command;
-import com.midsouthfoosball.foosobsplus.commands.RTT1Command;
-import com.midsouthfoosball.foosobsplus.commands.RTT2Command;
-import com.midsouthfoosball.foosobsplus.commands.RTT3Command;
+import com.midsouthfoosball.foosobsplus.commands.PWCommand;
+import com.midsouthfoosball.foosobsplus.commands.RTTCommand;
 import com.midsouthfoosball.foosobsplus.commands.SGTCommand;
 import com.midsouthfoosball.foosobsplus.commands.SPTCommand;
 import com.midsouthfoosball.foosobsplus.commands.SRTCommand;
 import com.midsouthfoosball.foosobsplus.commands.SSTCommand;
 import com.midsouthfoosball.foosobsplus.commands.STTCommand;
-import com.midsouthfoosball.foosobsplus.commands.UTT1Command;
-import com.midsouthfoosball.foosobsplus.commands.UTT2Command;
-import com.midsouthfoosball.foosobsplus.commands.UTT3Command;
-import com.midsouthfoosball.foosobsplus.commands.XP1Command;
-import com.midsouthfoosball.foosobsplus.commands.XP2Command;
-import com.midsouthfoosball.foosobsplus.commands.XPT1Command;
-import com.midsouthfoosball.foosobsplus.commands.XPT2Command;
-import com.midsouthfoosball.foosobsplus.commands.XPT3Command;
+import com.midsouthfoosball.foosobsplus.commands.UTTCommand;
+import com.midsouthfoosball.foosobsplus.commands.XPCommand;
+import com.midsouthfoosball.foosobsplus.commands.XPTCommand;
 import com.midsouthfoosball.foosobsplus.controller.MainController;
 import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
@@ -242,7 +223,7 @@ public class Main {
 																	new Game(team1, team2, team3, 5)
 																};
 
-	private Stats 				stats 				= new Stats(settings, team1, team2);
+	private Stats 				stats 				= new Stats(settings, team1, team2, team3);
 	
 	////// Create a TimeClock to be the Timer \\\\\\
 	
@@ -824,6 +805,30 @@ public class Main {
 		filtersPanel.addStartGameFilterListener(new StartGameFilterListener());
 		filtersPanel.addSwitchSidesFilterListener(new SwitchSidesFilterListener());
 	}
+	public void cutthroatRotate(int rotate) {
+		if (rotate ==1) {
+			Memento tmpTeam2 = saveState(team2);
+			Memento tmpTeam3 = saveState(team3);
+			team2.restoreState(tmpTeam3.getState());
+			team3.restoreState(tmpTeam2.getState());
+			team2.setTeamNbr(2);
+			team3.setTeamNbr(3);
+			matchController.displayAllStats();
+			teamController.displayAll();
+		} else if (rotate ==2 ) {
+			Memento tmpTeam1 = saveState(team1);
+			Memento tmpTeam2 = saveState(team2);
+			Memento tmpTeam3 = saveState(team3);
+			team1.restoreState(tmpTeam2.getState());
+			team2.restoreState(tmpTeam3.getState());
+			team3.restoreState(tmpTeam1.getState());
+			team1.setTeamNbr(1);
+			team2.setTeamNbr(2);
+			team3.setTeamNbr(3);
+			matchController.displayAllStats();
+			teamController.displayAll();
+		}
+	}
 	public void startEvent() {
 		if(gameClock.isStreamTimerRunning()) {
 			streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartEvent", settings.getGameType()) + " Pressed: " + tournament.getTournamentName() + ": " + tournament.getEventName() + "\r\n");
@@ -912,12 +917,19 @@ public class Main {
 			if (stats.getIsError()) {
 				statsEntryPanel.errorCodeHistory();
 			}
-			if (stats.getTeamScored(1)) matchController.incrementScore(1);
-			if (stats.getTeamScored(2)) matchController.incrementScore(2);
+			int rotate = 0;
+			if (stats.getTeamScored(1)) {
+				rotate = matchController.incrementScore(1);
+			} else if (stats.getTeamScored(2)) {
+				rotate = matchController.incrementScore(2);
+			}
+			if (rotate > 0) cutthroatRotate(rotate);
 			if (stats.getTeamTimeOut(1)) {
 				teamController.callTimeOut(1);
 			} else if (stats.getTeamTimeOut(2)) {
 				teamController.callTimeOut(2);
+			} else if (stats.getTeamTimeOut(3)) {
+				teamController.callTimeOut(3);
 			} else {
 				if (stats.getIsThreeRod()||stats.getIsTwoRod()) teamController.startShotTimer();
 				if (stats.getIsFiveRod()) teamController.startPassTimer();
@@ -1013,37 +1025,37 @@ public class Main {
 		Command stt = new STTCommand(statsController, teamController);
 		Command srt = new SRTCommand(statsController, teamController);
 		Command prt = new PRTCommand(statsController, teamController);
-		Command ist1 = new IST1Command(statsController, matchController);
-		Command ist2 = new IST2Command(statsController, matchController);
-		Command ist3 = new IST3Command(statsController, matchController);
-		Command dst1 = new DST1Command(statsController, matchController);
-		Command dst2 = new DST2Command(statsController, matchController);
-		Command dst3 = new DST3Command(statsController, matchController);
-		Command igt1 = new IGT1Command(statsController, teamController);
-		Command igt2 = new IGT2Command(statsController, teamController);
-		Command igt3 = new IGT3Command(statsController, teamController);
-		Command dgt1 = new DGT1Command(statsController, teamController);
-		Command dgt2 = new DGT2Command(statsController, teamController);
-		Command dgt3 = new DGT3Command(statsController, teamController);
-		Command utt1 = new UTT1Command(statsController, teamController);
-		Command utt2 = new UTT2Command(statsController, teamController);
-		Command utt3 = new UTT3Command(statsController, teamController);
-		Command rtt1 = new RTT1Command(statsController, teamController);
-		Command rtt2 = new RTT2Command(statsController, teamController);
-		Command rtt3 = new RTT3Command(statsController, teamController);
-		Command prt1 = new PRT1Command(statsController, teamController);
-		Command prt2 = new PRT2Command(statsController, teamController);
-		Command prt3 = new PRT3Command(statsController, teamController);
-		Command pwt1 = new PWT1Command(statsController, teamController);
-		Command pwt2 = new PWT2Command(statsController, teamController);
-		Command pwt3 = new PWT3Command(statsController, teamController);
+		Command ist1 = new ISTCommand(this, statsController, matchController, 1);
+		Command ist2 = new ISTCommand(this, statsController, matchController, 2);
+		Command ist3 = new ISTCommand(this, statsController, matchController, 3);
+		Command dst1 = new DSTCommand(statsController, matchController, 1);
+		Command dst2 = new DSTCommand(statsController, matchController, 2);
+		Command dst3 = new DSTCommand(statsController, matchController, 3);
+		Command igt1 = new IGTCommand(statsController, teamController, 1);
+		Command igt2 = new IGTCommand(statsController, teamController, 2);
+		Command igt3 = new IGTCommand(statsController, teamController, 3);
+		Command dgt1 = new DGTCommand(statsController, teamController, 1);
+		Command dgt2 = new DGTCommand(statsController, teamController, 2);
+		Command dgt3 = new DGTCommand(statsController, teamController, 3);
+		Command utt1 = new UTTCommand(statsController, teamController, 1);
+		Command utt2 = new UTTCommand(statsController, teamController, 2);
+		Command utt3 = new UTTCommand(statsController, teamController, 3);
+		Command rtt1 = new RTTCommand(statsController, teamController, 1);
+		Command rtt2 = new RTTCommand(statsController, teamController, 2);
+		Command rtt3 = new RTTCommand(statsController, teamController, 3);
+		Command prt1 = new PRCommand(statsController, teamController, 1);
+		Command prt2 = new PRCommand(statsController, teamController, 2);
+		Command prt3 = new PRCommand(statsController, teamController, 3);
+		Command pwt1 = new PWCommand(statsController, teamController, 1);
+		Command pwt2 = new PWCommand(statsController, teamController, 2);
+		Command pwt3 = new PWCommand(statsController, teamController, 3);
 		Command pss = new PSSCommand(statsController, this);
-		Command xpt1 = new XPT1Command(statsController, teamController);
-		Command xpt2 = new XPT2Command(statsController, teamController);
-		Command xpt3 = new XPT3Command(statsController, teamController);
+		Command xpt1 = new XPTCommand(statsController, teamController, 1);
+		Command xpt2 = new XPTCommand(statsController, teamController, 2);
+		Command xpt3 = new XPTCommand(statsController, teamController, 3);
 		Command pst = new PSTCommand(statsController, teamController);
-		Command xp1 = new XP1Command(statsController, teamController);
-		Command xp2 = new XP2Command(statsController, teamController);
+		Command xp1 = new XPCommand(statsController, teamController, 1);
+		Command xp2 = new XPCommand(statsController, teamController, 2);
 		Command pssc = new PSSCCommand(statsController, teamController);
 		Command psgc = new PSGCCommand(statsController, teamController);
 		Command psto = new PSTOCommand(statsController, teamController);

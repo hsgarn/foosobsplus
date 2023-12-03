@@ -1109,6 +1109,11 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xptca - push tournament clear all button
 
 ## Revision History</br>
+v2.012 12/03/2023</br>
+Remove display hack for cutthroat.</br>
+Refactor cutthroat rotate logic.</br>
+Refactor team commands to pass team number.</br>
+</br>
 v2.011 11/27/2023</br>
 Add 3rd Team object and show in MainFrame.</br>
 Add supporting Commands for 3rd Team.</br>

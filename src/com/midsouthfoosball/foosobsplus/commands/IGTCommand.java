@@ -24,17 +24,19 @@ package com.midsouthfoosball.foosobsplus.commands;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
 
-public class PWT3Command implements Command {
+public class IGTCommand implements Command {
 	private StatsController statsController;
 	private TeamController teamController;
-	
-	public PWT3Command(StatsController statsController, TeamController teamController) {
+	private int teamNumber;
+
+	public IGTCommand(StatsController statsController, TeamController teamController, int teamNumber) {
 		this.statsController = statsController;
 		this.teamController = teamController;
+		this.teamNumber = teamNumber;
 	}
 	
 	public void execute() {
-		teamController.toggleWarn(3);
+		teamController.incrementGameCount(teamNumber);
 	}
 
 	public String getCode() {
