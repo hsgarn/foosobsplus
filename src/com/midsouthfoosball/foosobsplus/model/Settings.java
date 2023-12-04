@@ -48,6 +48,7 @@ public class Settings {
 	// Property Settings
 	private Properties defaultControlProps;
 	private Properties defaultSourceProps;
+	private Properties defaultStatsSourceProps;
 	private Properties defaultFilterProps;
 	private Properties defaultPartnerProgramProps;
 	private Properties defaultHotKeyProps;
@@ -56,6 +57,7 @@ public class Settings {
 	
 	public Properties configControlProps;
 	public Properties configSourceProps;
+	public Properties configStatsSourceProps;
 	public Properties configFilterProps;
 	public Properties configPartnerProgramProps;
 	public Properties configHotKeyProps;
@@ -64,6 +66,7 @@ public class Settings {
 	
 	private String configControlFileName 			= "control.properties";
 	private String configSourceFileName 			= "source.properties";
+	private String configStatsSourceFileName 		= "statssource.properties";
 	private String configFilterFileName             = "filter.properties";
 	private String configPartnerProgramFileName     = "partnerprogram.properties";
 	private String configHotKeyFileName 			= "hotkey.properties";
@@ -79,6 +82,7 @@ public class Settings {
 	public Settings() throws IOException {
 		defaultControlProps 			= new Properties();
 		defaultSourceProps 				= new Properties();
+		defaultStatsSourceProps 		= new Properties();
 		defaultFilterProps              = new Properties();
 		defaultPartnerProgramProps      = new Properties();
 		defaultHotKeyProps 				= new Properties();
@@ -168,71 +172,72 @@ public class Settings {
 		defaultSourceProps.setProperty("GameTime", "gametime");
 		defaultSourceProps.setProperty("MatchTime", "matchtime");
 		defaultSourceProps.setProperty("StreamTime", "streamtime");
-		defaultSourceProps.setProperty("Stuffs1", "stuffs1");
-		defaultSourceProps.setProperty("Stuffs2", "stuffs2");
-		defaultSourceProps.setProperty("Stuffs3", "stuffs3");
-		defaultSourceProps.setProperty("Breaks1", "breaks1");
-		defaultSourceProps.setProperty("Breaks2", "breaks2");
-		defaultSourceProps.setProperty("Breaks3", "breaks3");
-		defaultSourceProps.setProperty("Aces1",  "aces1");
-		defaultSourceProps.setProperty("Aces2",  "aces2");
-		defaultSourceProps.setProperty("Aces3",  "aces3");
-		defaultSourceProps.setProperty("Team1PassAttempts", "team1passattempts");
-		defaultSourceProps.setProperty("Team2PassAttempts", "team2passattempts");
-		defaultSourceProps.setProperty("Team3PassAttempts", "team3passattempts");
-		defaultSourceProps.setProperty("Team1PassCompletes", "team1passcompletes");
-		defaultSourceProps.setProperty("Team2PassCompletes", "team2passcompletes");
-		defaultSourceProps.setProperty("Team3PassCompletes", "team3passcompletes");
-		defaultSourceProps.setProperty("Team1ShotAttempts", "team1shotattempts");
-		defaultSourceProps.setProperty("Team2ShotAttempts", "team2shotattempts");
-		defaultSourceProps.setProperty("Team3ShotAttempts", "team3shotattempts");
-		defaultSourceProps.setProperty("Team1ShotCompletes", "team1shotcompletes");
-		defaultSourceProps.setProperty("Team2ShotAttempts", "team2shotattempts");
-		defaultSourceProps.setProperty("Team3ShotAttempts", "team3shotattempts");
-		defaultSourceProps.setProperty("Team1ClearAttempts", "team1clearattempts");
-		defaultSourceProps.setProperty("Team2ShotAttempts", "team2shotattempts");
-		defaultSourceProps.setProperty("Team3ShotAttempts", "team3shotattempts");
-		defaultSourceProps.setProperty("Team1ClearCompletes", "team1clearcompletes");
-		defaultSourceProps.setProperty("Team2ShotAttempts", "team2shotattempts");
-		defaultSourceProps.setProperty("Team3ShotAttempts", "team3shotattempts");
-		defaultSourceProps.setProperty("Team1PassPercent", "team1passpercent");
-		defaultSourceProps.setProperty("Team2ShotAttempts", "team2shotattempts");
-		defaultSourceProps.setProperty("Team3ShotAttempts", "team3shotattempts");
-		defaultSourceProps.setProperty("Team1ShotPercent", "team1shotpercent");
-		defaultSourceProps.setProperty("Team2ShotAttempts", "team2shotattempts");
-		defaultSourceProps.setProperty("Team3ShotAttempts", "team3shotattempts");
-		defaultSourceProps.setProperty("Team1ClearPercent", "team1clearpercent");
-		defaultSourceProps.setProperty("Team2ClearPercent", "team2clearpercent");
-		defaultSourceProps.setProperty("Team3ClearPercent", "team3clearpercent");
-		defaultSourceProps.setProperty("Team1TwoBarPassAttempts", "team1twobarpassattempts");
-		defaultSourceProps.setProperty("Team2TwoBarPassAttempts", "team2twobarpassattempts");
-		defaultSourceProps.setProperty("Team3TwoBarPassAttempts", "team3twobarpassattempts");
-		defaultSourceProps.setProperty("Team1TwoBarPassCompletes", "team1twobarpasscompletes");
-		defaultSourceProps.setProperty("Team2TwoBarPassCompletes", "team2twobarpasscompletes");
-		defaultSourceProps.setProperty("Team3TwoBarPassCompletes", "team3twobarpasscompletes");
-		defaultSourceProps.setProperty("Team1TwoBarPassPercent", "team1twobarpasspercent");
-		defaultSourceProps.setProperty("Team2TwoBarPassPercent", "team2twobarpasspercent");
-		defaultSourceProps.setProperty("Team3TwoBarPassPercent", "team3twobarpasspercent");
-		defaultSourceProps.setProperty("Team1Scoring", "team1scoring");
-		defaultSourceProps.setProperty("Team2Scoring", "team2scoring");
-		defaultSourceProps.setProperty("Team3Scoring", "team3scoring");
-		defaultSourceProps.setProperty("Team1ThreeBarScoring", "team1threebarscoring");
-		defaultSourceProps.setProperty("Team2ThreeBarScoring", "team2threebarscoring");
-		defaultSourceProps.setProperty("Team3ThreeBarScoring", "team3threebarscoring");
-		defaultSourceProps.setProperty("Team1FiveBarScoring", "team1fivebarscoring");
-		defaultSourceProps.setProperty("Team2FiveBarScoring", "team2fivebarscoring");
-		defaultSourceProps.setProperty("Team3FiveBarScoring", "team3fivebarscoring");
-		defaultSourceProps.setProperty("Team1TwoBarScoring", "team1twobarscoring");
-		defaultSourceProps.setProperty("Team2TwoBarScoring", "team2twobarscoring");
-		defaultSourceProps.setProperty("Team3TwoBarScoring", "team3twobarscoring");
-		defaultSourceProps.setProperty("Team1ShotsOnGoal", "team1shotsongoal");
-		defaultSourceProps.setProperty("Team2ShotsOnGoal", "team2shotsongoal");
-		defaultSourceProps.setProperty("Team3ShotsOnGoal", "team3shotsongoal");
 		defaultSourceProps.setProperty("Side1Color","side1color");
 		defaultSourceProps.setProperty("Side2Color","side2color");
 		defaultSourceProps.setProperty("Side3Color","side3color");
 		defaultSourceProps.setProperty("ShowScoresSource", "ScoresAndLabels");
 		defaultSourceProps.setProperty("ShowTimerSource", "Foos OBS+ Timer");
+		//Stat Sources
+		defaultStatsSourceProps.setProperty("Stuffs1", "stuffs1");
+		defaultStatsSourceProps.setProperty("Stuffs2", "stuffs2");
+		defaultStatsSourceProps.setProperty("Stuffs3", "stuffs3");
+		defaultStatsSourceProps.setProperty("Breaks1", "breaks1");
+		defaultStatsSourceProps.setProperty("Breaks2", "breaks2");
+		defaultStatsSourceProps.setProperty("Breaks3", "breaks3");
+		defaultStatsSourceProps.setProperty("Aces1",  "aces1");
+		defaultStatsSourceProps.setProperty("Aces2",  "aces2");
+		defaultStatsSourceProps.setProperty("Aces3",  "aces3");
+		defaultStatsSourceProps.setProperty("Team1PassAttempts", "team1passattempts");
+		defaultStatsSourceProps.setProperty("Team2PassAttempts", "team2passattempts");
+		defaultStatsSourceProps.setProperty("Team3PassAttempts", "team3passattempts");
+		defaultStatsSourceProps.setProperty("Team1PassCompletes", "team1passcompletes");
+		defaultStatsSourceProps.setProperty("Team2PassCompletes", "team2passcompletes");
+		defaultStatsSourceProps.setProperty("Team3PassCompletes", "team3passcompletes");
+		defaultStatsSourceProps.setProperty("Team1ShotAttempts", "team1shotattempts");
+		defaultStatsSourceProps.setProperty("Team2ShotAttempts", "team2shotattempts");
+		defaultStatsSourceProps.setProperty("Team3ShotAttempts", "team3shotattempts");
+		defaultStatsSourceProps.setProperty("Team1ShotCompletes", "team1shotcompletes");
+		defaultStatsSourceProps.setProperty("Team2ShotAttempts", "team2shotattempts");
+		defaultStatsSourceProps.setProperty("Team3ShotAttempts", "team3shotattempts");
+		defaultStatsSourceProps.setProperty("Team1ClearAttempts", "team1clearattempts");
+		defaultStatsSourceProps.setProperty("Team2ShotAttempts", "team2shotattempts");
+		defaultStatsSourceProps.setProperty("Team3ShotAttempts", "team3shotattempts");
+		defaultStatsSourceProps.setProperty("Team1ClearCompletes", "team1clearcompletes");
+		defaultStatsSourceProps.setProperty("Team2ShotAttempts", "team2shotattempts");
+		defaultStatsSourceProps.setProperty("Team3ShotAttempts", "team3shotattempts");
+		defaultStatsSourceProps.setProperty("Team1PassPercent", "team1passpercent");
+		defaultStatsSourceProps.setProperty("Team2ShotAttempts", "team2shotattempts");
+		defaultStatsSourceProps.setProperty("Team3ShotAttempts", "team3shotattempts");
+		defaultStatsSourceProps.setProperty("Team1ShotPercent", "team1shotpercent");
+		defaultStatsSourceProps.setProperty("Team2ShotAttempts", "team2shotattempts");
+		defaultStatsSourceProps.setProperty("Team3ShotAttempts", "team3shotattempts");
+		defaultStatsSourceProps.setProperty("Team1ClearPercent", "team1clearpercent");
+		defaultStatsSourceProps.setProperty("Team2ClearPercent", "team2clearpercent");
+		defaultStatsSourceProps.setProperty("Team3ClearPercent", "team3clearpercent");
+		defaultStatsSourceProps.setProperty("Team1TwoBarPassAttempts", "team1twobarpassattempts");
+		defaultStatsSourceProps.setProperty("Team2TwoBarPassAttempts", "team2twobarpassattempts");
+		defaultStatsSourceProps.setProperty("Team3TwoBarPassAttempts", "team3twobarpassattempts");
+		defaultStatsSourceProps.setProperty("Team1TwoBarPassCompletes", "team1twobarpasscompletes");
+		defaultStatsSourceProps.setProperty("Team2TwoBarPassCompletes", "team2twobarpasscompletes");
+		defaultStatsSourceProps.setProperty("Team3TwoBarPassCompletes", "team3twobarpasscompletes");
+		defaultStatsSourceProps.setProperty("Team1TwoBarPassPercent", "team1twobarpasspercent");
+		defaultStatsSourceProps.setProperty("Team2TwoBarPassPercent", "team2twobarpasspercent");
+		defaultStatsSourceProps.setProperty("Team3TwoBarPassPercent", "team3twobarpasspercent");
+		defaultStatsSourceProps.setProperty("Team1Scoring", "team1scoring");
+		defaultStatsSourceProps.setProperty("Team2Scoring", "team2scoring");
+		defaultStatsSourceProps.setProperty("Team3Scoring", "team3scoring");
+		defaultStatsSourceProps.setProperty("Team1ThreeBarScoring", "team1threebarscoring");
+		defaultStatsSourceProps.setProperty("Team2ThreeBarScoring", "team2threebarscoring");
+		defaultStatsSourceProps.setProperty("Team3ThreeBarScoring", "team3threebarscoring");
+		defaultStatsSourceProps.setProperty("Team1FiveBarScoring", "team1fivebarscoring");
+		defaultStatsSourceProps.setProperty("Team2FiveBarScoring", "team2fivebarscoring");
+		defaultStatsSourceProps.setProperty("Team3FiveBarScoring", "team3fivebarscoring");
+		defaultStatsSourceProps.setProperty("Team1TwoBarScoring", "team1twobarscoring");
+		defaultStatsSourceProps.setProperty("Team2TwoBarScoring", "team2twobarscoring");
+		defaultStatsSourceProps.setProperty("Team3TwoBarScoring", "team3twobarscoring");
+		defaultStatsSourceProps.setProperty("Team1ShotsOnGoal", "team1shotsongoal");
+		defaultStatsSourceProps.setProperty("Team2ShotsOnGoal", "team2shotsongoal");
+		defaultStatsSourceProps.setProperty("Team3ShotsOnGoal", "team3shotsongoal");
 		//Filters
 		defaultFilterProps.setProperty("Team1Score", "team1score");
 		defaultFilterProps.setProperty("Team2Score", "team2score");
@@ -336,6 +341,7 @@ public class Settings {
 		//Config Properties
 		configControlProps 				= new Properties(defaultControlProps);
 		configSourceProps 				= new Properties(defaultSourceProps);
+		configStatsSourceProps 			= new Properties(defaultStatsSourceProps);
 		configFilterProps               = new Properties(defaultFilterProps);
 		configPartnerProgramProps       = new Properties(defaultPartnerProgramProps);
 		configHotKeyProps 				= new Properties(defaultHotKeyProps);
@@ -345,6 +351,7 @@ public class Settings {
 		loadFromControlConfig();
 		loadFromOBSConfig();
 		loadFromSourceConfig();
+		loadFromStatsSourceConfig();
 		loadFromFilterConfig();
 		loadFromPartnerProgramConfig();
 		loadFromHotKeyConfig();
@@ -437,86 +444,6 @@ public class Settings {
 		String teamNumber = Integer.toString(teamNbr);
 		return configSourceProps.getProperty("Warn" + teamNumber);//Warn1
 	}
-	public String getPassAttemptsSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Team" + teamNumber + "PassAttempts");//Team1PassAttempts
-	}
-	public String getPassCompletesSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Team" + teamNumber + "PassCompletes");//Team1PassCompletes
-	}
-	public String getShotAttemptsSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Team" + teamNumber + "ShotAttempts");//Team1ShotAttempts
-	}
-	public String getShotCompletesSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Team" + teamNumber + "ShotCompletes");//Team1ShotCompletes
-	}
-	public String getClearAttemptsSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Team" + teamNumber + "ClearAttempts");//Team1ClearAttempts
-	}
-	public String getClearCompletesSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Team" + teamNumber + "ClearCompletes");//Team1ClearCompletes
-	}
-	public String getPassPercentSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Team" + teamNumber + "PassPercent");//Team1PassPercent
-	}
-	public String getShotPercentSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Team" + teamNumber + "ShotPercent");//Team1ShotPercent
-	}
-	public String getClearPercentSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Team" + teamNumber + "ClearPercent");//Team1ClearPercent
-	}
-	public String getTwoBarPassAttemptsSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Team" + teamNumber + "TwoBarPassAttempts");//Team1TwoBarPassAttempts
-	}
-	public String getTwoBarPassCompletesSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Team" + teamNumber + "TwoBarPassCompletes");//Team1TwoBarPassCompletes
-	}
-	public String getTwoBarPassPercentSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Team" + teamNumber + "TwoBarPassPercent");//Team1TwoBarPassPercent
-	}
-	public String getScoringSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Team" + teamNumber + "Scoring");//Team1Scoring
-	}
-	public String getThreeBarScoringSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Team" + teamNumber + "ThreeBarScoring");//Team1ThreeBarScoring
-	}
-	public String getFiveBarScoringSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Team" + teamNumber + "FiveBarScoring");//Team1FiveBarScoring
-	}
-	public String getTwoBarScoringSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Team" + teamNumber + "TwoBarScoring");//Team1TwoBarScoring
-	}
-	public String getShotsOnGoalSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Team" + teamNumber + "ShotsOnGoal");//Team1ShotsOnGoal
-	}
-	public String getStuffsSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Stuffs" + teamNumber);//Stuffs1
-	}
-	public String getBreaksSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Breaks" + teamNumber);//Breaks1
-	}
-	public String getAcesSource(int teamNbr) {
-		String teamNumber = Integer.toString(teamNbr);
-		return configSourceProps.getProperty("Aces" + teamNumber);//Aces1
-	}
 	public String getTournamentSource() {return configSourceProps.getProperty("Tournament");}
 	public String getEventSource() {return configSourceProps.getProperty("Event");}
 	public String getTableNameSource() {return configSourceProps.getProperty("TableName");}
@@ -533,6 +460,87 @@ public class Settings {
 	public String getSide3ColorSource() {return configSourceProps.getProperty("Side3Color");}
 	public String getShowScoresSource() {return configSourceProps.getProperty("ShowScoresSource");}
 	public String getShowTimerSource() {return configSourceProps.getProperty("ShowTimerSource");}
+	//Stat Sources
+	public String getPassAttemptsSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Team" + teamNumber + "PassAttempts");//Team1PassAttempts
+	}
+	public String getPassCompletesSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Team" + teamNumber + "PassCompletes");//Team1PassCompletes
+	}
+	public String getShotAttemptsSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Team" + teamNumber + "ShotAttempts");//Team1ShotAttempts
+	}
+	public String getShotCompletesSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Team" + teamNumber + "ShotCompletes");//Team1ShotCompletes
+	}
+	public String getClearAttemptsSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Team" + teamNumber + "ClearAttempts");//Team1ClearAttempts
+	}
+	public String getClearCompletesSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Team" + teamNumber + "ClearCompletes");//Team1ClearCompletes
+	}
+	public String getPassPercentSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Team" + teamNumber + "PassPercent");//Team1PassPercent
+	}
+	public String getShotPercentSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Team" + teamNumber + "ShotPercent");//Team1ShotPercent
+	}
+	public String getClearPercentSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Team" + teamNumber + "ClearPercent");//Team1ClearPercent
+	}
+	public String getTwoBarPassAttemptsSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Team" + teamNumber + "TwoBarPassAttempts");//Team1TwoBarPassAttempts
+	}
+	public String getTwoBarPassCompletesSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Team" + teamNumber + "TwoBarPassCompletes");//Team1TwoBarPassCompletes
+	}
+	public String getTwoBarPassPercentSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Team" + teamNumber + "TwoBarPassPercent");//Team1TwoBarPassPercent
+	}
+	public String getScoringSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Team" + teamNumber + "Scoring");//Team1Scoring
+	}
+	public String getThreeBarScoringSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Team" + teamNumber + "ThreeBarScoring");//Team1ThreeBarScoring
+	}
+	public String getFiveBarScoringSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Team" + teamNumber + "FiveBarScoring");//Team1FiveBarScoring
+	}
+	public String getTwoBarScoringSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Team" + teamNumber + "TwoBarScoring");//Team1TwoBarScoring
+	}
+	public String getShotsOnGoalSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Team" + teamNumber + "ShotsOnGoal");//Team1ShotsOnGoal
+	}
+	public String getStuffsSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Stuffs" + teamNumber);//Stuffs1
+	}
+	public String getBreaksSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Breaks" + teamNumber);//Breaks1
+	}
+	public String getAcesSource(int teamNbr) {
+		String teamNumber = Integer.toString(teamNbr);
+		return configStatsSourceProps.getProperty("Aces" + teamNumber);//Aces1
+	}
 	//Filters
 	public String getFiltersFilter(String filter) {return configFilterProps.getProperty(filter);}
 	public String getTeam1ScoreFilter() {return configFilterProps.getProperty("Team1Score");}
@@ -737,6 +745,10 @@ public class Settings {
 	public void setSource(String property, String source) {
 		configSourceProps.setProperty(property, source);
 	}
+	//Stat Sources
+	public void setStatsSource(String property, String source) {
+		configStatsSourceProps.setProperty(property, source);
+	}
 	//Filters
 	public void setFilter(String property, String filter) {
 		configFilterProps.setProperty(property, filter);
@@ -844,71 +856,72 @@ public class Settings {
 	public String getDefaultGameTimeSource() {return defaultSourceProps.getProperty("GameTime");}
 	public String getDefaultMatchTimeSource() {return defaultSourceProps.getProperty("MatchTime");}
 	public String getDefaultStreamTimeSource() {return defaultSourceProps.getProperty("StreamTime");}
-	public String getDefaultStuffs1Source() {return defaultSourceProps.getProperty("Stuffs1");}
-	public String getDefaultStuffs2Source() {return defaultSourceProps.getProperty("Stuffs2");}
-	public String getDefaultStuffs3Source() {return defaultSourceProps.getProperty("Stuffs3");}
-	public String getDefaultBreaks1Source() {return defaultSourceProps.getProperty("Breaks1");}
-	public String getDefaultBreaks2Source() {return defaultSourceProps.getProperty("Breaks2");}
-	public String getDefaultBreaks3Source() {return defaultSourceProps.getProperty("Breaks3");}
-	public String getDefaultAces1Source() {return defaultSourceProps.getProperty("Aces1");}
-	public String getDefaultAces2Source() {return defaultSourceProps.getProperty("Aces2");}
-	public String getDefaultAces3Source() {return defaultSourceProps.getProperty("Aces3");}
-	public String getDefaultTeam1PassAttemptsSource() {return defaultSourceProps.getProperty("Team1PassAttempts");}
-	public String getDefaultTeam1PassCompletesSource() {return defaultSourceProps.getProperty("Team1PassCompletes");}
-	public String getDefaultTeam2PassAttemptsSource() {return defaultSourceProps.getProperty("Team2PassAttempts");}
-	public String getDefaultTeam2PassCompletesSource() {return defaultSourceProps.getProperty("Team2PassCompletes");}
-	public String getDefaultTeam3PassAttemptsSource() {return defaultSourceProps.getProperty("Team3PassAttempts");}
-	public String getDefaultTeam3PassCompletesSource() {return defaultSourceProps.getProperty("Team3PassCompletes");}
-	public String getDefaultTeam1ShotAttemptsSource() {return defaultSourceProps.getProperty("Team1ShotAttempts");}
-	public String getDefaultTeam1ShotCompletesSource() {return defaultSourceProps.getProperty("Team1ShotCompletes");}
-	public String getDefaultTeam2ShotAttemptsSource() {return defaultSourceProps.getProperty("Team2ShotAttempts");}
-	public String getDefaultTeam2ShotCompletesSource() {return defaultSourceProps.getProperty("Team2ShotCompletes");}
-	public String getDefaultTeam3ShotAttemptsSource() {return defaultSourceProps.getProperty("Team3ShotAttempts");}
-	public String getDefaultTeam3ShotCompletesSource() {return defaultSourceProps.getProperty("Team3ShotCompletes");}
-	public String getDefaultTeam1ClearAttemptsSource() {return defaultSourceProps.getProperty("Team1ClearAttempts");}
-	public String getDefaultTeam1ClearCompletesSource() {return defaultSourceProps.getProperty("Team1ClearCompletes");}
-	public String getDefaultTeam2ClearAttemptsSource() {return defaultSourceProps.getProperty("Team2ClearAttempts");}
-	public String getDefaultTeam2ClearCompletesSource() {return defaultSourceProps.getProperty("Team2ClearCompletes");}
-	public String getDefaultTeam3ClearAttemptsSource() {return defaultSourceProps.getProperty("Team3ClearAttempts");}
-	public String getDefaultTeam3ClearCompletesSource() {return defaultSourceProps.getProperty("Team3ClearCompletes");}
-	public String getDefaultSide1ColorSource() {return defaultSourceProps.getProperty("Side1Color");}
-	public String getDefaultSide2ColorSource() {return defaultSourceProps.getProperty("Side2Color");}
-	public String getDefaultSide3ColorSource() {return defaultSourceProps.getProperty("Side3Color");}
-	public String getDefaultTeam1PassPercentSource() {return defaultSourceProps.getProperty("Team1PassPercent");}
-	public String getDefaultTeam2PassPercentSource() {return defaultSourceProps.getProperty("Team2PassPercent");}
-	public String getDefaultTeam3PassPercentSource() {return defaultSourceProps.getProperty("Team3PassPercent");}
-	public String getDefaultTeam1ShotPercentSource() {return defaultSourceProps.getProperty("Team1ShotPercent");}
-	public String getDefaultTeam2ShotPercentSource() {return defaultSourceProps.getProperty("Team2ShotPercent");}
-	public String getDefaultTeam3ShotPercentSource() {return defaultSourceProps.getProperty("Team3ShotPercent");}
-	public String getDefaultTeam1ClearPercentSource() {return defaultSourceProps.getProperty("Team1ClearPercent");}
-	public String getDefaultTeam2ClearPercentSource() {return defaultSourceProps.getProperty("Team2ClearPercent");}
-	public String getDefaultTeam3ClearPercentSource() {return defaultSourceProps.getProperty("Team3ClearPercent");}
-	public String getDefaultTeam1TwoBarPassAttemptsSource() {return defaultSourceProps.getProperty("Team1TwoBarPassAttempts");}
-	public String getDefaultTeam1TwoBarPassCompletesSource() {return defaultSourceProps.getProperty("Team1TwoBarPassCompletes");}
-	public String getDefaultTeam2TwoBarPassAttemptsSource() {return defaultSourceProps.getProperty("Team2TwoBarPassAttempts");}
-	public String getDefaultTeam2TwoBarPassCompletesSource() {return defaultSourceProps.getProperty("Team2TwoBarPassCompletes");}
-	public String getDefaultTeam3TwoBarPassAttemptsSource() {return defaultSourceProps.getProperty("Team3TwoBarPassAttempts");}
-	public String getDefaultTeam3TwoBarPassCompletesSource() {return defaultSourceProps.getProperty("Team3TwoBarPassCompletes");}
-	public String getDefaultTeam1TwoBarPassPercentSource() {return defaultSourceProps.getProperty("Team1TwoBarPassPercent");}
-	public String getDefaultTeam2TwoBarPassPercentSource() {return defaultSourceProps.getProperty("Team2TwoBarPassPercent");}
-	public String getDefaultTeam3TwoBarPassPercentSource() {return defaultSourceProps.getProperty("Team3TwoBarPassPercent");}
-	public String getDefaultTeam1ScoringSource() {return defaultSourceProps.getProperty("Team1Scoring");}
-	public String getDefaultTeam2ScoringSource() {return defaultSourceProps.getProperty("Team2Scoring");}
-	public String getDefaultTeam3ScoringSource() {return defaultSourceProps.getProperty("Team3Scoring");}
-	public String getDefaultTeam1ThreeBarScoringSource() {return defaultSourceProps.getProperty("Team1ThreeBarScoring");}
-	public String getDefaultTeam2ThreeBarScoringSource() {return defaultSourceProps.getProperty("Team2ThreeBarScoring");}
-	public String getDefaultTeam3ThreeBarScoringSource() {return defaultSourceProps.getProperty("Team3ThreeBarScoring");}
-	public String getDefaultTeam1FiveBarScoringSource() {return defaultSourceProps.getProperty("Team1FiveBarScoring");}
-	public String getDefaultTeam2FiveBarScoringSource() {return defaultSourceProps.getProperty("Team2FiveBarScoring");}
-	public String getDefaultTeam3FiveBarScoringSource() {return defaultSourceProps.getProperty("Team3FiveBarScoring");}
-	public String getDefaultTeam1TwoBarScoringSource() {return defaultSourceProps.getProperty("Team1TwoBarScoring");}	
-	public String getDefaultTeam2TwoBarScoringSource() {return defaultSourceProps.getProperty("Team2TwoBarScoring");}	
-	public String getDefaultTeam3TwoBarScoringSource() {return defaultSourceProps.getProperty("Team3TwoBarScoring");}	
-	public String getDefaultTeam1ShotsOnGoalSource() {return defaultSourceProps.getProperty("Team1ShotsOnGoal");}
-	public String getDefaultTeam2ShotsOnGoalSource() {return defaultSourceProps.getProperty("Team2ShotsOnGoal");}
-	public String getDefaultTeam3ShotsOnGoalSource() {return defaultSourceProps.getProperty("Team3ShotsOnGoal");}
-	public String getDefaultShowScoresSource() {return defaultSourceProps.getProperty("ShowScoresSource");}
-	public String getDefaultShowTimerSource() {return defaultSourceProps.getProperty("ShowTimerSource");}
+	//Stat Sources
+	public String getDefaultStuffs1Source() {return defaultStatsSourceProps.getProperty("Stuffs1");}
+	public String getDefaultStuffs2Source() {return defaultStatsSourceProps.getProperty("Stuffs2");}
+	public String getDefaultStuffs3Source() {return defaultStatsSourceProps.getProperty("Stuffs3");}
+	public String getDefaultBreaks1Source() {return defaultStatsSourceProps.getProperty("Breaks1");}
+	public String getDefaultBreaks2Source() {return defaultStatsSourceProps.getProperty("Breaks2");}
+	public String getDefaultBreaks3Source() {return defaultStatsSourceProps.getProperty("Breaks3");}
+	public String getDefaultAces1Source() {return defaultStatsSourceProps.getProperty("Aces1");}
+	public String getDefaultAces2Source() {return defaultStatsSourceProps.getProperty("Aces2");}
+	public String getDefaultAces3Source() {return defaultStatsSourceProps.getProperty("Aces3");}
+	public String getDefaultTeam1PassAttemptsSource() {return defaultStatsSourceProps.getProperty("Team1PassAttempts");}
+	public String getDefaultTeam1PassCompletesSource() {return defaultStatsSourceProps.getProperty("Team1PassCompletes");}
+	public String getDefaultTeam2PassAttemptsSource() {return defaultStatsSourceProps.getProperty("Team2PassAttempts");}
+	public String getDefaultTeam2PassCompletesSource() {return defaultStatsSourceProps.getProperty("Team2PassCompletes");}
+	public String getDefaultTeam3PassAttemptsSource() {return defaultStatsSourceProps.getProperty("Team3PassAttempts");}
+	public String getDefaultTeam3PassCompletesSource() {return defaultStatsSourceProps.getProperty("Team3PassCompletes");}
+	public String getDefaultTeam1ShotAttemptsSource() {return defaultStatsSourceProps.getProperty("Team1ShotAttempts");}
+	public String getDefaultTeam1ShotCompletesSource() {return defaultStatsSourceProps.getProperty("Team1ShotCompletes");}
+	public String getDefaultTeam2ShotAttemptsSource() {return defaultStatsSourceProps.getProperty("Team2ShotAttempts");}
+	public String getDefaultTeam2ShotCompletesSource() {return defaultStatsSourceProps.getProperty("Team2ShotCompletes");}
+	public String getDefaultTeam3ShotAttemptsSource() {return defaultStatsSourceProps.getProperty("Team3ShotAttempts");}
+	public String getDefaultTeam3ShotCompletesSource() {return defaultStatsSourceProps.getProperty("Team3ShotCompletes");}
+	public String getDefaultTeam1ClearAttemptsSource() {return defaultStatsSourceProps.getProperty("Team1ClearAttempts");}
+	public String getDefaultTeam1ClearCompletesSource() {return defaultStatsSourceProps.getProperty("Team1ClearCompletes");}
+	public String getDefaultTeam2ClearAttemptsSource() {return defaultStatsSourceProps.getProperty("Team2ClearAttempts");}
+	public String getDefaultTeam2ClearCompletesSource() {return defaultStatsSourceProps.getProperty("Team2ClearCompletes");}
+	public String getDefaultTeam3ClearAttemptsSource() {return defaultStatsSourceProps.getProperty("Team3ClearAttempts");}
+	public String getDefaultTeam3ClearCompletesSource() {return defaultStatsSourceProps.getProperty("Team3ClearCompletes");}
+	public String getDefaultSide1ColorSource() {return defaultStatsSourceProps.getProperty("Side1Color");}
+	public String getDefaultSide2ColorSource() {return defaultStatsSourceProps.getProperty("Side2Color");}
+	public String getDefaultSide3ColorSource() {return defaultStatsSourceProps.getProperty("Side3Color");}
+	public String getDefaultTeam1PassPercentSource() {return defaultStatsSourceProps.getProperty("Team1PassPercent");}
+	public String getDefaultTeam2PassPercentSource() {return defaultStatsSourceProps.getProperty("Team2PassPercent");}
+	public String getDefaultTeam3PassPercentSource() {return defaultStatsSourceProps.getProperty("Team3PassPercent");}
+	public String getDefaultTeam1ShotPercentSource() {return defaultStatsSourceProps.getProperty("Team1ShotPercent");}
+	public String getDefaultTeam2ShotPercentSource() {return defaultStatsSourceProps.getProperty("Team2ShotPercent");}
+	public String getDefaultTeam3ShotPercentSource() {return defaultStatsSourceProps.getProperty("Team3ShotPercent");}
+	public String getDefaultTeam1ClearPercentSource() {return defaultStatsSourceProps.getProperty("Team1ClearPercent");}
+	public String getDefaultTeam2ClearPercentSource() {return defaultStatsSourceProps.getProperty("Team2ClearPercent");}
+	public String getDefaultTeam3ClearPercentSource() {return defaultStatsSourceProps.getProperty("Team3ClearPercent");}
+	public String getDefaultTeam1TwoBarPassAttemptsSource() {return defaultStatsSourceProps.getProperty("Team1TwoBarPassAttempts");}
+	public String getDefaultTeam1TwoBarPassCompletesSource() {return defaultStatsSourceProps.getProperty("Team1TwoBarPassCompletes");}
+	public String getDefaultTeam2TwoBarPassAttemptsSource() {return defaultStatsSourceProps.getProperty("Team2TwoBarPassAttempts");}
+	public String getDefaultTeam2TwoBarPassCompletesSource() {return defaultStatsSourceProps.getProperty("Team2TwoBarPassCompletes");}
+	public String getDefaultTeam3TwoBarPassAttemptsSource() {return defaultStatsSourceProps.getProperty("Team3TwoBarPassAttempts");}
+	public String getDefaultTeam3TwoBarPassCompletesSource() {return defaultStatsSourceProps.getProperty("Team3TwoBarPassCompletes");}
+	public String getDefaultTeam1TwoBarPassPercentSource() {return defaultStatsSourceProps.getProperty("Team1TwoBarPassPercent");}
+	public String getDefaultTeam2TwoBarPassPercentSource() {return defaultStatsSourceProps.getProperty("Team2TwoBarPassPercent");}
+	public String getDefaultTeam3TwoBarPassPercentSource() {return defaultStatsSourceProps.getProperty("Team3TwoBarPassPercent");}
+	public String getDefaultTeam1ScoringSource() {return defaultStatsSourceProps.getProperty("Team1Scoring");}
+	public String getDefaultTeam2ScoringSource() {return defaultStatsSourceProps.getProperty("Team2Scoring");}
+	public String getDefaultTeam3ScoringSource() {return defaultStatsSourceProps.getProperty("Team3Scoring");}
+	public String getDefaultTeam1ThreeBarScoringSource() {return defaultStatsSourceProps.getProperty("Team1ThreeBarScoring");}
+	public String getDefaultTeam2ThreeBarScoringSource() {return defaultStatsSourceProps.getProperty("Team2ThreeBarScoring");}
+	public String getDefaultTeam3ThreeBarScoringSource() {return defaultStatsSourceProps.getProperty("Team3ThreeBarScoring");}
+	public String getDefaultTeam1FiveBarScoringSource() {return defaultStatsSourceProps.getProperty("Team1FiveBarScoring");}
+	public String getDefaultTeam2FiveBarScoringSource() {return defaultStatsSourceProps.getProperty("Team2FiveBarScoring");}
+	public String getDefaultTeam3FiveBarScoringSource() {return defaultStatsSourceProps.getProperty("Team3FiveBarScoring");}
+	public String getDefaultTeam1TwoBarScoringSource() {return defaultStatsSourceProps.getProperty("Team1TwoBarScoring");}	
+	public String getDefaultTeam2TwoBarScoringSource() {return defaultStatsSourceProps.getProperty("Team2TwoBarScoring");}	
+	public String getDefaultTeam3TwoBarScoringSource() {return defaultStatsSourceProps.getProperty("Team3TwoBarScoring");}	
+	public String getDefaultTeam1ShotsOnGoalSource() {return defaultStatsSourceProps.getProperty("Team1ShotsOnGoal");}
+	public String getDefaultTeam2ShotsOnGoalSource() {return defaultStatsSourceProps.getProperty("Team2ShotsOnGoal");}
+	public String getDefaultTeam3ShotsOnGoalSource() {return defaultStatsSourceProps.getProperty("Team3ShotsOnGoal");}
+	public String getDefaultShowScoresSource() {return defaultStatsSourceProps.getProperty("ShowScoresSource");}
+	public String getDefaultShowTimerSource() {return defaultStatsSourceProps.getProperty("ShowTimerSource");}
 	//Filters
 	public String getDefaultTeam1ScoreFilter() {return defaultFilterProps.getProperty("Team1Score");}
 	public String getDefaultTeam2ScoreFilter() {return defaultFilterProps.getProperty("Team2Score");}
@@ -1026,6 +1039,16 @@ public class Settings {
 			saveSourceConfig();
 		}
 	}
+	public void loadFromStatsSourceConfig() throws IOException {
+		try(InputStream inputStream = Files.newInputStream(Paths.get(configStatsSourceFileName))) {
+			configStatsSourceProps.load(inputStream);
+		} catch (NoSuchFileException e) {
+			logger.info(Paths.get(configStatsSourceFileName) + " not found. Writing defaults.");
+			Files.createFile(Paths.get(configStatsSourceFileName));
+			configStatsSourceProps = defaultStatsSourceProps;
+			saveStatsSourceConfig();
+		}
+	}
 	public void loadFromFilterConfig() throws IOException {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configFilterFileName))) {
 			configFilterProps.load(inputStream);
@@ -1088,6 +1111,14 @@ public class Settings {
 			configSourceProps.store(outputStream, "FoosOBSPlus Source Settings");
 		} catch (Exception e) {
 			logger.error("Could not write to " + Paths.get(configSourceFileName));
+		}
+	}
+	public void saveStatsSourceConfig() throws IOException {
+		//Stats Source
+		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configStatsSourceFileName))) {
+			configStatsSourceProps.store(outputStream, "FoosOBSPlus Stats Source Settings");
+		} catch (Exception e) {
+			logger.error("Could not write to " + Paths.get(configStatsSourceFileName));
 		}
 	}
 	public void saveFilterConfig() throws IOException {

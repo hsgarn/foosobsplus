@@ -1109,6 +1109,10 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xptca - push tournament clear all button
 
 ## Revision History</br>
+v2.014 12/04/2023</br>
+Separate stat sources from other sources.</br>
+Redesign Sources Panel.</br>
+</br>
 v2.013 12/03/2023</br>
 Add team3 info to sources in settings.</br>
 Fix tournament source that was incorrectly defaulting to tablename.</br>
