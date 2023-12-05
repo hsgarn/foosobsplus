@@ -1,5 +1,5 @@
 /**
-Copyright 2020-2023 Hugh Garner
+Copyright 2020-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -220,15 +220,15 @@ public class SwitchPanel extends JPanel {
 		} else {
 			btnSwitchTeams.setMnemonic(settings.getSwitchTeamsHotKey().charAt(0));
 		};
-		if(settings.getSwitchPlayer1HotKey().isEmpty()) {
+		if(settings.getSwitchPlayerHotKey("1").isEmpty()) {
 			btnSwitchPlayer1.setMnemonic(-1);
 		} else {
-			btnSwitchPlayer1.setMnemonic(settings.getSwitchPlayer1HotKey().charAt(0));
+			btnSwitchPlayer1.setMnemonic(settings.getSwitchPlayerHotKey("1").charAt(0));
 		};
-		if(settings.getSwitchPlayer2HotKey().isEmpty()) {
+		if(settings.getSwitchPlayerHotKey("2").isEmpty()) {
 			btnSwitchPlayer2.setMnemonic(-1);
 		} else {
-			btnSwitchPlayer2.setMnemonic(settings.getSwitchPlayer2HotKey().charAt(0));
+			btnSwitchPlayer2.setMnemonic(settings.getSwitchPlayerHotKey("2").charAt(0));
 		};
 		if(settings.getSwitchScoresHotKey().isEmpty()) {
 			btnSwitchScores.setMnemonic(-1);

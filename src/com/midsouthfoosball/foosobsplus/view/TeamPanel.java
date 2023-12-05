@@ -1,5 +1,5 @@
 /**
-Copyright 2020-2023 Hugh Garner
+Copyright 2020-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -162,99 +162,52 @@ public class TeamPanel extends JPanel {
         this.setFocusCycleRoot(true);
 	}
 	private void setMnemonics(int teamNbr) {
-		if (teamNbr == 1) {
-			if(settings.getTeam1SwitchPositionsHotKey().isEmpty()) {
-				btnSwitchPositions.setMnemonic(-1);
-			} else {
-				btnSwitchPositions.setMnemonic(settings.getTeam1SwitchPositionsHotKey().charAt(0));
-			};
-			if(settings.getScore1PlusHotKey().isEmpty()) {
-				btnScoreIncrease.setMnemonic(-1);
-			} else {
-				btnScoreIncrease.setMnemonic(settings.getScore1PlusHotKey().charAt(0));
-			};
-			if(settings.getScore1MinusHotKey().isEmpty()) {
-				btnScoreDecrease.setMnemonic(-1);
-			} else {
-				btnScoreDecrease.setMnemonic(settings.getScore1MinusHotKey().charAt(0));
-			};
-			if(settings.getGameCount1PlusHotKey().isEmpty()) {
-				btnGameCountIncrease.setMnemonic(-1);
-			} else {
-				btnGameCountIncrease.setMnemonic(settings.getGameCount1PlusHotKey().charAt(0));
-			};
-			if(settings.getGameCount1MinusHotKey().isEmpty()) {
-				btnGameCountDecrease.setMnemonic(-1);
-			} else {
-				btnGameCountDecrease.setMnemonic(settings.getGameCount1MinusHotKey().charAt(0));
-			};
-			if(settings.getTimeOut1PlusHotKey().isEmpty()) {
-				btnTimeOutCountIncrease.setMnemonic(-1);
-			} else {
-				btnTimeOutCountIncrease.setMnemonic(settings.getTimeOut1PlusHotKey().charAt(0));
-			};
-			if(settings.getTimeOut1MinusHotKey().isEmpty()) {
-				btnTimeOutCountDecrease.setMnemonic(-1);
-			} else {
-				btnTimeOutCountDecrease.setMnemonic(settings.getTimeOut1MinusHotKey().charAt(0));
-			};
-			if(settings.getReset1HotKey().isEmpty()) {
-				btnReset.setMnemonic(-1);
-			} else {
-				btnReset.setMnemonic(settings.getReset1HotKey().charAt(0));
-			};
-			if(settings.getWarn1HotKey().isEmpty()) {
-				btnWarn.setMnemonic(-1);
-			} else {
-				btnWarn.setMnemonic(settings.getWarn1HotKey().charAt(0));
-			};
+		String teamNumber = Integer.toString(teamNbr);
+		if(settings.getTeamSwitchPositionsHotKey(teamNumber).isEmpty()) {
+			btnSwitchPositions.setMnemonic(-1);
 		} else {
-			if(settings.getTeam2SwitchPositionsHotKey().isEmpty()) {
-				btnSwitchPositions.setMnemonic(-1);
-			} else {
-				btnSwitchPositions.setMnemonic(settings.getTeam2SwitchPositionsHotKey().charAt(0));
-			};
-			if(settings.getScore2PlusHotKey().isEmpty()) {
-				btnScoreIncrease.setMnemonic(-1);
-			} else {
-				btnScoreIncrease.setMnemonic(settings.getScore2PlusHotKey().charAt(0));
-			};
-			if(settings.getScore2MinusHotKey().isEmpty()) {
-				btnScoreDecrease.setMnemonic(-1);
-			} else {
-				btnScoreDecrease.setMnemonic(settings.getScore2MinusHotKey().charAt(0));
-			};
-			if(settings.getGameCount2PlusHotKey().isEmpty()) {
-				btnGameCountIncrease.setMnemonic(-1);
-			} else {
-				btnGameCountIncrease.setMnemonic(settings.getGameCount2PlusHotKey().charAt(0));
-			};
-			if(settings.getGameCount2MinusHotKey().isEmpty()) {
-				btnGameCountDecrease.setMnemonic(-1);
-			} else {
-				btnGameCountDecrease.setMnemonic(settings.getGameCount2MinusHotKey().charAt(0));
-			};
-			if(settings.getTimeOut2PlusHotKey().isEmpty()) {
-				btnTimeOutCountIncrease.setMnemonic(-2);
-			} else {
-				btnTimeOutCountIncrease.setMnemonic(settings.getTimeOut2PlusHotKey().charAt(0));
-			};
-			if(settings.getTimeOut2MinusHotKey().isEmpty()) {
-				btnTimeOutCountDecrease.setMnemonic(-2);
-			} else {
-				btnTimeOutCountDecrease.setMnemonic(settings.getTimeOut2MinusHotKey().charAt(0));
-			};
-			if(settings.getReset2HotKey().isEmpty()) {
-				btnReset.setMnemonic(-2);
-			} else {
-				btnReset.setMnemonic(settings.getReset2HotKey().charAt(0));
-			};
-			if(settings.getWarn2HotKey().isEmpty()) {
-				btnWarn.setMnemonic(-2);
-			} else {
-				btnWarn.setMnemonic(settings.getWarn2HotKey().charAt(0));
-			};
-		}
+			btnSwitchPositions.setMnemonic(settings.getTeamSwitchPositionsHotKey(teamNumber).charAt(0));
+		};
+		if(settings.getScorePlusHotKey(teamNumber).isEmpty()) {
+			btnScoreIncrease.setMnemonic(-1);
+		} else {
+			btnScoreIncrease.setMnemonic(settings.getScorePlusHotKey(teamNumber).charAt(0));
+		};
+		if(settings.getScoreMinusHotKey(teamNumber).isEmpty()) {
+			btnScoreDecrease.setMnemonic(-1);
+		} else {
+			btnScoreDecrease.setMnemonic(settings.getScoreMinusHotKey(teamNumber).charAt(0));
+		};
+		if(settings.getGameCountPlusHotKey(teamNumber).isEmpty()) {
+			btnGameCountIncrease.setMnemonic(-1);
+		} else {
+			btnGameCountIncrease.setMnemonic(settings.getGameCountPlusHotKey(teamNumber).charAt(0));
+		};
+		if(settings.getGameCountMinusHotKey(teamNumber).isEmpty()) {
+			btnGameCountDecrease.setMnemonic(-1);
+		} else {
+			btnGameCountDecrease.setMnemonic(settings.getGameCountMinusHotKey(teamNumber).charAt(0));
+		};
+		if(settings.getTimeOutPlusHotKey(teamNumber).isEmpty()) {
+			btnTimeOutCountIncrease.setMnemonic(-1);
+		} else {
+			btnTimeOutCountIncrease.setMnemonic(settings.getTimeOutPlusHotKey(teamNumber).charAt(0));
+		};
+		if(settings.getTimeOutMinusHotKey(teamNumber).isEmpty()) {
+			btnTimeOutCountDecrease.setMnemonic(-1);
+		} else {
+			btnTimeOutCountDecrease.setMnemonic(settings.getTimeOutMinusHotKey(teamNumber).charAt(0));
+		};
+		if(settings.getResetHotKey(teamNumber).isEmpty()) {
+			btnReset.setMnemonic(-1);
+		} else {
+			btnReset.setMnemonic(settings.getResetHotKey(teamNumber).charAt(0));
+		};
+		if(settings.getWarnHotKey(teamNumber).isEmpty()) {
+			btnWarn.setMnemonic(-1);
+		} else {
+			btnWarn.setMnemonic(settings.getWarnHotKey(teamNumber).charAt(0));
+		};
 	}
 	private void layoutComponents() {
 		setLayout(new GridBagLayout());
