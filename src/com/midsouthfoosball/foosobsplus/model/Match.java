@@ -523,7 +523,6 @@ public class Match implements Serializable {
 			clearMatchWinner();
 		}
 		return matchWon;
-		
 	}
 	private void checkMeatball() {
 		int points1 = team1.getScore();
@@ -602,11 +601,6 @@ public class Match implements Serializable {
 		team2.setScore(0);
 		team3.setScore(0);
 	}
-//	private void resetGameCounts() {
-//		team1.setGameCount(0);
-//		team2.setGameCount(0);
-//		team3.setGameCount(0);
-//	}
 	private void resetTimeOuts() {
 		team1.resetTimeOuts();
 		team2.resetTimeOuts();
