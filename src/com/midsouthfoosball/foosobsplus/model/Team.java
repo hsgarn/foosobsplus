@@ -706,13 +706,13 @@ public class Team implements Serializable {
     	writeData(settings.getTeamGoalieSource(Integer.toString(teamNbr)), goalieName);
     }
     private void writeGameCount() {
-    	writeData(settings.getGameCountSource(Integer.toString(teamNbr)), Integer.toString(getGameCount()));
+    	writeData(settings.getTeamGameCountSource(Integer.toString(teamNbr)), Integer.toString(getGameCount()));
     }
     private void writeTimeOuts() {
-   		writeData(settings.getTimeOutSource(Integer.toString(teamNbr)), Integer.toString(getTimeOutCount()));
+   		writeData(settings.getTeamTimeOutSource(Integer.toString(teamNbr)), Integer.toString(getTimeOutCount()));
     }
 	private void writeReset() {
-		String src = settings.getResetSource(Integer.toString(teamNbr));
+		String src = settings.getTeamResetSource(Integer.toString(teamNbr));
 		if(resetState) {
 			writeData(src, "RESET");
 		} else {
@@ -720,7 +720,7 @@ public class Team implements Serializable {
 		}
 	}
 	private void writeWarn() {
-		String src = settings.getWarnSource(Integer.toString(teamNbr));
+		String src = settings.getTeamWarnSource(Integer.toString(teamNbr));
 		if(warnState) {
 			writeData(src, "WARNING");
 		} else {
@@ -794,7 +794,7 @@ public class Team implements Serializable {
 		writeData(settings.getAcesSource(Integer.toString(teamNbr)), Integer.toString(getAces()));
 	}
     private void writeScore() {
-    	writeData(settings.getScoreSource(Integer.toString(teamNbr)), Integer.toString(getScore()));
+    	writeData(settings.getTeamScoreSource(Integer.toString(teamNbr)), Integer.toString(getScore()));
     }
     private void writeForwardScore() {
     	

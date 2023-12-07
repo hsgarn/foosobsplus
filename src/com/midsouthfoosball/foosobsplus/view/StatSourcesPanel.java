@@ -87,15 +87,15 @@ public class StatSourcesPanel extends JPanel {
 	private JTextField txtTeam1TwoBarPassPercentSource;
 	private JTextField txtTeam2TwoBarPassPercentSource;
 	private JTextField txtTeam3TwoBarPassPercentSource;
-	private JTextField txtAces1Source;
-	private JTextField txtAces2Source;
-	private JTextField txtAces3Source;
-	private JTextField txtStuffs1Source;
-	private JTextField txtStuffs2Source;
-	private JTextField txtStuffs3Source;
-	private JTextField txtBreaks1Source;
-	private JTextField txtBreaks2Source;
-	private JTextField txtBreaks3Source;
+	private JTextField txtTeam1AcesSource;
+	private JTextField txtTeam2AcesSource;
+	private JTextField txtTeam3AcesSource;
+	private JTextField txtTeam1StuffsSource;
+	private JTextField txtTeam2StuffsSource;
+	private JTextField txtTeam3StuffsSource;
+	private JTextField txtTeam1BreaksSource;
+	private JTextField txtTeam2BreaksSource;
+	private JTextField txtTeam3BreaksSource;
 	private JTextField txtTeam1ScoringSource;
 	private JTextField txtTeam2ScoringSource;
 	private JTextField txtTeam3ScoringSource;
@@ -125,7 +125,7 @@ public class StatSourcesPanel extends JPanel {
 
 		setLayout(settings);
 	}
-
+	
 	private void restoreDefaults(Settings settings) {
 		txtTeam1PassAttemptsSource.setText(settings.getDefaultTeamPassAttemptsSource("1"));
 		txtTeam2PassAttemptsSource.setText(settings.getDefaultTeamPassAttemptsSource("2"));
@@ -163,15 +163,15 @@ public class StatSourcesPanel extends JPanel {
 		txtTeam1TwoBarPassPercentSource.setText(settings.getDefaultTeamTwoBarPassPercentSource("1"));
 		txtTeam2TwoBarPassPercentSource.setText(settings.getDefaultTeamTwoBarPassPercentSource("2"));
 		txtTeam3TwoBarPassPercentSource.setText(settings.getDefaultTeamTwoBarPassPercentSource("3"));
-		txtAces1Source.setText(settings.getDefaultAcesSource("1"));
-		txtAces2Source.setText(settings.getDefaultAcesSource("2"));
-		txtAces3Source.setText(settings.getDefaultAcesSource("3"));
-		txtStuffs1Source.setText(settings.getDefaultStuffsSource("1"));
-		txtStuffs2Source.setText(settings.getDefaultStuffsSource("2"));
-		txtStuffs3Source.setText(settings.getDefaultStuffsSource("3"));
-		txtBreaks1Source.setText(settings.getDefaultBreaksSource("1"));
-		txtBreaks2Source.setText(settings.getDefaultBreaksSource("2"));
-		txtBreaks3Source.setText(settings.getDefaultBreaksSource("3"));
+		txtTeam1AcesSource.setText(settings.getDefaultTeamAcesSource("1"));
+		txtTeam2AcesSource.setText(settings.getDefaultTeamAcesSource("2"));
+		txtTeam3AcesSource.setText(settings.getDefaultTeamAcesSource("3"));
+		txtTeam1StuffsSource.setText(settings.getDefaultTeamStuffsSource("1"));
+		txtTeam2StuffsSource.setText(settings.getDefaultTeamStuffsSource("2"));
+		txtTeam3StuffsSource.setText(settings.getDefaultTeamStuffsSource("3"));
+		txtTeam1BreaksSource.setText(settings.getDefaultTeamBreaksSource("1"));
+		txtTeam2BreaksSource.setText(settings.getDefaultTeamBreaksSource("2"));
+		txtTeam3BreaksSource.setText(settings.getDefaultTeamBreaksSource("3"));
 		txtTeam1ScoringSource.setText(settings.getDefaultTeamScoringSource("1"));
 		txtTeam2ScoringSource.setText(settings.getDefaultTeamScoringSource("2"));
 		txtTeam3ScoringSource.setText(settings.getDefaultTeamScoringSource("3"));
@@ -217,15 +217,15 @@ public class StatSourcesPanel extends JPanel {
 		settings.setSource("Team1ClearPercentSource",txtTeam1ClearPercentSource.getText());
 		settings.setSource("Team2ClearPercentSource",txtTeam2ClearPercentSource.getText());
 		settings.setSource("Team3ClearPercentSource",txtTeam3ClearPercentSource.getText());
-		settings.setSource("Aces1Source",txtAces1Source.getText());
-		settings.setSource("Aces2Source",txtAces2Source.getText());
-		settings.setSource("Aces3Source",txtAces3Source.getText());
-		settings.setSource("Stuffs1Source",txtStuffs1Source.getText());
-		settings.setSource("Stuffs2Source",txtStuffs2Source.getText());
-		settings.setSource("Stuffs3Source",txtStuffs3Source.getText());
-		settings.setSource("Breaks1Source",txtBreaks1Source.getText());
-		settings.setSource("Breaks2Source",txtBreaks2Source.getText());
-		settings.setSource("Breaks3Source",txtBreaks3Source.getText());
+		settings.setSource("Aces1Source",txtTeam1AcesSource.getText());
+		settings.setSource("Aces2Source",txtTeam2AcesSource.getText());
+		settings.setSource("Aces3Source",txtTeam3AcesSource.getText());
+		settings.setSource("Stuffs1Source",txtTeam1StuffsSource.getText());
+		settings.setSource("Stuffs2Source",txtTeam2StuffsSource.getText());
+		settings.setSource("Stuffs3Source",txtTeam3StuffsSource.getText());
+		settings.setSource("Breaks1Source",txtTeam1BreaksSource.getText());
+		settings.setSource("Breaks2Source",txtTeam2BreaksSource.getText());
+		settings.setSource("Breaks3Source",txtTeam3BreaksSource.getText());
 		settings.setSource("Team1ScoringSource",txtTeam1ScoringSource.getText());
 		settings.setSource("Team2ScoringSource",txtTeam2ScoringSource.getText());
 		settings.setSource("Team3ScoringSource",txtTeam3ScoringSource.getText());
@@ -574,56 +574,56 @@ public class StatSourcesPanel extends JPanel {
 		JLabel lblAcesSource = new JLabel(Messages.getString("StatSourcesPanel.Aces", settings.getGameType())); //$NON-NLS-1$
 		add(lblAcesSource, "cell 5 3,alignx right"); //$NON-NLS-1$
 		
-		txtAces1Source = new JTextField();
-		txtAces1Source.setText(settings.getAcesSource("1"));
-		txtAces1Source.setColumns(15);
-		add(txtAces1Source, "cell 6 3,alignx left"); //$NON-NLS-1$
+		txtTeam1AcesSource = new JTextField();
+		txtTeam1AcesSource.setText(settings.getAcesSource("1"));
+		txtTeam1AcesSource.setColumns(15);
+		add(txtTeam1AcesSource, "cell 6 3,alignx left"); //$NON-NLS-1$
 		
-		txtAces2Source = new JTextField();
-		txtAces2Source.setText(settings.getAcesSource("2"));
-		txtAces2Source.setColumns(15);
-		add(txtAces2Source, "cell 7 3,alignx left"); //$NON-NLS-1$
+		txtTeam2AcesSource = new JTextField();
+		txtTeam2AcesSource.setText(settings.getAcesSource("2"));
+		txtTeam2AcesSource.setColumns(15);
+		add(txtTeam2AcesSource, "cell 7 3,alignx left"); //$NON-NLS-1$
 		
-		txtAces3Source = new JTextField();
-		txtAces3Source.setText(settings.getAcesSource("3"));
-		txtAces3Source.setColumns(15);
-		add(txtAces3Source, "cell 8 3,alignx left"); //$NON-NLS-1$
+		txtTeam3AcesSource = new JTextField();
+		txtTeam3AcesSource.setText(settings.getAcesSource("3"));
+		txtTeam3AcesSource.setColumns(15);
+		add(txtTeam3AcesSource, "cell 8 3,alignx left"); //$NON-NLS-1$
 		
 		JLabel lblStuffsSource = new JLabel(Messages.getString("StatSourcesPanel.Stuffs", settings.getGameType())); //$NON-NLS-1$
 		add(lblStuffsSource, "cell 5 4,alignx right"); //$NON-NLS-1$
 		
-		txtStuffs1Source = new JTextField();
-		txtStuffs1Source.setText(settings.getStuffsSource("1"));
-		txtStuffs1Source.setColumns(15);
-		add(txtStuffs1Source, "cell 6 4,alignx left"); //$NON-NLS-1$
+		txtTeam1StuffsSource = new JTextField();
+		txtTeam1StuffsSource.setText(settings.getStuffsSource("1"));
+		txtTeam1StuffsSource.setColumns(15);
+		add(txtTeam1StuffsSource, "cell 6 4,alignx left"); //$NON-NLS-1$
 
-		txtStuffs2Source = new JTextField();
-		txtStuffs2Source.setText(settings.getStuffsSource("2"));
-		txtStuffs2Source.setColumns(15);
-		add(txtStuffs2Source, "cell 7 4,alignx left"); //$NON-NLS-1$
+		txtTeam2StuffsSource = new JTextField();
+		txtTeam2StuffsSource.setText(settings.getStuffsSource("2"));
+		txtTeam2StuffsSource.setColumns(15);
+		add(txtTeam2StuffsSource, "cell 7 4,alignx left"); //$NON-NLS-1$
 		
-		txtStuffs3Source = new JTextField();
-		txtStuffs3Source.setText(settings.getStuffsSource("3"));
-		txtStuffs3Source.setColumns(15);
-		add(txtStuffs3Source, "cell 8 4,alignx left"); //$NON-NLS-1$
+		txtTeam3StuffsSource = new JTextField();
+		txtTeam3StuffsSource.setText(settings.getStuffsSource("3"));
+		txtTeam3StuffsSource.setColumns(15);
+		add(txtTeam3StuffsSource, "cell 8 4,alignx left"); //$NON-NLS-1$
 		
 		JLabel lblBreaksSource = new JLabel(Messages.getString("StatSourcesPanel.Breaks", settings.getGameType())); //$NON-NLS-1$
 		add(lblBreaksSource, "cell 5 5,alignx right"); //$NON-NLS-1$
 		
-		txtBreaks1Source = new JTextField();
-		txtBreaks1Source.setText(settings.getBreaksSource("1"));
-		txtBreaks1Source.setColumns(15);
-		add(txtBreaks1Source, "cell 6 5,alignx left"); //$NON-NLS-1$
+		txtTeam1BreaksSource = new JTextField();
+		txtTeam1BreaksSource.setText(settings.getBreaksSource("1"));
+		txtTeam1BreaksSource.setColumns(15);
+		add(txtTeam1BreaksSource, "cell 6 5,alignx left"); //$NON-NLS-1$
 		
-		txtBreaks2Source = new JTextField();
-		txtBreaks2Source.setText(settings.getBreaksSource("2"));
-		txtBreaks2Source.setColumns(15);
-		add(txtBreaks2Source, "cell 7 5,alignx left"); //$NON-NLS-1$
+		txtTeam2BreaksSource = new JTextField();
+		txtTeam2BreaksSource.setText(settings.getBreaksSource("2"));
+		txtTeam2BreaksSource.setColumns(15);
+		add(txtTeam2BreaksSource, "cell 7 5,alignx left"); //$NON-NLS-1$
 		
-		txtBreaks3Source = new JTextField();
-		txtBreaks3Source.setText(settings.getBreaksSource("3"));
-		txtBreaks3Source.setColumns(15);
-		add(txtBreaks3Source, "cell 8 5,alignx left"); //$NON-NLS-1$
+		txtTeam3BreaksSource = new JTextField();
+		txtTeam3BreaksSource.setText(settings.getBreaksSource("3"));
+		txtTeam3BreaksSource.setColumns(15);
+		add(txtTeam3BreaksSource, "cell 8 5,alignx left"); //$NON-NLS-1$
 		
 		JLabel lblTeamScoringSource = new JLabel(Messages.getString("StatSourcesPanel.TeamScoring", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeamScoringSource, "cell 5 6,alignx right"); //$NON-NLS-1$

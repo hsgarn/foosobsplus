@@ -1109,6 +1109,11 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xptca - push tournament clear all button
 
 ## Revision History</br>
+v2.017 12/06/2023</br>
+More refactoring of source/statssource variables/methods.</br>
+Fix stats source and source reset default bugs.</br>
+Start on adding Show Cutthroat in OBS Panel.</br>
+</br>
 v2.016 12/05/2023</br>
 Add stats source window.</br>
 Add Show Cutthroat source.</br>

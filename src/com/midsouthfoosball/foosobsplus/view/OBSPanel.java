@@ -1,5 +1,5 @@
 /**
-Copyright 2022-2023 Hugh Garner
+Copyright 2022-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -29,6 +29,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
@@ -47,6 +48,7 @@ public class OBSPanel extends JPanel {
 	private JToggleButton tglbtnShowTimer;
 	private JToggleButton tglbtnEnableSkunk;
 	private JToggleButton tglbtnStartStream;
+	private JCheckBox ckbxShowCutthroat;
 	private JLabel lblStreamTimeLabel;
 	private JLabel lblStreamTime;
 	private Settings settings;
@@ -77,6 +79,7 @@ public class OBSPanel extends JPanel {
 		tglbtnEnableSkunk = new JToggleButton(enableSkunkText);
 		tglbtnEnableSkunk.setSelected(enableSkunkInitialState);
 		tglbtnStartStream = new JToggleButton(Messages.getString("OBSPanel.StartStreamTimer",settings.getGameType())); //$NON-NLS-1$
+		ckbxShowCutthroat = new JCheckBox(Messages.getString("OBSPanel.ShowCutthroat",settings.getGameType())); //$NON-NLS-1$
 		lblStreamTimeLabel = new JLabel(Messages.getString("OBSPanel.StreamTimeLabel",settings.getGameType())); //$NON-NLS-1$
 		lblStreamTime = new JLabel("00:00:00"); //$NON-NLS-1$
 		lblStreamTime.setOpaque(true);
@@ -207,6 +210,19 @@ public class OBSPanel extends JPanel {
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(5, 5, 5, 5);
 		add(lblStreamTime, gc);
+		
+		//////// Show Cutthroat /////////
+		
+		gc.gridy++;
+		gc.weightx = .1;
+		gc.weighty = 0.5;
+		
+		gc.gridx = 0;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.insets = new Insets(5, 5, 5, 5);
+		add(ckbxShowCutthroat, gc);
+		
 	}
 	private void setMnemonics() {
 		if(settings.getConnectHotKey().isEmpty()) {

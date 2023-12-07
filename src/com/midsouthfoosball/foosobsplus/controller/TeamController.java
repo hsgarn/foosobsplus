@@ -832,15 +832,15 @@ public class TeamController {
 		teamMethodMap.put(settings.getTeamGoalieSource("1"), new SimpleEntry<Team, String>(team1, "setGoalieName"));
 		teamMethodMap.put(settings.getTeamGoalieSource("2"), new SimpleEntry<Team, String>(team2, "setGoalieName"));
 		teamMethodMap.put(settings.getTeamGoalieSource("3"), new SimpleEntry<Team, String>(team3, "setGoalieName"));
-		teamMethodMap.put(settings.getScoreSource("1"), new SimpleEntry<Team, String>(team1, "setScore"));
-		teamMethodMap.put(settings.getScoreSource("2"), new SimpleEntry<Team, String>(team2, "setScore"));
-		teamMethodMap.put(settings.getScoreSource("3"), new SimpleEntry<Team, String>(team3, "setScore"));
-		teamMethodMap.put(settings.getGameCountSource("1"), new SimpleEntry<Team, String>(team1, "setGameCount"));
-        teamMethodMap.put(settings.getGameCountSource("2"), new SimpleEntry<Team, String>(team2, "setGameCount"));
-		teamMethodMap.put(settings.getGameCountSource("3"), new SimpleEntry<Team, String>(team3, "setGameCount"));
-		teamMethodMap.put(settings.getTimeOutSource("1"), new SimpleEntry<Team, String>(team1, "setTimeOutCount"));
-		teamMethodMap.put(settings.getTimeOutSource("2"), new SimpleEntry<Team, String>(team2, "setTimeOutCount"));
-		teamMethodMap.put(settings.getTimeOutSource("3"), new SimpleEntry<Team, String>(team3, "setTimeOutCount"));
+		teamMethodMap.put(settings.getTeamScoreSource("1"), new SimpleEntry<Team, String>(team1, "setScore"));
+		teamMethodMap.put(settings.getTeamScoreSource("2"), new SimpleEntry<Team, String>(team2, "setScore"));
+		teamMethodMap.put(settings.getTeamScoreSource("3"), new SimpleEntry<Team, String>(team3, "setScore"));
+		teamMethodMap.put(settings.getTeamGameCountSource("1"), new SimpleEntry<Team, String>(team1, "setGameCount"));
+        teamMethodMap.put(settings.getTeamGameCountSource("2"), new SimpleEntry<Team, String>(team2, "setGameCount"));
+		teamMethodMap.put(settings.getTeamGameCountSource("3"), new SimpleEntry<Team, String>(team3, "setGameCount"));
+		teamMethodMap.put(settings.getTeamTimeOutSource("1"), new SimpleEntry<Team, String>(team1, "setTimeOutCount"));
+		teamMethodMap.put(settings.getTeamTimeOutSource("2"), new SimpleEntry<Team, String>(team2, "setTimeOutCount"));
+		teamMethodMap.put(settings.getTeamTimeOutSource("3"), new SimpleEntry<Team, String>(team3, "setTimeOutCount"));
 		teamMethodMap.put(settings.getPassAttemptsSource("1"), new SimpleEntry<Team, String>(team1, "setPassAttempts"));
 		teamMethodMap.put(settings.getPassAttemptsSource("2"), new SimpleEntry<Team, String>(team2, "setPassAttempts"));
 		teamMethodMap.put(settings.getPassAttemptsSource("3"), new SimpleEntry<Team, String>(team3, "setPassAttempts"));
@@ -901,12 +901,12 @@ public class TeamController {
 		teamMethodMap.put(settings.getAcesSource("1"), new SimpleEntry<Team, String>(team1, "setAces"));
 		teamMethodMap.put(settings.getAcesSource("2"), new SimpleEntry<Team, String>(team2, "setAces"));
 		teamMethodMap.put(settings.getAcesSource("3"), new SimpleEntry<Team, String>(team3, "setAces"));
-		teamMethodMap.put(settings.getResetSource("1"), new SimpleEntry<Team, String>(team1, "setReset"));
-		teamMethodMap.put(settings.getResetSource("2"), new SimpleEntry<Team, String>(team2, "setReset"));
-		teamMethodMap.put(settings.getResetSource("3"), new SimpleEntry<Team, String>(team3, "setReset"));
-		teamMethodMap.put(settings.getWarnSource("1"), new SimpleEntry<Team, String>(team1, "setWarn"));
-		teamMethodMap.put(settings.getWarnSource("2"), new SimpleEntry<Team, String>(team2, "setWarn"));
-		teamMethodMap.put(settings.getWarnSource("3"), new SimpleEntry<Team, String>(team3, "setWarn"));
+		teamMethodMap.put(settings.getTeamResetSource("1"), new SimpleEntry<Team, String>(team1, "setReset"));
+		teamMethodMap.put(settings.getTeamResetSource("2"), new SimpleEntry<Team, String>(team2, "setReset"));
+		teamMethodMap.put(settings.getTeamResetSource("3"), new SimpleEntry<Team, String>(team3, "setReset"));
+		teamMethodMap.put(settings.getTeamWarnSource("1"), new SimpleEntry<Team, String>(team1, "setWarn"));
+		teamMethodMap.put(settings.getTeamWarnSource("2"), new SimpleEntry<Team, String>(team2, "setWarn"));
+		teamMethodMap.put(settings.getTeamWarnSource("3"), new SimpleEntry<Team, String>(team3, "setWarn"));
 		OBS obs = OBS.getInstance();
 		OBSRemoteController obsRemoteController = obs.getController();
 		if (!(obsRemoteController==null) && obs.getConnected())
@@ -951,7 +951,7 @@ public class TeamController {
 	}
 	private void setTextFromSource(String source, String text, Map<String, Entry<Team, String>> methodMap) {
 		Entry<Team, String> methodMapEntry = methodMap.get(source);
-		if(source.equals(settings.getResetSource("1")) || source.equals(settings.getResetSource("2")) || source.equals(settings.getWarnSource("1")) || source.equals(settings.getWarnSource("2")))
+		if(source.equals(settings.getTeamResetSource("1")) || source.equals(settings.getTeamResetSource("2")) || source.equals(settings.getTeamWarnSource("1")) || source.equals(settings.getTeamWarnSource("2")))
 		{
 			try {
 				Method method = methodMapEntry.getKey().getClass().getMethod(methodMapEntry.getValue(), boolean.class);
