@@ -176,9 +176,9 @@ public class SourcesPanel extends JPanel {
 		settings.setSource("GameTime",txtGameTimeSource.getText());
 		settings.setSource("MatchTime",txtMatchTimeSource.getText());
 		settings.setSource("StreamTime",txtStreamTimeSource.getText());
-		settings.setSource("ShowScoresSource",txtShowScoresSource.getText());
-		settings.setSource("ShowTimerSource",txtShowTimerSource.getText());
-		settings.setSource("ShowCutthroatSource", txtShowCutthroatSource.getText());
+		settings.setSource("ShowScores",txtShowScoresSource.getText());
+		settings.setSource("ShowTimer",txtShowTimerSource.getText());
+		settings.setSource("ShowCutthroat", txtShowCutthroatSource.getText());
 		try {
 			settings.saveSourceConfig();
 		} catch (IOException ex) {

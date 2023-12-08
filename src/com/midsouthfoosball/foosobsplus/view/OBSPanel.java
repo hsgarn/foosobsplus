@@ -44,12 +44,11 @@ public class OBSPanel extends JPanel {
 	private JButton btnDisconnect;
 	private JButton btnPull;
 	private JButton btnPush;
-	private JToggleButton tglbtnShowScores;
-	private JToggleButton tglbtnShowTimer;
-	private JToggleButton tglbtnEnableSkunk;
+	private JCheckBox ckbxShowScores;
+	private JCheckBox ckbxShowTimer;
+	private JCheckBox ckbxEnableSkunk;
 	private JToggleButton tglbtnStartStream;
 	private JCheckBox ckbxShowCutthroat;
-	private JLabel lblStreamTimeLabel;
 	private JLabel lblStreamTime;
 	private Settings settings;
 	private Border innerBorder;
@@ -61,26 +60,21 @@ public class OBSPanel extends JPanel {
 		dim.width = 275;
 		dim.height = 125;
 		setPreferredSize(dim);
-		String enableSkunkText;
 		boolean enableSkunkInitialState = false;
 		if (settings.getShowSkunk()==1) {
 			enableSkunkInitialState = true;
-			enableSkunkText = Messages.getString("OBSPanel.DisableSkunk", settings.getGameType()); //$NON-NLS-1$
-		} else {
-			enableSkunkText = Messages.getString("OBSPanel.EnableSkunk", settings.getGameType()); //$NON-NLS-1$
 		}
 		
 		btnConnect = new JButton(Messages.getString("OBSPanel.Connect", settings.getGameType())); //$NON-NLS-1$
 		btnDisconnect = new JButton(Messages.getString("OBSPanel.Disconnect", settings.getGameType())); //$NON-NLS-1$
 		btnPull = new JButton(Messages.getString("OBSPanel.Pull", settings.getGameType())); //$NON-NLS-1$
 		btnPush = new JButton(Messages.getString("OBSPanel.Push", settings.getGameType())); //$NON-NLS-1$
-		tglbtnShowScores = new JToggleButton(Messages.getString("OBSPanel.ShowScores", settings.getGameType())); //$NON-NLS-1$
-		tglbtnShowTimer = new JToggleButton(Messages.getString("OBSPanel.ShowTimer", settings.getGameType())); //$NON-NLS-1$
-		tglbtnEnableSkunk = new JToggleButton(enableSkunkText);
-		tglbtnEnableSkunk.setSelected(enableSkunkInitialState);
+		ckbxShowScores = new JCheckBox(Messages.getString("OBSPanel.ShowScores", settings.getGameType())); //$NON-NLS-1$
+		ckbxShowTimer = new JCheckBox(Messages.getString("OBSPanel.ShowTimer", settings.getGameType())); //$NON-NLS-1$
+		ckbxEnableSkunk = new JCheckBox(Messages.getString("OBSPanel.EnableSkunk", settings.getGameType())); //$NON-NLS-1$
+		ckbxEnableSkunk.setSelected(enableSkunkInitialState);
 		tglbtnStartStream = new JToggleButton(Messages.getString("OBSPanel.StartStreamTimer",settings.getGameType())); //$NON-NLS-1$
 		ckbxShowCutthroat = new JCheckBox(Messages.getString("OBSPanel.ShowCutthroat",settings.getGameType())); //$NON-NLS-1$
-		lblStreamTimeLabel = new JLabel(Messages.getString("OBSPanel.StreamTimeLabel",settings.getGameType())); //$NON-NLS-1$
 		lblStreamTime = new JLabel("00:00:00"); //$NON-NLS-1$
 		lblStreamTime.setOpaque(true);
 		lblStreamTime.setBackground(Color.ORANGE);
@@ -145,6 +139,28 @@ public class OBSPanel extends JPanel {
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnPull, gc);
 		
+		//////// Start Stream ////////
+		gc.gridy++;
+		
+		gc.weightx = 0.9;
+		gc.weighty = 0.1;
+		
+		gc.gridx = 0;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.LINE_START;
+		gc.insets = new Insets(0, 0, 0, 0);
+		add(tglbtnStartStream, gc);
+		
+		//////// Stream Time ////////
+		gc.weightx = 0;
+		gc.weighty = 0.5;
+		
+		gc.gridx = 1;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.LINE_END;
+		gc.insets = new Insets(5, 5, 5, 5);
+		add(lblStreamTime, gc);
+		
 		//////// Show Scores ////////
 		gc.gridy++;
 
@@ -155,7 +171,7 @@ public class OBSPanel extends JPanel {
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_START;
 		gc.insets = new Insets(0, 0, 0, 0);
-		add(tglbtnShowScores, gc);
+		add(ckbxShowScores, gc);
 		
 		/////// Enable Skunk /////////
 		gc.weightx = .1;
@@ -165,7 +181,7 @@ public class OBSPanel extends JPanel {
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 0);
-		add(tglbtnEnableSkunk, gc);
+		add(ckbxEnableSkunk, gc);
 		
 		/////// Show Timer /////////
 		gc.gridy++;
@@ -177,49 +193,15 @@ public class OBSPanel extends JPanel {
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_START;
 		gc.insets = new Insets(0, 0, 0, 0);
-		add(tglbtnShowTimer, gc);
+		add(ckbxShowTimer, gc);
 
-		//////// Start Stream ////////
-		gc.weightx = .1;
-		gc.weighty = 0.1;
-		
-		gc.gridx = 1;
-		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = new Insets(0, 0, 0, 0);
-		add(tglbtnStartStream, gc);
-		
-		//////// Stream Time Label ////////
-		gc.gridy++;
-
-		gc.weightx = .1;
-		gc.weighty = 0.5;
-		
-		gc.gridx = 0;
-		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(5, 5, 5, 5);
-		add(lblStreamTimeLabel, gc);
-
-		//////// Stream Time ////////
-		gc.weightx = .1;
-		gc.weighty = 0.5;
-		
-		gc.gridx = 1;
-		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = new Insets(5, 5, 5, 5);
-		add(lblStreamTime, gc);
-		
 		//////// Show Cutthroat /////////
-		
-		gc.gridy++;
 		gc.weightx = .1;
 		gc.weighty = 0.5;
 		
-		gc.gridx = 0;
+		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.CENTER;
+		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(5, 5, 5, 5);
 		add(ckbxShowCutthroat, gc);
 		
@@ -246,24 +228,29 @@ public class OBSPanel extends JPanel {
 			btnPull.setMnemonic(settings.getPullHotKey().charAt(0));
 		};
 		if(settings.getShowScoresHotKey().isEmpty()) {
-			tglbtnShowScores.setMnemonic(-1);
+			ckbxShowScores.setMnemonic(-1);
 		} else {
-			tglbtnShowScores.setMnemonic(settings.getShowScoresHotKey().charAt(0));
+			ckbxShowScores.setMnemonic(settings.getShowScoresHotKey().charAt(0));
 		};
 		if(settings.getShowTimerHotKey().isEmpty()) {
-			tglbtnShowTimer.setMnemonic(-1);
+			ckbxShowTimer.setMnemonic(-1);
 		} else {
-			tglbtnShowTimer.setMnemonic(settings.getShowTimerHotKey().charAt(0));
+			ckbxShowTimer.setMnemonic(settings.getShowTimerHotKey().charAt(0));
 		};
 		if(settings.getShowSkunkHotKey().isEmpty()) {
-			tglbtnEnableSkunk.setMnemonic(-1);
+			ckbxEnableSkunk.setMnemonic(-1);
 		} else {
-			tglbtnEnableSkunk.setMnemonic(settings.getShowSkunkHotKey().charAt(0));
+			ckbxEnableSkunk.setMnemonic(settings.getShowSkunkHotKey().charAt(0));
 		};
 		if(settings.getStartStreamHotKey().isEmpty()) {
 			tglbtnStartStream.setMnemonic(-1);
 		} else {
 			tglbtnStartStream.setMnemonic(settings.getStartStreamHotKey().charAt(0));
+		};
+		if(settings.getShowCutthroatHotKey().isEmpty()) {
+			ckbxShowCutthroat.setMnemonic(-1);
+		} else {
+			ckbxShowCutthroat.setMnemonic(settings.getShowCutthroatHotKey().charAt(0));
 		};
 	}
 	////// Listeners  //////
@@ -280,43 +267,31 @@ public class OBSPanel extends JPanel {
 		btnPull.addActionListener(listenForBtnPull);
 	}
 	public void addShowScoresListener(ActionListener listenForBtnShowScores) {
-		tglbtnShowScores.addActionListener(listenForBtnShowScores);
+		ckbxShowScores.addActionListener(listenForBtnShowScores);
 	}
 	public void addShowTimerListener(ActionListener listenForBtnShowTimer) {
-		tglbtnShowTimer.addActionListener(listenForBtnShowTimer);
+		ckbxShowTimer.addActionListener(listenForBtnShowTimer);
 	}
 	public void addEnableSkunkListener(ActionListener listenForBtnEnableSkunk) {
-		tglbtnEnableSkunk.addActionListener(listenForBtnEnableSkunk);
+		ckbxEnableSkunk.addActionListener(listenForBtnEnableSkunk);
 	}
 	public void addStartStreamListener(ActionListener listenForBtnStartStream) {
 		tglbtnStartStream.addActionListener(listenForBtnStartStream);
+	}
+	public void addShowCutthroatListener(ActionListener listenForCkbxShowCutthroat) {
+		ckbxShowCutthroat.addActionListener(listenForCkbxShowCutthroat);
 	}
 
 	////// Utility Methods //////
 	
 	public void setShowScores(boolean show) {
-		tglbtnShowScores.setSelected(show);
-		if (show) {
-			tglbtnShowScores.setText(Messages.getString("OBSPanel.HideScores", settings.getGameType())); //$NON-NLS-1$
-		} else {
-			tglbtnShowScores.setText(Messages.getString("OBSPanel.ShowScores", settings.getGameType())); //$NON-NLS-1$
-		}
+		ckbxShowScores.setSelected(show);
 	}
 	public void setEnableSkunk(boolean enableSkunkFlag) {
-		tglbtnEnableSkunk.setSelected(enableSkunkFlag);
-		if (enableSkunkFlag) {
-			tglbtnEnableSkunk.setText(Messages.getString("OBSPanel.DisableSkunk", settings.getGameType())); //$NON-NLS-1$
-		} else {
-			tglbtnEnableSkunk.setText(Messages.getString("OBSPanel.EnableSkunk", settings.getGameType())); //$NON-NLS-1$
-		}
+		ckbxEnableSkunk.setSelected(enableSkunkFlag);
 	}
 	public void setShowTimer(boolean showTimerFlag) {
-		tglbtnShowTimer.setSelected(showTimerFlag);
-		if (showTimerFlag) {
-			tglbtnShowTimer.setText(Messages.getString("OBSPanel.HideTimer", settings.getGameType())); //$NON-NLS-1$
-		} else {
-			tglbtnShowTimer.setText(Messages.getString("OBSPanel.ShowTimer", settings.getGameType())); //$NON-NLS-1$
-		}
+		ckbxShowTimer.setSelected(showTimerFlag);
 	}
 	public void setStartStream(boolean startStream) {
 		tglbtnStartStream.setSelected(startStream);
@@ -325,6 +300,9 @@ public class OBSPanel extends JPanel {
 		} else {
 			tglbtnStartStream.setText(Messages.getString("OBSPanel.StartStreamTimer", settings.getGameType())); //$NON-NLS-1$
 		}
+	}
+	public void setShowCutthroat(boolean showCutthroat) {
+		ckbxShowCutthroat.setSelected(showCutthroat);
 	}
 	public void updateTimerDisplay(String timeElapsed) {
 		lblStreamTime.setText(timeElapsed);

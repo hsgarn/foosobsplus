@@ -360,6 +360,14 @@ public class Main {
 			           	}
 			        }
 		    });
+		obs.getController().getSceneItemId(sceneName, settings.getShowCutthroatSource(), null,
+				getSceneItemIdResponse -> {
+		        	if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
+			           	if (getSceneItemIdResponse.getSceneItemId().toString().equals(itemId.toString())) {
+			           		obsPanel.setShowCutthroat(show);	
+			           	}
+			        }
+		    });
 	}
 	private void checkActiveStateChange(InputActiveStateChangedEvent inputActiveStateChangedEvent) {
 		String name = inputActiveStateChangedEvent.getInputName();
@@ -367,11 +375,12 @@ public class Main {
 			boolean show = inputActiveStateChangedEvent.getVideoActive();
 			obsPanel.setShowTimer(show);
 			mainController.showTimerWindow(show);
-		} else {
-			if (!settings.getShowScoresSource().isEmpty() && name.equals(settings.getShowScoresSource())) {
-				boolean show = inputActiveStateChangedEvent.getVideoActive();
-				obsPanel.setShowScores(show);
-			}
+		} else if (!settings.getShowScoresSource().isEmpty() && name.equals(settings.getShowScoresSource())) {
+			boolean show = inputActiveStateChangedEvent.getVideoActive();
+			obsPanel.setShowScores(show);
+		} else if (!settings.getShowCutthroatSource().isEmpty() && name.equals(settings.getShowCutthroatSource())) {
+			boolean show = inputActiveStateChangedEvent.getVideoActive();
+			obsPanel.setShowCutthroat(show);
 		}
 	}
 	public void connectToOBS() {
@@ -426,6 +435,10 @@ public class Main {
 			{boolean show = response.getMessageData().getResponseData().getVideoActive();
 				obsPanel.setShowScores(show);
 			});
+		obs.getController().getSourceActive(settings.getShowCutthroatSource(), response ->
+		{boolean show = response.getMessageData().getResponseData().getVideoActive();
+			obsPanel.setShowCutthroat(show);
+		});
 		if(settings.getOBSCloseOnConnect()==1) { 
 			obsConnectFrame.setVisible(false);
 		}
@@ -724,6 +737,7 @@ public class Main {
 		obsPanel.addShowTimerListener(new OBSShowTimerListener());
 		obsPanel.addEnableSkunkListener(new OBSEnableSkunkListener());
 		obsPanel.addStartStreamListener(new OBSStartStreamListener());
+		obsPanel.addShowCutthroatListener(new OBSShowCutthroatListener());
 		autoScoreMainPanel.addConnectListener(new AutoScoreMainPanelConnectListener());
 		autoScoreMainPanel.addDisconnectListener(new AutoScoreMainPanelDisconnectListener());
 		autoScoreMainPanel.addSettingsListener(new AutoScoreMainPanelSettingsListener());
@@ -1137,6 +1151,10 @@ public class Main {
 		mainController.showTimerWindow(show);
 		showSource(settings.getShowTimerSource(), show);
 	}
+	public void showCutthroat(boolean show) {
+		obsPanel.setShowCutthroat(show);
+		showSource(settings.getShowCutthroatSource(), show);
+	}
 	public void showSource(String source, boolean show) {
 		if (obs.getConnected()) {
 		    String sceneName;
@@ -1504,6 +1522,14 @@ public class Main {
 			if (obs.getConnected()) {
 				AbstractButton abstractButton = (AbstractButton) e.getSource();
 				showTimer(abstractButton.getModel().isSelected());
+			}
+		}
+	}
+	private class OBSShowCutthroatListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if (obs.getConnected()) {
+				AbstractButton abstractButton = (AbstractButton) e.getSource();
+				showCutthroat(abstractButton.getModel().isSelected());
 			}
 		}
 	}

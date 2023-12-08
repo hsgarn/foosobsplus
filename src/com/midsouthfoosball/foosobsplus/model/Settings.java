@@ -338,6 +338,7 @@ public class Settings {
 		defaultHotKeyProps.setProperty("ShowTimerHotKey", "");
 		defaultHotKeyProps.setProperty("ShowSkunkHotKey", "k");
 		defaultHotKeyProps.setProperty("StartStreamHotKey", "z");
+		defaultHotKeyProps.setProperty("ShowCutthroatHotKey", "");
 		defaultHotKeyProps.setProperty("AutoScoreMainConnectHotKey", "");
 		defaultHotKeyProps.setProperty("AutoScoreMainDisconnectHotKey", "");
 		defaultHotKeyProps.setProperty("AutoScoreMainSettingsHotKey", "");
@@ -594,6 +595,7 @@ public class Settings {
 	public String getShowTimerHotKey() {return configHotKeyProps.getProperty("ShowTimerHotKey");}
 	public String getShowSkunkHotKey() {return configHotKeyProps.getProperty("ShowSkunkHotKey");}
 	public String getStartStreamHotKey() {return configHotKeyProps.getProperty("StartStreamHotKey");}
+	public String getShowCutthroatHotKey() {return configHotKeyProps.getProperty("ShowCutthroatHotKey");}
 	public String getAutoScoreMainConnectHotKey() {return configHotKeyProps.getProperty("AutoScoreMainConnectHotKey");}
 	public String getAutoScoreMainDisconnectHotKey() {return configHotKeyProps.getProperty("AutoScoreMainDisconnectHotKey");}
 	public String getAutoScoreMainSettingsHotKey() {return configHotKeyProps.getProperty("AutoScoreMainSettingsHotKey");}
