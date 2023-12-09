@@ -369,7 +369,10 @@ public class Settings {
 		loadFromHotKeyConfig();
 		loadFromAutoScoreSettingsConfig();
 	}
-
+	public int getBorderTop() {return 2;};
+	public int getBorderBottom() {return 0;};
+	public int getBorderLeft() {return 0;};
+	public int getBorderRight() {return 0;};
 	//Getters
 	//Control Parameters
 	public String getGameType() {return gameType;}

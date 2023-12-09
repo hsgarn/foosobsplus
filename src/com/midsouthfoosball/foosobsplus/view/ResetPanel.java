@@ -1,5 +1,5 @@
 /**
-Copyright 2020-2023 Hugh Garner
+Copyright 2020-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -50,9 +50,10 @@ public class ResetPanel extends JPanel {
 		this.settings = settings;
 		
 		Dimension dim = getPreferredSize();
-		dim.width = 350;
-		dim.height = 50;
+		dim.width = 340;
+		dim.height = 300;
 		setPreferredSize(dim);
+		setName(buildTitle());
 		
 		btnResetNames = new JButton(Messages.getString("ResetPanel.ResetNames", settings.getGameType())); //$NON-NLS-1$
 		btnResetScores = new JButton(Messages.getString("ResetPanel.ResetScores", settings.getGameType())); //$NON-NLS-1$
@@ -65,7 +66,7 @@ public class ResetPanel extends JPanel {
 
 		innerBorder = BorderFactory.createTitledBorder(buildTitle()); //$NON-NLS-1$
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
-		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
+		Border outerBorder = BorderFactory.createEmptyBorder(settings.getBorderTop(),settings.getBorderLeft(),settings.getBorderBottom(),settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();

@@ -1109,6 +1109,10 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xptca - push tournament clear all button
 
 ## Revision History</br>
+v2.019 12/08/2023</br>
+Play with panel sizes.</br>
+Limit stats to team 1 and 2 only.</br>
+</br>
 v2.018 12/08/2023</br>
 Implement Show Cutthroat checkbox logic.</br>
 Change Show Score, Enable Skunk, Show Timer to check boxes and rearrange order.</br>

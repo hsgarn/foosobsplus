@@ -56,9 +56,10 @@ public class SwitchPanel extends JPanel {
 		this.settings = settings;
 		
 		Dimension dim = getPreferredSize();
-		dim.width = 350;
-		dim.height = 50;
+		dim.width = 340;
+		dim.height = 300;
 		setPreferredSize(dim);
+		setName(buildTitle());
 		
 		btnSwitchSides = new JButton(Messages.getString("SwitchPanel.SwitchSides", settings.getGameType())); //$NON-NLS-1$
 		btnSwitchTeams = new JButton(Messages.getString("SwitchPanel.SwitchTeams", settings.getGameType())); //$NON-NLS-1$
@@ -76,7 +77,7 @@ public class SwitchPanel extends JPanel {
 
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
-		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
+		Border outerBorder = BorderFactory.createEmptyBorder(settings.getBorderTop(),settings.getBorderLeft(),settings.getBorderBottom(),settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();

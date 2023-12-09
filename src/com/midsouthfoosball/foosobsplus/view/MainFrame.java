@@ -20,6 +20,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.view;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -50,6 +51,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,10 +166,23 @@ public final class MainFrame extends JFrame implements WindowListener {
 			}
 		});
 		
-		setSize(1400,900);
+		setSize(1480,860);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
+
+		if(settings.getShowParsed()) {
+			Dimension windowSize = getSize();
+	        System.out.println("Current window size: " + windowSize.width + " x " + windowSize.height);
+	        Component[] components = getContentPane().getComponents();
+	        for (Component component : components) {
+	            if (component instanceof JPanel) {
+	                JPanel panel = (JPanel) component;
+	                Dimension panelSize = panel.getSize();
+	                System.out.println("Panel " + panel.getName() + ":  Panel size: " + panelSize.width + " x " + panelSize.height);
+	            }
+	        }
+		}
 	}
 	
 	private JMenuBar createMenuBar() {
@@ -537,9 +552,8 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		add(statsEntryPanel, gc);
 		statsEntryPanel.setPreferredSize(new Dimension(350,450));
-		gc.gridheight = 1;
+		add(statsEntryPanel, gc);
 		
 		//////// Stats Display Panel ////////
 		

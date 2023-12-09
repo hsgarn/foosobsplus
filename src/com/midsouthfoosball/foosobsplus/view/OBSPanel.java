@@ -22,9 +22,6 @@ package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
@@ -37,6 +34,8 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
+
+import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class OBSPanel extends JPanel {
@@ -57,9 +56,10 @@ public class OBSPanel extends JPanel {
 		
 		this.settings = settings;
 		Dimension dim = getPreferredSize();
-		dim.width = 275;
-		dim.height = 125;
+		dim.width = 340;
+		dim.height = 225;
 		setPreferredSize(dim);
+		setName(buildTitle());
 		boolean enableSkunkInitialState = false;
 		if (settings.getShowSkunk()==1) {
 			enableSkunkInitialState = true;
@@ -83,128 +83,37 @@ public class OBSPanel extends JPanel {
 		
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
-		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
+		Border outerBorder = BorderFactory.createEmptyBorder(settings.getBorderTop(),settings.getBorderLeft(),settings.getBorderBottom(),settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
 		
 	}
 	public void layoutComponents() {
-		setLayout(new GridBagLayout());
-		
-		GridBagConstraints gc = new GridBagConstraints();
-		gc.gridy = 0;
-
-		//////// Connect ////////
-		gc.gridy++;
-
-		gc.weightx = .1;
-		gc.weighty = 0.1;
-		
-		gc.gridx = 0;
-		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.LINE_START;
-		gc.insets = new Insets(0, 0, 0, 0);
-		add(btnConnect, gc);
-
-		//////// Disconnect ////////
-		gc.weightx = .1;
-		gc.weighty = 0.0;
-		
-		gc.gridx = 1;
-		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = new Insets(0, 0, 0, 0);
-		add(btnDisconnect, gc);
-
-		//////// Push ////////
-		gc.gridy++;
-
-		gc.weightx = .1;
-		gc.weighty = 0.1;
-		
-		gc.gridx = 0;
-		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.LINE_START;
-		gc.insets = new Insets(0, 0, 0, 0);
-		add(btnPush, gc);
-		
-		//////// Pull ////////
-		gc.weightx = .1;
-		gc.weighty = 0.1;
-		
-		gc.gridx = 1;
-		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = new Insets(0, 0, 0, 0);
-		add(btnPull, gc);
-		
-		//////// Start Stream ////////
-		gc.gridy++;
-		
-		gc.weightx = 0.9;
-		gc.weighty = 0.1;
-		
-		gc.gridx = 0;
-		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.LINE_START;
-		gc.insets = new Insets(0, 0, 0, 0);
-		add(tglbtnStartStream, gc);
-		
-		//////// Stream Time ////////
-		gc.weightx = 0;
-		gc.weighty = 0.5;
-		
-		gc.gridx = 1;
-		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = new Insets(5, 5, 5, 5);
-		add(lblStreamTime, gc);
-		
-		//////// Show Scores ////////
-		gc.gridy++;
-
-		gc.weightx = .1;
-		gc.weighty = 0.1;
-		
-		gc.gridx = 0;
-		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.LINE_START;
-		gc.insets = new Insets(0, 0, 0, 0);
-		add(ckbxShowScores, gc);
-		
-		/////// Enable Skunk /////////
-		gc.weightx = .1;
-		gc.weighty = 0.1;
-		
-		gc.gridx = 1;
-		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = new Insets(0, 0, 0, 0);
-		add(ckbxEnableSkunk, gc);
-		
-		/////// Show Timer /////////
-		gc.gridy++;
-		
-		gc.weightx = .1;
-		gc.weighty = 0.1;
-		
-		gc.gridx = 0;
-		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.LINE_START;
-		gc.insets = new Insets(0, 0, 0, 0);
-		add(ckbxShowTimer, gc);
-
-		//////// Show Cutthroat /////////
-		gc.weightx = .1;
-		gc.weighty = 0.5;
-		
-		gc.gridx = 1;
-		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = new Insets(5, 5, 5, 5);
-		add(ckbxShowCutthroat, gc);
-		
+		//setBounds(100, 100, 900, 489);
+//		setLayout(new MigLayout("", "[][][][][][][][][][][][]", "[][][][][][][][][][][][][][][][][][][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//		setLayout(new MigLayout("", "", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//		add(btnConnect,"cell 1 0");
+//		add(btnDisconnect, "cell 2 0");
+//		add(btnPush, "cell 1 1");
+//		add(btnPull, "cell 2 1");
+//		add(tglbtnStartStream, "cell 1 2");
+//		add(lblStreamTime, "cell 2 2, alignx left");
+//		add(ckbxShowScores, "cell 1 3");
+//		add(ckbxEnableSkunk, "cell 2 3, alignx left");
+//		add(ckbxShowTimer, "cell 1 4");
+//		add(ckbxShowCutthroat, "cell 2 4, alignx left");
+		setLayout(new MigLayout("fillx")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		add(btnConnect,"");
+		add(btnDisconnect, "wrap");
+		add(btnPush, "");
+		add(btnPull, "wrap");
+		add(tglbtnStartStream, "");
+		add(lblStreamTime, "wrap");
+		add(ckbxShowScores, "");
+		add(ckbxEnableSkunk, "wrap");
+		add(ckbxShowTimer, "");
+		add(ckbxShowCutthroat, "wrap");
 	}
 	private void setMnemonics() {
 		if(settings.getConnectHotKey().isEmpty()) {

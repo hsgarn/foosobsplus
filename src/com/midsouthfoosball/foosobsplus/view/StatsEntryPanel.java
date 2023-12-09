@@ -1,5 +1,5 @@
 /**
-Copyright 2020-2023 Hugh Garner
+Copyright 2020-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -60,9 +60,10 @@ public class StatsEntryPanel extends JPanel {
 	public StatsEntryPanel(Settings settings) {
 		this.settings = settings;
 		Dimension dim = getPreferredSize();
-		dim.width = 350;
-		dim.height = 50;
+		dim.width = 340;
+		dim.height = 550;
 		setPreferredSize(dim);
+		setName(buildTitle());
 		
 		lblCode = new JLabel(buildTitle());
 		lblCodeHistory = new JLabel(Messages.getString("StatsEntryPanel.History", settings.getGameType())); //$NON-NLS-1$
@@ -81,7 +82,7 @@ public class StatsEntryPanel extends JPanel {
 		
 		innerBorder = BorderFactory.createTitledBorder(Messages.getString("StatsEntryPanel.StatisticsEntryPanel", settings.getGameType())); //$NON-NLS-1$
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
-		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
+		Border outerBorder = BorderFactory.createEmptyBorder(settings.getBorderTop(),settings.getBorderLeft(),settings.getBorderBottom(),settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
@@ -90,7 +91,7 @@ public class StatsEntryPanel extends JPanel {
 		setLayout(new GridBagLayout());
 		
 		GridBagConstraints gc = new GridBagConstraints();
-		gc.gridy = 0;
+		gc.gridy = -1;
 
 		gc.gridy++;
 
@@ -99,9 +100,9 @@ public class StatsEntryPanel extends JPanel {
 		
 		gc.gridx = 0;
 		gc.gridheight=1;
-		gc.fill = GridBagConstraints.HORIZONTAL;
-		gc.anchor = GridBagConstraints.SOUTH;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.fill = GridBagConstraints.BOTH;
+		gc.anchor = GridBagConstraints.NORTH;
+		gc.insets = new Insets(0, 0, 0, 3);
 		add(lblCode, gc);
 		
 		gc.weightx = 1;
@@ -109,63 +110,63 @@ public class StatsEntryPanel extends JPanel {
 		
 		gc.gridx = 1;
 		gc.gridheight=1;
-		gc.fill = GridBagConstraints.HORIZONTAL;
-		gc.anchor = GridBagConstraints.SOUTH;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.fill = GridBagConstraints.BOTH;
+		gc.anchor = GridBagConstraints.NORTH;
+		gc.insets = new Insets(0, 0, 0, 3);
 		add(lblCodeHistory, gc);
 		
 		//////// Statistics Window ////////
 		gc.gridy++;
 
 		gc.weightx = 1;
-		gc.weighty = 1;
+		gc.weighty = .9;
 		
 		gc.gridx = 0;
 		gc.gridheight=1;
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		gc.anchor = GridBagConstraints.NORTH;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 3);
 		add(txtCode, gc);
 
 		gc.weightx = 1;
-		gc.weighty = 1;
+		gc.weighty = .9;
 		
 		gc.gridx = 1;
 		gc.gridheight=4;
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.insets = new Insets(0, 0, 0, 3);
 		add(scrCodeHistory, gc);
 		
 		gc.weightx = 1;
-		gc.weighty = 1;
+		gc.weighty = .9;
 		
 		gc.gridx = 2;
 		gc.gridheight=1;
 		gc.fill = GridBagConstraints.BOTH;
-		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.anchor = GridBagConstraints.NORTH;
+		gc.insets = new Insets(0, 0, 0, 3);
 		add(btnUndo, gc);
 
 		gc.gridy++;
 		gc.weightx = 1;
-		gc.weighty = 1;
+		gc.weighty = .9;
 		
 		gc.gridx = 0;
-		gc.gridheight=1;
+		gc.gridheight=2;
 		gc.fill = GridBagConstraints.HORIZONTAL;
-		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.anchor = GridBagConstraints.NORTH;
+		gc.insets = new Insets(0, 0, 0, 3);
 		add(btnClear, gc);
 
 		gc.weightx = 1;
-		gc.weighty = 1;
+		gc.weighty = .9;
 		
 		gc.gridx = 2;
 		gc.gridheight=1;
 		gc.fill = GridBagConstraints.BOTH;
-		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 5);
+		gc.anchor = GridBagConstraints.NORTH;
+		gc.insets = new Insets(0, 0, 0, 3);
 		add(btnRedo, gc);
 	}
 	private void setMnemonics() {

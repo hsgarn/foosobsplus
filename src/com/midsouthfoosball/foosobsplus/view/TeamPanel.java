@@ -88,9 +88,10 @@ public class TeamPanel extends JPanel {
 		this.teamNbr = teamNbr;
 		
 		Dimension dim = getPreferredSize();
-		dim.width = 350;
-		dim.height = 50;
+		dim.width = 340;
+		dim.height = 300;
 		setPreferredSize(dim);
+		setName(buildTitle());
 		
 		lblTeamName = new JLabel(Messages.getString("TeamPanel.TeamName",settings.getGameType())); //$NON-NLS-1$
 		txtTeamName = new JTextField(50);
@@ -139,7 +140,7 @@ public class TeamPanel extends JPanel {
 
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
-		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
+		Border outerBorder = BorderFactory.createEmptyBorder(settings.getBorderTop(),settings.getBorderLeft(),settings.getBorderBottom(),settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
         Vector<Component> order = new Vector<Component>(16);
         order.add(txtTeamName);

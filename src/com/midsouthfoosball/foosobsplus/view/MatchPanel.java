@@ -70,9 +70,10 @@ public class MatchPanel extends JPanel {
 		this.maxGameCount = settings.getMaxGameNumber(); 
 		
 		Dimension dim = getPreferredSize();
-		dim.width = 550;
-		dim.height = 100;
+		dim.width = 340;
+		dim.height = 325;
 		setPreferredSize(dim);
+		setName(buildTitle());
 		
 		btnStartEvent = new JButton(Messages.getString("MatchPanel.StartEvent", settings.getGameType())); //$NON-NLS-1$
 		btnStartMatch = new JButton(Messages.getString("MatchPanel.StartMatch", settings.getGameType())); //$NON-NLS-1$
@@ -92,7 +93,7 @@ public class MatchPanel extends JPanel {
 		
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
-		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
+		Border outerBorder = BorderFactory.createEmptyBorder(settings.getBorderTop(),settings.getBorderLeft(),settings.getBorderBottom(),settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
