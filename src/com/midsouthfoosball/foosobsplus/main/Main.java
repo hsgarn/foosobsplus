@@ -57,6 +57,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -79,6 +80,7 @@ import com.midsouthfoosball.foosobsplus.commands.ISTCommand;
 import com.midsouthfoosball.foosobsplus.commands.Memento;
 import com.midsouthfoosball.foosobsplus.commands.PCACommand;
 import com.midsouthfoosball.foosobsplus.commands.PEMCommand;
+import com.midsouthfoosball.foosobsplus.commands.PKCommand;
 import com.midsouthfoosball.foosobsplus.commands.PPMCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRACommand;
 import com.midsouthfoosball.foosobsplus.commands.PRCommand;
@@ -147,8 +149,8 @@ import com.midsouthfoosball.foosobsplus.view.ParametersPanel;
 import com.midsouthfoosball.foosobsplus.view.PartnerProgramFrame;
 import com.midsouthfoosball.foosobsplus.view.ResetPanel;
 import com.midsouthfoosball.foosobsplus.view.SourcesFrame;
-import com.midsouthfoosball.foosobsplus.view.StatSourcesFrame;
 import com.midsouthfoosball.foosobsplus.view.StatSettingsFrame;
+import com.midsouthfoosball.foosobsplus.view.StatSourcesFrame;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
@@ -645,7 +647,8 @@ public class Main {
 					activateFilter(filter);
 					if(gameClock.isStreamTimerRunning()) {
 						if(settings.getCutThroatMode()==1) {
-							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Game end: " + team1.getForwardName() + " vs " + team2.getForwardName() + " vs " + team2.getGoalieName() + "\r\n");
+							int c = Integer.parseInt(match.getScoresTeam3()[gn-2]);
+							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Game end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + ": " + a + " to " + b + " to " + c + "\r\n");
 						} else {
 							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Game end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + ": " + a + " to " + b + "\r\n");
 						}
@@ -665,7 +668,8 @@ public class Main {
 					activateFilter(filter);
 					if(gameClock.isStreamTimerRunning()) {
 						if(settings.getCutThroatMode()==1) {
-							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Match end: " + team1.getForwardName() + " vs " + team2.getForwardName() + " vs " + team2.getGoalieName() + "\r\n");
+							int c = team3.getScore();
+							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Match end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + ": " + a + " to " + b + " to " + c + "\r\n");
 						} else {
 							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Match end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + ": " + a + " to " + b + "\r\n");
 						}
@@ -770,6 +774,9 @@ public class Main {
 		teamPanel1.addWarnListener(new WarnListener());
 		teamPanel2.addWarnListener(new WarnListener());
 		teamPanel3.addWarnListener(new WarnListener());
+		teamPanel1.addKingSeatListener(new KingSeatListener());
+		teamPanel2.addKingSeatListener(new KingSeatListener());
+		teamPanel3.addKingSeatListener(new KingSeatListener());
 		teamPanel1.addSwitchPositionsListener(new SwitchPositionsListener());
 		teamPanel2.addSwitchPositionsListener(new SwitchPositionsListener());
 		teamPanel3.addSwitchPositionsListener(new SwitchPositionsListener());
@@ -859,7 +866,7 @@ public class Main {
 		}
 		if(gameClock.isStreamTimerRunning()) {
 			if(settings.getCutThroatMode()==1) {
-				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch", settings.getGameType()) + " Pressed: " + team1.getForwardName() + " vs " + team2.getForwardName() + " vs " + team2.getGoalieName() + "\r\n");
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch", settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + "\r\n");
 			} else {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch", settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n");
 			}
@@ -874,7 +881,7 @@ public class Main {
 	public void startGame() {
 		if(gameClock.isStreamTimerRunning()) {
 			if(settings.getCutThroatMode()==1) {
-				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame", settings.getGameType()) + " Pressed: " + team1.getForwardName() + " vs " + team2.getForwardName() + " vs " + team2.getGoalieName() + "\r\n");
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame", settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + "\r\n");
 			} else {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame", settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n");
 			}
@@ -1065,6 +1072,9 @@ public class Main {
 		Command pwt1 = new PWCommand(statsController, teamController, 1);
 		Command pwt2 = new PWCommand(statsController, teamController, 2);
 		Command pwt3 = new PWCommand(statsController, teamController, 3);
+		Command pkt1 = new PKCommand(statsController, teamController, 1);
+		Command pkt2 = new PKCommand(statsController, teamController, 2);
+		Command pkt3 = new PKCommand(statsController, teamController, 3);
 		Command pss = new PSSCommand(statsController, this);
 		Command xpt1 = new XPTCommand(statsController, teamController, 1);
 		Command xpt2 = new XPTCommand(statsController, teamController, 2);
@@ -1122,6 +1132,9 @@ public class Main {
 		mySwitch.register("PWT1", pwt1);
 		mySwitch.register("PWT2", pwt2);
 		mySwitch.register("PWT3", pwt3);
+		mySwitch.register("PKT1", pkt1);
+		mySwitch.register("PKT2", pkt2);
+		mySwitch.register("PKT3", pkt3);
 		mySwitch.register("PSS", pss);
 		mySwitch.register("XPT1", xpt1);
 		mySwitch.register("XPT2", xpt2);
@@ -1676,6 +1689,17 @@ public class Main {
 			String filter = "Team" + teamNumber + "Warn";//Team1Warn
 			processCode(code,false);
 			if (btn.isSelected()) activateFilter(filter);
+			statsEntryPanel.setFocusOnCode();
+		}
+	}
+	private class KingSeatListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			JCheckBox ckbx = (JCheckBox) e.getSource();
+			String teamNumber = ripTeamNumber(ckbx.getName());
+			String code = "XPKT" + teamNumber;//XPKT1
+			String filter = "Team" + teamNumber + "KingSeat";//Team1KingSeat
+			processCode(code,false);
+			if (ckbx.isSelected()) activateFilter(filter);
 			statsEntryPanel.setFocusOnCode();
 		}
 	}

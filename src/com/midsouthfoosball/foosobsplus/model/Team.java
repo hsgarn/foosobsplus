@@ -45,6 +45,7 @@ public class Team implements Serializable {
 	private int timeOutCount;
 	private boolean resetState = false;
 	private boolean warnState = false;
+	private boolean kingSeatState = false;
 	private transient OBSInterface obsInterface;
 	private transient Settings settings;
 	private int teamNbr;
@@ -265,6 +266,13 @@ public class Team implements Serializable {
 		warnState = state;
 		writeWarn();
 	}
+	public boolean getKingSeat() {
+		return kingSeatState;
+	}
+	public void setKingSeat(boolean state) {
+		kingSeatState = state;
+		writeKingSeat();
+	}
 	public int getShotsOnGoal() {
 		return shotsOnGoal;
 	}
@@ -370,6 +378,7 @@ public class Team implements Serializable {
 		stuffs = 0;
 		resetTimeOuts();
 		resetResetWarns();
+		resetKingSeats();
 		writeAll();
 	}
 	public void resetTimeOuts() {
@@ -385,6 +394,10 @@ public class Team implements Serializable {
 		setWarn(false);
 		writeReset();
 		writeWarn();
+	}
+	public void resetKingSeats() {
+		setKingSeat(false);
+		writeKingSeat();
 	}
 	public int getPassAttempts() {
 		return passAttempts;
@@ -689,20 +702,12 @@ public class Team implements Serializable {
     }
     private void writeForwardName() {
     	String forwardName;
-    	if(settings.getCutThroatMode()==1) {
-    		forwardName = getForwardGameCount() + " " + getForwardName() + " " + getForwardScore();
-    	} else {
-    		forwardName = getForwardName();
-    	}
+   		forwardName = getForwardName();
     	writeData(settings.getTeamForwardSource(Integer.toString(teamNbr)), forwardName);
     }
     private void writeGoalieName() {
     	String goalieName;
-    	if(settings.getCutThroatMode()==1) {
-    		goalieName = getGoalieGameCount() + " " + getGoalieName() + " " + getGoalieScore();
-    	} else {
-    		goalieName = getGoalieName();
-    	}
+   		goalieName = getGoalieName();
     	writeData(settings.getTeamGoalieSource(Integer.toString(teamNbr)), goalieName);
     }
     private void writeGameCount() {
@@ -723,6 +728,14 @@ public class Team implements Serializable {
 		String src = settings.getTeamWarnSource(Integer.toString(teamNbr));
 		if(warnState) {
 			writeData(src, "WARNING");
+		} else {
+			writeData(src, "");
+		}
+	}
+	private void writeKingSeat() {
+		String src = settings.getTeamKingSeatSource(Integer.toString(teamNbr));
+		if(kingSeatState) {
+			writeData(src, "♔");
 		} else {
 			writeData(src, "");
 		}
@@ -841,6 +854,7 @@ public class Team implements Serializable {
 		writeGameCount();
 		writeReset();
 		writeWarn();
+		writeKingSeat();
 		writeTimeOuts();
 		writeStats();
 	}
@@ -864,6 +878,7 @@ public class Team implements Serializable {
 		this.setTimeOutCount(tempTeam.getTimeOutCount());
 		this.setReset(tempTeam.getReset());
 		this.setWarn(tempTeam.getWarn());
+		this.setKingSeat(tempTeam.getKingSeat());
 		this.setTeamColor(tempTeam.getTeamColor());
 		this.setPassAttempts(tempTeam.getPassAttempts());
 		this.setPassCompletes(tempTeam.getPassCompletes());

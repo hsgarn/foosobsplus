@@ -35,6 +35,7 @@ import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -69,6 +70,7 @@ public class TeamPanel extends JPanel {
 	private JButton btnTimeOutCountDecrease;
 	private JToggleButton btnReset;
 	private JToggleButton btnWarn;
+	private JCheckBox ckbxKingSeat;
 	private Settings settings;
 	private int teamNbr;
 	private Border innerBorder;
@@ -136,6 +138,8 @@ public class TeamPanel extends JPanel {
 		lblLastScoredTime.setBackground(Color.CYAN);
 		btnWarn = new JToggleButton(Messages.getString("TeamPanel.Warn",settings.getGameType())); //$NON-NLS-1$
 		btnWarn.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
+		ckbxKingSeat = new JCheckBox(Messages.getString("TeamPanel.KingSeat", settings.getGameType())); //$NON-NLS-1$
+		ckbxKingSeat.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
 		setMnemonics(teamNbr);
 
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
@@ -158,6 +162,7 @@ public class TeamPanel extends JPanel {
         order.add(btnTimeOutCountIncrease);
         order.add(btnReset);
         order.add(btnWarn);
+        order.add(ckbxKingSeat);
         customTraversalPolicy = new CustomFocusTraversalPolicy(order);
         this.setFocusTraversalPolicy(customTraversalPolicy);
         this.setFocusCycleRoot(true);
@@ -398,6 +403,18 @@ public class TeamPanel extends JPanel {
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(btnWarn, gc);
+		
+		////////KING SEAT ////////////
+		gc.gridy++;
+		gc.weightx = 1;
+		gc.weighty = 1.0;
+		
+		gc.gridx = 1;
+		gc.insets = new Insets(10, 0, 10, 0);
+		gc.fill = GridBagConstraints.HORIZONTAL;
+		gc.anchor = GridBagConstraints.CENTER;
+		add(ckbxKingSeat, gc);
+		
 	}
 	
 	////// Listener Methods //////
@@ -473,7 +490,9 @@ public class TeamPanel extends JPanel {
 	public void addWarnListener(ActionListener listenForBtnWarn) {
 		btnWarn.addActionListener(listenForBtnWarn);
 	}
-	
+	public void addKingSeatListener(ActionListener listenForCkbxKingSeat) {
+		ckbxKingSeat.addActionListener(listenForCkbxKingSeat);
+	}
 	////// Utility Methods //////
 	
 	public void updateScore(int score) {
@@ -500,6 +519,9 @@ public class TeamPanel extends JPanel {
 	public void updateWarn(boolean state) {
 		btnWarn.setSelected(state);
 	}
+	public void updateKingSeat(boolean state) {
+		ckbxKingSeat.setSelected(state);
+	}
 	public void updateNames(String forwardName, String goalieName) {
 		txtForwardName.setText(forwardName);
 		txtGoalieName.setText(goalieName);
@@ -522,7 +544,7 @@ public class TeamPanel extends JPanel {
 	public void selectGoalieName() {
 		txtGoalieName.selectAll();
 	}
-	public void displayAllFields(String teamName, String forwardName, String goalieName, int score, int gameCount, int timeOutCount, boolean isReset, boolean isWarn) {
+	public void displayAllFields(String teamName, String forwardName, String goalieName, int score, int gameCount, int timeOutCount, boolean isReset, boolean isWarn, boolean isKingSeat) {
 		updateTeamName(teamName);
 		updateNames(forwardName, goalieName);
 		updateScore(score);
@@ -530,6 +552,7 @@ public class TeamPanel extends JPanel {
 		updateTimeOutCount(timeOutCount);
 		btnReset.setSelected(isReset);
 		btnWarn.setSelected(isWarn);
+		ckbxKingSeat.setSelected(isKingSeat);
 	}
 
 	public void setTitle(String title) {

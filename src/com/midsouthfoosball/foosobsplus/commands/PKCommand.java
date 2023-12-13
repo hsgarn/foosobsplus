@@ -1,5 +1,5 @@
 /**
-Copyright 2022-2024 Hugh Garner
+Copyright 2023-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -22,19 +22,21 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.commands;
 
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
-import com.midsouthfoosball.foosobsplus.main.Main;
+import com.midsouthfoosball.foosobsplus.controller.TeamController;
 
-public class PEMCommand implements Command {
+public class PKCommand implements Command {
 	private StatsController statsController;
-	private Main main;
+	private TeamController teamController;
+	private int teamNumber;
 	
-	public PEMCommand(StatsController statsController, Main main) {
+	public PKCommand(StatsController statsController, TeamController teamController, int teamNumber) {
 		this.statsController = statsController;
-		this.main = main;
+		this.teamController = teamController;
+		this.teamNumber = teamNumber;
 	}
-
+	
 	public void execute() {
-		main.endMatch();
+		teamController.toggleKingSeat(teamNumber);
 	}
 
 	public String getCode() {

@@ -168,6 +168,9 @@ public class Settings {
 		defaultSourceProps.setProperty("Team1Warn", "team1warn");
 		defaultSourceProps.setProperty("Team2Warn", "team2warn");
 		defaultSourceProps.setProperty("Team3Warn", "team3warn");
+		defaultSourceProps.setProperty("Team1KingSeat", "team1kingseat");
+		defaultSourceProps.setProperty("Team2KingSeat", "team2kingseat");
+		defaultSourceProps.setProperty("Team3KingSeat", "team3kingseat");
 		defaultSourceProps.setProperty("LastScored","lastscored");
 		defaultSourceProps.setProperty("GameTime", "gametime");
 		defaultSourceProps.setProperty("MatchTime", "matchtime");
@@ -450,6 +453,9 @@ public class Settings {
 	}
 	public String getTeamWarnSource(String teamNumber) {
 		return configSourceProps.getProperty("Team" + teamNumber + "Warn");//Team1Warn
+	}
+	public String getTeamKingSeatSource(String teamNumber) {
+		return configSourceProps.getProperty("Team" + teamNumber + "KingSeat");//Team1KingSeat
 	}
 	public String getTournamentSource() {return configSourceProps.getProperty("Tournament");}
 	public String getEventSource() {return configSourceProps.getProperty("Event");}
@@ -831,6 +837,9 @@ public class Settings {
 	public String getDefaultTeam1WarnSource() {return defaultSourceProps.getProperty("Team1Warn");}
 	public String getDefaultTeam2WarnSource() {return defaultSourceProps.getProperty("Team2Warn");}
 	public String getDefaultTeam3WarnSource() {return defaultSourceProps.getProperty("Team3Warn");}
+	public String getDefaultTeam1KingSeatSource() {return defaultSourceProps.getProperty("Team1KingSeat");}
+	public String getDefaultTeam2KingSeatSource() {return defaultSourceProps.getProperty("Team2KingSeat");}
+	public String getDefaultTeam3KingSeatSource() {return defaultSourceProps.getProperty("Team3KingSeat");}
 	public String getDefaultLastScoredSource() {return defaultSourceProps.getProperty("LastScored");}
 	public String getDefaultGameTimeSource() {return defaultSourceProps.getProperty("GameTime");}
 	public String getDefaultMatchTimeSource() {return defaultSourceProps.getProperty("MatchTime");}

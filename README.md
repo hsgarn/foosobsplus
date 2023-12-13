@@ -681,9 +681,6 @@ This window will show any messages relevant to communicating with OBS Studio.
 ### Disconnect
 Click this menu item to disconnect from OBS Studio.
 
-### Show Scores
-When checked, a command is sent to OBS to show scores. When unchecked, the scores will be hidden.  The score fields are determined by the source identified in the Show Scores field in Sources Settings. It is useful to hide the scores in OBS when no one is keeping score and to show them again when someone is available to update the scores (when not using AutoScore).
-
 ## AutoScore
 This is the menu item for FoosScore AutoScore related activity.  A green solid circle will show before AutoScore to indicate that a connection has been established to the FoosScore AutoScore system.  A red solid circle indicates that FoosScore AutoScore is currently disconnected.
 
@@ -844,6 +841,8 @@ This button will send the word RESET to the source specified in the Reset 1 fiel
 This button will send the word WARNING to the source specified in the Warn 1 field in Sources Settings.  It is a toggle button so when pressed once, it displays WARNING. When pressed again, it clears the text.  A hot key can be assigned to this button in Hot Keys Settings.
 #### Time Since Last Scored
 This is the time elapsed since Team 1 scored a goal. It is reset by the Start Match button or when Team 1 scores a point.
+#### King Seat
+This checkbox is used to flag the team as currently being in the King Seat (top of the winners bracket).  When checked, a crown (♔) will be displayed. Since only 1 team can be designated as in the King Seat, the other teams' King Seat checkboxes will be cleared.  Clearing the checkbox will clear the text.
 ### Team 2 Information
 This panel is identical to Team 1 Information panel but is for tracking Team 2's information.
 ### Timer Panel
@@ -1107,8 +1106,17 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpsa - push show all button
 * xpha - push hide all button
 * xptca - push tournament clear all button
+* xpkt1 - push king seat team 1
+* xpkt2 - push king seat team 2
+* xpkt3 - push king seat team 3
 
 ## Revision History</br>
+v2.020 12/12/2023</br>
+Update copyright to 2024.</br>
+Add King Seat logic.</br>
+Removed Show Scores from OBS Menu Bar.</br>
+Fix Cutthroat Streaming Log.</br>
+</br>
 v2.019 12/08/2023</br>
 Play with panel sizes.</br>
 Limit stats to team 1 and 2 only.</br>

@@ -90,19 +90,6 @@ public class OBSPanel extends JPanel {
 		
 	}
 	public void layoutComponents() {
-		//setBounds(100, 100, 900, 489);
-//		setLayout(new MigLayout("", "[][][][][][][][][][][][]", "[][][][][][][][][][][][][][][][][][][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-//		setLayout(new MigLayout("", "", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-//		add(btnConnect,"cell 1 0");
-//		add(btnDisconnect, "cell 2 0");
-//		add(btnPush, "cell 1 1");
-//		add(btnPull, "cell 2 1");
-//		add(tglbtnStartStream, "cell 1 2");
-//		add(lblStreamTime, "cell 2 2, alignx left");
-//		add(ckbxShowScores, "cell 1 3");
-//		add(ckbxEnableSkunk, "cell 2 3, alignx left");
-//		add(ckbxShowTimer, "cell 1 4");
-//		add(ckbxShowCutthroat, "cell 2 4, alignx left");
 		setLayout(new MigLayout("fillx")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		add(btnConnect,"");
 		add(btnDisconnect, "wrap");

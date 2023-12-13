@@ -93,7 +93,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private JCheckBoxMenuItem viewGameTableWindow;
 	private JCheckBoxMenuItem viewAllWindows;
 	private JCheckBoxMenuItem helpShowParsed;
-	private JCheckBoxMenuItem showScores;
 	private JMenuItem obsConnectItem;
 	private JMenuItem obsDisconnectItem;
 	private JMenu obsMenu;
@@ -221,7 +220,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		obsMenu 			= new JMenu(Messages.getString("MainFrame.OBS")); //$NON-NLS-1$
 		obsConnectItem 		= new JMenuItem(Messages.getString("MainFrame.OBSConnect")); //$NON-NLS-1$
 		obsDisconnectItem 	= new JMenuItem(Messages.getString("MainFrame.OBSDisconnect")); //$NON-NLS-1$
-		showScores          = new JCheckBoxMenuItem(Messages.getString("MainFrame.ShowScores")); //$NON-NLS-1$
+//		showScores          = new JCheckBoxMenuItem(Messages.getString("MainFrame.ShowScores")); //$NON-NLS-1$
 		
 		imgOBSConnected = new ImageIcon(this.getClass().getResource("Connected.png"));; //$NON-NLS-1$
 		imgOBSConnected.setImage(imgOBSConnected.getImage().getScaledInstance(12, 12,  Image.SCALE_DEFAULT));
@@ -232,7 +231,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		
 		obsMenu.add(obsConnectItem);
 		obsMenu.add(obsDisconnectItem);
-		obsMenu.add(showScores);
+//		obsMenu.add(showScores);
 		obsMenu.setIcon(imgIconOBSDisconnected);
 		
 		autoScoreMenu  = new JMenu(Messages.getString("MainFrame.AutoScore")); //$NON-NLS-1$
@@ -278,11 +277,11 @@ public final class MainFrame extends JFrame implements WindowListener {
 		obsMenu.setIcon(imgIconOBSDisconnected);
 		autoScoreMenu.setIcon(imgIconAutoScoreDisconnected);
 		
-		showScores.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				main.showScores(showScores.isSelected());
-			}
-		});
+//		showScores.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent ae) {
+//				main.showScores(showScores.isSelected());
+//			}
+//		});
 		viewAlwaysOnTop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				setAlwaysOnTop(viewAlwaysOnTop.isSelected());
