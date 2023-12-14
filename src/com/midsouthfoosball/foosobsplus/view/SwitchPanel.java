@@ -40,8 +40,8 @@ public class SwitchPanel extends JPanel {
 	
 	private JButton btnSwitchSides;
 	private JButton btnSwitchTeams;
-	private JButton btnSwitchPlayer1;
-	private JButton btnSwitchPlayer2;
+	private JButton btnSwitchForwards;
+	private JButton btnSwitchGoalies;
 	private JButton btnSwitchScores;
 	private JButton btnSwitchGameCounts;
 	private JButton btnSwitchTimeOuts;
@@ -63,8 +63,8 @@ public class SwitchPanel extends JPanel {
 		
 		btnSwitchSides = new JButton(Messages.getString("SwitchPanel.SwitchSides", settings.getGameType())); //$NON-NLS-1$
 		btnSwitchTeams = new JButton(Messages.getString("SwitchPanel.SwitchTeams", settings.getGameType())); //$NON-NLS-1$
-		btnSwitchPlayer1 = new JButton(Messages.getString("SwitchPanel.SwitchPlayer1", settings.getGameType()));
-		btnSwitchPlayer2 = new JButton(Messages.getString("SwitchPanel.SwitchPlayer2", settings.getGameType()));
+		btnSwitchForwards = new JButton(Messages.getString("SwitchPanel.SwitchPlayer1", settings.getGameType()));
+		btnSwitchGoalies = new JButton(Messages.getString("SwitchPanel.SwitchPlayer2", settings.getGameType()));
 		btnSwitchScores = new JButton(Messages.getString("SwitchPanel.SwitchScores", settings.getGameType())); //$NON-NLS-1$
 		btnSwitchGameCounts = new JButton(Messages.getString("SwitchPanel.SwitchGameCounts", settings.getGameType())); //$NON-NLS-1$
 		btnSwitchTimeOuts = new JButton(Messages.getString("SwitchPanel.SwitchTimeOuts", settings.getGameType())); //$NON-NLS-1$
@@ -123,7 +123,7 @@ public class SwitchPanel extends JPanel {
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		add(btnSwitchPlayer1, gc);
+		add(btnSwitchForwards, gc);
 		
 		//////// Switch Player2 ////////
 		gc.gridy++;
@@ -135,7 +135,7 @@ public class SwitchPanel extends JPanel {
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
-		add(btnSwitchPlayer2, gc);
+		add(btnSwitchGoalies, gc);
 		
 		//////// Switch Scores ////////
 		gc.gridy++;
@@ -221,15 +221,15 @@ public class SwitchPanel extends JPanel {
 		} else {
 			btnSwitchTeams.setMnemonic(settings.getSwitchTeamsHotKey().charAt(0));
 		};
-		if(settings.getSwitchPlayerHotKey("1").isEmpty()) {
-			btnSwitchPlayer1.setMnemonic(-1);
+		if(settings.getSwitchForwardsHotKey().isEmpty()) {
+			btnSwitchForwards.setMnemonic(-1);
 		} else {
-			btnSwitchPlayer1.setMnemonic(settings.getSwitchPlayerHotKey("1").charAt(0));
+			btnSwitchForwards.setMnemonic(settings.getSwitchForwardsHotKey().charAt(0));
 		};
-		if(settings.getSwitchPlayerHotKey("2").isEmpty()) {
-			btnSwitchPlayer2.setMnemonic(-1);
+		if(settings.getSwitchGoaliesHotKey().isEmpty()) {
+			btnSwitchGoalies.setMnemonic(-1);
 		} else {
-			btnSwitchPlayer2.setMnemonic(settings.getSwitchPlayerHotKey("2").charAt(0));
+			btnSwitchGoalies.setMnemonic(settings.getSwitchGoaliesHotKey().charAt(0));
 		};
 		if(settings.getSwitchScoresHotKey().isEmpty()) {
 			btnSwitchScores.setMnemonic(-1);
@@ -267,10 +267,10 @@ public class SwitchPanel extends JPanel {
 		btnSwitchTeams.addActionListener(listenForBtnSwitchTeams);
 	}
 	public void addSwitchPlayer1Listener(ActionListener listenForBtnSwitchPlayer1) {
-		btnSwitchPlayer1.addActionListener(listenForBtnSwitchPlayer1);
+		btnSwitchForwards.addActionListener(listenForBtnSwitchPlayer1);
 	}
 	public void addSwitchPlayer2Listener(ActionListener listenForBtnSwitchPlayer2) {
-		btnSwitchPlayer2.addActionListener(listenForBtnSwitchPlayer2);
+		btnSwitchGoalies.addActionListener(listenForBtnSwitchPlayer2);
 	}
 	public void addSwitchScoresListener(ActionListener listenForBtnSwitchScores) {
 		btnSwitchScores.addActionListener(listenForBtnSwitchScores);

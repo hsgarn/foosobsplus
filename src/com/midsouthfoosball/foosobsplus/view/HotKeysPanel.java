@@ -61,26 +61,38 @@ public class HotKeysPanel extends JPanel {
 	private JTextField txtStartGameHotKey;
 	private JTextField txtTeam1SwitchPositionsHotKey;
 	private JTextField txtTeam2SwitchPositionsHotKey;
+	private JTextField txtTeam3SwitchPositionsHotKey;
 	private JTextField txtSwitchTeamsHotKey;
 	private JTextField txtGameCount1MinusHotKey;
 	private JTextField txtGameCount1PlusHotKey;
 	private JTextField txtGameCount2MinusHotKey;
 	private JTextField txtGameCount2PlusHotKey;
+	private JTextField txtGameCount3MinusHotKey;
+	private JTextField txtGameCount3PlusHotKey;
 	private JTextField txtSwitchGameCountsHotKey;
 	private JTextField txtScore1MinusHotKey;
 	private JTextField txtScore1PlusHotKey;
 	private JTextField txtScore2MinusHotKey;
 	private JTextField txtScore2PlusHotKey;
+	private JTextField txtScore3MinusHotKey;
+	private JTextField txtScore3PlusHotKey;
 	private JTextField txtSwitchScoresHotKey;
 	private JTextField txtTimeOut1MinusHotKey;
 	private JTextField txtTimeOut1PlusHotKey;
 	private JTextField txtTimeOut2MinusHotKey;
 	private JTextField txtTimeOut2PlusHotKey;
+	private JTextField txtTimeOut3MinusHotKey;
+	private JTextField txtTimeOut3PlusHotKey;
 	private JTextField txtSwitchTimeOutsHotKey;
 	private JTextField txtReset1HotKey;
 	private JTextField txtReset2HotKey;
+	private JTextField txtReset3HotKey;
 	private JTextField txtWarn1HotKey;
 	private JTextField txtWarn2HotKey;
+	private JTextField txtWarn3HotKey;
+	private JTextField txtKingSeat1HotKey;
+	private JTextField txtKingSeat2HotKey;
+	private JTextField txtKingSeat3HotKey;
 	private JTextField txtSwitchResetWarnsHotKey;
 	private JTextField txtSwitchSidesHotKey;
 	private JTextField txtResetGameCountsHotKey;
@@ -98,8 +110,8 @@ public class HotKeysPanel extends JPanel {
 	private JTextField txtResetNamesHotKey;
 	private JTextField txtUndoHotKey;
 	private JTextField txtRedoHotKey;
-	private JTextField txtSwitchPlayer1HotKey;
-	private JTextField txtSwitchPlayer2HotKey;
+	private JTextField txtSwitchForwardsHotKey;
+	private JTextField txtSwitchGoaliesHotKey;
 	private JTextField txtShowSkunkHotKey;
 	private JTextField txtStartStreamHotKey;
 	private JButton btnSave;
@@ -113,501 +125,7 @@ public class HotKeysPanel extends JPanel {
 	public HotKeysPanel(Settings settings) throws IOException {
 		hotKeyBaseScriptText = settings.getHotKeyBaseScript();
 		if (hotKeyBaseScriptText.isEmpty()) hotKeyBaseScriptText = settings.getDefaultHotKeyBaseScript();
-		setLayout(new MigLayout("", "[][grow][10.00][][grow][10.00][][grow][10.00][][grow]", "[][][][][][][][][][][][][][][][][][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-		JLabel lblButton = new JLabel(Messages.getString("HotKeysPanel.Button")); //$NON-NLS-1$
-		lblButton.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
-		add(lblButton, "cell 0 0,alignx right"); //$NON-NLS-1$
-		
-		JLabel lblHotKey = new JLabel(Messages.getString("HotKeysPanel.HotKey")); //$NON-NLS-1$
-		lblHotKey.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
-		add(lblHotKey, "cell 1 0,alignx center"); //$NON-NLS-1$
-		
-		JLabel lblButton1 = new JLabel(Messages.getString("HotKeysPanel.Button")); //$NON-NLS-1$
-		lblButton1.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
-		add(lblButton1, "cell 3 0,alignx right"); //$NON-NLS-1$
-		
-		JLabel lblHotKey1 = new JLabel(Messages.getString("HotKeysPanel.HotKey")); //$NON-NLS-1$
-		lblHotKey1.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
-		add(lblHotKey1, "cell 4 0,alignx center"); //$NON-NLS-1$
-		
-		JLabel lblButton2 = new JLabel(Messages.getString("HotKeysPanel.Button")); //$NON-NLS-1$
-		lblButton2.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
-		add(lblButton2, "cell 6 0,alignx right"); //$NON-NLS-1$
-		
-		JLabel lblHotKey2 = new JLabel(Messages.getString("HotKeysPanel.HotKey")); //$NON-NLS-1$
-		lblHotKey2.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
-		add(lblHotKey2, "cell 7 0,alignx center"); //$NON-NLS-1$
-		
-		JLabel lblButton3 = new JLabel(Messages.getString("HotKeysPanel.Button")); //$NON-NLS-1$
-		lblButton3.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
-		add(lblButton3, "cell 9 0,alignx right"); //$NON-NLS-1$
-		
-		JLabel lblHotKey3 = new JLabel(Messages.getString("HotKeysPanel.HotKey")); //$NON-NLS-1$
-		lblHotKey3.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
-		add(lblHotKey3, "cell 10 0,alignx center"); //$NON-NLS-1$
-		
-		JLabel lblStartMatchHotKey = new JLabel(Messages.getString("HotKeysPanel.StartMatch", settings.getGameType())); //$NON-NLS-1$
-		add(lblStartMatchHotKey, "cell 0 1,alignx trailing"); //$NON-NLS-1$
-		
-		txtStartMatchHotKey = new JTextField();
-		txtStartMatchHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtStartMatchHotKey.setText(settings.getStartMatchHotKey());
-		add(txtStartMatchHotKey, "cell 1 1,alignx left"); //$NON-NLS-1$
-		txtStartMatchHotKey.setColumns(10);
-		
-		JLabel lblReset1HotKey = new JLabel(Messages.getString("HotKeysPanel.ResetTeam1", settings.getGameType())); //$NON-NLS-1$
-		add(lblReset1HotKey, "cell 3 1,alignx trailing"); //$NON-NLS-1$
-		
-		txtReset1HotKey = new JTextField();
-		txtReset1HotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtReset1HotKey.setText(settings.getResetHotKey("1"));
-		add(txtReset1HotKey, "cell 4 1,alignx left"); //$NON-NLS-1$
-		txtReset1HotKey.setColumns(10);
-		
-		JLabel lblWarn1HotKey = new JLabel(Messages.getString("HotKeysPanel.WarnTeam1", settings.getGameType())); //$NON-NLS-1$
-		add(lblWarn1HotKey, "cell 6 1,alignx trailing"); //$NON-NLS-1$
-		
-		txtWarn1HotKey = new JTextField();
-		txtWarn1HotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtWarn1HotKey.setText(settings.getWarnHotKey("1"));
-		add(txtWarn1HotKey, "cell 7 1,alignx left"); //$NON-NLS-1$
-		txtWarn1HotKey.setColumns(10);
-		
-		JLabel lblTimers = new JLabel(Messages.getString("HotKeysPanel.Timers", settings.getGameType())); //$NON-NLS-1$
-		add(lblTimers, "cell 9 1,alignx right"); //$NON-NLS-1$
-		
-		JLabel lblPauseMatchHotKey = new JLabel(Messages.getString("HotKeysPanel.PauseMatch", settings.getGameType())); //$NON-NLS-1$
-		add(lblPauseMatchHotKey, "cell 0 2,alignx trailing"); //$NON-NLS-1$
-		
-		txtPauseMatchHotKey = new JTextField();
-		txtPauseMatchHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtPauseMatchHotKey.setText(settings.getPauseMatchHotKey());
-		add(txtPauseMatchHotKey, "cell 1 2,alignx left"); //$NON-NLS-1$
-		txtPauseMatchHotKey.setColumns(10);
-		
-		JLabel lblReset2HotKey = new JLabel(Messages.getString("HotKeysPanel.ResetTeam2", settings.getGameType())); //$NON-NLS-1$
-		add(lblReset2HotKey, "cell 3 2,alignx trailing"); //$NON-NLS-1$
-		
-		txtReset2HotKey = new JTextField();
-		txtReset2HotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtReset2HotKey.setText(settings.getResetHotKey("2"));
-		add(txtReset2HotKey, "cell 4 2,growx"); //$NON-NLS-1$
-		txtReset2HotKey.setColumns(10);
-		
-		JLabel lblWarn2HotKey = new JLabel(Messages.getString("HotKeysPanel.WarnTeam2", settings.getGameType())); //$NON-NLS-1$
-		add(lblWarn2HotKey, "cell 6 2,alignx trailing"); //$NON-NLS-1$
-		
-		txtWarn2HotKey = new JTextField();
-		txtWarn2HotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtWarn2HotKey.setText(settings.getWarnHotKey("2"));
-		add(txtWarn2HotKey, "cell 7 2,alignx left"); //$NON-NLS-1$
-		txtWarn2HotKey.setColumns(10);
-		
-		JLabel lblShotTimerHotKey = new JLabel(Messages.getString("HotKeysPanel.StartShotTimer", settings.getGameType())); //$NON-NLS-1$
-		add(lblShotTimerHotKey, "cell 9 2,alignx trailing"); //$NON-NLS-1$
-		
-		txtShotTimerHotKey = new JTextField();
-		txtShotTimerHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtShotTimerHotKey.setText(settings.getShotTimerHotKey());
-		add(txtShotTimerHotKey, "cell 10 2,alignx left"); //$NON-NLS-1$
-		txtShotTimerHotKey.setColumns(10);
-		
-		JLabel lblStartGameHotKey = new JLabel(Messages.getString("HotKeysPanel.StartGame", settings.getGameType())); //$NON-NLS-1$
-		add(lblStartGameHotKey, "cell 0 4,alignx trailing"); //$NON-NLS-1$
-		
-		txtStartGameHotKey = new JTextField();
-		txtStartGameHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtStartGameHotKey.setText(settings.getStartGameHotKey());
-		add(txtStartGameHotKey, "cell 1 4,alignx left,aligny top"); //$NON-NLS-1$
-		txtStartGameHotKey.setColumns(10);
-		
-		JLabel lblPassTimerHotKey = new JLabel(Messages.getString("HotKeysPanel.StartPassTimer", settings.getGameType())); //$NON-NLS-1$
-		add(lblPassTimerHotKey, "cell 9 4,alignx trailing"); //$NON-NLS-1$
-		
-		txtPassTimerHotKey = new JTextField();
-		txtPassTimerHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtPassTimerHotKey.setText(settings.getPassTimerHotKey());
-		add(txtPassTimerHotKey, "cell 10 4,alignx left"); //$NON-NLS-1$
-		txtPassTimerHotKey.setColumns(10);
-		
-		JLabel lblTeamNames = new JLabel(Messages.getString("HotKeysPanel.TeamNames", settings.getGameType())); //$NON-NLS-1$
-		add(lblTeamNames, "cell 0 5,alignx right"); //$NON-NLS-1$
-		
-		JLabel lblScores = new JLabel(Messages.getString("HotKeysPanel.Scores", settings.getGameType())); //$NON-NLS-1$
-		add(lblScores, "cell 3 5,alignx right"); //$NON-NLS-1$
-		
-		JLabel lblSwitchResetWarnsHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchResetWarns", settings.getGameType())); //$NON-NLS-1$
-		add(lblSwitchResetWarnsHotKey, "cell 6 6,alignx trailing"); //$NON-NLS-1$
-		
-		txtSwitchResetWarnsHotKey = new JTextField();
-		txtSwitchResetWarnsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtSwitchResetWarnsHotKey.setText(settings.getSwitchResetWarnsHotKey());
-		add(txtSwitchResetWarnsHotKey, "cell 7 6,alignx left"); //$NON-NLS-1$
-		txtSwitchResetWarnsHotKey.setColumns(10);
-		
-		JLabel lblTimeOutTimerHotKey = new JLabel(Messages.getString("HotKeysPanel.StartTimeOut", settings.getGameType())); //$NON-NLS-1$
-		add(lblTimeOutTimerHotKey, "cell 9 5,alignx trailing"); //$NON-NLS-1$
-		
-		txtTimeOutTimerHotKey = new JTextField();
-		txtTimeOutTimerHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtTimeOutTimerHotKey.setText(settings.getTimeOutTimerHotKey());
-		add(txtTimeOutTimerHotKey, "cell 10 5,alignx left"); //$NON-NLS-1$
-		txtTimeOutTimerHotKey.setColumns(10);
-		
-		JLabel lblScore1MinusHotKey = new JLabel(Messages.getString("HotKeysPanel.DecrementScoreTeam1", settings.getGameType())); //$NON-NLS-1$
-		add(lblScore1MinusHotKey, "cell 3 6,alignx trailing"); //$NON-NLS-1$
-		
-		txtScore1MinusHotKey = new JTextField();
-		txtScore1MinusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtScore1MinusHotKey.setText(settings.getScoreMinusHotKey("1"));
-		add(txtScore1MinusHotKey, "cell 4 6,alignx left"); //$NON-NLS-1$
-		txtScore1MinusHotKey.setColumns(10);
-		
-		JLabel lblGameTimerHotKey = new JLabel(Messages.getString("HotKeysPanel.StartGameTimer", settings.getGameType())); //$NON-NLS-1$
-		add(lblGameTimerHotKey, "cell 9 6,alignx trailing"); //$NON-NLS-1$
-		
-		txtGameTimerHotKey = new JTextField();
-		txtGameTimerHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtGameTimerHotKey.setText(settings.getGameTimerHotKey());
-		add(txtGameTimerHotKey, "cell 10 6,alignx left"); //$NON-NLS-1$
-		txtGameTimerHotKey.setColumns(10);
-		
-		JLabel lblTeam1SwitchPositionsHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchPositionsTeam1", settings.getGameType())); //$NON-NLS-1$
-		add(lblTeam1SwitchPositionsHotKey, "cell 0 6,alignx trailing"); //$NON-NLS-1$
-		
-		txtTeam1SwitchPositionsHotKey = new JTextField();
-		txtTeam1SwitchPositionsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtTeam1SwitchPositionsHotKey.setText(settings.getTeamSwitchPositionsHotKey("1"));
-		add(txtTeam1SwitchPositionsHotKey, "cell 1 6,alignx left"); //$NON-NLS-1$
-		txtTeam1SwitchPositionsHotKey.setColumns(10);
-		
-		JLabel lblScore1PlusHotKey = new JLabel(Messages.getString("HotKeysPanel.IncrementScoreTeam1", settings.getGameType())); //$NON-NLS-1$
-		add(lblScore1PlusHotKey, "cell 3 7,alignx trailing"); //$NON-NLS-1$
-		
-		txtScore1PlusHotKey = new JTextField();
-		txtScore1PlusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtScore1PlusHotKey.setText(settings.getScorePlusHotKey("1"));
-		add(txtScore1PlusHotKey, "cell 4 7,alignx left"); //$NON-NLS-1$
-		txtScore1PlusHotKey.setColumns(10);
-		
-		JLabel lblSwitchSidesHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchSides", settings.getGameType())); //$NON-NLS-1$
-		add(lblSwitchSidesHotKey, "cell 6 7,alignx trailing"); //$NON-NLS-1$
-		
-		txtSwitchSidesHotKey = new JTextField();
-		txtSwitchSidesHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtSwitchSidesHotKey.setText(settings.getSwitchSidesHotKey());
-		add(txtSwitchSidesHotKey, "cell 7 7,alignx left"); //$NON-NLS-1$
-		txtSwitchSidesHotKey.setColumns(10);
-		
-		JLabel lblRecallTimerHotKey = new JLabel(Messages.getString("HotKeysPanel.StartRecallTimer", settings.getGameType())); //$NON-NLS-1$
-		add(lblRecallTimerHotKey, "cell 9 7,alignx trailing"); //$NON-NLS-1$
-		
-		txtRecallTimerHotKey = new JTextField();
-		txtRecallTimerHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtRecallTimerHotKey.setText(settings.getRecallTimerHotKey());
-		add(txtRecallTimerHotKey, "cell 10 7,alignx left"); //$NON-NLS-1$
-		txtRecallTimerHotKey.setColumns(10);
-		
-		JLabel lblScore2MinusHotKey = new JLabel(Messages.getString("HotKeysPanel.DecrementScoreTeam2", settings.getGameType())); //$NON-NLS-1$
-		add(lblScore2MinusHotKey, "cell 3 8,alignx trailing"); //$NON-NLS-1$
-		
-		txtScore2MinusHotKey = new JTextField();
-		txtScore2MinusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtScore2MinusHotKey.setText(settings.getScoreMinusHotKey("2"));
-		add(txtScore2MinusHotKey, "cell 4 8,alignx left"); //$NON-NLS-1$
-		txtScore2MinusHotKey.setColumns(10);
-		
-		JLabel lblClearAllHotKey = new JLabel(Messages.getString("HotKeysPanel.ClearAll", settings.getGameType())); //$NON-NLS-1$
-		add(lblClearAllHotKey, "cell 6 8,alignx trailing"); //$NON-NLS-1$
-		
-		txtClearAllHotKey = new JTextField();
-		txtClearAllHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtClearAllHotKey.setText(settings.getClearAllHotKey());
-		add(txtClearAllHotKey, "cell 7 8,alignx left"); //$NON-NLS-1$
-		txtClearAllHotKey.setColumns(10);
-		
-		JLabel lblResetTimersHotKey = new JLabel(Messages.getString("HotKeysPanel.ResetTimer", settings.getGameType())); //$NON-NLS-1$
-		add(lblResetTimersHotKey, "cell 9 8,alignx trailing"); //$NON-NLS-1$
-		
-		txtResetTimersHotKey = new JTextField();
-		txtResetTimersHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtResetTimersHotKey.setText(settings.getResetTimersHotKey());
-		add(txtResetTimersHotKey, "cell 10 8,alignx left"); //$NON-NLS-1$
-		txtResetTimersHotKey.setColumns(10);
-		
-		JLabel lblTeam2SwitchPositionsHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchPositionsTeam2", settings.getGameType())); //$NON-NLS-1$
-		add(lblTeam2SwitchPositionsHotKey, "cell 0 7,alignx trailing"); //$NON-NLS-1$
-		
-		txtTeam2SwitchPositionsHotKey = new JTextField();
-		txtTeam2SwitchPositionsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtTeam2SwitchPositionsHotKey.setText(settings.getTeamSwitchPositionsHotKey("2"));
-		add(txtTeam2SwitchPositionsHotKey, "cell 1 7,alignx left"); //$NON-NLS-1$
-		txtTeam2SwitchPositionsHotKey.setColumns(10);
-		
-		JLabel lblScore2PlusHotKey = new JLabel(Messages.getString("HotKeysPanel.IncrementScoreTeam2", settings.getGameType())); //$NON-NLS-1$
-		add(lblScore2PlusHotKey, "cell 3 9,alignx trailing"); //$NON-NLS-1$
-		
-		txtScore2PlusHotKey = new JTextField();
-		txtScore2PlusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtScore2PlusHotKey.setText(settings.getScorePlusHotKey("2"));
-		add(txtScore2PlusHotKey, "cell 4 9,alignx left,aligny top"); //$NON-NLS-1$
-		txtScore2PlusHotKey.setColumns(10);
-		
-		JLabel lblSwitchTeamsHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchTeams", settings.getGameType())); //$NON-NLS-1$
-		add(lblSwitchTeamsHotKey, "cell 0 10,alignx trailing"); //$NON-NLS-1$
-		
-		txtSwitchTeamsHotKey = new JTextField();
-		txtSwitchTeamsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtSwitchTeamsHotKey.setText(settings.getSwitchTeamsHotKey());
-		add(txtSwitchTeamsHotKey, "cell 1 10,alignx left"); //$NON-NLS-1$
-		txtSwitchTeamsHotKey.setColumns(10);
-		
-		JLabel lblSwitchScoresHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchScores", settings.getGameType())); //$NON-NLS-1$
-		add(lblSwitchScoresHotKey, "cell 3 10,alignx trailing"); //$NON-NLS-1$
-		
-		txtSwitchScoresHotKey = new JTextField();
-		txtSwitchScoresHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtSwitchScoresHotKey.setText(settings.getSwitchScoresHotKey());
-		add(txtSwitchScoresHotKey, "cell 4 10,alignx left"); //$NON-NLS-1$
-		txtSwitchScoresHotKey.setColumns(10);
-		
-		JLabel lblResetNamesHotKey = new JLabel(Messages.getString("HotKeysPanel.ResetNames", settings.getGameType())); //$NON-NLS-1$
-		add(lblResetNamesHotKey, "cell 6 10,alignx trailing"); //$NON-NLS-1$
-		
-		txtResetNamesHotKey = new JTextField();
-		txtResetNamesHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtResetNamesHotKey.setText(settings.getResetNamesHotKey());
-		add(txtResetNamesHotKey, "cell 7 10,alignx left"); //$NON-NLS-1$
-		txtResetNamesHotKey.setColumns(10);
-		
-		JLabel lblUndoHotKey = new JLabel(Messages.getString("HotKeysPanel.Undo", settings.getGameType())); //$NON-NLS-1$
-		add(lblUndoHotKey, "cell 9 10,alignx trailing"); //$NON-NLS-1$
-		
-		txtUndoHotKey = new JTextField();
-		txtUndoHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtUndoHotKey.setText(settings.getUndoHotKey());
-		add(txtUndoHotKey, "cell 10 10,alignx left"); //$NON-NLS-1$
-		txtUndoHotKey.setColumns(10);
-		
-		JLabel lblGameCounts = new JLabel(Messages.getString("HotKeysPanel.GameCounts", settings.getGameType())); //$NON-NLS-1$
-		add(lblGameCounts, "cell 0 11,alignx right"); //$NON-NLS-1$
-		
-		JLabel lblTimeOuts = new JLabel(Messages.getString("HotKeysPanel.TimeOuts", settings.getGameType())); //$NON-NLS-1$
-		add(lblTimeOuts, "cell 3 11,alignx right"); //$NON-NLS-1$
-		
-		JLabel lblResetScoresHotKey = new JLabel(Messages.getString("HotKeysPanel.ResetScores", settings.getGameType())); //$NON-NLS-1$
-		add(lblResetScoresHotKey, "cell 6 11,alignx trailing"); //$NON-NLS-1$
-		
-		txtResetScoresHotKey = new JTextField();
-		txtResetScoresHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtResetScoresHotKey.setText(settings.getResetScoresHotKey());
-		add(txtResetScoresHotKey, "cell 7 11,alignx left"); //$NON-NLS-1$
-		txtResetScoresHotKey.setColumns(10);
-		
-		JLabel lblRedoHotKey = new JLabel(Messages.getString("HotKeysPanel.Redo", settings.getGameType())); //$NON-NLS-1$
-		add(lblRedoHotKey, "cell 9 11,alignx trailing"); //$NON-NLS-1$
-		
-		txtRedoHotKey = new JTextField();
-		txtRedoHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtRedoHotKey.setText(settings.getRedoHotKey());
-		add(txtRedoHotKey, "cell 10 11,alignx left"); //$NON-NLS-1$
-		txtRedoHotKey.setColumns(10);
-		
-		JLabel lblGameCount1MinusHotKey = new JLabel(Messages.getString("HotKeysPanel.DecrementGameCountTeam1", settings.getGameType())); //$NON-NLS-1$
-		add(lblGameCount1MinusHotKey, "cell 0 12,alignx trailing"); //$NON-NLS-1$
-		
-		txtGameCount1MinusHotKey = new JTextField();
-		txtGameCount1MinusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtGameCount1MinusHotKey.setText(settings.getGameCountMinusHotKey("1"));
-		add(txtGameCount1MinusHotKey, "cell 1 12,alignx left"); //$NON-NLS-1$
-		txtGameCount1MinusHotKey.setColumns(10);
-		
-		JLabel lblTimeOut1MinusHotKey = new JLabel(Messages.getString("HotKeysPanel.ReturnTimeOutTeam1", settings.getGameType())); //$NON-NLS-1$
-		add(lblTimeOut1MinusHotKey, "cell 3 12,alignx trailing"); //$NON-NLS-1$
-		
-		txtTimeOut1MinusHotKey = new JTextField();
-		txtTimeOut1MinusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtTimeOut1MinusHotKey.setText(settings.getTimeOutMinusHotKey("1"));
-		add(txtTimeOut1MinusHotKey, "cell 4 12,alignx left"); //$NON-NLS-1$
-		txtTimeOut1MinusHotKey.setColumns(10);
-		
-		JLabel lblResetGameCountsHotKey = new JLabel(Messages.getString("HotKeysPanel.ResetGameCounts", settings.getGameType())); //$NON-NLS-1$
-		add(lblResetGameCountsHotKey, "cell 6 12,alignx trailing"); //$NON-NLS-1$
-		
-		txtResetGameCountsHotKey = new JTextField();
-		txtResetGameCountsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtResetGameCountsHotKey.setText(settings.getResetGameCountsHotKey());
-		add(txtResetGameCountsHotKey, "cell 7 12,alignx left"); //$NON-NLS-1$
-		txtResetGameCountsHotKey.setColumns(10);
-		
-		JLabel lblGameCount1PlusHotKey = new JLabel(Messages.getString("HotKeysPanel.IncrementGameCountTeam1", settings.getGameType())); //$NON-NLS-1$
-		add(lblGameCount1PlusHotKey, "cell 0 13,alignx trailing"); //$NON-NLS-1$
-		
-		txtGameCount1PlusHotKey = new JTextField();
-		txtGameCount1PlusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtGameCount1PlusHotKey.setText(settings.getGameCountPlusHotKey("1"));
-		add(txtGameCount1PlusHotKey, "cell 1 13,alignx left"); //$NON-NLS-1$
-		txtGameCount1PlusHotKey.setColumns(10);
-		
-		JLabel lblTimeOut1PlusHotKey = new JLabel(Messages.getString("HotKeysPanel.UseTimeOutTeam1", settings.getGameType())); //$NON-NLS-1$
-		add(lblTimeOut1PlusHotKey, "cell 3 13,alignx trailing"); //$NON-NLS-1$
-		
-		txtTimeOut1PlusHotKey = new JTextField();
-		txtTimeOut1PlusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtTimeOut1PlusHotKey.setText(settings.getTimeOutPlusHotKey("1"));
-		add(txtTimeOut1PlusHotKey, "cell 4 13,alignx left"); //$NON-NLS-1$
-		txtTimeOut1PlusHotKey.setColumns(10);
-		
-		JLabel lblResetTimeOutsHotKey = new JLabel(Messages.getString("HotKeysPanel.ResetTimeOuts", settings.getGameType())); //$NON-NLS-1$
-		add(lblResetTimeOutsHotKey, "cell 6 13,alignx trailing"); //$NON-NLS-1$
-		
-		txtResetTimeOutsHotKey = new JTextField();
-		txtResetTimeOutsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtResetTimeOutsHotKey.setText(settings.getResetTimeOutsHotKey());
-		add(txtResetTimeOutsHotKey, "cell 7 13,alignx left"); //$NON-NLS-1$
-		txtResetTimeOutsHotKey.setColumns(10);
-		
-		JLabel lblGameCount2MinusHotKey = new JLabel(Messages.getString("HotKeysPanel.DecrementGameCountTeam2", settings.getGameType())); //$NON-NLS-1$
-		add(lblGameCount2MinusHotKey, "cell 0 14,alignx trailing"); //$NON-NLS-1$
-		
-		txtGameCount2MinusHotKey = new JTextField();
-		txtGameCount2MinusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtGameCount2MinusHotKey.setText(settings.getGameCountMinusHotKey("2"));
-		add(txtGameCount2MinusHotKey, "cell 1 14,alignx left"); //$NON-NLS-1$
-		txtGameCount2MinusHotKey.setColumns(10);
-		
-		JLabel lblTimeOut2MinusHotKey = new JLabel(Messages.getString("HotKeysPanel.ReturnTimeOutTeam2", settings.getGameType())); //$NON-NLS-1$
-		add(lblTimeOut2MinusHotKey, "cell 3 14,alignx trailing"); //$NON-NLS-1$
-		
-		txtTimeOut2MinusHotKey = new JTextField();
-		txtTimeOut2MinusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtTimeOut2MinusHotKey.setText(settings.getTimeOutMinusHotKey("2"));
-		add(txtTimeOut2MinusHotKey, "cell 4 14,alignx left"); //$NON-NLS-1$
-		txtTimeOut2MinusHotKey.setColumns(10);
-		
-		JLabel lblResetResetWarnHotKey = new JLabel(Messages.getString("HotKeysPanel.ResetResetWarn", settings.getGameType())); //$NON-NLS-1$
-		add(lblResetResetWarnHotKey, "cell 6 14,alignx trailing"); //$NON-NLS-1$
-		
-		txtResetResetWarnHotKey = new JTextField();
-		txtResetResetWarnHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtResetResetWarnHotKey.setText(settings.getResetResetWarnHotKey());
-		add(txtResetResetWarnHotKey, "cell 7 14,alignx left"); //$NON-NLS-1$
-		txtResetResetWarnHotKey.setColumns(10);
-		
-		JLabel lblGameCount2PlusHotKey = new JLabel(Messages.getString("HotKeysPanel.IncrementGameCountTeam2", settings.getGameType())); //$NON-NLS-1$
-		add(lblGameCount2PlusHotKey, "cell 0 15,alignx trailing"); //$NON-NLS-1$
-		
-		txtGameCount2PlusHotKey = new JTextField();
-		txtGameCount2PlusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtGameCount2PlusHotKey.setText(settings.getGameCountPlusHotKey("2"));
-		add(txtGameCount2PlusHotKey, "cell 1 15,alignx left"); //$NON-NLS-1$
-		txtGameCount2PlusHotKey.setColumns(10);
-		
-		JLabel lblTimeOut2PlusHotKey = new JLabel(Messages.getString("HotKeysPanel.UseTimeOutTeam2", settings.getGameType())); //$NON-NLS-1$
-		add(lblTimeOut2PlusHotKey, "cell 3 15,alignx trailing"); //$NON-NLS-1$
-		
-		txtTimeOut2PlusHotKey = new JTextField();
-		txtTimeOut2PlusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtTimeOut2PlusHotKey.setText(settings.getTimeOutPlusHotKey("2"));
-		add(txtTimeOut2PlusHotKey, "cell 4 15,alignx left"); //$NON-NLS-1$
-		txtTimeOut2PlusHotKey.setColumns(10);
-		
-		JLabel lblResetAllHotKey = new JLabel(Messages.getString("HotKeysPanel.ResetAll", settings.getGameType())); //$NON-NLS-1$
-		add(lblResetAllHotKey, "cell 6 15,alignx trailing"); //$NON-NLS-1$
-		
-		txtResetAllHotKey = new JTextField();
-		txtResetAllHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtResetAllHotKey.setText(settings.getResetAllHotKey());
-		add(txtResetAllHotKey, "cell 7 15,alignx left"); //$NON-NLS-1$
-		txtResetAllHotKey.setColumns(10);
-		
-		JLabel lblSwitchGameCountsHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchGameCounts", settings.getGameType())); //$NON-NLS-1$
-		add(lblSwitchGameCountsHotKey, "cell 0 16,alignx trailing"); //$NON-NLS-1$
-		
-		txtSwitchGameCountsHotKey = new JTextField();
-		txtSwitchGameCountsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtSwitchGameCountsHotKey.setText(settings.getSwitchGameCountsHotKey());
-		add(txtSwitchGameCountsHotKey, "cell 1 16,alignx left"); //$NON-NLS-1$
-		txtSwitchGameCountsHotKey.setColumns(10);
-		
-		JLabel lblSwitchTimeOutsHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchTimeOuts", settings.getGameType())); //$NON-NLS-1$
-		add(lblSwitchTimeOutsHotKey, "cell 3 16,alignx trailing"); //$NON-NLS-1$
-		
-		txtSwitchTimeOutsHotKey = new JTextField();
-		txtSwitchTimeOutsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtSwitchTimeOutsHotKey.setText(settings.getSwitchTimeOutsHotKey());
-		add(txtSwitchTimeOutsHotKey, "cell 4 16,alignx left"); //$NON-NLS-1$
-		txtSwitchTimeOutsHotKey.setColumns(10);
-		
-		JLabel lblSwitchPlayer1HotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchPlayer1", settings.getGameType())); //$NON-NLS-1$
-		add(lblSwitchPlayer1HotKey, "cell 9 12,alignx trailing"); //$NON-NLS-1$
-		                            
-		txtSwitchPlayer1HotKey = new JTextField();
-		txtSwitchPlayer1HotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtSwitchPlayer1HotKey.setText(settings.getSwitchPlayerHotKey("1"));
-		add(txtSwitchPlayer1HotKey, "cell 10 12,alignx left"); //$NON-NLS-1$
-
-		txtSwitchPlayer1HotKey.setColumns(10);
-		
-		JLabel lblSwitchPlayer2HotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchPlayer2", settings.getGameType())); //$NON-NLS-1$
-		add(lblSwitchPlayer2HotKey, "cell 9 13,alignx trailing"); //$NON-NLS-1$
-
-		txtSwitchPlayer2HotKey = new JTextField();
-		txtSwitchPlayer2HotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtSwitchPlayer2HotKey.setText(settings.getSwitchPlayerHotKey("2"));
-		add(txtSwitchPlayer2HotKey, "cell 10 13,alignx left"); //$NON-NLS-1$
-
-		txtSwitchPlayer2HotKey.setColumns(10);
-
-		JLabel lblShowSkunkHotKey = new JLabel(Messages.getString("HotKeysPanel.ShowSkunk", settings.getGameType())); //$NON-NLS-1$
-		add(lblShowSkunkHotKey, "cell 9 14,alignx trailing"); //$NON-NLS-1$
-
-		txtShowSkunkHotKey = new JTextField();
-		txtShowSkunkHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtShowSkunkHotKey.setText(settings.getShowSkunkHotKey());
-		add(txtShowSkunkHotKey, "cell 10 14,alignx left"); //$NON-NLS-1$
-
-		txtShowSkunkHotKey.setColumns(10);
-	
-		JLabel lblStartStreamHotKey = new JLabel(Messages.getString("HotKeysPanel.StartStream", settings.getGameType())); //$NON-NLS-1$
-		add(lblStartStreamHotKey, "cell 9 15,alignx trailing"); //$NON-NLS-1$
-
-		txtStartStreamHotKey = new JTextField();
-		txtStartStreamHotKey.setHorizontalAlignment(SwingConstants.CENTER);
-		txtStartStreamHotKey.setText(settings.getStartStreamHotKey());
-		add(txtStartStreamHotKey, "cell 10 15,alignx left"); //$NON-NLS-1$
-
-		txtStartStreamHotKey.setColumns(10);
-		
-		btnGenerateHotKeyScripts = new JButton(Messages.getString("HotKeysPanel.GenerateHotKeyScripts", settings.getGameType())); //$NON-NLS-1$
-		btnGenerateHotKeyScripts.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				settings.generateHotKeyScripts();
-			}
-		});
-		add(btnGenerateHotKeyScripts, "cell 0 18, spanx 2, alignx center"); //$NON-NLS-1$
-	
-		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
-		add(btnSave, "cell 6 18,alignx center"); //$NON-NLS-1$
-		
-		JButton btnCancel = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
-		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JComponent comp = (JComponent) e.getSource();
-				Window win = SwingUtilities.getWindowAncestor(comp);
-				win.dispose();
-			}
-		});
-		add(btnCancel, "cell 7 18,alignx center"); //$NON-NLS-1$
-		
-		JButton btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
-		btnRestoreDefaults.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				restoreDefaults(settings);
-			}
-		});
-		add(btnRestoreDefaults, "cell 9 18, spanx 2, alignx trailing"); //$NON-NLS-1$
+		setLayout(new MigLayout("", "[][][][][][][][][][][]", "[][][][][][][][][][][][][][][][][][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		JButton btnSelectPath = new JButton(Messages.getString("HotKeysPanel.SelectPath")); //$NON-NLS-1$
 		btnSelectPath.addActionListener(new ActionListener() {
@@ -644,8 +162,7 @@ public class HotKeysPanel extends JPanel {
 				}
 			}
 		});
-		add(btnSelectPath, "cell 0 19, alignx right"); //$NON-NLS-1$
-
+		add(btnSelectPath, "cell 1 0"); //$NON-NLS-1$
 		formattedTxtPath = new JFormattedTextField();
 		formattedTxtPath.setText(settings.getHotKeyScriptPath());
 		formattedTxtPath.addFocusListener(new FocusAdapter() {
@@ -673,9 +190,536 @@ public class HotKeysPanel extends JPanel {
 			    }
 			}
 		});
-		add(formattedTxtPath, "cell 1 19 4 1,alignx left"); //$NON-NLS-1$
+		add(formattedTxtPath, "cell 2 0 8 1,alignx left"); //$NON-NLS-1$
 		formattedTxtPath.setColumns(50);
+	
+		//Column Headers
+		JLabel lblTeam1Column = new JLabel(Messages.getString("HotKeysPanel.Team1Column")); //$NON-NLS-1$
+		lblTeam1Column.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
+		add(lblTeam1Column, "cell 2 1,alignx left"); //$NON-NLS-1$
+
+		JLabel lblTeam2Column = new JLabel(Messages.getString("HotKeysPanel.Team2Column")); //$NON-NLS-1$
+		lblTeam2Column.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
+		add(lblTeam2Column, "cell 3 1,alignx left,aligny center"); //$NON-NLS-1$
+		
+		JLabel lblTeam3Column = new JLabel(Messages.getString("HotKeysPanel.Team3Column")); //$NON-NLS-1$
+		lblTeam3Column.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
+		add(lblTeam3Column, "cell 4 1,alignx left"); //$NON-NLS-1$
+
+		JLabel lblHotKeyCol1 = new JLabel(Messages.getString("HotKeysPanel.HotKey")); //$NON-NLS-1$
+		lblHotKeyCol1.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
+		add(lblHotKeyCol1, "cell 2 2,alignx left"); //$NON-NLS-1$
+
+		JLabel lblHotKeyCol2 = new JLabel(Messages.getString("HotKeysPanel.HotKey")); //$NON-NLS-1$
+		lblHotKeyCol2.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
+		add(lblHotKeyCol2, "cell 3 2,alignx left,aligny center"); //$NON-NLS-1$
+		
+		JLabel lblHotKeyCol3 = new JLabel(Messages.getString("HotKeysPanel.HotKey")); //$NON-NLS-1$
+		lblHotKeyCol3.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
+		add(lblHotKeyCol3, "cell 4 2,alignx left"); //$NON-NLS-1$
+
+		JLabel lblHotKeyCol4 = new JLabel(Messages.getString("HotKeysPanel.HotKey")); //$NON-NLS-1$
+		lblHotKeyCol4.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
+		add(lblHotKeyCol4, "cell 6 2,alignx left"); //$NON-NLS-1$
+
+		JLabel lblHotKeyCol5 = new JLabel(Messages.getString("HotKeysPanel.HotKey")); //$NON-NLS-1$
+		lblHotKeyCol5.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
+		add(lblHotKeyCol5, "cell 8 2,alignx left"); //$NON-NLS-1$
+
+		JLabel lblTeam1SwitchPositionsHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchPositions", settings.getGameType())); //$NON-NLS-1$
+		add(lblTeam1SwitchPositionsHotKey, "cell 1 3,alignx right"); //$NON-NLS-1$
+		
+		txtTeam1SwitchPositionsHotKey = new JTextField();
+		txtTeam1SwitchPositionsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTeam1SwitchPositionsHotKey.setText(settings.getTeamSwitchPositionsHotKey("1"));
+		txtTeam1SwitchPositionsHotKey.setColumns(10);
+		add(txtTeam1SwitchPositionsHotKey, "cell 2 3,alignx left"); //$NON-NLS-1$
+		
+		txtTeam2SwitchPositionsHotKey = new JTextField();
+		txtTeam2SwitchPositionsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTeam2SwitchPositionsHotKey.setText(settings.getTeamSwitchPositionsHotKey("2"));
+		txtTeam2SwitchPositionsHotKey.setColumns(10);
+		add(txtTeam2SwitchPositionsHotKey, "cell 3 3,alignx left"); //$NON-NLS-1$
+		
+		txtTeam3SwitchPositionsHotKey = new JTextField();
+		txtTeam3SwitchPositionsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTeam3SwitchPositionsHotKey.setText(settings.getTeamSwitchPositionsHotKey("3"));
+		txtTeam3SwitchPositionsHotKey.setColumns(10);
+		add(txtTeam3SwitchPositionsHotKey, "cell 4 3,alignx left"); //$NON-NLS-1$
+
+		JLabel lblScore1PlusHotKey = new JLabel(Messages.getString("HotKeysPanel.IncrementScore", settings.getGameType())); //$NON-NLS-1$
+		add(lblScore1PlusHotKey, "cell 1 4,alignx right"); //$NON-NLS-1$
+		
+		txtScore1PlusHotKey = new JTextField();
+		txtScore1PlusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtScore1PlusHotKey.setText(settings.getScorePlusHotKey("1"));
+		txtScore1PlusHotKey.setColumns(10);
+		add(txtScore1PlusHotKey, "cell 2 4,alignx left"); //$NON-NLS-1$
+		
+		txtScore2PlusHotKey = new JTextField();
+		txtScore2PlusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtScore2PlusHotKey.setText(settings.getScorePlusHotKey("2"));
+		txtScore2PlusHotKey.setColumns(10);
+		add(txtScore2PlusHotKey, "cell 3 4,alignx left"); //$NON-NLS-1$
+		
+		txtScore3PlusHotKey = new JTextField();
+		txtScore3PlusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtScore3PlusHotKey.setText(settings.getScorePlusHotKey("3"));
+		txtScore3PlusHotKey.setColumns(10);
+		add(txtScore3PlusHotKey, "cell 4 4,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblScore1MinusHotKey = new JLabel(Messages.getString("HotKeysPanel.DecrementScore", settings.getGameType())); //$NON-NLS-1$
+		add(lblScore1MinusHotKey, "cell 1 5,alignx right"); //$NON-NLS-1$
+		
+		txtScore1MinusHotKey = new JTextField();
+		txtScore1MinusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtScore1MinusHotKey.setText(settings.getScoreMinusHotKey("1"));
+		txtScore1MinusHotKey.setColumns(10);
+		add(txtScore1MinusHotKey, "cell 2 5,alignx left"); //$NON-NLS-1$
+		
+		txtScore2MinusHotKey = new JTextField();
+		txtScore2MinusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtScore2MinusHotKey.setText(settings.getScoreMinusHotKey("2"));
+		txtScore2MinusHotKey.setColumns(10);
+		add(txtScore2MinusHotKey, "cell 3 5,alignx left"); //$NON-NLS-1$
+		
+		txtScore3MinusHotKey = new JTextField();
+		txtScore3MinusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtScore3MinusHotKey.setText(settings.getScoreMinusHotKey("3"));
+		txtScore3MinusHotKey.setColumns(10);
+		add(txtScore3MinusHotKey, "cell 4 5,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblGameCount1PlusHotKey = new JLabel(Messages.getString("HotKeysPanel.IncrementGameCount", settings.getGameType())); //$NON-NLS-1$
+		add(lblGameCount1PlusHotKey, "cell 1 6,alignx right"); //$NON-NLS-1$
+		
+		txtGameCount1PlusHotKey = new JTextField();
+		txtGameCount1PlusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtGameCount1PlusHotKey.setText(settings.getGameCountPlusHotKey("1"));
+		txtGameCount1PlusHotKey.setColumns(10);
+		add(txtGameCount1PlusHotKey, "cell 2 6,alignx left"); //$NON-NLS-1$
+		
+		txtGameCount2PlusHotKey = new JTextField();
+		txtGameCount2PlusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtGameCount2PlusHotKey.setText(settings.getGameCountPlusHotKey("2"));
+		txtGameCount2PlusHotKey.setColumns(10);
+		add(txtGameCount2PlusHotKey, "cell 3 6,alignx left"); //$NON-NLS-1$
+		
+		txtGameCount3PlusHotKey = new JTextField();
+		txtGameCount3PlusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtGameCount3PlusHotKey.setText(settings.getGameCountPlusHotKey("3"));
+		txtGameCount3PlusHotKey.setColumns(10);
+		add(txtGameCount3PlusHotKey, "cell 4 6,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblGameCount1MinusHotKey = new JLabel(Messages.getString("HotKeysPanel.DecrementGameCount", settings.getGameType())); //$NON-NLS-1$
+		add(lblGameCount1MinusHotKey, "cell 1 7,alignx right"); //$NON-NLS-1$
+		
+		txtGameCount1MinusHotKey = new JTextField();
+		txtGameCount1MinusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtGameCount1MinusHotKey.setText(settings.getGameCountMinusHotKey("1"));
+		txtGameCount1MinusHotKey.setColumns(10);
+		add(txtGameCount1MinusHotKey, "cell 2 7,alignx left"); //$NON-NLS-1$
+		
+		txtGameCount2MinusHotKey = new JTextField();
+		txtGameCount2MinusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtGameCount2MinusHotKey.setText(settings.getGameCountMinusHotKey("2"));
+		txtGameCount2MinusHotKey.setColumns(10);
+		add(txtGameCount2MinusHotKey, "cell 3 7,alignx left"); //$NON-NLS-1$
+		
+		txtGameCount3MinusHotKey = new JTextField();
+		txtGameCount3MinusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtGameCount3MinusHotKey.setText(settings.getGameCountMinusHotKey("3"));
+		txtGameCount3MinusHotKey.setColumns(10);
+		add(txtGameCount3MinusHotKey, "cell 4 7,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblTimeOut1PlusHotKey = new JLabel(Messages.getString("HotKeysPanel.UseTimeOut", settings.getGameType())); //$NON-NLS-1$
+		add(lblTimeOut1PlusHotKey, "cell 1 8,alignx right"); //$NON-NLS-1$
+		
+		txtTimeOut1PlusHotKey = new JTextField();
+		txtTimeOut1PlusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTimeOut1PlusHotKey.setText(settings.getTimeOutPlusHotKey("1"));
+		txtTimeOut1PlusHotKey.setColumns(10);
+		add(txtTimeOut1PlusHotKey, "cell 2 8,alignx left"); //$NON-NLS-1$
+		
+		txtTimeOut2PlusHotKey = new JTextField();
+		txtTimeOut2PlusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTimeOut2PlusHotKey.setText(settings.getTimeOutPlusHotKey("2"));
+		txtTimeOut2PlusHotKey.setColumns(10);
+		add(txtTimeOut2PlusHotKey, "cell 3 8,alignx left"); //$NON-NLS-1$
+		
+		txtTimeOut3PlusHotKey = new JTextField();
+		txtTimeOut3PlusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTimeOut3PlusHotKey.setText(settings.getTimeOutPlusHotKey("3"));
+		txtTimeOut3PlusHotKey.setColumns(10);
+		add(txtTimeOut3PlusHotKey, "cell 4 8,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblTimeOut1MinusHotKey = new JLabel(Messages.getString("HotKeysPanel.ReturnTimeOut", settings.getGameType())); //$NON-NLS-1$
+		add(lblTimeOut1MinusHotKey, "cell 1 9,alignx right"); //$NON-NLS-1$
+		
+		txtTimeOut1MinusHotKey = new JTextField();
+		txtTimeOut1MinusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTimeOut1MinusHotKey.setText(settings.getTimeOutMinusHotKey("1"));
+		txtTimeOut1MinusHotKey.setColumns(10);
+		add(txtTimeOut1MinusHotKey, "cell 2 9,alignx left"); //$NON-NLS-1$
+		
+		txtTimeOut2MinusHotKey = new JTextField();
+		txtTimeOut2MinusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTimeOut2MinusHotKey.setText(settings.getTimeOutMinusHotKey("2"));
+		txtTimeOut2MinusHotKey.setColumns(10);
+		add(txtTimeOut2MinusHotKey, "cell 3 9,alignx left"); //$NON-NLS-1$
+		
+		txtTimeOut3MinusHotKey = new JTextField();
+		txtTimeOut3MinusHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTimeOut3MinusHotKey.setText(settings.getTimeOutMinusHotKey("3"));
+		txtTimeOut3MinusHotKey.setColumns(10);
+		add(txtTimeOut3MinusHotKey, "cell 4 9,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblReset1HotKey = new JLabel(Messages.getString("HotKeysPanel.Reset", settings.getGameType())); //$NON-NLS-1$
+		add(lblReset1HotKey, "cell 1 10,alignx right"); //$NON-NLS-1$
+		
+		txtReset1HotKey = new JTextField();
+		txtReset1HotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtReset1HotKey.setText(settings.getResetHotKey("1"));
+		txtReset1HotKey.setColumns(10);
+		add(txtReset1HotKey, "cell 2 10,alignx left"); //$NON-NLS-1$
+		
+		txtReset2HotKey = new JTextField();
+		txtReset2HotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtReset2HotKey.setText(settings.getResetHotKey("2"));
+		txtReset2HotKey.setColumns(10);
+		add(txtReset2HotKey, "cell 3 10,alignx left"); //$NON-NLS-1$
+		
+		txtReset3HotKey = new JTextField();
+		txtReset3HotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtReset3HotKey.setText(settings.getResetHotKey("3"));
+		txtReset3HotKey.setColumns(10);
+		add(txtReset3HotKey, "cell 4 10,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblWarn1HotKey = new JLabel(Messages.getString("HotKeysPanel.Warn", settings.getGameType())); //$NON-NLS-1$
+		add(lblWarn1HotKey, "cell 1 11,alignx right"); //$NON-NLS-1$
+		
+		txtWarn1HotKey = new JTextField();
+		txtWarn1HotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtWarn1HotKey.setText(settings.getWarnHotKey("1"));
+		add(txtWarn1HotKey, "cell 2 11,alignx left"); //$NON-NLS-1$
+		txtWarn1HotKey.setColumns(10);
+		
+		txtWarn2HotKey = new JTextField();
+		txtWarn2HotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtWarn2HotKey.setText(settings.getWarnHotKey("2"));
+		txtWarn2HotKey.setColumns(10);
+		add(txtWarn2HotKey, "cell 3 11,alignx left"); //$NON-NLS-1$
+		
+		txtWarn3HotKey = new JTextField();
+		txtWarn3HotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtWarn3HotKey.setText(settings.getWarnHotKey("3"));
+		txtWarn3HotKey.setColumns(10);
+		add(txtWarn3HotKey, "cell 4 11,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblKingSeat1HotKey = new JLabel(Messages.getString("HotKeysPanel.KingSeat", settings.getGameType())); //$NON-NLS-1$
+		add(lblKingSeat1HotKey, "cell 1 12,alignx right"); //$NON-NLS-1$
+		
+		txtKingSeat1HotKey = new JTextField();
+		txtKingSeat1HotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtKingSeat1HotKey.setText(settings.getKingSeatHotKey("1"));
+		txtKingSeat1HotKey.setColumns(10);
+		add(txtKingSeat1HotKey, "cell 2 12,alignx left"); //$NON-NLS-1$
+		
+		txtKingSeat2HotKey = new JTextField();
+		txtKingSeat2HotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtKingSeat2HotKey.setText(settings.getKingSeatHotKey("2"));
+		txtKingSeat2HotKey.setColumns(10);
+		add(txtKingSeat2HotKey, "cell 3 12,alignx left"); //$NON-NLS-1$
+		
+		txtKingSeat3HotKey = new JTextField();
+		txtKingSeat3HotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtKingSeat3HotKey.setText(settings.getKingSeatHotKey("3"));
+		txtKingSeat3HotKey.setColumns(10);
+		add(txtKingSeat3HotKey, "cell 4 12,alignx left"); //$NON-NLS-1$
+	
+		JLabel lblStartMatchHotKey = new JLabel(Messages.getString("HotKeysPanel.StartMatch", settings.getGameType())); //$NON-NLS-1$
+		add(lblStartMatchHotKey, "cell 5 3,alignx right"); //$NON-NLS-1$
+		
+		txtStartMatchHotKey = new JTextField();
+		txtStartMatchHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtStartMatchHotKey.setText(settings.getStartMatchHotKey());
+		txtStartMatchHotKey.setColumns(10);
+		add(txtStartMatchHotKey, "cell 6 3,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblPauseMatchHotKey = new JLabel(Messages.getString("HotKeysPanel.PauseMatch", settings.getGameType())); //$NON-NLS-1$
+		add(lblPauseMatchHotKey, "cell 5 4,alignx right"); //$NON-NLS-1$
+		
+		txtPauseMatchHotKey = new JTextField();
+		txtPauseMatchHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtPauseMatchHotKey.setText(settings.getPauseMatchHotKey());
+		txtPauseMatchHotKey.setColumns(10);
+		add(txtPauseMatchHotKey, "cell 6 4,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblStartGameHotKey = new JLabel(Messages.getString("HotKeysPanel.StartGame", settings.getGameType())); //$NON-NLS-1$
+		add(lblStartGameHotKey, "cell 5 5,alignx right"); //$NON-NLS-1$
+		
+		txtStartGameHotKey = new JTextField();
+		txtStartGameHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtStartGameHotKey.setText(settings.getStartGameHotKey());
+		txtStartGameHotKey.setColumns(10);
+		add(txtStartGameHotKey, "cell 6 5,alignx left,aligny top"); //$NON-NLS-1$
+		
+		JLabel lblShotTimerHotKey = new JLabel(Messages.getString("HotKeysPanel.StartShotTimer", settings.getGameType())); //$NON-NLS-1$
+		add(lblShotTimerHotKey, "cell 5 6,alignx right"); //$NON-NLS-1$
+		
+		txtShotTimerHotKey = new JTextField();
+		txtShotTimerHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtShotTimerHotKey.setText(settings.getShotTimerHotKey());
+		txtShotTimerHotKey.setColumns(10);
+		add(txtShotTimerHotKey, "cell 6 6,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblPassTimerHotKey = new JLabel(Messages.getString("HotKeysPanel.StartPassTimer", settings.getGameType())); //$NON-NLS-1$
+		add(lblPassTimerHotKey, "cell 5 7,alignx right"); //$NON-NLS-1$
+		
+		txtPassTimerHotKey = new JTextField();
+		txtPassTimerHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtPassTimerHotKey.setText(settings.getPassTimerHotKey());
+		txtPassTimerHotKey.setColumns(10);
+		add(txtPassTimerHotKey, "cell 6 7,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblTimeOutTimerHotKey = new JLabel(Messages.getString("HotKeysPanel.StartTimeOut", settings.getGameType())); //$NON-NLS-1$
+		add(lblTimeOutTimerHotKey, "cell 5 8,alignx right"); //$NON-NLS-1$
+		
+		txtTimeOutTimerHotKey = new JTextField();
+		txtTimeOutTimerHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTimeOutTimerHotKey.setText(settings.getTimeOutTimerHotKey());
+		txtTimeOutTimerHotKey.setColumns(10);
+		add(txtTimeOutTimerHotKey, "cell 6 8,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblGameTimerHotKey = new JLabel(Messages.getString("HotKeysPanel.StartGameTimer", settings.getGameType())); //$NON-NLS-1$
+		add(lblGameTimerHotKey, "cell 5 9,alignx right"); //$NON-NLS-1$
+		
+		txtGameTimerHotKey = new JTextField();
+		txtGameTimerHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtGameTimerHotKey.setText(settings.getGameTimerHotKey());
+		txtGameTimerHotKey.setColumns(10);
+		add(txtGameTimerHotKey, "cell 6 9,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblRecallTimerHotKey = new JLabel(Messages.getString("HotKeysPanel.StartRecallTimer", settings.getGameType())); //$NON-NLS-1$
+		add(lblRecallTimerHotKey, "cell 5 10,alignx right"); //$NON-NLS-1$
+		
+		txtRecallTimerHotKey = new JTextField();
+		txtRecallTimerHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtRecallTimerHotKey.setText(settings.getRecallTimerHotKey());
+		txtRecallTimerHotKey.setColumns(10);
+		add(txtRecallTimerHotKey, "cell 6 10,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblResetTimersHotKey = new JLabel(Messages.getString("HotKeysPanel.ResetTimer", settings.getGameType())); //$NON-NLS-1$
+		add(lblResetTimersHotKey, "cell 5 11,alignx right"); //$NON-NLS-1$
+		
+		txtResetTimersHotKey = new JTextField();
+		txtResetTimersHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtResetTimersHotKey.setText(settings.getResetTimersHotKey());
+		txtResetTimersHotKey.setColumns(10);
+		add(txtResetTimersHotKey, "cell 6 11,alignx left"); //$NON-NLS-1$
+
+		JLabel lblClearAllHotKey = new JLabel(Messages.getString("HotKeysPanel.ClearAll", settings.getGameType())); //$NON-NLS-1$
+		add(lblClearAllHotKey, "cell 5 12,alignx right"); //$NON-NLS-1$
+		
+		txtClearAllHotKey = new JTextField();
+		txtClearAllHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtClearAllHotKey.setText(settings.getClearAllHotKey());
+		txtClearAllHotKey.setColumns(10);
+		add(txtClearAllHotKey, "cell 6 12,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblUndoHotKey = new JLabel(Messages.getString("HotKeysPanel.Undo", settings.getGameType())); //$NON-NLS-1$
+		add(lblUndoHotKey, "cell 5 13,alignx right"); //$NON-NLS-1$
+		
+		txtUndoHotKey = new JTextField();
+		txtUndoHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtUndoHotKey.setText(settings.getUndoHotKey());
+		txtUndoHotKey.setColumns(10);
+		add(txtUndoHotKey, "cell 6 13,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblRedoHotKey = new JLabel(Messages.getString("HotKeysPanel.Redo", settings.getGameType())); //$NON-NLS-1$
+		add(lblRedoHotKey, "cell 5 14,alignx right"); //$NON-NLS-1$
+		
+		txtRedoHotKey = new JTextField();
+		txtRedoHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtRedoHotKey.setText(settings.getRedoHotKey());
+		txtRedoHotKey.setColumns(10);
+		add(txtRedoHotKey, "cell 6 14,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblShowSkunkHotKey = new JLabel(Messages.getString("HotKeysPanel.ShowSkunk", settings.getGameType())); //$NON-NLS-1$
+		add(lblShowSkunkHotKey, "cell 5 15,alignx right"); //$NON-NLS-1$
+
+		txtShowSkunkHotKey = new JTextField();
+		txtShowSkunkHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtShowSkunkHotKey.setText(settings.getShowSkunkHotKey());
+		txtShowSkunkHotKey.setColumns(10);
+		add(txtShowSkunkHotKey, "cell 6 15,alignx left"); //$NON-NLS-1$
+
+		JLabel lblStartStreamHotKey = new JLabel(Messages.getString("HotKeysPanel.StartStream", settings.getGameType())); //$NON-NLS-1$
+		add(lblStartStreamHotKey, "cell 5 16,alignx right"); //$NON-NLS-1$
+
+		txtStartStreamHotKey = new JTextField();
+		txtStartStreamHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtStartStreamHotKey.setText(settings.getStartStreamHotKey());
+		txtStartStreamHotKey.setColumns(10);
+		add(txtStartStreamHotKey, "cell 6 16,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblSwitchSidesHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchSides", settings.getGameType())); //$NON-NLS-1$
+		add(lblSwitchSidesHotKey, "cell 7 3,alignx right"); //$NON-NLS-1$
+		
+		txtSwitchSidesHotKey = new JTextField();
+		txtSwitchSidesHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtSwitchSidesHotKey.setText(settings.getSwitchSidesHotKey());
+		txtSwitchSidesHotKey.setColumns(10);
+		add(txtSwitchSidesHotKey, "cell 8 3,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblSwitchTeamsHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchTeams", settings.getGameType())); //$NON-NLS-1$
+		add(lblSwitchTeamsHotKey, "cell 7 4,alignx right"); //$NON-NLS-1$
+		
+		txtSwitchTeamsHotKey = new JTextField();
+		txtSwitchTeamsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtSwitchTeamsHotKey.setText(settings.getSwitchTeamsHotKey());
+		txtSwitchTeamsHotKey.setColumns(10);
+		add(txtSwitchTeamsHotKey, "cell 8 4,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblSwitchScoresHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchScores", settings.getGameType())); //$NON-NLS-1$
+		add(lblSwitchScoresHotKey, "cell 7 5,alignx right"); //$NON-NLS-1$
+		
+		txtSwitchScoresHotKey = new JTextField();
+		txtSwitchScoresHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtSwitchScoresHotKey.setText(settings.getSwitchScoresHotKey());
+		txtSwitchScoresHotKey.setColumns(10);
+		add(txtSwitchScoresHotKey, "cell 8 5,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblSwitchGameCountsHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchGameCounts", settings.getGameType())); //$NON-NLS-1$
+		add(lblSwitchGameCountsHotKey, "cell 7 6,alignx right"); //$NON-NLS-1$
+		
+		txtSwitchGameCountsHotKey = new JTextField();
+		txtSwitchGameCountsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtSwitchGameCountsHotKey.setText(settings.getSwitchGameCountsHotKey());
+		txtSwitchGameCountsHotKey.setColumns(10);
+		add(txtSwitchGameCountsHotKey, "cell 8 6,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblSwitchTimeOutsHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchTimeOuts", settings.getGameType())); //$NON-NLS-1$
+		add(lblSwitchTimeOutsHotKey, "cell 7 7,alignx right"); //$NON-NLS-1$
+		
+		txtSwitchTimeOutsHotKey = new JTextField();
+		txtSwitchTimeOutsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtSwitchTimeOutsHotKey.setText(settings.getSwitchTimeOutsHotKey());
+		txtSwitchTimeOutsHotKey.setColumns(10);
+		add(txtSwitchTimeOutsHotKey, "cell 8 7,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblSwitchResetWarnsHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchResetWarns", settings.getGameType())); //$NON-NLS-1$
+		add(lblSwitchResetWarnsHotKey, "cell 7 8,alignx right"); //$NON-NLS-1$
+		
+		txtSwitchResetWarnsHotKey = new JTextField();
+		txtSwitchResetWarnsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtSwitchResetWarnsHotKey.setText(settings.getSwitchResetWarnsHotKey());
+		txtSwitchResetWarnsHotKey.setColumns(10);
+		add(txtSwitchResetWarnsHotKey, "cell 8 8,alignx left"); //$NON-NLS-1$
+
+		JLabel lblSwitchForwardsHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchForwards", settings.getGameType())); //$NON-NLS-1$
+		add(lblSwitchForwardsHotKey, "cell 7 9,alignx right"); //$NON-NLS-1$
+		                            
+		txtSwitchForwardsHotKey = new JTextField();
+		txtSwitchForwardsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtSwitchForwardsHotKey.setText(settings.getSwitchForwardsHotKey());
+		txtSwitchForwardsHotKey.setColumns(10);
+		add(txtSwitchForwardsHotKey, "cell 8 9,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblSwitchGoaliesHotKey = new JLabel(Messages.getString("HotKeysPanel.SwitchGoalies", settings.getGameType())); //$NON-NLS-1$
+		add(lblSwitchGoaliesHotKey, "cell 7 10,alignx right"); //$NON-NLS-1$
+
+		txtSwitchGoaliesHotKey = new JTextField();
+		txtSwitchGoaliesHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtSwitchGoaliesHotKey.setText(settings.getSwitchGoaliesHotKey());
+		txtSwitchGoaliesHotKey.setColumns(10);
+		add(txtSwitchGoaliesHotKey, "cell 8 10,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblResetNamesHotKey = new JLabel(Messages.getString("HotKeysPanel.ResetNames", settings.getGameType())); //$NON-NLS-1$
+		add(lblResetNamesHotKey, "cell 7 11,alignx right"); //$NON-NLS-1$
+		
+		txtResetNamesHotKey = new JTextField();
+		txtResetNamesHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtResetNamesHotKey.setText(settings.getResetNamesHotKey());
+		txtResetNamesHotKey.setColumns(10);
+		add(txtResetNamesHotKey, "cell 8 11,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblResetScoresHotKey = new JLabel(Messages.getString("HotKeysPanel.ResetScores", settings.getGameType())); //$NON-NLS-1$
+		add(lblResetScoresHotKey, "cell 7 12,alignx right"); //$NON-NLS-1$
+		
+		txtResetScoresHotKey = new JTextField();
+		txtResetScoresHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtResetScoresHotKey.setText(settings.getResetScoresHotKey());
+		txtResetScoresHotKey.setColumns(10);
+		add(txtResetScoresHotKey, "cell 8 12,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblResetGameCountsHotKey = new JLabel(Messages.getString("HotKeysPanel.ResetGameCounts", settings.getGameType())); //$NON-NLS-1$
+		add(lblResetGameCountsHotKey, "cell 7 13,alignx right"); //$NON-NLS-1$
+		
+		txtResetGameCountsHotKey = new JTextField();
+		txtResetGameCountsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtResetGameCountsHotKey.setText(settings.getResetGameCountsHotKey());
+		txtResetGameCountsHotKey.setColumns(10);
+		add(txtResetGameCountsHotKey, "cell 8 13,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblResetTimeOutsHotKey = new JLabel(Messages.getString("HotKeysPanel.ResetTimeOuts", settings.getGameType())); //$NON-NLS-1$
+		add(lblResetTimeOutsHotKey, "cell 7 14,alignx right"); //$NON-NLS-1$
+		
+		txtResetTimeOutsHotKey = new JTextField();
+		txtResetTimeOutsHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtResetTimeOutsHotKey.setText(settings.getResetTimeOutsHotKey());
+		txtResetTimeOutsHotKey.setColumns(10);
+		add(txtResetTimeOutsHotKey, "cell 8 14,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblResetResetWarnHotKey = new JLabel(Messages.getString("HotKeysPanel.ResetResetWarn", settings.getGameType())); //$NON-NLS-1$
+		add(lblResetResetWarnHotKey, "cell 7 15,alignx right"); //$NON-NLS-1$
+		
+		txtResetResetWarnHotKey = new JTextField();
+		txtResetResetWarnHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtResetResetWarnHotKey.setText(settings.getResetResetWarnHotKey());
+		txtResetResetWarnHotKey.setColumns(10);
+		add(txtResetResetWarnHotKey, "cell 8 15,alignx left"); //$NON-NLS-1$
+		
+		JLabel lblResetAllHotKey = new JLabel(Messages.getString("HotKeysPanel.ResetAll", settings.getGameType())); //$NON-NLS-1$
+		add(lblResetAllHotKey, "cell 7 16,alignx right"); //$NON-NLS-1$
+		
+		txtResetAllHotKey = new JTextField();
+		txtResetAllHotKey.setHorizontalAlignment(SwingConstants.CENTER);
+		txtResetAllHotKey.setText(settings.getResetAllHotKey());
+		txtResetAllHotKey.setColumns(10);
+		add(txtResetAllHotKey, "cell 8 16,alignx left"); //$NON-NLS-1$
+		
+
+		
+		btnGenerateHotKeyScripts = new JButton(Messages.getString("HotKeysPanel.GenerateHotKeyScripts", settings.getGameType())); //$NON-NLS-1$
+		btnGenerateHotKeyScripts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				settings.generateHotKeyScripts();
+			}
+		});
+		add(btnGenerateHotKeyScripts, "cell 1 18, spanx 2, alignx center"); //$NON-NLS-1$
+	
+		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
+		add(btnSave, "cell 4 18,alignx center"); //$NON-NLS-1$
+		
+		JButton btnCancel = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JComponent comp = (JComponent) e.getSource();
+				Window win = SwingUtilities.getWindowAncestor(comp);
+				win.dispose();
+			}
+		});
+		add(btnCancel, "cell 6 18,alignx center"); //$NON-NLS-1$
+		
+		JButton btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
+		btnRestoreDefaults.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				restoreDefaults(settings);
+			}
+		});
+		add(btnRestoreDefaults, "cell 8 18, spanx 2, alignx right"); //$NON-NLS-1$
 	}
+
 	private void restoreDefaults(Settings settings) {
 		formattedTxtPath.setText(settings.getDefaultHotKeyScriptPath());
 		txtStartMatchHotKey.setText(settings.getDefaultStartMatchHotKey());
@@ -683,26 +727,38 @@ public class HotKeysPanel extends JPanel {
 		txtStartGameHotKey.setText(settings.getDefaultStartGameHotKey());
 		txtTeam1SwitchPositionsHotKey.setText(settings.getDefaultTeamSwitchPositionsHotKey("1"));
 		txtTeam2SwitchPositionsHotKey.setText(settings.getDefaultTeamSwitchPositionsHotKey("2"));
+		txtTeam3SwitchPositionsHotKey.setText(settings.getDefaultTeamSwitchPositionsHotKey("3"));
 		txtSwitchTeamsHotKey.setText(settings.getDefaultSwitchTeamsHotKey());
 		txtGameCount1MinusHotKey.setText(settings.getDefaultGameCountMinusHotKey("1"));
 		txtGameCount1PlusHotKey.setText(settings.getDefaultGameCountPlusHotKey("1"));
 		txtGameCount2MinusHotKey.setText(settings.getDefaultGameCountMinusHotKey("2"));
 		txtGameCount2PlusHotKey.setText(settings.getDefaultGameCountPlusHotKey("2"));
+		txtGameCount3MinusHotKey.setText(settings.getDefaultGameCountMinusHotKey("3"));
+		txtGameCount3PlusHotKey.setText(settings.getDefaultGameCountPlusHotKey("3"));
 		txtSwitchGameCountsHotKey.setText(settings.getDefaultSwitchGameCountsHotKey());
 		txtScore1MinusHotKey.setText(settings.getDefaultScoreMinusHotKey("1"));
 		txtScore1PlusHotKey.setText(settings.getDefaultScorePlusHotKey("1"));
 		txtScore2MinusHotKey.setText(settings.getDefaultScoreMinusHotKey("2"));
 		txtScore2PlusHotKey.setText(settings.getDefaultScorePlusHotKey("2"));
+		txtScore3MinusHotKey.setText(settings.getDefaultScoreMinusHotKey("3"));
+		txtScore3PlusHotKey.setText(settings.getDefaultScorePlusHotKey("3"));
 		txtSwitchScoresHotKey.setText(settings.getDefaultSwitchScoresHotKey());
 		txtTimeOut1MinusHotKey.setText(settings.getDefaultTimeOutMinusHotKey("1"));
 		txtTimeOut1PlusHotKey.setText(settings.getDefaultTimeOutPlusHotKey("1"));
 		txtTimeOut2MinusHotKey.setText(settings.getDefaultTimeOutMinusHotKey("2"));
 		txtTimeOut2PlusHotKey.setText(settings.getDefaultTimeOutPlusHotKey("2"));
+		txtTimeOut3MinusHotKey.setText(settings.getDefaultTimeOutMinusHotKey("3"));
+		txtTimeOut3PlusHotKey.setText(settings.getDefaultTimeOutPlusHotKey("3"));
 		txtSwitchTimeOutsHotKey.setText(settings.getDefaultSwitchTimeOutsHotKey());
 		txtReset1HotKey.setText(settings.getDefaultResetHotKey("1"));
 		txtReset2HotKey.setText(settings.getDefaultResetHotKey("2"));
+		txtReset3HotKey.setText(settings.getDefaultResetHotKey("3"));
 		txtWarn1HotKey.setText(settings.getDefaultWarnHotKey("1"));
 		txtWarn2HotKey.setText(settings.getDefaultWarnHotKey("2"));
+		txtWarn3HotKey.setText(settings.getDefaultWarnHotKey("3"));
+		txtKingSeat1HotKey.setText(settings.getDefaultKingSeatHotKey("1"));
+		txtKingSeat2HotKey.setText(settings.getDefaultKingSeatHotKey("2"));
+		txtKingSeat3HotKey.setText(settings.getDefaultKingSeatHotKey("3"));
 		txtSwitchResetWarnsHotKey.setText(settings.getDefaultSwitchResetWarnsHotKey());
 		txtSwitchSidesHotKey.setText(settings.getDefaultSwitchPositionsHotKey());
 		txtResetNamesHotKey.setText(settings.getDefaultResetNamesHotKey());
@@ -720,8 +776,8 @@ public class HotKeysPanel extends JPanel {
 		txtResetTimersHotKey.setText(settings.getDefaultResetTimersHotKey());
 		txtUndoHotKey.setText(settings.getDefaultUndoHotKey());
 		txtRedoHotKey.setText(settings.getDefaultRedoHotKey());
-		txtSwitchPlayer1HotKey.setText(settings.getDefaultSwitchPlayerHotKey("1"));
-		txtSwitchPlayer2HotKey.setText(settings.getDefaultSwitchPlayerHotKey("2"));
+		txtSwitchForwardsHotKey.setText(settings.getDefaultSwitchForwardsHotKey());
+		txtSwitchGoaliesHotKey.setText(settings.getDefaultSwitchGoaliesHotKey());
 		txtShowSkunkHotKey.setText(settings.getDefaultShowSkunkHotKey());
 		txtStartStreamHotKey.setText(settings.getDefaultStartStreamHotKey());
 		hotKeyBaseScriptText = settings.getDefaultHotKeyBaseScript();
@@ -736,26 +792,38 @@ public class HotKeysPanel extends JPanel {
 			settings.setHotKey("StartGameHotKey",txtStartGameHotKey.getText());
 			settings.setHotKey("Team1SwitchPositionsHotKey",txtTeam1SwitchPositionsHotKey.getText());
 			settings.setHotKey("Team2SwitchPositionsHotKey",txtTeam2SwitchPositionsHotKey.getText());
+			settings.setHotKey("Team3SwitchPositionsHotKey",txtTeam3SwitchPositionsHotKey.getText());
 			settings.setHotKey("SwitchTeamsHotKey",txtSwitchTeamsHotKey.getText());
 			settings.setHotKey("GameCount1MinusHotKey",txtGameCount1MinusHotKey.getText());
 			settings.setHotKey("GameCount1PlusHotKey",txtGameCount1PlusHotKey.getText());
 			settings.setHotKey("GameCount2MinusHotKey",txtGameCount2MinusHotKey.getText());
 			settings.setHotKey("GameCount2PlusHotKey",txtGameCount2PlusHotKey.getText());
+			settings.setHotKey("GameCount3MinusHotKey",txtGameCount3MinusHotKey.getText());
+			settings.setHotKey("GameCount3PlusHotKey",txtGameCount3PlusHotKey.getText());
 			settings.setHotKey("SwitchGameCountsHotKey",txtSwitchGameCountsHotKey.getText());
 			settings.setHotKey("Score1MinusHotKey",txtScore1MinusHotKey.getText());
 			settings.setHotKey("Score1PlusHotKey",txtScore1PlusHotKey.getText());
 			settings.setHotKey("Score2MinusHotKey",txtScore2MinusHotKey.getText());
 			settings.setHotKey("Score2PlusHotKey",txtScore2PlusHotKey.getText());
+			settings.setHotKey("Score3MinusHotKey",txtScore3MinusHotKey.getText());
+			settings.setHotKey("Score3PlusHotKey",txtScore3PlusHotKey.getText());
 			settings.setHotKey("SwitchScoresHotKey",txtSwitchScoresHotKey.getText());
 			settings.setHotKey("TimeOut1MinusHotKey",txtTimeOut1MinusHotKey.getText());
 			settings.setHotKey("TimeOut1PlusHotKey",txtTimeOut1PlusHotKey.getText());
 			settings.setHotKey("TimeOut2MinusHotKey",txtTimeOut2MinusHotKey.getText());
 			settings.setHotKey("TimeOut2PlusHotKey",txtTimeOut2PlusHotKey.getText());
+			settings.setHotKey("TimeOut3MinusHotKey",txtTimeOut3MinusHotKey.getText());
+			settings.setHotKey("TimeOut3PlusHotKey",txtTimeOut3PlusHotKey.getText());
 			settings.setHotKey("SwitchTimeOutsHotKey",txtSwitchTimeOutsHotKey.getText());
 			settings.setHotKey("Reset1HotKey",txtReset1HotKey.getText());
 			settings.setHotKey("Reset2HotKey",txtReset2HotKey.getText());
+			settings.setHotKey("Reset3HotKey",txtReset3HotKey.getText());
 			settings.setHotKey("Warn1HotKey",txtWarn1HotKey.getText());
 			settings.setHotKey("Warn2HotKey",txtWarn2HotKey.getText());
+			settings.setHotKey("Warn3HotKey",txtWarn3HotKey.getText());
+			settings.setHotKey("KingSeat1HotKey", txtKingSeat1HotKey.getText());
+			settings.setHotKey("KingSeat2HotKey", txtKingSeat2HotKey.getText());
+			settings.setHotKey("KingSeat3HotKey", txtKingSeat3HotKey.getText());
 			settings.setHotKey("SwitchResetWarnsHotKey",txtSwitchResetWarnsHotKey.getText());
 			settings.setHotKey("SwitchSidesHotKey",txtSwitchSidesHotKey.getText());
 			settings.setHotKey("ResetNamesHotKey",txtResetNamesHotKey.getText());
@@ -773,8 +841,8 @@ public class HotKeysPanel extends JPanel {
 			settings.setHotKey("ResetTimersHotKey",txtResetTimersHotKey.getText());
 			settings.setHotKey("UndoHotKey",txtUndoHotKey.getText());
 			settings.setHotKey("RedoHotKey",txtRedoHotKey.getText());
-			settings.setHotKey("SwitchPlayer1HotKey",txtSwitchPlayer1HotKey.getText());
-			settings.setHotKey("SwitchPlayer2HotKey",txtSwitchPlayer2HotKey.getText());
+			settings.setHotKey("SwitchForwardsHotKey",txtSwitchForwardsHotKey.getText());
+			settings.setHotKey("SwitchGoaliesHotKey",txtSwitchGoaliesHotKey.getText());
 			settings.setHotKey("ShowSkunkHotKey",txtShowSkunkHotKey.getText());
 			settings.setHotKey("StartStreamHotKey",txtStartStreamHotKey.getText());
 			settings.setHotKey("HotKeyBaseScript", hotKeyBaseScriptText);

@@ -1111,6 +1111,9 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpkt3 - push king seat team 3
 
 ## Revision History</br>
+v2.021 12/14/2023</br>
+Rework HotKeys Panel for Team 3.</br>
+</br>
 v2.020 12/12/2023</br>
 Update copyright to 2024.</br>
 Add King Seat logic.</br>

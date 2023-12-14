@@ -214,6 +214,11 @@ public class TeamPanel extends JPanel {
 		} else {
 			btnWarn.setMnemonic(settings.getWarnHotKey(teamNumber).charAt(0));
 		};
+		if(settings.getKingSeatHotKey(teamNumber).isEmpty()) {
+			ckbxKingSeat.setMnemonic(-1);
+		} else {
+			ckbxKingSeat.setMnemonic(settings.getKingSeatHotKey(teamNumber).charAt(0));
+		};
 	}
 	private void layoutComponents() {
 		setLayout(new GridBagLayout());
