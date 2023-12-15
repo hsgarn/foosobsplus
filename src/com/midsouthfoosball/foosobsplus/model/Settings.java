@@ -149,11 +149,14 @@ public class Settings {
 		defaultSourceProps.setProperty("Team3Name", "team3name");
 		defaultSourceProps.setProperty("Team3Forward", "team3forward");
 		defaultSourceProps.setProperty("Team3Goalie", "team3goalie");
-		defaultSourceProps.setProperty("Team1GameCount", "team1gamecount");
 		defaultSourceProps.setProperty("TimeRemaining", "timeremaining");
-		defaultSourceProps.setProperty("Team2GameCount", "team2gamecount");
 		defaultSourceProps.setProperty("TimerInUse", "timerinuse");
+		defaultSourceProps.setProperty("Team1GameCount", "team1gamecount");
+		defaultSourceProps.setProperty("Team2GameCount", "team2gamecount");
 		defaultSourceProps.setProperty("Team3GameCount", "team3gamecount");
+		defaultSourceProps.setProperty("Team1MatchCount", "team1matchcount");
+		defaultSourceProps.setProperty("Team2MatchCount", "team2matchcount");
+		defaultSourceProps.setProperty("Team3MatchCount", "team3matchcount");
 		defaultSourceProps.setProperty("Team1Score", "team1score");
 		defaultSourceProps.setProperty("MatchWinner", "matchwinner");
 		defaultSourceProps.setProperty("Meatball",  "meatball");
@@ -294,6 +297,13 @@ public class Settings {
 		defaultHotKeyProps.setProperty("GameCount2PlusHotKey", "6");
 		defaultHotKeyProps.setProperty("GameCount3PlusHotKey", "");
 		defaultHotKeyProps.setProperty("GameCountSwitchHotKey", "l");
+		defaultHotKeyProps.setProperty("MatchCount1MinusHotKey", "");
+		defaultHotKeyProps.setProperty("MatchCount2MinusHotKey", "");
+		defaultHotKeyProps.setProperty("MatchCount3MinusHotKey", "");
+		defaultHotKeyProps.setProperty("MatchCount1PlusHotKey", "");
+		defaultHotKeyProps.setProperty("MatchCount2PlusHotKey", "");
+		defaultHotKeyProps.setProperty("MatchCount3PlusHotKey", "");
+		defaultHotKeyProps.setProperty("MatchCountSwitchHotKey", "");
 		defaultHotKeyProps.setProperty("Score1MinusHotKey", "4");
 		defaultHotKeyProps.setProperty("Score2MinusHotKey", "8");
 		defaultHotKeyProps.setProperty("Score3MinusHotKey", "");
@@ -302,6 +312,7 @@ public class Settings {
 		defaultHotKeyProps.setProperty("Score3PlusHotKey", "");
 		defaultHotKeyProps.setProperty("SwitchScoresHotKey", "");
 		defaultHotKeyProps.setProperty("SwitchGameCountsHotKey", "");
+		defaultHotKeyProps.setProperty("SwitchMatchCountsHotKey", "");
 		defaultHotKeyProps.setProperty("TimeOut1MinusHotKey", "n");
 		defaultHotKeyProps.setProperty("TimeOut2MinusHotKey", "q");
 		defaultHotKeyProps.setProperty("TimeOut3MinusHotKey", "");
@@ -322,6 +333,7 @@ public class Settings {
 		defaultHotKeyProps.setProperty("SwitchSidesHotKey", "w");
 		defaultHotKeyProps.setProperty("ResetNamesHotKey", "");
 		defaultHotKeyProps.setProperty("ResetGameCountsHotKey", "7");
+		defaultHotKeyProps.setProperty("ResetMatchCountsHotKey", "");
 		defaultHotKeyProps.setProperty("ResetScoresHotKey", "3");
 		defaultHotKeyProps.setProperty("ResetTimeOutsHotKey", "-");
 		defaultHotKeyProps.setProperty("ResetResetWarnHotKey", "");
@@ -443,6 +455,9 @@ public class Settings {
 	}
 	public String getTeamGameCountSource(String teamNumber) {
 		return configSourceProps.getProperty("Team" + teamNumber + "GameCount");//Team1GameCount
+	}
+	public String getTeamMatchCountSource(String teamNumber) {
+		return configSourceProps.getProperty("Team" + teamNumber + "MatchCount");//Team1MatchCount
 	}
 	public String getTeamScoreSource(String teamNumber) {
 		return configSourceProps.getProperty("Team" + teamNumber + "Score");//Team1Score
@@ -572,6 +587,8 @@ public class Settings {
 	public String getSwitchGoaliesHotKey() {return configHotKeyProps.getProperty("SwitchGoaliesHotKey");}
 	public String getGameCountMinusHotKey(String teamNumber) {return configHotKeyProps.getProperty("GameCount" + teamNumber + "MinusHotKey");}
 	public String getGameCountPlusHotKey(String teamNumber) {return configHotKeyProps.getProperty("GameCount" + teamNumber + "PlusHotKey");}
+	public String getMatchCountMinusHotKey(String teamNumber) {return configHotKeyProps.getProperty("MatchCount" + teamNumber + "MinusHotKey");}
+	public String getMatchCountPlusHotKey(String teamNumber) {return configHotKeyProps.getProperty("MatchCount" + teamNumber + "PlusHotKey");}
 	public String getTimeOutMinusHotKey(String teamNumber) {return configHotKeyProps.getProperty("TimeOut" + teamNumber + "MinusHotKey");}
 	public String getTimeOutPlusHotKey(String teamNumber) {return configHotKeyProps.getProperty("TimeOut" + teamNumber + "PlusHotKey");}
 	public String getScoreMinusHotKey(String teamNumber) {return configHotKeyProps.getProperty("Score" + teamNumber + "MinusHotKey");}
@@ -581,12 +598,14 @@ public class Settings {
 	public String getKingSeatHotKey(String teamNumber) {return configHotKeyProps.getProperty("KingSeat" + teamNumber + "HotKey");}
 	public String getSwitchTeamsHotKey() {return configHotKeyProps.getProperty("SwitchTeamsHotKey");}
 	public String getSwitchGameCountsHotKey() {return configHotKeyProps.getProperty("SwitchGameCountsHotKey");}
+	public String getSwitchMatchCountsHotKey() {return configHotKeyProps.getProperty("SwitchMatchCountsHotKey");}
 	public String getSwitchScoresHotKey() {return configHotKeyProps.getProperty("SwitchScoresHotKey");}
 	public String getSwitchTimeOutsHotKey() {return configHotKeyProps.getProperty("SwitchTimeOutsHotKey");}
 	public String getSwitchResetWarnsHotKey() {return configHotKeyProps.getProperty("SwitchResetWarnsHotKey");}
 	public String getSwitchSidesHotKey() {return configHotKeyProps.getProperty("SwitchSidesHotKey");}
 	public String getResetNamesHotKey() {return configHotKeyProps.getProperty("ResetNamesHotKey");}
 	public String getResetGameCountsHotKey() {return configHotKeyProps.getProperty("ResetGameCountsHotKey");}
+	public String getResetMatchCountsHotKey() {return configHotKeyProps.getProperty("ResetMatchCountsHotKey");}
 	public String getResetScoresHotKey() {return configHotKeyProps.getProperty("ResetScoresHotKey");}
 	public String getResetTimeOutsHotKey() {return configHotKeyProps.getProperty("ResetTimeOutsHotKey");}
 	public String getResetResetWarnHotKey() {return configHotKeyProps.getProperty("ResetResetWarnHotKey");}
@@ -822,10 +841,13 @@ public class Settings {
 	public String getDefaultTeam3ForwardSource() {return defaultSourceProps.getProperty("Team3Forward");}
 	public String getDefaultTeam3GoalieSource() {return defaultSourceProps.getProperty("Team3Goalie");}
 	public String getDefaultTableNameSource() {return defaultSourceProps.getProperty("TableName");}
-	public String getDefaultTeam1GameCountSource() {return defaultSourceProps.getProperty("Team1GameCount");}
 	public String getDefaultTimeRemainingSource() {return defaultSourceProps.getProperty("TimeRemaining");}
+	public String getDefaultTeam1GameCountSource() {return defaultSourceProps.getProperty("Team1GameCount");}
 	public String getDefaultTeam2GameCountSource() {return defaultSourceProps.getProperty("Team2GameCount");}
 	public String getDefaultTeam3GameCount3Source() {return defaultSourceProps.getProperty("Team3GameCount");}
+	public String getDefaultTeam1MatchCountSource() {return defaultSourceProps.getProperty("Team1MatchCount");}
+	public String getDefaultTeam2MatchCountSource() {return defaultSourceProps.getProperty("Team2MatchCount");}
+	public String getDefaultTeam3MatchCount3Source() {return defaultSourceProps.getProperty("Team3MatchCount");}
 	public String getDefaultTimerInUseSource() {return defaultSourceProps.getProperty("TimerInUse");}
 	public String getDefaultTeam1ScoreSource() {return defaultSourceProps.getProperty("Team1Score");}
 	public String getDefaultMatchWinnerSource() {return defaultSourceProps.getProperty("MatchWinner");}
@@ -905,11 +927,14 @@ public class Settings {
 	public String getDefaultStartGameHotKey() {return defaultHotKeyProps.getProperty("StartGameHotKey");}
 	public String getDefaultSwitchTeamsHotKey() {return defaultHotKeyProps.getProperty("SwitchTeamsHotKey");}
 	public String getDefaultSwitchGameCountsHotKey() {return defaultHotKeyProps.getProperty("SwitchGameCountsHotKey");}
+	public String getDefaultSwitchMatchCountsHotKey() {return defaultHotKeyProps.getProperty("SwitchMatchCountsHotKey");}
 	public String getDefaultTeamSwitchPositionsHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("Team" + teamNumber + "SwitchPositionsHotKey");}
 	public String getDefaultSwitchForwardsHotKey() {return defaultHotKeyProps.getProperty("SwitchForwardsHotKey");}
 	public String getDefaultSwitchGoaliesHotKey() {return defaultHotKeyProps.getProperty("SwitchGoaliesHotKey");}
 	public String getDefaultGameCountMinusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("GameCount" + teamNumber + "MinusHotKey");}
 	public String getDefaultGameCountPlusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("GameCount" + teamNumber + "PlusHotKey");}
+	public String getDefaultMatchCountMinusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("MatchCount" + teamNumber + "MinusHotKey");}
+	public String getDefaultMatchCountPlusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("MatchCount" + teamNumber + "PlusHotKey");}
 	public String getDefaultTimeOutMinusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("TimeOut" + teamNumber + "MinusHotKey");}
 	public String getDefaultTimeOutPlusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("TimeOut" + teamNumber + "PlusHotKey");}
 	public String getDefaultResetHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("Reset" + teamNumber + "HotKey");}
@@ -923,6 +948,7 @@ public class Settings {
 	public String getDefaultSwitchPositionsHotKey() {return defaultHotKeyProps.getProperty("SwitchSidesHotKey");}
 	public String getDefaultResetNamesHotKey() {return defaultHotKeyProps.getProperty("resetNamesHotKey");}
 	public String getDefaultResetGameCountsHotKey() {return defaultHotKeyProps.getProperty("ResetGameCountsHotKey");}
+	public String getDefaultResetMatchCountsHotKey() {return defaultHotKeyProps.getProperty("ResetMatchCountsHotKey");}
 	public String getDefaultResetScoresHotKey() {return defaultHotKeyProps.getProperty("ResetScoresHotKey");}
 	public String getDefaultResetTimeOutsHotKey() {return defaultHotKeyProps.getProperty("ResetTimeOutsHotKey");}
 	public String getDefaultResetResetWarnHotKey() {return defaultHotKeyProps.getProperty("ResetResetWarnHotKey");}

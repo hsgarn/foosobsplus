@@ -439,12 +439,6 @@ public class TeamController {
 		displayAll();
 		return winState;
 	}
-	public void incrementForwardGameCount(int teamNumber) {
-		Team team = teamsMap.getOrDefault(teamNumber, null);
-		if (team != null) {
-			team.incrementForwardGameCount();
-		}
-	}
 	public void decrementScore(int teamNumber) {
 		Team team = teamsMap.getOrDefault(teamNumber, null);
 		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
@@ -470,6 +464,23 @@ public class TeamController {
 		match.syncCurrentGameNumber();
 		teamPanels[teamNumber-1].updateGameCount(teams[teamNumber-1].getGameCount());
 		updateGameTables();
+	}
+	public void incrementMatchCount(int teamNumber) {
+		match.incrementMatchCount(teams[teamNumber-1]);
+//		match.syncCurrentGameNumber();
+		teamPanels[teamNumber-1].updateMatchCount(teams[teamNumber-1].getMatchCount());
+//		if(matchWon) {
+//			resetKingSeats();
+//		} else {
+//			startGameTimer();
+//		}
+//		updateGameTables();
+	}
+	public void decrementMatchCount(int teamNumber) {
+		teams[teamNumber-1].decrementMatchCount();
+//		match.syncCurrentGameNumber();
+		teamPanels[teamNumber-1].updateMatchCount(teams[teamNumber-1].getMatchCount());
+//		updateGameTables();
 	}
 	public void callTimeOut(int teamNumber) {
 		teams[teamNumber-1].callTimeOut();
@@ -602,6 +613,14 @@ public class TeamController {
 		teamPanel2.updateGameCount(team2.getGameCount());
 		updateGameTables();
 	}
+	public void switchMatchCounts() {
+		int tmp = team1.getMatchCount();
+		team1.setMatchCount(team2.getMatchCount());
+		team2.setMatchCount(tmp);
+		teamPanel1.updateMatchCount(team1.getMatchCount());
+		teamPanel2.updateMatchCount(team2.getMatchCount());
+		updateGameTables();
+	}
 	public void switchTimeOuts() {
 		int tmp = team1.getTimeOutCount();
 		team1.setTimeOutCount(team2.getTimeOutCount());
@@ -673,12 +692,6 @@ public class TeamController {
 		team1.setGameCount(0);
 		team2.setGameCount(0);
 		team3.setGameCount(0);
-		team1.setForwardGameCount(0);
-		team1.setGoalieGameCount(0);
-		team2.setForwardGameCount(0);
-		team2.setGoalieGameCount(0);
-		team3.setForwardGameCount(0);
-		team3.setGoalieGameCount(0);
 		teamPanel1.updateGameCount(team1.getGameCount());
 		teamPanel2.updateGameCount(team2.getGameCount());
 		teamPanel3.updateGameCount(team3.getGameCount());
@@ -686,6 +699,13 @@ public class TeamController {
 		match.setCurrentScoreTeam1(team1.getScore());
 		match.setCurrentScoreTeam2(team2.getScore());
 		match.setCurrentScoreTeam3(team3.getScore());
+		updateGameTables();
+		displayAll();
+	}
+	public void resetMatchCounts() {
+		team1.setMatchCount(0);
+		team2.setMatchCount(0);
+		team3.setMatchCount(0);
 		updateGameTables();
 		displayAll();
 	}
@@ -779,6 +799,7 @@ public class TeamController {
 		String teamName1 = team1.getTeamName();
 		int score1 = team1.getScore();
 		int gameCount1 = team1.getGameCount();
+		int matchCount1 = team1.getMatchCount();
 		int timeOutCount1 = team1.getTimeOutCount();
 		boolean isReset1 = team1.getReset();
 		boolean isWarn1 = team1.getWarn();
@@ -786,6 +807,7 @@ public class TeamController {
 		String teamName2 = team2.getTeamName();
 		int score2 = team2.getScore();
 		int gameCount2 = team2.getGameCount();
+		int matchCount2 = team2.getMatchCount();
 		int timeOutCount2 = team2.getTimeOutCount();
 		boolean isReset2 = team2.getReset();
 		boolean isWarn2 = team2.getWarn();
@@ -793,6 +815,7 @@ public class TeamController {
 		String teamName3 = team3.getTeamName();
 		int score3 = team3.getScore();
 		int gameCount3 = team3.getGameCount();
+		int matchCount3 = team3.getMatchCount();
 		int timeOutCount3 = team3.getTimeOutCount();
 		boolean isReset3 = team3.getReset();
 		boolean isWarn3 = team3.getWarn();
@@ -806,9 +829,9 @@ public class TeamController {
 		team1.writeAll();
 		team2.writeAll();
 		team3.writeAll();
-		teamPanel1.displayAllFields(teamName1, forwardName1, goalieName1, score1, gameCount1, timeOutCount1, isReset1, isWarn1, isKingSeat1);
-		teamPanel2.displayAllFields(teamName2, forwardName2, goalieName2, score2, gameCount2, timeOutCount2, isReset2, isWarn2, isKingSeat2);
-		teamPanel3.displayAllFields(teamName3, forwardName3, goalieName3, score3, gameCount3, timeOutCount3, isReset3, isWarn3, isKingSeat3);
+		teamPanel1.displayAllFields(teamName1, forwardName1, goalieName1, score1, gameCount1, matchCount1, timeOutCount1, isReset1, isWarn1, isKingSeat1);
+		teamPanel2.displayAllFields(teamName2, forwardName2, goalieName2, score2, gameCount2, matchCount2, timeOutCount2, isReset2, isWarn2, isKingSeat2);
+		teamPanel3.displayAllFields(teamName3, forwardName3, goalieName3, score3, gameCount3, matchCount3, timeOutCount3, isReset3, isWarn3, isKingSeat3);
 		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
 		updateGameTables();
 	}

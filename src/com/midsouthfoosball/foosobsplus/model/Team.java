@@ -42,6 +42,7 @@ public class Team implements Serializable {
 	private int forwardGameCount = 0;
 	private int goalieGameCount = 0;
 	private int gameCount = 0;
+	private int matchCount = 0;
 	private int timeOutCount;
 	private boolean resetState = false;
 	private boolean warnState = false;
@@ -134,50 +135,10 @@ public class Team implements Serializable {
 	public void setGoalieGameCount(int goalieGameCount) {
 		this.goalieGameCount = goalieGameCount;
 	}
-	public int incrementForwardScore() {
-		forwardScore++;
-		writeForwardScore();
-		return forwardScore;
-	}
-	public int incrementGoalieScore() {
-		goalieScore++;
-		writeGoalieScore();
-		return goalieScore;
-	}
-	public int incrementForwardGameCount() {
-		forwardGameCount++;
-		writeForwardGameCount();
-		return forwardGameCount;
-	}
-	public int incrementGoalieGameCount() {
-		goalieGameCount++;
-		writeGoalieGameCount();
-		return goalieGameCount;
-	}
 	public int incrementScore() {
 		score++;
 		writeScore();
 		return score;
-	}
-	public int decrementForwardScore() {
-		if(forwardScore > 0) forwardScore--;
-		writeForwardScore();
-		return forwardScore;
-	}
-	public int decrementGoalieScore() {
-		if(goalieScore > 0) goalieScore--;
-		writeGoalieScore();
-		return goalieScore;
-	}
-	public int decrementForwardGameCount() {
-		if(forwardGameCount > 0) forwardGameCount--;
-		writeForwardGameCount();
-		return forwardGameCount;
-	}
-	public int decrementGoalieGameCount() {
-		if(goalieGameCount > 0) goalieGameCount--;
-		writeGoalieGameCount();
-		return goalieGameCount;
 	}
 	public int decrementScore() {
 		if(score > 0) score--;
@@ -186,6 +147,9 @@ public class Team implements Serializable {
 	}
 	public int getGameCount() {
 		return gameCount;
+	}
+	public int getMatchCount() {
+		return matchCount;
 	}
 	public void setGameCount(int gameCount) {
 		this.gameCount = gameCount;
@@ -198,6 +162,17 @@ public class Team implements Serializable {
 			setGameCount(Integer.parseInt(gameCount));
 		}
 	}
+	public void setMatchCount(int matchCount) {
+		this.matchCount = matchCount;
+		writeMatchCount();
+	}
+	public void setMatchCount(String matchCount) {
+		if(matchCount=="") {
+			setMatchCount(0);
+		} else {
+			setMatchCount(Integer.parseInt(matchCount));
+		}
+	}
 	public int incrementGameCount() {
 		gameCount++;
 		writeGameCount();
@@ -207,6 +182,16 @@ public class Team implements Serializable {
 		if(gameCount > 0) gameCount--;
 		writeGameCount();
 		return gameCount;
+	}	
+	public int incrementMatchCount() {
+		matchCount++;
+		writeMatchCount();
+		return matchCount;
+	}
+	public int decrementMatchCount() {
+		if(matchCount > 0) matchCount--;
+		writeMatchCount();
+		return matchCount;
 	}	
 	public int getTimeOutCount() {
 		return timeOutCount;
@@ -225,14 +210,8 @@ public class Team implements Serializable {
 	public int callTimeOut() {
 		if(settings.getShowTimeOutsUsed() == 1) {
 			timeOutCount++;
-//			if(timeOutCount>settings.getMaxTimeOuts()) {
-//				timeOutCount=settings.getMaxTimeOuts();
-//			}
 		} else {
 			timeOutCount--;
-//			if(timeOutCount<0) {
-//				timeOutCount=0;
-//			}
 		}
 		writeTimeOuts();
 		return timeOutCount;
@@ -351,9 +330,8 @@ public class Team implements Serializable {
 		score = 0;
 		forwardScore = 0;
 		goalieScore = 0;
-		forwardGameCount = 0;
-		goalieGameCount = 0;
 		gameCount = 0;
+		matchCount = 0;
 		passAttempts = 0;
 		passCompletes = 0;
 		passBreaks = 0;
@@ -713,6 +691,9 @@ public class Team implements Serializable {
     private void writeGameCount() {
     	writeData(settings.getTeamGameCountSource(Integer.toString(teamNbr)), Integer.toString(getGameCount()));
     }
+    private void writeMatchCount() {
+    	writeData(settings.getTeamMatchCountSource(Integer.toString(teamNbr)), Integer.toString(getMatchCount()));
+    }
     private void writeTimeOuts() {
    		writeData(settings.getTeamTimeOutSource(Integer.toString(teamNbr)), Integer.toString(getTimeOutCount()));
     }
@@ -809,18 +790,6 @@ public class Team implements Serializable {
     private void writeScore() {
     	writeData(settings.getTeamScoreSource(Integer.toString(teamNbr)), Integer.toString(getScore()));
     }
-    private void writeForwardScore() {
-    	
-    }
-    private void writeGoalieScore() {
-    	
-    }
-    private void writeForwardGameCount() {
-    	
-    }
-    private void writeGoalieGameCount() {
-    	
-    }
 	private void writeData(String source, String data) {
 		obsInterface.writeData(source, data, "Team", settings.getShowParsed());
 	}
@@ -852,6 +821,7 @@ public class Team implements Serializable {
 		writeGoalieName();
 		writeScore();
 		writeGameCount();
+		writeMatchCount();
 		writeReset();
 		writeWarn();
 		writeKingSeat();
@@ -859,7 +829,6 @@ public class Team implements Serializable {
 		writeStats();
 	}
 	public void restoreState(byte[] serializedObject) {
-
 		Team tempTeam = null;
 		try {
 			byte b[] = serializedObject;
@@ -875,6 +844,7 @@ public class Team implements Serializable {
 		this.setGoalieName(tempTeam.getGoalieName());
 		this.setScore(tempTeam.getScore());
 		this.setGameCount(tempTeam.getGameCount());
+		this.setMatchCount(tempTeam.getMatchCount());
 		this.setTimeOutCount(tempTeam.getTimeOutCount());
 		this.setReset(tempTeam.getReset());
 		this.setWarn(tempTeam.getWarn());

@@ -74,8 +74,10 @@ import com.midsouthfoosball.foosobsplus.commands.CodeCommand;
 import com.midsouthfoosball.foosobsplus.commands.Command;
 import com.midsouthfoosball.foosobsplus.commands.CommandSwitch;
 import com.midsouthfoosball.foosobsplus.commands.DGTCommand;
+import com.midsouthfoosball.foosobsplus.commands.DMTCommand;
 import com.midsouthfoosball.foosobsplus.commands.DSTCommand;
 import com.midsouthfoosball.foosobsplus.commands.IGTCommand;
+import com.midsouthfoosball.foosobsplus.commands.IMTCommand;
 import com.midsouthfoosball.foosobsplus.commands.ISTCommand;
 import com.midsouthfoosball.foosobsplus.commands.Memento;
 import com.midsouthfoosball.foosobsplus.commands.PCACommand;
@@ -85,6 +87,7 @@ import com.midsouthfoosball.foosobsplus.commands.PPMCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRACommand;
 import com.midsouthfoosball.foosobsplus.commands.PRCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRGCommand;
+import com.midsouthfoosball.foosobsplus.commands.PRMCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRNCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRRCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRSCommand;
@@ -92,6 +95,7 @@ import com.midsouthfoosball.foosobsplus.commands.PRTCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRTOCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSECommand;
 import com.midsouthfoosball.foosobsplus.commands.PSGCCommand;
+import com.midsouthfoosball.foosobsplus.commands.PSMCCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSGCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSMCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSRCommand;
@@ -762,6 +766,12 @@ public class Main {
 		teamPanel1.addGameCountDecreaseListener(new GameCountDecreaseListener());
 		teamPanel2.addGameCountDecreaseListener(new GameCountDecreaseListener());
 		teamPanel3.addGameCountDecreaseListener(new GameCountDecreaseListener());
+		teamPanel1.addMatchCountIncreaseListener(new MatchCountIncreaseListener());
+		teamPanel2.addMatchCountIncreaseListener(new MatchCountIncreaseListener());
+		teamPanel3.addMatchCountIncreaseListener(new MatchCountIncreaseListener());
+		teamPanel1.addMatchCountDecreaseListener(new MatchCountDecreaseListener());
+		teamPanel2.addMatchCountDecreaseListener(new MatchCountDecreaseListener());
+		teamPanel3.addMatchCountDecreaseListener(new MatchCountDecreaseListener());
 		teamPanel1.addTimeOutCountIncreaseListener(new TimeOutCountIncreaseListener());
 		teamPanel2.addTimeOutCountIncreaseListener(new TimeOutCountIncreaseListener());
 		teamPanel3.addTimeOutCountIncreaseListener(new TimeOutCountIncreaseListener());
@@ -797,12 +807,14 @@ public class Main {
 		switchPanel.addSwitchPlayer2Listener(new SwitchPlayer2Listener());
 		switchPanel.addSwitchScoresListener(new SwitchScoresListener());
 		switchPanel.addSwitchGameCountsListener(new SwitchGameCountsListener());
+		switchPanel.addSwitchMatchCountsListener(new SwitchMatchCountsListener());
 		switchPanel.addSwitchTimeOutsListener(new SwitchTimeOutsListener());
 		switchPanel.addSwitchResetWarnsListener(new SwitchResetWarnsListener());
 		switchPanel.addClearAllListener(new ClearAllListener());
 		resetPanel.addResetNamesListener(new ResetNamesListener());
 		resetPanel.addResetScoresListener(new ResetScoresListener());
 		resetPanel.addResetGameCountsListener(new ResetGameCountsListener());
+		resetPanel.addResetMatchCountsListener(new ResetMatchCountsListener());
 		resetPanel.addResetTimeOutsListener(new ResetTimeOutsListener());
 		resetPanel.addResetResetWarnsListener(new ResetResetWarnsListener());
 		resetPanel.addResetAllListener(new ResetAllListener());
@@ -1057,9 +1069,15 @@ public class Main {
 		Command igt1 = new IGTCommand(statsController, teamController, 1);
 		Command igt2 = new IGTCommand(statsController, teamController, 2);
 		Command igt3 = new IGTCommand(statsController, teamController, 3);
+		Command imt1 = new IMTCommand(statsController, teamController, 1);
+		Command imt2 = new IMTCommand(statsController, teamController, 2);
+		Command imt3 = new IMTCommand(statsController, teamController, 3);
 		Command dgt1 = new DGTCommand(statsController, teamController, 1);
 		Command dgt2 = new DGTCommand(statsController, teamController, 2);
 		Command dgt3 = new DGTCommand(statsController, teamController, 3);
+		Command dmt1 = new DMTCommand(statsController, teamController, 1);
+		Command dmt2 = new DMTCommand(statsController, teamController, 2);
+		Command dmt3 = new DMTCommand(statsController, teamController, 3);
 		Command utt1 = new UTTCommand(statsController, teamController, 1);
 		Command utt2 = new UTTCommand(statsController, teamController, 2);
 		Command utt3 = new UTTCommand(statsController, teamController, 3);
@@ -1084,12 +1102,14 @@ public class Main {
 		Command xp2 = new XPCommand(statsController, teamController, 2);
 		Command pssc = new PSSCCommand(statsController, teamController);
 		Command psgc = new PSGCCommand(statsController, teamController);
+		Command psmc = new PSMCCommand(statsController, teamController);
 		Command psto = new PSTOCommand(statsController, teamController);
 		Command psr = new PSRCommand(statsController, teamController);
 		Command pca = new PCACommand(statsController, teamController);
 		Command prn= new PRNCommand(statsController, teamController);
 		Command prs = new PRSCommand(statsController, teamController);
 		Command prg = new PRGCommand(statsController, teamController);
+		Command prm = new PRMCommand(statsController, teamController);
 		Command prto = new PRTOCommand(statsController, teamController);
 		Command prr = new PRRCommand(statsController, teamController);
 		Command pra = new PRACommand(statsController, teamController);
@@ -1117,9 +1137,15 @@ public class Main {
 		mySwitch.register("IGT1", igt1);
 		mySwitch.register("IGT2", igt2);
 		mySwitch.register("IGT3", igt3);
+		mySwitch.register("IMT1", imt1);
+		mySwitch.register("IMT2", imt2);
+		mySwitch.register("IMT3", imt3);
 		mySwitch.register("DGT1", dgt1);
 		mySwitch.register("DGT2", dgt2);
 		mySwitch.register("DGT3", dgt3);
+		mySwitch.register("DMT1", dmt1);
+		mySwitch.register("DMT2", dmt2);
+		mySwitch.register("DMT3", dmt3);
 		mySwitch.register("UTT1", utt1);
 		mySwitch.register("UTT2", utt2);
 		mySwitch.register("UTT3", utt3);
@@ -1144,12 +1170,14 @@ public class Main {
 		mySwitch.register("XP2", xp2);
 		mySwitch.register("PSSC", pssc);
 		mySwitch.register("PSGC", psgc);
+		mySwitch.register("PSMC", psmc);
 		mySwitch.register("PSTO", psto);
 		mySwitch.register("PSR", psr);
 		mySwitch.register("PCA", pca);
 		mySwitch.register("PRN", prn);
 		mySwitch.register("PRS", prs);
 		mySwitch.register("PRG", prg);
+		mySwitch.register("PRM", prm);
 		mySwitch.register("PRTO", prto);
 		mySwitch.register("PRR", prr);
 		mySwitch.register("PRA", pra);
@@ -1652,6 +1680,24 @@ public class Main {
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
+	private class MatchCountIncreaseListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			JButton btn = (JButton) e.getSource();
+			String teamNumber = ripTeamNumber(btn.getName());
+			String code = "XIMT" + teamNumber;//XIMT1
+			processCode(code,false);
+			statsEntryPanel.setFocusOnCode();
+		}
+	}
+	private class MatchCountDecreaseListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			JButton btn = (JButton) e.getSource();
+			String teamNumber = ripTeamNumber(btn.getName());
+			String code = "XDMT" + teamNumber;//XDMT1
+			processCode(code,false);
+			statsEntryPanel.setFocusOnCode();
+		}
+	}
 	private class TimeOutCountIncreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
@@ -1819,6 +1865,12 @@ public class Main {
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
+	private class SwitchMatchCountsListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPSMC",false);
+			statsEntryPanel.setFocusOnCode();
+		}
+	}
 	private class SwitchTimeOutsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSTO",false);
@@ -1852,6 +1904,12 @@ public class Main {
 	private class ResetGameCountsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRG",false);
+			statsEntryPanel.setFocusOnCode();
+		}
+	}
+	private class ResetMatchCountsListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			processCode("XPRM",false);
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
@@ -2152,6 +2210,7 @@ public class Main {
 						match.resetMatch();
 						teamController.resetScores();
 						teamController.resetGameCounts();
+						teamController.resetMatchCounts();
 						matchController.startMatch(createMatchId());
 						streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match from Name Change: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + "\r\n");
 					}

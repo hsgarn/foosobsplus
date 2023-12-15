@@ -1111,6 +1111,11 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpkt3 - push king seat team 3
 
 ## Revision History</br>
+v2.022 12/14/2023</br>
+Add Match Count to Team Panel.</br>
+Add Match Count to Hot Keys and Sources.</br>
+Remove obsolete forward/goalie scores methods.</br>
+</br>
 v2.021 12/14/2023</br>
 Rework HotKeys Panel for Team 3.</br>
 </br>

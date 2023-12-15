@@ -39,6 +39,7 @@ public class ResetPanel extends JPanel {
 	private JButton btnResetNames;
 	private JButton btnResetScores;
 	private JButton btnResetGameCounts;
+	private JButton btnResetMatchCounts;
 	private JButton btnResetTimeOuts;
 	private JButton btnResetResetWarns;
 	private JButton btnResetAll;
@@ -58,6 +59,7 @@ public class ResetPanel extends JPanel {
 		btnResetNames = new JButton(Messages.getString("ResetPanel.ResetNames", settings.getGameType())); //$NON-NLS-1$
 		btnResetScores = new JButton(Messages.getString("ResetPanel.ResetScores", settings.getGameType())); //$NON-NLS-1$
 		btnResetGameCounts = new JButton(Messages.getString("ResetPanel.ResetGameCounts", settings.getGameType())); //$NON-NLS-1$
+		btnResetMatchCounts = new JButton(Messages.getString("ResetPanel.ResetMatchCounts", settings.getGameType())); //$NON-NLS-1$
 		btnResetTimeOuts = new JButton(Messages.getString("ResetPanel.ResetTimeOuts", settings.getGameType())); //$NON-NLS-1$
 		btnResetResetWarns = new JButton(Messages.getString("ResetPanel.ResetResetWarns", settings.getGameType())); //$NON-NLS-1$
 		btnResetAll = new JButton(Messages.getString("ResetPanel.ResetAll", settings.getGameType())); //$NON-NLS-1$
@@ -115,6 +117,18 @@ public class ResetPanel extends JPanel {
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnResetGameCounts, gc);
 		
+		//////// Reset Match Counts ////////
+		gc.gridy++;
+
+		gc.weightx = 1;
+		gc.weighty = 0.1;
+		
+		gc.gridx = 0;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.insets = new Insets(0, 0, 0, 0);
+		add(btnResetMatchCounts, gc);
+		
 		//////// Reset Time Out Counts ////////
 		gc.gridy++;
 
@@ -167,6 +181,11 @@ public class ResetPanel extends JPanel {
 		} else {
 			btnResetGameCounts.setMnemonic(settings.getResetGameCountsHotKey().charAt(0));
 		};
+		if(settings.getResetMatchCountsHotKey().isEmpty()) {
+			btnResetMatchCounts.setMnemonic(-1);
+		} else {
+			btnResetMatchCounts.setMnemonic(settings.getResetMatchCountsHotKey().charAt(0));
+		};
 		if(settings.getResetTimeOutsHotKey().isEmpty()) {
 			btnResetTimeOuts.setMnemonic(-1);
 		} else {
@@ -195,6 +214,9 @@ public class ResetPanel extends JPanel {
 	}
 	public void addResetGameCountsListener(ActionListener listenForBtnResetGameCounts) {
 		btnResetGameCounts.addActionListener(listenForBtnResetGameCounts);
+	}
+	public void addResetMatchCountsListener(ActionListener listenForBtnResetMatchCounts) {
+		btnResetMatchCounts.addActionListener(listenForBtnResetMatchCounts);
 	}
 	public void addResetTimeOutsListener(ActionListener listenForBtnResetTimeOuts) {
 		btnResetTimeOuts.addActionListener(listenForBtnResetTimeOuts);

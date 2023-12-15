@@ -524,6 +524,14 @@ public class Match implements Serializable {
 		}
 		return matchWon;
 	}
+	public boolean incrementMatchCount(Team team) {
+		team.incrementMatchCount();
+// if any kingseat is set and they won, then set result
+// if kingseat is set and other team won and has more than 1 match, then set result
+// if kingseat not set, then result is false
+		boolean result = false;
+		return result;
+	}
 	private void checkMeatball() {
 		int points1 = team1.getScore();
 		int points2 = team2.getScore();

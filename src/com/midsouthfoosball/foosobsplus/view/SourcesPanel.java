@@ -67,6 +67,9 @@ public class SourcesPanel extends JPanel {
 	private JTextField txtTeam1GameCountSource;
 	private JTextField txtTeam2GameCountSource;
 	private JTextField txtTeam3GameCountSource;
+	private JTextField txtTeam1MatchCountSource;
+	private JTextField txtTeam2MatchCountSource;
+	private JTextField txtTeam3MatchCountSource;
 	private JTextField txtTeam1TimeOutSource;
 	private JTextField txtTeam2TimeOutSource;
 	private JTextField txtTeam3TimeOutSource;
@@ -120,6 +123,9 @@ public class SourcesPanel extends JPanel {
 		txtTeam1GameCountSource.setText(settings.getDefaultTeam1GameCountSource());
 		txtTeam2GameCountSource.setText(settings.getDefaultTeam2GameCountSource());
 		txtTeam3GameCountSource.setText(settings.getDefaultTeam3GameCount3Source());
+		txtTeam1MatchCountSource.setText(settings.getDefaultTeam1MatchCountSource());
+		txtTeam2MatchCountSource.setText(settings.getDefaultTeam2MatchCountSource());
+		txtTeam3MatchCountSource.setText(settings.getDefaultTeam3MatchCount3Source());
 		txtTeam1ScoreSource.setText(settings.getDefaultTeam1ScoreSource());
 		txtTeam2ScoreSource.setText(settings.getDefaultTeam2ScoreSource());
 		txtTeam3ScoreSource.setText(settings.getDefaultTeam3ScoreSource());
@@ -163,6 +169,9 @@ public class SourcesPanel extends JPanel {
 		settings.setSource("Team1GameCount",txtTeam1GameCountSource.getText());
 		settings.setSource("Team2GameCount",txtTeam2GameCountSource.getText());
 		settings.setSource("Team3GameCount",txtTeam3GameCountSource.getText());
+		settings.setSource("Team1MatchCount",txtTeam1MatchCountSource.getText());
+		settings.setSource("Team2MatchCount",txtTeam2MatchCountSource.getText());
+		settings.setSource("Team3MatchCount",txtTeam3MatchCountSource.getText());
 		settings.setSource("Team1Score",txtTeam1ScoreSource.getText());
 		settings.setSource("Team2Score",txtTeam2ScoreSource.getText());
 		settings.setSource("Team3Score",txtTeam3ScoreSource.getText());
@@ -391,81 +400,127 @@ public class SourcesPanel extends JPanel {
 		txtTeam3GameCountSource.setColumns(10);
 		add(txtTeam3GameCountSource, "cell 4 7,alignx left"); //$NON-NLS-1$
 
+		//Match Count
+		JLabel lblMatchCount = new JLabel(Messages.getString("SourcesPanel.MatchCount", settings.getGameType())); //$NON-NLS-1$
+		add(lblMatchCount, "cell 1 8,alignx right"); //$NON-NLS-1$
+
+		txtTeam1MatchCountSource = new JTextField();
+		txtTeam1MatchCountSource.setText(settings.getTeamMatchCountSource("1"));
+		txtTeam1MatchCountSource.setColumns(10);
+		add(txtTeam1MatchCountSource, "cell 2 8,alignx left"); //$NON-NLS-1$
+
+		txtTeam2MatchCountSource = new JTextField();
+		txtTeam2MatchCountSource.setText(settings.getTeamMatchCountSource("2"));
+		txtTeam2MatchCountSource.setColumns(10);
+		add(txtTeam2MatchCountSource, "cell 3 8,alignx left"); //$NON-NLS-1$
+
+		txtTeam3MatchCountSource = new JTextField();
+		txtTeam3MatchCountSource.setText(settings.getTeamMatchCountSource("3"));
+		txtTeam3MatchCountSource.setColumns(10);
+		add(txtTeam3MatchCountSource, "cell 4 8,alignx left"); //$NON-NLS-1$
+
 		//Time Out
 		JLabel lblTimeOut = new JLabel(Messages.getString("SourcesPanel.TimeOut", settings.getGameType())); //$NON-NLS-1$
-		add(lblTimeOut, "cell 1 8,alignx right"); //$NON-NLS-1$
+		add(lblTimeOut, "cell 1 9,alignx right"); //$NON-NLS-1$
 
 		txtTeam1TimeOutSource = new JTextField();
 		txtTeam1TimeOutSource.setText(settings.getTeamTimeOutSource("1"));
 		txtTeam1TimeOutSource.setColumns(10);
-		add(txtTeam1TimeOutSource, "cell 2 8,alignx left"); //$NON-NLS-1$
+		add(txtTeam1TimeOutSource, "cell 2 9,alignx left"); //$NON-NLS-1$
 
 		txtTeam2TimeOutSource = new JTextField();
 		txtTeam2TimeOutSource.setText(settings.getTeamTimeOutSource("2"));
 		txtTeam2TimeOutSource.setColumns(10);
-		add(txtTeam2TimeOutSource, "cell 3 8,alignx left"); //$NON-NLS-1$
+		add(txtTeam2TimeOutSource, "cell 3 9,alignx left"); //$NON-NLS-1$
 
 		txtTeam3TimeOutSource = new JTextField();
 		txtTeam3TimeOutSource.setText(settings.getTeamTimeOutSource("3"));
 		txtTeam3TimeOutSource.setColumns(10);
-		add(txtTeam3TimeOutSource, "cell 4 8,alignx left"); //$NON-NLS-1$
+		add(txtTeam3TimeOutSource, "cell 4 9,alignx left"); //$NON-NLS-1$
 
 		//Reset
 		JLabel lblReset = new JLabel(Messages.getString("SourcesPanel.Reset", settings.getGameType())); //$NON-NLS-1$
-		add(lblReset, "cell 1 9,alignx right"); //$NON-NLS-1$
+		add(lblReset, "cell 1 10,alignx right"); //$NON-NLS-1$
 
 		txtTeam1ResetSource = new JTextField();
 		txtTeam1ResetSource.setText(settings.getTeamResetSource("1"));
 		txtTeam1ResetSource.setColumns(10);
-		add(txtTeam1ResetSource, "cell 2 9,alignx left"); //$NON-NLS-1$
+		add(txtTeam1ResetSource, "cell 2 10,alignx left"); //$NON-NLS-1$
 
 		txtTeam2ResetSource = new JTextField();
 		txtTeam2ResetSource.setText(settings.getTeamResetSource("2"));
 		txtTeam2ResetSource.setColumns(10);
-		add(txtTeam2ResetSource, "cell 3 9,alignx left"); //$NON-NLS-1$
+		add(txtTeam2ResetSource, "cell 3 10,alignx left"); //$NON-NLS-1$
 
 		txtTeam3ResetSource = new JTextField();
 		txtTeam3ResetSource.setText(settings.getTeamResetSource("3"));
 		txtTeam3ResetSource.setColumns(10);
-		add(txtTeam3ResetSource, "cell 4 9,alignx left"); //$NON-NLS-1$
+		add(txtTeam3ResetSource, "cell 4 10,alignx left"); //$NON-NLS-1$
 		
 		//Warn
 		JLabel lblWarn = new JLabel(Messages.getString("SourcesPanel.Warn", settings.getGameType())); //$NON-NLS-1$
-		add(lblWarn, "cell 1 10,alignx right"); //$NON-NLS-1$
+		add(lblWarn, "cell 1 11,alignx right"); //$NON-NLS-1$
 
 		txtTeam1WarnSource = new JTextField();
 		txtTeam1WarnSource.setText(settings.getTeamWarnSource("1"));
 		txtTeam1WarnSource.setColumns(10);
-		add(txtTeam1WarnSource, "cell 2 10,alignx left"); //$NON-NLS-1$
+		add(txtTeam1WarnSource, "cell 2 11,alignx left"); //$NON-NLS-1$
 
 		txtTeam2WarnSource = new JTextField();
 		txtTeam2WarnSource.setText(settings.getTeamWarnSource("2"));
 		txtTeam2WarnSource.setColumns(10);
-		add(txtTeam2WarnSource, "cell 3 10,alignx left"); //$NON-NLS-1$
+		add(txtTeam2WarnSource, "cell 3 11,alignx left"); //$NON-NLS-1$
 		
 		txtTeam3WarnSource = new JTextField();
 		txtTeam3WarnSource.setText(settings.getTeamWarnSource("3"));
 		txtTeam3WarnSource.setColumns(10);
-		add(txtTeam3WarnSource, "cell 4 10,alignx left"); //$NON-NLS-1$
+		add(txtTeam3WarnSource, "cell 4 11,alignx left"); //$NON-NLS-1$
 		
 		//KingSeat
 		JLabel lblKingSeat = new JLabel(Messages.getString("SourcesPanel.KingSeat", settings.getGameType())); //$NON-NLS-1$
-		add(lblKingSeat, "cell 1 11,alignx right"); //$NON-NLS-1$
+		add(lblKingSeat, "cell 1 12,alignx right"); //$NON-NLS-1$
 		
 		txtTeam1KingSeatSource = new JTextField();
 		txtTeam1KingSeatSource.setText(settings.getTeamKingSeatSource("1"));
 		txtTeam1KingSeatSource.setColumns(10);
-		add(txtTeam1KingSeatSource, "cell 2 11, alignx left"); //$NON-NLS-1$
+		add(txtTeam1KingSeatSource, "cell 2 12, alignx left"); //$NON-NLS-1$
 		
 		txtTeam2KingSeatSource = new JTextField();
 		txtTeam2KingSeatSource.setText(settings.getTeamKingSeatSource("2"));
 		txtTeam2KingSeatSource.setColumns(10);
-		add(txtTeam2KingSeatSource, "cell 3 11, alignx left"); //$NON-NLS-1$
+		add(txtTeam2KingSeatSource, "cell 3 12, alignx left"); //$NON-NLS-1$
 		
 		txtTeam3KingSeatSource = new JTextField();
 		txtTeam3KingSeatSource.setText(settings.getTeamKingSeatSource("3"));
 		txtTeam3KingSeatSource.setColumns(10);
-		add(txtTeam3KingSeatSource, "cell 4 11, alignx left"); //$NON-NLS-1$
+		add(txtTeam3KingSeatSource, "cell 4 12, alignx left"); //$NON-NLS-1$
+		
+		//Show Scores
+		JLabel lblShowScoresSource = new JLabel(Messages.getString("SourcesPanel.ShowScores", settings.getGameType())); //$NON-NLS-1$
+		add(lblShowScoresSource, "cell 1 13,alignx trailing"); //$NON-NLS-1$
+		
+		txtShowScoresSource = new JTextField();
+		txtShowScoresSource.setText(settings.getShowScoresSource());
+		add(txtShowScoresSource, "cell 2 13,alignx left"); //$NON-NLS-1$
+		txtShowScoresSource.setColumns(10);
+		
+		//Show Timer
+		JLabel lblShowTimerSource = new JLabel(Messages.getString("SourcesPanel.ShowTimer", settings.getGameType())); //$NON-NLS-1$
+		add(lblShowTimerSource, "cell 1 14,alignx trailing"); //$NON-NLS-1$
+		
+		txtShowTimerSource = new JTextField();
+		txtShowTimerSource.setText(settings.getShowTimerSource());
+		add(txtShowTimerSource, "cell 2 14,alignx left"); //$NON-NLS-1$
+		txtShowTimerSource.setColumns(10);
+		
+		//Show Cutthroat
+		JLabel lblShowCutthroatSource = new JLabel(Messages.getString("SourcesPanel.ShowCutthroat", settings.getGameType())); //$NON-NLS-1$
+		add(lblShowCutthroatSource, "cell 1 15,alignx trailing"); //$NON-NLS-1$
+		
+		txtShowCutthroatSource = new JTextField();
+		txtShowCutthroatSource.setText(settings.getShowCutthroatSource());
+		add(txtShowCutthroatSource, "cell 2 15,alignx left"); //$NON-NLS-1$
+		txtShowCutthroatSource.setColumns(10);
 		
 		//Tournament
 		JLabel lblTournamentSource = new JLabel(Messages.getString("SourcesPanel.Tournament", settings.getGameType())); //$NON-NLS-1$
@@ -566,33 +621,6 @@ public class SourcesPanel extends JPanel {
 		add(txtMeatballSource, "cell 6 13,alignx left"); //$NON-NLS-1$
 		txtMeatballSource.setColumns(10);
 
-		//Show Scores
-		JLabel lblShowScoresSource = new JLabel(Messages.getString("SourcesPanel.ShowScores", settings.getGameType())); //$NON-NLS-1$
-		add(lblShowScoresSource, "cell 1 12,alignx trailing"); //$NON-NLS-1$
-		
-		txtShowScoresSource = new JTextField();
-		txtShowScoresSource.setText(settings.getShowScoresSource());
-		add(txtShowScoresSource, "cell 2 12,alignx left"); //$NON-NLS-1$
-		txtShowScoresSource.setColumns(10);
-		
-		//Show Timer
-		JLabel lblShowTimerSource = new JLabel(Messages.getString("SourcesPanel.ShowTimer", settings.getGameType())); //$NON-NLS-1$
-		add(lblShowTimerSource, "cell 1 13,alignx trailing"); //$NON-NLS-1$
-		
-		txtShowTimerSource = new JTextField();
-		txtShowTimerSource.setText(settings.getShowTimerSource());
-		add(txtShowTimerSource, "cell 2 13,alignx left"); //$NON-NLS-1$
-		txtShowTimerSource.setColumns(10);
-		
-		//Show Cutthroat
-		JLabel lblShowCutthroatSource = new JLabel(Messages.getString("SourcesPanel.ShowCutthroat", settings.getGameType())); //$NON-NLS-1$
-		add(lblShowCutthroatSource, "cell 1 14,alignx trailing"); //$NON-NLS-1$
-		
-		txtShowCutthroatSource = new JTextField();
-		txtShowCutthroatSource.setText(settings.getShowCutthroatSource());
-		add(txtShowCutthroatSource, "cell 2 14,alignx left"); //$NON-NLS-1$
-		txtShowCutthroatSource.setColumns(10);
-		
 		JButton btnSaveSources = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		btnSaveSources.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

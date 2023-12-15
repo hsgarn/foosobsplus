@@ -44,6 +44,7 @@ public class SwitchPanel extends JPanel {
 	private JButton btnSwitchGoalies;
 	private JButton btnSwitchScores;
 	private JButton btnSwitchGameCounts;
+	private JButton btnSwitchMatchCounts;
 	private JButton btnSwitchTimeOuts;
 	private JButton btnSwitchResetWarns;
 	private JButton btnClearAll;
@@ -67,6 +68,7 @@ public class SwitchPanel extends JPanel {
 		btnSwitchGoalies = new JButton(Messages.getString("SwitchPanel.SwitchPlayer2", settings.getGameType()));
 		btnSwitchScores = new JButton(Messages.getString("SwitchPanel.SwitchScores", settings.getGameType())); //$NON-NLS-1$
 		btnSwitchGameCounts = new JButton(Messages.getString("SwitchPanel.SwitchGameCounts", settings.getGameType())); //$NON-NLS-1$
+		btnSwitchMatchCounts = new JButton(Messages.getString("SwitchPanel.SwitchMatchCounts", settings.getGameType())); //$NON-NLS-1$
 		btnSwitchTimeOuts = new JButton(Messages.getString("SwitchPanel.SwitchTimeOuts", settings.getGameType())); //$NON-NLS-1$
 		btnSwitchResetWarns = new JButton(Messages.getString("SwitchPanel.SwitchResetWarns", settings.getGameType())); //$NON-NLS-1$
 		btnClearAll = new JButton(Messages.getString("SwitchPanel.ClearAll", settings.getGameType())); //$NON-NLS-1$
@@ -161,6 +163,18 @@ public class SwitchPanel extends JPanel {
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(btnSwitchGameCounts, gc);
 		
+		//////// Switch Match Counts ////////
+		gc.gridy++;
+
+		gc.weightx = 1;
+		gc.weighty = 0.1;
+		
+		gc.gridx = 1;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.insets = new Insets(0, 0, 0, 0);
+		add(btnSwitchMatchCounts, gc);
+		
 		//////// Switch Time Out Counts ////////
 		gc.gridy++;
 
@@ -241,6 +255,11 @@ public class SwitchPanel extends JPanel {
 		} else {
 			btnSwitchGameCounts.setMnemonic(settings.getSwitchGameCountsHotKey().charAt(0));
 		};
+		if(settings.getSwitchMatchCountsHotKey().isEmpty()) {
+			btnSwitchMatchCounts.setMnemonic(-1);
+		} else {
+			btnSwitchMatchCounts.setMnemonic(settings.getSwitchMatchCountsHotKey().charAt(0));
+		};
 		if(settings.getSwitchTimeOutsHotKey().isEmpty()) {
 			btnSwitchTimeOuts.setMnemonic(-1);
 		} else {
@@ -277,6 +296,9 @@ public class SwitchPanel extends JPanel {
 	}
 	public void addSwitchGameCountsListener(ActionListener listenForBtnSwitchGameCounts) {
 		btnSwitchGameCounts.addActionListener(listenForBtnSwitchGameCounts);
+	}
+	public void addSwitchMatchCountsListener(ActionListener listenForBtnSwitchMatchCounts) {
+		btnSwitchMatchCounts.addActionListener(listenForBtnSwitchMatchCounts);
 	}
 	public void addSwitchTimeOutsListener(ActionListener listenForBtnSwitchTimeOuts) {
 		btnSwitchTimeOuts.addActionListener(listenForBtnSwitchTimeOuts);

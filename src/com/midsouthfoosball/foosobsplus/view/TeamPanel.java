@@ -54,6 +54,7 @@ public class TeamPanel extends JPanel {
 	private JButton btnSwitchPositions;
 	private JLabel lblScore;
 	private JLabel lblGameCount;
+	private JLabel lblMatchCount;
 	private JLabel lblTimeOutCount;
 	private JLabel lblLastScoredTime;
 	private JTextField txtTeamName;
@@ -61,11 +62,14 @@ public class TeamPanel extends JPanel {
 	private JTextField txtGoalieName;
 	private JTextField txtScore;
 	private JTextField txtGameCount;
+	private JTextField txtMatchCount;
 	private JTextField txtTimeOutCount;
 	private JButton btnScoreIncrease;
 	private JButton btnScoreDecrease;
 	private JButton btnGameCountIncrease;
 	private JButton btnGameCountDecrease;
+	private JButton btnMatchCountIncrease;
+	private JButton btnMatchCountDecrease;
 	private JButton btnTimeOutCountIncrease;
 	private JButton btnTimeOutCountDecrease;
 	private JToggleButton btnReset;
@@ -114,6 +118,7 @@ public class TeamPanel extends JPanel {
 		txtScore.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
 		btnScoreIncrease = new JButton(Messages.getString("TeamPanel.Increment",settings.getGameType())); //$NON-NLS-1$
 		btnScoreIncrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
+
 		lblGameCount = new JLabel(Messages.getString("TeamPanel.GameCount",settings.getGameType())); //$NON-NLS-1$
 		btnGameCountDecrease = new JButton(Messages.getString("TeamPanel.Decrement",settings.getGameType())); //$NON-NLS-1$
 		btnGameCountDecrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
@@ -122,6 +127,16 @@ public class TeamPanel extends JPanel {
 		txtGameCount.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
 		btnGameCountIncrease = new JButton(Messages.getString("TeamPanel.Increment",settings.getGameType())); //$NON-NLS-1$
 		btnGameCountIncrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
+		
+		lblMatchCount = new JLabel(Messages.getString("TeamPanel.MatchCount",settings.getGameType())); //$NON-NLS-1$
+		btnMatchCountDecrease = new JButton(Messages.getString("TeamPanel.Decrement",settings.getGameType())); //$NON-NLS-1$
+		btnMatchCountDecrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
+		txtMatchCount = new JTextField(3);
+		txtMatchCount.setHorizontalAlignment(JTextField.CENTER);
+		txtMatchCount.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
+		btnMatchCountIncrease = new JButton(Messages.getString("TeamPanel.Increment",settings.getGameType())); //$NON-NLS-1$
+		btnMatchCountIncrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
+		
 		lblTimeOutCount = new JLabel(Messages.getString("TeamPanel.TimeOutCount",settings.getGameType())); //$NON-NLS-1$
 		btnTimeOutCountDecrease = new JButton(Messages.getString("TeamPanel.ReturnTimeOut",settings.getGameType())); //$NON-NLS-1$
 		btnTimeOutCountDecrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
@@ -152,12 +167,15 @@ public class TeamPanel extends JPanel {
         order.add(txtGoalieName);
         order.add(txtScore);
         order.add(txtGameCount);
+        order.add(txtMatchCount);
         order.add(txtTimeOutCount);
         order.add(btnSwitchPositions);
         order.add(btnScoreDecrease);
         order.add(btnScoreIncrease);
         order.add(btnGameCountDecrease);
         order.add(btnGameCountIncrease);
+        order.add(btnMatchCountDecrease);
+        order.add(btnMatchCountIncrease);
         order.add(btnTimeOutCountDecrease);
         order.add(btnTimeOutCountIncrease);
         order.add(btnReset);
@@ -193,6 +211,16 @@ public class TeamPanel extends JPanel {
 			btnGameCountDecrease.setMnemonic(-1);
 		} else {
 			btnGameCountDecrease.setMnemonic(settings.getGameCountMinusHotKey(teamNumber).charAt(0));
+		};
+		if(settings.getMatchCountPlusHotKey(teamNumber).isEmpty()) {
+			btnMatchCountIncrease.setMnemonic(-1);
+		} else {
+			btnMatchCountIncrease.setMnemonic(settings.getMatchCountPlusHotKey(teamNumber).charAt(0));
+		};
+		if(settings.getMatchCountMinusHotKey(teamNumber).isEmpty()) {
+			btnMatchCountDecrease.setMnemonic(-1);
+		} else {
+			btnMatchCountDecrease.setMnemonic(settings.getMatchCountMinusHotKey(teamNumber).charAt(0));
 		};
 		if(settings.getTimeOutPlusHotKey(teamNumber).isEmpty()) {
 			btnTimeOutCountIncrease.setMnemonic(-1);
@@ -354,6 +382,37 @@ public class TeamPanel extends JPanel {
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(btnGameCountIncrease, gc);
 
+		//////// Match Count ////////
+		gc.gridy++;
+
+		gc.weightx = 1;
+		gc.weighty = 1;
+		
+		gc.gridx = 1;
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.insets = new Insets(0, 0, 0, 0);
+		add(lblMatchCount, gc);
+		
+		gc.gridy++;
+		gc.gridx = 0;
+		gc.insets = new Insets(0, 0, 0, 10);
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.LINE_END;
+		add(btnMatchCountDecrease, gc);
+		
+		gc.gridx = 1;
+		gc.insets = new Insets(0, 0, 0, 0);
+		gc.fill = GridBagConstraints.HORIZONTAL;
+		gc.anchor = GridBagConstraints.LINE_START;
+		add(txtMatchCount, gc);
+
+		gc.gridx = 2;
+		gc.insets = new Insets(0, 10, 0, 0);
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.LINE_START;
+		add(btnMatchCountIncrease, gc);
+
 		//////// Time Out Count ////////
 		gc.gridy++;
 
@@ -468,14 +527,26 @@ public class TeamPanel extends JPanel {
 	public void addGameCountDecreaseListener(ActionListener listenForBtnGameCountDecrease) {
 		btnGameCountDecrease.addActionListener(listenForBtnGameCountDecrease);
 	}
+	public void addMatchCountDecreaseListener(ActionListener listenForBtnMatchCountDecrease) {
+		btnMatchCountDecrease.addActionListener(listenForBtnMatchCountDecrease);
+	}
 	public void addGameCountListener(ActionListener listenForTxtGameCount) {
 		txtGameCount.addActionListener(listenForTxtGameCount);
+	}
+	public void addMatchCountListener(ActionListener listenForTxtMatchCount) {
+		txtMatchCount.addActionListener(listenForTxtMatchCount);
 	}
 	public void addGameCountFocusListener(FocusListener focusListenerForTxtGameCount) {
 		txtGameCount.addFocusListener(focusListenerForTxtGameCount);
 	}
+	public void addMatchCountFocusListener(FocusListener focusListenerForTxtMatchCount) {
+		txtMatchCount.addFocusListener(focusListenerForTxtMatchCount);
+	}
 	public void addGameCountIncreaseListener(ActionListener listenForBtnGameCountIncrease) {
 		btnGameCountIncrease.addActionListener(listenForBtnGameCountIncrease);
+	}
+	public void addMatchCountIncreaseListener(ActionListener listenForBtnMatchCountIncrease) {
+		btnMatchCountIncrease.addActionListener(listenForBtnMatchCountIncrease);
 	}
 	public void addTimeOutCountDecreaseListener(ActionListener listenForBtnTimeOutCountDecrease) {
 		btnTimeOutCountDecrease.addActionListener(listenForBtnTimeOutCountDecrease);
@@ -509,8 +580,14 @@ public class TeamPanel extends JPanel {
 	public void updateGameCount(int gameCount) {
 		txtGameCount.setText(Integer.toString(gameCount));
 	}
+	public void updateMatchCount(int matchCount) {
+		txtMatchCount.setText(Integer.toString(matchCount));
+	}
 	public void updateGameCount(String gameCount) {
 		txtGameCount.setText(gameCount);
+	}
+	public void updateMatchCount(String matchCount) {
+		txtMatchCount.setText(matchCount);
 	}
 	public void updateTimeOutCount(int timeOutCount) {
 		txtTimeOutCount.setText(Integer.toString(timeOutCount));
@@ -549,11 +626,12 @@ public class TeamPanel extends JPanel {
 	public void selectGoalieName() {
 		txtGoalieName.selectAll();
 	}
-	public void displayAllFields(String teamName, String forwardName, String goalieName, int score, int gameCount, int timeOutCount, boolean isReset, boolean isWarn, boolean isKingSeat) {
+	public void displayAllFields(String teamName, String forwardName, String goalieName, int score, int gameCount, int matchCount, int timeOutCount, boolean isReset, boolean isWarn, boolean isKingSeat) {
 		updateTeamName(teamName);
 		updateNames(forwardName, goalieName);
 		updateScore(score);
 		updateGameCount(gameCount);
+		updateMatchCount(matchCount);
 		updateTimeOutCount(timeOutCount);
 		btnReset.setSelected(isReset);
 		btnWarn.setSelected(isWarn);
