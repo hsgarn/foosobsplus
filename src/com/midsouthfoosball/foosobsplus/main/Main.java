@@ -1649,7 +1649,6 @@ public class Main {
 			String teamNumber = ripTeamNumber(btn.getName());
 			String code = "XIST" + teamNumber;//XIST1
 			processCode(code,false);
-//			checkFilters(code);
 			statsEntryPanel.setFocusOnCode();
 		}
 	}

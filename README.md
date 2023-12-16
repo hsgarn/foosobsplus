@@ -1111,6 +1111,10 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpkt3 - push king seat team 3
 
 ## Revision History</br>
+v2.023 12/15/2023</br>
+Work on match count logic.</br>
+Added missing Team 3 to stream log for cutthroat mode.</br>
+</br>
 v2.022 12/14/2023</br>
 Add Match Count to Team Panel.</br>
 Add Match Count to Hot Keys and Sources.</br>

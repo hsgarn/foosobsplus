@@ -106,7 +106,11 @@ public class MatchController {
 				teamController.resetScores();
 				teamController.resetGameCounts();
 				startMatch(createMatchId());
-				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + "\r\n");
+				if (settings.getCutThroatMode()==1) {
+					streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + " vs " + teamController.getForwardName(3) + "/" + teamController.getGoalieName(3) + "\r\n");
+				} else {
+					streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + "\r\n");
+				}
 			}
 			int winState = teamController.incrementScore(teamNumber);
 			if (winState==1) {
@@ -116,6 +120,7 @@ public class MatchController {
 			if (winState==2) {
 				gameClock.stopMatchTimer();
 				gameClock.stopGameTimer();
+				match.incrementMatchCount(teamNumber);
 			}
 			switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
 			updateGameTables();
