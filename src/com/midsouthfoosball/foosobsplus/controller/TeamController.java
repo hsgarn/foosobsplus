@@ -72,8 +72,6 @@ public class TeamController {
 	private LastScoredClock lastScored2Clock;
 	private LastScoredClock lastScored3Clock;
 	private GameClock gameClock;
-	private Team teams[] = new Team[] {null,null,null};
-	private TeamPanel teamPanels[] = new TeamPanel[] {null,null,null};
     private MainController mainController;
     private Map<Integer, Team> teamsMap = new HashMap<>();
     private Map<Integer, TeamPanel> teamPanelsMap = new HashMap<>();
@@ -102,12 +100,6 @@ public class TeamController {
 		this.lastScored2Clock = lastScored2Clock;
 		this.lastScored3Clock = lastScored3Clock;
 		this.gameClock = gameClock;
-		this.teams[0] = team1;
-		this.teams[1] = team2;
-		this.teams[2] = team3;
-		this.teamPanels[0] = teamPanel1;
-		this.teamPanels[1] = teamPanel2;
-		this.teamPanels[2] = teamPanel3;
 		this.mainController = mainController;
 		
 		////// Team Panel Listeners Methods //////
@@ -148,9 +140,15 @@ public class TeamController {
 		this.teamPanel1.addGameCountListener(new GameCountListener());
 		this.teamPanel2.addGameCountListener(new GameCountListener());
 		this.teamPanel3.addGameCountListener(new GameCountListener());
+		this.teamPanel1.addMatchCountListener(new MatchCountListener());
+		this.teamPanel2.addMatchCountListener(new MatchCountListener());
+		this.teamPanel3.addMatchCountListener(new MatchCountListener());
 		this.teamPanel1.addGameCountFocusListener(new GameCountFocusListener());
 		this.teamPanel2.addGameCountFocusListener(new GameCountFocusListener());
 		this.teamPanel3.addGameCountFocusListener(new GameCountFocusListener());
+		this.teamPanel1.addMatchCountFocusListener(new MatchCountFocusListener());
+		this.teamPanel2.addMatchCountFocusListener(new MatchCountFocusListener());
+		this.teamPanel3.addMatchCountFocusListener(new MatchCountFocusListener());
 		this.teamPanel1.addTimeOutCountListener(new TimeOutCountListener());
 		this.teamPanel2.addTimeOutCountListener(new TimeOutCountListener());
 		this.teamPanel3.addTimeOutCountListener(new TimeOutCountListener());
@@ -208,19 +206,26 @@ public class TeamController {
 			teamName = txt.getText();
 		}
 		int teamNumber = convertToTeamNumber(txt.getName());
-		teams[teamNumber-1].setTeamName(teamName);
-		teamPanels[teamNumber-1].updateTeamName(teamName);
-		statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
-		if (match.getWinState() > 0) {
-			resetForNewGame();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			team.setTeamName(teamName);
+			teamPanel.updateTeamName(teamName);
+			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
+			if (match.getWinState() > 0) {
+				resetForNewGame();
+			}
+			updateGameTables();
 		}
-		updateGameTables();
 	}
 	private class TeamNameMouseListener extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			int teamNumber = convertToTeamNumber(txt.getName());
-			teamPanels[teamNumber-1].selectTeamName();
+			TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+			if (teamPanel != null) {
+				teamPanel.selectTeamName();
+			}
 		}
 	}
 	private class ForwardNameListener implements ActionListener{
@@ -243,19 +248,26 @@ public class TeamController {
 			forwardName = txt.getText();
 		}
 		int teamNumber = convertToTeamNumber(txt.getName());
-		teams[teamNumber-1].setForwardName(forwardName);
-		teamPanels[teamNumber-1].updateForwardName(forwardName);
-		statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
-		checkResetForNewGame();
-		updateGameTables();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			team.setForwardName(forwardName);
+			teamPanel.updateForwardName(forwardName);
+			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
+			checkResetForNewGame();
+			updateGameTables();
+		}
 	}
 	private class ForwardNameMouseListener extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			int teamNumber = convertToTeamNumber(txt.getName());
-			teamPanels[teamNumber-1].selectForwardName();
-			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
-			updateGameTables();
+			TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+			if (teamPanel != null) {
+				teamPanel.selectForwardName();
+				statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
+				updateGameTables();
+			}
 		}
 	}
 	private class GoalieNameListener implements ActionListener{
@@ -278,18 +290,26 @@ public class TeamController {
 			goalieName = txt.getText();
 		}
 		int teamNumber = convertToTeamNumber(txt.getName());
-		teams[teamNumber-1].setGoalieName(goalieName);
-		teamPanels[teamNumber-1].updateGoalieName(goalieName);
-		statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
-		checkResetForNewGame();
-		updateGameTables();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			team.setGoalieName(goalieName);
+			teamPanel.updateGoalieName(goalieName);
+			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
+			checkResetForNewGame();
+			updateGameTables();
+		}
 	}
 	private class GoalieNameMouseListener extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			int teamNumber = convertToTeamNumber(txt.getName());
-			teamPanels[teamNumber-1].selectGoalieName();
-//			updateGameTables();
+			TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+			if (teamPanel != null) {
+				teamPanel.selectGoalieName();
+				statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
+				updateGameTables();
+			}
 		}
 	}
 	private class ScoreListener implements ActionListener{
@@ -297,9 +317,13 @@ public class TeamController {
 			JTextField txt = (JTextField) e.getSource();
 			String score = convertNumbers(txt.getText());
 			int teamNumber = convertToTeamNumber(txt.getName());
-			teams[teamNumber-1].setScore(score);
-			teamPanels[teamNumber-1].updateScore(score);
-			updateGameTables();
+			Team team = teamsMap.getOrDefault(teamNumber, null);
+			TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+			if (team != null) {
+				team.setScore(score);
+				teamPanel.updateScore(score);
+				updateGameTables();
+			}
 		}
 	}
 	private class ScoreFocusListener extends FocusAdapter{
@@ -307,9 +331,13 @@ public class TeamController {
 			JTextField txt = (JTextField) e.getSource();
 			String score = convertNumbers(txt.getText());
 			int teamNumber = convertToTeamNumber(txt.getName());
-			teams[teamNumber-1].setScore(score);
-			teamPanels[teamNumber-1].updateScore(score);
-			updateGameTables();
+			Team team = teamsMap.getOrDefault(teamNumber, null);
+			TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+			if (team != null) {
+				team.setScore(score);
+				teamPanel.updateScore(score);
+				updateGameTables();
+			}
 		}
 	}
 	private class GameCountListener implements ActionListener{
@@ -317,9 +345,13 @@ public class TeamController {
 			JTextField txt = (JTextField) e.getSource();
 			String gameCount = convertNumbers(txt.getText());
 			int teamNumber = convertToTeamNumber(txt.getName());
-			teams[teamNumber-1].setGameCount(gameCount);
-			teamPanels[teamNumber-1].updateGameCount(gameCount);
-			updateGameTables();
+			Team team = teamsMap.getOrDefault(teamNumber, null);
+			TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+			if (team != null) {
+				team.setGameCount(gameCount);
+				teamPanel.updateGameCount(gameCount);
+				updateGameTables();
+			}
 		}
 	}
 	private class GameCountFocusListener extends FocusAdapter{
@@ -327,9 +359,41 @@ public class TeamController {
 			JTextField txt = (JTextField) e.getSource();
 			String gameCount = convertNumbers(txt.getText());
 			int teamNumber = convertToTeamNumber(txt.getName());
-			teams[teamNumber-1].setGameCount(gameCount);
-			teamPanels[teamNumber-1].updateGameCount(gameCount);
-			updateGameTables();
+			Team team = teamsMap.getOrDefault(teamNumber, null);
+			TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+			if (team != null) {
+				team.setGameCount(gameCount);
+				teamPanel.updateGameCount(gameCount);
+				updateGameTables();
+			}
+		}
+	}
+	private class MatchCountListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			JTextField txt = (JTextField) e.getSource();
+			String matchCount = convertNumbers(txt.getText());
+			int teamNumber = convertToTeamNumber(txt.getName());
+			Team team = teamsMap.getOrDefault(teamNumber, null);
+			TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+			if (team != null) {
+				team.setMatchCount(matchCount);
+				teamPanel.updateMatchCount(matchCount);
+				updateGameTables();
+			}
+		}
+	}
+	private class MatchCountFocusListener extends FocusAdapter{
+		public void focusLost(FocusEvent e) {
+			JTextField txt = (JTextField) e.getSource();
+			String matchCount = convertNumbers(txt.getText());
+			int teamNumber = convertToTeamNumber(txt.getName());
+			Team team = teamsMap.getOrDefault(teamNumber, null);
+			TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+			if (team != null) {
+				team.setMatchCount(matchCount);
+				teamPanel.updateMatchCount(matchCount);
+				updateGameTables();
+			}
 		}
 	}
 	private class TimeOutCountListener implements ActionListener{
@@ -337,8 +401,12 @@ public class TeamController {
 			JTextField txt = (JTextField) e.getSource();
 			String timeOutCount = convertNumbers(txt.getText());
 			int teamNumber = convertToTeamNumber(txt.getName());
-			teams[teamNumber-1].setTimeOutCount(timeOutCount);
-			teamPanels[teamNumber-1].updateTimeOutCount(timeOutCount);
+			Team team = teamsMap.getOrDefault(teamNumber, null);
+			TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+			if (team != null) {
+				team.setTimeOutCount(timeOutCount);
+				teamPanel.updateTimeOutCount(timeOutCount);
+			}
 		}
 	}
 	private class TimeOutCountFocusListener extends FocusAdapter{
@@ -346,8 +414,12 @@ public class TeamController {
 			JTextField txt = (JTextField) e.getSource();
 			String timeOutCount = convertNumbers(txt.getText());
 			int teamNumber = convertToTeamNumber(txt.getName());
-			teams[teamNumber-1].setTimeOutCount(timeOutCount);
-			teamPanels[teamNumber-1].updateTimeOutCount(timeOutCount);
+			Team team = teamsMap.getOrDefault(teamNumber, null);
+			TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+			if (team != null) {
+				team.setTimeOutCount(timeOutCount);
+				teamPanel.updateTimeOutCount(timeOutCount);
+			}
 		}
 	}
 
@@ -449,47 +521,70 @@ public class TeamController {
 		}
 	}
 	public void incrementGameCount(int teamNumber) {
-		boolean matchWon = match.incrementGameCount(teams[teamNumber-1]);
-		match.syncCurrentGameNumber();
-		teamPanels[teamNumber-1].updateGameCount(teams[teamNumber-1].getGameCount());
-		if(matchWon) {
-			resetKingSeats();
-		} else {
-			startGameTimer();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			boolean matchWon = match.incrementGameCount(team);
+			match.syncCurrentGameNumber();
+			teamPanel.updateGameCount(team.getGameCount());
+			if(matchWon) {
+				resetKingSeats();
+			} else {
+				startGameTimer();
+			}
+			updateGameTables();
 		}
-		updateGameTables();
 	}
 	public void decrementGameCount(int teamNumber) {
-		teams[teamNumber-1].decrementGameCount();
-		match.syncCurrentGameNumber();
-		teamPanels[teamNumber-1].updateGameCount(teams[teamNumber-1].getGameCount());
-		updateGameTables();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			team.decrementGameCount();
+			match.syncCurrentGameNumber();
+			teamPanel.updateGameCount(team.getGameCount());
+			updateGameTables();
+		}
 	}
 	public void incrementMatchCount(int teamNumber) {
-		match.incrementMatchCount(teams[teamNumber-1]);
-//		match.syncCurrentGameNumber();
-		teamPanels[teamNumber-1].updateMatchCount(teams[teamNumber-1].getMatchCount());
-//		if(matchWon) {
-//			resetKingSeats();
-//		} else {
-//			startGameTimer();
-//		}
-//		updateGameTables();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			match.incrementMatchCount(team);
+			teamPanel.updateMatchCount(team.getMatchCount());
+//			if(matchWon) {
+//				resetKingSeats();
+//			} else {
+//				startGameTimer();
+//			}
+//			updateGameTables();
+		}
 	}
 	public void decrementMatchCount(int teamNumber) {
-		teams[teamNumber-1].decrementMatchCount();
-//		match.syncCurrentGameNumber();
-		teamPanels[teamNumber-1].updateMatchCount(teams[teamNumber-1].getMatchCount());
-//		updateGameTables();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			team.decrementMatchCount();
+//			match.syncCurrentGameNumber();
+			teamPanel.updateMatchCount(team.getMatchCount());
+//			updateGameTables();
+		}
 	}
 	public void callTimeOut(int teamNumber) {
-		teams[teamNumber-1].callTimeOut();
-		teamPanels[teamNumber-1].updateTimeOutCount(teams[teamNumber-1].getTimeOutCount());
-		startTimeOutTimer();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			team.callTimeOut();
+			teamPanel.updateTimeOutCount(team.getTimeOutCount());
+			startTimeOutTimer();
+		}
 	}
 	public void restoreTimeOut(int teamNumber) {
-		teams[teamNumber-1].restoreTimeOut();
-		teamPanels[teamNumber-1].updateTimeOutCount(teams[teamNumber-1].getTimeOutCount());
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			team.restoreTimeOut();
+			teamPanel.updateTimeOutCount(team.getTimeOutCount());
+		}
 	}
 	public void resetTimer() {
 		timerController.resetTimer();
@@ -678,12 +773,6 @@ public class TeamController {
 		team1.setScore(0);
 		team2.setScore(0);
 		team3.setScore(0);
-		team1.setForwardScore(0);
-		team1.setGoalieScore(0);
-		team2.setForwardScore(0);
-		team2.setGoalieScore(0);
-		team3.setForwardScore(0);
-		team3.setGoalieScore(0);
 		teamPanel1.updateScore(team1.getScore());
 		teamPanel2.updateScore(team2.getScore());
 		teamPanel3.updateScore(team3.getScore());
@@ -852,22 +941,32 @@ public class TeamController {
 		gameTableWindowPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getScoresTeam3(), match.getTimes(), match.getCurrentGameNumber());
 	}
 	public void toggleReset(int teamNumber) {
-		teams[teamNumber-1].setReset(!teams[teamNumber-1].getReset());
-		teamPanels[teamNumber-1].updateReset(teams[teamNumber-1].getReset());
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			team.setReset(!team.getReset());
+			teamPanel.updateReset(team.getReset());
+		}
 	}
 	public void toggleWarn(int teamNumber) {
-		teams[teamNumber-1].setWarn(!teams[teamNumber-1].getWarn());
-		teamPanels[teamNumber-1].updateWarn(teams[teamNumber-1].getWarn());
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			team.setWarn(!team.getWarn());
+			teamPanel.updateWarn(team.getWarn());
+		}
 	}
 	public void toggleKingSeat(int teamNumber) {
-		if (!(teams[teamNumber-1].getKingSeat())) {
-			for (int x = 0;x <3;x++) {
-				teams[x].setKingSeat(false);
-				teamPanels[x].updateKingSeat(false);
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			if (!(team.getKingSeat())) {
+				teamsMap.forEach((k,v) -> v.setKingSeat(false));
+				teamPanelsMap.forEach((k,v) -> v.updateKingSeat(false));
 			}
+			team.setKingSeat(!team.getKingSeat());
+			teamPanel.updateKingSeat(team.getKingSeat());
 		}
-		teams[teamNumber-1].setKingSeat(!teams[teamNumber-1].getKingSeat());
-		teamPanels[teamNumber-1].updateKingSeat(teams[teamNumber-1].getKingSeat());
 	}
 	public void fetchAll() {
 		Map<String, Entry<Team, String>> teamMethodMap = new HashMap<String, Entry<Team, String>>();
@@ -887,6 +986,9 @@ public class TeamController {
 		teamMethodMap.put(settings.getTeamGameCountSource("1"), new SimpleEntry<Team, String>(team1, "setGameCount"));
         teamMethodMap.put(settings.getTeamGameCountSource("2"), new SimpleEntry<Team, String>(team2, "setGameCount"));
 		teamMethodMap.put(settings.getTeamGameCountSource("3"), new SimpleEntry<Team, String>(team3, "setGameCount"));
+		teamMethodMap.put(settings.getTeamMatchCountSource("1"), new SimpleEntry<Team, String>(team1, "setMatchCount"));
+        teamMethodMap.put(settings.getTeamMatchCountSource("2"), new SimpleEntry<Team, String>(team2, "setMatchCount"));
+		teamMethodMap.put(settings.getTeamMatchCountSource("3"), new SimpleEntry<Team, String>(team3, "setMatchCount"));
 		teamMethodMap.put(settings.getTeamTimeOutSource("1"), new SimpleEntry<Team, String>(team1, "setTimeOutCount"));
 		teamMethodMap.put(settings.getTeamTimeOutSource("2"), new SimpleEntry<Team, String>(team2, "setTimeOutCount"));
 		teamMethodMap.put(settings.getTeamTimeOutSource("3"), new SimpleEntry<Team, String>(team3, "setTimeOutCount"));
@@ -983,6 +1085,9 @@ public class TeamController {
 			teamPanel1.updateGameCount(team1.getGameCount());
 			teamPanel2.updateGameCount(team2.getGameCount());
 			teamPanel3.updateGameCount(team3.getGameCount());
+			teamPanel1.updateMatchCount(team1.getMatchCount());
+			teamPanel2.updateMatchCount(team2.getMatchCount());
+			teamPanel3.updateMatchCount(team3.getMatchCount());
 			teamPanel1.updateTimeOutCount(team1.getTimeOutCount());
 			teamPanel2.updateTimeOutCount(team2.getTimeOutCount());
 			teamPanel3.updateTimeOutCount(team3.getTimeOutCount());
@@ -1039,72 +1144,187 @@ public class TeamController {
 		team3.writeAll();
 	}
 	public int getPassAttempts(int teamNumber) {
-		return teams[teamNumber-1].getPassAttempts();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getPassAttempts();
+		} else {
+			return -1;
+		}
 	}
 	public int getPassCompletes(int teamNumber) {
-		return teams[teamNumber-1].getPassCompletes();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getPassCompletes();
+		} else {
+			return -1;
+		}
 	}
 	public Float getPassPercent(int teamNumber) {
-		return teams[teamNumber-1].getPassPercent();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getPassPercent();
+		} else {
+			return -1F;
+		}
 	}
 	public int getShotAttempts(int teamNumber) {
-		return teams[teamNumber-1].getShotAttempts();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getShotAttempts();
+		} else {
+			return -1;
+		}
 	}
 	public int getShotCompletes(int teamNumber) {
-		return teams[teamNumber-1].getShotCompletes();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getShotCompletes();
+		} else {
+			return -1;
+		}
 	}
 	public Float getShotPercent(int teamNumber) {
-		return teams[teamNumber-1].getShotPercent();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getShotPercent();
+		} else {
+			return -1F;
+		}
 	}
 	public int getClearAttempts(int teamNumber) {
-		return teams[teamNumber-1].getClearAttempts();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getClearAttempts();
+		} else {
+			return -1;
+		}
 	}
 	public int getClearCompletes(int teamNumber) {
-		return teams[teamNumber-1].getClearCompletes();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getClearCompletes();
+		} else {
+			return -1;
+		}
 	}
 	public Float getClearPercent(int teamNumber) {
-		return teams[teamNumber-1].getClearPercent();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getClearPercent();
+		} else {
+			return -1F;
+		}
 	}
 	public int getTwoBarPassAttempts(int teamNumber) {
-		return teams[teamNumber-1].getTwoBarPassAttempts();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getTwoBarPassAttempts();
+		} else {
+			return -1;
+		}
 	}
 	public int getTwoBarPassCompletes(int teamNumber) {
-		return teams[teamNumber-1].getTwoBarPassCompletes();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getTwoBarPassCompletes();
+		} else {
+			return -1;
+		}
 	}
 	public Float getTwoBarPassPercent(int teamNumber) {
-		return teams[teamNumber-1].getTwoBarPassPercent();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getTwoBarPassPercent();
+		} else {
+			return -1F;
+		}
 	}
 	public int getScoring(int teamNumber) {
-		return teams[teamNumber-1].getScoring();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getScoring();
+		} else {
+			return -1;
+		}
 	}
 	public int getThreeBarScoring(int teamNumber) {
-		return teams[teamNumber-1].getThreeBarScoring();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getThreeBarScoring();
+		} else {
+			return -1;
+		}
 	}
 	public int getFiveBarScoring(int teamNumber) {
-		return teams[teamNumber-1].getFiveBarScoring();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getFiveBarScoring();
+		} else {
+			return -1;
+		}
 	}
 	public int getTwoBarScoring(int teamNumber) {
-		return teams[teamNumber-1].getTwoBarScoring();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getTwoBarScoring();
+		} else {
+			return -1;
+		}
 	}
 	public int getShotsOnGoal(int teamNumber) {
-		return teams[teamNumber-1].getShotsOnGoal();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getShotsOnGoal();
+		} else {
+			return -1;
+		}
 	}
 	public int getStuffs(int teamNumber) {
-		return teams[teamNumber-1].getStuffs();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getStuffs();
+		} else {
+			return -1;
+		}
 	}
 	public int getBreaks(int teamNumber) {
-		return teams[teamNumber-1].getBreaks();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getBreaks();
+		} else {
+			return -1;
+		}
 	}
 	public int getAces(int teamNumber) {
-		return teams[teamNumber-1].getAces();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getAces();
+		} else {
+			return -1;
+		}
 	}
 	public String getForwardName(int teamNumber) {
-		return teams[teamNumber-1].getForwardName();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getForwardName();
+		} else {
+			return "";
+		}
 	}
 	public String getGoalieName(int teamNumber) {
-		return teams[teamNumber-1].getGoalieName();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getGoalieName();
+		} else {
+			return "";
+		}
 	}
 	public String getTeamName(int teamNumber) {
-		return teams[teamNumber-1].getTeamName();
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			return team.getTeamName();
+		} else {
+			return "";
+		}
 	}
 }

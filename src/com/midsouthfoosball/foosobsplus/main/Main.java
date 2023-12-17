@@ -95,8 +95,8 @@ import com.midsouthfoosball.foosobsplus.commands.PRTCommand;
 import com.midsouthfoosball.foosobsplus.commands.PRTOCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSECommand;
 import com.midsouthfoosball.foosobsplus.commands.PSGCCommand;
-import com.midsouthfoosball.foosobsplus.commands.PSMCCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSGCommand;
+import com.midsouthfoosball.foosobsplus.commands.PSMCCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSMCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSRCommand;
 import com.midsouthfoosball.foosobsplus.commands.PSSCCommand;
@@ -839,6 +839,9 @@ public class Main {
 		filtersPanel.addStartMatchFilterListener(new StartMatchFilterListener());
 		filtersPanel.addStartGameFilterListener(new StartGameFilterListener());
 		filtersPanel.addSwitchSidesFilterListener(new SwitchSidesFilterListener());
+		team1.addPropertyChangeListener(new TeamPropertyListener());
+		team2.addPropertyChangeListener(new TeamPropertyListener());
+		team3.addPropertyChangeListener(new TeamPropertyListener());
 	}
 	public void cutthroatRotate(int rotate) {
 		if (rotate ==1) {
@@ -2063,6 +2066,49 @@ public class Main {
 	private class SwitchSidesFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("SwitchSides");
+		}
+	}
+	private class TeamPropertyListener implements PropertyChangeListener{
+		@Override
+		public void propertyChange(PropertyChangeEvent e) {
+			String name = e.getPropertyName();
+			if (name.equals("Team1Score")) {
+//				System.out.println("Team1 new Score: " + e.getNewValue().toString());
+//				System.out.println("Team1 old Score: " + e.getOldValue().toString());
+			} else if (name.equals("Team2Score")) {
+//				System.out.println("Team2 new Score: " + e.getNewValue().toString());
+//				System.out.println("Team2 old Score: " + e.getOldValue().toString());
+			} else if (name.equals("Team3Score")) {
+//				System.out.println("Team3 new Score: " + e.getNewValue().toString());
+//				System.out.println("Team3 old Score: " + e.getOldValue().toString());
+			} else if (name.equals("Team1Game")) {
+//				System.out.println("Team1 new Game: " + e.getNewValue().toString());
+//				System.out.println("Team1 old Game: " + e.getOldValue().toString());
+			} else if (name.equals("Team2Game")) {
+//				System.out.println("Team2 new Game: " + e.getNewValue().toString());
+//				System.out.println("Team2 old Game: " + e.getOldValue().toString());
+			} else if (name.equals("Team3Game")) {
+//				System.out.println("Team3 new Game: " + e.getNewValue().toString());
+//				System.out.println("Team3 old Game: " + e.getOldValue().toString());
+			} else if (name.equals("Team1Match")) {
+//				System.out.println("Team1 new Match: " + e.getNewValue().toString());
+//				System.out.println("Team1 old Match: " + e.getOldValue().toString());
+			} else if (name.equals("Team2Match")) {
+//				System.out.println("Team2 new Match: " + e.getNewValue().toString());
+//				System.out.println("Team2 old Match: " + e.getOldValue().toString());
+			} else if (name.equals("Team3Match")) {
+//				System.out.println("Team3 new Match: " + e.getNewValue().toString());
+//				System.out.println("Team3 old Match: " + e.getOldValue().toString());
+			} else if (name.equals("Team1TimeOut")) {
+//				System.out.println("Team1 new TimeOut: " + e.getNewValue().toString());
+//				System.out.println("Team1 old TimeOut: " + e.getOldValue().toString());
+			} else if (name.equals("Team2TimeOut")) {
+//				System.out.println("Team2 new TimeOut: " + e.getNewValue().toString());
+//				System.out.println("Team2 old TimeOut: " + e.getOldValue().toString());
+			} else if (name.equals("Team3TimeOut")) {
+//				System.out.println("Team3 new TimeOut: " + e.getNewValue().toString());
+//				System.out.println("Team3 old TimeOut: " + e.getOldValue().toString());
+			}
 		}
 	}
 //	private void testProcessCodes() {

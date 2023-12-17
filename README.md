@@ -1111,6 +1111,12 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpkt3 - push king seat team 3
 
 ## Revision History</br>
+v2.024 12/17/2023</br>
+Refactor Team to reduce code duplication in set methods.</br>
+Fix bug with MatchCount logic not updating when directly changed in text box.</br>
+Add property change listeners to Team for score, gamecount, matchcount, timeoutcount.</br>
+Refactor TeamController to use TeamsMap and TeamPanelsMap instead of teams[], teampanels[].</br>
+</br>
 v2.023 12/15/2023</br>
 Work on match count logic.</br>
 Added missing Team 3 to stream log for cutthroat mode.</br>

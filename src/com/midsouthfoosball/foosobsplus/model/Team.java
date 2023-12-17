@@ -20,6 +20,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.model;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -33,14 +35,11 @@ import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 public class Team implements Serializable {
 
 	private static final long serialVersionUID = 6807215509861474745L;
+	protected PropertyChangeSupport propertyChangeSupport;
 	private String teamName = "";
 	private String forwardName = "";
 	private String goalieName = "";
 	private int score = 0;
-	private int forwardScore = 0;
-	private int goalieScore = 0;
-	private int forwardGameCount = 0;
-	private int goalieGameCount = 0;
 	private int gameCount = 0;
 	private int matchCount = 0;
 	private int timeOutCount;
@@ -84,6 +83,7 @@ public class Team implements Serializable {
 		this.settings = settings;
 		this.teamNbr = teamNbr;
 		this.teamColor = teamColor;
+		propertyChangeSupport = new PropertyChangeSupport(this);
 	}
 	public int getTeamNbr() {
 		return teamNbr;
@@ -101,7 +101,9 @@ public class Team implements Serializable {
 		return score;
 	}
 	public void setScore(int score) {
+		int oldScore = this.score;
 		this.score = score;
+		propertyChangeSupport.firePropertyChange("Team"+teamNbr+"Score",oldScore,score);
 		writeScore();
 	}
 	public void setScore(String score) {
@@ -111,39 +113,15 @@ public class Team implements Serializable {
 			setScore(Integer.parseInt(score));
 		}
 	}
-	public int getForwardScore() {
-		return forwardScore;
-	}
-	public void setForwardScore(int forwardScore) {
-		this.forwardScore = forwardScore;
-	}
-	public int getGoalieScore() {
-		return goalieScore;
-	}
-	public void setGoalieScore(int goalieScore) {
-		this.goalieScore = goalieScore;
-	}
-	public int getForwardGameCount() {
-		return forwardGameCount;
-	}
-	public void setForwardGameCount(int forwardGameCount) {
-		this.forwardGameCount = forwardGameCount;
-	}
-	public int getGoalieGameCount() {
-		return goalieGameCount;
-	}
-	public void setGoalieGameCount(int goalieGameCount) {
-		this.goalieGameCount = goalieGameCount;
-	}
 	public int incrementScore() {
-		score++;
-		writeScore();
-		return score;
+		setScore(getScore()+1);
+		return getScore();
 	}
 	public int decrementScore() {
-		if(score > 0) score--;
-		writeScore();
-		return score;
+		if(score > 0) {
+			setScore(getScore()-1);
+		}
+		return getScore();
 	}
 	public int getGameCount() {
 		return gameCount;
@@ -152,7 +130,9 @@ public class Team implements Serializable {
 		return matchCount;
 	}
 	public void setGameCount(int gameCount) {
+		int oldGameCount = this.gameCount;
 		this.gameCount = gameCount;
+		propertyChangeSupport.firePropertyChange("Team"+teamNbr+"Game",oldGameCount,gameCount);
 		writeGameCount();
 	}
 	public void setGameCount(String gameCount) {
@@ -163,7 +143,9 @@ public class Team implements Serializable {
 		}
 	}
 	public void setMatchCount(int matchCount) {
+		int oldMatchCount = this.matchCount;
 		this.matchCount = matchCount;
+		propertyChangeSupport.firePropertyChange("Team"+teamNbr+"Match",oldMatchCount,matchCount);
 		writeMatchCount();
 	}
 	public void setMatchCount(String matchCount) {
@@ -174,30 +156,32 @@ public class Team implements Serializable {
 		}
 	}
 	public int incrementGameCount() {
-		gameCount++;
-		writeGameCount();
-		return gameCount;
+		setGameCount(getGameCount()+1);
+		return getGameCount();
 	}
 	public int decrementGameCount() {
-		if(gameCount > 0) gameCount--;
-		writeGameCount();
-		return gameCount;
+		if(gameCount > 0) {
+			setGameCount(getGameCount()-1);
+		}
+		return getGameCount();
 	}	
 	public int incrementMatchCount() {
-		matchCount++;
-		writeMatchCount();
-		return matchCount;
+		setMatchCount(getMatchCount()+1);
+		return getMatchCount();
 	}
 	public int decrementMatchCount() {
-		if(matchCount > 0) matchCount--;
-		writeMatchCount();
-		return matchCount;
+		if(matchCount > 0) {
+			setMatchCount(getMatchCount()-1);
+		}
+		return getMatchCount();
 	}	
 	public int getTimeOutCount() {
 		return timeOutCount;
 	}
 	public void setTimeOutCount(int timeOutCount) {
+		int oldTimeOutCount = this.timeOutCount;
 		this.timeOutCount = timeOutCount;
+		propertyChangeSupport.firePropertyChange("Team"+teamNbr+"TimeOut",oldTimeOutCount,timeOutCount);
 		writeTimeOuts();
 	}
 	public void setTimeOutCount(String timeOutCount) {
@@ -209,27 +193,25 @@ public class Team implements Serializable {
 	}
 	public int callTimeOut() {
 		if(settings.getShowTimeOutsUsed() == 1) {
-			timeOutCount++;
+			setTimeOutCount(getTimeOutCount()+1);
 		} else {
-			timeOutCount--;
+			setTimeOutCount(getTimeOutCount()-1);
 		}
-		writeTimeOuts();
-		return timeOutCount;
+		return getTimeOutCount();
 	}
 	public int restoreTimeOut() {
 		if(settings.getShowTimeOutsUsed()==1) {
-			timeOutCount--;
-			if(timeOutCount<0) {
-				timeOutCount=0;
+			setTimeOutCount(getTimeOutCount()-1);
+			if(getTimeOutCount()<0) {
+				setTimeOutCount(0);
 			}
 		} else {
-			timeOutCount++;
-			if(timeOutCount>settings.getMaxTimeOuts()) {
-				timeOutCount=settings.getMaxTimeOuts();
+			setTimeOutCount(getTimeOutCount()+1);
+			if(getTimeOutCount()>settings.getMaxTimeOuts()) {
+				setTimeOutCount(settings.getMaxTimeOuts());
 			}
 		}
-		writeTimeOuts();
-		return timeOutCount;
+		return getTimeOutCount();
 	}
 	public boolean getReset() {
 		return resetState;
@@ -328,8 +310,6 @@ public class Team implements Serializable {
 		forwardName = "";
 		goalieName = "";
 		score = 0;
-		forwardScore = 0;
-		goalieScore = 0;
 		gameCount = 0;
 		matchCount = 0;
 		passAttempts = 0;
@@ -361,11 +341,10 @@ public class Team implements Serializable {
 	}
 	public void resetTimeOuts() {
 		if(settings.getShowTimeOutsUsed() == 1) {
-			timeOutCount = 0;
+			setTimeOutCount(0);
 		} else {
-			timeOutCount = settings.getMaxTimeOuts();
+			setTimeOutCount(settings.getMaxTimeOuts());
 		}
-		writeTimeOuts();
 	}
 	public void resetResetWarns() {
 		setReset(false);
@@ -440,7 +419,6 @@ public class Team implements Serializable {
     public int getAces() {
     	return aces;
     }
-	
 	public void setPassAttempts(int passAttempts) {
 		this.passAttempts = passAttempts;
 		writePassAttempts();
@@ -872,5 +850,8 @@ public class Team implements Serializable {
 		this.setTwoBarScoring(tempTeam.getTwoBarScoring());
 		this.setBreaks(tempTeam.getBreaks());
 		this.setStuffs(tempTeam.getStuffs());
+	}
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangeSupport.addPropertyChangeListener(listener);
 	}
 }
