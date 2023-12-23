@@ -70,9 +70,7 @@ public class MatchController {
 		this.streamIndexer = streamIndexer;
 		updateGameTables();
 	}
-	
 	////// Match Panel Listener Objects \\\\\\
-
 	private class GameClockTimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			matchPanel.updateElapsedTime(gameClock.getMatchTime());
@@ -83,6 +81,7 @@ public class MatchController {
 			gameTableWindowPanel.setTime(time);
 		}
 	}
+	////// Utility Methods \\\\\\
 	public int incrementScore(int teamNumber) {
 		// return 1 to rotate after team1 wins (Cutthroat)
 		// return 2 to rotate after team2 or team3 scores (Cutthroat)

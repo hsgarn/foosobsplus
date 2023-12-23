@@ -1111,6 +1111,10 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpkt3 - push king seat team 3
 
 ## Revision History</br>
+v2.025 12/23/2023</br>
+Rearranged some methods in TeamController and MatchController.</br>
+Remove Statistics settings screen.</br>
+</br>
 v2.024 12/17/2023</br>
 Refactor Team to reduce code duplication in set methods.</br>
 Fix bug with MatchCount logic not updating when directly changed in text box.</br>

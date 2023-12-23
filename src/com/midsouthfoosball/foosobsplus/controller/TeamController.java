@@ -187,37 +187,6 @@ public class TeamController {
 			teamNameChange(txt);
 		}
 	}
-	private static String capitalizeWords(String str) {
-		if(str.isEmpty()) {return str;}
-		String words[]=str.split("\\s");
-		String capitalizeWord="";
-		for(String w:words) {
-			String first=w.substring(0,1);
-			String afterfirst=w.substring(1);
-			capitalizeWord+=first.toUpperCase()+afterfirst+" ";
-		}
-		return capitalizeWord.trim();
-	}
-	private void teamNameChange(JTextField txt) {
-		String teamName;
-		if(settings.getAutoCapNames()==1) {
-			teamName = capitalizeWords(txt.getText());
-		} else {
-			teamName = txt.getText();
-		}
-		int teamNumber = convertToTeamNumber(txt.getName());
-		Team team = teamsMap.getOrDefault(teamNumber, null);
-		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
-		if (team != null) {
-			team.setTeamName(teamName);
-			teamPanel.updateTeamName(teamName);
-			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
-			if (match.getWinState() > 0) {
-				resetForNewGame();
-			}
-			updateGameTables();
-		}
-	}
 	private class TeamNameMouseListener extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) {
 			JTextField txt = (JTextField) e.getSource();
@@ -238,24 +207,6 @@ public class TeamController {
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			forwardNameChange(txt);
-		}
-	}
-	private void forwardNameChange(JTextField txt) {
-		String forwardName;
-		if(settings.getAutoCapNames()==1) {
-			forwardName = capitalizeWords(txt.getText());
-		} else {
-			forwardName = txt.getText();
-		}
-		int teamNumber = convertToTeamNumber(txt.getName());
-		Team team = teamsMap.getOrDefault(teamNumber, null);
-		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
-		if (team != null) {
-			team.setForwardName(forwardName);
-			teamPanel.updateForwardName(forwardName);
-			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
-			checkResetForNewGame();
-			updateGameTables();
 		}
 	}
 	private class ForwardNameMouseListener extends MouseAdapter{
@@ -280,24 +231,6 @@ public class TeamController {
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			goalieNameChange(txt);
-		}
-	}
-	private void goalieNameChange(JTextField txt) {
-		String goalieName;
-		if(settings.getAutoCapNames()==1) {
-			goalieName = capitalizeWords(txt.getText());
-		} else {
-			goalieName = txt.getText();
-		}
-		int teamNumber = convertToTeamNumber(txt.getName());
-		Team team = teamsMap.getOrDefault(teamNumber, null);
-		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
-		if (team != null) {
-			team.setGoalieName(goalieName);
-			teamPanel.updateGoalieName(goalieName);
-			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
-			checkResetForNewGame();
-			updateGameTables();
 		}
 	}
 	private class GoalieNameMouseListener extends MouseAdapter{
@@ -422,14 +355,110 @@ public class TeamController {
 			}
 		}
 	}
-
 	private class LastScoredClockTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			updateLastScoredTimes();
 		}
 	}
-	
 	////// Utility Methods \\\\\\
+	public int incrementScore(int teamNumber) {
+		int winState = 0;
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		LastScoredClock lastScoredClock = lastScoredClocksMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			winState = match.incrementScore(teamNumber, gameClock.getGameTime());
+			lastScoredClock.startLastScoredTimer();
+		}
+		resetTimer();
+		if(winState==1) {
+			startGameTimer();
+			gameClock.stopGameTimer();
+		}
+		displayAll();
+		return winState;
+	}
+	public void incrementGameCount(int teamNumber) {
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			boolean matchWon = match.incrementGameCount(team);
+			match.syncCurrentGameNumber();
+			teamPanel.updateGameCount(team.getGameCount());
+			if(matchWon) {
+				resetKingSeats();
+			} else {
+				startGameTimer();
+			}
+			updateGameTables();
+		}
+	}
+	private static String capitalizeWords(String str) {
+		if(str.isEmpty()) {return str;}
+		String words[]=str.split("\\s");
+		String capitalizeWord="";
+		for(String w:words) {
+			String first=w.substring(0,1);
+			String afterfirst=w.substring(1);
+			capitalizeWord+=first.toUpperCase()+afterfirst+" ";
+		}
+		return capitalizeWord.trim();
+	}
+	private void teamNameChange(JTextField txt) {
+		String teamName;
+		if(settings.getAutoCapNames()==1) {
+			teamName = capitalizeWords(txt.getText());
+		} else {
+			teamName = txt.getText();
+		}
+		int teamNumber = convertToTeamNumber(txt.getName());
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			team.setTeamName(teamName);
+			teamPanel.updateTeamName(teamName);
+			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
+			if (match.getWinState() > 0) {
+				resetForNewGame();
+			}
+			updateGameTables();
+		}
+	}
+	private void forwardNameChange(JTextField txt) {
+		String forwardName;
+		if(settings.getAutoCapNames()==1) {
+			forwardName = capitalizeWords(txt.getText());
+		} else {
+			forwardName = txt.getText();
+		}
+		int teamNumber = convertToTeamNumber(txt.getName());
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			team.setForwardName(forwardName);
+			teamPanel.updateForwardName(forwardName);
+			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
+			checkResetForNewGame();
+			updateGameTables();
+		}
+	}
+	private void goalieNameChange(JTextField txt) {
+		String goalieName;
+		if(settings.getAutoCapNames()==1) {
+			goalieName = capitalizeWords(txt.getText());
+		} else {
+			goalieName = txt.getText();
+		}
+		int teamNumber = convertToTeamNumber(txt.getName());
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			team.setGoalieName(goalieName);
+			teamPanel.updateGoalieName(goalieName);
+			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
+			checkResetForNewGame();
+			updateGameTables();
+		}
+	}
 	private static int convertToTeamNumber(String name) {
 		String numericPart = name.replaceAll("[^0-9]", "");
 		try {
@@ -495,43 +524,12 @@ public class TeamController {
 		team3 = tmp;
 		displayAll();
 	};
-	public int incrementScore(int teamNumber) {
-		int winState = 0;
-		Team team = teamsMap.getOrDefault(teamNumber, null);
-		LastScoredClock lastScoredClock = lastScoredClocksMap.getOrDefault(teamNumber, null);
-		if (team != null) {
-			winState = match.incrementScore(teamNumber, gameClock.getGameTime());
-			lastScoredClock.startLastScoredTimer();
-		}
-		resetTimer();
-		if(winState==1) {
-			startGameTimer();
-			gameClock.stopGameTimer();
-		}
-		displayAll();
-		return winState;
-	}
 	public void decrementScore(int teamNumber) {
 		Team team = teamsMap.getOrDefault(teamNumber, null);
 		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
 		if (team != null) {
 			match.decrementScore(teamNumber);
 			teamPanel.updateScore(team.getScore());
-			updateGameTables();
-		}
-	}
-	public void incrementGameCount(int teamNumber) {
-		Team team = teamsMap.getOrDefault(teamNumber, null);
-		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
-		if (team != null) {
-			boolean matchWon = match.incrementGameCount(team);
-			match.syncCurrentGameNumber();
-			teamPanel.updateGameCount(team.getGameCount());
-			if(matchWon) {
-				resetKingSeats();
-			} else {
-				startGameTimer();
-			}
 			updateGameTables();
 		}
 	}

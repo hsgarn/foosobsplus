@@ -153,7 +153,6 @@ import com.midsouthfoosball.foosobsplus.view.ParametersPanel;
 import com.midsouthfoosball.foosobsplus.view.PartnerProgramFrame;
 import com.midsouthfoosball.foosobsplus.view.ResetPanel;
 import com.midsouthfoosball.foosobsplus.view.SourcesFrame;
-import com.midsouthfoosball.foosobsplus.view.StatSettingsFrame;
 import com.midsouthfoosball.foosobsplus.view.StatSourcesFrame;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
@@ -264,7 +263,6 @@ public class Main {
 	private StatSourcesFrame	statSourcesFrame	= new StatSourcesFrame(settings, obsInterface);
 	private FiltersFrame        filtersFrame        = new FiltersFrame(settings, obsInterface);
 	private FiltersPanel        filtersPanel        = filtersFrame.getFiltersPanel();
-	private StatSettingsFrame   statSettingsFrame   = new StatSettingsFrame(settings, obsInterface);
 	private PartnerProgramFrame partnerProgramFrame = new PartnerProgramFrame(settings);
 	private OBSConnectFrame		obsConnectFrame		= new OBSConnectFrame(settings, obs);
 	private OBSConnectPanel		obsConnectPanel		= obsConnectFrame.getOBSConnectPanel();
@@ -696,7 +694,7 @@ public class Main {
 	public void loadWindowsAndControllers() {
 		mainFrame = new MainFrame(settings, tournamentPanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, teamPanel3, statsEntryPanel, 
 				switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, sourcesFrame, statSourcesFrame, filtersFrame, 
-				statSettingsFrame, partnerProgramFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, this);
+				partnerProgramFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, this);
 
 		////// Set up independent Windows \\\\\\
 		

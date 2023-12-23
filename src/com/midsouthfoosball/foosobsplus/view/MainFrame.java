@@ -79,7 +79,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private SourcesFrame sourcesFrame;
 	private StatSourcesFrame statSourcesFrame;
 	private FiltersFrame filtersFrame;
-	private StatSettingsFrame statSettingsFrame;
 	private PartnerProgramFrame partnerProgramFrame;
 	private OBSConnectFrame obsConnectFrame;
 	private AutoScoreSettingsFrame autoScoreSettingsFrame;
@@ -116,7 +115,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	public MainFrame(Settings settings, TournamentPanel tournamentPanel, TimerPanel timerPanel, OBSPanel obsPanel, AutoScoreMainPanel autoScoreMainPanel,
 			TeamPanel team1Panel, TeamPanel team2Panel, TeamPanel team3Panel, StatsEntryPanel statsEntryPanel, SwitchPanel switchPanel, ResetPanel resetPanel, 
 			StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,	SourcesFrame sourcesFrame, 
-			StatSourcesFrame statSourcesFrame, FiltersFrame filtersFrame, StatSettingsFrame statSettingsFrame, PartnerProgramFrame partnerProgramFrame, OBSConnectFrame obsConnectFrame, 
+			StatSourcesFrame statSourcesFrame, FiltersFrame filtersFrame, PartnerProgramFrame partnerProgramFrame, OBSConnectFrame obsConnectFrame, 
 			AutoScoreSettingsFrame autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame, Main main) {
 
 		super(programName + ": Foosball"); //$NON-NLS-1$
@@ -138,7 +137,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 		this.sourcesFrame			= sourcesFrame;
 		this.statSourcesFrame       = statSourcesFrame;
 		this.filtersFrame           = filtersFrame;
-		this.statSettingsFrame      = statSettingsFrame;
 		this.partnerProgramFrame    = partnerProgramFrame;
 		this.obsConnectFrame 		= obsConnectFrame;
 		this.autoScoreSettingsFrame = autoScoreSettingsFrame;
@@ -206,7 +204,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 		JMenuItem settingsStatsSourceItem 		= new JMenuItem(Messages.getString("MainFrame.StatSources")); //$NON-NLS-1$
 		JMenuItem settingsFilterItem    		= new JMenuItem(Messages.getString("MainFrame.Filters")); //$NON-NLS-1$
 		JMenuItem settingsPartnerProgramItem 	= new JMenuItem(Messages.getString("MainFrame.PartnerProgram")); //$NON-NLS-1$
-		JMenuItem settingsStatItem				= new JMenuItem(Messages.getString("MainFrame.Statistics")); //$NON-NLS-1$
 		
 		settingsMenu.add(settingsParamItem);
 		settingsMenu.add(settingsHotKeyItem);
@@ -214,13 +211,11 @@ public final class MainFrame extends JFrame implements WindowListener {
 		settingsMenu.add(settingsStatsSourceItem);
 		settingsMenu.add(settingsFilterItem);
 		settingsMenu.add(settingsPartnerProgramItem);
-		settingsMenu.add(settingsStatItem);
 		editMenu.add(settingsMenu);
 		
 		obsMenu 			= new JMenu(Messages.getString("MainFrame.OBS")); //$NON-NLS-1$
 		obsConnectItem 		= new JMenuItem(Messages.getString("MainFrame.OBSConnect")); //$NON-NLS-1$
 		obsDisconnectItem 	= new JMenuItem(Messages.getString("MainFrame.OBSDisconnect")); //$NON-NLS-1$
-//		showScores          = new JCheckBoxMenuItem(Messages.getString("MainFrame.ShowScores")); //$NON-NLS-1$
 		
 		imgOBSConnected = new ImageIcon(this.getClass().getResource("Connected.png"));; //$NON-NLS-1$
 		imgOBSConnected.setImage(imgOBSConnected.getImage().getScaledInstance(12, 12,  Image.SCALE_DEFAULT));
@@ -231,7 +226,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 		
 		obsMenu.add(obsConnectItem);
 		obsMenu.add(obsDisconnectItem);
-//		obsMenu.add(showScores);
 		obsMenu.setIcon(imgIconOBSDisconnected);
 		
 		autoScoreMenu  = new JMenu(Messages.getString("MainFrame.AutoScore")); //$NON-NLS-1$
@@ -277,11 +271,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 		obsMenu.setIcon(imgIconOBSDisconnected);
 		autoScoreMenu.setIcon(imgIconAutoScoreDisconnected);
 		
-//		showScores.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent ae) {
-//				main.showScores(showScores.isSelected());
-//			}
-//		});
 		viewAlwaysOnTop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				setAlwaysOnTop(viewAlwaysOnTop.isSelected());
@@ -322,11 +311,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 		settingsFilterItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				filtersFrame.setVisible(true);
-			}
-		});
-		settingsStatItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				statSettingsFrame.setVisible(true);
 			}
 		});
 		settingsPartnerProgramItem.addActionListener(new ActionListener() {
