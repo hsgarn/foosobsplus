@@ -96,6 +96,7 @@ public class SourcesPanel extends JPanel {
 	private JTextField txtLastScoredSource;
 	private JTextField txtMatchWinnerSource;
 	private JTextField txtMeatballSource;
+	private JTextField txtGameResultsSource;
 	OBSInterface obsInterface;
 	private String defaultFilePath = "c:\\temp"; //$NON-NLS-1$
 	private static transient Logger logger;
@@ -145,6 +146,7 @@ public class SourcesPanel extends JPanel {
 		txtTimerInUseSource.setText(settings.getDefaultTimerInUseSource());
 		txtMatchWinnerSource.setText(settings.getDefaultMatchWinnerSource());
 		txtMeatballSource.setText(settings.getDefaultMeatballSource());
+		txtGameResultsSource.setText(settings.getDefaultGameResultsSource());
 		txtLastScoredSource.setText(settings.getDefaultLastScoredSource());
 		txtGameTimeSource.setText(settings.getDefaultGameTimeSource());
 		txtMatchTimeSource.setText(settings.getDefaultMatchTimeSource());
@@ -192,6 +194,7 @@ public class SourcesPanel extends JPanel {
 		settings.setSource("TimerInUse",txtTimerInUseSource.getText());
 		settings.setSource("MatchWinner",txtMatchWinnerSource.getText());
 		settings.setSource("Meatball",txtMeatballSource.getText());
+		settings.setSource("GameResults", txtGameResultsSource.getText());
 		settings.setSource("GameTime",txtGameTimeSource.getText());
 		settings.setSource("MatchTime",txtMatchTimeSource.getText());
 		settings.setSource("StreamTime",txtStreamTimeSource.getText());
@@ -620,6 +623,15 @@ public class SourcesPanel extends JPanel {
 		txtMeatballSource.setText(settings.getMeatballSource());
 		add(txtMeatballSource, "cell 6 13,alignx left"); //$NON-NLS-1$
 		txtMeatballSource.setColumns(10);
+		
+		//Game Results
+		JLabel lblGameResults = new JLabel(Messages.getString("SourcesPanel.GameResults", settings.getGameType())); //$NON-NLS-1$
+		add(lblGameResults, "cell 5 14,alignx right"); //$NON-NLS-1$
+
+		txtGameResultsSource = new JTextField();
+		txtGameResultsSource.setText(settings.getGameResultsSource());
+		add(txtGameResultsSource, "cell 6 14,alignx left"); //$NON-NLS-1$
+		txtGameResultsSource.setColumns(10);
 
 		JButton btnSaveSources = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		btnSaveSources.addActionListener(new ActionListener() {

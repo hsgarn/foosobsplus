@@ -33,8 +33,11 @@ import net.miginfocom.swing.MigLayout;
 
 public class AboutPanel extends JPanel {
 
-	private static final long serialVersionUID = 1L;
-	private static final String versionNumber = "2.025"; //$NON-NLS-1$
+	private static final long serialVersionUID 	= 1L;
+	private static final String versionNumber 	= "2.026"; //$NON-NLS-1$
+	private static final String releaseDate 	= "12/24/2023"; //$NON-NLS-1$
+	private static final String author 			= "Hugh Garner"; //$NON-NLS-1$
+	private static final String copyright 		= "2020-2024 Hugh Garner"; //$NON-NLS-1$
 
 	public AboutPanel(JFrame aboutFrame) {
 		setLayout(new MigLayout("", "[127.00][50.00:87.00,grow,left]", "[][][][][grow][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -54,19 +57,19 @@ public class AboutPanel extends JPanel {
 		JLabel lblReleaseDate = new JLabel(Messages.getString("AboutPanel.ReleaseDate")); //$NON-NLS-1$
 		add(lblReleaseDate, "cell 0 2,alignx right"); //$NON-NLS-1$
 		
-		JLabel lblReleaseDateValue = new JLabel("12/23/2023");
+		JLabel lblReleaseDateValue = new JLabel(releaseDate);
 		add(lblReleaseDateValue, "cell 1 2"); //$NON-NLS-1$
 		
 		JLabel lblAuthor = new JLabel(Messages.getString("AboutPanel.Author")); //$NON-NLS-1$
 		add(lblAuthor, "cell 0 3,alignx right"); //$NON-NLS-1$
 		
-		JLabel lblAuthorValue = new JLabel("Hugh Garner"); //$NON-NLS-1$
+		JLabel lblAuthorValue = new JLabel(author); //$NON-NLS-1$
 		add(lblAuthorValue, "cell 1 3"); //$NON-NLS-1$
 		
 		JLabel lblCopyright = new JLabel(Messages.getString("AboutPanel.Copyright")); //$NON-NLS-1$
 		add(lblCopyright, "cell 0 4,alignx right"); //$NON-NLS-1$
 		
-		JLabel lblCopyrightValue = new JLabel("2020-2024 Hugh Garner"); //$NON-NLS-1$
+		JLabel lblCopyrightValue = new JLabel(copyright); //$NON-NLS-1$
 		add(lblCopyrightValue, "cell 1 4"); //$NON-NLS-1$
 		
 		JLabel lblLicense = new JLabel(Messages.getString("AboutPanel.License")); //$NON-NLS-1$

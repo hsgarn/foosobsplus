@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
-
 public class Match implements Serializable {
 	
 	private static final long serialVersionUID = -3958726389588837391L;
@@ -55,25 +54,16 @@ public class Match implements Serializable {
 	private String matchId = "";
 	private boolean isMatchStarted = false;
 	private int maxGamesToShow = 12;
-	private int gameWinners[]; // = {0,0,0,0,0,0,0,0,0,0,0,0};
-	private String[] scoresTeam1; // = {"0","0","0","0","0","0","0"};
-	private String[] scoresTeam2; // = {"0","0","0","0","0","0","0"};
-	private String[] scoresTeam3; // = {"0","0","0","0","0","0","0"};
-	private String[] times; // = {"00:00:00","00:00:00","00:00:00","00:00:00","00:00:00","00:00:00","00:00:00"};
-//	private transient String endTime;
-//	private transient int elapsedTime;
-//	private transient int[] points;
-//	private transient int[] threeBarPoints;
-//	private transient int[] fiveBarPoints;
-//	private transient int[] twoBarPoints;
-//	private transient int[] shotsOnGoal;
-//	private transient int[] breaks;
-//	private transient int[] stuffs;
+	private int gameWinners[];
+	private String[] scoresTeam1;
+	private String[] scoresTeam2;
+	private String[] scoresTeam3;
+	private String[] times;
 	private static transient Logger logger;
+	private StringBuilder gameResults = new StringBuilder();
 	{
 		logger = LoggerFactory.getLogger(this.getClass());
 	}
-
 	public Match(OBSInterface obsInterface, Settings settings, Team team1, Team team2, Team team3) {
 		this.team1 = team1;
 		this.team2 = team2;
@@ -114,6 +104,17 @@ public class Match implements Serializable {
 		clearMeatball();
 		startGame();
 	}
+	public StringBuilder getGameResults() {
+		return gameResults;
+	}
+	public StringBuilder clearGameResults() {
+		gameResults.setLength(0);
+		return gameResults;
+	}
+	public StringBuilder addGameResults(String result) {
+		gameResults.append(result).append("\r\n");
+		return gameResults;
+	}
 	public int getWinState() {
 		return winState;
 	}
@@ -147,10 +148,9 @@ public class Match implements Serializable {
 		setMatchWon(false);
 		setMatchWinner(0);
 		setCurrentGameNumber(1);
-//		setLastScored(0);
 		clearScoresAfterFirst();
 		clearTimesAfterFirst();
-		clearGameWinners();//AfterFirst();
+		clearGameWinners();
 		clearMatchWinner();
 		clearMeatball();
 		
@@ -443,6 +443,10 @@ public class Match implements Serializable {
 			
 		}
 		if (winState>0) {
+			String result = "[" + getCurrentTime() + "] " + team1.getForwardName() + "/" + team1.getGoalieName() + " " + team1.getScore() + " vs " + team2.getForwardName()
+				+ "/" + team2.getGoalieName() + " " + team2.getScore() + " (" + getTimes()[currentGameNumber-1] + ")"; 
+			addGameResults(result);
+			writeData(settings.getDefaultGameResultsSource(), getGameResults().toString());
 			setCurrentTime(gameTime);
 		}
 

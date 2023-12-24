@@ -1111,6 +1111,13 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpkt3 - push king seat team 3
 
 ## Revision History</br>
+v2.026 12/24/2023</br>
+Refactor WindowListeners to WindowAdapter to reduce code in MainController and Main.</br>
+Delete Game class.</br>
+Add End Match Hot Key logic.</br>
+Move match.getMatchWon() check so it applies to cutthroat and regular modes.</br>
+Add gameResults source and supporting logic.</br>
+</br>
 v2.025 12/23/2023</br>
 Rearranged some methods in TeamController and MatchController.</br>
 Remove Statistics settings screen.</br>

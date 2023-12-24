@@ -50,7 +50,7 @@ public class HotKeysFrame extends JFrame {
 			logger.error(Messages.getString("HotKeysFrame.ErrorLoadingSettings")); //$NON-NLS-1$
 			logger.error(e.toString());
 		}
-		hotKeysPanel.setPreferredSize(new Dimension(850, 600));
+		hotKeysPanel.setPreferredSize(new Dimension(850, 630));
 		
 		getContentPane().add(hotKeysPanel);
 		pack();

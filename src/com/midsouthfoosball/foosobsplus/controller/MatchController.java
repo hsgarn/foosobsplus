@@ -86,6 +86,17 @@ public class MatchController {
 		// return 1 to rotate after team1 wins (Cutthroat)
 		// return 2 to rotate after team2 or team3 scores (Cutthroat)
 		int rotate = 0;
+		if (match.getMatchWon()) {
+			match.resetMatch();
+			teamController.resetScores();
+			teamController.resetGameCounts();
+			startMatch(createMatchId());
+			if (settings.getCutThroatMode()==1) {
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + " vs " + teamController.getForwardName(3) + "/" + teamController.getGoalieName(3) + "\r\n");
+			} else {
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + "\r\n");
+			}
+		}
 		if (settings.getCutThroatMode()==1) {
 			int won = 0;
 			if (teamNumber == 1) {
@@ -100,17 +111,6 @@ public class MatchController {
 				rotate = 2;
 			}
 		} else {
-			if (match.getMatchWon()) {
-				match.resetMatch();
-				teamController.resetScores();
-				teamController.resetGameCounts();
-				startMatch(createMatchId());
-				if (settings.getCutThroatMode()==1) {
-					streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + " vs " + teamController.getForwardName(3) + "/" + teamController.getGoalieName(3) + "\r\n");
-				} else {
-					streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + "\r\n");
-				}
-			}
 			int winState = teamController.incrementScore(teamNumber);
 			if (winState==1) {
 				match.increaseCurrentGameNumber();

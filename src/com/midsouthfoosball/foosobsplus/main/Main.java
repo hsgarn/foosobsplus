@@ -25,8 +25,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
@@ -120,7 +120,6 @@ import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
 import com.midsouthfoosball.foosobsplus.controller.TimerController;
 import com.midsouthfoosball.foosobsplus.controller.TournamentController;
-import com.midsouthfoosball.foosobsplus.model.Game;
 import com.midsouthfoosball.foosobsplus.model.GameClock;
 import com.midsouthfoosball.foosobsplus.model.LastScoredClock;
 import com.midsouthfoosball.foosobsplus.model.Match;
@@ -171,7 +170,6 @@ import io.obswebsocket.community.client.message.response.scenes.GetCurrentProgra
 
 public class Main {
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
-
 	{
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -186,61 +184,50 @@ public class Main {
 		}
 	}	
 	////// Settings and OBSInterface setup \\\\\\
-	
-	final static OBS obs			 				= OBS.getInstance();
-	private Settings			settings			= new Settings();
-	public  OBSInterface 		obsInterface 		= new OBSInterface(settings);
-	public  String				matchId				= "";
-	private DateTimeFormatter dtf 					= DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-	private boolean autoScoreConnected				= false;
-	private Socket autoScoreSocket;
-	private PrintWriter autoScoreSocketWriter;
-	private StreamIndexer streamIndexer             = new StreamIndexer(settings.getDatapath());
-	private Boolean allowAutoScoreReconnect         = true;
-	private Boolean blockAutoScoreReconnect         = false;
+	final static OBS 			obs			 			= OBS.getInstance();
+	private Settings			settings				= new Settings();
+	private OBSInterface 		obsInterface 			= new OBSInterface(settings);
+	private String				matchId					= "";
+	private DateTimeFormatter 	dtf 					= DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+	private boolean 			autoScoreConnected		= false;
+	private Socket 				autoScoreSocket;
+	private PrintWriter 		autoScoreSocketWriter;
+	private StreamIndexer 		streamIndexer      		= new StreamIndexer(settings.getDatapath());
+	private Boolean 			allowAutoScoreReconnect	= true;
+	private Boolean 			blockAutoScoreReconnect	= false;
 
 	////// Watch Service for File changes \\\\\\
 	WatchService watchService;
 	
 	////// CommandStack and UndoRedo setup \\\\\\
-	
-	private int undoRedoPointer 					= -1;
-	private Stack<Command> commandStack 			= new Stack<>();
-	private Stack<Memento> mementoStackTeam1 		= new Stack<>();
-	private Stack<Memento> mementoStackTeam2		= new Stack<>();
-	private Stack<Memento> mementoStackTeam3        = new Stack<>();
-	private Stack<Memento> mementoStackStats 		= new Stack<>();
-	private Stack<Memento> mementoStackMatch		= new Stack<>();
-	private Stack<Memento> mementoStackGameClock	= new Stack<>();
-	private Stack<String> codeStack 				= new Stack<>();
-	private CommandSwitch mySwitch;
+	private int 			undoRedoPointer			= -1;
+	private Stack<Command> 	commandStack 			= new Stack<>();
+	private Stack<Memento> 	mementoStackTeam1 		= new Stack<>();
+	private Stack<Memento> 	mementoStackTeam2		= new Stack<>();
+	private Stack<Memento> 	mementoStackTeam3       = new Stack<>();
+	private Stack<Memento> 	mementoStackStats 		= new Stack<>();
+	private Stack<Memento> 	mementoStackMatch		= new Stack<>();
+	private Stack<Memento> 	mementoStackGameClock	= new Stack<>();
+	private Stack<String>	codeStack 				= new Stack<>();
+	private CommandSwitch 	mySwitch;
 
 	////// Generate the Data Models (Mvc) \\\\\\
-	
-	private Tournament			tournament			= new Tournament(obsInterface, settings);
-	private Team 				team1 				= new Team(obsInterface, settings, 1, settings.getSide1Color());
-	private Team 				team2 				= new Team(obsInterface, settings, 2, settings.getSide2Color());
-	private Team                team3               = new Team(obsInterface, settings, 3, "None");
-	private Match 				match				= new Match(obsInterface, settings, team1, team2, team3);
-	private Game				games[]	 			= new Game[] {	new Game(team1, team2, team3, 1), 
-																	new Game(team1, team2, team3, 2), 
-																	new Game(team1, team2, team3, 3), 
-																	new Game(team1, team2, team3, 4), 
-																	new Game(team1, team2, team3, 5)
-																};
-
-	private Stats 				stats 				= new Stats(settings, team1, team2, team3);
+	private Tournament		tournament				= new Tournament(obsInterface, settings);
+	private Team 			team1 					= new Team(obsInterface, settings, 1, settings.getSide1Color());
+	private Team 			team2 					= new Team(obsInterface, settings, 2, settings.getSide2Color());
+	private Team            team3              		= new Team(obsInterface, settings, 3, "None");
+	private Match 			match					= new Match(obsInterface, settings, team1, team2, team3);
+	private Stats 			stats 					= new Stats(settings, team1, team2, team3);
 	
 	////// Create a TimeClock to be the Timer \\\\\\
-	
-	private TimeClock 			timeClock 			= new TimeClock(obsInterface, settings);
-	private GameClock           gameClock           = new GameClock(obsInterface, settings);
-	private LastScoredClock  	lastScored1Clock    = new LastScoredClock();
-	private LastScoredClock		lastScored2Clock    = new LastScoredClock();
-	private LastScoredClock    	lastScored3Clock	= new LastScoredClock();
+	private TimeClock 		timeClock 				= new TimeClock(obsInterface, settings);
+	private GameClock       gameClock           	= new GameClock(obsInterface, settings);
+	private LastScoredClock lastScored1Clock   		= new LastScoredClock();
+	private LastScoredClock	lastScored2Clock    	= new LastScoredClock();
+	private LastScoredClock lastScored3Clock		= new LastScoredClock();
+
 	////// Create the View Panels to Display (mVc) \\\\\\
-	
-	private TournamentPanel 			tournamentPanel 			= new TournamentPanel(settings);
+	private TournamentPanel 	tournamentPanel 	= new TournamentPanel(settings);
 	private TimerPanel 			timerPanel 			= new TimerPanel(settings);
 	private OBSPanel            obsPanel            = new OBSPanel(settings);
 	private AutoScoreMainPanel	autoScoreMainPanel  = new AutoScoreMainPanel(settings);
@@ -254,47 +241,43 @@ public class Main {
 	private StatsDisplayPanel 	statsDisplayPanel 	= new StatsDisplayPanel(settings);
 
 	////// Set up Timer and Settings Windows \\\\\\
-	
-	private ParametersFrame 	parametersFrame 	= new ParametersFrame(settings);
-	private ParametersPanel		parametersPanel		= parametersFrame.getSettingsPanel();
-	private HotKeysFrame 		hotKeysFrame 		= new HotKeysFrame(settings);
-	private HotKeysPanel 		hotKeysPanel		= hotKeysFrame.getHotKeysPanel();
-	private SourcesFrame		sourcesFrame		= new SourcesFrame(settings, obsInterface);
-	private StatSourcesFrame	statSourcesFrame	= new StatSourcesFrame(settings, obsInterface);
-	private FiltersFrame        filtersFrame        = new FiltersFrame(settings, obsInterface);
-	private FiltersPanel        filtersPanel        = filtersFrame.getFiltersPanel();
-	private PartnerProgramFrame partnerProgramFrame = new PartnerProgramFrame(settings);
-	private OBSConnectFrame		obsConnectFrame		= new OBSConnectFrame(settings, obs);
-	private OBSConnectPanel		obsConnectPanel		= obsConnectFrame.getOBSConnectPanel();
-	private AutoScoreSettingsFrame		autoScoreSettingsFrame		= new AutoScoreSettingsFrame(settings);
-	private AutoScoreSettingsPanel		autoScoreSettingsPanel		= autoScoreSettingsFrame.getAutoScoreSettingsPanel();
-	private AutoScoreConfigFrame		autoScoreConfigFrame		= new AutoScoreConfigFrame();
-	private AutoScoreConfigPanel		autoScoreConfigPanel		= autoScoreConfigFrame.getAutoScoreConfigPanel();
+	private ParametersFrame 		parametersFrame 		= new ParametersFrame(settings);
+	private ParametersPanel			parametersPanel			= parametersFrame.getSettingsPanel();
+	private HotKeysFrame 			hotKeysFrame 			= new HotKeysFrame(settings);
+	private HotKeysPanel 			hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
+	private SourcesFrame			sourcesFrame			= new SourcesFrame(settings, obsInterface);
+	private StatSourcesFrame		statSourcesFrame		= new StatSourcesFrame(settings, obsInterface);
+	private FiltersFrame        	filtersFrame        	= new FiltersFrame(settings, obsInterface);
+	private FiltersPanel        	filtersPanel        	= filtersFrame.getFiltersPanel();
+	private PartnerProgramFrame 	partnerProgramFrame 	= new PartnerProgramFrame(settings);
+	private OBSConnectFrame			obsConnectFrame			= new OBSConnectFrame(settings, obs);
+	private OBSConnectPanel			obsConnectPanel			= obsConnectFrame.getOBSConnectPanel();
+	private AutoScoreSettingsFrame	autoScoreSettingsFrame	= new AutoScoreSettingsFrame(settings);
+	private AutoScoreSettingsPanel	autoScoreSettingsPanel	= autoScoreSettingsFrame.getAutoScoreSettingsPanel();
+	private AutoScoreConfigFrame	autoScoreConfigFrame	= new AutoScoreConfigFrame();
+	private AutoScoreConfigPanel	autoScoreConfigPanel	= autoScoreConfigFrame.getAutoScoreConfigPanel();
 	
 	////// Display the View Panels on a JFrame \\\\\\
-	
 	private MainFrame mainFrame; // The Main Window JFrame with multiple View Panels on it
 
 	////// Set up independent Windows \\\\\\
-	
-	private GameTableWindowPanel		gameTableWindowPanel;
-	private GameTableWindowFrame		gameTableWindowFrame;
-	private TimerWindowFrame 			timerWindowFrame;
-	private LastScoredWindowFrame 		lastScored1WindowFrame;
-	private LastScoredWindowFrame 		lastScored2WindowFrame;
-	private LastScoredWindowFrame   	lastScored3WindowFrame;
+	private GameTableWindowPanel	gameTableWindowPanel;
+	private GameTableWindowFrame	gameTableWindowFrame;
+	private TimerWindowFrame 		timerWindowFrame;
+	private LastScoredWindowFrame 	lastScored1WindowFrame;
+	private LastScoredWindowFrame 	lastScored2WindowFrame;
+	private LastScoredWindowFrame   lastScored3WindowFrame;
 
 	////// Build and Start the Controllers (mvC) \\\\\\
-	
-	private MainController 	mainController;
-	private TimerController timerController;
-	private TeamController 	teamController;
-	private TournamentController tournamentController;
-	private MatchController matchController;
-	private StatsController statsController;
-	private SwingWorker<Boolean, Integer> autoScoreWorker;
-	private SwingWorker<Boolean, String> fileWatchWorker;
-	public Main() throws IOException {
+	private MainController 					mainController;
+	private TimerController 				timerController;
+	private TeamController 					teamController;
+	private TournamentController 			tournamentController;
+	private MatchController 				matchController;
+	private StatsController 				statsController;
+	private SwingWorker<Boolean, Integer> 	autoScoreWorker;
+	private SwingWorker<Boolean, String> 	fileWatchWorker;
+	public  Main() throws IOException {
 
 		loadWindowsAndControllers();
 		
@@ -327,7 +310,6 @@ public class Main {
 		
 		createFileWatchWorker();
 		fileWatchWorker.execute();
-		
 	}
 	private void buildOBSController() {
 		if(obs.getController() != null) {
@@ -697,7 +679,6 @@ public class Main {
 				partnerProgramFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, this);
 
 		////// Set up independent Windows \\\\\\
-		
 		mainFrame.windowActivated(null);
 		gameTableWindowPanel		= new GameTableWindowPanel(settings);
 		gameTableWindowFrame		= new GameTableWindowFrame(settings, gameTableWindowPanel, mainFrame);
@@ -707,7 +688,6 @@ public class Main {
 		lastScored3WindowFrame  	= new LastScoredWindowFrame(mainFrame, 3);
 
 		////// Build and Start the Controllers (mvC) \\\\\\
-		
 		mainController 			= new MainController(mainFrame, timerWindowFrame, lastScored1WindowFrame, lastScored2WindowFrame, lastScored3WindowFrame, gameTableWindowFrame);
 		timerController 		= new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock, lastScored3WindowFrame, lastScored3Clock);
 		teamController 			= new TeamController(obsInterface, settings, team1, team2, team3, match, teamPanel1, teamPanel2, teamPanel3, switchPanel, matchPanel, gameTableWindowPanel, statsDisplayPanel, timerController, lastScored1Clock, lastScored2Clock, lastScored3Clock, gameClock, mainController);
@@ -715,7 +695,6 @@ public class Main {
 		matchController 		= new MatchController(settings, match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, switchPanel, gameTableWindowPanel, teamController, streamIndexer);
 		statsController 		= new StatsController(stats, statsDisplayPanel, teamController);
 		gameClock.addGameClockTimerListener(new GameClockTimerListener());
-
 	}
 	public void loadListeners() {
 		hotKeysPanel.addSaveListener(new HotKeysSaveListener());
@@ -873,10 +852,6 @@ public class Main {
 	public void startMatch() {
 		matchId = createMatchId();
 		matchController.startMatch(matchId);
-		for(Game game: games) {
-			game.clearAll();
-			game.setMatchId(matchId);
-		}
 		if(gameClock.isStreamTimerRunning()) {
 			if(settings.getCutThroatMode()==1) {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch", settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + "\r\n");
@@ -1938,21 +1913,9 @@ public class Main {
 			statsEntryPanel.setFocusOnCode();
 		}
 	}
-	private class TimerWindowCloseListener implements WindowListener {
+	private class TimerWindowCloseListener extends WindowAdapter {
 		public void windowClosed(WindowEvent we) {
 			showTimer(false);
-		}
-		public void windowActivated(WindowEvent e) {
-		}
-		public void windowClosing(WindowEvent e) {
-		}
-		public void windowDeactivated(WindowEvent e) {
-		}
-		public void windowDeiconified(WindowEvent e) {
-		}
-		public void windowIconified(WindowEvent e) {
-		}
-		public void windowOpened(WindowEvent e) {
 		}
 	}
 	private class AutoScoreWorkerStateChangeListener implements PropertyChangeListener {

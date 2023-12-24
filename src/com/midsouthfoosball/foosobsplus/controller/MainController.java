@@ -24,8 +24,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import javax.swing.JCheckBoxMenuItem;
 
@@ -49,7 +49,6 @@ public class MainController {
 		this.lastScored2WindowFrame = lastScored2WindowFrame;
 		this.lastScored3WindowFrame = lastScored3WindowFrame;
 		this.gameTableWindowFrame = gameTableWindowFrame;
-		
 		this.mainFrame.addTimerWindowListener(new TimerWindowListener());
 		this.mainFrame.addLastScored1WindowListener(new LastScored1WindowListener());
 		this.mainFrame.addLastScored2WindowListener(new LastScored2WindowListener());
@@ -84,92 +83,36 @@ public class MainController {
 		mainFrame.showAutoScoreSettings();
 	}
 	////// MainFrame Listener Objects //////
-	private class TimerWindowCloseListener implements WindowListener {
+	private class TimerWindowCloseListener extends WindowAdapter {
+		@Override
 		public void windowClosed(WindowEvent we) {
 			mainFrame.setTimerWindowSelected(false);
 		}
-		public void windowActivated(WindowEvent e) {
-		}
-		public void windowClosing(WindowEvent e) {
-		}
-		public void windowDeactivated(WindowEvent e) {
-		}
-		public void windowDeiconified(WindowEvent e) {
-		}
-		public void windowIconified(WindowEvent e) {
-		}
-		public void windowOpened(WindowEvent e) {
-		}
 	}
-	private class LastScoredWindow1CloseListener implements WindowListener {
+	private class LastScoredWindow1CloseListener extends WindowAdapter {
+		@Override
 		public void windowClosed(WindowEvent we) {
 			mainFrame.setLastScored1WindowSelected(false);
 		}
-		public void windowActivated(WindowEvent e) {
-		}
-		public void windowClosing(WindowEvent e) {
-		}
-		public void windowDeactivated(WindowEvent e) {
-		}
-		public void windowDeiconified(WindowEvent e) {
-		}
-		public void windowIconified(WindowEvent e) {
-		}
-		public void windowOpened(WindowEvent e) {
-		}
 	}
-	private class LastScoredWindow2CloseListener implements WindowListener {
+	private class LastScoredWindow2CloseListener extends WindowAdapter {
+		@Override
 		public void windowClosed(WindowEvent we) {
 			mainFrame.setLastScored2WindowSelected(false);
 		}
-		public void windowActivated(WindowEvent e) {
-		}
-		public void windowClosing(WindowEvent e) {
-		}
-		public void windowDeactivated(WindowEvent e) {
-		}
-		public void windowDeiconified(WindowEvent e) {
-		}
-		public void windowIconified(WindowEvent e) {
-		}
-		public void windowOpened(WindowEvent e) {
-		}
 	}
-	private class LastScoredWindow3CloseListener implements WindowListener {
+	private class LastScoredWindow3CloseListener extends WindowAdapter {
+		@Override
 		public void windowClosed(WindowEvent we) {
 			mainFrame.setLastScored3WindowSelected(false);
 		}
-		public void windowActivated(WindowEvent e) {
-		}
-		public void windowClosing(WindowEvent e) {
-		}
-		public void windowDeactivated(WindowEvent e) {
-		}
-		public void windowDeiconified(WindowEvent e) {
-		}
-		public void windowIconified(WindowEvent e) {
-		}
-		public void windowOpened(WindowEvent e) {
-		}
 	}
-	private class GameTableWindowCloseListener implements WindowListener {
+	private class GameTableWindowCloseListener extends WindowAdapter {
+		@Override
 		public void windowClosed(WindowEvent we) {
 			mainFrame.setGameTableWindowSelected(false);
 		}
-		public void windowActivated(WindowEvent arg0) {
-		}
-		public void windowClosing(WindowEvent arg0) {
-		}
-		public void windowDeactivated(WindowEvent arg0) {
-		}
-		public void windowDeiconified(WindowEvent arg0) {
-		}
-		public void windowIconified(WindowEvent arg0) {
-		}
-		public void windowOpened(WindowEvent arg0) {
-		}
 	}
-	
 	private class TimerWindowViewItemListener implements ItemListener {
 		public void itemStateChanged(ItemEvent e) {
 			checkForAllOff();
@@ -256,9 +199,4 @@ public class MainController {
 			mainFrame.setAllWindowsSelected(false);
 		}
 	}
-//	private class TimerWindowViewCheckBoxListner implements ItemListener {
-//		public void viewTimerWindowItemStateChanged(ItemEvent ie) {
-//			checkForAllOff();
-//		}
-//	}
 }

@@ -160,6 +160,7 @@ public class Settings {
 		defaultSourceProps.setProperty("Team1Score", "team1score");
 		defaultSourceProps.setProperty("MatchWinner", "matchwinner");
 		defaultSourceProps.setProperty("Meatball",  "meatball");
+		defaultSourceProps.setProperty("GameResults", "gameresults");
 		defaultSourceProps.setProperty("Team2Score", "team2score");
 		defaultSourceProps.setProperty("Team3Score", "team3score");
 		defaultSourceProps.setProperty("Team1TimeOut", "team1timeout");
@@ -282,6 +283,7 @@ public class Settings {
 		//HotKeys
 		defaultHotKeyProps.setProperty("StartMatchHotKey", "b");
 		defaultHotKeyProps.setProperty("PauseMatchHotKey", ",");
+		defaultHotKeyProps.setProperty("EndMatchHotKey", "");
 		defaultHotKeyProps.setProperty("StartGameHotKey", ".");
 		defaultHotKeyProps.setProperty("TournamentNameClearHotKey", "");
 		defaultHotKeyProps.setProperty("Team1SwitchPositionsHotKey", "t");
@@ -481,6 +483,7 @@ public class Settings {
 	public String getTimerInUseSource() {return configSourceProps.getProperty("TimerInUse");}
 	public String getMatchWinnerSource() {return configSourceProps.getProperty("MatchWinner");}
 	public String getMeatballSource() {return configSourceProps.getProperty("Meatball");}
+	public String getGameResultsSource() {return configSourceProps.getProperty("GameResults");}
 	public String getLastScoredSource() {return configSourceProps.getProperty("LastScored");}
 	public String getGameTimeSource() {return configSourceProps.getProperty("GameTime");}
 	public String getMatchTimeSource() {return configSourceProps.getProperty("MatchTime");}
@@ -581,6 +584,7 @@ public class Settings {
 	//HotKeys
 	public String getStartMatchHotKey() {return configHotKeyProps.getProperty("StartMatchHotKey");}
 	public String getPauseMatchHotKey() {return configHotKeyProps.getProperty("PauseMatchHotKey");}
+	public String getEndMatchHotKey() {return configHotKeyProps.getProperty("EndMatchHotKey");}
 	public String getStartGameHotKey() {return configHotKeyProps.getProperty("StartGameHotKey");}
 	public String getTeamSwitchPositionsHotKey(String teamNumber) {return configHotKeyProps.getProperty("Team" + teamNumber + "SwitchPositionsHotKey");}
 	public String getSwitchForwardsHotKey() {return configHotKeyProps.getProperty("SwitchForwardsHotKey");}
@@ -852,6 +856,7 @@ public class Settings {
 	public String getDefaultTeam1ScoreSource() {return defaultSourceProps.getProperty("Team1Score");}
 	public String getDefaultMatchWinnerSource() {return defaultSourceProps.getProperty("MatchWinner");}
 	public String getDefaultMeatballSource() {return defaultSourceProps.getProperty("Meatball");}
+	public String getDefaultGameResultsSource() {return defaultSourceProps.getProperty("GameResults");}
 	public String getDefaultTeam2ScoreSource() {return defaultSourceProps.getProperty("Team2Score");}
 	public String getDefaultTeam3ScoreSource() {return defaultSourceProps.getProperty("Team3Score");}
 	public String getDefaultTeam1TimeOutSource() {return defaultSourceProps.getProperty("Team1TimeOut");}
@@ -924,6 +929,7 @@ public class Settings {
 	//HotKeys
 	public String getDefaultStartMatchHotKey() {return defaultHotKeyProps.getProperty("StartMatchHotKey");}
 	public String getDefaultPauseMatchHotKey() {return defaultHotKeyProps.getProperty("PauseMatchHotKey");}
+	public String getDefaultEndMatchHotKey() {return defaultHotKeyProps.getProperty("EndMatchHotKey");}
 	public String getDefaultStartGameHotKey() {return defaultHotKeyProps.getProperty("StartGameHotKey");}
 	public String getDefaultSwitchTeamsHotKey() {return defaultHotKeyProps.getProperty("SwitchTeamsHotKey");}
 	public String getDefaultSwitchGameCountsHotKey() {return defaultHotKeyProps.getProperty("SwitchGameCountsHotKey");}

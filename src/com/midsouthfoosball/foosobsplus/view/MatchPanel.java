@@ -98,7 +98,6 @@ public class MatchPanel extends JPanel {
 		
 		layoutComponents();
 	}
-	
 	public void changeGameType() {
 		btnStartMatch.setText(Messages.getString("MatchPanel.StartMatch", settings.getGameType())); //$NON-NLS-1$
 		btnPauseMatch.setText(Messages.getString("MatchPanel.PauseMatch", settings.getGameType())); //$NON-NLS-1$
@@ -264,7 +263,6 @@ public class MatchPanel extends JPanel {
 	public void addStartGameListener(ActionListener listenForBtnStartGame) {
 		btnStartGame.addActionListener(listenForBtnStartGame);
 	}
-	
 	public void updateElapsedTime(String elapsedTime) {
 		lblElapsedTime.setText(elapsedTime);
 	}
@@ -298,11 +296,11 @@ public class MatchPanel extends JPanel {
 		} else {
 			btnPauseMatch.setMnemonic(settings.getPauseMatchHotKey().charAt(0));
 		};
-//		if(settings.getEndMatchHotKey().isEmpty()) {
-//			btnEndMatch.setMnemonic(-1);
-//		} else {
-//			btnEndMatch.setMnemonic(settings.getEndMatchHotKey().charAt(0));
-//		};
+		if(settings.getEndMatchHotKey().isEmpty()) {
+			btnEndMatch.setMnemonic(-1);
+		} else {
+			btnEndMatch.setMnemonic(settings.getEndMatchHotKey().charAt(0));
+		};
 		if(settings.getStartGameHotKey().isEmpty()) {
 			btnStartGame.setMnemonic(-1);
 		} else {
@@ -312,7 +310,6 @@ public class MatchPanel extends JPanel {
 	public void updateMnemonics() {
 		setMnemonics();
 	}
-
 	public void setGameWinners(int[] gameWinners) {
 		this.gameWinners = gameWinners;
 	}
@@ -386,16 +383,13 @@ public class MatchPanel extends JPanel {
           return this;
 	  }
     }
-	
 	public void setTitle() {
 		String title=buildTitle();
 		TitledBorder border = BorderFactory.createTitledBorder(title);
 		border.setTitleJustification(TitledBorder.CENTER);
 		this.setBorder(border);
 	}
-
 	private String buildTitle() {
 		return Messages.getString("MatchPanel.MatchInformation", settings.getGameType()); //$NON-NLS-1$
 	}
-
 }
