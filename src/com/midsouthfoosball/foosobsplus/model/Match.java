@@ -445,8 +445,7 @@ public class Match implements Serializable {
 		if (winState>0) {
 			String result = "[" + getCurrentTime() + "] " + team1.getForwardName() + "/" + team1.getGoalieName() + " " + team1.getScore() + " vs " + team2.getForwardName()
 				+ "/" + team2.getGoalieName() + " " + team2.getScore() + " (" + getTimes()[currentGameNumber-1] + ")"; 
-			addGameResults(result);
-			writeData(settings.getDefaultGameResultsSource(), getGameResults().toString());
+			writeData(settings.getDefaultGameResultsSource(), addGameResults(result).toString());
 			setCurrentTime(gameTime);
 		}
 
