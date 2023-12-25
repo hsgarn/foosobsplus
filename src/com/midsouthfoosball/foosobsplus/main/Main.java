@@ -368,6 +368,7 @@ public class Main {
 			boolean show = inputActiveStateChangedEvent.getVideoActive();
 			obsPanel.setShowCutthroat(show);
 		}
+		statsEntryPanel.setFocusOnCode();
 	}
 	public void connectToOBS() {
 		logger.info("Trying to connect to OBS...");
@@ -1163,14 +1164,20 @@ public class Main {
 	public void showScores(boolean show) {
 		obsPanel.setShowScores(show);
 		showSource(settings.getShowScoresSource(), show);
+		statsEntryPanel.setFocusOnCode();
 	}
 	public void showTimer(boolean show) {
 		mainController.showTimerWindow(show);
 		showSource(settings.getShowTimerSource(), show);
+		statsEntryPanel.setFocusOnCode();
+	}
+	public void setFocusOnCode() {
+		statsEntryPanel.setFocusOnCode();
 	}
 	public void showCutthroat(boolean show) {
 		obsPanel.setShowCutthroat(show);
 		showSource(settings.getShowCutthroatSource(), show);
+		statsEntryPanel.setFocusOnCode();
 	}
 	public void showSource(String source, boolean show) {
 		if (obs.getConnected()) {
@@ -1414,6 +1421,7 @@ public class Main {
 				matchPanel.updateMnemonics();
 				teamPanel1.updateMnemonics();
 				teamPanel2.updateMnemonics();
+				teamPanel3.updateMnemonics();
 				timerPanel.updateMnemonics();
 				switchPanel.updateMnemonics();
 				resetPanel.updateMnemonics();
@@ -1488,12 +1496,14 @@ public class Main {
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Requesting disconnect.");
 			obs.getController().disconnect();
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class OBSConnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.updateOBS();
 			connectToOBS();
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class OBSDisconnectItemListener implements ActionListener {
@@ -1501,11 +1511,13 @@ public class Main {
 			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Requesting disconnect.");
 			obs.getController().disconnect();
 			obsConnectPanel.updateOBS();
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class OBSSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.saveSettings();
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class OBSPushListener implements ActionListener {
@@ -1515,6 +1527,7 @@ public class Main {
 				teamController.writeAll();
 				statsController.displayAllStats();
 			}
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class OBSPullListener implements ActionListener {
@@ -1524,6 +1537,7 @@ public class Main {
 				teamController.displayAll();
 				tournamentController.fetchAll();
 			}
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class OBSShowScoresListener implements ActionListener {
@@ -1532,6 +1546,7 @@ public class Main {
 				AbstractButton abstractButton = (AbstractButton) e.getSource();
 				showScores(abstractButton.getModel().isSelected());
 			}
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class OBSShowTimerListener implements ActionListener {
@@ -1540,6 +1555,7 @@ public class Main {
 				AbstractButton abstractButton = (AbstractButton) e.getSource();
 				showTimer(abstractButton.getModel().isSelected());
 			}
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class OBSShowCutthroatListener implements ActionListener {
@@ -1548,6 +1564,7 @@ public class Main {
 				AbstractButton abstractButton = (AbstractButton) e.getSource();
 				showCutthroat(abstractButton.getModel().isSelected());
 			}
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class OBSEnableSkunkListener implements ActionListener {
@@ -1561,6 +1578,7 @@ public class Main {
 			} else {
 				settings.setShowSkunk(0);
 			}
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class OBSStartStreamListener implements ActionListener {
@@ -1573,6 +1591,7 @@ public class Main {
 			} else {
 				gameClock.stopStreamTimer();
 			}
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class GameClockTimerListener implements ActionListener {
@@ -1599,12 +1618,14 @@ public class Main {
 			JComponent comp = (JComponent) e.getSource();
 			Window win = SwingUtilities.getWindowAncestor(comp);
 			win.dispose();
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class AutoScoreMainPanelConnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			blockAutoScoreReconnect = false;
 			connectAutoScore();
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class AutoScoreMainPanelDisconnectListener implements ActionListener {
@@ -1612,6 +1633,7 @@ public class Main {
 			blockAutoScoreReconnect = true;
 			logger.info("AutoScore Main Panel Disconnect Button Pressed.");
 			disconnectAutoScore();
+			statsEntryPanel.setFocusOnCode();
 		}
 	}
 	private class AutoScoreMainPanelSettingsListener implements ActionListener {

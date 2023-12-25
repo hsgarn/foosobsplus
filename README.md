@@ -119,7 +119,7 @@ When checked, the program will activate the OBS filter defined in the OBS Connec
 When checked, the program activates CutThroat Mode to support the game of CutThroat.  In CutThroat, three people play against each other. One player starts on the scoring side (Team 1) while the other players play on Team 2. The player on the scoring side always serves the ball and when scores, gets a point.  If the players on other side score, then everybody rotates so that Team 2 Forward moves to the scoring side. Team 2 Goalie moves to the Team 1 Forward position.  And the player who was on the scoring side moves to the Team 2 Goalie position.  The scores in this mode are appended to the players names.
 
 ### Sources
-FoosOBSPlus sends most of its data to sources in OBS Studio so it can be displayed in a live stream.  The names of these sources are configurable if the default names do not suit you. The vast majority of these sources should be Text (GDI+) sources with the Read from file checkbox unchecked.  Exceptions to this will be specifically noted below.  To get to the sources configuration, click on Edit, then Settings, then Sources:
+FoosOBSPlus sends most of its data to sources in OBS Studio so it can be displayed in a live stream.  The names of these sources are configurable if the default names do not suit you. The vast majority of these sources should be Text (GDI+) sources with the Read from file checkbox unchecked.  Exceptions to this will be specifically noted below.  There are enough sources that they were split into two windows.  The sources window is described below and the statistics sources window will be described in the following section. To get to the sources configuration, click on Edit, then Settings, then Sources:
 
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings3.png">
 
@@ -128,210 +128,87 @@ Sources Settings Page:</br>
 
 Below are the sources that can be configured:
 
-#### Team 1
-This is the source for Team 1's name(s). Default source is team1name.
+#### Name: (Team 1, Team 2, Team 3)
+A source can be entered for each team's name.  The default source is teamXname where X is the team number (1, 2 or 3).
 
-#### Team 2
-This is the source for Team 2's name(s). Default source is team2name.
+#### Forward Name: (Team 1, Team 2, Team 3)
+A source can be entered for each team's forward.  The default source is teamXforward where X is the team number (1, 2 or 3).
 
-#### Game Count 1
-This is the source for Team 1's game count. Default source is gamecount1.
+#### Goalie Name: (Team 1, Team 2, Team 3)
+A source can be entered for each team's goalie.  The default source is teamXgoalie where X is the team number (1, 2 or 3).
 
-#### Game Count 2
-This is the source for Team 2's game count. Default source is gamecount2.
+#### Score: (Team 1, Team 2, Team 3)
+The score source for each team can be set.  The default source is teamXscore where X is the team number (1, 2 or 3).
 
-#### Score 1
-This is the source for Team 1's score. Default source is score1.
+#### Game Count: (Team 1, Team 2, Team 3)
+The game count source for each team can be set.  The default source is teamXgamecount where X is the team number (1, 2 or 3).
 
-#### Score 2
-This is the source for Team 2's score. Default source is score2.
+#### Match Count: (Team 1, Team 2, Team 3)
+The match count source for each team can be set.  The default source is teamXmatchcount where X is the team number (1, 2 or 3).
 
-#### Time Out 1
-This is the source for Team 1's time outs used or remaining depending the Show Time Outs Used checkbox. Default source is timeout1.
+#### Time Out: (Team 1, Team 2, Team 3)
+The time out count source for each team can be set.  The default source is teamXtimeout where X is the team number (1, 2 or 3).
 
-#### Time Out 2
-This is the source for Team 2's time outs used or remaining depending the Show Time Outs Used checkbox. Default source is timeout2.
+#### Reset: (Team 1, Team 2, Team 3)
+The reset source for each team can be set.  The default source is teamXreset where X is the team number (1, 2 or 3).
 
-#### Reset 1
-This is the source for Team 1's Reset flag.  Default source is reset1.
+#### Warn: (Team 1, Team 2, Team 3)
+The warn source for each team can be set.  The default source is teamXwarn where X is the team number (1, 2 or 3).
 
-#### Reset 2
-This is the source for Team 2's Reset flag.  Default source is reset2.
+#### King Seat: (Team 1, Team 2, Team 3)
+The king seat source for each team can be set.  The default source is teamXkingseat where X is the team number (1, 2 or 3).
 
-#### Warn 1
-This is the source for Team 1's Reset Warning flag.  Default source is warn1.
-
-#### Warn 2
-This is the source for Team 2's Reset Warning flag.  Default source is warn2.
-
-#### Game Time
-This is the source for the game clock time.  Default source is gametime.
-
-#### Match Time
-This is the source for the match time.  Default source is matchtime.
-
-#### Stream Time
-This is the source for the stream time. Default source is streamtime.
-
-#### Table Name
-This is the source for the table name.  Default source is tablename.
-
-#### Last Scored
-This is the source that holds the indicator for which team scored last.  Default source is lastscored.
-
-#### Team 1 Forward
-This is the source that holds Team 1's forward's name.  Default source is team1forward.
-
-#### Team 1 Goalie
-This is the source that holds Team 1's goalie's name.  Default source is team1goalie.
-
-#### Team 2 Forward
-This is the source that holds Team 2's forward's name.  Default source is team2forward.
-
-#### Team 2 Goalie
-This is the source that holds Team 2's goalie's name.  Default source is team2goalie.
-
-#### Tournament
-This is the source of a freeform text field that can be used for the name of the tournament or venue.  Default source is tournament.
-
-#### Event
-This is the source of a freeform text field that can be used for the name of the event being played (i.e. DYP, Open Singles, etc).  Default source is event.
-
-#### Time Remaining
-This is the source for the Time Remaining on the current timer.  Default source is timeremaining.  An alternative and arguably better method to show time remaining is to use a Window Capture source in OBS. This will show the background color of the timer which is a nice touch since it starts green and goes red when time runs out.
-
-#### Timer
-This is the source that holds the name of the current timer that is running (Shot, Pass, Game, Timeout, Recall). Default source is timerinuse.
-
-#### Match Winner
-This is the source that holds the Winner Prefix, Team's Name and Winner Suffix of the team that won the match.  Default source is matchwinner.
-
-#### Meatball
-This is the source that holds the Meatball text when a game is tied just prior to the final point.  Default source is meatball.
-
-#### Aces 1
-This is the source that holds the number of aces team 1 had done. Default source is aces1.
-
-#### Aces 2
-This is the source that holds the number of aces team 2 had done. Default source is aces2.
-
-#### Stuffs 1
-This is the source that holds the number of stuffs team 1 has done.  Default source is stuffs1.
-
-#### Stuffs 2
-This is the source that holds the number of stuffs team 2 has done.  Default source is stuffs2.
-
-#### Breaks 1
-This is the source that holds the number of breaks team 1 has gotten.  Default source is breaks1.
-
-#### Breaks 2
-This is the source that holds the number of breaks team 2 has gotten.  Default source is breaks2.
-
-#### Team 1 Pass Attempts
-This is the source that holds the number of pass attempts for team 1.  Default source is team1passattempts.
-
-#### Team 1 Pass Completes
-This is the source that holds the number of pass completions for team 1.  Default source is team1passcompletes.
-
-#### Team 2 Pass Attempts
-This is the source that holds the number of pass attempts for team 2.  Default source is team2passattempts.
-
-#### Team 2 Pass Completes
-This is the source that holds the number of pass completions for team 2.  Default source is team2passcompletes.
-
-#### Team 1 Shot Attempts
-This is the source that holds the number of shot attempts for team 1.  Default source is team1shotattempts.
-
-#### Team 1 Shot Completes
-This is the source that holds the number of shots made for team 1.  Default source is team1shotcompletes.
-
-#### Team 2 Shot Attempts
-This is the source that holds the number of shot attempts for team 2.  Default source is team2shotattempts.
-
-#### Team 2 Shot Completes
-This is the source that holds the number of shots made for team 2.  Default source is team2shotcompletes.
-
-#### Team 1 Clear Attempts
-This is the source that holds the number of clearing attempts for team 1.  Default source is team1clearattempts.
-
-#### Team 1 Clear Completes
-This is the source that holds the number of successful clears for team 1 from the goalie area to the 5 bar or beyond.  Default source is team1clearcompletes.
-
-#### Team 2 Clear Attempts
-This is the source that holds the number of successful clears for team 2 from the goalie area to the 5 bar or beyond.  Default source is team2clearcompletes.
-
-#### Team 2 Clear Completes
-This is the source that holds the number of successful clears for team 2 from the goalie area to the 5 bar or beyond.  Default source is team2clearcompletes.
-
-#### Team 1 2-Bar Pass Attempts
-This is the source that holds the number of pass attempts for team 1 from the 2-bar to the 5-bar or 3-bar.  Default source is team1twobarpassattempts.
-
-#### Team 1 2-Bar Pass Completes
-This is the source that holds the number of succesful pass completions for team 1 from the 2-bar to the 5 or 3-bar.  Default source is team1twobarpasscompletes.
-
-#### Team 2 2-Bar Pass Attempts
-This is the source that holds the number of pass attempts for team 2 from the 2-bar to the 5-bar or 3-bar.  Default source is team2twobarpassattempts.
-
-#### Team 2 2-Bar Pass Completes
-This is the source that holds the number of succesful pass completions for team 2 from the 2-bar to the 5 or 3-bar.  Default source is team2twobarpasscompletes.
-
-#### Team 1 Pass Percent
-This is the source that holds the successful passing percentage for team 1.  Default source is team1passpercent.
-
-#### Team 2 Pass Percent
-This is the source that holds the successful passing percentage for team 2.  Default source is team2passpercent.
-
-#### Team 1 Shot Percent
-This is the source that holds the successful shot percentage for team 1.  Default source is team1shotpercent.
-
-#### Team 2 Shot Percent
-This is the source that holds the successful shot percentage for team 2.  Default source is team2shotpercent.
-
-#### Team 1 Clear Percent
-This is the source that holds the successful clear percentatge for team 1.  Default source is team1clearpercent.
-
-#### Team 2 Clear Percent
-This is the source that holds the successful clear percentatge for team 2.  Default source is team2clearpercent.
-
-#### Team 1 Scoring
-This is the source that holds the number of scores for team 1.  Default source is team1scoring.
-
-#### Team 2 Scoring
-This is the source that holds the number of scores for team 2.  Default source is team2scoring.
-
-#### Team 1 3-Bar Scoring
-This is the source that holds the number of scores from the 3-bar for team 1.  Default source is team1threebarscoring.
-
-#### Team 2 3-Bar Scoring
-This is the source that holds the number of scores from the 3-bar for team 2.  Default source is team2threebarscoring.
-
-#### Team 1 5-Bar Scoring
-This is the source that holds the number of scores from the 5-bar for team 1.  Default source is team1fivebarscoring.
-
-#### Team 2 5-Bar Scoring
-This is the source that holds the number of scores from the 5-bar for team 2.  Default source is team2fivebarscoring.
-
-#### Team 1 2-Bar Scoring
-This is the source that holds the number of scores from the 2-bar for team 1.  Default source is team1twobarscoring.
-
-#### Team 2 2-Bar Scoring
-This is the source that holds the number of scores from the 2-bar for team 2.  Default source is team2twobarscoring.
-
-#### Team 1 Shots On Goal
-This is the source that holds the number of shots on goal for team 1.  Default source is team1shotsongoal.
-
-#### Team 2 Shots On Goal
-This is the source that holds the number of shots on goal for team 2.  Default source is team2shotsongoal.
-
-#### Show Scores
-This is the source that is controlled by the Show Score/Hide Score toggle button in the OBS Panel on the main screen.  This is intended to be a Scene within OBS that contains all the scoring fields and their associated labels.  This scene can then be included in your main streaming scene.  When you want to keep score, click the Show Score button on the main screen.  When no one is keeping the score, click the Hide Score button which will turn the scene in the Show Scores box off.
-The following sources would typically be contained in this scene:
-Last Scored, Time Out 1, Time Out 2, Game Count 1, Game Count 2, Score 1, Score 2
+#### Show Scores:
+This is the source that is controlled by the Show Score check box in the OBS Panel on the main screen.  This is intended to be a named group of sources within within OBS or a scene with OBS that contains all the scoring fields and their associated labels.  This group or scene can then be included in your main streaming scene.  When you want to keep score, check the Show Score check box on the main screen.  When no one is keeping the score, uncheck the Show Scores button which will turn the scene/group in the Show Scores: source box off.
+The following sources would typically be contained in this scene or group:
+Last Scored, Time Out (Teams 1 & 2), Match Count 1 (Teams 1 & 2), Game Count (Teams 1 & 2), Score (Teams 1 & 2), King Seat (Teams 1 & 2).
+Not team 3 sources are controlled by Show Cutthroat discussed later.
 Also include any labels that would look out of place without the above fields.
 
-#### Show Timer
+#### Show Timer:
 This is the source that shows the time remaining.  This should be a Window Capture source in OBS. The window should be setup as follows:</br>
 <img width="500" height="200" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettingsTimerWindow.png">
+
+#### Show Cutthroat:
+This is the source that is controlled by the Show Cutthroat check box in the OBS Panel on the main screen.  This is intended to be a named group of sources within within OBS or a scene with OBS that contains all the scoring fields and their associated labels for team 3.  This group or scene can then be included in your main streaming scene.  When you want to show team 3's information, check the Show Cutthroat check box on the main screen.  When no one is keeping the score, uncheck the Show Scores button which will turn the scene/group in the Show Scores: source box off.
+The following sources would typically be contained in this scene or group:
+Time Out (Team 3), Match Count (Team 3), Game Count (Team 3), Score (Team 3), King Seat (Team 3).
+
+#### Tournament:
+This is the source of a freeform text field that can be used for the name of the tournament or venue.  Default source is tournament.
+
+#### Event:
+This is the source of a freeform text field that can be used for the name of the event being played (i.e. DYP, Open Singles, etc).  Default source is event.
+
+#### Table Name:
+This is the source for the table name.  Default source is tablename.
+
+#### Timer:
+This is the source that holds the name of the current timer that is running (Shot, Pass, Game, Timeout, Recall). Default source is timerinuse.
+
+#### Time Remaining:
+This is the source for the Time Remaining on the current timer.  Default source is timeremaining.  An alternative and arguably better method to show time remaining is to use a Window Capture source in OBS. This will show the background color of the timer which is a nice touch since it starts green and goes red when time runs out.
+
+#### Game Time:
+This is the source for the game clock time.  Default source is gametime.
+
+#### Match Time:
+This is the source for the match time.  Default source is matchtime.
+
+#### Stream Time:
+This is the source for the stream time. Default source is streamtime.
+
+#### Last Scored:
+This is the source that holds the indicator for which team scored last.  Default source is lastscored.
+
+#### Match Winner:
+This is the source that holds the Winner Prefix, Team's Name and Winner Suffix of the team that won the match.  Default source is matchwinner.
+
+#### Meatball:
+This is the source that holds the Meatball text when a game is tied just prior to the final point.  Default source is meatball.
+
+#### Game Results:
+This is the source that holds the results of all the games played since the program was started or the Start Event button was pressed.  It is intended to be a Text (GDI+) source with a scrolling filter applied.   Every time a game is won, the current time, team 1 forward & goalie names, team 1 score, team 2 forward & goalie names, team 2 score, and the game time length is added to the text on a new line.  Default source is gameresults.
 
 #### Save
 Click the save button to save any source changes made.
@@ -342,6 +219,87 @@ Click the cancel button to discard any source changes made.
 #### Restore Defaults
 Click the Restore Defaults button to restore the default sources.
 
+### Statistics Sources
+The statistics fields in FoosOBSPlus can be sent to OBS Studio so it can be displayed in a live stream.  The names of these sources are configurable if the default names do not suit you. The vast majority of these sources should be Text (GDI+) sources with the Read from file checkbox unchecked.  Exceptions to this will be specifically noted below.  To get to the Statistics Sources configuration, click on Edit, then Settings, then Statistics Sources:
+
+<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings11.png">
+
+Sources Settings Page:</br>
+<img width="542" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings12.png">
+
+Below are the sources that can be configured:
+(Note: Although Team 3 sources can be defined, currently no statistics are actually captured for Team 3.)
+Each field below has a source for Team 1, Team 2 and Team 3.  For the defaults, replace the actual team number for the X.
+
+#### Pass Attempts:
+This is the source that holds the number of pass attempts for a team.  Default source is teamXpassattempts.
+
+#### Pass Completes:
+This is the source that holds the number of pass completions for a team.  Default source is teamXpasscompletes.
+
+#### Pass Percent:
+This is the source that holds the successful passing percentage for a team.  Default source is teamXpasspercent.
+
+#### Shot Attempts:
+This is the source that holds the number of shot attempts for a team.  Default source is teamXshotattempts.
+
+#### Shot Completes:
+This is the source that holds the number of shots made for a team.  Default source is teamXshotcompletes.
+
+#### Shot Percent:
+This is the source that holds the successful shot percentage for a team.  Default source is teamXshotpercent.
+
+#### Clear Attempts:
+This is the source that holds the number of clearing attempts for a team.  Default source is teamXclearattempts.
+
+#### Clear Completes:
+This is the source that holds the number of successful clears for a team from the goalie area to the 5 bar or beyond.  Default source is teamXclearcompletes.
+
+#### Clear Percent:
+This is the source that holds the successful clear percentage for a team.  Default source is teamXclearpercent.
+
+#### 2-Bar Pass Attempts:
+This is the source that holds the number of pass attempts for a team from the 2-bar to the 5-bar or 3-bar.  Default source is teamXtwobarpassattempts.
+
+#### 2-Bar Pass Completes:
+This is the source that holds the number of successful pass completions for a team from the 2-bar to the 5-bar or 3-bar.  Default source is teamXtwobarpasscompletes.
+
+#### 2-Bar Pass Percent:
+This is the source that holds the successful 2-bar to the 5-bar or 3-bar passing percentage for a team.  Default source is teamXtwobarpasspercent.
+
+#### Aces:
+This is the source that holds the number of aces for a team. Default source is teamXaces.
+
+#### Stuffs:
+This is the source that holds the number of stuffs for a team.  Default source is teamXstuffs.
+
+#### Breaks:
+This is the source that holds the number of breaks for a team.  Default source is teamXbreaks.
+
+#### Scoring:
+This is the source that holds the number of scores for a team.  Default source is teamXscoring.
+
+#### 3-Bar Scoring:
+This is the source that holds the number of scores from the 3-bar for a team.  Default source is teamXthreebarscoring.
+
+#### 5-Bar Scoring:
+This is the source that holds the number of scores from the 5-bar for a team.  Default source is teamXfivebarscoring.
+
+#### 2-Bar Scoring:
+This is the source that holds the number of scores from the 2-bar for a team.  Default source is teamXtwobarscoring.
+
+#### Shots On Goal:
+This is the source that holds the number of shots on goal for a team.  Default source is teamXshotsongoal.
+
+#### Save
+Click the save button to save any statistics source changes made.
+
+#### Cancel
+Click the cancel button to discard any statistics source changes made.
+
+#### Restore Defaults
+Click the Restore Defaults button to restore the default statistics sources.
+
 ### Hot Keys
 FoosOBSPlus uses buttons to do various functions such as increase or decrease scores, switch sides, reset game counts, start timers, etc.  Each button can have a Hot Key assigned to it.  Pressing ALT plus the assigned Hot Key for the button will function just like pressing the actual button.  Unfortunately, there are more buttons than available hot keys so you can not assign a hot key to every button. The hot keys can be used in Stream Deck commands to make operating FoosOBSPlus a simple push button affair.  TouchPortal is another program that can be used to activate the buttons in FoosOBSPlus.  These will require that AutoHotKey be installed. (See https://www.autohotkey.com/docs/Tutorial.htm).  FoosOBSPlus will generate the AutoHotKey scripts for any hot keys defined (see the Generate AutoHotKey Scripts button below).
 
@@ -350,93 +308,185 @@ FoosOBSPlus uses buttons to do various functions such as increase or decrease sc
 Hot Key Settings Page:</br>
 <img width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings6.png">
 
+##### Team 1 Switch Positions
+Assigns the hot key to Switch Team 1's forward and goalie names. Default hot key is t.
+
+##### Team 2 Switch Positions
+Assigns the hot key to Switch Team 2's forward and goalie names. Default hot key is m.
+
+##### Team 3 Switch Positions
+Assigns the hot key to Switch Team 3's forward and goalie names. Default hot key is m.
+
+##### Team 1 Increment Score
+Assigns the hot key for the + (increment score) button for Team 1. Default hot key is 1.
+
+##### Team 2 Increment Score
+Assigns the hot key for the + (increment score) button for Team 2. Default hot key is 2.
+
+##### Team 3 Increment Score
+Assigns the hot key for the + (increment score) button for Team 3. Default hot key is unassigned.
+
+##### Team 1 Decrement Score
+Assigns the hot key for the - (decrement score) button for Team 1. Default hot key is 4.
+
+##### Team 2 Decrement Score
+Assigns the hot key for the - (decrement score) button for Team 2. Default hot key is 8.
+
+##### Team 3 Decrement Score
+Assigns the hot key for the - (decrement score) button for Team 3. Default hot key is unassigned.
+
+##### Team 1 Increment Game
+Assigns the hot key for the + (increment game count) button to increase Team 1's game count. Default hot key is 5.
+
+##### Team 2 Increment Game
+Assigns the hot key for the + (increment game count) button to increase Team 2's game count. Default hot key is 6.
+
+##### Team 3 Increment Game
+Assigns the hot key for the + (increment game count) button to increase Team 3's game count. Default hot key is unassigned.
+
+##### Team 1 Decrement Game
+Assigns the hot key for the - (decrement game count) button for Team 1's score. Default hot key is j.
+
+##### Team 2 Decrement Game
+Assigns the hot key for the - (decrement game count) button for Team 2's score. Default hot key is i.
+
+##### Team 3 Decrement Game
+Assigns the hot key for the - (decrement game count) button for Team 3's score. Default hot key is unassigned.
+
+##### Team 1 Increment Match
+Assigns the hot key for the + (increment match) button for Team 1. Default hot key is unassigned.
+
+##### Team 2 Increment Match
+Assigns the hot key for the + (increment match) button for Team 2. Default hot key is unassigned2.
+
+##### Team 3 Increment Match
+Assigns the hot key for the + (increment match) button for Team 3. Default hot key is unassigned.
+
+##### Team 1 Decrement Match
+Assigns the hot key for the - (decrement match) button for Team 1. Default hot key is unassigned.
+
+##### Team 2 Decrement Match
+Assigns the hot key for the - (decrement match) button for Team 2. Default hot key is unassigned.
+
+##### Team 3 Decrement Match
+Assigns the hot key for the - (decrement match) button for Team 3. Default hot key is unassigned.
+
+##### Team 1 Use Time Out
+Assigns the hot key to use a time out for Team 1.  Default hot key is 9.
+
+##### Team 2 Use Time Out
+Assigns the hot key to use a time out for Team 2.  Default hot key is 0.
+
+##### Team 3 Use Time Out
+Assigns the hot key to use a time out for Team 3.  Default hot key is unassigned.
+
+##### Team 1 Return Time Out
+Assigns the hot key to return a time out to Team 1's available pool of timeouts or used pool of time outs depending on how the Show Time Outs Used setting is set.  Default hot key is n.
+
+##### Team 2 Return Time Out
+Assigns the hot key to return a time out to Team 2's available pool of timeouts or used pool of time outs depending on how the Show Time Outs Used setting is set.  Default hot key is q.
+
+##### Team 3 Return Time Out
+Assigns the hot key to return a time out to Team 3's available pool of timeouts or used pool of time outs depending on how the Show Time Outs Used setting is set.  Default hot key is unassigned.
+
+#### Team 1 Reset
+Assigns the hot key for the Reset button for Team 1.  Default hot key is unassigned.
+
+#### Team 2 Reset
+Assigns the hot key for the Reset button for Team 2.  Default hot key is unassigned.
+
+#### Team 3 Reset
+Assigns the hot key for the Reset button for Team 3.  Default hot key is unassigned.
+
+#### Team 1 Warn
+Assigns the hot key for the Warn button for Team 1. Default hot key is unassigned.
+
+#### Team 2 Warn
+Assigns the hot key for the Warn button for Team 2. Default hot key is unassigned.
+
+#### Team 3 Warn
+Assigns the hot key for the Warn button for Team 3. Default hot key is unassigned.
+
+#### Team 1 King Seat
+Assigns the hot key for the King Seat check box for Team 1. Default hot key is unassigned.
+
+#### Team 2 King Seat
+Assigns the hot key for the King Seat check box for Team 2. Default hot key is unassigned.
+
+#### Team 3 King Seat
+Assigns the hot key for the King Seat check box for Team 3. Default hot key is unassigned.
+
 #### Start Match
 Assigns the hot key for the Start Match button.  Default hot key is b.
 
 #### Pause Match
 Assigns the hot key for the Pause Match button.  Default hot key is ,.
 
+#### End Match
+Assigns the hot key for the End Match button.  Default hot key is unassigned.
+
 #### Start Game
 Assigns the hot key for the Start Game button.  Default hot key is ..
 
-#### Reset(Team 1)
-Assigns the hot key for the Reset button for Team 1.  Default hot key is unassigned.
+##### Shot Timer
+Assigns the hot key to start the Shot timer.  Default hot key is s.
 
-#### Reset(Team 2)
-Assigns the hot key for the Reset button for Team 2.  Default hot key is unassigned.
+##### Pass Timer
+Assigns the hot key to start the Pass timer.  Default hot key is p.
 
-#### Warn(Team 1)
-Assigns the hot key for the Warn button for Team 1. Default hot key is unassigned.
+##### Time Out Timer
+Assigns the hot key to start the Time Out timer.  Default hot key is o.
 
-#### Warn(Team 2)
-Assigns the hot key for the Warn button for Team 2. Default hot key is unassigned.
+##### Game Timer
+Assigns the hot key to start the Game timer.  Default hot key is g.
 
-#### Switch Reset/Warns
-Assigns the hot key to swap the Reset and Warn flags for Team 1 with Team 2.  Default hot key is unassigned.
+##### Recall Timer
+Assigns the hot key to start the Recall timer.  Default hot key is c.
 
-#### Team Names
-##### Team 1 Switch Positions
-Assigns the hot key to Switch Team 1 and Team 2's names. Default hot key is t.
-
-##### Team 2 Switch Positions
-Assigns the hot key for the Switch button for Team 2's names. Default hot key is m.
-
-##### Switch Teams
-Assigns the hot key to swap Team 1's and Team 2's names (Team, Forward & Goalie) with each other.  Default hot key is e.
-
-#### Scores
-##### -(Team 1)
-Assigns the hot key for the - button for Team 1's score. Default hot key is 4.
-
-##### +(Team 1)
-Assigns the hot key for the + button to increase Team 1's score. Default hot key is 1.
-
-##### -(Team 2)
-Assigns the hot key for the - button for Team 2's score. Default hot key is 8.
-
-##### +(Team 2)
-Assigns the hot key for the + button to increase Team 2's score. Default hot key is 2.
-
-##### Switch Scores
-Assigns the hot key to Switch Team 1 and Team 2's scores.  Default hot key is unassigned.
-
-#### Switch Sides
-Assigns the hot key to swap all Team 1's data with Team 2's data.  Use this when the teams switch sides. Default hot key is w.
+##### Reset Timer
+Assigns the hot key to reset the timer to 0 regardless of what it is currently timing.  Default hot key is r.
 
 #### Clear All
 Assigns the hot key for the Clear All button in the Switch Panel.  Default hot key is unassigned.
 
-#### Game Counts
-##### -(Team 1)
-Assigns the hot key for the - button for Team 1's score. Default hot key is j.
+#### Undo
+Assigns the hot key for the Undo button.  Default hot key is u.
 
-##### +(Team 1)
-Assigns the hot key for the + button to increase Team 1's game count. Default hot key is 5.
+#### Redo
+Assigns the hot key for the Redo button.  Default hot key is d.
 
-##### -(Team 2)
-Assigns the hot key for the - button for Team 2's score. Default hot key is i.
+#### Show Skunk
+Assigns the hot key for the Show Skunk button. Default hot key is k.
 
-##### +(Team 2)
-Assigns the hot key for the + button to increase Team 2's game count. Default hot key is 6.
+#### Start Stream
+Assigns the hot key for the Start Stream button. Default hot key is z.
+
+#### Switch Match Counts
+Assigns the hot key for the Switch Match Counts button. Default hot key is unassigned.
+
+#### Switch Sides
+Assigns the hot key to swap all Team 1's data with Team 2's data.  Use this when the teams switch sides. Default hot key is w.
+
+##### Switch Teams
+Assigns the hot key to swap Team 1's and Team 2's names (Team, Forward & Goalie) with each other.  Default hot key is e.
+
+##### Switch Scores
+Assigns the hot key to Switch Team 1 and Team 2's scores.  Default hot key is unassigned.
 
 ##### Switch Game Counts
 Assigns the hot key to switch the game counts. Team 1's game count will be swapped with Team 2's game count.  Default hot key is unassigned.
 
-#### Time Outs
-##### Return TO(Team 1)
-Assigns the hot key to return a time out to Team 1's available pool of timeouts or used pool of time outs depending on how the Show Time Outs Used setting is set.  Default hot key is n.
-
-##### Use TO(Team 1)
-Assigns the hot key to use a time out for Team 1.  Default hot key is 9.
-
-##### Return TO(Team 2)
-Assigns the hot key to return a time out to Team 2's available pool of timeouts or used pool of time outs depending on how the Show Time Outs Used setting is set.  Default hot key is 1.
-
-##### Use TO(Team 2)
-Assigns the hot key to use a time out for Team 2.  Default hot key is 0.
-
 ##### Switch Time Outs
 Assigns the hot key to switch the time out counts. Team 1's time out count will be swapped with Team 2's time out count.  Default hot key is [.
+
+#### Switch Reset/Warns
+Assigns the hot key to swap the Reset and Warn flags for Team 1 with Team 2.  Default hot key is unassigned.
+
+#### Switch Forwards
+Assigns the hot key for switching only the names of the Forwards of Team 1 and Team 2.  Default hot key is ;.
+
+#### Switch Goalies
+Assigns the hot key for switching only the names of the Goalies of Team 1 and Team 2.  Default hot key is x.
 
 #### Reset Names
 Assigns the hot key for the Reset Names button in the Reset Panel.  Default hot key is unassigned.
@@ -445,10 +495,10 @@ Assigns the hot key for the Reset Names button in the Reset Panel.  Default hot 
 Assigns the hot key for the Reset Scores button in the Reset Panel.  Default hot key is 3.
 
 #### Reset Game Counts
-Assigns the hot key to reset Team 1's and Team 2's game counts to 0.  Default hot key is 7.
+Assigns the hot key to reset Team 1's, Team 2's and Team 3's game counts to 0.  Default hot key is 7.
 
 #### Reset Time Outs
-Assigns the hot key to reset Team 1's and Team 2's time outs to 0 or the max time outs depending on how the Show Time Outs Used setting is set.  Default hot key is -.
+Assigns the hot key to reset Team 1's, Team 2's and Team 3's time outs to 0 or the max time outs depending on how the Show Time Outs Used setting is set.  Default hot key is -.
 
 #### Reset Reset/Warn
 Assigns the hot key to clear the Reset and Warn flags for both Team 1 and Team 2.  Default hot key is unassigned.
@@ -456,42 +506,8 @@ Assigns the hot key to clear the Reset and Warn flags for both Team 1 and Team 2
 #### Reset All
 Assigns the hot key to clear the game counts, scores, time outs, reset flags and warn flags for both Team 1 and Team 2.  Default hot key is a.
 
-#### Timers
-##### Start(Shot)
-Assigns the hot key to start the Shot timer.  Default hot key is s.
-
-##### Start(Pass)
-Assigns the hot key to start the Pass timer.  Default hot key is p.
-
-##### Start(Time Out)
-Assigns the hot key to start the Time Out timer.  Default hot key is o.
-
-##### Start(Game)
-Assigns the hot key to start the Game timer.  Default hot key is g.
-
-##### Start(Recall)
-Assigns the hot key to start the Recall timer.  Default hot key is c.
-
-##### Reset Timer
-Assigns the hot key to reset the timer to 0 regardless of what it is currently timing.  Default hot key is r.
-
-#### Undo
-Assigns the hot key for the Undo button.  Default hot key is u.
-
-#### Redo
-Assigns the hot key for the Redo button.  Default hot key is d.
-
-#### Switch Forwards
-Assigns the hot key for switching only the names of the Forwards of Team 1 and Team 2.  Default hot key is ;.
-
-#### Switch Goalies
-Assigns the hot key for switching only the names of the Goalies of Team 1 and Team 2.  Default hot key is x.
-
-#### Show Skunk
-Assigns the hot key for the Show Skunk button. Default hot key is k.
-
-#### Start Stream
-Assigns the hot key for the Start Stream button. Default hot key is z.
+#### Reset Match Counts
+Assigns the hot key to reset Team 1's, Team 2's and Team 3's match counts to 0.  Default hot key is 7.
 
 #### AutoHotKey Script Path
 This is the path to where the AutoHotKey scripts will be generated.  The default is C:\FoosOBSPlusScripts\.
@@ -506,7 +522,7 @@ The Select Path allows you to choose the directory in which the AutoHotKey scrip
 Click the save button to save any hot key changes made.
 
 #### Cancel
-Click the cancel button to discard any hot keye changes made.
+Click the cancel button to discard any hot key changes made.
 
 #### Restore Defaults
 Click the Restore Defaults button to restore the default hot keys.
@@ -619,18 +635,6 @@ Click the cancel button to discard any changes made.
 #### Restore Defaults
 Click the Restore Defaults button to restore the default file names.
 
-### Statistics
-This has not been implemented yet. But will contain the sources for the Statistics generated for the current game.  Probably will only complete this section if someone expresses an interest.
-
-#### Save
-Click the save button to save any changes made.
-
-#### Cancel
-Click the cancel button to discard any changes made.
-
-#### Restore Defaults
-Click the Restore Defaults button to restore the default file names.
-
 ## OBS
 This is the menu item for OBS Studio related activity.  A green solid circle will show before OBS to indicate that a connection has been established.  A red solid circle indicates that OBS Studio is currently disconnected.
 
@@ -667,10 +671,10 @@ If this box is checked, then the OBS Connect window will close when FoosOBSPlus 
 If this box is checked, then when FoosOBSPlus connects to OBS Studio, it will immediately send the current data in FoosOBSPlus to OBS Studio. Otherwise, data will only be sent when fields change in FoosOBSPlus.
 
 #### Connect
-This button attempts to connect FoosOBSPlus to OBS Studio.  The Host, Port and Password fields must be set correctly and OBS Studio must be running on the same network for a successful connection.
+This button attempts to connect FoosOBSPlus to OBS Studio.  The Host, Port and Password fields must be set correctly and OBS Studio must be running on the same network for a successful connection. The button will be grayed out if already FoosOBSPlus is already connected to OBS Studio.
 
 #### Disconnect
-This button will disconnect FoosOBSPlus from OBS Studio.
+This button will disconnect FoosOBSPlus from OBS Studio.  This button will be grayed out if FoosOBSPlus is already disconnected from OBS Studio.
 
 #### Save
 This button will save the current settings in the OBS Connect window.
@@ -679,7 +683,7 @@ This button will save the current settings in the OBS Connect window.
 This window will show any messages relevant to communicating with OBS Studio.
 
 ### Disconnect
-Click this menu item to disconnect from OBS Studio.
+Click this menu item to disconnect FoosOBSPlus from OBS Studio.
 
 ## AutoScore
 This is the menu item for FoosScore AutoScore related activity.  A green solid circle will show before AutoScore to indicate that a connection has been established to the FoosScore AutoScore system.  A red solid circle indicates that FoosScore AutoScore is currently disconnected.
@@ -747,6 +751,8 @@ When checked, the main timer window is displayed.  This is a window that can be 
 When checked, the Team 1 Last Scored Timer Window will display.  This shows how long it has been since Team 1 has scored.  To show in OBS, create a Window Capture source and set Window to "[javaw.exe]:FoosOBSPlus Team 1 Last Scored Timer Window", Capture Method to Automatic and  WIndow Match Priority to "Window title must match".w
 ### Team 2 Last Scored Window
 When checked, the Team 2 Last Scored Timer Window will display.  This shows how long it has been since Team 2 has scored.  To show in OBS, create a Window Capture source and set Window to "[javaw.exe]:FoosOBSPlus Team 2 Last Scored Timer Window", Capture Method to Automatic and  Window Match Priority to "Window title must match".
+### Team 3 Last Scored Window
+When checked, the Team 3 Last Scored Timer Window will display.  This shows how long it has been since Team 3 has scored.  To show in OBS, create a Window Capture source and set Window to "[javaw.exe]:FoosOBSPlus Team 3 Last Scored Timer Window", Capture Method to Automatic and  Window Match Priority to "Window title must match".
 ### Game Table Window
 When checked, the Game Table Window will display.  This shows the games for the current match being played. To show in OBS, create a Window Capture source and set Window to "[javaw.exe]:FoosOBSPlus Game Table Window", Capture Method to Automatic and  Window Match Priority to "Window title must match".
 ### Show All Windows
@@ -776,17 +782,14 @@ This field will be sent to the source specified in the Event field in Sources Se
 This field will be sent to the source specified in the Table Name field in Sources Settings.  Use this to display the table name (or number) that is currently being streamed.
 #### Clear
 This button will clear all the fields in the Table Information panel.
-#### Load
-This button is currently useless.
-#### Set
-Yet another useless button.
+
 ### Match Information
 This panel provides a way to manage a match and shows a game table grid of the current match being played.
 
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusMatchInformation.png">
 
 #### Start Event
-This button is simply to drop a Start Event marker in the streamindex.txt file if Start Stream is activated.
+This button drops a Start Event marker in the streamindex.txt file if Start Stream is activated.  It will also reset the Game Results variable used to send the Game Results to OBS Studio through the Game Results source.
 #### Start Match
 This button will reset all scores, game counts, time outs, reset/warns and times.  It also records the current time as the Start Time and will drop a Start Match marker in the streamindex.txt file if Start Stream is activated.
 #### Pause Match
@@ -804,59 +807,67 @@ This displays the running time for the current match. It starts when the Start M
 This display the running time of the current game. The Pause Match button will pause/unpause the Game Time.  Reaching the points for winning a game will restart the game timer for the next game.  If the last game of the match is over, then the game timer will stop and have to be restarted by the Start Match or Start Game buttons.
 #### Game Table
 The Game Table shows the scores and time elapsed for each game.  Game winning score is highlighted in blue and match winning team is highlighted in Green.  The current game number is highlighted in gray.  The game table will only display up to 11 games and anything over 5 games won't look pretty.
-### Team 1 Information & Team 2 Information
-These panels manage the information specific to Team 1 and Team 2 for the current match.
+### Team 1 Information & Team 2 Information & Team 3 Information
+These panels manage the information specific to Team 1, Team 2 and Team 3 for the current match.
 
 <img width="520" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusTeamInformation.png">
 
 #### Team Name
-This field will be sent to the source specified in the Team 1 field in Sources Settings. Use this to display the team name for Team 1.
+This field will be sent to the source specified in the Team 1 Name field in Sources Settings. Use this to display the team name for Team 1.
 #### Forward Name
-This field will be sent to the source specified in the Team 1 Forward field in Sources Settings. Use this to display the name fo the forward for Team 1.
+This field will be sent to the source specified in the Team 1 Forward Name field in Sources Settings. Use this to display the name of the forward for Team 1.
 #### Goalie Name
-This field will be sent to the source specified in the Team 1 Goalie field in Sources Settings. Use this to display the name fo the goalie for Team 1.
+This field will be sent to the source specified in the Team 1 Goalie Name field in Sources Settings. Use this to display the name of the goalie for Team 1.
 #### Switch Positions
 The Switch Positions button will swap the Forward's and Goalie's names. Use this when Team 1 switches positions.
 #### Score
-This field is an editable field that will allow you to change the score for Team 1.  The score is sent to the source specified in the Score 1 field in Sources Settings.
+This field is an editable field that will allow you to change the score for Team 1.  The score is sent to the source specified in the Team 1 Score field in Sources Settings.
 #### Score -
 This button will decrement Team 1's score by 1.  It can be assigned a hot key in Hot Keys Settings.
 #### Score +
 This button will increment Team 1's score by 1.  It can be assigned a hot key in Hot Keys Settings.
 #### Game Count
-This field is an editable field that will allow you to change the game count for Team 1.  The game count is sent to the source specified in the Game Count 1 field in Sources Settings.
+This field is an editable field that will allow you to change the game count for Team 1.  The game count is sent to the source specified in the Team 1 Game Count field in Sources Settings.
 #### Game Count -
 This button will decrement Team 1's game count by 1.  It can be assigned a hot key in Hot Keys Settings.
 #### Game Count +
 This button will increment Team 1's game count by 1.  It can be assigned a hot key in Hot Keys Settings.
+#### Match Count
+This field is an editable field that will allow you to change the match count for Team 1.  The match count is sent to the source specified in the Team 1 Match Count field in Sources Settings.
+#### Match Count -
+This button will decrement Team 1's match count by 1.  It can be assigned a hot key in Hot Keys Settings.
+#### Match Count +
+This button will increment Team 1's match count by 1.  It can be assigned a hot key in Hot Keys Settings.
 #### Time Out Count
-This field is an editable field that will allow you to change the time outs for Team 1.  The time out count is sent to the source specified in the Time Out 1 field in Sources Settings.  This field can be have in two different ways depending on if Show Time Outs Used checkbox is checked or not in Parameters Settings. If checked, then the number in the Time Out Count field shows the number of time outs used. Otherwise, it shows the number of time outs remaining.
+This field is an editable field that will allow you to change the time outs for Team 1.  The time out count is sent to the source specified in the Team 1 Time Out field in Sources Settings.  This field can behave in two different ways depending on whether the Show Time Outs Used checkbox is checked or not in Parameters Settings. If checked, then the number in the Time Out Count field shows the number of time outs used. Otherwise, it shows the number of time outs remaining.
 #### Return TO
 This button will return a time out to Team 1.  This will either increment or decrement the Time Out Count depending on how the Show Time Outs Used checkbox in Parameters Settings is set. It can be assigned a hot key in Hot Keys Settings.
 #### Use TO
 This button will charge a time out to Team 1.  This will either increment or decrement the Time Out Count depending on how the Show Time Outs Used checkbox in Parameters Settings is set. It can be assigned a hot key in Hot Keys Settings.
 #### Reset
-This button will send the word RESET to the source specified in the Reset 1 field in Sources Settings.  It is a toggle button so when pressed once, it displays RESET. When pressed again, it clears the text.  A hot key can be assigned to this button in Hot Keys Settings.
+This button will send the word RESET to the source specified in the Team 1 Reset field in Sources Settings.  It is a toggle button so when pressed once, it displays RESET. When pressed again, it clears the text.  A hot key can be assigned to this button in Hot Keys Settings.
 #### Warn
-This button will send the word WARNING to the source specified in the Warn 1 field in Sources Settings.  It is a toggle button so when pressed once, it displays WARNING. When pressed again, it clears the text.  A hot key can be assigned to this button in Hot Keys Settings.
+This button will send the word WARNING to the source specified in the Team 1 Warn field in Sources Settings.  It is a toggle button so when pressed once, it displays WARNING. When pressed again, it clears the text.  A hot key can be assigned to this button in Hot Keys Settings.
 #### Time Since Last Scored
 This is the time elapsed since Team 1 scored a goal. It is reset by the Start Match button or when Team 1 scores a point.
 #### King Seat
 This checkbox is used to flag the team as currently being in the King Seat (top of the winners bracket).  When checked, a crown (♔) will be displayed. Since only 1 team can be designated as in the King Seat, the other teams' King Seat checkboxes will be cleared.  Clearing the checkbox will clear the text.
 ### Team 2 Information
 This panel is identical to Team 1 Information panel but is for tracking Team 2's information.
+### Team 3 Information
+This panel is identical to Team 1 Information panel but is for tracking Team 3's information.
 ### Timer Panel
 The Timer Panel gives the ability to start and reset various timers.  Only one time is active at a time
 
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusTimerPanel.png">
 
 #### Active Timer
-The first line in the Timer Window displays which timer is currently active. This will be one of the following:
-Timer Reset - shows when no timer is currently active.
-Shot Timer
-Pass Timer
-Time Out Timer
-Game Timer
+The first line in the Timer Window displays which timer is currently active. This will be one of the following:</br></br>
+Timer Reset - shows when no timer is currently active.</br>
+Shot Timer</br>
+Pass Timer</br>
+Time Out Timer</br>
+Game Timer</br>
 Recall Timer
 #### Shot Timer Start
 This button starts the Shot Timer.  The amount of time allowed for a shot is defined in the Shot Time field in Parameters Settings.  A hot key can be assigned to this button in Hot Keys Settings.
@@ -879,21 +890,21 @@ The OBS Panel provides some controls to manage OBS.  OBS must be configured in t
 This button will connect FoosOBSPlus to OBS. Once connected, data will automatically be sent to OBS when changed in FoosOBSPlus. 
 #### Update OBS
 This button will send the current data in FoosOBSPlus to OBS.  This can be useful if you have to restart OBS and reconnect.
-#### Show Score/Hide Score
-This button will send a command to OBS to show or hide the source identified in the Show Scores field in Sources Settings. It is useful to hide the scores in OBS when no one is keeping score and to show them again when someone is available.
-#### Show Timer/Hide Timer
-This button will send a command to OBS to show or hide the source identified in the Show Timer field in Sources Settings.  It is useful to hide the timer window in OBS when no one is available to run the timers.
+#### Show Scores
+This checkbox will send a command to OBS to show or hide the source identified in the Show Scores field in Sources Settings depending on if the box is checked (show) or not (hide). It is useful to hide the scores in OBS when no one is keeping score and to show them again when someone is available or AutoScore is working.
+#### Show Timer
+This checkbox will send a command to OBS to show or hide the source identified in the Show Timer field in Sources Settings depending on if the box is checked (show) or not (hide).  It is useful to hide the timer window in OBS when no one is available to run the timers.
 #### Disconnect
 This button will disconnect OBS.
 #### Fetch OBS
 This button will read the data in OBS and show it in FoosOBSPlus.
-#### Enable Skunk/Disable Skunk
-This button will enable activating the Skunk filters identified in Team 1 Skunks and Team 2 Skunks in Filters Settings.  The Skunk filters will only be activated when the Enable Skunk button is on.
-#### Start Stream/Stop Stream
+#### Enable Skunk
+This checkbox will enable activating the Skunk filters identified in Team 1 Skunks and Team 2 Skunks in Filters Settings.  The Skunk filters will only be activated when the Enable Skunk checkbox is checked.
+#### Start Stream Timer/Stop Stream Timer
 This button will start a stream timer and create a file called streamindex.txt.  Markers can be dropped in this file to show the time stamps when certain events happen.  This can be useful for indexing the stream videos.
 Once the Start Stream Timer button is pressed, it will toggle to Stop Stream Timer button.  This will then stop the stream timer. The next press will reset the time and start it again.
 #### Stream Time:
-This shows the running stream time when the Start Stream Timer button has been pressed.
+The time to the right of the Start Stream Timer/Stop Stream Timer button shows the running stream time when the Start Stream Timer button has been pressed.
 ### AutoScore Panel
 The AutoScore Panel controls the interaction with the AutoScore system.  This is a home grown system using lasers and a Raspberry Pico to detect when the ball is scored in one goal or the other.  When a score is detected, it sends data to FoosOBSPlus to increment the scoring team's score by one point.
 
@@ -913,7 +924,7 @@ The Switch Panel is used to swap the information between Team 1 and Team 2.
 <img width="320" height="370" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSwitchPanel.png">
 
 #### Switch Sides
-The Switch Sides button is used when the teams switch sides.  The team names, player names, scores, time outs, game counts, reset/warns and last scored times will all be swapped. A hot key can be assigned to this button in Hot Keys Settings.
+The Switch Sides button is used when the teams switch sides.  The team names, player names, scores, time outs, game counts, match counts, reset/warns, king seat and last scored times will all be swapped. A hot key can be assigned to this button in Hot Keys Settings.
 #### Switch Teams
 This button will swap the Team Name, Forward Name and Goalie Name of Team 1 and Team 2. A hot key can be assigned to this button in Hot Keys Settings.
 #### Switch Forward
@@ -924,6 +935,8 @@ This button will only swap Goalie Names of Team 1 with Team 2. A hot key can be 
 This button will swap the scores of Team 1 with Team 2. A hot key can be assigned to this button in Hot Keys Settings.
 #### Switch Game Counts
 This button will swap the game counts of Team 1 with Team 2. A hot key can be assigned to this button in Hot Keys Settings.
+#### Switch Match Counts
+This button will swap the match counts of Team 1 with Team 2. A hot key can be assigned to this button in Hot Keys Settings.
 #### Switch Time Outs
 This button will swap the Time Out Counts of Team 1 with Team 2. A hot key can be assigned to this button in Hot Keys Settings.
 #### Switch Reset/Warns
@@ -938,17 +951,19 @@ The Reset Panel is useful for reseting information in the Team 1 and Team 2 Info
 <img width="270" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusResetPanel.png">
 
 #### Reset Names
-This button will reset the Team Name, Forward Name and Goalie Name for both teams. A hot key can be assigned to this button in Hot Keys Settings.
+This button will reset the Team Name, Forward Name and Goalie Name for all teams. A hot key can be assigned to this button in Hot Keys Settings.
 #### Reset Scores
-This button will set the Scores for both teams to 0. A hot key can be assigned to this button in Hot Keys Settings.
+This button will set the Scores for all teams to 0. A hot key can be assigned to this button in Hot Keys Settings.
 #### Reset Game Counts
-This button will set the Game Counts for both teams to 0. A hot key can be assigned to this button in Hot Keys Settings.
+This button will set the Game Counts for all teams to 0. A hot key can be assigned to this button in Hot Keys Settings.
+#### Reset Match Counts
+This button will set the Match Counts for all teams to 0. A hot key can be assigned to this button in Hot Keys Settings.
 #### Reset Time Outs
-This button will reset the Time Out Counts for both teams. A hot key can be assigned to this button in Hot Keys Settings.
+This button will reset the Time Out Counts for all teams. A hot key can be assigned to this button in Hot Keys Settings.
 #### Reset Reset/Warns
-This button will clear the Reset and Warn buttons for both teams. A hot key can be assigned to this button in Hot Keys Settings.
+This button will clear the Reset and Warn buttons for all teams. A hot key can be assigned to this button in Hot Keys Settings.
 #### Reset All
-This button will clear the Scores, Game Counts, Time Out Counts, Resets and Warns for both teams.  Note that the Name fields are not reset.  A hot key can be assigned to this button in Hot Keys Settings.
+This button will clear the Scores, Game Counts, Match Counts, Time Out Counts, Resets and Warns and King Seat for all teams.  Note that the Name fields are not reset.  A hot key can be assigned to this button in Hot Keys Settings.
 ### Statistics Entry Panel
 The Statistics Entry Panel is intended to be used for entering codes to track statistics during the foosball match.
 
@@ -957,7 +972,7 @@ The Statistics Entry Panel is intended to be used for entering codes to track st
 #### Foosball Code
 Enter codes here.  Most of the buttons on FoosOBSPlus main screen have codes that can be entered that act the same as pressing the button itself.  These are actually commands and are preceeded with an X.  Other codes can be entered to track the ball in the foosball match. These codes are then converted into stats that will be shown in the Statistics Display Panel.  The commands and codes are explained in the Codes and Commands section.
 #### History
-All commands and codes entered are shown in the History area.  The last command/code entered is shown at the top of the box.
+All commands and codes entered are shown in the History area.  The last command/code entered is shown at the top of the box. Clicking inside the History box and pressing Control-A followed by Control-C will allow you to copy all the current commands in the History area. It will not show highlighted, but it will copy them to the clipboard.
 #### Clear
 This button will clear the History area.
 #### Undo
@@ -965,10 +980,11 @@ This button will undo the last command or code entered.
 #### Redo
 This button will redo the last command or code that was undone.
 ### Statistics Display Panel
-The Statistics Dispaly Panel displays any stats generated for the current match.  The Team Names (if any) are shown at the top of the panel.  Followed by the Forward and Goalie names for both teams.  Stats for team 1 are shown on the left and stats for team 2 are shown on the right. A description of each stat is in the middle.
+The Statistics Display Panel displays any statistics generated for the current match.  The Team Names (if any) are shown at the top of the panel.  Followed by the Forward and Goalie names for Teams 1 and 2.  Statistics for team 1 are shown on the left and statistics for team 2 are shown on the right. A description of each statistic is in the middle.
 
 <img width="320" height="370" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusStatisticsDisplayPanel.png">
 
+For Passing, Shooting, Clearing and 2-Bar Passing, there are 6 numbers. 3 for each team. The 3 numbers on the left are for team 1 and the 3 numbers on right are for team 2.  On the left the order is success, attempts, percentage. On the right, the order is percentage, success, attempts.
 #### Passing
 The first value is the number of successful passes (5 man to 3 man). The second number is the number of pass attempts.  The third number is the pass success percentage.
 #### Shooting
@@ -1068,22 +1084,37 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xprt - push reset timer
 * xist1 - increase score team 1
 * xist2 - increase score team 2
+* xist32 - increase score team 3
 * xdst1 - decrease score team 1
 * xdst2 - decrease score team 2
+* xdst3 - decrease score team 3
 * xigt1 - increase game count team 1
 * xigt2 - increase game count team 2
+* xigt3 - increase game count team 3
 * xdgt1 - decrease game count team 1
 * xdgt2 - decrease game count team 2
+* xdgt3 - decrease game count team 3
+* ximt1 - increase match count team 1
+* ximt2 - increase match count team 2
+* ximt3 - increase match count team 3
+* xdmt1 - decrease match count team 1
+* xdmt2 - decrease match count team 2
+* xdmt3 - decrease match count team 3
 * xutt1 - use timeout for team 1
 * xutt2 - use timeout for team 2
+* xutt3 - use timeout for team 3
 * xrtt1 - return timeout for team 1
 * xrtt2 - return timeout for team 2
+* xrtt3 - return timeout for team 3
 * xprt1 - push reset button for team 1
 * xprt2 - push reset button for team 2
+* xprt3 - push reset button for team 3
 * xpwt1 - push warn button for team 1
 * xpwt2 - push warn button for team 2
+* xpwt3 - push warn button for team 3
 * xxpt1 - switch positions team 1
 * xxpt2 - switch positions team 2
+* xxpt3 - switch positions team 3
 * xpss - push switch sides button
 * xpst	- switch teams
 * xxp1 - switch player 1 (forward)
@@ -1093,8 +1124,6 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpsto	- switch time outs
 * xpsr	- switch reset/warns
 * xpca	- clear all (switch)
-* xpct1 - push clear team 1
-* xpct2 - push clear team 2
 * xprn - push reset names
 * xprs - push reset scores
 * xprg - push reset game counts
@@ -1111,7 +1140,17 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpkt3 - push king seat team 3
 
 ## Revision History</br>
-v2.027 12/24/2024</br>
+v2.028 12/24/2023</br>
+Reduce redundant code.</br>
+Update teamPanel3 Mnemonics when hotkeys saved.</br>
+Add more calls to statsEntryPanel.setFocusOnCode for better code entry/hot key usage.</br>
+Add ability to copy with double click a single item or control A/control C for entire list from the History stats box. Still doesn't show as selected though.</br>
+Remove weight for labels in Tournament Information Panel to let text boxes get more room.</br>
+Bold column headers in statsSourcesPanel and filtersPanel.</br>
+Update images for README file.</br>
+Update documentation in README file.</br>
+</br>
+v2.027 12/24/2023</br>
 Reduce code in Match.</br>
 </br>
 v2.026 12/24/2023</br>

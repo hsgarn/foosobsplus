@@ -286,9 +286,8 @@ public class TimerPanel extends JPanel {
 	}
 
 	////// Utility Methods //////
-	
 	public void updateTimerDisplay(int timeRemaining) {
-		lblTimerDisplay.setText(Integer.toString(timeRemaining));
+		updateTimerDisplay(Integer.toString(timeRemaining));
 	}
 	public void updateTimerDisplay(String timeRemaining) {
 		lblTimerDisplay.setText(timeRemaining);

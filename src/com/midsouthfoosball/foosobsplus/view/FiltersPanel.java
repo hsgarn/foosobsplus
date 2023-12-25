@@ -20,6 +20,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.view;
 
+import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -147,9 +148,11 @@ public class FiltersPanel extends JPanel {
 		setLayout(new MigLayout("", "[][][174.00,grow][27.00][91.00][grow][][][grow][14.00][][grow]", "[][][][][][][][][][][][][][][][][][][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		JLabel lblFilter = new JLabel(Messages.getString("FiltersPanel.Filter")); //$NON-NLS-1$
+		lblFilter.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 		add(lblFilter, "cell 2 1,alignx left"); //$NON-NLS-1$
 
 		JLabel lblFilterCol2 = new JLabel(Messages.getString("FiltersPanel.Filter")); //$NON-NLS-1$
+		lblFilterCol2.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 		add(lblFilterCol2, "cell 5 1,alignx left,aligny center"); //$NON-NLS-1$
 		
 		JLabel lblTeam1ScoreFilter = new JLabel(Messages.getString("FiltersPanel.Team1Score", settings.getGameType())); //$NON-NLS-1$

@@ -20,6 +20,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.view;
 
+import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -320,21 +321,27 @@ public class StatSourcesPanel extends JPanel {
 		formattedTxtPath.setColumns(50);
 
 		JLabel lblTeam1Column = new JLabel(Messages.getString("StatSourcesPanel.Team1Column")); //$NON-NLS-1$
+		lblTeam1Column.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 		add(lblTeam1Column, "cell 2 1,alignx left"); //$NON-NLS-1$
 
 		JLabel lblTeam2Column = new JLabel(Messages.getString("StatSourcesPanel.Team2Column")); //$NON-NLS-1$
+		lblTeam2Column.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 		add(lblTeam2Column, "cell 3 1,alignx left"); //$NON-NLS-1$
 		
 		JLabel lblTeam3Column = new JLabel(Messages.getString("StatSourcesPanel.Team3Column")); //$NON-NLS-1$
+		lblTeam3Column.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 		add(lblTeam3Column, "cell 4 1,alignx left"); //$NON-NLS-1$
 
 		JLabel lblSourceCol1 = new JLabel(Messages.getString("StatSourcesPanel.Source")); //$NON-NLS-1$
+		lblSourceCol1.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 		add(lblSourceCol1, "cell 2 2,alignx left"); //$NON-NLS-1$
 
 		JLabel lblSourceCol2 = new JLabel(Messages.getString("StatSourcesPanel.Source")); //$NON-NLS-1$
+		lblSourceCol2.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 		add(lblSourceCol2, "cell 3 2,alignx left"); //$NON-NLS-1$
 		
 		JLabel lblSourceCol3 = new JLabel(Messages.getString("StatSourcesPanel.Source")); //$NON-NLS-1$
+		lblSourceCol3.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 		add(lblSourceCol3, "cell 4 2,alignx left"); //$NON-NLS-1$
 
 		JLabel lblTeamPassAttemptsSource = new JLabel(Messages.getString("StatSourcesPanel.TeamPassAttempts", settings.getGameType())); //$NON-NLS-1$
@@ -554,21 +561,27 @@ public class StatSourcesPanel extends JPanel {
 		add(txtTeam3TwoBarPassPercentSource, "cell 4 14,alignx left"); //$NON-NLS-1$
 
 		JLabel lblTeam1Column2 = new JLabel(Messages.getString("StatSourcesPanel.Team1Column")); //$NON-NLS-1$
+		lblTeam1Column2.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 		add(lblTeam1Column2, "cell 6 1,alignx left"); //$NON-NLS-1$
 
 		JLabel lblTeam2Column2 = new JLabel(Messages.getString("StatSourcesPanel.Team2Column")); //$NON-NLS-1$
+		lblTeam2Column2.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 		add(lblTeam2Column2, "cell 7 1,alignx left,aligny center"); //$NON-NLS-1$
 		
 		JLabel lblTeam3Column2 = new JLabel(Messages.getString("StatSourcesPanel.Team3Column")); //$NON-NLS-1$
+		lblTeam3Column2.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 		add(lblTeam3Column2, "cell 8 1,alignx left"); //$NON-NLS-1$
 
 		JLabel lblSourceCol4 = new JLabel(Messages.getString("StatSourcesPanel.Source")); //$NON-NLS-1$
+		lblSourceCol4.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 		add(lblSourceCol4, "cell 6 2,alignx left"); //$NON-NLS-1$
 
 		JLabel lblSourceCol5 = new JLabel(Messages.getString("StatSourcesPanel.Source")); //$NON-NLS-1$
+		lblSourceCol5.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 		add(lblSourceCol5, "cell 7 2,alignx left,aligny center"); //$NON-NLS-1$
 		
 		JLabel lblSourceCol6 = new JLabel(Messages.getString("StatSourcesPanel.Source")); //$NON-NLS-1$
+		lblSourceCol6.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 		add(lblSourceCol6, "cell 8 2,alignx left"); //$NON-NLS-1$
 
 		JLabel lblAcesSource = new JLabel(Messages.getString("StatSourcesPanel.Aces", settings.getGameType())); //$NON-NLS-1$

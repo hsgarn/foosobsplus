@@ -26,7 +26,14 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
@@ -37,9 +44,12 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
@@ -77,6 +87,35 @@ public class StatsEntryPanel extends JPanel {
 		scrCodeHistory.setViewportView(lstCodeHistory);
 		lstCodeHistory.setLayoutOrientation(JList.VERTICAL);
 		lstCodeHistory.setCellRenderer(new AttributiveCellRenderer());
+		lstCodeHistory.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		lstCodeHistory.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+					copySelectedItemsToClipboard(lstCodeHistory);
+				}
+			}
+		});
+		lstCodeHistory.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if ((e.getKeyCode() == KeyEvent.VK_C) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+					copySelectedItemsToClipboard(lstCodeHistory);
+				}
+			}
+		});
+		lstCodeHistory.addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if (!e.getValueIsAdjusting()) {
+					int[] selectedIndices = lstCodeHistory.getSelectedIndices();
+					StringBuilder selectedItems = new StringBuilder();
+					for (int index : selectedIndices) {
+						selectedItems.append(lstCodeHistory.getModel().getElementAt(index)).append("\n");
+					}
+				}
+			}
+		});
 
 		setMnemonics();
 		
@@ -87,17 +126,25 @@ public class StatsEntryPanel extends JPanel {
 		
 		layoutComponents();
 	}
+    private static void copySelectedItemsToClipboard(JList<String> jList) {
+        int[] selectedIndices = jList.getSelectedIndices();
+        if (selectedIndices.length > 0) {
+            StringBuilder selectedItems = new StringBuilder();
+            for (int index : selectedIndices) {
+                selectedItems.append(jList.getModel().getElementAt(index)).append("\n");
+            }
+            StringSelection selection = new StringSelection(selectedItems.toString());
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(selection, null);
+        }
+    }
 	private void layoutComponents() {
 		setLayout(new GridBagLayout());
-		
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = -1;
-
 		gc.gridy++;
-
 		gc.weightx = 1;
 		gc.weighty = .1;
-		
 		gc.gridx = 0;
 		gc.gridheight=1;
 		gc.fill = GridBagConstraints.BOTH;
@@ -107,7 +154,6 @@ public class StatsEntryPanel extends JPanel {
 		
 		gc.weightx = 1;
 		gc.weighty = .1;
-		
 		gc.gridx = 1;
 		gc.gridheight=1;
 		gc.fill = GridBagConstraints.BOTH;
@@ -117,10 +163,8 @@ public class StatsEntryPanel extends JPanel {
 		
 		//////// Statistics Window ////////
 		gc.gridy++;
-
 		gc.weightx = 1;
 		gc.weighty = .9;
-		
 		gc.gridx = 0;
 		gc.gridheight=1;
 		gc.fill = GridBagConstraints.HORIZONTAL;
@@ -130,7 +174,6 @@ public class StatsEntryPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = .9;
-		
 		gc.gridx = 1;
 		gc.gridheight=4;
 		gc.fill = GridBagConstraints.BOTH;
@@ -140,7 +183,6 @@ public class StatsEntryPanel extends JPanel {
 		
 		gc.weightx = 1;
 		gc.weighty = .9;
-		
 		gc.gridx = 2;
 		gc.gridheight=1;
 		gc.fill = GridBagConstraints.BOTH;
@@ -151,7 +193,6 @@ public class StatsEntryPanel extends JPanel {
 		gc.gridy++;
 		gc.weightx = 1;
 		gc.weighty = .9;
-		
 		gc.gridx = 0;
 		gc.gridheight=2;
 		gc.fill = GridBagConstraints.HORIZONTAL;
@@ -161,7 +202,6 @@ public class StatsEntryPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = .9;
-		
 		gc.gridx = 2;
 		gc.gridheight=1;
 		gc.fill = GridBagConstraints.BOTH;
@@ -180,7 +220,7 @@ public class StatsEntryPanel extends JPanel {
 		} else {
 			btnRedo.setMnemonic(settings.getRedoHotKey().charAt(0));
 		};
-}
+	}
 	////// Listeners  //////
 	public void addCodeListener(ActionListener listenForTxtCode) {
 		txtCode.addActionListener(listenForTxtCode);
@@ -194,9 +234,7 @@ public class StatsEntryPanel extends JPanel {
 	public void addRedoListener(ActionListener listenForBtnRedo) {
 		btnRedo.addActionListener(listenForBtnRedo);
 	}
-
 	////// Utility Methods //////
-	
 	public void updateMnemonics() {
 		setMnemonics();
 	}
@@ -229,7 +267,6 @@ public class StatsEntryPanel extends JPanel {
 	  public AttributiveCellRenderer() {
 	    setOpaque(true);
 	  }
-
 	  public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) 
 	  {
 		  String tmp = ""; //$NON-NLS-1$

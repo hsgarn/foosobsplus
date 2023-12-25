@@ -85,9 +85,8 @@ public class TournamentPanel extends JPanel {
 
 		////////  Tournament Name ////////
 		gc.gridy++;
-		gc.weightx = .5;
+		gc.weightx = 0;
 		gc.weighty = 0;
-
 		gc.gridx = 0;
 		gc.gridwidth = 1;
 		gc.fill = GridBagConstraints.LINE_START;
@@ -95,6 +94,7 @@ public class TournamentPanel extends JPanel {
 		gc.insets = new Insets(0, 5, 5, 5);
 		add(lblTournamentName, gc);
 		
+		gc.weightx = .5;
 		gc.gridx = 1;
 		gc.gridwidth = 2;
 		gc.fill = GridBagConstraints.HORIZONTAL;
@@ -104,9 +104,8 @@ public class TournamentPanel extends JPanel {
 
 		////////  Event Name ////////
 		gc.gridy++;
-		gc.weightx = .5;
+		gc.weightx = 0;
 		gc.weighty = 0;
-
 		gc.gridx = 0;
 		gc.gridwidth = 1;
 		gc.fill = GridBagConstraints.LINE_START;
@@ -114,6 +113,7 @@ public class TournamentPanel extends JPanel {
 		gc.insets = new Insets(0, 5, 5, 5);
 		add(lblEventName, gc);
 		
+		gc.weightx = .5;
 		gc.gridx = 1;
 		gc.gridwidth = 2;
 		gc.fill = GridBagConstraints.HORIZONTAL;
@@ -123,9 +123,8 @@ public class TournamentPanel extends JPanel {
 				
 		////////  Tournament Name ////////
 		gc.gridy++;
-		gc.weightx = .5;
+		gc.weightx = 0;
 		gc.weighty = 0;
-
 		gc.gridx = 0;
 		gc.gridwidth = 1;
 		gc.fill = GridBagConstraints.LINE_START;
@@ -133,6 +132,7 @@ public class TournamentPanel extends JPanel {
 		gc.insets = new Insets(0, 5, 5, 5);
 		add(lblTableName, gc);
 		
+		gc.weightx = .5;
 		gc.gridx = 1;
 		gc.gridwidth = 2;
 		gc.fill = GridBagConstraints.HORIZONTAL;
@@ -144,7 +144,6 @@ public class TournamentPanel extends JPanel {
 		gc.gridy++;
 		gc.weightx = .5;
 		gc.weighty = 0;
-		
 		gc.gridx = 0;
 		gc.gridwidth = 3;
 		gc.fill = GridBagConstraints.HORIZONTAL;
