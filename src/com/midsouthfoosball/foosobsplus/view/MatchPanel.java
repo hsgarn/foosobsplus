@@ -334,6 +334,21 @@ public class MatchPanel extends JPanel {
 		}
 		gameTable.repaint();
 	}
+	public void clearKingSeat() {
+		gameTable.setValueAt("Team 1",1,0);
+		gameTable.setValueAt("Team 2",2,0);
+		if (settings.getCutThroatMode()==1) {
+			gameTable.setValueAt("Team 3",3,0);
+		}
+		gameTable.repaint();
+	}
+	public void setKingSeat(int teamNumber) {
+		if (teamNumber > 0 && (teamNumber < 3 || (teamNumber == 3 && settings.getCutThroatMode()==1))) {
+			String kingSeat = Messages.getString("Global.KingSeat"); //$NON-NLS-1$
+			gameTable.setValueAt(kingSeat + "Team " + Integer.toString(teamNumber), teamNumber, 0);
+			gameTable.repaint();
+		}
+	}
 	public class GameTableCellRenderer extends DefaultTableCellRenderer 
     {
 	  public GameTableCellRenderer() {

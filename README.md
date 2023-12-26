@@ -224,7 +224,7 @@ The statistics fields in FoosOBSPlus can be sent to OBS Studio so it can be disp
 
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings11.png">
 
-Sources Settings Page:</br>
+Statistics Sources Settings Page:</br>
 <img width="542" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings12.png">
 
 Below are the sources that can be configured:
@@ -1140,6 +1140,11 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpkt3 - push king seat team 3
 
 ## Revision History</br>
+v2.029 12/26/2023</br>
+Correct typo in README.md.</br>
+Add king seat indicators to Game Windows.</br>
+Pull king seat indicator from message.properties.</br>
+</br>
 v2.028 12/24/2023</br>
 Reduce redundant code.</br>
 Update teamPanel3 Mnemonics when hotkeys saved.</br>

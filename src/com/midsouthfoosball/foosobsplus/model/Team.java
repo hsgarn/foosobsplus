@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
+import com.midsouthfoosball.foosobsplus.view.Messages;
 
 public class Team implements Serializable {
 
@@ -694,7 +695,7 @@ public class Team implements Serializable {
 	private void writeKingSeat() {
 		String src = settings.getTeamKingSeatSource(Integer.toString(teamNbr));
 		if(kingSeatState) {
-			writeData(src, "♔");
+			writeData(src, Messages.getString("Global.KingSeat")); //$NON-NLS-1$
 		} else {
 			writeData(src, "");
 		}

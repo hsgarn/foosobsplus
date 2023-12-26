@@ -47,6 +47,7 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.Team;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowPanel;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
+import com.midsouthfoosball.foosobsplus.view.Messages;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
 import com.midsouthfoosball.foosobsplus.view.TeamPanel;
@@ -825,6 +826,7 @@ public class TeamController {
 		teamPanel1.updateKingSeat(team1.getKingSeat());
 		teamPanel2.updateKingSeat(team2.getKingSeat());
 		teamPanel3.updateKingSeat(team3.getKingSeat());
+		matchPanel.clearKingSeat();
 	}
 	public void resetStats() {
 		team1.resetStats();
@@ -933,7 +935,11 @@ public class TeamController {
 		matchPanel.setGameWinners(match.getGameWinners());
 		matchPanel.setMatchWinner(match.getMatchWinner());
 		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getScoresTeam3(), match.getTimes(), match.getCurrentGameNumber());
-		gameTableWindowPanel.setTeams(getForwardName(1) + " / " + getGoalieName(1) + ":",getForwardName(2) + " / " + getGoalieName(2) + ":", getForwardName(3) + " / " + getGoalieName(3));
+		matchPanel.clearKingSeat();
+		for (int i = 1; i < 4; i++) {
+		    if (teamsMap.get(i).getKingSeat() ) matchPanel.setKingSeat(i);
+		}
+		updateGameTableWindowNames();
 		gameTableWindowPanel.setGameWinners(match.getGameWinners());
 		gameTableWindowPanel.setMatchWinner(match.getMatchWinner());
 		gameTableWindowPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getScoresTeam3(), match.getTimes(), match.getCurrentGameNumber());
@@ -964,7 +970,25 @@ public class TeamController {
 			}
 			team.setKingSeat(!team.getKingSeat());
 			teamPanel.updateKingSeat(team.getKingSeat());
+			matchPanel.clearKingSeat();
+			updateGameTableWindowNames();
+			if (team.getKingSeat()) {
+				matchPanel.setKingSeat(teamNumber);
+			}
 		}
+	}
+	public void updateGameTableWindowNames() {
+		String[] teamPrefixes = new String[3];
+		String[] teamNames = new String[3];
+		for (int i = 0; i < 3; i++) {
+		    if (teamsMap.get(i+1).getKingSeat() ) {
+		        teamPrefixes[i] = Messages.getString("Global.KingSeat"); //$NON-NLS-1$
+		    } else {
+		        teamPrefixes[i] = "";
+		    }
+		    teamNames[i] = teamPrefixes[i] + getForwardName(i + 1) + " / " + getGoalieName(i + 1) + ":";
+		}
+		gameTableWindowPanel.setTeams(teamNames[0], teamNames[1], teamNames[2]);
 	}
 	public void fetchAll() {
 		Map<String, Entry<Team, String>> teamMethodMap = new HashMap<String, Entry<Team, String>>();
