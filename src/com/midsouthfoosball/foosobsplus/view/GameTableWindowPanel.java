@@ -22,6 +22,9 @@ package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -32,8 +35,6 @@ import javax.swing.table.TableColumnModel;
 
 import com.midsouthfoosball.foosobsplus.model.GameTableModel;
 import com.midsouthfoosball.foosobsplus.model.Settings;
-
-import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class GameTableWindowPanel extends JPanel {
@@ -50,20 +51,22 @@ public class GameTableWindowPanel extends JPanel {
 	public GameTableWindowPanel(Settings settings) {
 		this.settings = settings;
 		this.maxGameCount = settings.getMaxGameNumber();
-		if (settings.getCutThroatMode()==1) {
-			setLayout(new MigLayout("", "[430.00]", "[100.00]"));
-		} else {
-			setLayout(new MigLayout("", "[430.00]", "[100.00]"));
-		}
 		gameWinners = new int[maxGameCount];
 		gameTable = new JTable(new GameTableModel(maxGameCount, settings.getCutThroatMode()));
 		gameTable.setDefaultRenderer(Object.class, new GameTableCellRenderer());
-		TableColumnModel gameTableColumnModel = gameTable.getColumnModel();
-		
-		gameTableColumnModel.getColumn(0).setPreferredWidth(130);
-		for(int i=1;i <= maxGameCount; i++) {
-			gameTableColumnModel.getColumn(i).setPreferredWidth((int) (300/maxGameCount));
-		}
+		updateGameTableColumnWidths();
+		setLayout(new GridBagLayout());
+		GridBagConstraints gc = new GridBagConstraints();
+		gc.gridy = 0;
+		gc.gridx = 0;
+		gc.gridwidth = 1;
+		gc.gridheight = 1;
+		gc.weightx = 1;
+		gc.weighty = 1;
+		gc.fill = GridBagConstraints.BOTH;
+		gc.anchor = GridBagConstraints.LINE_START;
+		gc.insets = new Insets(0,0,0,0);
+			
 		add(gameTable);
 	}
 	public void setTeams(String name1, String name2, String name3) {
@@ -106,9 +109,17 @@ public class GameTableWindowPanel extends JPanel {
 		gameTable.repaint();
 	}
 	public void resizeGameTable() {
-		GameTableModel tableModel = new GameTableModel(settings.getMaxGameNumber(),settings.getCutThroatMode());
+		this.maxGameCount = settings.getMaxGameNumber();
+		GameTableModel tableModel = new GameTableModel(this.maxGameCount ,settings.getCutThroatMode());
 		gameTable.setModel(tableModel);
-		maxGameCount = settings.getMaxGameNumber();
+		updateGameTableColumnWidths();
+	}
+	private void updateGameTableColumnWidths() {
+        TableColumnModel gameTableColumnModel = gameTable.getColumnModel();
+        gameTableColumnModel.getColumn(0).setPreferredWidth(130);
+        for (int i = 1; i <= maxGameCount; i++) {
+            gameTableColumnModel.getColumn(i).setPreferredWidth((int) (300 / maxGameCount));
+        }
 	}
 	public class GameTableCellRenderer extends DefaultTableCellRenderer 
     {

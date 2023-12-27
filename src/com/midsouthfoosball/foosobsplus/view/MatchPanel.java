@@ -243,7 +243,7 @@ public class MatchPanel extends JPanel {
 		gc.gridheight = 4;
 		gc.fill = GridBagConstraints.BOTH;
 		gc.anchor = GridBagConstraints.LAST_LINE_START;
-		gc.insets = new Insets(5, 5, 5, 5);
+		gc.insets = new Insets(0, 0, 0, 0);
 		add(gameTable,gc);
 	}		
 

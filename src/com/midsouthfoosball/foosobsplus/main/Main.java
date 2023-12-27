@@ -297,17 +297,12 @@ public class Main {
 				connectToOBS();
 			}
 		}
-
 		loadListeners();
-
 		loadCommands();
-
 		createAutoScoreWorker();
-		
 		if (settings.getAutoScoreSettingsAutoConnect() == 1) {
 			connectAutoScore();
 		}
-		
 		createFileWatchWorker();
 		fileWatchWorker.execute();
 	}
@@ -368,7 +363,7 @@ public class Main {
 			boolean show = inputActiveStateChangedEvent.getVideoActive();
 			obsPanel.setShowCutthroat(show);
 		}
-		statsEntryPanel.setFocusOnCode();
+		setFocusOnCode();
 	}
 	public void connectToOBS() {
 		logger.info("Trying to connect to OBS...");
@@ -678,7 +673,6 @@ public class Main {
 		mainFrame = new MainFrame(settings, tournamentPanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, teamPanel3, statsEntryPanel, 
 				switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, sourcesFrame, statSourcesFrame, filtersFrame, 
 				partnerProgramFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, this);
-
 		////// Set up independent Windows \\\\\\
 		mainFrame.windowActivated(null);
 		gameTableWindowPanel		= new GameTableWindowPanel(settings);
@@ -687,7 +681,6 @@ public class Main {
 		lastScored1WindowFrame 		= new LastScoredWindowFrame(mainFrame, 1);
 		lastScored2WindowFrame 		= new LastScoredWindowFrame(mainFrame, 2);
 		lastScored3WindowFrame  	= new LastScoredWindowFrame(mainFrame, 3);
-
 		////// Build and Start the Controllers (mvC) \\\\\\
 		mainController 			= new MainController(mainFrame, timerWindowFrame, lastScored1WindowFrame, lastScored2WindowFrame, lastScored3WindowFrame, gameTableWindowFrame);
 		timerController 		= new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock, lastScored3WindowFrame, lastScored3Clock);
@@ -959,8 +952,7 @@ public class Main {
 		mementoStackGameClock.push(saveState(gameClock));
 	}
 	private Memento saveState(Object object) {
-		Memento memento = new Memento(object);
-		return memento;
+		return new Memento(object);
 	}
 	public void undo() 	{
 		if(undoRedoPointer < 0) return;
@@ -983,7 +975,7 @@ public class Main {
 	    stats.showParsed();
 		teamController.displayAll();
 		statsController.displayAllStats();
-		statsEntryPanel.setFocusOnCode();	
+		setFocusOnCode();	
 		matchController.updateGameTables();
 	}
  	public void redo() 	{
@@ -1092,7 +1084,6 @@ public class Main {
 		Command pra = new PRACommand(statsController, teamController);
 		Command codeCommand = new CodeCommand(statsController);
 		Command ptca = new PTCACommand(statsController, tournamentController);
-
 		mySwitch = new CommandSwitch();
 		mySwitch.register("PSE", pse);
 		mySwitch.register("PSM", psm);
@@ -1164,12 +1155,12 @@ public class Main {
 	public void showScores(boolean show) {
 		obsPanel.setShowScores(show);
 		showSource(settings.getShowScoresSource(), show);
-		statsEntryPanel.setFocusOnCode();
+		setFocusOnCode();
 	}
 	public void showTimer(boolean show) {
 		mainController.showTimerWindow(show);
 		showSource(settings.getShowTimerSource(), show);
-		statsEntryPanel.setFocusOnCode();
+		setFocusOnCode();
 	}
 	public void setFocusOnCode() {
 		statsEntryPanel.setFocusOnCode();
@@ -1177,7 +1168,7 @@ public class Main {
 	public void showCutthroat(boolean show) {
 		obsPanel.setShowCutthroat(show);
 		showSource(settings.getShowCutthroatSource(), show);
-		statsEntryPanel.setFocusOnCode();
+		setFocusOnCode();
 	}
 	public void showSource(String source, boolean show) {
 		if (obs.getConnected()) {
@@ -1204,7 +1195,7 @@ public class Main {
 		}
 	}
 	public void setSourceFilterVisibility(String source, String filter, boolean show) {
-		if(filter == null) return;
+		if(source == null || filter == null) return;
 		if (obs.getConnected()) {
 			obs.getController().setSourceFilterEnabled(source, filter, show, response -> {
 				if(response != null && response.isSuccessful()) {
@@ -1227,6 +1218,7 @@ public class Main {
 	}
 	private void disconnectAutoScore() {
 		autoScoreSettingsPanel.addMessage("Disconnecting...");
+		logger.info("Trying to disconnect from AutoScore...");
 		autoScoreWorker.cancel(true);
 		mainFrame.setAutoScoreIconConnected(false);
 		autoScoreConnected = false;
@@ -1246,7 +1238,6 @@ public class Main {
 		String[] paramTests = {"PORT","PIN","PIN","PIN","PIN","PIN","TIME","TIME","PIN","PIN"};
 		List<String> copyNames = new ArrayList<>(Arrays.asList(paramNames));
 		List<String> copyTests = new ArrayList<>(Arrays.asList(paramTests));
-
 		String config = autoScoreConfigPanel.getConfigTextArea();
 		String[] lines = config.split("\n");
 		for(String line:lines) {
@@ -1323,9 +1314,7 @@ public class Main {
 						}
 					}
 				}
-					
 			}
-				
 		}
 		if (!copyNames.isEmpty()) {
 			String msg = "Validation Failed. Missing parameters:\r\n"; 
@@ -1374,7 +1363,6 @@ public class Main {
 	private static String ripTeamNumber(String name) {
 		return name.replaceAll("[^0-9]", "");
 	}
-
 	////// Listeners \\\\\\
 	private class CodeListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
@@ -1401,7 +1389,7 @@ public class Main {
 	private class StatsEntryRedoListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			redo();
-			statsEntryPanel.setFocusOnCode();	
+			setFocusOnCode();	
 		}
 	}
 	private class StatsClearListener implements ActionListener{
@@ -1409,7 +1397,7 @@ public class Main {
 			stats.clearAll();
 			statsEntryPanel.clearAll();
 			undoRedoPointer = -1;
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class HotKeysSaveListener implements ActionListener {
@@ -1496,14 +1484,14 @@ public class Main {
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Requesting disconnect.");
 			obs.getController().disconnect();
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class OBSConnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.updateOBS();
 			connectToOBS();
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class OBSDisconnectItemListener implements ActionListener {
@@ -1511,13 +1499,13 @@ public class Main {
 			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Requesting disconnect.");
 			obs.getController().disconnect();
 			obsConnectPanel.updateOBS();
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class OBSSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.saveSettings();
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class OBSPushListener implements ActionListener {
@@ -1527,7 +1515,7 @@ public class Main {
 				teamController.writeAll();
 				statsController.displayAllStats();
 			}
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class OBSPullListener implements ActionListener {
@@ -1537,7 +1525,7 @@ public class Main {
 				teamController.displayAll();
 				tournamentController.fetchAll();
 			}
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class OBSShowScoresListener implements ActionListener {
@@ -1546,7 +1534,7 @@ public class Main {
 				AbstractButton abstractButton = (AbstractButton) e.getSource();
 				showScores(abstractButton.getModel().isSelected());
 			}
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class OBSShowTimerListener implements ActionListener {
@@ -1555,7 +1543,7 @@ public class Main {
 				AbstractButton abstractButton = (AbstractButton) e.getSource();
 				showTimer(abstractButton.getModel().isSelected());
 			}
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class OBSShowCutthroatListener implements ActionListener {
@@ -1564,7 +1552,7 @@ public class Main {
 				AbstractButton abstractButton = (AbstractButton) e.getSource();
 				showCutthroat(abstractButton.getModel().isSelected());
 			}
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class OBSEnableSkunkListener implements ActionListener {
@@ -1578,7 +1566,7 @@ public class Main {
 			} else {
 				settings.setShowSkunk(0);
 			}
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class OBSStartStreamListener implements ActionListener {
@@ -1591,7 +1579,7 @@ public class Main {
 			} else {
 				gameClock.stopStreamTimer();
 			}
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class GameClockTimerListener implements ActionListener {
@@ -1618,14 +1606,15 @@ public class Main {
 			JComponent comp = (JComponent) e.getSource();
 			Window win = SwingUtilities.getWindowAncestor(comp);
 			win.dispose();
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class AutoScoreMainPanelConnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			blockAutoScoreReconnect = false;
+			logger.info("AutoScore Main Panel Connect Button Pressed.");
 			connectAutoScore();
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class AutoScoreMainPanelDisconnectListener implements ActionListener {
@@ -1633,7 +1622,7 @@ public class Main {
 			blockAutoScoreReconnect = true;
 			logger.info("AutoScore Main Panel Disconnect Button Pressed.");
 			disconnectAutoScore();
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class AutoScoreMainPanelSettingsListener implements ActionListener {
@@ -1644,73 +1633,65 @@ public class Main {
 	private class ScoreIncreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String teamNumber = ripTeamNumber(btn.getName());
-			String code = "XIST" + teamNumber;//XIST1
+			String code = "XIST" + ripTeamNumber(btn.getName());//XIST1
 			processCode(code,false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class ScoreDecreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String teamNumber = ripTeamNumber(btn.getName());
-			String code = "XDST" + teamNumber;//XDST1
+			String code = "XDST" + ripTeamNumber(btn.getName());//XDST1
 			processCode(code,false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class GameCountIncreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String teamNumber = ripTeamNumber(btn.getName());
-			String code = "XIGT" + teamNumber;//XIGT1
+			String code = "XIGT" + ripTeamNumber(btn.getName());//XIGT1
 			processCode(code,false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class GameCountDecreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String teamNumber = ripTeamNumber(btn.getName());
-			String code = "XDGT" + teamNumber;//XDGT1
+			String code = "XDGT" + ripTeamNumber(btn.getName());//XDGT1
 			processCode(code,false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class MatchCountIncreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String teamNumber = ripTeamNumber(btn.getName());
-			String code = "XIMT" + teamNumber;//XIMT1
+			String code = "XIMT" + ripTeamNumber(btn.getName());//XIMT1
 			processCode(code,false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class MatchCountDecreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String teamNumber = ripTeamNumber(btn.getName());
-			String code = "XDMT" + teamNumber;//XDMT1
+			String code = "XDMT" + ripTeamNumber(btn.getName());//XDMT1
 			processCode(code,false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class TimeOutCountIncreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String teamNumber = ripTeamNumber(btn.getName());
-			String code = "XUTT" + teamNumber;//XUTT1
+			String code = "XUTT" + ripTeamNumber(btn.getName());//XUTT1
 			processCode(code,false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class TimeOutCountDecreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String teamNumber = ripTeamNumber(btn.getName());
-			String code = "XRTT" + teamNumber;//XRTT1
+			String code = "XRTT" + ripTeamNumber(btn.getName());//XRTT1
 			processCode(code,false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class ResetListener implements ActionListener{
@@ -1721,7 +1702,7 @@ public class Main {
 			String filter = "Team" + teamNumber + "Reset";//Team1Reset
 			processCode(code,false);
 			if (btn.isSelected()) activateFilter(filter);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class WarnListener implements ActionListener{
@@ -1732,7 +1713,7 @@ public class Main {
 			String filter = "Team" + teamNumber + "Warn";//Team1Warn
 			processCode(code,false);
 			if (btn.isSelected()) activateFilter(filter);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class KingSeatListener implements ActionListener{
@@ -1743,7 +1724,7 @@ public class Main {
 			String filter = "Team" + teamNumber + "KingSeat";//Team1KingSeat
 			processCode(code,false);
 			if (ckbx.isSelected()) activateFilter(filter);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class SwitchPositionsListener implements ActionListener{
@@ -1754,185 +1735,185 @@ public class Main {
 			String filter = "Team" + teamNumber + "SwitchPositions";//Team1SwitchPositions
 			processCode(code,false);
 			activateFilter(filter);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class SwitchSidesListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSS",false);
 			activateFilter("SwitchSides");
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class ShotTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSST",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class PassTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSPT",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class TimeOutTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSTT",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class GameTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSGT",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class RecallTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSRT",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class ResetTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRT",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class StartEventListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSE",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class StartMatchListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSM",false);
 			activateFilter("StartMatch");
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class PauseMatchListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPPM",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class EndMatchListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPEM",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class StartGameListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSG",false);
 			activateFilter("StartGame");
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class SwitchTeamsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPST",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class SwitchPlayer1Listener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XXP1",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class SwitchPlayer2Listener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XXP2",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class SwitchScoresListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSSC",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class SwitchGameCountsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSGC",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class SwitchMatchCountsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSMC",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class SwitchTimeOutsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSTO",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class SwitchResetWarnsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSR",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class ClearAllListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPCA",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class ResetNamesListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRN",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class ResetScoresListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRS",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class ResetGameCountsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRG",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class ResetMatchCountsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRM",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class ResetTimeOutsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRTO",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class ResetResetWarnsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRR",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class ResetAllListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRA",false);
 			statsController.displayAllStats();
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class TableClearAllListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPTCA",false);
-			statsEntryPanel.setFocusOnCode();
+			setFocusOnCode();
 		}
 	}
 	private class TimerWindowCloseListener extends WindowAdapter {
@@ -2182,7 +2163,7 @@ public class Main {
 		        		}
 			        	boolean valid = watchKey.reset();
 			        	if (!valid) {
-			        		logger.error("watchKey wasn\'t valid so made a break for it");
+			        		logger.error("watchKey wasn\'t valid so made a break for it in Main.doInBackground().");
 			        		break;
 			        	}
 	        		}

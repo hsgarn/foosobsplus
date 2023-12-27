@@ -39,8 +39,7 @@ public class Messages {
 	}
 
 	public static String getString(String key, String gameType) {
-		String newKey = gameType + "." + key;
-		return getString(newKey);
+		return getString(gameType + "." + key);
 	}
 	
 	public static String getString(String key) {
@@ -50,6 +49,5 @@ public class Messages {
 			logger.error(e.toString());
 			return '!' + key + '!';
 		}
-		
 	}
 }

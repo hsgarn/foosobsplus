@@ -20,10 +20,16 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.view;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
 
 import javax.swing.BorderFactory;
@@ -103,6 +109,8 @@ public class StatsDisplayPanel extends JPanel {
 		dim.height = 550;
 		setPreferredSize(dim);
 		setName(buildTitle());
+		
+		addMouseListener(new DoubleClickListener());
 
 		lblTeamName1 = new JLabel(Messages.getString("StatsDisplayPanel.TeamName1", settings.getGameType())); //$NON-NLS-1$
 		lblTeamName2 = new JLabel(Messages.getString("StatsDisplayPanel.TeamName2", settings.getGameType())); //$NON-NLS-1$
@@ -160,6 +168,50 @@ public class StatsDisplayPanel extends JPanel {
 		lblTeam2Breaks = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		lblTeam2Aces = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		lblTeam2Stuffs = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblTeamName1.setName("TeamName1");
+		lblTeamName2.setName("TeamName2");
+		lblPlayerNames1.setName("PlayerNames1");
+		lblPlayerNames2.setName("PlayerNames2");
+		lblTeam1PassAttempts.setName("Team1PassAttempts");
+		lblTeam1PassCompletes.setName("Team1PassCompletes");
+		lblTeam1Passing.setName("Team1Passing");
+		lblTeam1ShotAttempts.setName("Team1ShotAttempts");
+		lblTeam1ShotCompletes.setName("Team1ShotCompletes");
+		lblTeam1Shooting.setName("Team1Shooting");
+		lblTeam1ClearAttempts.setName("Team1ClearAttempts");
+		lblTeam1ClearCompletes.setName("Team1ClearCompletes");
+		lblTeam1Clearing.setName("Team1Clearing");
+		lblTeam1TwoBarPassAttempts.setName("Team1TwoBarPassAttempts");
+		lblTeam1TwoBarPassCompletes.setName("Team1TwoBarPassCompletes");
+		lblTeam1TwoBarPassing.setName("Team1TwoBarPassing");
+		lblTeam1ShotsOnGoal.setName("Team1ShotsOnGoal");
+		lblTeam1Scoring.setName("Team1Scoring");
+		lblTeam1ThreeBarScoring.setName("Team1ThreeBarScoring");
+		lblTeam1FiveBarScoring.setName("Team1FiveBarScoring");
+		lblTeam1TwoBarScoring.setName("Team1TwoBarScoring");
+		lblTeam1Breaks.setName("Team1Breaks");
+		lblTeam1Aces.setName("Team1Aces");
+		lblTeam1Stuffs.setName("Team1Stuffs");
+		lblTeam2PassAttempts.setName("Team2PassAttempts");
+		lblTeam2PassCompletes.setName("Team2PassCompletes");
+		lblTeam2Passing.setName("Team2Passing");
+		lblTeam2ShotAttempts.setName("Team2ShotAttempts");
+		lblTeam2ShotCompletes.setName("Team2ShotCompletes");
+		lblTeam2Shooting.setName("Team2Shooting");
+		lblTeam2ClearAttempts.setName("Team2ClearAttempts");
+		lblTeam2ClearCompletes.setName("Team2ClearCompletes");
+		lblTeam2Clearing.setName("Team2Clearing");
+		lblTeam2TwoBarPassAttempts.setName("Team2TwoBarPassAttempts");
+		lblTeam2TwoBarPassCompletes.setName("Team2TwoBarPassCompletes");
+		lblTeam2TwoBarPassing.setName("Team2TwoBarPassing");
+		lblTeam2ShotsOnGoal.setName("Team2ShotsOnGoal");
+		lblTeam2Scoring.setName("Team2Scoring");
+		lblTeam2ThreeBarScoring.setName("Team2ThreeBarScoring");
+		lblTeam2FiveBarScoring.setName("Team2FiveBarScoring");
+		lblTeam2TwoBarScoring.setName("Team2TwoBarScoring");
+		lblTeam2Breaks.setName("Team2Breaks");
+		lblTeam2Aces.setName("Team2Aces");
+		lblTeam2Stuffs.setName("Team2Stuffs");
 		
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
@@ -167,19 +219,16 @@ public class StatsDisplayPanel extends JPanel {
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
-
 	}
+	
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
 		
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = -1;
-		
 		gc.gridy++;
-		
 		gc.weightx = 1;
 		gc.weighty = .1;
-		
 		gc.gridx = 0;
 		gc.gridwidth = 3;
 		gc.fill = GridBagConstraints.NONE;
@@ -189,7 +238,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = .1;
-		
 		gc.gridx = 4;
 		gc.gridwidth = 3;
 		gc.fill = GridBagConstraints.NONE;
@@ -198,12 +246,9 @@ public class StatsDisplayPanel extends JPanel {
 		add(lblTeamName2, gc);
 
 		//////// Player Names ////////
-		
 		gc.gridy++;
-		
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx = 0;
 		gc.gridwidth = 3;
 		gc.fill = GridBagConstraints.NONE;
@@ -213,7 +258,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx = 4;
 		gc.gridwidth = 3;
 		gc.fill = GridBagConstraints.NONE;
@@ -223,10 +267,8 @@ public class StatsDisplayPanel extends JPanel {
 
 		//////// Passing Row ////////
 		gc.gridy++;
-
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx = 0;
 		gc.gridwidth = 1;
 		gc.fill = GridBagConstraints.NONE;
@@ -236,7 +278,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -245,7 +286,6 @@ public class StatsDisplayPanel extends JPanel {
 		
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -254,7 +294,6 @@ public class StatsDisplayPanel extends JPanel {
 		
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.CENTER;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -263,7 +302,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -272,7 +310,6 @@ public class StatsDisplayPanel extends JPanel {
 		
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -281,7 +318,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -289,12 +325,9 @@ public class StatsDisplayPanel extends JPanel {
 		add(lblTeam2PassAttempts, gc);
 		
 		//////// Shooting Row ////////
-		
 		gc.gridy++;
-
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -303,7 +336,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -312,7 +344,6 @@ public class StatsDisplayPanel extends JPanel {
 		
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -321,7 +352,6 @@ public class StatsDisplayPanel extends JPanel {
 		
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -330,7 +360,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -339,7 +368,6 @@ public class StatsDisplayPanel extends JPanel {
 		
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -348,7 +376,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -356,12 +383,9 @@ public class StatsDisplayPanel extends JPanel {
 		add(lblTeam2ShotAttempts, gc);
 		
 		//////// Clearing Row ////////
-		
 		gc.gridy++;
-
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -370,7 +394,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -379,7 +402,6 @@ public class StatsDisplayPanel extends JPanel {
 		
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -388,7 +410,6 @@ public class StatsDisplayPanel extends JPanel {
 		
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.CENTER;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -397,7 +418,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -406,7 +426,6 @@ public class StatsDisplayPanel extends JPanel {
 		
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -415,7 +434,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -423,12 +441,9 @@ public class StatsDisplayPanel extends JPanel {
 		add(lblTeam2ClearAttempts, gc);
 		
 		/////// Two Bar Passing Row \\\\\\
-
 		gc.gridy++;
-
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -437,7 +452,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -446,7 +460,6 @@ public class StatsDisplayPanel extends JPanel {
 		
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -455,7 +468,6 @@ public class StatsDisplayPanel extends JPanel {
 		
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.CENTER;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -464,7 +476,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -473,7 +484,6 @@ public class StatsDisplayPanel extends JPanel {
 		
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -482,7 +492,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -490,12 +499,9 @@ public class StatsDisplayPanel extends JPanel {
 		add(lblTeam2TwoBarPassAttempts, gc);
 		
 		/////// ShotsOnGoal Row \\\\\\
-
 		gc.gridy++;
-
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx = 2;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -504,7 +510,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.CENTER;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -513,7 +518,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -521,12 +525,9 @@ public class StatsDisplayPanel extends JPanel {
 		add(lblTeam2ShotsOnGoal, gc);
 		
 		/////// Scoring Row \\\\\\
-
 		gc.gridy++;
-
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx = 2;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -535,7 +536,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.CENTER;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -544,7 +544,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -552,12 +551,9 @@ public class StatsDisplayPanel extends JPanel {
 		add(lblTeam2Scoring, gc);
 		
 		/////// ThreeBarScoring Row \\\\\\
-
 		gc.gridy++;
-
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx = 2;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -566,7 +562,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.CENTER;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -575,7 +570,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -583,12 +577,9 @@ public class StatsDisplayPanel extends JPanel {
 		add(lblTeam2ThreeBarScoring, gc);
 		
 		/////// FiveBarScoring Row \\\\\\
-
 		gc.gridy++;
-
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx = 2;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -597,7 +588,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.CENTER;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -606,7 +596,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -614,12 +603,9 @@ public class StatsDisplayPanel extends JPanel {
 		add(lblTeam2FiveBarScoring, gc);
 		
 		/////// TwoBarScoring Row \\\\\\
-
 		gc.gridy++;
-
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx = 2;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -628,7 +614,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.CENTER;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -637,7 +622,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -645,12 +629,9 @@ public class StatsDisplayPanel extends JPanel {
 		add(lblTeam2TwoBarScoring, gc);
 		
 		/////// Breaks Row \\\\\\
-
 		gc.gridy++;
-
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx = 2;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -659,7 +640,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.CENTER;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -668,7 +648,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -676,12 +655,9 @@ public class StatsDisplayPanel extends JPanel {
 		add(lblTeam2Breaks, gc);
 		
 		/////// Stuffs Row \\\\\\
-
 		gc.gridy++;
-
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx = 2;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -690,7 +666,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.CENTER;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -699,7 +674,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -707,12 +681,9 @@ public class StatsDisplayPanel extends JPanel {
 		add(lblTeam2Stuffs, gc);
 		
 		/////// Aces Row \\\\\\
-
 		gc.gridy++;
-
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx = 2;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -721,7 +692,6 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.CENTER;
 		gc.anchor = GridBagConstraints.CENTER;
@@ -730,17 +700,14 @@ public class StatsDisplayPanel extends JPanel {
 
 		gc.weightx = 1;
 		gc.weighty = 1;
-		
 		gc.gridx++;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(lblTeam2Aces, gc);
-		
 	}
 
 	////// Utility Methods \\\\\\
-
 	public void updatePassStats(int teamNbr, int completes, int attempts, Float percent) {
 		if(teamNbr==1) {
 			lblTeam1PassCompletes.setText(String.format("%-3s",Integer.toString(completes))); //$NON-NLS-1$
@@ -859,5 +826,27 @@ public class StatsDisplayPanel extends JPanel {
 	private String buildTitle() {
 		return Messages.getString("StatsDisplayPanel.StatisticsDisplayPanel", settings.getGameType()); //$NON-NLS-1$
 	}
-
+	public void copyLabelsToClipboard() {
+		Component[] components = getComponents();
+		StringBuilder lines = new StringBuilder();
+		for (Component component:components) {
+			if (component instanceof JLabel) {
+				JLabel label = (JLabel) component;
+				String name = label.getName();
+				String value = label.getText();
+				if (name != null && !value.isEmpty()) lines.append(name + ": " + value).append("\n"); 
+			}
+		}
+		StringSelection selection = new StringSelection(lines.toString());
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(selection, null);
+	}
+	private class DoubleClickListener extends MouseAdapter {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+				copyLabelsToClipboard();
+			}
+		}
+	}
 }

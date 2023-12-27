@@ -980,7 +980,7 @@ This button will undo the last command or code entered.
 #### Redo
 This button will redo the last command or code that was undone.
 ### Statistics Display Panel
-The Statistics Display Panel displays any statistics generated for the current match.  The Team Names (if any) are shown at the top of the panel.  Followed by the Forward and Goalie names for Teams 1 and 2.  Statistics for team 1 are shown on the left and statistics for team 2 are shown on the right. A description of each statistic is in the middle.
+The Statistics Display Panel displays any statistics generated for the current match.  The Team Names (if any) are shown at the top of the panel.  Followed by the Forward and Goalie names for Teams 1 and 2.  Statistics for team 1 are shown on the left and statistics for team 2 are shown on the right. A description of each statistic is in the middle.  Double clicking with the left mouse button anywhere in the Statistics Display Panel will copy the current statistics to the clipboard.
 
 <img width="320" height="370" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusStatisticsDisplayPanel.png">
 
@@ -1140,6 +1140,12 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpkt3 - push king seat team 3
 
 ## Revision History</br>
+v2.030 12/26/2023</br>
+Removed unneeded variable declaration in getString(String, String) method in Messages.</br>
+Improve Game Table Window sizing.</br>
+Refactor setFocusOnCode() in Main and other minor refactors in Main.</br>
+Double clicking anywhere in the Statistics Display Panel will now copy all the stats to the clipboard.</br>
+</br>
 v2.029 12/26/2023</br>
 Correct typo in README.md.</br>
 Add king seat indicators to Game Windows.</br>
