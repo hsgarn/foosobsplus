@@ -1140,6 +1140,9 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpkt3 - push king seat team 3
 
 ## Revision History</br>
+v2.031 12/26/2023</br>
+Enhance Team Forward/Goalie names logic to only show slash if both names present in statistics display panel and in game table window.</br>
+</br>
 v2.030 12/26/2023</br>
 Removed unneeded variable declaration in getString(String, String) method in Messages.</br>
 Improve Game Table Window sizing.</br>

@@ -217,7 +217,7 @@ public class TeamController {
 			TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
 			if (teamPanel != null) {
 				teamPanel.selectForwardName();
-				statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
+				statsDisplayPanel.updateTeams(teamNumber,getDisplayName(teamNumber),getTeamName(teamNumber));
 				updateGameTables();
 			}
 		}
@@ -241,7 +241,7 @@ public class TeamController {
 			TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
 			if (teamPanel != null) {
 				teamPanel.selectGoalieName();
-				statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
+				statsDisplayPanel.updateTeams(teamNumber,getDisplayName(teamNumber),getTeamName(teamNumber));
 				updateGameTables();
 			}
 		}
@@ -417,7 +417,7 @@ public class TeamController {
 		if (team != null) {
 			team.setTeamName(teamName);
 			teamPanel.updateTeamName(teamName);
-			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
+			statsDisplayPanel.updateTeams(teamNumber,getDisplayName(teamNumber),getTeamName(teamNumber));
 			if (match.getWinState() > 0) {
 				resetForNewGame();
 			}
@@ -437,10 +437,25 @@ public class TeamController {
 		if (team != null) {
 			team.setForwardName(forwardName);
 			teamPanel.updateForwardName(forwardName);
-			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
+			statsDisplayPanel.updateTeams(teamNumber,getDisplayName(teamNumber),getTeamName(teamNumber));
 			checkResetForNewGame();
 			updateGameTables();
 		}
+	}
+	public String getDisplayName(int teamNumber) {
+		String forwardName = getForwardName(teamNumber);
+		String goalieName = getGoalieName(teamNumber);
+		String displayName;
+		if (goalieName.isEmpty() && forwardName.isEmpty()) {
+			displayName = "";
+		} else if (goalieName.isEmpty()) {
+			displayName = forwardName;
+		} else if (forwardName.isEmpty()) {
+			displayName = goalieName;
+		} else {
+			displayName = forwardName + "/" + goalieName;
+		}
+		return displayName;
 	}
 	private void goalieNameChange(JTextField txt) {
 		String goalieName;
@@ -455,7 +470,7 @@ public class TeamController {
 		if (team != null) {
 			team.setGoalieName(goalieName);
 			teamPanel.updateGoalieName(goalieName);
-			statsDisplayPanel.updateTeams(teamNumber,getForwardName(teamNumber) + "/" + getGoalieName(teamNumber),getTeamName(teamNumber));
+			statsDisplayPanel.updateTeams(teamNumber,getDisplayName(teamNumber),getTeamName(teamNumber));
 			checkResetForNewGame();
 			updateGameTables();
 		}
@@ -986,7 +1001,7 @@ public class TeamController {
 		    } else {
 		        teamPrefixes[i] = "";
 		    }
-		    teamNames[i] = teamPrefixes[i] + getForwardName(i + 1) + " / " + getGoalieName(i + 1) + ":";
+		    teamNames[i] = teamPrefixes[i] + getDisplayName(i + 1) + ":";
 		}
 		gameTableWindowPanel.setTeams(teamNames[0], teamNames[1], teamNames[2]);
 	}
