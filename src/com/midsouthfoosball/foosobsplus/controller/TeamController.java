@@ -171,6 +171,8 @@ public class TeamController {
 		lastScoredClocksMap.put(1,  lastScored1Clock);
 		lastScoredClocksMap.put(2,  lastScored2Clock);
 		lastScoredClocksMap.put(3,  lastScored3Clock);
+		
+		checkTeamNames();
 	}
 	
 	////// Team Panel Listener Objects //////
@@ -405,13 +407,16 @@ public class TeamController {
 		return capitalizeWord.trim();
 	}
 	private void teamNameChange(JTextField txt) {
-		String teamName;
-		if(settings.getAutoCapNames()==1) {
-			teamName = capitalizeWords(txt.getText());
-		} else {
-			teamName = txt.getText();
-		}
 		int teamNumber = convertToTeamNumber(txt.getName());
+		String teamName;
+		String name = txt.getText();
+		if (name == null || name.isEmpty()) {
+			teamName = Messages.getString("TeamPanel.Team",settings.getGameType()) + teamNumber; 
+		} else if(settings.getAutoCapNames()==1) {
+			teamName = capitalizeWords(name);
+		} else {
+			teamName = name;
+		}
 		Team team = teamsMap.getOrDefault(teamNumber, null);
 		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
 		if (team != null) {
@@ -423,6 +428,16 @@ public class TeamController {
 			}
 			updateGameTables();
 		}
+	}
+	private void checkTeamNames() {
+		teamsMap.forEach((k,v) -> {
+			String name = v.getTeamName();
+			if (name == null || name.isEmpty()) {
+				String newName = Messages.getString("TeamPanel.Team",settings.getGameType()) + k;
+				v.setTeamName(newName);
+				teamPanelsMap.get(k).updateTeamName(newName);
+			}
+		});
 	}
 	private void forwardNameChange(JTextField txt) {
 		String forwardName;
@@ -753,6 +768,7 @@ public class TeamController {
 		team1.setTeamName("");
 		team2.setTeamName("");
 		team3.setTeamName("");
+		checkTeamNames();
 		team1.setForwardName("");
 		team2.setForwardName("");
 		team3.setForwardName("");
