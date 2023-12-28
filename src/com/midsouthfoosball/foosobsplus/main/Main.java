@@ -550,8 +550,8 @@ public class Main {
 				boolean status;
 				if (isCancelled()) return;
 			    try {
-			     status = get();
-			     autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Worker completed with isConnected: " + status);
+					status = get();
+					autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Worker completed with isConnected: " + status);
 			    } catch (InterruptedException e) {
 			    	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString());
 		        	logger.error(e.toString());
@@ -1928,11 +1928,15 @@ public class Main {
 			if (source == autoScoreWorker) {
 				state = autoScoreWorker.getState();
 			}
-			logger.info("AutoScoreWorker state changed to: " + state.toString());
-			if (state == SwingWorker.StateValue.DONE) {
-				if (allowAutoScoreReconnect && !blockAutoScoreReconnect) {
-					logger.info("Attempt reconnect to AutoScore...");
-					connectAutoScore();
+			if (state == null) {
+				logger.info("AutoScoreWorker state is null so probably no AutoScore instance to connect to.");
+			} else {
+				logger.info("AutoScoreWorker state changed to: " + state.toString());
+				if (state == SwingWorker.StateValue.DONE) {
+					if (allowAutoScoreReconnect && !blockAutoScoreReconnect) {
+						logger.info("Attempt reconnect to AutoScore...");
+						connectAutoScore();
+					}
 				}
 			}
 		}

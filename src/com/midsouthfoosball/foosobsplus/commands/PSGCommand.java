@@ -25,20 +25,16 @@ import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.main.Main;
 
 public class PSGCommand implements Command {
-	private StatsController statsController;
-	private Main main;
-	
+	private final StatsController statsController;
+	private final Main main;
 	public PSGCommand(StatsController statsController, Main main) {
 		this.statsController = statsController;
 		this.main = main;
 	}
-	
 	public void execute() {
 		main.startGame();
 	}
-
 	public String getCode() {
 		return statsController.getLastCode();
 	}
-
 }

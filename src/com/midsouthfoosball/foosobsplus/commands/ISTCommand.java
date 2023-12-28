@@ -26,24 +26,21 @@ import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.main.Main;
 
 public class ISTCommand implements Command {
-	private StatsController statsController;
-	private MatchController matchController;
-	private Main main;
-	private int teamNumber;
-	
+	private final StatsController statsController;
+	private final MatchController matchController;
+	private final Main main;
+	private final int teamNumber;
 	public ISTCommand(Main main, StatsController statsController, MatchController matchController, int teamNumber) {
 		this.main = main;
 		this.statsController = statsController;
 		this.matchController = matchController;
 		this.teamNumber = teamNumber;
 	}
-	
 	public void execute() {
 		int rotate = 0;
 		rotate = matchController.incrementScore(teamNumber);
 		if (rotate > 0) main.cutthroatRotate(rotate); 
 	}
-
 	public String getCode() {
 		return statsController.getLastCode();
 	}

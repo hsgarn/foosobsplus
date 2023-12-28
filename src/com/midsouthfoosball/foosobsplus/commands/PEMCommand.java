@@ -25,18 +25,15 @@ import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.main.Main;
 
 public class PEMCommand implements Command {
-	private StatsController statsController;
-	private Main main;
-	
+	private final StatsController statsController;
+	private final Main main;
 	public PEMCommand(StatsController statsController, Main main) {
 		this.statsController = statsController;
 		this.main = main;
 	}
-
 	public void execute() {
 		main.endMatch();
 	}
-
 	public String getCode() {
 		return statsController.getLastCode();
 	}

@@ -25,20 +25,17 @@ import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 
 public class DSTCommand implements Command {
-	private StatsController statsController;
-	private MatchController matchController;
-	private int teamNumber;
-	
+	private final StatsController statsController;
+	private final MatchController matchController;
+	private final int teamNumber;
 	public DSTCommand(StatsController statsController, MatchController matchController, int teamNumber) {
 		this.statsController = statsController;
 		this.matchController = matchController;
 		this.teamNumber = teamNumber;
 	}
-	
 	public void execute() {
 		matchController.decrementScore(teamNumber);
 	}
-
 	public String getCode() {
 		return statsController.getLastCode();
 	}

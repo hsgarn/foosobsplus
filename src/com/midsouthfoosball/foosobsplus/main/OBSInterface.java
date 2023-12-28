@@ -36,29 +36,21 @@ public class OBSInterface {
 	{
 		logger = LoggerFactory.getLogger(this.getClass());
 	}
-	
 	public OBSInterface(Settings settings) {
 	}
-
 	public String getContents(String whichSource) {
-		final String theContents;
 		OBS obs = OBS.getInstance();
 		OBSRemoteController obsRemoteController = obs.getController();
 		if (!(obsRemoteController==null) && obs.getConnected()) {
 			GetInputSettingsResponse getInputSettings = obsRemoteController.getInputSettings(whichSource, 500);
-			if (getInputSettings != null && getInputSettings.isSuccessful()) {
-				theContents = getInputSettings.getInputSettings().get("text").getAsString();
-			} else {
-				theContents = "";
-			}
-		} else {
-			theContents = "";
+			return (getInputSettings != null && getInputSettings.isSuccessful()) 
+					? getInputSettings.getInputSettings().get("text").getAsString()
+					: "" ;
 		}
-		return theContents;
+		return "";
 	}
-	
 	public void writeData(String source, String data, String className, Boolean showParsed) {
-		if (source == "" || source == null) return;
+		if (source == null || source.isEmpty()) return;
 		OBS obs = OBS.getInstance();
 		OBSRemoteController obsRemoteController = obs.getController();
 		if (obsRemoteController != null && obs.getConnected()) {

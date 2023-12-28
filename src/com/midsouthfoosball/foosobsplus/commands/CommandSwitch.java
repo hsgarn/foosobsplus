@@ -22,25 +22,23 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.commands;
 
 import java.util.HashMap;
-
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CommandSwitch {
 	public final HashMap<String, Command> commandMap = new HashMap<>();
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
+	private static final Logger logger = LoggerFactory.getLogger(CommandSwitch.class);
 	
 	public void register(String commandName, Command command) {
+		Objects.requireNonNull(commandName, "Command name cannot be null");
+		Objects.requireNonNull(command, "Command cannot be null");
 		commandMap.put(commandName, command);
 	}
-	
 	public Command execute(String commandName) {
 		Command command = commandMap.get(commandName);
 		if (command == null) {
-			logger.error("No command registered for commandName [" + commandName + "].");
+			logger.error("No command registered for commandName [{}].", commandName);
 		} else {
 			command.execute();
 		}

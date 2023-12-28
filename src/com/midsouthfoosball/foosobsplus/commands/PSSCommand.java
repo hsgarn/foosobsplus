@@ -25,18 +25,15 @@ import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.main.Main;
 
 public class PSSCommand implements Command {
-	private StatsController statsController;
-	private Main main;
-	
+	private final StatsController statsController;
+	private final Main main;
 	public PSSCommand(StatsController statsController, Main main) {
 		this.statsController = statsController;
 		this.main = main;
 	}
-	
 	public void execute() {
 		main.switchSides();
 	}
-
 	public String getCode() {
 		return statsController.getLastCode();
 	}

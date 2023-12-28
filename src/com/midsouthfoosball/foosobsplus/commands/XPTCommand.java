@@ -25,20 +25,17 @@ import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
 
 public class XPTCommand implements Command {
-	private StatsController statsController;
-	private TeamController teamController;
-	private int teamNumber;
-	
+	private final StatsController statsController;
+	private final TeamController teamController;
+	private final int teamNumber;
 	public XPTCommand(StatsController statsController, TeamController teamController, int teamNumber) {
 		this.statsController = statsController;
 		this.teamController = teamController;
 		this.teamNumber = teamNumber;
 	}
-	
 	public void execute() {
 		teamController.switchPositions("Team " + Integer.toString(teamNumber));
 	}
-
 	public String getCode() {
 		return statsController.getLastCode();
 	}

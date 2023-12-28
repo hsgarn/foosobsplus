@@ -22,27 +22,22 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.commands;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectOutputStream;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Memento {
-	private static transient Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
+	private static final transient Logger logger = LoggerFactory.getLogger(Memento.class);
 	byte[] serializedObject;
-
 	public Memento(Object object) {
-		try {
-			ByteArrayOutputStream bo = new ByteArrayOutputStream();
-			ObjectOutputStream so = new ObjectOutputStream(bo);
+		try (ByteArrayOutputStream bo = new ByteArrayOutputStream();
+			ObjectOutputStream so = new ObjectOutputStream(bo)) {
 			so.writeObject(object);
 			so.flush();
 			serializedObject = bo.toByteArray();
-		} catch (Exception e) {
-			logger.error(e.toString());
+		} catch (IOException e) {
+			logger.error("Error while serializing object to Memento: {}", e.toString());
 		}
 	}
 	public byte[] getState() {

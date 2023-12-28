@@ -25,18 +25,15 @@ import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
 
 public class SPTCommand implements Command {
-	private StatsController statsController;
-	private TeamController teamController;
-	
+	private final StatsController statsController;
+	private final TeamController teamController;
 	public SPTCommand(StatsController statsController, TeamController teamController) {
 		this.statsController = statsController;
 		this.teamController = teamController;
 	}
-	
 	public void execute() {
 		teamController.startPassTimer();
 	}
-
 	public String getCode() {
 		return statsController.getLastCode();
 	}

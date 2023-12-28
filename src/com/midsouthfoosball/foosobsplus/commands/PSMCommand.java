@@ -25,18 +25,15 @@ import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.main.Main;
 
 public class PSMCommand implements Command {
-	private StatsController statsController;
-	private Main main;
-	
+	private final StatsController statsController;
+	private final Main main;
 	public PSMCommand(StatsController statsController, Main main) {
 		this.statsController = statsController;
 		this.main = main;
 	}
-
 	public void execute() {
 		main.startMatch();
 	}
-
 	public String getCode() {
 		return statsController.getLastCode();
 	}

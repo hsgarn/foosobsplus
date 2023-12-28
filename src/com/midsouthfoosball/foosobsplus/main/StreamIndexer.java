@@ -28,30 +28,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class StreamIndexer {
-	
 	private String dataPath;
 	private String separator = FileSystems.getDefault().getSeparator();
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
+	private static Logger logger =LoggerFactory.getLogger(StreamIndexer.class);
 	
 	public StreamIndexer(String dataPath) {
 		this.dataPath = dataPath;
 	}
-	
 	public void appendStreamIndexer(String text) {
 		String filePath = dataPath + separator + "streamindex.txt";
-		FileWriter fw;
-		try {
-			fw = new FileWriter(filePath, true);
-			BufferedWriter bw = new BufferedWriter(fw);
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
 			bw.write(text);
-			bw.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			logger.error(e.toString());
+			logger.error("Error writing to file: {}", e.toString());
 		}
-		
 	}
 }

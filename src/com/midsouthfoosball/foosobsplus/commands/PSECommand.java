@@ -24,20 +24,16 @@ import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.main.Main;
 
 public class PSECommand implements Command {
-	private StatsController statsController;
-	private Main main;
-	
+	private final StatsController statsController;
+	private final Main main;
 	public PSECommand(StatsController statsController, Main main) {
 		this.statsController = statsController;
 		this.main = main;
 	}
-
 	public void execute() {
 		main.startEvent();
 	}
-
 	public String getCode() {
 		return statsController.getLastCode();
 	}
-
 }

@@ -25,18 +25,15 @@ import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 
 public class PPMCommand implements Command {
-	private StatsController statsController;
-	private MatchController matchController;
-	
+	private final StatsController statsController;
+	private final MatchController matchController;
 	public PPMCommand(StatsController statsController, MatchController matchController) {
 		this.statsController = statsController;
 		this.matchController = matchController;
 	}
-
 	public void execute() {
 		matchController.pauseMatch();
 	}
-
 	public String getCode() {
 		return statsController.getLastCode();
 	}

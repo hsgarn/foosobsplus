@@ -1140,6 +1140,11 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpkt3 - push king seat team 3
 
 ## Revision History</br>
+v2.032 12/27/2023</br>
+Check for null state to prevent null pointer exception in AutoScoreWorkerStateChangeListener in Main.</br>
+Refactor OBSInterface, StreamIndexer, CodeCommand, Memento.</br>
+Refactor Command classes to use final.</br>
+</br>
 v2.031 12/26/2023</br>
 Enhance Team Forward/Goalie names logic to only show slash if both names present in statistics display panel and in game table window.</br>
 </br>

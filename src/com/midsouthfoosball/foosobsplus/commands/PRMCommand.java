@@ -25,18 +25,15 @@ import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
 
 public class PRMCommand implements Command {
-	private StatsController statsController;
-	private TeamController teamController;
-	
+	private final StatsController statsController;
+	private final TeamController teamController;
 	public PRMCommand(StatsController statsController, TeamController teamController) {
 		this.statsController = statsController;
 		this.teamController = teamController;
 	}
-	
 	public void execute() {
 		teamController.resetMatchCounts();
 	}
-
 	public String getCode() {
 		return statsController.getLastCode();
 	}

@@ -21,24 +21,19 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 package com.midsouthfoosball.foosobsplus.commands;
 
+import java.util.Objects;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 
 public class CodeCommand implements Command {
-	private StatsController statsController;
+	private final StatsController statsController;
 	private String theCode;
-	
 	public CodeCommand(StatsController statsController) {
 		this.statsController = statsController;
 	}
-
 	public void execute() {
-		theCode = statsController.getLastCode();
+		theCode = Objects.requireNonNull(statsController.getLastCode(), "Code cannot be null");
 	}
-
 	public String getCode() {
 		return theCode;
 	}
-	
-	
-
 }

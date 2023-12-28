@@ -23,18 +23,15 @@ import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TournamentController;
 
 public class PTCACommand implements Command {
-	private StatsController statsController;
-	private TournamentController tournamentController;
-	
+	private final StatsController statsController;
+	private final TournamentController tournamentController;
 	public PTCACommand(StatsController statsController, TournamentController tournamentController) {
 		this.statsController = statsController;
 		this.tournamentController = tournamentController;
 	}
-	
 	public void execute() {
 		tournamentController.clearAll();
 	}
-
 	public String getCode() {
 		return statsController.getLastCode();
 	}
