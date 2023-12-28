@@ -21,52 +21,37 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.event.ActionListener;
-import java.io.IOException;
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-
 import net.miginfocom.swing.MigLayout;
 
 public class AutoScoreConfigPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JLabel lblConfig;
-
 	private JTextArea txtConfig;
-	
 	private JButton btnValidateConfig;
 	private JButton btnWriteConfig;
 	private JButton btnReadConfig;
 	private JButton btnResetConfig;
 	private JButton btnClearConfig;
-
-	public AutoScoreConfigPanel() throws IOException {
-
+	public AutoScoreConfigPanel() {
 		setLayout(new MigLayout());
-		
 		lblConfig = new JLabel(Messages.getString("AutoScoreConfigPanel.Config")); //$NON-NLS-1$
 		add(lblConfig, "cell 0 0,alignx leading"); //$NON-NLS-1$
-		
 		txtConfig = new JTextArea(10,20);
 		add(txtConfig, "cell 0 1 2 1, growx"); //$NON-NLS-1$
-		
 		btnReadConfig = new JButton(Messages.getString("AutoScoreConfigPanel.Read")); //$NON-NLS-1$
 		add(btnReadConfig, "cell 0 2 1 1");
-		
 		btnClearConfig = new JButton(Messages.getString("AutoScoreConfigPanel.Clear")); //$NON-NLS-1$
 		add(btnClearConfig, "cell 1 2 1 1");
-		
 		btnValidateConfig = new JButton(Messages.getString("AutoScoreConfigPanel.Validate")); //$NON-NLS-1$
 		add(btnValidateConfig, "cell 0 3 2 1, growx");
-		
 		btnWriteConfig = new JButton(Messages.getString("AutoScoreConfigPanel.Write")); //$NON-NLS-1$
 		add(btnWriteConfig, "cell 0 4 1 1"); //$NON-NLS-1$
-		
 		btnResetConfig = new JButton(Messages.getString("AutoScoreConfigPanel.Reset")); //$NON-NLS-1$
 		add(btnResetConfig, "cell 1 4 1 1, growx"); //$NON-NLS-1$
-		
 	}
 	public void clearConfigTextArea() {
 		txtConfig.setText("");

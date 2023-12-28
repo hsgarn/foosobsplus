@@ -23,25 +23,18 @@ package com.midsouthfoosball.foosobsplus.view;
 import java.awt.Dimension;
 import java.io.IOException;
 import javax.swing.JFrame;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.AppConfig;
 
 @SuppressWarnings("serial")
 public class HotKeysFrame extends JFrame {
-
 	private HotKeysPanel hotKeysPanel;
-	private static final String programName = "FoosOBSPlus"; //$NON-NLS-1$
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
-	
+	private static final String programName = AppConfig.PROGRAM_NAME;
+	private static Logger logger = LoggerFactory.getLogger(HotKeysFrame.class);
 	public HotKeysFrame(Settings settings) {
 		super(programName + " " + Messages.getString("HotKeysFrame.HotKeySettings")); //$NON-NLS-1$ //$NON-NLS-2$
-		
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
 		try {
@@ -51,7 +44,6 @@ public class HotKeysFrame extends JFrame {
 			logger.error(e.toString());
 		}
 		hotKeysPanel.setPreferredSize(new Dimension(850, 630));
-		
 		getContentPane().add(hotKeysPanel);
 		pack();
 	}

@@ -54,7 +54,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
-
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -66,10 +65,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.midsouthfoosball.foosobsplus.commands.CodeCommand;
 import com.midsouthfoosball.foosobsplus.commands.Command;
 import com.midsouthfoosball.foosobsplus.commands.CommandSwitch;
@@ -160,7 +157,6 @@ import com.midsouthfoosball.foosobsplus.view.TeamPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.TournamentPanel;
-
 import io.obswebsocket.community.client.OBSRemoteController;
 import io.obswebsocket.community.client.WebSocketCloseCode;
 import io.obswebsocket.community.client.listener.lifecycle.ReasonThrowable;
@@ -179,8 +175,13 @@ public class Main {
 				}
 			}
 		} catch (Exception e) {
-			logger.info("Can't set look and feel.");
 			logger.error(e.toString());
+			try {
+				UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+			} catch (Exception e1) {
+				logger.info("Can't set look and feel.");
+				logger.error(e1.toString());
+			}
 		}
 	}	
 	////// Settings and OBSInterface setup \\\\\\

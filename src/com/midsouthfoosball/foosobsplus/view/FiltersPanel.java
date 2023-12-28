@@ -42,7 +42,6 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 import net.miginfocom.swing.MigLayout;
 
 public class FiltersPanel extends JPanel {
-	
 	private static final long serialVersionUID = 1L;
 	private JTextField txtTeam1ScoreFilter;
 	private JTextField txtTeam2ScoreFilter;
@@ -82,17 +81,11 @@ public class FiltersPanel extends JPanel {
 	private JButton btnStartMatchFilter;
 	private JButton btnStartGameFilter;
 	private JButton btnSwitchSidesFilter;
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
+	private static Logger logger = LoggerFactory.getLogger(FiltersPanel.class);
 	OBSInterface obsInterface;
-	
 	// Create the Panel
-
 	public FiltersPanel(Settings settings, OBSInterface obsInterface) throws IOException {
 		this.obsInterface = obsInterface;
-
 		setLayout(settings);
 	}
 	private void restoreDefaults(Settings settings) {
@@ -160,8 +153,8 @@ public class FiltersPanel extends JPanel {
 
 		txtTeam1ScoreFilter = new JTextField();
 		txtTeam1ScoreFilter.setText(settings.getTeam1ScoreFilter());
-		add(txtTeam1ScoreFilter, "cell 2 2,alignx left"); //$NON-NLS-1$
 		txtTeam1ScoreFilter.setColumns(20);
+		add(txtTeam1ScoreFilter, "cell 2 2,alignx left"); //$NON-NLS-1$
 		
 		btnTeam1ScoreFilter = new JButton("Test");
 		add(btnTeam1ScoreFilter, "cell 3 2, alignx left");
@@ -171,8 +164,8 @@ public class FiltersPanel extends JPanel {
 
 		txtTeam2ScoreFilter = new JTextField();
 		txtTeam2ScoreFilter.setText(settings.getTeam2ScoreFilter());
-		add(txtTeam2ScoreFilter, "cell 2 3,alignx left"); //$NON-NLS-1$
 		txtTeam2ScoreFilter.setColumns(20);
+		add(txtTeam2ScoreFilter, "cell 2 3,alignx left"); //$NON-NLS-1$
 		
 		btnTeam2ScoreFilter = new JButton("Test");
 		add(btnTeam2ScoreFilter, "cell 3 3, alignx left");
@@ -182,8 +175,8 @@ public class FiltersPanel extends JPanel {
 
 		txtTeam1WinGameFilter = new JTextField();
 		txtTeam1WinGameFilter.setText(settings.getTeam1WinGameFilter());
-		add(txtTeam1WinGameFilter, "cell 2 4,alignx left"); //$NON-NLS-1$
 		txtTeam1WinGameFilter.setColumns(20);
+		add(txtTeam1WinGameFilter, "cell 2 4,alignx left"); //$NON-NLS-1$
 		
 		btnTeam1WinGameFilter = new JButton("Test");
 		add(btnTeam1WinGameFilter, "cell 3 4, alignx left");
@@ -193,8 +186,8 @@ public class FiltersPanel extends JPanel {
 
 		txtTeam2WinGameFilter = new JTextField();
 		txtTeam2WinGameFilter.setText(settings.getTeam2WinGameFilter());
-		add(txtTeam2WinGameFilter, "cell 2 5,alignx left"); //$NON-NLS-1$
 		txtTeam2WinGameFilter.setColumns(20);
+		add(txtTeam2WinGameFilter, "cell 2 5,alignx left"); //$NON-NLS-1$
 		
 		btnTeam2WinGameFilter = new JButton("Test");
 		add(btnTeam2WinGameFilter, "cell 3 5, alignx left");
@@ -204,8 +197,8 @@ public class FiltersPanel extends JPanel {
 
 		txtTeam1WinMatchFilter = new JTextField();
 		txtTeam1WinMatchFilter.setText(settings.getTeam1WinMatchFilter());
-		add(txtTeam1WinMatchFilter, "cell 2 6,alignx left"); //$NON-NLS-1$
 		txtTeam1WinMatchFilter.setColumns(20);
+		add(txtTeam1WinMatchFilter, "cell 2 6,alignx left"); //$NON-NLS-1$
 		
 		btnTeam1WinMatchFilter = new JButton("Test");
 		add(btnTeam1WinMatchFilter, "cell 3 6, alignx left");
@@ -215,8 +208,8 @@ public class FiltersPanel extends JPanel {
 
 		txtTeam2WinMatchFilter = new JTextField();
 		txtTeam2WinMatchFilter.setText(settings.getTeam2WinMatchFilter());
-		add(txtTeam2WinMatchFilter, "cell 2 7,alignx left"); //$NON-NLS-1$
 		txtTeam2WinMatchFilter.setColumns(20);
+		add(txtTeam2WinMatchFilter, "cell 2 7,alignx left"); //$NON-NLS-1$
 		
 		btnTeam2WinMatchFilter = new JButton("Test");
 		add(btnTeam2WinMatchFilter, "cell 3 7, alignx left");
@@ -226,8 +219,8 @@ public class FiltersPanel extends JPanel {
 
 		txtTeam1TimeOutFilter = new JTextField();
 		txtTeam1TimeOutFilter.setText(settings.getTeam1TimeOutFilter());
-		add(txtTeam1TimeOutFilter, "cell 2 8,alignx left"); //$NON-NLS-1$
 		txtTeam1TimeOutFilter.setColumns(20);
+		add(txtTeam1TimeOutFilter, "cell 2 8,alignx left"); //$NON-NLS-1$
 		
 		btnTeam1TimeOutFilter = new JButton("Test");
 		add(btnTeam1TimeOutFilter, "cell 3 8, alignx left");
@@ -237,8 +230,8 @@ public class FiltersPanel extends JPanel {
 
 		txtTeam2TimeOutFilter = new JTextField();
 		txtTeam2TimeOutFilter.setText(settings.getTeam2TimeOutFilter());
-		add(txtTeam2TimeOutFilter, "cell 2 9,alignx left"); //$NON-NLS-1$
 		txtTeam2TimeOutFilter.setColumns(20);
+		add(txtTeam2TimeOutFilter, "cell 2 9,alignx left"); //$NON-NLS-1$
 		
 		btnTeam2TimeOutFilter = new JButton("Test");
 		add(btnTeam2TimeOutFilter, "cell 3 9, alignx left");
@@ -248,8 +241,8 @@ public class FiltersPanel extends JPanel {
 
 		txtTeam1ResetFilter = new JTextField();
 		txtTeam1ResetFilter.setText(settings.getTeam1ResetFilter());
-		add(txtTeam1ResetFilter, "cell 2 10,alignx left"); //$NON-NLS-1$
 		txtTeam1ResetFilter.setColumns(20);
+		add(txtTeam1ResetFilter, "cell 2 10,alignx left"); //$NON-NLS-1$
 		
 		btnTeam1ResetFilter = new JButton("Test");
 		add(btnTeam1ResetFilter, "cell 3 10, alignx left");
@@ -259,8 +252,8 @@ public class FiltersPanel extends JPanel {
 
 		txtTeam2ResetFilter = new JTextField();
 		txtTeam2ResetFilter.setText(settings.getTeam2ResetFilter());
-		add(txtTeam2ResetFilter, "cell 2 11,alignx left"); //$NON-NLS-1$
 		txtTeam2ResetFilter.setColumns(20);
+		add(txtTeam2ResetFilter, "cell 2 11,alignx left"); //$NON-NLS-1$
 		
 		btnTeam2ResetFilter = new JButton("Test");
 		add(btnTeam2ResetFilter, "cell 3 11, alignx left");
@@ -270,8 +263,8 @@ public class FiltersPanel extends JPanel {
 
 		txtTeam1WarnFilter = new JTextField();
 		txtTeam1WarnFilter.setText(settings.getTeam1WarnFilter());
-		add(txtTeam1WarnFilter, "cell 2 12,alignx left"); //$NON-NLS-1$
 		txtTeam1WarnFilter.setColumns(20);
+		add(txtTeam1WarnFilter, "cell 2 12,alignx left"); //$NON-NLS-1$
 		
 		btnTeam1WarnFilter = new JButton("Test");
 		add(btnTeam1WarnFilter, "cell 3 12, alignx left");
@@ -281,8 +274,8 @@ public class FiltersPanel extends JPanel {
 
 		txtTeam2WarnFilter = new JTextField();
 		txtTeam2WarnFilter.setText(settings.getTeam2WarnFilter());
-		add(txtTeam2WarnFilter, "cell 2 13,alignx left"); //$NON-NLS-1$
 		txtTeam2WarnFilter.setColumns(20);
+		add(txtTeam2WarnFilter, "cell 2 13,alignx left"); //$NON-NLS-1$
 		
 		btnTeam2WarnFilter = new JButton("Test");
 		add(btnTeam2WarnFilter, "cell 3 13, alignx left");
@@ -292,8 +285,8 @@ public class FiltersPanel extends JPanel {
 
 		txtTeam1SwitchPositionsFilter = new JTextField();
 		txtTeam1SwitchPositionsFilter.setText(settings.getTeam1SwitchPositionsFilter());
-		add(txtTeam1SwitchPositionsFilter, "cell 2 14,alignx left"); //$NON-NLS-1$
 		txtTeam1SwitchPositionsFilter.setColumns(20);
+		add(txtTeam1SwitchPositionsFilter, "cell 2 14,alignx left"); //$NON-NLS-1$
 		
 		btnTeam1SwitchPositionsFilter = new JButton("Test");
 		add(btnTeam1SwitchPositionsFilter, "cell 3 14, alignx left");
@@ -303,8 +296,8 @@ public class FiltersPanel extends JPanel {
 
 		txtTeam2SwitchPositionsFilter = new JTextField();
 		txtTeam2SwitchPositionsFilter.setText(settings.getTeam2SwitchPositionsFilter());
-		add(txtTeam2SwitchPositionsFilter, "cell 2 15,alignx left"); //$NON-NLS-1$
 		txtTeam2SwitchPositionsFilter.setColumns(20);
+		add(txtTeam2SwitchPositionsFilter, "cell 2 15,alignx left"); //$NON-NLS-1$
 		
 		btnTeam2SwitchPositionsFilter = new JButton("Test");
 		add(btnTeam2SwitchPositionsFilter, "cell 3 15, alignx left");
@@ -314,8 +307,8 @@ public class FiltersPanel extends JPanel {
 
 		txtTeam1SkunkFilter = new JTextField();
 		txtTeam1SkunkFilter.setText(settings.getTeam1SkunkFilter());
-		add(txtTeam1SkunkFilter, "cell 2 16,alignx left"); //$NON-NLS-1$
 		txtTeam1SkunkFilter.setColumns(20);
+		add(txtTeam1SkunkFilter, "cell 2 16,alignx left"); //$NON-NLS-1$
 		
 		btnTeam1SkunkFilter = new JButton("Test");
 		add(btnTeam1SkunkFilter, "cell 3 16, alignx left");
@@ -325,8 +318,8 @@ public class FiltersPanel extends JPanel {
 
 		txtTeam2SkunkFilter = new JTextField();
 		txtTeam2SkunkFilter.setText(settings.getTeam2SkunkFilter());
-		add(txtTeam2SkunkFilter, "cell 2 17,alignx left"); //$NON-NLS-1$
 		txtTeam2SkunkFilter.setColumns(20);
+		add(txtTeam2SkunkFilter, "cell 2 17,alignx left"); //$NON-NLS-1$
 		
 		btnTeam2SkunkFilter = new JButton("Test");
 		add(btnTeam2SkunkFilter, "cell 3 17, alignx left");
@@ -336,8 +329,8 @@ public class FiltersPanel extends JPanel {
 
 		txtStartMatchFilter = new JTextField();
 		txtStartMatchFilter.setText(settings.getStartMatchFilter());
-		add(txtStartMatchFilter, "cell 5 2,alignx left"); //$NON-NLS-1$
 		txtStartMatchFilter.setColumns(20);
+		add(txtStartMatchFilter, "cell 5 2,alignx left"); //$NON-NLS-1$
 		
 		btnStartMatchFilter = new JButton("Test");
 		add(btnStartMatchFilter, "cell 6 2, alignx left");
@@ -347,8 +340,8 @@ public class FiltersPanel extends JPanel {
 
 		txtStartGameFilter = new JTextField();
 		txtStartGameFilter.setText(settings.getStartGameFilter());
-		add(txtStartGameFilter, "cell 5 3,alignx left"); //$NON-NLS-1$
 		txtStartGameFilter.setColumns(20);
+		add(txtStartGameFilter, "cell 5 3,alignx left"); //$NON-NLS-1$
 		
 		btnStartGameFilter = new JButton("Test");
 		add(btnStartGameFilter, "cell 6 3, alignx left");
@@ -358,8 +351,8 @@ public class FiltersPanel extends JPanel {
 
 		txtSwitchSidesFilter = new JTextField();
 		txtSwitchSidesFilter.setText(settings.getSwitchSidesFilter());
-		add(txtSwitchSidesFilter, "cell 5 4,alignx left"); //$NON-NLS-1$
 		txtSwitchSidesFilter.setColumns(20);
+		add(txtSwitchSidesFilter, "cell 5 4,alignx left"); //$NON-NLS-1$
 		
 		btnSwitchSidesFilter = new JButton("Test");
 		add(btnSwitchSidesFilter, "cell 6 4, alignx left");

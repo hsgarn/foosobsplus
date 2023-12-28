@@ -23,25 +23,19 @@ package com.midsouthfoosball.foosobsplus.view;
 import java.awt.Dimension;
 import java.io.IOException;
 import javax.swing.JFrame;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.AppConfig;
 
 @SuppressWarnings("serial")
 public class AutoScoreSettingsFrame extends JFrame {
 
 	private AutoScoreSettingsPanel autoScoreSettingsPanel;
-	private static final String programName = "FoosOBSPlus"; //$NON-NLS-1$
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
-	
+	private static final String programName = AppConfig.PROGRAM_NAME;
+	private static Logger logger = LoggerFactory.getLogger(AutoScoreSettingsFrame.class);
 	public AutoScoreSettingsFrame(Settings settings) {
 		super(programName + " " + Messages.getString("AutoScoreSettingsFrame.AutoScoreSettings")); //$NON-NLS-1$ //$NON-NLS-2$
-		
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
 		try {

@@ -23,43 +23,18 @@ package com.midsouthfoosball.foosobsplus.view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.WindowListener;
-
 import javax.swing.JFrame;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.midsouthfoosball.foosobsplus.model.AppConfig;
 
 @SuppressWarnings("serial")
 public class TimerWindowFrame extends JFrame {
-	
 	private TimerWindowPanel timerWindowPanel;
-	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
-
+	private static final String programName = AppConfig.PROGRAM_NAME;
 	public TimerWindowFrame(MainFrame mainFrame) {
 		super(programName + " " + Messages.getString("TimerWindowFrame.TimerWindow")); //$NON-NLS-1$ //$NON-NLS-2$
-		try {
-		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-		        if ("Nimbus".equals(info.getName())) { //$NON-NLS-1$
-		            UIManager.setLookAndFeel(info.getClassName());
-		            break;
-		        }
-		    }
-		} catch (Exception e) {
-		    logger.error(Messages.getString("Errors.LookAndFeelException")); //$NON-NLS-1$
-		    logger.error(e.toString());
-		}
-
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
 		timerWindowPanel = new TimerWindowPanel("0",Color.GREEN); //$NON-NLS-1$
 		timerWindowPanel.setPreferredSize(new Dimension(256, 70));
-
 		getContentPane().add(timerWindowPanel);
 		setLocation(0,0);
 		pack();
@@ -74,5 +49,4 @@ public class TimerWindowFrame extends JFrame {
 	public void addTimerWindowClosedListener(WindowListener listenForTimerWindowClose) {
 		this.addWindowListener(listenForTimerWindowClose);
 	}
-
 }

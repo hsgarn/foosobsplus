@@ -21,41 +21,23 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Dimension;
-import java.io.IOException;
-
 import javax.swing.JFrame;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.midsouthfoosball.foosobsplus.model.AppConfig;
 
 @SuppressWarnings("serial")
 public class AutoScoreConfigFrame extends JFrame {
-
 	private AutoScoreConfigPanel autoScoreConfigPanel;
-	private static final String programName = "FoosOBSPlus"; //$NON-NLS-1$
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
-	
+	private static final String programName = AppConfig.PROGRAM_NAME;
 	public AutoScoreConfigFrame() {
 		super(programName + " " + Messages.getString("AutoScoreConfigFrame.Title")); //$NON-NLS-1$ //$NON-NLS-2$
-		
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
-		try {
-			autoScoreConfigPanel = new AutoScoreConfigPanel();
-		} catch (IOException e) {
-			logger.error(Messages.getString("AutoScoreConfigFrame.ErrorLoadingConfig")); //$NON-NLS-1$
-			logger.error(e.toString());
-		}
+		autoScoreConfigPanel = new AutoScoreConfigPanel();
 		autoScoreConfigPanel.setPreferredSize(new Dimension(500, 400));
-		
 		getContentPane().add(autoScoreConfigPanel);
 		pack();
 	}
 	public AutoScoreConfigPanel getAutoScoreConfigPanel() {
 		return autoScoreConfigPanel;
 	}
-
 }

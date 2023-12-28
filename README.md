@@ -1140,6 +1140,11 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpkt3 - push king seat team 3
 
 ## Revision History</br>
+v2.033 12/28/2023</br>
+Refactor Frame classes and remove unnecessary LookAndFeel logic.</br>
+Add backup LookAndFeel in Main if Nimbus not loaded.</br>
+Add AppConfig class.</br>
+</br>
 v2.032 12/27/2023</br>
 Check for null state to prevent null pointer exception in AutoScoreWorkerStateChangeListener in Main.</br>
 Refactor OBSInterface, StreamIndexer, CodeCommand, Memento.</br>

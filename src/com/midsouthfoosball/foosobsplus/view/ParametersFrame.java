@@ -23,28 +23,20 @@ package com.midsouthfoosball.foosobsplus.view;
 import java.awt.Dimension;
 import java.io.IOException;
 import javax.swing.JFrame;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.midsouthfoosball.foosobsplus.model.AppConfig;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
 public class ParametersFrame extends JFrame {
-	
 	private ParametersPanel parametersPanel;
-	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
-	
+	private static final String programName = AppConfig.PROGRAM_NAME;
+	private static Logger logger = LoggerFactory.getLogger(ParametersFrame.class);
 	public ParametersFrame(Settings settings) {
 		super(programName + " " + Messages.getString("ParametersFrame.ParameterSettings")); //$NON-NLS-1$ //$NON-NLS-2$
-
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
-		
 		try {
 			parametersPanel = new ParametersPanel(settings);
 		} catch (IOException e) {
@@ -52,7 +44,6 @@ public class ParametersFrame extends JFrame {
 			logger.error(e.toString());
 		}
 		parametersPanel.setPreferredSize(new Dimension(650, 600));
-		
 		getContentPane().add(parametersPanel);
 		pack();
 	}

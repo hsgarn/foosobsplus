@@ -32,12 +32,8 @@ import io.obswebsocket.community.client.OBSRemoteController;
 import io.obswebsocket.community.client.message.response.inputs.GetInputSettingsResponse;
 
 public class OBSInterface {
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
-	public OBSInterface(Settings settings) {
-	}
+	private static Logger logger = LoggerFactory.getLogger(OBSInterface.class);
+	public OBSInterface(Settings settings) {}
 	public String getContents(String whichSource) {
 		OBS obs = OBS.getInstance();
 		OBSRemoteController obsRemoteController = obs.getController();

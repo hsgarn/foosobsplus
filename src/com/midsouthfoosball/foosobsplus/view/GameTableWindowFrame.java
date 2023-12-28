@@ -22,53 +22,25 @@ package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Dimension;
 import java.awt.event.WindowListener;
-
 import javax.swing.JFrame;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.midsouthfoosball.foosobsplus.model.AppConfig;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
 public class GameTableWindowFrame extends JFrame {
-	
-	private static final String programName = "FoosOBSPlus"; //$NON-NLS-1$
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
-	
+	private static final String programName = AppConfig.PROGRAM_NAME;
 	public GameTableWindowFrame(Settings settings, GameTableWindowPanel gameTableWindowPanel, MainFrame mainFrame) {
 		super(programName + " " + Messages.getString("GameTableWindowFrame.GameTableWindow")); //$NON-NLS-1$ //$NON-NLS-2$
-		try {
-		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-		        if ("Nimbus".equals(info.getName())) { //$NON-NLS-1$
-		            UIManager.setLookAndFeel(info.getClassName());
-		            break;
-		        }
-		    }
-		} catch (Exception e) {
-		    logger.error(Messages.getString("Errors.LookAndFeelException")); //$NON-NLS-1$
-		    logger.error(e.toString());
-		}
-
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//		setAlwaysOnTop(true);
-		
 		if (settings.getCutThroatMode()==1) {
 			gameTableWindowPanel.setPreferredSize(new Dimension(440, 100));
 		} else {
 			gameTableWindowPanel.setPreferredSize(new Dimension(440, 100));
 		}
-
 		getContentPane().add(gameTableWindowPanel);
 		setLocation(513,0);
 		pack();
 	}
-	
 	////// Listeners \\\\\\
 	public void addGameTableWindowClosedListener(WindowListener listenForGameTableWindowClose) {
 		this.addWindowListener(listenForGameTableWindowClose);

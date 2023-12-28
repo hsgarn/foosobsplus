@@ -41,7 +41,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
@@ -52,10 +51,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.midsouthfoosball.foosobsplus.model.AppConfig;
 import com.midsouthfoosball.foosobsplus.main.Main;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
@@ -106,12 +104,8 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private ImageIcon imgAutoScoreDisconnected;
 	private Icon imgIconAutoScoreConnected;
 	private Icon imgIconAutoScoreDisconnected;	
-	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
-	
+	private static final String programName = AppConfig.PROGRAM_NAME;
+	private static Logger logger = LoggerFactory.getLogger(MainFrame.class);
 	public MainFrame(Settings settings, TournamentPanel tournamentPanel, TimerPanel timerPanel, OBSPanel obsPanel, AutoScoreMainPanel autoScoreMainPanel,
 			TeamPanel team1Panel, TeamPanel team2Panel, TeamPanel team3Panel, StatsEntryPanel statsEntryPanel, SwitchPanel switchPanel, ResetPanel resetPanel, 
 			StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,	SourcesFrame sourcesFrame, 

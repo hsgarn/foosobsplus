@@ -22,31 +22,22 @@ package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Dimension;
 import java.io.IOException;
-
 import javax.swing.JFrame;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.midsouthfoosball.foosobsplus.model.AppConfig;
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
 public class StatSourcesFrame extends JFrame {
-	
 	private StatSourcesPanel statSourcesPanel;
-	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
-	
+	private static final String programName = AppConfig.PROGRAM_NAME;
+	private static Logger logger = LoggerFactory.getLogger(StatSourcesFrame.class);
 	public StatSourcesFrame(Settings settings, OBSInterface obsInterface) {
 		super(programName + " " + Messages.getString("StatSourcesFrame.StatSourcesSettings")); //$NON-NLS-1$ //$NON-NLS-2$
-		
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
-		
 		try {
 			statSourcesPanel = new StatSourcesPanel(settings, obsInterface);
 		} catch (IOException e) {
@@ -54,7 +45,6 @@ public class StatSourcesFrame extends JFrame {
 			logger.error(e.toString());
 		}
 		statSourcesPanel.setPreferredSize(new Dimension(1100, 650));
-		
 		getContentPane().add(statSourcesPanel);
 		pack();
 	}

@@ -22,39 +22,29 @@ package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Dimension;
 import java.io.IOException;
-
 import javax.swing.JFrame;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
+import com.midsouthfoosball.foosobsplus.model.AppConfig;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
 public class FiltersFrame extends JFrame {
-	
 	private FiltersPanel filtersPanel;
-	private final static String programName = "FoosOBSPlus"; //$NON-NLS-1$
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
-	
+	private static final String programName = AppConfig.PROGRAM_NAME;
+	private static final Logger logger = LoggerFactory.getLogger(FiltersFrame.class);
 	public FiltersFrame(Settings settings, OBSInterface obsInterface) {
 		super(programName + " " + Messages.getString("FiltersFrame.FiltersSettings")); //$NON-NLS-1$ //$NON-NLS-2$
-		
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
-		
 		try {
-			filtersPanel = new FiltersPanel(settings, obsInterface);
+			this.filtersPanel = new FiltersPanel(settings, obsInterface);
 		} catch (IOException e) {
 			logger.error(Messages.getString("Errors.LoadSettingsError")); //$NON-NLS-1$
 			logger.error(e.toString());
 		}
 		filtersPanel.setPreferredSize(new Dimension(750, 630));
-		
 		getContentPane().add(filtersPanel);
 		pack();
 	}
