@@ -74,10 +74,7 @@ public class Team implements Serializable {
 	private int twoBarScoring = 0;
 	private int shotsOnGoal = 0;
 	private DecimalFormat df = new DecimalFormat("###.#");
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
+	private static Logger logger = LoggerFactory.getLogger(Team.class);
 	
 	public Team(OBSInterface obsInterface, Settings settings, Integer teamNbr, String teamColor) {
 		this.obsInterface = obsInterface;

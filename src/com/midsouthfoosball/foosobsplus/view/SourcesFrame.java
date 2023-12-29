@@ -44,8 +44,11 @@ public class SourcesFrame extends JFrame {
 			logger.error(Messages.getString("Errors.LoadSettingsError")); //$NON-NLS-1$
 			logger.error(e.toString());
 		}
-		sourcesPanel.setPreferredSize(new Dimension(750, 550));
+		sourcesPanel.setPreferredSize(new Dimension(750, 625));
 		getContentPane().add(sourcesPanel);
 		pack();
+	}
+	public SourcesPanel getSourcesPanel() {
+		return sourcesPanel;
 	}
 }

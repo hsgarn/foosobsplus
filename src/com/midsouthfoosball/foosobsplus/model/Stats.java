@@ -114,10 +114,7 @@ public class Stats implements Serializable {
 	private transient Team team1;
 	private transient Team team2;
 //	private transient Team team3;
-	private static transient Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
+	private static transient Logger logger = LoggerFactory.getLogger(Stats.class);
 
 	public Stats(Settings settings, Team team1, Team team2, Team team3) {
 		codeHistory = new DefaultListModel<String>();

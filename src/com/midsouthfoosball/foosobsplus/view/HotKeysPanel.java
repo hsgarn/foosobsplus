@@ -126,10 +126,7 @@ public class HotKeysPanel extends JPanel {
 	private JButton btnSave;
 	private JButton btnGenerateHotKeyScripts;
 	private String hotKeyBaseScriptText;
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
+	private static Logger logger = LoggerFactory.getLogger(HotKeysPanel.class);
 
 	public HotKeysPanel(Settings settings) throws IOException {
 		hotKeyBaseScriptText = settings.getHotKeyBaseScript();

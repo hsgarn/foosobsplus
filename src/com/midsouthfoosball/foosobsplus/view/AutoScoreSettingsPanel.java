@@ -65,10 +65,7 @@ public class AutoScoreSettingsPanel extends JPanel {
 	private JList<String> lstMessageHistory;
 	private DefaultListModel<String> mdlMessageHistory;
 	private JScrollPane scrMessageHistory;
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
+	private static Logger logger = LoggerFactory.getLogger(AutoScoreSettingsPanel.class);
 
 	public AutoScoreSettingsPanel(Settings settings) throws IOException {
 		this.settings = settings;
@@ -84,8 +81,8 @@ public class AutoScoreSettingsPanel extends JPanel {
 		txtServerAddress.setHorizontalAlignment(SwingConstants.CENTER);
 		txtServerAddress.setInputVerifier(new IPAddrInputVerifier());
 		txtServerAddress.setText(settings.getAutoScoreSettingsServerAddress());
-		add(txtServerAddress, "cell 1 2,alignx left"); //$NON-NLS-1$
 		txtServerAddress.setColumns(10);
+		add(txtServerAddress, "cell 1 2,alignx left"); //$NON-NLS-1$
 		
 		chckbxAutoConnect = new JCheckBox("Auto Connect on Start Up");
 		if (Integer.toString(settings.getAutoScoreSettingsAutoConnect()).equals("1")) {
@@ -101,8 +98,8 @@ public class AutoScoreSettingsPanel extends JPanel {
 		txtServerPort = new JTextField();
 		txtServerPort.setHorizontalAlignment(SwingConstants.CENTER);
 		txtServerPort.setText(Integer.toString(settings.getAutoScoreSettingsServerPort()));
-		add(txtServerPort, "cell 1 3,alignx left,aligny top"); //$NON-NLS-1$
 		txtServerPort.setColumns(10);
+		add(txtServerPort, "cell 1 3,alignx left,aligny top"); //$NON-NLS-1$
 
 		chckbxDetailLog = new JCheckBox("Detail Log");
 		if (Integer.toString(settings.getAutoScoreSettingsDetailLog()).equals("1")) {

@@ -55,10 +55,7 @@ public class PartnerProgramPanel extends JPanel {
 	private JTextField txtPlayer2FileName;
 	private JTextField txtPlayer3FileName;
 	private JTextField txtPlayer4FileName;
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
+	private static Logger logger = LoggerFactory.getLogger(PartnerProgramPanel.class);
 
 	// Create the Panel.
 

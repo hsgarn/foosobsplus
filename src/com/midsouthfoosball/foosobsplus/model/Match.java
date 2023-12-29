@@ -59,11 +59,8 @@ public class Match implements Serializable {
 	private String[] scoresTeam2;
 	private String[] scoresTeam3;
 	private String[] times;
-	private static transient Logger logger;
+	private static transient Logger logger = LoggerFactory.getLogger(Match.class);
 	private StringBuilder gameResults = new StringBuilder();
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
 	public Match(OBSInterface obsInterface, Settings settings, Team team1, Team team2, Team team3) {
 		this.team1 = team1;
 		this.team2 = team2;

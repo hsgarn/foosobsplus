@@ -82,9 +82,15 @@ public class SourcesPanel extends JPanel {
 	private JTextField txtTeam1KingSeatSource;
 	private JTextField txtTeam2KingSeatSource;
 	private JTextField txtTeam3KingSeatSource;
-	private JTextField txtShowScoresSource;
-	private JTextField txtShowTimerSource;
-	private JTextField txtShowCutthroatSource;
+	private JTextField txtTeam1Game1ShowSource;
+	private JTextField txtTeam2Game1ShowSource;
+	private JTextField txtTeam3Game1ShowSource;
+	private JTextField txtTeam1Game2ShowSource;
+	private JTextField txtTeam2Game2ShowSource;
+	private JTextField txtTeam3Game2ShowSource;
+	private JTextField txtTeam1Game3ShowSource;
+	private JTextField txtTeam2Game3ShowSource;
+	private JTextField txtTeam3Game3ShowSource;
 	private JTextField txtTournamentSource;
 	private JTextField txtEventSource;
 	private JTextField txtTableNameSource;
@@ -97,12 +103,13 @@ public class SourcesPanel extends JPanel {
 	private JTextField txtMatchWinnerSource;
 	private JTextField txtMeatballSource;
 	private JTextField txtGameResultsSource;
+	private JTextField txtShowScoresSource;
+	private JTextField txtShowTimerSource;
+	private JTextField txtShowCutthroatSource;
+	private JButton btnSaveSources;
 	OBSInterface obsInterface;
 	private String defaultFilePath = "c:\\temp"; //$NON-NLS-1$
-	private static transient Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
+	private static transient Logger logger = LoggerFactory.getLogger(SourcesPanel.class);
 	// Create the Panel.
 	public SourcesPanel(Settings settings, OBSInterface obsInterface) throws IOException {
 		this.obsInterface = obsInterface;
@@ -142,6 +149,15 @@ public class SourcesPanel extends JPanel {
 		txtTeam1KingSeatSource.setText(settings.getDefaultTeam1KingSeatSource());
 		txtTeam2KingSeatSource.setText(settings.getDefaultTeam2KingSeatSource());
 		txtTeam3KingSeatSource.setText(settings.getDefaultTeam3KingSeatSource());
+		txtTeam1Game1ShowSource.setText(settings.getDefaultTeamGameShowSource("1","1"));
+		txtTeam2Game1ShowSource.setText(settings.getDefaultTeamGameShowSource("2","1"));
+		txtTeam3Game1ShowSource.setText(settings.getDefaultTeamGameShowSource("3","1"));
+		txtTeam1Game2ShowSource.setText(settings.getDefaultTeamGameShowSource("1","2"));
+		txtTeam2Game2ShowSource.setText(settings.getDefaultTeamGameShowSource("2","2"));
+		txtTeam3Game2ShowSource.setText(settings.getDefaultTeamGameShowSource("3","2"));
+		txtTeam1Game3ShowSource.setText(settings.getDefaultTeamGameShowSource("1","3"));
+		txtTeam2Game3ShowSource.setText(settings.getDefaultTeamGameShowSource("2","3"));
+		txtTeam3Game3ShowSource.setText(settings.getDefaultTeamGameShowSource("3","3"));
 		txtTimeRemainingSource.setText(settings.getDefaultTimeRemainingSource());
 		txtTimerInUseSource.setText(settings.getDefaultTimerInUseSource());
 		txtMatchWinnerSource.setText(settings.getDefaultMatchWinnerSource());
@@ -155,7 +171,8 @@ public class SourcesPanel extends JPanel {
 		txtShowTimerSource.setText(settings.getDefaultShowTimerSource());
 		txtShowCutthroatSource.setText(settings.getDefaultShowCutthroatSource());
 	}
-	private void saveSettings(Settings settings) {
+	public boolean saveSettings(Settings settings) {
+		boolean okToCloseWindow = false;
 		settings.setSource("Tournament",txtTournamentSource.getText());
 		settings.setSource("Event",txtEventSource.getText());
 		settings.setSource("TableName",txtTableNameSource.getText());
@@ -189,6 +206,15 @@ public class SourcesPanel extends JPanel {
 		settings.setSource("Team1KingSeat",txtTeam1KingSeatSource.getText());
 		settings.setSource("Team2KingSeat",txtTeam2KingSeatSource.getText());
 		settings.setSource("Team3KingSeat",txtTeam3KingSeatSource.getText());
+		settings.setSource("Team1Game1Show",txtTeam1Game1ShowSource.getText());
+		settings.setSource("Team2Game1Show",txtTeam2Game1ShowSource.getText());
+		settings.setSource("Team3Game1Show",txtTeam3Game1ShowSource.getText());
+		settings.setSource("Team1Game2Show",txtTeam1Game2ShowSource.getText());
+		settings.setSource("Team2Game2Show",txtTeam2Game2ShowSource.getText());
+		settings.setSource("Team3Game2Show",txtTeam3Game2ShowSource.getText());
+		settings.setSource("Team1Game3Show",txtTeam1Game3ShowSource.getText());
+		settings.setSource("Team2Game3Show",txtTeam2Game3ShowSource.getText());
+		settings.setSource("Team3Game3Show",txtTeam3Game3ShowSource.getText());
 		settings.setSource("LastScored",txtLastScoredSource.getText());
 		settings.setSource("TimeRemaining",txtTimeRemainingSource.getText());
 		settings.setSource("TimerInUse",txtTimerInUseSource.getText());
@@ -203,10 +229,12 @@ public class SourcesPanel extends JPanel {
 		settings.setSource("ShowCutthroat", txtShowCutthroatSource.getText());
 		try {
 			settings.saveSourceConfig();
+			okToCloseWindow = true;
 		} catch (IOException ex) {
 			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile")); //$NON-NLS-1$
 			logger.error(ex.toString());
 		}
+		return okToCloseWindow;
 	}
 	public void setLayout(Settings settings) {	
 		setBounds(100, 100, 900, 489);
@@ -498,32 +526,60 @@ public class SourcesPanel extends JPanel {
 		txtTeam3KingSeatSource.setColumns(10);
 		add(txtTeam3KingSeatSource, "cell 4 12, alignx left"); //$NON-NLS-1$
 		
-		//Show Scores
-		JLabel lblShowScoresSource = new JLabel(Messages.getString("SourcesPanel.ShowScores", settings.getGameType())); //$NON-NLS-1$
-		add(lblShowScoresSource, "cell 1 13,alignx trailing"); //$NON-NLS-1$
-		
-		txtShowScoresSource = new JTextField();
-		txtShowScoresSource.setText(settings.getShowScoresSource());
-		add(txtShowScoresSource, "cell 2 13,alignx left"); //$NON-NLS-1$
-		txtShowScoresSource.setColumns(10);
-		
-		//Show Timer
-		JLabel lblShowTimerSource = new JLabel(Messages.getString("SourcesPanel.ShowTimer", settings.getGameType())); //$NON-NLS-1$
-		add(lblShowTimerSource, "cell 1 14,alignx trailing"); //$NON-NLS-1$
-		
-		txtShowTimerSource = new JTextField();
-		txtShowTimerSource.setText(settings.getShowTimerSource());
-		add(txtShowTimerSource, "cell 2 14,alignx left"); //$NON-NLS-1$
-		txtShowTimerSource.setColumns(10);
-		
-		//Show Cutthroat
-		JLabel lblShowCutthroatSource = new JLabel(Messages.getString("SourcesPanel.ShowCutthroat", settings.getGameType())); //$NON-NLS-1$
-		add(lblShowCutthroatSource, "cell 1 15,alignx trailing"); //$NON-NLS-1$
-		
-		txtShowCutthroatSource = new JTextField();
-		txtShowCutthroatSource.setText(settings.getShowCutthroatSource());
-		add(txtShowCutthroatSource, "cell 2 15,alignx left"); //$NON-NLS-1$
-		txtShowCutthroatSource.setColumns(10);
+		//Game 1 Show Source
+		JLabel lblGame1ShowSource = new JLabel(Messages.getString("SourcesPanel.Game1ShowSource", settings.getGameType())); //$NON-NLS-1$
+		add(lblGame1ShowSource, "cell 1 13,alignx right"); //$NON-NLS-1$
+		txtTeam1Game1ShowSource = new JTextField();
+		txtTeam1Game1ShowSource.setText(settings.getTeamGameShowSource(1,1));
+		txtTeam1Game1ShowSource.setColumns(10);
+		add(txtTeam1Game1ShowSource, "cell 2 13, alignx left"); //$NON-NLS-1$
+
+		txtTeam2Game1ShowSource = new JTextField();
+		txtTeam2Game1ShowSource.setText(settings.getTeamGameShowSource(2,1));
+		txtTeam2Game1ShowSource.setColumns(10);
+		add(txtTeam2Game1ShowSource, "cell 3 13, alignx left"); //$NON-NLS-1$
+
+		txtTeam3Game1ShowSource = new JTextField();
+		txtTeam3Game1ShowSource.setText(settings.getTeamGameShowSource(3,1));
+		txtTeam3Game1ShowSource.setColumns(10);
+		add(txtTeam3Game1ShowSource, "cell 4 13, alignx left"); //$NON-NLS-1$
+
+		//Game 2 Show Source
+		JLabel lblGame2ShowSource = new JLabel(Messages.getString("SourcesPanel.Game2ShowSource", settings.getGameType())); //$NON-NLS-1$
+		add(lblGame2ShowSource, "cell 1 14,alignx right"); //$NON-NLS-1$
+		txtTeam1Game2ShowSource = new JTextField();
+		txtTeam1Game2ShowSource.setText(settings.getTeamGameShowSource(1,2));
+		txtTeam1Game2ShowSource.setColumns(10);
+		add(txtTeam1Game2ShowSource, "cell 2 14, alignx left"); //$NON-NLS-1$
+
+		txtTeam2Game2ShowSource = new JTextField();
+		txtTeam2Game2ShowSource.setText(settings.getTeamGameShowSource(2,2));
+		txtTeam2Game2ShowSource.setColumns(10);
+		add(txtTeam2Game2ShowSource, "cell 3 14, alignx left"); //$NON-NLS-1$
+
+		txtTeam3Game2ShowSource = new JTextField();
+		txtTeam3Game2ShowSource.setText(settings.getTeamGameShowSource(3,2));
+		txtTeam3Game2ShowSource.setColumns(10);
+		add(txtTeam3Game2ShowSource, "cell 4 14, alignx left"); //$NON-NLS-1$
+
+		//Game 3 Show Source
+		JLabel lblGame3ShowSource = new JLabel(Messages.getString("SourcesPanel.Game3ShowSource", settings.getGameType())); //$NON-NLS-1$
+		add(lblGame3ShowSource, "cell 1 15,alignx right"); //$NON-NLS-1$
+		txtTeam1Game3ShowSource = new JTextField();
+		txtTeam1Game3ShowSource.setText(settings.getTeamGameShowSource(1,3));
+		txtTeam1Game3ShowSource.setColumns(10);
+		add(txtTeam1Game3ShowSource, "cell 2 15, alignx left"); //$NON-NLS-1$
+
+		txtTeam2Game3ShowSource = new JTextField();
+		txtTeam2Game3ShowSource.setText(settings.getTeamGameShowSource(2,3));
+		txtTeam2Game3ShowSource.setColumns(10);
+		add(txtTeam2Game3ShowSource, "cell 3 15, alignx left"); //$NON-NLS-1$
+
+		txtTeam3Game3ShowSource = new JTextField();
+		txtTeam3Game3ShowSource.setText(settings.getTeamGameShowSource(3,3));
+		txtTeam3Game3ShowSource.setColumns(10);
+		add(txtTeam3Game3ShowSource, "cell 4 15, alignx left"); //$NON-NLS-1$
+
 		
 		//Tournament
 		JLabel lblTournamentSource = new JLabel(Messages.getString("SourcesPanel.Tournament", settings.getGameType())); //$NON-NLS-1$
@@ -633,16 +689,35 @@ public class SourcesPanel extends JPanel {
 		add(txtGameResultsSource, "cell 6 14,alignx left"); //$NON-NLS-1$
 		txtGameResultsSource.setColumns(10);
 
-		JButton btnSaveSources = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
-		btnSaveSources.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveSettings(settings);
-				JComponent comp = (JComponent) e.getSource();
-				Window win = SwingUtilities.getWindowAncestor(comp);
-				win.dispose();
-			}
-		});
-		add(btnSaveSources, "cell 2 16,alignx left"); //$NON-NLS-1$
+		//Show Scores
+		JLabel lblShowScoresSource = new JLabel(Messages.getString("SourcesPanel.ShowScores", settings.getGameType())); //$NON-NLS-1$
+		add(lblShowScoresSource, "cell 5 15,alignx trailing"); //$NON-NLS-1$
+		
+		txtShowScoresSource = new JTextField();
+		txtShowScoresSource.setText(settings.getShowScoresSource());
+		add(txtShowScoresSource, "cell 6 15,alignx left"); //$NON-NLS-1$
+		txtShowScoresSource.setColumns(10);
+		
+		//Show Timer
+		JLabel lblShowTimerSource = new JLabel(Messages.getString("SourcesPanel.ShowTimer", settings.getGameType())); //$NON-NLS-1$
+		add(lblShowTimerSource, "cell 5 16,alignx trailing"); //$NON-NLS-1$
+		
+		txtShowTimerSource = new JTextField();
+		txtShowTimerSource.setText(settings.getShowTimerSource());
+		add(txtShowTimerSource, "cell 6 16,alignx left"); //$NON-NLS-1$
+		txtShowTimerSource.setColumns(10);
+		
+		//Show Cutthroat
+		JLabel lblShowCutthroatSource = new JLabel(Messages.getString("SourcesPanel.ShowCutthroat", settings.getGameType())); //$NON-NLS-1$
+		add(lblShowCutthroatSource, "cell 5 17,alignx trailing"); //$NON-NLS-1$
+		
+		txtShowCutthroatSource = new JTextField();
+		txtShowCutthroatSource.setText(settings.getShowCutthroatSource());
+		add(txtShowCutthroatSource, "cell 6 17,alignx left"); //$NON-NLS-1$
+		txtShowCutthroatSource.setColumns(10);
+		
+		btnSaveSources = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
+		add(btnSaveSources, "cell 2 20,alignx left"); //$NON-NLS-1$
 		
 		JButton btnCancelSources = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
 		btnCancelSources.addActionListener(new ActionListener() {
@@ -652,7 +727,7 @@ public class SourcesPanel extends JPanel {
 				win.dispose();
 			}
 		});
-		add(btnCancelSources, "cell 3 16,alignx left"); //$NON-NLS-1$
+		add(btnCancelSources, "cell 3 20,alignx left"); //$NON-NLS-1$
 
 		JButton btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
 		btnRestoreDefaults.addActionListener(new ActionListener() {
@@ -660,6 +735,10 @@ public class SourcesPanel extends JPanel {
 				restoreDefaults(settings);
 			}
 		});
-		add(btnRestoreDefaults, "cell 4 16,alignx left"); //$NON-NLS-1$
+		add(btnRestoreDefaults, "cell 4 20,alignx left"); //$NON-NLS-1$
+	}
+	/////// Listeners \\\\\\\
+	public void addSaveListener(ActionListener listenForBtnSaveSources) {
+		btnSaveSources.addActionListener(listenForBtnSaveSources);
 	}
 }

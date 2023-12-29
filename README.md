@@ -158,6 +158,15 @@ The warn source for each team can be set.  The default source is teamXwarn where
 #### King Seat: (Team 1, Team 2, Team 3)
 The king seat source for each team can be set.  The default source is teamXkingseat where X is the team number (1, 2 or 3).
 
+#### Game 1: (Team 1, Team 2, Team 3)
+This is the source that will be made visible when team X wins their first game.  This source can be any source type as long as it has the visible property (i.e. Text GUI+, Image, etc.).  The default source is teamXgame1 where X is the team number (1, 2 or 3).
+
+#### Game 2: (Team 1, Team 2, Team 3)
+This is the source that will be made visible when team X wins their second game.  Game 1's source will remain visible.  This source can be any source type as long as it has the visible property (i.e. Text GUI+, Image, etc.).  The default source is teamXgame2 where X is the team number (1, 2 or 3).
+
+#### Game 3: (Team 1, Team 2, Team 3)
+This is the source that will be made visible when team X wins their third game.  Game 1 and 2 sources will remain visible.  This source can be any source type as long as it has the visible property (i.e. Text GUI+, Image, etc.).  The default source is teamXgame3 where X is the team number (1, 2 or 3).
+
 #### Show Scores:
 This is the source that is controlled by the Show Score check box in the OBS Panel on the main screen.  This is intended to be a named group of sources within within OBS or a scene with OBS that contains all the scoring fields and their associated labels.  This group or scene can then be included in your main streaming scene.  When you want to keep score, check the Show Score check box on the main screen.  When no one is keeping the score, uncheck the Show Scores button which will turn the scene/group in the Show Scores: source box off.
 The following sources would typically be contained in this scene or group:
@@ -1140,6 +1149,10 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpkt3 - push king seat team 3
 
 ## Revision History</br>
+v2.035 12/29/2023</br>
+Add Team X Game X Show sources and make source visible when team X Game X is won. This allows showing an image for each game won instead of just displaying a number.</br>
+More Logger refactoring.</br>
+</br>
 v2.034 12/28/2023</br>
 Added Labels to Statistics Display Panel.</br>
 Default Team Names to Team 1,2,3.</br>

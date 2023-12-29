@@ -77,10 +77,7 @@ public class TeamController {
     private Map<Integer, Team> teamsMap = new HashMap<>();
     private Map<Integer, TeamPanel> teamPanelsMap = new HashMap<>();
     private Map<Integer, LastScoredClock> lastScoredClocksMap = new HashMap<>();
-	private static transient Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
+	private static transient Logger logger = LoggerFactory.getLogger(TeamController.class);
    
 	public TeamController(OBSInterface obsInterface, Settings settings, Team team1, Team team2, Team team3, Match match, TeamPanel teamPanel1, TeamPanel teamPanel2, TeamPanel teamPanel3, SwitchPanel switchPanel, MatchPanel matchPanel, GameTableWindowPanel gameTableWindowPanel, StatsDisplayPanel statsDisplayPanel, TimerController timerController, LastScoredClock lastScored1Clock, LastScoredClock lastScored2Clock, LastScoredClock lastScored3Clock, GameClock gameClock, MainController mainController) {
 		this.obsInterface = obsInterface;

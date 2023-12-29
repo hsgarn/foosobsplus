@@ -66,10 +66,7 @@ public class OBSConnectPanel extends JPanel {
 	private JList<String> lstMessageHistory;
 	private DefaultListModel<String> mdlMessageHistory;
 	private JScrollPane scrMessageHistory;
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
+	private static Logger logger = LoggerFactory.getLogger(OBSConnectPanel.class);
 	
 	public OBSConnectPanel(Settings settings, OBS obs) throws IOException {
 		this.settings = settings;
@@ -97,23 +94,23 @@ public class OBSConnectPanel extends JPanel {
 		
 		txtHost = new JTextField();
 		txtHost.setText(settings.getOBSHost());
-		add(txtHost, "cell 1 1,alignx left");
 		txtHost.setColumns(10);
+		add(txtHost, "cell 1 1,alignx left");
 		
 		txtPort = new JTextField();
 		txtPort.setText(settings.getOBSPort());
-		add(txtPort, "cell 1 2,alignx left");
 		txtPort.setColumns(10);
+		add(txtPort, "cell 1 2,alignx left");
 		
 		txtPassword = new JTextField();
 		txtPassword.setText(settings.getOBSPassword());
-		add(txtPassword, "cell 1 3,alignx left");
 		txtPassword.setColumns(10);
+		add(txtPassword, "cell 1 3,alignx left");
 		
 		txtScene = new JTextField();
 		txtScene.setText(settings.getOBSScene());
-		add(txtScene, "cell 1 4,alignx left");
 		txtScene.setColumns(10);
+		add(txtScene, "cell 1 4,alignx left");
 		
 		chckbxSavePassword = new JCheckBox("Save Password");
 		if (Integer.toString(settings.getOBSSavePassword()).equals("1")) { //$NON-NLS-1$

@@ -114,10 +114,7 @@ public class StatSourcesPanel extends JPanel {
 	private JTextField txtTeam3ShotsOnGoalSource;
 	OBSInterface obsInterface;
 	private String defaultFilePath = "c:\\temp"; //$NON-NLS-1$
-	private static transient Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
+	private static transient Logger logger = LoggerFactory.getLogger(StatSourcesPanel.class);
 
 	// Create the Panel.
 

@@ -58,10 +58,7 @@ public class GameClock implements Serializable {
 	private transient OBSInterface obsInterface;
 	private transient Settings settings;
 	private transient DecimalFormat df = new DecimalFormat("00");
-	private static transient Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
+	private static transient Logger logger = LoggerFactory.getLogger(GameClock.class);
 	
 	public GameClock(OBSInterface obsInterface, Settings settings) {
 

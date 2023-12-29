@@ -78,10 +78,7 @@ public class ParametersPanel extends JPanel {
 	private JButton btnCancel;
 	private JButton btnRestoreDefaults;
 	private final Integer maxGamesToWin = 6;
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
+	private static Logger logger = LoggerFactory.getLogger(ParametersPanel.class);
 
 	public ParametersPanel(Settings settings) throws IOException {
 
@@ -108,128 +105,128 @@ public class ParametersPanel extends JPanel {
 		
 		txtPointsToWin = new JTextField();
 		txtPointsToWin.setText(Integer.toString(settings.getPointsToWin()));
-		add(txtPointsToWin, "cell 1 1,alignx left"); //$NON-NLS-1$
 		txtPointsToWin.setColumns(10);
+		add(txtPointsToWin, "cell 1 1,alignx left"); //$NON-NLS-1$
 		
 		JLabel lblShotTime = new JLabel(Messages.getString("ParametersPanel.ShotTime", settings.getGameType())); //$NON-NLS-1$
 		add(lblShotTime, "cell 2 1,alignx trailing"); //$NON-NLS-1$
 		
 		txtShotTime = new JTextField();
 		txtShotTime.setText(Integer.toString(settings.getShotTime()));
-		add(txtShotTime, "cell 3 1,growx"); //$NON-NLS-1$
 		txtShotTime.setColumns(10);
+		add(txtShotTime, "cell 3 1,growx"); //$NON-NLS-1$
 		
 		JLabel lblMaxWin = new JLabel(Messages.getString("ParametersPanel.MaxWin", settings.getGameType())); //$NON-NLS-1$
 		add(lblMaxWin, "flowx,cell 0 2,alignx right"); //$NON-NLS-1$
 		
 		txtMaxWin = new JTextField();
 		txtMaxWin.setText(Integer.toString(settings.getMaxWin()));
-		add(txtMaxWin, "cell 1 2,alignx left"); //$NON-NLS-1$
 		txtMaxWin.setColumns(10);
+		add(txtMaxWin, "cell 1 2,alignx left"); //$NON-NLS-1$
 		
 		JLabel lblPassTime = new JLabel(Messages.getString("ParametersPanel.PassTime", settings.getGameType())); //$NON-NLS-1$
 		add(lblPassTime, "cell 2 2,alignx trailing"); //$NON-NLS-1$
 		
 		txtPassTime = new JTextField();
 		txtPassTime.setText(Integer.toString(settings.getPassTime()));
-		add(txtPassTime, "cell 3 2,growx"); //$NON-NLS-1$
 		txtPassTime.setColumns(10);
+		add(txtPassTime, "cell 3 2,growx"); //$NON-NLS-1$
 		
 		JLabel lblWinBy = new JLabel(Messages.getString("ParametersPanel.WinBy", settings.getGameType())); //$NON-NLS-1$
 		add(lblWinBy, "cell 0 3,alignx trailing"); //$NON-NLS-1$
 		
 		txtWinBy = new JTextField();
 		txtWinBy.setText(Integer.toString(settings.getWinBy()));
-		add(txtWinBy, "cell 1 3,alignx left"); //$NON-NLS-1$
 		txtWinBy.setColumns(10);
+		add(txtWinBy, "cell 1 3,alignx left"); //$NON-NLS-1$
 		
 		JLabel lblTimeOutTime = new JLabel(Messages.getString("ParametersPanel.TimeOutTime", settings.getGameType())); //$NON-NLS-1$
 		add(lblTimeOutTime, "cell 2 3,alignx trailing"); //$NON-NLS-1$
 		
 		txtTimeOutTime = new JTextField();
 		txtTimeOutTime.setText(Integer.toString(settings.getTimeOutTime()));
-		add(txtTimeOutTime, "cell 3 3,growx"); //$NON-NLS-1$
 		txtTimeOutTime.setColumns(10);
+		add(txtTimeOutTime, "cell 3 3,growx"); //$NON-NLS-1$
 		
 		JLabel lblGamesToWin = new JLabel(Messages.getString("ParametersPanel.GamesToWin", settings.getGameType())); //$NON-NLS-1$
 		add(lblGamesToWin, "cell 0 4,alignx trailing"); //$NON-NLS-1$
 		
 		txtGamesToWin = new JTextField();
 		txtGamesToWin.setText(Integer.toString(settings.getGamesToWin()));
-		add(txtGamesToWin, "cell 1 4,alignx left"); //$NON-NLS-1$
 		txtGamesToWin.setColumns(10);
+		add(txtGamesToWin, "cell 1 4,alignx left"); //$NON-NLS-1$
 		
 		JLabel lblGameTime = new JLabel(Messages.getString("ParametersPanel.GameTime", settings.getGameType())); //$NON-NLS-1$
 		add(lblGameTime, "cell 2 4,alignx trailing"); //$NON-NLS-1$
 		
 		txtGameTime = new JTextField();
 		txtGameTime.setText(Integer.toString(settings.getGameTime()));
-		add(txtGameTime, "cell 3 4,growx"); //$NON-NLS-1$
 		txtGameTime.setColumns(10);
+		add(txtGameTime, "cell 3 4,growx"); //$NON-NLS-1$
 		
 		JLabel lblMaxTimeOuts = new JLabel(Messages.getString("ParametersPanel.MaxTimeOuts", settings.getGameType())); //$NON-NLS-1$
 		add(lblMaxTimeOuts, "flowx,cell 0 5,alignx right"); //$NON-NLS-1$
 		
 		txtMaxTimeOuts = new JTextField();
 		txtMaxTimeOuts.setText(Integer.toString(settings.getMaxTimeOuts()));
-		add(txtMaxTimeOuts, "cell 1 5"); //$NON-NLS-1$
 		txtMaxTimeOuts.setColumns(10);
+		add(txtMaxTimeOuts, "cell 1 5"); //$NON-NLS-1$
 		
 		JLabel lblRecallTime = new JLabel(Messages.getString("ParametersPanel.RecallTime", settings.getGameType())); //$NON-NLS-1$
 		add(lblRecallTime, "cell 2 5,alignx trailing"); //$NON-NLS-1$
 		
 		txtRecallTime = new JTextField();
 		txtRecallTime.setText(Integer.toString(settings.getRecallTime()));
-		add(txtRecallTime, "cell 3 5,growx,aligny top"); //$NON-NLS-1$
 		txtRecallTime.setColumns(10);
+		add(txtRecallTime, "cell 3 5,growx,aligny top"); //$NON-NLS-1$
 		
 		JLabel lblTeam1LastScored = new JLabel(Messages.getString("ParametersPanel.Team1LastScored", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam1LastScored, "cell 2 6,alignx trailing"); //$NON-NLS-1$
 		
 		txtTeam1LastScored = new JTextField();
 		txtTeam1LastScored.setText(settings.getTeam1LastScored());
-		add(txtTeam1LastScored, "cell 3 6,growx"); //$NON-NLS-1$
 		txtTeam1LastScored.setColumns(10);
+		add(txtTeam1LastScored, "cell 3 6,growx"); //$NON-NLS-1$
 
 		JLabel lblTeam2LastScored = new JLabel(Messages.getString("ParametersPanel.Team2LastScored", settings.getGameType())); //$NON-NLS-1$
 		add(lblTeam2LastScored, "cell 2 7,alignx trailing"); //$NON-NLS-1$
 		
 		txtTeam2LastScored = new JTextField();
 		txtTeam2LastScored.setText(settings.getTeam2LastScored());
-		add(txtTeam2LastScored, "cell 3 7,growx"); //$NON-NLS-1$
 		txtTeam2LastScored.setColumns(10);
+		add(txtTeam2LastScored, "cell 3 7,growx"); //$NON-NLS-1$
 		
 		JLabel lblClearLastScored = new JLabel(Messages.getString("ParametersPanel.ClearLastScored", settings.getGameType())); //$NON-NLS-1$
 		add(lblClearLastScored, "cell 2 8,alignx trailing"); //$NON-NLS-1$
 		
 		txtClearLastScored = new JTextField();
 		txtClearLastScored.setText(settings.getClearLastScored());
-		add(txtClearLastScored, "cell 3 8,growx"); //$NON-NLS-1$
 		txtClearLastScored.setColumns(10);
+		add(txtClearLastScored, "cell 3 8,growx"); //$NON-NLS-1$
 		
 		JLabel lblSide1Color = new JLabel(Messages.getString("ParametersPanel.Team1Color", settings.getGameType())); //$NON-NLS-1$
 		add(lblSide1Color, "cell 0 6,alignx trailing"); //$NON-NLS-1$
 		
 		txtSide1Color = new JTextField();
 		txtSide1Color.setText(settings.getSide1Color());
-		add(txtSide1Color, "cell 1 6,growx,aligny top"); //$NON-NLS-1$
 		txtSide1Color.setColumns(10);
+		add(txtSide1Color, "cell 1 6,growx,aligny top"); //$NON-NLS-1$
 		
 		JLabel lblSide2Color = new JLabel(Messages.getString("ParametersPanel.Team2Color", settings.getGameType())); //$NON-NLS-1$
 		add(lblSide2Color, "cell 0 7,alignx trailing"); //$NON-NLS-1$
 		
 		txtSide2Color = new JTextField();
 		txtSide2Color.setText(settings.getSide2Color());
-		add(txtSide2Color, "cell 1 7,growx"); //$NON-NLS-1$
 		txtSide2Color.setColumns(10);
+		add(txtSide2Color, "cell 1 7,growx"); //$NON-NLS-1$
 		
 		JLabel lblBallsInRack = new JLabel(Messages.getString("ParametersPanel.BallsInRack", settings.getGameType())); //$NON-NLS-1$
 		add(lblBallsInRack, "cell 0 8,alignx trailing"); //$NON-NLS-1$
 		
 		txtBallsInRack = new JTextField();
 		txtBallsInRack.setText(Integer.toString(settings.getBallsInRack()));
-		add(txtBallsInRack, "cell 1 8,growx"); //$NON-NLS-1$
 		txtBallsInRack.setColumns(10);
+		add(txtBallsInRack, "cell 1 8,growx"); //$NON-NLS-1$
 		
 		JLabel lblRackMode = new JLabel(Messages.getString("ParametersPanel.RackMode", settings.getGameType())); //$NON-NLS-1$
 		add(lblRackMode, "cell 0 9,alignx right"); //$NON-NLS-1$
@@ -273,13 +270,13 @@ public class ParametersPanel extends JPanel {
 		txtWinnerPrefix = new JTextField();
 		txtWinnerPrefix.setHorizontalAlignment(SwingConstants.RIGHT);
 		txtWinnerPrefix.setText(settings.getWinnerPrefix());
-		add(txtWinnerPrefix, "cell 2 12,alignx center"); //$NON-NLS-1$
 		txtWinnerPrefix.setColumns(10);
+		add(txtWinnerPrefix, "cell 2 12,alignx center"); //$NON-NLS-1$
 		
 		txtWinnerSuffix = new JTextField();
 		txtWinnerSuffix.setText(settings.getWinnerSuffix());
-		add(txtWinnerSuffix, "cell 3 12,growx,aligny top"); //$NON-NLS-1$
 		txtWinnerSuffix.setColumns(10);
+		add(txtWinnerSuffix, "cell 3 12,growx,aligny top"); //$NON-NLS-1$
 		
 		JLabel lblAnnounceMeatball = new JLabel(Messages.getString("ParametersPanel.AnnounceMeatball", settings.getGameType())); //$NON-NLS-1$
 		add(lblAnnounceMeatball, "cell 0 14,alignx right"); //$NON-NLS-1$
@@ -295,8 +292,8 @@ public class ParametersPanel extends JPanel {
 		txtMeatball = new JTextField();
 		txtMeatball.setHorizontalAlignment(SwingConstants.CENTER);
 		txtMeatball.setText(settings.getMeatball());
-		add(txtMeatball, "cell 2 13,alignx center"); //$NON-NLS-1$
 		txtMeatball.setColumns(10);
+		add(txtMeatball, "cell 2 13,alignx center"); //$NON-NLS-1$
 		
 		JLabel lblShowTimeOutsUsed = new JLabel(Messages.getString("ParametersPanel.ShowTimeOutsUsed", settings.getGameType())); //$NON-NLS-1$
 		add(lblShowTimeOutsUsed, "cell 0 15,alignx right"); //$NON-NLS-1$
@@ -375,7 +372,6 @@ public class ParametersPanel extends JPanel {
 		btnRestoreDefaults.setHorizontalAlignment(SwingConstants.RIGHT);
 		add(btnRestoreDefaults, "cell 3 21,alignx center"); //$NON-NLS-1$
 	}
-	
 	private void restoreDefaults(Settings settings) {
 		txtPointsToWin.setText(Integer.toString(settings.getDefaultPointsToWin()));
 		txtShotTime.setText(Integer.toString(settings.getDefaultShotTime()));
@@ -444,7 +440,6 @@ public class ParametersPanel extends JPanel {
 		txtSide2Color.setText(settings.getDefaultSide2Color());
 		txtBallsInRack.setText(settings.getDefaultBallsInRack());
 	}
-	
 	public void saveSettings(Settings settings) {
     	if (isValidInteger(txtPointsToWin.getText())) {
 			settings.setPointsToWin(Integer.parseInt(txtPointsToWin.getText()));
@@ -552,7 +547,6 @@ public class ParametersPanel extends JPanel {
 			JOptionPane.showMessageDialog(null, ex.getMessage(), Messages.getString("Errors.ErrorSavingPropertiesFile"), 1);//$NON-NLS-1$
 		}
 	}
-
 	private boolean isValidInteger(String checkString) {
     	try {
     		Integer.parseInt(checkString);
@@ -562,11 +556,9 @@ public class ParametersPanel extends JPanel {
     		return false;
     	}
 	}
-	
 	public void setEnableShowSkunk(boolean enableFlag) {
 		chckbxEnableShowSkunk.setSelected(enableFlag);
 	}
-	
 	////// Listeners \\\\\\
 	public void addSaveListener(ActionListener listenForBtnSave) {
 		btnSave.addActionListener(listenForBtnSave);

@@ -72,10 +72,7 @@ public class Settings {
 	private String configHotKeyFileName 			= "hotkey.properties";
 	private String configOBSFileName        		= "obs.properties";
 	private String configAutoScoreSettingsFileName	= "autoscoresettings.properties";
-	private static Logger logger;
-	{
-		logger = LoggerFactory.getLogger(this.getClass());
-	}
+	private static Logger logger = LoggerFactory.getLogger(Settings.class);
 
 	//////////////////////////////////////////////////////
 	
@@ -175,6 +172,15 @@ public class Settings {
 		defaultSourceProps.setProperty("Team1KingSeat", "team1kingseat");
 		defaultSourceProps.setProperty("Team2KingSeat", "team2kingseat");
 		defaultSourceProps.setProperty("Team3KingSeat", "team3kingseat");
+		defaultSourceProps.setProperty("Team1Game1Show", "team1game1");
+		defaultSourceProps.setProperty("Team2Game1Show", "team2game1");
+		defaultSourceProps.setProperty("Team3Game1Show", "team3game1");
+		defaultSourceProps.setProperty("Team1Game2Show", "team1game2");
+		defaultSourceProps.setProperty("Team2Game2Show", "team2game2");
+		defaultSourceProps.setProperty("Team3Game2Show", "team3game2");
+		defaultSourceProps.setProperty("Team1Game3Show", "team1game3");
+		defaultSourceProps.setProperty("Team2Game3Show", "team2game3");
+		defaultSourceProps.setProperty("Team3Game3Show", "team3game3");
 		defaultSourceProps.setProperty("LastScored","lastscored");
 		defaultSourceProps.setProperty("GameTime", "gametime");
 		defaultSourceProps.setProperty("MatchTime", "matchtime");
@@ -475,6 +481,9 @@ public class Settings {
 	}
 	public String getTeamKingSeatSource(String teamNumber) {
 		return configSourceProps.getProperty("Team" + teamNumber + "KingSeat");//Team1KingSeat
+	}
+	public String getTeamGameShowSource(int teamNumber, int gameNumber) {
+		return configSourceProps.getProperty("Team" + teamNumber + "Game" + gameNumber + "Show");
 	}
 	public String getTournamentSource() {return configSourceProps.getProperty("Tournament");}
 	public String getEventSource() {return configSourceProps.getProperty("Event");}
@@ -871,6 +880,7 @@ public class Settings {
 	public String getDefaultTeam1KingSeatSource() {return defaultSourceProps.getProperty("Team1KingSeat");}
 	public String getDefaultTeam2KingSeatSource() {return defaultSourceProps.getProperty("Team2KingSeat");}
 	public String getDefaultTeam3KingSeatSource() {return defaultSourceProps.getProperty("Team3KingSeat");}
+	public String getDefaultTeamGameShowSource(String teamNumber, String gameNumber) {return defaultSourceProps.getProperty("Team"+teamNumber+"Game"+gameNumber+"Show");}
 	public String getDefaultLastScoredSource() {return defaultSourceProps.getProperty("LastScored");}
 	public String getDefaultGameTimeSource() {return defaultSourceProps.getProperty("GameTime");}
 	public String getDefaultMatchTimeSource() {return defaultSourceProps.getProperty("MatchTime");}

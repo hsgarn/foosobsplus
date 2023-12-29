@@ -50,10 +50,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
+
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -65,8 +68,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.midsouthfoosball.foosobsplus.commands.CodeCommand;
 import com.midsouthfoosball.foosobsplus.commands.Command;
 import com.midsouthfoosball.foosobsplus.commands.CommandSwitch;
@@ -149,6 +154,7 @@ import com.midsouthfoosball.foosobsplus.view.ParametersPanel;
 import com.midsouthfoosball.foosobsplus.view.PartnerProgramFrame;
 import com.midsouthfoosball.foosobsplus.view.ResetPanel;
 import com.midsouthfoosball.foosobsplus.view.SourcesFrame;
+import com.midsouthfoosball.foosobsplus.view.SourcesPanel;
 import com.midsouthfoosball.foosobsplus.view.StatSourcesFrame;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
@@ -157,6 +163,7 @@ import com.midsouthfoosball.foosobsplus.view.TeamPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.TournamentPanel;
+
 import io.obswebsocket.community.client.OBSRemoteController;
 import io.obswebsocket.community.client.WebSocketCloseCode;
 import io.obswebsocket.community.client.listener.lifecycle.ReasonThrowable;
@@ -185,17 +192,18 @@ public class Main {
 		}
 	}	
 	////// Settings and OBSInterface setup \\\\\\
-	final static OBS 			obs			 			= OBS.getInstance();
-	private Settings			settings				= new Settings();
-	private OBSInterface 		obsInterface 			= new OBSInterface(settings);
-	private String				matchId					= "";
-	private DateTimeFormatter 	dtf 					= DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-	private boolean 			autoScoreConnected		= false;
-	private Socket 				autoScoreSocket;
-	private PrintWriter 		autoScoreSocketWriter;
-	private StreamIndexer 		streamIndexer      		= new StreamIndexer(settings.getDatapath());
-	private Boolean 			allowAutoScoreReconnect	= true;
-	private Boolean 			blockAutoScoreReconnect	= false;
+	final static OBS 				obs			 			= OBS.getInstance();
+	private Settings				settings				= new Settings();
+	private OBSInterface 			obsInterface 			= new OBSInterface(settings);
+	private String					matchId					= "";
+	private DateTimeFormatter 		dtf 					= DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+	private boolean 				autoScoreConnected		= false;
+	private Socket 					autoScoreSocket;
+	private PrintWriter 			autoScoreSocketWriter;
+	private StreamIndexer 			streamIndexer      		= new StreamIndexer(settings.getDatapath());
+	private Boolean 				allowAutoScoreReconnect	= true;
+	private Boolean 				blockAutoScoreReconnect	= false;
+    private Map<String, String>		teamGameShowSourcesMap	= new HashMap<>();
 
 	////// Watch Service for File changes \\\\\\
 	WatchService watchService;
@@ -247,6 +255,7 @@ public class Main {
 	private HotKeysFrame 			hotKeysFrame 			= new HotKeysFrame(settings);
 	private HotKeysPanel 			hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
 	private SourcesFrame			sourcesFrame			= new SourcesFrame(settings, obsInterface);
+	private SourcesPanel			sourcesPanel			= sourcesFrame.getSourcesPanel();
 	private StatSourcesFrame		statSourcesFrame		= new StatSourcesFrame(settings, obsInterface);
 	private FiltersFrame        	filtersFrame        	= new FiltersFrame(settings, obsInterface);
 	private FiltersPanel        	filtersPanel        	= filtersFrame.getFiltersPanel();
@@ -280,6 +289,8 @@ public class Main {
 	private SwingWorker<Boolean, String> 	fileWatchWorker;
 	public  Main() throws IOException {
 
+		buildTeamGameShowSourcesMap();
+	    
 		loadWindowsAndControllers();
 		
 		obs.setHost(settings.getOBSHost());
@@ -306,6 +317,14 @@ public class Main {
 		}
 		createFileWatchWorker();
 		fileWatchWorker.execute();
+	}
+	private void buildTeamGameShowSourcesMap() {
+		teamGameShowSourcesMap.clear();
+		for (int x = 1; x <= 3; x++) {
+			for (int y = 1; y <= 3; y++) {
+				teamGameShowSourcesMap.put(Integer.toString(x)+Integer.toString(y), settings.getTeamGameShowSource(x, y));
+			}
+		}
 	}
 	private void buildOBSController() {
 		if(obs.getController() != null) {
@@ -693,6 +712,7 @@ public class Main {
 	}
 	public void loadListeners() {
 		hotKeysPanel.addSaveListener(new HotKeysSaveListener());
+		sourcesPanel.addSaveListener(new SourcesSaveListener());
 		autoScoreSettingsPanel.addSaveListener(new AutoScoreSettingsSaveListener());
 		autoScoreSettingsPanel.addConnectListener(new AutoScoreSettingsConnectListener());
 		autoScoreSettingsPanel.addDisconnectListener(new AutoScoreSettingsDisconnectListener());
@@ -762,7 +782,6 @@ public class Main {
 		teamPanel1.addSwitchPositionsListener(new SwitchPositionsListener());
 		teamPanel2.addSwitchPositionsListener(new SwitchPositionsListener());
 		teamPanel3.addSwitchPositionsListener(new SwitchPositionsListener());
-		switchPanel.addSwitchSidesListener(new SwitchSidesListener());
 		timerPanel.addShotTimerListener(new ShotTimerListener());
 		timerPanel.addPassTimerListener(new PassTimerListener());
 		timerPanel.addTimeOutTimerListener(new TimeOutTimerListener());
@@ -774,6 +793,7 @@ public class Main {
 		matchPanel.addPauseMatchListener(new PauseMatchListener());
 		matchPanel.addEndMatchListener(new EndMatchListener());
 		matchPanel.addStartGameListener(new StartGameListener());
+		switchPanel.addSwitchSidesListener(new SwitchSidesListener());
 		switchPanel.addSwitchTeamsListener(new SwitchTeamsListener());
 		switchPanel.addSwitchPlayer1Listener(new SwitchPlayer1Listener());
 		switchPanel.addSwitchPlayer2Listener(new SwitchPlayer2Listener());
@@ -1172,6 +1192,7 @@ public class Main {
 		setFocusOnCode();
 	}
 	public void showSource(String source, boolean show) {
+		if (source == null || source.isEmpty()) return;
 		if (obs.getConnected()) {
 		    String sceneName;
 		    GetCurrentProgramSceneResponse getCurrentProgramSceneResponse = obs.getController().getCurrentProgramScene(1000);
@@ -1415,6 +1436,16 @@ public class Main {
 				switchPanel.updateMnemonics();
 				resetPanel.updateMnemonics();
 				statsEntryPanel.updateMnemonics();
+			}
+		}
+	}
+	private class SourcesSaveListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if (sourcesPanel.saveSettings(settings)) {
+				JComponent comp = (JComponent) e.getSource();
+				Window win = SwingUtilities.getWindowAncestor(comp);
+				win.dispose();
+				buildTeamGameShowSourcesMap();
 			}
 		}
 	}
@@ -2051,14 +2082,11 @@ public class Main {
 //				System.out.println("Team3 new Score: " + e.getNewValue().toString());
 //				System.out.println("Team3 old Score: " + e.getOldValue().toString());
 			} else if (name.equals("Team1Game")) {
-//				System.out.println("Team1 new Game: " + e.getNewValue().toString());
-//				System.out.println("Team1 old Game: " + e.getOldValue().toString());
+				setTeamGameCountVisible(name, e.getNewValue().toString());
 			} else if (name.equals("Team2Game")) {
-//				System.out.println("Team2 new Game: " + e.getNewValue().toString());
-//				System.out.println("Team2 old Game: " + e.getOldValue().toString());
+				setTeamGameCountVisible(name, e.getNewValue().toString());
 			} else if (name.equals("Team3Game")) {
-//				System.out.println("Team3 new Game: " + e.getNewValue().toString());
-//				System.out.println("Team3 old Game: " + e.getOldValue().toString());
+				setTeamGameCountVisible(name, e.getNewValue().toString());
 			} else if (name.equals("Team1Match")) {
 //				System.out.println("Team1 new Match: " + e.getNewValue().toString());
 //				System.out.println("Team1 old Match: " + e.getOldValue().toString());
@@ -2080,6 +2108,19 @@ public class Main {
 			}
 		}
 	}
+	private void setTeamGameCountVisible(String name, String value) {
+		String teamNumber = ripTeamNumber(name);
+		if (value != null) {
+			boolean show = false;
+			int gameCount = Integer.valueOf(value);
+			for (Integer x = 1; x < 4; x++) {
+				show = (x <= gameCount) ? true : false;
+//				showSource("game"+teamNumber+x.toString(), show);
+				showSource(teamGameShowSourcesMap.get(teamNumber+x.toString()), show);
+			}
+		}
+	}
+	
 //	private void testProcessCodes() {
 //		String codes[] = {"XPSE", "XPSM", "Y5D", "Y3P", "BGS", "B5D", "B3P", "YGS" };
 //		autoProcessCodes(codes);
