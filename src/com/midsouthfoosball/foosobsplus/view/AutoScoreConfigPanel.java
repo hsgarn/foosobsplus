@@ -40,8 +40,8 @@ public class AutoScoreConfigPanel extends JPanel {
 		setLayout(new MigLayout());
 		lblConfig = new JLabel(Messages.getString("AutoScoreConfigPanel.Config")); //$NON-NLS-1$
 		add(lblConfig, "cell 0 0,alignx leading"); //$NON-NLS-1$
-		txtConfig = new JTextArea(10,20);
-		add(txtConfig, "cell 0 1 2 1, growx"); //$NON-NLS-1$
+		txtConfig = new JTextArea(20,50);
+		add(txtConfig, "cell 0 1 2 1, growx, growy"); //$NON-NLS-1$
 		btnReadConfig = new JButton(Messages.getString("AutoScoreConfigPanel.Read")); //$NON-NLS-1$
 		add(btnReadConfig, "cell 0 2 1 1");
 		btnClearConfig = new JButton(Messages.getString("AutoScoreConfigPanel.Clear")); //$NON-NLS-1$

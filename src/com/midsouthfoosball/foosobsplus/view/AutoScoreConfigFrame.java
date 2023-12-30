@@ -33,7 +33,7 @@ public class AutoScoreConfigFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
 		autoScoreConfigPanel = new AutoScoreConfigPanel();
-		autoScoreConfigPanel.setPreferredSize(new Dimension(500, 400));
+		autoScoreConfigPanel.setPreferredSize(new Dimension(350, 500));
 		getContentPane().add(autoScoreConfigPanel);
 		pack();
 	}

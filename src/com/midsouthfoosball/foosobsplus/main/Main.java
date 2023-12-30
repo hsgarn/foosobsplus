@@ -467,8 +467,7 @@ public class Main {
 		    	boolean isConnected = false;
 		    	String address = settings.getAutoScoreSettingsServerAddress();
 		    	int port = settings.getAutoScoreSettingsServerPort();
-		    	try
-		        {
+		    	try {
 		            autoScoreSocket = new Socket(address, port);
 		            autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Connected to " + address + ": " + port);
 		            logger.info("Auto Score connected to " + address + ": " + port);
@@ -486,14 +485,12 @@ public class Main {
 		    		mainFrame.setAutoScoreIconConnected(true);
 		    		autoScoreConnected = true;
 		        }
-		        catch(UnknownHostException uh)
-		        {
+		        catch(UnknownHostException uh) {
 		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Auto Score UnknownHostException");
 		        	logger.error("Auto Score new Socket UnknownHostException");
 		        	logger.error(uh.toString());
 		        }
-		        catch(IOException io)
-		        {
+		        catch(IOException io) {
 		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Auto Score IOException");
 		        	logger.error("Auto Score new Socket IOException");
 		        	logger.error(io.toString());
@@ -501,8 +498,7 @@ public class Main {
 		    	String raw = "";
 		        String str[];
 		        String cmd[];
-		        while (isConnected)
-		        {
+		        while (isConnected) {
             		try {
            				raw = dataIn.readLine();
 		            } catch(IOException io) {
@@ -510,8 +506,8 @@ public class Main {
 			        	logger.error(io.toString());
 			        	isConnected = false;
 		            }
-            		logger.info("Received raw data: [" + raw + "]");
-            		if (!raw.isEmpty()) {
+            		if (raw != null && !raw.isEmpty()) {
+                		logger.info("Received raw data: [" + raw + "]");
 		        		cmd = raw.split(":");
 		        		logger.info("Parse command: " + cmd[0]);
 	                	if (settings.getAutoScoreSettingsDetailLog()==1) {
@@ -552,14 +548,11 @@ public class Main {
 		        }
 		        autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Connection Terminated!!");
 		        logger.info("Auto Score Connection Terminated!!");
-		        try
-		        {
+		        try {
 		            dataIn.close();
 		            autoScoreSocket.close();
 		            isConnected = false;
-		        }
-		        catch(IOException io)
-		        {
+		        } catch(IOException io) {
 		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString());
 		        	logger.error(io.toString());
 		        }
@@ -604,10 +597,10 @@ public class Main {
             	}
 				if (!ignoreSensors && (mostRecentValue == 1)) {
 					processCode("XIST1", false);
-				}	else {
-						if (!ignoreSensors && (mostRecentValue == 2)) {
-							processCode("XIST2", false);
-						}
+				} else {
+					if (!ignoreSensors && (mostRecentValue == 2)) {
+						processCode("XIST2", false);
+					}
 				}
 				if (mostRecentValue == 3) {
 					processCode("XUTT1", false);
@@ -1378,6 +1371,8 @@ public class Main {
 				autoScoreSocketWriter.println("save:" + dateStamp + config + "End");
 				if (autoScoreSocketWriter.checkError()) {
 					logger.error("saveAutoScoreConfig println error sending save:" + dateStamp + config + "End");
+				} else {
+					logger.info("write autoscore config:" + dateStamp + config + "End");
 				}
 			}
 		}

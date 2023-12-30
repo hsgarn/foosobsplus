@@ -1149,6 +1149,10 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpkt3 - push king seat team 3
 
 ## Revision History</br>
+v2.036 12/29/2023</br>
+Check for null when reading from auto score in Main createAutoScoreWorker().</br>
+Resize AutoScoreConfigFrame and improve AutoScoreConfigPanel layout.</br>
+</br>
 v2.035 12/29/2023</br>
 Add Team X Game X Show sources and make source visible when team X Game X is won. This allows showing an image for each game won instead of just displaying a number.</br>
 More Logger refactoring.</br>
