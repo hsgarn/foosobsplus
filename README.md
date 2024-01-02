@@ -1149,6 +1149,9 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpkt3 - push king seat team 3
 
 ## Revision History</br>
+v2.037 01/01/2024</br>
+Fix Reset All and Clear All buttons not clearing the new Team Game Show sources in OBS.</br>
+</br>
 v2.036 12/29/2023</br>
 Check for null when reading from auto score in Main createAutoScoreWorker().</br>
 Resize AutoScoreConfigFrame and improve AutoScoreConfigPanel layout.</br>

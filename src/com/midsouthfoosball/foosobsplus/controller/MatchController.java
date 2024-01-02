@@ -149,6 +149,7 @@ public class MatchController {
 	public void startMatch(String matchId) {
 		match.setMatchStarted(true);
 		teamController.resetAll();
+		match.resetMatch();
 		displayAllStats();
 		gameClock.startMatchTimer();
 		match.startMatch(matchId);

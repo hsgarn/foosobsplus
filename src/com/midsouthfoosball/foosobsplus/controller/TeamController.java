@@ -883,7 +883,7 @@ public class TeamController {
 		team1.writeAll();
 		team2.writeAll();
 		team3.writeAll();
-		match.resetMatch(); // probably should go through matchController, but it is not accessible here
+//		match.resetMatch(); // probably should go through matchController, but it is not accessible here
 		updateGameTables();
 	}
 	public void clearTeamFromButton(int teamNbr) {

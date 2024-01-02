@@ -21,19 +21,29 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 package com.midsouthfoosball.foosobsplus.commands;
 
+import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
+import com.midsouthfoosball.foosobsplus.main.Main;
 
 public class PRACommand implements Command {
 	private final StatsController statsController;
 	private final TeamController teamController;
-	public PRACommand(StatsController statsController, TeamController teamController) {
+	private final MatchController matchController;
+	private final Main main;
+	public PRACommand(StatsController statsController, TeamController teamController, MatchController matchController, Main main) {
 		this.statsController = statsController;
 		this.teamController = teamController;
+		this.matchController = matchController;
+		this.main = main;
 	}
 	public void execute() {
 		teamController.resetAll();
+		matchController.resetMatch();
 		statsController.displayAllStats();
+		main.setTeamGameCountVisible("1","0");
+		main.setTeamGameCountVisible("2", "0");
+		main.setTeamGameCountVisible("3", "0");
 	}
 	public String getCode() {
 		return statsController.getLastCode();

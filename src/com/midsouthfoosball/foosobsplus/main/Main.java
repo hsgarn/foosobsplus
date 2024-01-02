@@ -1088,14 +1088,14 @@ public class Main {
 		Command psmc = new PSMCCommand(statsController, teamController);
 		Command psto = new PSTOCommand(statsController, teamController);
 		Command psr = new PSRCommand(statsController, teamController);
-		Command pca = new PCACommand(statsController, teamController);
+		Command pca = new PCACommand(statsController, teamController, matchController, this);
 		Command prn= new PRNCommand(statsController, teamController);
 		Command prs = new PRSCommand(statsController, teamController);
 		Command prg = new PRGCommand(statsController, teamController);
 		Command prm = new PRMCommand(statsController, teamController);
 		Command prto = new PRTOCommand(statsController, teamController);
 		Command prr = new PRRCommand(statsController, teamController);
-		Command pra = new PRACommand(statsController, teamController);
+		Command pra = new PRACommand(statsController, teamController, matchController, this);
 		Command codeCommand = new CodeCommand(statsController);
 		Command ptca = new PTCACommand(statsController, tournamentController);
 		mySwitch = new CommandSwitch();
@@ -2103,19 +2103,17 @@ public class Main {
 			}
 		}
 	}
-	private void setTeamGameCountVisible(String name, String value) {
+	public void setTeamGameCountVisible(String name, String value) {
 		String teamNumber = ripTeamNumber(name);
 		if (value != null) {
 			boolean show = false;
 			int gameCount = Integer.valueOf(value);
 			for (Integer x = 1; x < 4; x++) {
 				show = (x <= gameCount) ? true : false;
-//				showSource("game"+teamNumber+x.toString(), show);
 				showSource(teamGameShowSourcesMap.get(teamNumber+x.toString()), show);
 			}
 		}
 	}
-	
 //	private void testProcessCodes() {
 //		String codes[] = {"XPSE", "XPSM", "Y5D", "Y3P", "BGS", "B5D", "B3P", "YGS" };
 //		autoProcessCodes(codes);
