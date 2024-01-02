@@ -1187,6 +1187,8 @@ public class Main {
 	public void showSource(String source, boolean show) {
 		if (source == null || source.isEmpty()) return;
 		if (obs.getConnected()) {
+			boolean showParsed = settings.getShowParsed();
+			if (showParsed) obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled called: " + source + ", " + show);
 		    String sceneName;
 		    GetCurrentProgramSceneResponse getCurrentProgramSceneResponse = obs.getController().getCurrentProgramScene(1000);
 		    if (getCurrentProgramSceneResponse != null && getCurrentProgramSceneResponse.isSuccessful()) {
@@ -1196,14 +1198,14 @@ public class Main {
 			            if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
 			                obs.getController().setSceneItemEnabled(sceneName,getSceneItemIdResponse.getSceneItemId(),show,
 			                    setSceneItemEnabledResponse -> {
-            						if(settings.getShowParsed()) {
-            							obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled called: " + source + ", " + show);
+            						if(showParsed) {
+            							obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled response obtained: " + source + ", " + show);
             						}
 			                    });
 			            }
 			        });
 		    } else {
-				if(settings.getShowParsed()) {
+				if(showParsed) {
 					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled failed: " + source + ", " + show);
 				}
 		    }
@@ -1212,14 +1214,16 @@ public class Main {
 	public void setSourceFilterVisibility(String source, String filter, boolean show) {
 		if(source == null || filter == null) return;
 		if (obs.getConnected()) {
+			boolean showParsed = settings.getShowParsed();
+			if (showParsed) obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceFilterEnabled called: " + source + ", " + filter + ", " + show);
 			obs.getController().setSourceFilterEnabled(source, filter, show, response -> {
 				if(response != null && response.isSuccessful()) {
-					if(settings.getShowParsed()) {
-						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceFilterEnabled called: " + source + ", " + show);
+					if(showParsed) {
+						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceFilterEnabled response obtained: " + source + ", " + filter + ", " + show);
 					}
 				} else {
-					if(settings.getShowParsed()) {
-						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceFilterEnabled failed: " + source + ", " + show);
+					if(showParsed) {
+						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceFilterEnabled failed: " + source + ", " + filter + ", " + show);
 					}
 				}
 			});

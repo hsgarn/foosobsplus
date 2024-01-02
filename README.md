@@ -1149,6 +1149,9 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpkt3 - push king seat team 3
 
 ## Revision History</br>
+v2.038 01/01/2024</br>
+Add some logging to showSource and setSourceFilterVisiblity in main and writeData in OBSInterface.</br>
+</br>
 v2.037 01/01/2024</br>
 Fix Reset All and Clear All buttons not clearing the new Team Game Show sources in OBS.</br>
 </br>
