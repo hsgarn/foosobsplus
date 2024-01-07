@@ -1153,6 +1153,12 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.040 01/07/2024</br>
+Modify Copyright to include the fancy copyright symbol ©. </br>
+Make default properties final in Settings.</br>
+Handle IOException in Settings.</br>
+Added LICENSE.txt file on previous commit (but after v2.039 commit).</br>
+</br>
 v2.039 01/07/2024</br>
 Inserted and then commented out code to getSceneItemList and getGroupSceneItemList in the main OnReady method.</br>
 Add donation section to README.md and make proper hyperlinks for the HTTPS references.</br>

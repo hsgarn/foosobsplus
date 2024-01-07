@@ -1,5 +1,5 @@
 /**
-Copyright 2020-2024 Hugh Garner
+Copyright © 2020-2024 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -39,26 +39,24 @@ import org.slf4j.LoggerFactory;
 import com.midsouthfoosball.foosobsplus.view.Messages;
 
 public final class Settings {
-	private final static Settings instance 		= new Settings();
+	private final static Settings instance 			= new Settings();
 	// Parameter settings
-	private final static String separator 		= FileSystems.getDefault().getSeparator();
-	private final static String gameType		= "Foosball";
-	private static String[] lastScoredStrings 	= new String[4];
-	private final static int borderTop			= 2;
-	private final static int borderBottom 		= 0;
-	private final static int borderLeft			= 0;
-	private final static int borderRight 		= 0;
-
+	private final static String separator 			= FileSystems.getDefault().getSeparator();
+	private final static String gameType			= "Foosball";
+	private final static String[] lastScoredStrings = new String[4];
+	private final static int borderTop				= 2;
+	private final static int borderBottom 			= 0;
+	private final static int borderLeft				= 0;
+	private final static int borderRight 			= 0;
 	// Property Settings
-	private static Properties defaultControlProps 			= new Properties();
-	private static Properties defaultSourceProps 			= new Properties();
-	private static Properties defaultStatsSourceProps 		= new Properties();
-	private static Properties defaultFilterProps 			= new Properties();
-	private static Properties defaultPartnerProgramProps 	= new Properties();
-	private static Properties defaultHotKeyProps 			= new Properties();
-	private static Properties defaultOBSProps 				= new Properties();
-	private static Properties defaultAutoScoreSettingsProps = new Properties();
-	
+	private final static Properties defaultControlProps 			= new Properties();
+	private final static Properties defaultSourceProps 				= new Properties();
+	private final static Properties defaultStatsSourceProps 		= new Properties();
+	private final static Properties defaultFilterProps 				= new Properties();
+	private final static Properties defaultPartnerProgramProps 		= new Properties();
+	private final static Properties defaultHotKeyProps 				= new Properties();
+	private final static Properties defaultOBSProps 				= new Properties();
+	private final static Properties defaultAutoScoreSettingsProps 	= new Properties();
 	public static Properties configControlProps;
 	public static Properties configSourceProps;
 	public static Properties configStatsSourceProps;
@@ -67,7 +65,6 @@ public final class Settings {
 	public static Properties configHotKeyProps;
 	public static Properties configOBSProps;
 	public static Properties configAutoScoreSettingsProps;
-	
 	private final static String configControlFileName			= "control.properties";
 	private final static String configSourceFileName 			= "source.properties";
 	private final static String configStatsSourceFileName 		= "statssource.properties";
@@ -183,7 +180,7 @@ public final class Settings {
 		defaultSourceProps.setProperty("ShowScores", "ScoresAndLabels");
 		defaultSourceProps.setProperty("ShowTimer", "Foos OBS+ Timer");
 		defaultSourceProps.setProperty("ShowCutthroat", "Cutthroat");
-			//Stat Sources
+		//Stat Sources
 		defaultStatsSourceProps.setProperty("Team1PassAttempts", "team1passattempts");
 		defaultStatsSourceProps.setProperty("Team2PassAttempts", "team2passattempts");
 		defaultStatsSourceProps.setProperty("Team3PassAttempts", "team3passattempts");
@@ -385,8 +382,7 @@ public final class Settings {
 			loadFromHotKeyConfig();
 			loadFromAutoScoreSettingsConfig();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, Messages.getString("Errors.ErrorLoadingConfig") + " " + e.getLocalizedMessage());
 		}
 	}
 	private Settings() {
