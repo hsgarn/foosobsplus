@@ -38,54 +38,46 @@ import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.view.Messages;
 
-public class Settings {
-	
-// Parameter settings
-	private String separator 			= FileSystems.getDefault().getSeparator();
-	private String[] lastScoredStrings 	= new String[4];
-	private final String gameType       = "Foosball";
+public final class Settings {
+	private final static Settings instance 		= new Settings();
+	// Parameter settings
+	private final static String separator 		= FileSystems.getDefault().getSeparator();
+	private final static String gameType		= "Foosball";
+	private static String[] lastScoredStrings 	= new String[4];
+	private final static int borderTop			= 2;
+	private final static int borderBottom 		= 0;
+	private final static int borderLeft			= 0;
+	private final static int borderRight 		= 0;
 
 	// Property Settings
-	private Properties defaultControlProps;
-	private Properties defaultSourceProps;
-	private Properties defaultStatsSourceProps;
-	private Properties defaultFilterProps;
-	private Properties defaultPartnerProgramProps;
-	private Properties defaultHotKeyProps;
-	private Properties defaultOBSProps;
-	private Properties defaultAutoScoreSettingsProps;
+	private static Properties defaultControlProps 			= new Properties();
+	private static Properties defaultSourceProps 			= new Properties();
+	private static Properties defaultStatsSourceProps 		= new Properties();
+	private static Properties defaultFilterProps 			= new Properties();
+	private static Properties defaultPartnerProgramProps 	= new Properties();
+	private static Properties defaultHotKeyProps 			= new Properties();
+	private static Properties defaultOBSProps 				= new Properties();
+	private static Properties defaultAutoScoreSettingsProps = new Properties();
 	
-	public Properties configControlProps;
-	public Properties configSourceProps;
-	public Properties configStatsSourceProps;
-	public Properties configFilterProps;
-	public Properties configPartnerProgramProps;
-	public Properties configHotKeyProps;
-	public Properties configOBSProps;
-	public Properties configAutoScoreSettingsProps;
+	public static Properties configControlProps;
+	public static Properties configSourceProps;
+	public static Properties configStatsSourceProps;
+	public static Properties configFilterProps;
+	public static Properties configPartnerProgramProps;
+	public static Properties configHotKeyProps;
+	public static Properties configOBSProps;
+	public static Properties configAutoScoreSettingsProps;
 	
-	private String configControlFileName 			= "control.properties";
-	private String configSourceFileName 			= "source.properties";
-	private String configStatsSourceFileName 		= "statssource.properties";
-	private String configFilterFileName             = "filter.properties";
-	private String configPartnerProgramFileName     = "partnerprogram.properties";
-	private String configHotKeyFileName 			= "hotkey.properties";
-	private String configOBSFileName        		= "obs.properties";
-	private String configAutoScoreSettingsFileName	= "autoscoresettings.properties";
-	private static Logger logger = LoggerFactory.getLogger(Settings.class);
-
-	//////////////////////////////////////////////////////
-	
-	public Settings() throws IOException {
-		defaultControlProps 			= new Properties();
-		defaultSourceProps 				= new Properties();
-		defaultStatsSourceProps 		= new Properties();
-		defaultFilterProps              = new Properties();
-		defaultPartnerProgramProps      = new Properties();
-		defaultHotKeyProps 				= new Properties();
-		defaultOBSProps         		= new Properties();
-		defaultAutoScoreSettingsProps	= new Properties();
-		// sets default properties
+	private final static String configControlFileName			= "control.properties";
+	private final static String configSourceFileName 			= "source.properties";
+	private final static String configStatsSourceFileName 		= "statssource.properties";
+	private final static String configFilterFileName            = "filter.properties";
+	private final static String configPartnerProgramFileName    = "partnerprogram.properties";
+	private final static String configHotKeyFileName 			= "hotkey.properties";
+	private final static String configOBSFileName        		= "obs.properties";
+	private final static String configAutoScoreSettingsFileName	= "autoscoresettings.properties";
+	private final static Logger logger = LoggerFactory.getLogger(Settings.class);
+	static {
 		// Parameter settings
 		defaultControlProps.setProperty("ShowParsed", "true");
 		defaultControlProps.setProperty("TableName", "");
@@ -374,7 +366,6 @@ public class Settings {
 		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsServerPort", "5051");
 		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsAutoConnect", "0");
 		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsDetailLog", "0");
-
 		//Config Properties
 		configControlProps 				= new Properties(defaultControlProps);
 		configSourceProps 				= new Properties(defaultSourceProps);
@@ -384,618 +375,627 @@ public class Settings {
 		configHotKeyProps 				= new Properties(defaultHotKeyProps);
 		configOBSProps      			= new Properties(defaultOBSProps);
 		configAutoScoreSettingsProps	= new Properties(defaultAutoScoreSettingsProps);
-		
-		loadFromControlConfig();
-		loadFromOBSConfig();
-		loadFromSourceConfig();
-		loadFromStatsSourceConfig();
-		loadFromFilterConfig();
-		loadFromPartnerProgramConfig();
-		loadFromHotKeyConfig();
-		loadFromAutoScoreSettingsConfig();
+		try {
+			loadFromControlConfig();
+			loadFromOBSConfig();
+			loadFromSourceConfig();
+			loadFromStatsSourceConfig();
+			loadFromFilterConfig();
+			loadFromPartnerProgramConfig();
+			loadFromHotKeyConfig();
+			loadFromAutoScoreSettingsConfig();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	public int getBorderTop() {return 2;};
-	public int getBorderBottom() {return 0;};
-	public int getBorderLeft() {return 0;};
-	public int getBorderRight() {return 0;};
+	private Settings() {
+	}
+	public static Settings getInstance() {
+		return instance;
+	}
+	public static int getBorderTop() {return borderTop;};
+	public static int getBorderBottom() {return borderBottom;};
+	public static int getBorderLeft() {return borderLeft;};
+	public static int getBorderRight() {return borderRight;};
 	//Getters
 	//Control Parameters
-	public String getGameType() {return gameType;}
-	public boolean getShowParsed() {return Boolean.parseBoolean(configControlProps.getProperty("ShowParsed"));}
-	public String getTableName() {return configControlProps.getProperty("TableName");}
-	public String getDatapath() {return configControlProps.getProperty("datapath");}
-	public int getPointsToWin() {return Integer.parseInt(configControlProps.getProperty("PointsToWin"));}
-	public int getMaxWin() {return Integer.parseInt(configControlProps.getProperty("MaxWin"));}
-	public int getWinBy() {return Integer.parseInt(configControlProps.getProperty("WinBy"));}
-	public int getGamesToWin() {return Integer.parseInt(configControlProps.getProperty("GamesToWin"));}
-	public int getMaxTimeOuts() {return Integer.parseInt(configControlProps.getProperty("MaxTimeOuts"));}
-	public int getAutoIncrementGame() {return Integer.parseInt(configControlProps.getProperty("AutoIncrementGame"));}
-	public int getAnnounceWinner() {return Integer.parseInt(configControlProps.getProperty("AnnounceWinner"));}
-	public int getAnnounceMeatball() {return Integer.parseInt(configControlProps.getProperty("AnnounceMeatball"));}
-	public String getWinnerPrefix() {return configControlProps.getProperty("WinnerPrefix");}
-	public String getWinnerSuffix() {return configControlProps.getProperty("WinnerSuffix");}
-	public String getMeatball() {return configControlProps.getProperty("Meatball");}
-	public String getTeam1LastScored() {return configControlProps.getProperty("Team1LastScored");}
-	public String getTeam2LastScored() {return configControlProps.getProperty("Team2LastScored");}
-	public String getTeam3LastScored() {return configControlProps.getProperty("Team3LastScored");}
-	public String getClearLastScored() {return configControlProps.getProperty("ClearLastScored");}
-	public String[] getLastScoredStrings() {
+	public static String getGameType() {return gameType;}
+	public static boolean getShowParsed() {return Boolean.parseBoolean(configControlProps.getProperty("ShowParsed"));}
+	public static String getTableName() {return configControlProps.getProperty("TableName");}
+	public static String getDatapath() {return configControlProps.getProperty("datapath");}
+	public static int getPointsToWin() {return Integer.parseInt(configControlProps.getProperty("PointsToWin"));}
+	public static int getMaxWin() {return Integer.parseInt(configControlProps.getProperty("MaxWin"));}
+	public static int getWinBy() {return Integer.parseInt(configControlProps.getProperty("WinBy"));}
+	public static int getGamesToWin() {return Integer.parseInt(configControlProps.getProperty("GamesToWin"));}
+	public static int getMaxTimeOuts() {return Integer.parseInt(configControlProps.getProperty("MaxTimeOuts"));}
+	public static int getAutoIncrementGame() {return Integer.parseInt(configControlProps.getProperty("AutoIncrementGame"));}
+	public static int getAnnounceWinner() {return Integer.parseInt(configControlProps.getProperty("AnnounceWinner"));}
+	public static int getAnnounceMeatball() {return Integer.parseInt(configControlProps.getProperty("AnnounceMeatball"));}
+	public static String getWinnerPrefix() {return configControlProps.getProperty("WinnerPrefix");}
+	public static String getWinnerSuffix() {return configControlProps.getProperty("WinnerSuffix");}
+	public static String getMeatball() {return configControlProps.getProperty("Meatball");}
+	public static String getTeam1LastScored() {return configControlProps.getProperty("Team1LastScored");}
+	public static String getTeam2LastScored() {return configControlProps.getProperty("Team2LastScored");}
+	public static String getTeam3LastScored() {return configControlProps.getProperty("Team3LastScored");}
+	public static String getClearLastScored() {return configControlProps.getProperty("ClearLastScored");}
+	public static String[] getLastScoredStrings() {
 		lastScoredStrings[0] = getClearLastScored();
 		lastScoredStrings[1] = getTeam1LastScored();
 		lastScoredStrings[2] = getTeam2LastScored();
 		lastScoredStrings[3] = getTeam3LastScored();
 		return lastScoredStrings;
 	}
-	public String getSide1Color() {return configControlProps.getProperty("Side1Color");}
-	public String getSide2Color() {return configControlProps.getProperty("Side2Color");}
-	public int getBallsInRack() {return Integer.parseInt(configControlProps.getProperty("BallsInRack"));}
-	public int getShotTime() {return Integer.parseInt(configControlProps.getProperty("ShotTime"));}
-	public int getPassTime() {return Integer.parseInt(configControlProps.getProperty("PassTime"));}
-	public int getTimeOutTime() {return Integer.parseInt(configControlProps.getProperty("TimeOutTime"));}
-	public int getGameTime() {return Integer.parseInt(configControlProps.getProperty("GameTime"));}
-	public int getRecallTime() {return Integer.parseInt(configControlProps.getProperty("RecallTime"));}
-	public int getShowTimeOutsUsed() {return Integer.parseInt(configControlProps.getProperty("ShowTimeOutsUsed"));}
-	public int getAutoCapNames() {return Integer.parseInt(configControlProps.getProperty("AutoCapNames"));}
-	public int getWinByFinalOnly() {return Integer.parseInt(configControlProps.getProperty("WinByFinalOnly"));}
-	public int getShowSkunk() {return Integer.parseInt(configControlProps.getProperty("ShowSkunk"));}
-	public int getCutThroatMode() {return Integer.parseInt(configControlProps.getProperty("CutThroatMode"));}
-	public int getRackMode() {return Integer.parseInt(configControlProps.getProperty("RackMode"));}
-	public String getLogoImageURL() {return configControlProps.getProperty("LogoImageURL");}
-	public String getLogoLinkURI() {return configControlProps.getProperty("LogoLinkURI");}
+	public static String getSide1Color() {return configControlProps.getProperty("Side1Color");}
+	public static String getSide2Color() {return configControlProps.getProperty("Side2Color");}
+	public static int getBallsInRack() {return Integer.parseInt(configControlProps.getProperty("BallsInRack"));}
+	public static int getShotTime() {return Integer.parseInt(configControlProps.getProperty("ShotTime"));}
+	public static int getPassTime() {return Integer.parseInt(configControlProps.getProperty("PassTime"));}
+	public static int getTimeOutTime() {return Integer.parseInt(configControlProps.getProperty("TimeOutTime"));}
+	public static int getGameTime() {return Integer.parseInt(configControlProps.getProperty("GameTime"));}
+	public static int getRecallTime() {return Integer.parseInt(configControlProps.getProperty("RecallTime"));}
+	public static int getShowTimeOutsUsed() {return Integer.parseInt(configControlProps.getProperty("ShowTimeOutsUsed"));}
+	public static int getAutoCapNames() {return Integer.parseInt(configControlProps.getProperty("AutoCapNames"));}
+	public static int getWinByFinalOnly() {return Integer.parseInt(configControlProps.getProperty("WinByFinalOnly"));}
+	public static int getShowSkunk() {return Integer.parseInt(configControlProps.getProperty("ShowSkunk"));}
+	public static int getCutThroatMode() {return Integer.parseInt(configControlProps.getProperty("CutThroatMode"));}
+	public static int getRackMode() {return Integer.parseInt(configControlProps.getProperty("RackMode"));}
+	public static String getLogoImageURL() {return configControlProps.getProperty("LogoImageURL");}
+	public static String getLogoLinkURI() {return configControlProps.getProperty("LogoLinkURI");}
 	//OBS
-	public String getOBSHost() {return configOBSProps.getProperty("OBSHost");}
-	public String getOBSPort() {return configOBSProps.getProperty("OBSPort").isEmpty()?"0": configOBSProps.getProperty("OBSPort");}
-	public String getOBSPassword() {return configOBSProps.getProperty("OBSPassword");}
-	public String getOBSScene() {return configOBSProps.getProperty("OBSScene");}
-	public int getOBSSavePassword() {return Integer.parseInt(configOBSProps.getProperty("OBSSavePassword"));}
-	public int getOBSAutoLogin() {return Integer.parseInt(configOBSProps.getProperty("OBSAutoLogin"));}
-	public int getOBSCloseOnConnect() {return Integer.parseInt(configOBSProps.getProperty("OBSCloseOnConnect"));}
-	public int getOBSUpdateOnConnect()  {return Integer.parseInt(configOBSProps.getProperty("OBSUpdateOnConnect"));}
+	public static String getOBSHost() {return configOBSProps.getProperty("OBSHost");}
+	public static String getOBSPort() {return configOBSProps.getProperty("OBSPort").isEmpty()?"0": configOBSProps.getProperty("OBSPort");}
+	public static String getOBSPassword() {return configOBSProps.getProperty("OBSPassword");}
+	public static String getOBSScene() {return configOBSProps.getProperty("OBSScene");}
+	public static int getOBSSavePassword() {return Integer.parseInt(configOBSProps.getProperty("OBSSavePassword"));}
+	public static int getOBSAutoLogin() {return Integer.parseInt(configOBSProps.getProperty("OBSAutoLogin"));}
+	public static int getOBSCloseOnConnect() {return Integer.parseInt(configOBSProps.getProperty("OBSCloseOnConnect"));}
+	public static int getOBSUpdateOnConnect()  {return Integer.parseInt(configOBSProps.getProperty("OBSUpdateOnConnect"));}
 	//Sources
-	public String getTeamNameSource(String teamNumber) {
+	public static String getTeamNameSource(String teamNumber) {
 		return configSourceProps.getProperty("Team" + teamNumber + "Name");//Team1Name
 	}
-	public String getTeamForwardSource(String teamNumber) {
+	public static String getTeamForwardSource(String teamNumber) {
 		return configSourceProps.getProperty("Team" + teamNumber + "Forward");//Team1Forward
 	}
-	public String getTeamGoalieSource(String teamNumber) {
+	public static String getTeamGoalieSource(String teamNumber) {
 		return configSourceProps.getProperty("Team" + teamNumber + "Goalie");//Team1Goalie
 	}
-	public String getTeamGameCountSource(String teamNumber) {
+	public static String getTeamGameCountSource(String teamNumber) {
 		return configSourceProps.getProperty("Team" + teamNumber + "GameCount");//Team1GameCount
 	}
-	public String getTeamMatchCountSource(String teamNumber) {
+	public static String getTeamMatchCountSource(String teamNumber) {
 		return configSourceProps.getProperty("Team" + teamNumber + "MatchCount");//Team1MatchCount
 	}
-	public String getTeamScoreSource(String teamNumber) {
+	public static String getTeamScoreSource(String teamNumber) {
 		return configSourceProps.getProperty("Team" + teamNumber + "Score");//Team1Score
 	}
-	public String getTeamTimeOutSource(String teamNumber) {
+	public static String getTeamTimeOutSource(String teamNumber) {
 		return configSourceProps.getProperty("Team" + teamNumber + "TimeOut");//Team1TimeOut
 	}
-	public String getTeamResetSource(String teamNumber) {
+	public static String getTeamResetSource(String teamNumber) {
 		return configSourceProps.getProperty("Team" + teamNumber + "Reset");//Team1Reset
 	}
-	public String getTeamWarnSource(String teamNumber) {
+	public static String getTeamWarnSource(String teamNumber) {
 		return configSourceProps.getProperty("Team" + teamNumber + "Warn");//Team1Warn
 	}
-	public String getTeamKingSeatSource(String teamNumber) {
+	public static String getTeamKingSeatSource(String teamNumber) {
 		return configSourceProps.getProperty("Team" + teamNumber + "KingSeat");//Team1KingSeat
 	}
-	public String getTeamGameShowSource(int teamNumber, int gameNumber) {
+	public static String getTeamGameShowSource(int teamNumber, int gameNumber) {
 		return configSourceProps.getProperty("Team" + teamNumber + "Game" + gameNumber + "Show");
 	}
-	public String getTournamentSource() {return configSourceProps.getProperty("Tournament");}
-	public String getEventSource() {return configSourceProps.getProperty("Event");}
-	public String getTableNameSource() {return configSourceProps.getProperty("TableName");}
-	public String getTimeRemainingSource() {return configSourceProps.getProperty("TimeRemaining");}
-	public String getTimerInUseSource() {return configSourceProps.getProperty("TimerInUse");}
-	public String getMatchWinnerSource() {return configSourceProps.getProperty("MatchWinner");}
-	public String getMeatballSource() {return configSourceProps.getProperty("Meatball");}
-	public String getGameResultsSource() {return configSourceProps.getProperty("GameResults");}
-	public String getLastScoredSource() {return configSourceProps.getProperty("LastScored");}
-	public String getGameTimeSource() {return configSourceProps.getProperty("GameTime");}
-	public String getMatchTimeSource() {return configSourceProps.getProperty("MatchTime");}
-	public String getStreamTimeSource() {return configSourceProps.getProperty("StreamTime");}
-	public String getSide1ColorSource() {return configSourceProps.getProperty("Side1Color");}
-	public String getSide2ColorSource() {return configSourceProps.getProperty("Side2Color");}
-	public String getSide3ColorSource() {return configSourceProps.getProperty("Side3Color");}
-	public String getShowScoresSource() {return configSourceProps.getProperty("ShowScores");}
-	public String getShowTimerSource() {return configSourceProps.getProperty("ShowTimer");}
-	public String getShowCutthroatSource() {return configSourceProps.getProperty("ShowCutthroat");}
+	public static String getTournamentSource() {return configSourceProps.getProperty("Tournament");}
+	public static String getEventSource() {return configSourceProps.getProperty("Event");}
+	public static String getTableNameSource() {return configSourceProps.getProperty("TableName");}
+	public static String getTimeRemainingSource() {return configSourceProps.getProperty("TimeRemaining");}
+	public static String getTimerInUseSource() {return configSourceProps.getProperty("TimerInUse");}
+	public static String getMatchWinnerSource() {return configSourceProps.getProperty("MatchWinner");}
+	public static String getMeatballSource() {return configSourceProps.getProperty("Meatball");}
+	public static String getGameResultsSource() {return configSourceProps.getProperty("GameResults");}
+	public static String getLastScoredSource() {return configSourceProps.getProperty("LastScored");}
+	public static String getGameTimeSource() {return configSourceProps.getProperty("GameTime");}
+	public static String getMatchTimeSource() {return configSourceProps.getProperty("MatchTime");}
+	public static String getStreamTimeSource() {return configSourceProps.getProperty("StreamTime");}
+	public static String getSide1ColorSource() {return configSourceProps.getProperty("Side1Color");}
+	public static String getSide2ColorSource() {return configSourceProps.getProperty("Side2Color");}
+	public static String getSide3ColorSource() {return configSourceProps.getProperty("Side3Color");}
+	public static String getShowScoresSource() {return configSourceProps.getProperty("ShowScores");}
+	public static String getShowTimerSource() {return configSourceProps.getProperty("ShowTimer");}
+	public static String getShowCutthroatSource() {return configSourceProps.getProperty("ShowCutthroat");}
 	//Stat Sources
-	public String getPassAttemptsSource(String teamNumber) {
+	public static String getPassAttemptsSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "PassAttempts");//Team1PassAttempts
 	}
-	public String getPassCompletesSource(String teamNumber) {
+	public static String getPassCompletesSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "PassCompletes");//Team1PassCompletes
 	}
-	public String getShotAttemptsSource(String teamNumber) {
+	public static String getShotAttemptsSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "ShotAttempts");//Team1ShotAttempts
 	}
-	public String getShotCompletesSource(String teamNumber) {
+	public static String getShotCompletesSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "ShotCompletes");//Team1ShotCompletes
 	}
-	public String getClearAttemptsSource(String teamNumber) {
+	public static String getClearAttemptsSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "ClearAttempts");//Team1ClearAttempts
 	}
-	public String getClearCompletesSource(String teamNumber) {
+	public static String getClearCompletesSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "ClearCompletes");//Team1ClearCompletes
 	}
-	public String getPassPercentSource(String teamNumber) {
+	public static String getPassPercentSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "PassPercent");//Team1PassPercent
 	}
-	public String getShotPercentSource(String teamNumber) {
+	public static String getShotPercentSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "ShotPercent");//Team1ShotPercent
 	}
-	public String getClearPercentSource(String teamNumber) {
+	public static String getClearPercentSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "ClearPercent");//Team1ClearPercent
 	}
-	public String getTwoBarPassAttemptsSource(String teamNumber) {
+	public static String getTwoBarPassAttemptsSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "TwoBarPassAttempts");//Team1TwoBarPassAttempts
 	}
-	public String getTwoBarPassCompletesSource(String teamNumber) {
+	public static String getTwoBarPassCompletesSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "TwoBarPassCompletes");//Team1TwoBarPassCompletes
 	}
-	public String getTwoBarPassPercentSource(String teamNumber) {
+	public static String getTwoBarPassPercentSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "TwoBarPassPercent");//Team1TwoBarPassPercent
 	}
-	public String getScoringSource(String teamNumber) {
+	public static String getScoringSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "Scoring");//Team1Scoring
 	}
-	public String getThreeBarScoringSource(String teamNumber) {
+	public static String getThreeBarScoringSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "ThreeBarScoring");//Team1ThreeBarScoring
 	}
-	public String getFiveBarScoringSource(String teamNumber) {
+	public static String getFiveBarScoringSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "FiveBarScoring");//Team1FiveBarScoring
 	}
-	public String getTwoBarScoringSource(String teamNumber) {
+	public static String getTwoBarScoringSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "TwoBarScoring");//Team1TwoBarScoring
 	}
-	public String getShotsOnGoalSource(String teamNumber) {
+	public static String getShotsOnGoalSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "ShotsOnGoal");//Team1ShotsOnGoal
 	}
-	public String getStuffsSource(String teamNumber) {
+	public static String getStuffsSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "Stuffs");//Stuffs1
 	}
-	public String getBreaksSource(String teamNumber) {
+	public static String getBreaksSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "Breaks");//Breaks1
 	}
-	public String getAcesSource(String teamNumber) {
+	public static String getAcesSource(String teamNumber) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + "Aces");//Aces1
 	}
 	//Filters
-	public String getFiltersFilter(String filter) {return configFilterProps.getProperty(filter);}
-	public String getTeam1ScoreFilter() {return configFilterProps.getProperty("Team1Score");}
-	public String getTeam2ScoreFilter() {return configFilterProps.getProperty("Team2Score");}
-	public String getTeam1WinGameFilter() {return configFilterProps.getProperty("Team1WinGame");}
-	public String getTeam2WinGameFilter() {return configFilterProps.getProperty("Team2WinGame");}
-	public String getTeam1WinMatchFilter() {return configFilterProps.getProperty("Team1WinMatch");}
-	public String getTeam2WinMatchFilter() {return configFilterProps.getProperty("Team2WinMatch");}
-	public String getTeam1TimeOutFilter() {return configFilterProps.getProperty("Team1TimeOut");}
-	public String getTeam2TimeOutFilter() {return configFilterProps.getProperty("Team2TimeOut");}
-	public String getTeam1ResetFilter() {return configFilterProps.getProperty("Team1Reset");}
-	public String getTeam2ResetFilter() {return configFilterProps.getProperty("Team2Reset");}
-	public String getTeam1WarnFilter() {return configFilterProps.getProperty("Team1Warn");}
-	public String getTeam2WarnFilter() {return configFilterProps.getProperty("Team2Warn");}
-	public String getTeam1SwitchPositionsFilter() {return configFilterProps.getProperty("Team1SwitchPositions");}
-	public String getTeam2SwitchPositionsFilter() {return configFilterProps.getProperty("Team2SwitchPositions");}
-	public String getTeam1SkunkFilter() {return configFilterProps.getProperty("Team1Skunk");}
-	public String getTeam2SkunkFilter() {return configFilterProps.getProperty("Team2Skunk");}
-	public String getStartMatchFilter() {return configFilterProps.getProperty("StartMatch");}
-	public String getStartGameFilter() {return configFilterProps.getProperty("StartGame");}
-	public String getSwitchSidesFilter() {return configFilterProps.getProperty("SwitchSides");}	//PartnerProgram
-	public String getPartnerProgramPath() {return configPartnerProgramProps.getProperty("PartnerProgramPath");}
-	public String getPlayer1FileName() {return configPartnerProgramProps.getProperty("Player1FileName");}
-	public String getPlayer2FileName() {return configPartnerProgramProps.getProperty("Player2FileName");}
-	public String getPlayer3FileName() {return configPartnerProgramProps.getProperty("Player3FileName");}
-	public String getPlayer4FileName() {return configPartnerProgramProps.getProperty("Player4FileName");}
+	public static String getFiltersFilter(String filter) {return configFilterProps.getProperty(filter);}
+	public static String getTeam1ScoreFilter() {return configFilterProps.getProperty("Team1Score");}
+	public static String getTeam2ScoreFilter() {return configFilterProps.getProperty("Team2Score");}
+	public static String getTeam1WinGameFilter() {return configFilterProps.getProperty("Team1WinGame");}
+	public static String getTeam2WinGameFilter() {return configFilterProps.getProperty("Team2WinGame");}
+	public static String getTeam1WinMatchFilter() {return configFilterProps.getProperty("Team1WinMatch");}
+	public static String getTeam2WinMatchFilter() {return configFilterProps.getProperty("Team2WinMatch");}
+	public static String getTeam1TimeOutFilter() {return configFilterProps.getProperty("Team1TimeOut");}
+	public static String getTeam2TimeOutFilter() {return configFilterProps.getProperty("Team2TimeOut");}
+	public static String getTeam1ResetFilter() {return configFilterProps.getProperty("Team1Reset");}
+	public static String getTeam2ResetFilter() {return configFilterProps.getProperty("Team2Reset");}
+	public static String getTeam1WarnFilter() {return configFilterProps.getProperty("Team1Warn");}
+	public static String getTeam2WarnFilter() {return configFilterProps.getProperty("Team2Warn");}
+	public static String getTeam1SwitchPositionsFilter() {return configFilterProps.getProperty("Team1SwitchPositions");}
+	public static String getTeam2SwitchPositionsFilter() {return configFilterProps.getProperty("Team2SwitchPositions");}
+	public static String getTeam1SkunkFilter() {return configFilterProps.getProperty("Team1Skunk");}
+	public static String getTeam2SkunkFilter() {return configFilterProps.getProperty("Team2Skunk");}
+	public static String getStartMatchFilter() {return configFilterProps.getProperty("StartMatch");}
+	public static String getStartGameFilter() {return configFilterProps.getProperty("StartGame");}
+	public static String getSwitchSidesFilter() {return configFilterProps.getProperty("SwitchSides");}	//PartnerProgram
+	public static String getPartnerProgramPath() {return configPartnerProgramProps.getProperty("PartnerProgramPath");}
+	public static String getPlayer1FileName() {return configPartnerProgramProps.getProperty("Player1FileName");}
+	public static String getPlayer2FileName() {return configPartnerProgramProps.getProperty("Player2FileName");}
+	public static String getPlayer3FileName() {return configPartnerProgramProps.getProperty("Player3FileName");}
+	public static String getPlayer4FileName() {return configPartnerProgramProps.getProperty("Player4FileName");}
 	//HotKeys
-	public String getStartMatchHotKey() {return configHotKeyProps.getProperty("StartMatchHotKey");}
-	public String getPauseMatchHotKey() {return configHotKeyProps.getProperty("PauseMatchHotKey");}
-	public String getEndMatchHotKey() {return configHotKeyProps.getProperty("EndMatchHotKey");}
-	public String getStartGameHotKey() {return configHotKeyProps.getProperty("StartGameHotKey");}
-	public String getTeamSwitchPositionsHotKey(String teamNumber) {return configHotKeyProps.getProperty("Team" + teamNumber + "SwitchPositionsHotKey");}
-	public String getSwitchForwardsHotKey() {return configHotKeyProps.getProperty("SwitchForwardsHotKey");}
-	public String getSwitchGoaliesHotKey() {return configHotKeyProps.getProperty("SwitchGoaliesHotKey");}
-	public String getGameCountMinusHotKey(String teamNumber) {return configHotKeyProps.getProperty("GameCount" + teamNumber + "MinusHotKey");}
-	public String getGameCountPlusHotKey(String teamNumber) {return configHotKeyProps.getProperty("GameCount" + teamNumber + "PlusHotKey");}
-	public String getMatchCountMinusHotKey(String teamNumber) {return configHotKeyProps.getProperty("MatchCount" + teamNumber + "MinusHotKey");}
-	public String getMatchCountPlusHotKey(String teamNumber) {return configHotKeyProps.getProperty("MatchCount" + teamNumber + "PlusHotKey");}
-	public String getTimeOutMinusHotKey(String teamNumber) {return configHotKeyProps.getProperty("TimeOut" + teamNumber + "MinusHotKey");}
-	public String getTimeOutPlusHotKey(String teamNumber) {return configHotKeyProps.getProperty("TimeOut" + teamNumber + "PlusHotKey");}
-	public String getScoreMinusHotKey(String teamNumber) {return configHotKeyProps.getProperty("Score" + teamNumber + "MinusHotKey");}
-	public String getScorePlusHotKey(String teamNumber) {return configHotKeyProps.getProperty("Score" + teamNumber + "PlusHotKey");}
-	public String getResetHotKey(String teamNumber) {return configHotKeyProps.getProperty("Reset" + teamNumber + "HotKey");}
-	public String getWarnHotKey(String teamNumber) {return configHotKeyProps.getProperty("Warn" + teamNumber + "HotKey");}
-	public String getKingSeatHotKey(String teamNumber) {return configHotKeyProps.getProperty("KingSeat" + teamNumber + "HotKey");}
-	public String getSwitchTeamsHotKey() {return configHotKeyProps.getProperty("SwitchTeamsHotKey");}
-	public String getSwitchGameCountsHotKey() {return configHotKeyProps.getProperty("SwitchGameCountsHotKey");}
-	public String getSwitchMatchCountsHotKey() {return configHotKeyProps.getProperty("SwitchMatchCountsHotKey");}
-	public String getSwitchScoresHotKey() {return configHotKeyProps.getProperty("SwitchScoresHotKey");}
-	public String getSwitchTimeOutsHotKey() {return configHotKeyProps.getProperty("SwitchTimeOutsHotKey");}
-	public String getSwitchResetWarnsHotKey() {return configHotKeyProps.getProperty("SwitchResetWarnsHotKey");}
-	public String getSwitchSidesHotKey() {return configHotKeyProps.getProperty("SwitchSidesHotKey");}
-	public String getResetNamesHotKey() {return configHotKeyProps.getProperty("ResetNamesHotKey");}
-	public String getResetGameCountsHotKey() {return configHotKeyProps.getProperty("ResetGameCountsHotKey");}
-	public String getResetMatchCountsHotKey() {return configHotKeyProps.getProperty("ResetMatchCountsHotKey");}
-	public String getResetScoresHotKey() {return configHotKeyProps.getProperty("ResetScoresHotKey");}
-	public String getResetTimeOutsHotKey() {return configHotKeyProps.getProperty("ResetTimeOutsHotKey");}
-	public String getResetResetWarnHotKey() {return configHotKeyProps.getProperty("ResetResetWarnHotKey");}
-	public String getResetAllHotKey() {return configHotKeyProps.getProperty("ResetAllHotKey");}
-	public String getClearAllHotKey() {return configHotKeyProps.getProperty("ClearAllHotKey");}
-	public String getShotTimerHotKey() {return configHotKeyProps.getProperty("ShotTimerHotKey");}
-	public String getPassTimerHotKey() {return configHotKeyProps.getProperty("PassTimerHotKey");}
-	public String getTimeOutTimerHotKey() {return configHotKeyProps.getProperty("TimeOutTimerHotKey");}
-	public String getGameTimerHotKey() {return configHotKeyProps.getProperty("GameTimerHotKey");}
-	public String getRecallTimerHotKey() {return configHotKeyProps.getProperty("RecallTimerHotKey");}
-	public String getResetTimersHotKey() {return configHotKeyProps.getProperty("ResetTimersHotKey");}
-	public String getUndoHotKey() {return configHotKeyProps.getProperty("UndoHotKey");}
-	public String getRedoHotKey() {return configHotKeyProps.getProperty("RedoHotKey");}
-	public String getConnectHotKey() {return configHotKeyProps.getProperty("ConnectHotKey");}
-	public String getDisconnectHotKey() {return configHotKeyProps.getProperty("DisconnectHotKey");}
-	public String getPushHotKey() {return configHotKeyProps.getProperty("PushHotKey");}
-	public String getPullHotKey() {return configHotKeyProps.getProperty("PullHotKey");}
-	public String getShowScoresHotKey() {return configHotKeyProps.getProperty("ShowScoresHotKey");}
-	public String getShowTimerHotKey() {return configHotKeyProps.getProperty("ShowTimerHotKey");}
-	public String getShowSkunkHotKey() {return configHotKeyProps.getProperty("ShowSkunkHotKey");}
-	public String getStartStreamHotKey() {return configHotKeyProps.getProperty("StartStreamHotKey");}
-	public String getShowCutthroatHotKey() {return configHotKeyProps.getProperty("ShowCutthroatHotKey");}
-	public String getAutoScoreMainConnectHotKey() {return configHotKeyProps.getProperty("AutoScoreMainConnectHotKey");}
-	public String getAutoScoreMainDisconnectHotKey() {return configHotKeyProps.getProperty("AutoScoreMainDisconnectHotKey");}
-	public String getAutoScoreMainSettingsHotKey() {return configHotKeyProps.getProperty("AutoScoreMainSettingsHotKey");}
-	public String getHotKeyBaseScript() {return configHotKeyProps.getProperty("HotKeyBaseScript");}
-	public String getHotKeyScriptPath() {return configHotKeyProps.getProperty("HotKeyScriptPath");}
+	public static String getStartMatchHotKey() {return configHotKeyProps.getProperty("StartMatchHotKey");}
+	public static String getPauseMatchHotKey() {return configHotKeyProps.getProperty("PauseMatchHotKey");}
+	public static String getEndMatchHotKey() {return configHotKeyProps.getProperty("EndMatchHotKey");}
+	public static String getStartGameHotKey() {return configHotKeyProps.getProperty("StartGameHotKey");}
+	public static String getTeamSwitchPositionsHotKey(String teamNumber) {return configHotKeyProps.getProperty("Team" + teamNumber + "SwitchPositionsHotKey");}
+	public static String getSwitchForwardsHotKey() {return configHotKeyProps.getProperty("SwitchForwardsHotKey");}
+	public static String getSwitchGoaliesHotKey() {return configHotKeyProps.getProperty("SwitchGoaliesHotKey");}
+	public static String getGameCountMinusHotKey(String teamNumber) {return configHotKeyProps.getProperty("GameCount" + teamNumber + "MinusHotKey");}
+	public static String getGameCountPlusHotKey(String teamNumber) {return configHotKeyProps.getProperty("GameCount" + teamNumber + "PlusHotKey");}
+	public static String getMatchCountMinusHotKey(String teamNumber) {return configHotKeyProps.getProperty("MatchCount" + teamNumber + "MinusHotKey");}
+	public static String getMatchCountPlusHotKey(String teamNumber) {return configHotKeyProps.getProperty("MatchCount" + teamNumber + "PlusHotKey");}
+	public static String getTimeOutMinusHotKey(String teamNumber) {return configHotKeyProps.getProperty("TimeOut" + teamNumber + "MinusHotKey");}
+	public static String getTimeOutPlusHotKey(String teamNumber) {return configHotKeyProps.getProperty("TimeOut" + teamNumber + "PlusHotKey");}
+	public static String getScoreMinusHotKey(String teamNumber) {return configHotKeyProps.getProperty("Score" + teamNumber + "MinusHotKey");}
+	public static String getScorePlusHotKey(String teamNumber) {return configHotKeyProps.getProperty("Score" + teamNumber + "PlusHotKey");}
+	public static String getResetHotKey(String teamNumber) {return configHotKeyProps.getProperty("Reset" + teamNumber + "HotKey");}
+	public static String getWarnHotKey(String teamNumber) {return configHotKeyProps.getProperty("Warn" + teamNumber + "HotKey");}
+	public static String getKingSeatHotKey(String teamNumber) {return configHotKeyProps.getProperty("KingSeat" + teamNumber + "HotKey");}
+	public static String getSwitchTeamsHotKey() {return configHotKeyProps.getProperty("SwitchTeamsHotKey");}
+	public static String getSwitchGameCountsHotKey() {return configHotKeyProps.getProperty("SwitchGameCountsHotKey");}
+	public static String getSwitchMatchCountsHotKey() {return configHotKeyProps.getProperty("SwitchMatchCountsHotKey");}
+	public static String getSwitchScoresHotKey() {return configHotKeyProps.getProperty("SwitchScoresHotKey");}
+	public static String getSwitchTimeOutsHotKey() {return configHotKeyProps.getProperty("SwitchTimeOutsHotKey");}
+	public static String getSwitchResetWarnsHotKey() {return configHotKeyProps.getProperty("SwitchResetWarnsHotKey");}
+	public static String getSwitchSidesHotKey() {return configHotKeyProps.getProperty("SwitchSidesHotKey");}
+	public static String getResetNamesHotKey() {return configHotKeyProps.getProperty("ResetNamesHotKey");}
+	public static String getResetGameCountsHotKey() {return configHotKeyProps.getProperty("ResetGameCountsHotKey");}
+	public static String getResetMatchCountsHotKey() {return configHotKeyProps.getProperty("ResetMatchCountsHotKey");}
+	public static String getResetScoresHotKey() {return configHotKeyProps.getProperty("ResetScoresHotKey");}
+	public static String getResetTimeOutsHotKey() {return configHotKeyProps.getProperty("ResetTimeOutsHotKey");}
+	public static String getResetResetWarnHotKey() {return configHotKeyProps.getProperty("ResetResetWarnHotKey");}
+	public static String getResetAllHotKey() {return configHotKeyProps.getProperty("ResetAllHotKey");}
+	public static String getClearAllHotKey() {return configHotKeyProps.getProperty("ClearAllHotKey");}
+	public static String getShotTimerHotKey() {return configHotKeyProps.getProperty("ShotTimerHotKey");}
+	public static String getPassTimerHotKey() {return configHotKeyProps.getProperty("PassTimerHotKey");}
+	public static String getTimeOutTimerHotKey() {return configHotKeyProps.getProperty("TimeOutTimerHotKey");}
+	public static String getGameTimerHotKey() {return configHotKeyProps.getProperty("GameTimerHotKey");}
+	public static String getRecallTimerHotKey() {return configHotKeyProps.getProperty("RecallTimerHotKey");}
+	public static String getResetTimersHotKey() {return configHotKeyProps.getProperty("ResetTimersHotKey");}
+	public static String getUndoHotKey() {return configHotKeyProps.getProperty("UndoHotKey");}
+	public static String getRedoHotKey() {return configHotKeyProps.getProperty("RedoHotKey");}
+	public static String getConnectHotKey() {return configHotKeyProps.getProperty("ConnectHotKey");}
+	public static String getDisconnectHotKey() {return configHotKeyProps.getProperty("DisconnectHotKey");}
+	public static String getPushHotKey() {return configHotKeyProps.getProperty("PushHotKey");}
+	public static String getPullHotKey() {return configHotKeyProps.getProperty("PullHotKey");}
+	public static String getShowScoresHotKey() {return configHotKeyProps.getProperty("ShowScoresHotKey");}
+	public static String getShowTimerHotKey() {return configHotKeyProps.getProperty("ShowTimerHotKey");}
+	public static String getShowSkunkHotKey() {return configHotKeyProps.getProperty("ShowSkunkHotKey");}
+	public static String getStartStreamHotKey() {return configHotKeyProps.getProperty("StartStreamHotKey");}
+	public static String getShowCutthroatHotKey() {return configHotKeyProps.getProperty("ShowCutthroatHotKey");}
+	public static String getAutoScoreMainConnectHotKey() {return configHotKeyProps.getProperty("AutoScoreMainConnectHotKey");}
+	public static String getAutoScoreMainDisconnectHotKey() {return configHotKeyProps.getProperty("AutoScoreMainDisconnectHotKey");}
+	public static String getAutoScoreMainSettingsHotKey() {return configHotKeyProps.getProperty("AutoScoreMainSettingsHotKey");}
+	public static String getHotKeyBaseScript() {return configHotKeyProps.getProperty("HotKeyBaseScript");}
+	public static String getHotKeyScriptPath() {return configHotKeyProps.getProperty("HotKeyScriptPath");}
 	//AutoScore Settings
-	public String getAutoScoreSettingsServerAddress() {return configAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerAddress");}
-	public int getAutoScoreSettingsServerPort() {return Integer.parseInt(configAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerPort"));}
-	public int getAutoScoreSettingsAutoConnect() {return Integer.parseInt(configAutoScoreSettingsProps.getProperty("AutoScoreSettingsAutoConnect"));}
-	public int getAutoScoreSettingsDetailLog() {return Integer.parseInt(configAutoScoreSettingsProps.getProperty("AutoScoreSettingsDetailLog"));}
+	public static String getAutoScoreSettingsServerAddress() {return configAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerAddress");}
+	public static int getAutoScoreSettingsServerPort() {return Integer.parseInt(configAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerPort"));}
+	public static int getAutoScoreSettingsAutoConnect() {return Integer.parseInt(configAutoScoreSettingsProps.getProperty("AutoScoreSettingsAutoConnect"));}
+	public static int getAutoScoreSettingsDetailLog() {return Integer.parseInt(configAutoScoreSettingsProps.getProperty("AutoScoreSettingsDetailLog"));}
 	//Setters
 	//Control Parameters
-	public void setShowParsed(boolean showParsed) {
+	public static void setShowParsed(boolean showParsed) {
 		configControlProps.setProperty("ShowParsed", Boolean.toString(showParsed));
 	}
-	public void setTableName(String tableName) {
+	public static void setTableName(String tableName) {
 		configControlProps.setProperty("TableName", tableName);
 	}
-	public void setDatapath(String datapath) {
+	public static void setDatapath(String datapath) {
 		configControlProps.setProperty("datapath", datapath);
 	}
-	public void setPointsToWin(int pointsToWin) {
+	public static void setPointsToWin(int pointsToWin) {
 		configControlProps.setProperty("PointsToWin", Integer.toString(pointsToWin));
 		}
-	public void setMaxWin(int maxWin) {
+	public static void setMaxWin(int maxWin) {
 		configControlProps.setProperty("MaxWin", Integer.toString(maxWin));
 		}
-	public void setWinBy(int winBy) {
+	public static void setWinBy(int winBy) {
 		configControlProps.setProperty("WinBy", Integer.toString(winBy));
 		}
-	public void setGamesToWin(int gamesToWin) {
+	public static void setGamesToWin(int gamesToWin) {
 		configControlProps.setProperty("GamesToWin", Integer.toString(gamesToWin));
 		}
-	public void setMaxTimeOuts(int maxTimeOuts) {
+	public static void setMaxTimeOuts(int maxTimeOuts) {
 		configControlProps.setProperty("MaxTimeOuts", Integer.toString(maxTimeOuts));
 		}
-	public void setAutoIncrementGame(int autoIncrementGame) {
+	public static void setAutoIncrementGame(int autoIncrementGame) {
 		configControlProps.setProperty("AutoIncrementGame", Integer.toString(autoIncrementGame));
 		}
-	public void setAnnounceWinner(int announceWinner) {
+	public static void setAnnounceWinner(int announceWinner) {
 		configControlProps.setProperty("AnnounceWinner", Integer.toString(announceWinner));
 		}
-	public void setAnnounceMeatball(int announceMeatball) {
+	public static void setAnnounceMeatball(int announceMeatball) {
 		configControlProps.setProperty("AnnounceMeatball", Integer.toString(announceMeatball));
 		}
-	public void setWinnerPrefix(String winnerPrefix) {
+	public static void setWinnerPrefix(String winnerPrefix) {
 		configControlProps.setProperty("WinnerPrefix", winnerPrefix);
 	}
-	public void setWinnerSuffix(String winnerSuffix) {
+	public static void setWinnerSuffix(String winnerSuffix) {
 		configControlProps.setProperty("WinnerSuffix", winnerSuffix);
 	}
-	public void setMeatball(String meatball) {
+	public static void setMeatball(String meatball) {
 		configControlProps.setProperty("Meatball", meatball);
 	}
-	public void setTeam1LastScored(String team1LastScored) {
+	public static void setTeam1LastScored(String team1LastScored) {
 		configControlProps.setProperty("Team1LastScored", team1LastScored);
 	}
-	public void setTeam2LastScored(String team2LastScored) {
+	public static void setTeam2LastScored(String team2LastScored) {
 		configControlProps.setProperty("Team2LastScored", team2LastScored);
 	}
-	public void setTeam3LastScored(String team3LastScored) {
+	public static void setTeam3LastScored(String team3LastScored) {
 		configControlProps.setProperty("Team3LastScored", team3LastScored);
 	}
-	public void setClearLastScored(String clearLastScored) {
+	public static void setClearLastScored(String clearLastScored) {
 		configControlProps.setProperty("ClearLastScored", clearLastScored);
 	}
-	public void setSide1Color(String side1Color) {
+	public static void setSide1Color(String side1Color) {
 		configControlProps.setProperty("Side1Color", side1Color);
 	}
-	public void setSide2Color(String side2Color) {
+	public static void setSide2Color(String side2Color) {
 		configControlProps.setProperty("Side2Color", side2Color);
 	}
-	public void setBallsInRack(String ballsInRack) {
+	public static void setBallsInRack(String ballsInRack) {
 		configControlProps.setProperty("BallsInRack", ballsInRack);
 	}
-	public void setShotTime(int shotTime) {
+	public static void setShotTime(int shotTime) {
 		configControlProps.setProperty("ShotTime", Integer.toString(shotTime));
 		}
-	public void setPassTime(int passTime) {
+	public static void setPassTime(int passTime) {
 		configControlProps.setProperty("PassTime", Integer.toString(passTime));
 		}
-	public void setTimeOutTime(int timeOutTime) {
+	public static void setTimeOutTime(int timeOutTime) {
 		configControlProps.setProperty("TimeOutTime", Integer.toString(timeOutTime));
 		}
-	public void setGameTime(int gameTime) {
+	public static void setGameTime(int gameTime) {
 		configControlProps.setProperty("GameTime", Integer.toString(gameTime));
 		}
-	public void setRecallTime(int recallTime) {
+	public static void setRecallTime(int recallTime) {
 		configControlProps.setProperty("RecallTime", Integer.toString(recallTime));
 		}
-	public void setShowTimeOutsUsed(int showTimeOutsUsed) {
+	public static void setShowTimeOutsUsed(int showTimeOutsUsed) {
 		configControlProps.setProperty("ShowTimeOutsUsed", Integer.toString(showTimeOutsUsed));
 	}
-	public void setAutoCapNames(int autoCapNames) {
+	public static void setAutoCapNames(int autoCapNames) {
 		configControlProps.setProperty("AutoCapNames", Integer.toString(autoCapNames));
 	}
-	public void setWinByFinalOnly(int winByFinalOnly) {
+	public static void setWinByFinalOnly(int winByFinalOnly) {
 		configControlProps.setProperty("WinByFinalOnly", Integer.toString(winByFinalOnly));
 	}
-	public void setShowSkunk(int showSkunk) {
+	public static void setShowSkunk(int showSkunk) {
 		configControlProps.setProperty("ShowSkunk", Integer.toString(showSkunk));
 	}
-	public void setCutThroatMode(int cutThroatMode) {
+	public static void setCutThroatMode(int cutThroatMode) {
 		configControlProps.setProperty("CutThroatMode", Integer.toString(cutThroatMode));
 	}
-	public void setRackMode(int rackMode) {
+	public static void setRackMode(int rackMode) {
 		configControlProps.setProperty("RackMode", Integer.toString(rackMode));
 	}
-	public void setLogoImageURL(String logoImageURL) {
+	public static void setLogoImageURL(String logoImageURL) {
 		configControlProps.setProperty("LogoImageURL", logoImageURL);
 	}
-	public void setLogoLinkURI(String logoLinkURI) {
+	public static void setLogoLinkURI(String logoLinkURI) {
 		configControlProps.setProperty("LogoLinkURI", logoLinkURI);
 	}
 	//OBS
-	public void setOBS(String property, String OBSValue) {
+	public static void setOBS(String property, String OBSValue) {
 		configOBSProps.setProperty(property, OBSValue);
 	}
-	public void setOBS(String property, int value) {
+	public static void setOBS(String property, int value) {
 		configOBSProps.setProperty(property, Integer.toString(value));
 	}
 	//Sources
-	public void setSource(String property, String source) {
+	public static void setSource(String property, String source) {
 		configSourceProps.setProperty(property, source);
 	}
 	//Stat Sources
-	public void setStatsSource(String property, String source) {
+	public static void setStatsSource(String property, String source) {
 		configStatsSourceProps.setProperty(property, source);
 	}
 	//Filters
-	public void setFilter(String property, String filter) {
+	public static void setFilter(String property, String filter) {
 		configFilterProps.setProperty(property, filter);
 	}
 	//PartnerProgram
-	public void setPartnerProgram(String property, String data) {
+	public static void setPartnerProgram(String property, String data) {
 		configPartnerProgramProps.setProperty(property, data);
 	}
-	public void setPartnerProgramPath(String path) {
+	public static void setPartnerProgramPath(String path) {
 		configPartnerProgramProps.setProperty("PartnerProgramPath", path);
 	}
 	//HotKeys
-	public void setHotKey(String property, String hotKey) {
+	public static void setHotKey(String property, String hotKey) {
 		configHotKeyProps.setProperty(property, hotKey);
 	}
-	public void setHotKeyScriptPath(String hotKeyScriptPath) {
+	public static void setHotKeyScriptPath(String hotKeyScriptPath) {
 		if (!hotKeyScriptPath.isEmpty() && hotKeyScriptPath.charAt(hotKeyScriptPath.length()-1)!='\\') {
 			hotKeyScriptPath = hotKeyScriptPath + "\\";
 		}
 		configHotKeyProps.setProperty("HotKeyScriptPath", hotKeyScriptPath);
 	}
 	//AutoScore Settings
-	public void setAutoScore(String property, String value) {
+	public static void setAutoScore(String property, String value) {
 		configAutoScoreSettingsProps.setProperty(property, value);
 	}
-	public void setAutoScore(String property, int value) {
+	public static void setAutoScore(String property, int value) {
 		configAutoScoreSettingsProps.setProperty(property, Integer.toString(value));
 	}
 //Get Defaults
 	//Control Parameters
-	public Boolean getDefaultShowParsed() {return Boolean.parseBoolean(defaultControlProps.getProperty("ShowParsed"));}
-	public int getDefaultPointsToWin() {return Integer.parseInt(defaultControlProps.getProperty("PointsToWin"));}
-	public int getDefaultMaxWin() {return Integer.parseInt(defaultControlProps.getProperty("MaxWin"));}
-	public int getDefaultWinBy() {return Integer.parseInt(defaultControlProps.getProperty("WinBy"));}
-	public int getDefaultGamesToWin() {return Integer.parseInt(defaultControlProps.getProperty("GamesToWin"));}
-	public int getDefaultMaxTimeOuts() {return Integer.parseInt(defaultControlProps.getProperty("MaxTimeOuts"));}
-	public int getDefaultAutoIncrementGame() {return Integer.parseInt(defaultControlProps.getProperty("AutoIncrementGame"));}
-	public int getDefaultAnnounceWinner() {return Integer.parseInt(defaultControlProps.getProperty("AnnounceWinner"));}
-	public int getDefaultAnnounceMeatball() {return Integer.parseInt(defaultControlProps.getProperty("AnnounceMeatball"));}
-	public String getDefaultWinnerPrefix() {return defaultControlProps.getProperty("WinnerPrefix");}
-	public String getDefaultWinnerSuffix() {return defaultControlProps.getProperty("WinnerSuffix");}
-	public String getDefaultMeatball() {return defaultControlProps.getProperty("Meatball");}
-	public String getDefaultTeam1LastScored() {return defaultControlProps.getProperty("Team1LastScored");}
-	public String getDefaultTeam2LastScored() {return defaultControlProps.getProperty("Team2LastScored");}
-	public String getDefaultTeam3LastScored() {return defaultControlProps.getProperty("Team3LastScored");}
-	public String getDefaultClearLastScored() {return defaultControlProps.getProperty("ClearLastScored");}
-	public String getDefaultSide1Color() {return defaultControlProps.getProperty("Side1Color");}
-	public String getDefaultSide2Color() {return defaultControlProps.getProperty("Side2Color");}
-	public String getDefaultSide3Color() {return defaultControlProps.getProperty("Side3Color");}
-	public String getDefaultBallsInRack() {return defaultControlProps.getProperty("BallsInRack");}
-	public String getDefaultNameSeparator() {return defaultControlProps.getProperty("NameSeparator");}
-	public int getDefaultShotTime() {return Integer.parseInt(defaultControlProps.getProperty("ShotTime"));}
-	public int getDefaultPassTime() {return Integer.parseInt(defaultControlProps.getProperty("PassTime"));}
-	public int getDefaultTimeOutTime() {return Integer.parseInt(defaultControlProps.getProperty("TimeOutTime"));}
-	public int getDefaultGameTime() {return Integer.parseInt(defaultControlProps.getProperty("GameTime"));}
-	public int getDefaultRecallTime() {return Integer.parseInt(defaultControlProps.getProperty("RecallTime"));}
-	public int getDefaultShowTimeOutsUsed() {return Integer.parseInt(defaultControlProps.getProperty("ShowTimeOutsUsed"));}
-	public int getDefaultAutoCapNames() {return Integer.parseInt(defaultControlProps.getProperty("AutoCapNames"));}
-	public int getDefaultWinByFinalOnly() {return Integer.parseInt(defaultControlProps.getProperty("WinByFinalOnly"));}
-	public int getDefaultShowSkunk() {return Integer.parseInt(defaultControlProps.getProperty("ShowSkunk"));}
-	public int getDefaultCutThroatMode() {return Integer.parseInt(defaultControlProps.getProperty("CutThroatMode"));}
-	public int getDefaultRackMode() {return Integer.parseInt(defaultControlProps.getProperty("RackMode"));}
+	public static Boolean getDefaultShowParsed() {return Boolean.parseBoolean(defaultControlProps.getProperty("ShowParsed"));}
+	public static int getDefaultPointsToWin() {return Integer.parseInt(defaultControlProps.getProperty("PointsToWin"));}
+	public static int getDefaultMaxWin() {return Integer.parseInt(defaultControlProps.getProperty("MaxWin"));}
+	public static int getDefaultWinBy() {return Integer.parseInt(defaultControlProps.getProperty("WinBy"));}
+	public static int getDefaultGamesToWin() {return Integer.parseInt(defaultControlProps.getProperty("GamesToWin"));}
+	public static int getDefaultMaxTimeOuts() {return Integer.parseInt(defaultControlProps.getProperty("MaxTimeOuts"));}
+	public static int getDefaultAutoIncrementGame() {return Integer.parseInt(defaultControlProps.getProperty("AutoIncrementGame"));}
+	public static int getDefaultAnnounceWinner() {return Integer.parseInt(defaultControlProps.getProperty("AnnounceWinner"));}
+	public static int getDefaultAnnounceMeatball() {return Integer.parseInt(defaultControlProps.getProperty("AnnounceMeatball"));}
+	public static String getDefaultWinnerPrefix() {return defaultControlProps.getProperty("WinnerPrefix");}
+	public static String getDefaultWinnerSuffix() {return defaultControlProps.getProperty("WinnerSuffix");}
+	public static String getDefaultMeatball() {return defaultControlProps.getProperty("Meatball");}
+	public static String getDefaultTeam1LastScored() {return defaultControlProps.getProperty("Team1LastScored");}
+	public static String getDefaultTeam2LastScored() {return defaultControlProps.getProperty("Team2LastScored");}
+	public static String getDefaultTeam3LastScored() {return defaultControlProps.getProperty("Team3LastScored");}
+	public static String getDefaultClearLastScored() {return defaultControlProps.getProperty("ClearLastScored");}
+	public static String getDefaultSide1Color() {return defaultControlProps.getProperty("Side1Color");}
+	public static String getDefaultSide2Color() {return defaultControlProps.getProperty("Side2Color");}
+	public static String getDefaultSide3Color() {return defaultControlProps.getProperty("Side3Color");}
+	public static String getDefaultBallsInRack() {return defaultControlProps.getProperty("BallsInRack");}
+	public static String getDefaultNameSeparator() {return defaultControlProps.getProperty("NameSeparator");}
+	public static int getDefaultShotTime() {return Integer.parseInt(defaultControlProps.getProperty("ShotTime"));}
+	public static int getDefaultPassTime() {return Integer.parseInt(defaultControlProps.getProperty("PassTime"));}
+	public static int getDefaultTimeOutTime() {return Integer.parseInt(defaultControlProps.getProperty("TimeOutTime"));}
+	public static int getDefaultGameTime() {return Integer.parseInt(defaultControlProps.getProperty("GameTime"));}
+	public static int getDefaultRecallTime() {return Integer.parseInt(defaultControlProps.getProperty("RecallTime"));}
+	public static int getDefaultShowTimeOutsUsed() {return Integer.parseInt(defaultControlProps.getProperty("ShowTimeOutsUsed"));}
+	public static int getDefaultAutoCapNames() {return Integer.parseInt(defaultControlProps.getProperty("AutoCapNames"));}
+	public static int getDefaultWinByFinalOnly() {return Integer.parseInt(defaultControlProps.getProperty("WinByFinalOnly"));}
+	public static int getDefaultShowSkunk() {return Integer.parseInt(defaultControlProps.getProperty("ShowSkunk"));}
+	public static int getDefaultCutThroatMode() {return Integer.parseInt(defaultControlProps.getProperty("CutThroatMode"));}
+	public static int getDefaultRackMode() {return Integer.parseInt(defaultControlProps.getProperty("RackMode"));}
 	//OBS
-	public String getDefaultOBSHost() {return defaultOBSProps.getProperty("OBSHost");}
-	public String getDefaultOBSPort() {return defaultOBSProps.getProperty("OBSPort");}
-	public String getDefaultOBSPassword() {return defaultOBSProps.getProperty("OBSPassword");}
-	public String getDefaultOBSScene() {return defaultOBSProps.getProperty("OBSScene");}
-	public int getDefaultOBSAutoLogin() {return Integer.parseInt(defaultOBSProps.getProperty("OBSAutoLogin"));}
-	public int getDefaultOBSSavePassword() {return Integer.parseInt(defaultOBSProps.getProperty("OBSSavePassword"));}
-	public int getDefaultOBSCloseOnConnect() {return Integer.parseInt(defaultOBSProps.getProperty("OBSCloseOnConnect"));}
-	public int getDefaultOBSUpdateOnConnect() {return Integer.parseInt(defaultOBSProps.getProperty("OBSUpdateOnConnect"));}
+	public static String getDefaultOBSHost() {return defaultOBSProps.getProperty("OBSHost");}
+	public static String getDefaultOBSPort() {return defaultOBSProps.getProperty("OBSPort");}
+	public static String getDefaultOBSPassword() {return defaultOBSProps.getProperty("OBSPassword");}
+	public static String getDefaultOBSScene() {return defaultOBSProps.getProperty("OBSScene");}
+	public static int getDefaultOBSAutoLogin() {return Integer.parseInt(defaultOBSProps.getProperty("OBSAutoLogin"));}
+	public static int getDefaultOBSSavePassword() {return Integer.parseInt(defaultOBSProps.getProperty("OBSSavePassword"));}
+	public static int getDefaultOBSCloseOnConnect() {return Integer.parseInt(defaultOBSProps.getProperty("OBSCloseOnConnect"));}
+	public static int getDefaultOBSUpdateOnConnect() {return Integer.parseInt(defaultOBSProps.getProperty("OBSUpdateOnConnect"));}
 	//Sources
-	public String getDefaultTeam1NameSource() {return defaultSourceProps.getProperty("Team1Name");}
-	public String getDefaultTeam1ForwardSource() {return defaultSourceProps.getProperty("Team1Forward");}
-	public String getDefaultTeam1GoalieSource() {return defaultSourceProps.getProperty("Team1Goalie");}
-	public String getDefaultTournamentSource() {return defaultSourceProps.getProperty("Tournament");}
-	public String getDefaultTeam2NameSource() {return defaultSourceProps.getProperty("Team2Name");}
-	public String getDefaultTeam2ForwardSource() {return defaultSourceProps.getProperty("Team2Forward");}
-	public String getDefaultTeam2GoalieSource() {return defaultSourceProps.getProperty("Team2Goalie");}
-	public String getDefaultEventSource() {return defaultSourceProps.getProperty("Event");}
-	public String getDefaultTeam3NameSource() {return defaultSourceProps.getProperty("Team3Name");}
-	public String getDefaultTeam3ForwardSource() {return defaultSourceProps.getProperty("Team3Forward");}
-	public String getDefaultTeam3GoalieSource() {return defaultSourceProps.getProperty("Team3Goalie");}
-	public String getDefaultTableNameSource() {return defaultSourceProps.getProperty("TableName");}
-	public String getDefaultTimeRemainingSource() {return defaultSourceProps.getProperty("TimeRemaining");}
-	public String getDefaultTeam1GameCountSource() {return defaultSourceProps.getProperty("Team1GameCount");}
-	public String getDefaultTeam2GameCountSource() {return defaultSourceProps.getProperty("Team2GameCount");}
-	public String getDefaultTeam3GameCount3Source() {return defaultSourceProps.getProperty("Team3GameCount");}
-	public String getDefaultTeam1MatchCountSource() {return defaultSourceProps.getProperty("Team1MatchCount");}
-	public String getDefaultTeam2MatchCountSource() {return defaultSourceProps.getProperty("Team2MatchCount");}
-	public String getDefaultTeam3MatchCount3Source() {return defaultSourceProps.getProperty("Team3MatchCount");}
-	public String getDefaultTimerInUseSource() {return defaultSourceProps.getProperty("TimerInUse");}
-	public String getDefaultTeam1ScoreSource() {return defaultSourceProps.getProperty("Team1Score");}
-	public String getDefaultMatchWinnerSource() {return defaultSourceProps.getProperty("MatchWinner");}
-	public String getDefaultMeatballSource() {return defaultSourceProps.getProperty("Meatball");}
-	public String getDefaultGameResultsSource() {return defaultSourceProps.getProperty("GameResults");}
-	public String getDefaultTeam2ScoreSource() {return defaultSourceProps.getProperty("Team2Score");}
-	public String getDefaultTeam3ScoreSource() {return defaultSourceProps.getProperty("Team3Score");}
-	public String getDefaultTeam1TimeOutSource() {return defaultSourceProps.getProperty("Team1TimeOut");}
-	public String getDefaultTeam2TimeOutSource() {return defaultSourceProps.getProperty("Team2TimeOut");}
-	public String getDefaultTeam3TimeOutSource() {return defaultSourceProps.getProperty("Team3TimeOut");}
-	public String getDefaultTeam1ResetSource() {return defaultSourceProps.getProperty("Team1Reset");}
-	public String getDefaultTeam2ResetSource() {return defaultSourceProps.getProperty("Team2Reset");}
-	public String getDefaultTeam3ResetSource() {return defaultSourceProps.getProperty("Team3Reset");}
-	public String getDefaultTeam1WarnSource() {return defaultSourceProps.getProperty("Team1Warn");}
-	public String getDefaultTeam2WarnSource() {return defaultSourceProps.getProperty("Team2Warn");}
-	public String getDefaultTeam3WarnSource() {return defaultSourceProps.getProperty("Team3Warn");}
-	public String getDefaultTeam1KingSeatSource() {return defaultSourceProps.getProperty("Team1KingSeat");}
-	public String getDefaultTeam2KingSeatSource() {return defaultSourceProps.getProperty("Team2KingSeat");}
-	public String getDefaultTeam3KingSeatSource() {return defaultSourceProps.getProperty("Team3KingSeat");}
-	public String getDefaultTeamGameShowSource(String teamNumber, String gameNumber) {return defaultSourceProps.getProperty("Team"+teamNumber+"Game"+gameNumber+"Show");}
-	public String getDefaultLastScoredSource() {return defaultSourceProps.getProperty("LastScored");}
-	public String getDefaultGameTimeSource() {return defaultSourceProps.getProperty("GameTime");}
-	public String getDefaultMatchTimeSource() {return defaultSourceProps.getProperty("MatchTime");}
-	public String getDefaultStreamTimeSource() {return defaultSourceProps.getProperty("StreamTime");}
-	public String getDefaultShowScoresSource() {return defaultSourceProps.getProperty("ShowScores");}
-	public String getDefaultShowTimerSource() {return defaultSourceProps.getProperty("ShowTimer");}
-	public String getDefaultShowCutthroatSource() {return defaultSourceProps.getProperty("ShowCutthroat");}
+	public static String getDefaultTeam1NameSource() {return defaultSourceProps.getProperty("Team1Name");}
+	public static String getDefaultTeam1ForwardSource() {return defaultSourceProps.getProperty("Team1Forward");}
+	public static String getDefaultTeam1GoalieSource() {return defaultSourceProps.getProperty("Team1Goalie");}
+	public static String getDefaultTournamentSource() {return defaultSourceProps.getProperty("Tournament");}
+	public static String getDefaultTeam2NameSource() {return defaultSourceProps.getProperty("Team2Name");}
+	public static String getDefaultTeam2ForwardSource() {return defaultSourceProps.getProperty("Team2Forward");}
+	public static String getDefaultTeam2GoalieSource() {return defaultSourceProps.getProperty("Team2Goalie");}
+	public static String getDefaultEventSource() {return defaultSourceProps.getProperty("Event");}
+	public static String getDefaultTeam3NameSource() {return defaultSourceProps.getProperty("Team3Name");}
+	public static String getDefaultTeam3ForwardSource() {return defaultSourceProps.getProperty("Team3Forward");}
+	public static String getDefaultTeam3GoalieSource() {return defaultSourceProps.getProperty("Team3Goalie");}
+	public static String getDefaultTableNameSource() {return defaultSourceProps.getProperty("TableName");}
+	public static String getDefaultTimeRemainingSource() {return defaultSourceProps.getProperty("TimeRemaining");}
+	public static String getDefaultTeam1GameCountSource() {return defaultSourceProps.getProperty("Team1GameCount");}
+	public static String getDefaultTeam2GameCountSource() {return defaultSourceProps.getProperty("Team2GameCount");}
+	public static String getDefaultTeam3GameCount3Source() {return defaultSourceProps.getProperty("Team3GameCount");}
+	public static String getDefaultTeam1MatchCountSource() {return defaultSourceProps.getProperty("Team1MatchCount");}
+	public static String getDefaultTeam2MatchCountSource() {return defaultSourceProps.getProperty("Team2MatchCount");}
+	public static String getDefaultTeam3MatchCount3Source() {return defaultSourceProps.getProperty("Team3MatchCount");}
+	public static String getDefaultTimerInUseSource() {return defaultSourceProps.getProperty("TimerInUse");}
+	public static String getDefaultTeam1ScoreSource() {return defaultSourceProps.getProperty("Team1Score");}
+	public static String getDefaultMatchWinnerSource() {return defaultSourceProps.getProperty("MatchWinner");}
+	public static String getDefaultMeatballSource() {return defaultSourceProps.getProperty("Meatball");}
+	public static String getDefaultGameResultsSource() {return defaultSourceProps.getProperty("GameResults");}
+	public static String getDefaultTeam2ScoreSource() {return defaultSourceProps.getProperty("Team2Score");}
+	public static String getDefaultTeam3ScoreSource() {return defaultSourceProps.getProperty("Team3Score");}
+	public static String getDefaultTeam1TimeOutSource() {return defaultSourceProps.getProperty("Team1TimeOut");}
+	public static String getDefaultTeam2TimeOutSource() {return defaultSourceProps.getProperty("Team2TimeOut");}
+	public static String getDefaultTeam3TimeOutSource() {return defaultSourceProps.getProperty("Team3TimeOut");}
+	public static String getDefaultTeam1ResetSource() {return defaultSourceProps.getProperty("Team1Reset");}
+	public static String getDefaultTeam2ResetSource() {return defaultSourceProps.getProperty("Team2Reset");}
+	public static String getDefaultTeam3ResetSource() {return defaultSourceProps.getProperty("Team3Reset");}
+	public static String getDefaultTeam1WarnSource() {return defaultSourceProps.getProperty("Team1Warn");}
+	public static String getDefaultTeam2WarnSource() {return defaultSourceProps.getProperty("Team2Warn");}
+	public static String getDefaultTeam3WarnSource() {return defaultSourceProps.getProperty("Team3Warn");}
+	public static String getDefaultTeam1KingSeatSource() {return defaultSourceProps.getProperty("Team1KingSeat");}
+	public static String getDefaultTeam2KingSeatSource() {return defaultSourceProps.getProperty("Team2KingSeat");}
+	public static String getDefaultTeam3KingSeatSource() {return defaultSourceProps.getProperty("Team3KingSeat");}
+	public static String getDefaultTeamGameShowSource(String teamNumber, String gameNumber) {return defaultSourceProps.getProperty("Team"+teamNumber+"Game"+gameNumber+"Show");}
+	public static String getDefaultLastScoredSource() {return defaultSourceProps.getProperty("LastScored");}
+	public static String getDefaultGameTimeSource() {return defaultSourceProps.getProperty("GameTime");}
+	public static String getDefaultMatchTimeSource() {return defaultSourceProps.getProperty("MatchTime");}
+	public static String getDefaultStreamTimeSource() {return defaultSourceProps.getProperty("StreamTime");}
+	public static String getDefaultShowScoresSource() {return defaultSourceProps.getProperty("ShowScores");}
+	public static String getDefaultShowTimerSource() {return defaultSourceProps.getProperty("ShowTimer");}
+	public static String getDefaultShowCutthroatSource() {return defaultSourceProps.getProperty("ShowCutthroat");}
 	//Stat Sources
-	public String getDefaultTeamStuffsSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "Stuffs");}
-	public String getDefaultTeamBreaksSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "Breaks");}
-	public String getDefaultTeamAcesSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "Aces");}
-	public String getDefaultTeamPassAttemptsSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "PassAttempts");}
-	public String getDefaultTeamPassCompletesSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "PassCompletes");}
-	public String getDefaultTeamShotAttemptsSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "ShotAttempts");}
-	public String getDefaultTeamShotCompletesSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "ShotCompletes");}
-	public String getDefaultTeamClearAttemptsSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "ClearAttempts");}
-	public String getDefaultTeamClearCompletesSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "ClearCompletes");}
-	public String getDefaultSideColorSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Side" + teamNumber + "Color");}
-	public String getDefaultTeamPassPercentSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "PassPercent");}
-	public String getDefaultTeamShotPercentSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "ShotPercent");}
-	public String getDefaultTeamClearPercentSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "ClearPercent");}
-	public String getDefaultTeamTwoBarPassAttemptsSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "TwoBarPassAttempts");}
-	public String getDefaultTeamTwoBarPassCompletesSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "TwoBarPassCompletes");}
-	public String getDefaultTeamTwoBarPassPercentSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "TwoBarPassPercent");}
-	public String getDefaultTeamScoringSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "Scoring");}
-	public String getDefaultTeamThreeBarScoringSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "ThreeBarScoring");}
-	public String getDefaultTeamFiveBarScoringSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "FiveBarScoring");}
-	public String getDefaultTeamTwoBarScoringSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "TwoBarScoring");}	
-	public String getDefaultTeamShotsOnGoalSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "ShotsOnGoal");}
+	public static String getDefaultTeamStuffsSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "Stuffs");}
+	public static String getDefaultTeamBreaksSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "Breaks");}
+	public static String getDefaultTeamAcesSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "Aces");}
+	public static String getDefaultTeamPassAttemptsSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "PassAttempts");}
+	public static String getDefaultTeamPassCompletesSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "PassCompletes");}
+	public static String getDefaultTeamShotAttemptsSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "ShotAttempts");}
+	public static String getDefaultTeamShotCompletesSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "ShotCompletes");}
+	public static String getDefaultTeamClearAttemptsSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "ClearAttempts");}
+	public static String getDefaultTeamClearCompletesSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "ClearCompletes");}
+	public static String getDefaultSideColorSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Side" + teamNumber + "Color");}
+	public static String getDefaultTeamPassPercentSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "PassPercent");}
+	public static String getDefaultTeamShotPercentSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "ShotPercent");}
+	public static String getDefaultTeamClearPercentSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "ClearPercent");}
+	public static String getDefaultTeamTwoBarPassAttemptsSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "TwoBarPassAttempts");}
+	public static String getDefaultTeamTwoBarPassCompletesSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "TwoBarPassCompletes");}
+	public static String getDefaultTeamTwoBarPassPercentSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "TwoBarPassPercent");}
+	public static String getDefaultTeamScoringSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "Scoring");}
+	public static String getDefaultTeamThreeBarScoringSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "ThreeBarScoring");}
+	public static String getDefaultTeamFiveBarScoringSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "FiveBarScoring");}
+	public static String getDefaultTeamTwoBarScoringSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "TwoBarScoring");}	
+	public static String getDefaultTeamShotsOnGoalSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "ShotsOnGoal");}
 	//Filters
-	public String getDefaultTeam1ScoreFilter() {return defaultFilterProps.getProperty("Team1Score");}
-	public String getDefaultTeam2ScoreFilter() {return defaultFilterProps.getProperty("Team2Score");}
-	public String getDefaultTeam1WinGameFilter() {return defaultFilterProps.getProperty("Team1WinGame");}
-	public String getDefaultTeam2WinGameFilter() {return defaultFilterProps.getProperty("Team2WinGame");}
-	public String getDefaultTeam1WinMatchFilter() {return defaultFilterProps.getProperty("Team1WinMatch");}
-	public String getDefaultTeam2WinMatchFilter() {return defaultFilterProps.getProperty("Team2WinMatch");}
-	public String getDefaultTeam1TimeOutFilter() {return defaultFilterProps.getProperty("Team1TimeOut");}
-	public String getDefaultTeam2TimeOutFilter() {return defaultFilterProps.getProperty("Team2TimeOut");}
-	public String getDefaultTeam1ResetFilter() {return defaultFilterProps.getProperty("Team1Reset");}
-	public String getDefaultTeam2ResetFilter() {return defaultFilterProps.getProperty("Team2Reset");}
-	public String getDefaultTeam1WarnFilter() {return defaultFilterProps.getProperty("Team1Warn");}
-	public String getDefaultTeam2WarnFilter() {return defaultFilterProps.getProperty("Team2Warn");}
-	public String getDefaultTeam1SwitchPositionsFilter() {return defaultFilterProps.getProperty("Team1SwitchPositions");}
-	public String getDefaultTeam2SwitchPositionsFilter() {return defaultFilterProps.getProperty("Team2SwitchPositions");}
-	public String getDefaultTeam1SkunkFilter() {return defaultFilterProps.getProperty("Team1Skunk");}
-	public String getDefaultTeam2SkunkFilter() {return defaultFilterProps.getProperty("Team2Skunk");}
-	public String getDefaultStartMatchFilter() {return defaultFilterProps.getProperty("StartMatch");}
-	public String getDefaultStartGameFilter() {return defaultFilterProps.getProperty("StartGame");}
-	public String getDefaultSwitchSidesFilter() {return defaultFilterProps.getProperty("SwitchSides");}
+	public static String getDefaultTeam1ScoreFilter() {return defaultFilterProps.getProperty("Team1Score");}
+	public static String getDefaultTeam2ScoreFilter() {return defaultFilterProps.getProperty("Team2Score");}
+	public static String getDefaultTeam1WinGameFilter() {return defaultFilterProps.getProperty("Team1WinGame");}
+	public static String getDefaultTeam2WinGameFilter() {return defaultFilterProps.getProperty("Team2WinGame");}
+	public static String getDefaultTeam1WinMatchFilter() {return defaultFilterProps.getProperty("Team1WinMatch");}
+	public static String getDefaultTeam2WinMatchFilter() {return defaultFilterProps.getProperty("Team2WinMatch");}
+	public static String getDefaultTeam1TimeOutFilter() {return defaultFilterProps.getProperty("Team1TimeOut");}
+	public static String getDefaultTeam2TimeOutFilter() {return defaultFilterProps.getProperty("Team2TimeOut");}
+	public static String getDefaultTeam1ResetFilter() {return defaultFilterProps.getProperty("Team1Reset");}
+	public static String getDefaultTeam2ResetFilter() {return defaultFilterProps.getProperty("Team2Reset");}
+	public static String getDefaultTeam1WarnFilter() {return defaultFilterProps.getProperty("Team1Warn");}
+	public static String getDefaultTeam2WarnFilter() {return defaultFilterProps.getProperty("Team2Warn");}
+	public static String getDefaultTeam1SwitchPositionsFilter() {return defaultFilterProps.getProperty("Team1SwitchPositions");}
+	public static String getDefaultTeam2SwitchPositionsFilter() {return defaultFilterProps.getProperty("Team2SwitchPositions");}
+	public static String getDefaultTeam1SkunkFilter() {return defaultFilterProps.getProperty("Team1Skunk");}
+	public static String getDefaultTeam2SkunkFilter() {return defaultFilterProps.getProperty("Team2Skunk");}
+	public static String getDefaultStartMatchFilter() {return defaultFilterProps.getProperty("StartMatch");}
+	public static String getDefaultStartGameFilter() {return defaultFilterProps.getProperty("StartGame");}
+	public static String getDefaultSwitchSidesFilter() {return defaultFilterProps.getProperty("SwitchSides");}
 	//PartnerProgram
-	public String getDefaultPartnerProgramPath() {return defaultPartnerProgramProps.getProperty("PartnerProgramPath");}
-	public String getDefaultPlayer1FileName() {return defaultPartnerProgramProps.getProperty("Player1FileName");}
-	public String getDefaultPlayer2FileName() {return defaultPartnerProgramProps.getProperty("Player2FileName");}
-	public String getDefaultPlayer3FileName() {return defaultPartnerProgramProps.getProperty("Player3FileName");}
-	public String getDefaultPlayer4FileName() {return defaultPartnerProgramProps.getProperty("Player4FileName");}
+	public static String getDefaultPartnerProgramPath() {return defaultPartnerProgramProps.getProperty("PartnerProgramPath");}
+	public static String getDefaultPlayer1FileName() {return defaultPartnerProgramProps.getProperty("Player1FileName");}
+	public static String getDefaultPlayer2FileName() {return defaultPartnerProgramProps.getProperty("Player2FileName");}
+	public static String getDefaultPlayer3FileName() {return defaultPartnerProgramProps.getProperty("Player3FileName");}
+	public static String getDefaultPlayer4FileName() {return defaultPartnerProgramProps.getProperty("Player4FileName");}
 	//HotKeys
-	public String getDefaultStartMatchHotKey() {return defaultHotKeyProps.getProperty("StartMatchHotKey");}
-	public String getDefaultPauseMatchHotKey() {return defaultHotKeyProps.getProperty("PauseMatchHotKey");}
-	public String getDefaultEndMatchHotKey() {return defaultHotKeyProps.getProperty("EndMatchHotKey");}
-	public String getDefaultStartGameHotKey() {return defaultHotKeyProps.getProperty("StartGameHotKey");}
-	public String getDefaultSwitchTeamsHotKey() {return defaultHotKeyProps.getProperty("SwitchTeamsHotKey");}
-	public String getDefaultSwitchGameCountsHotKey() {return defaultHotKeyProps.getProperty("SwitchGameCountsHotKey");}
-	public String getDefaultSwitchMatchCountsHotKey() {return defaultHotKeyProps.getProperty("SwitchMatchCountsHotKey");}
-	public String getDefaultTeamSwitchPositionsHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("Team" + teamNumber + "SwitchPositionsHotKey");}
-	public String getDefaultSwitchForwardsHotKey() {return defaultHotKeyProps.getProperty("SwitchForwardsHotKey");}
-	public String getDefaultSwitchGoaliesHotKey() {return defaultHotKeyProps.getProperty("SwitchGoaliesHotKey");}
-	public String getDefaultGameCountMinusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("GameCount" + teamNumber + "MinusHotKey");}
-	public String getDefaultGameCountPlusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("GameCount" + teamNumber + "PlusHotKey");}
-	public String getDefaultMatchCountMinusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("MatchCount" + teamNumber + "MinusHotKey");}
-	public String getDefaultMatchCountPlusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("MatchCount" + teamNumber + "PlusHotKey");}
-	public String getDefaultTimeOutMinusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("TimeOut" + teamNumber + "MinusHotKey");}
-	public String getDefaultTimeOutPlusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("TimeOut" + teamNumber + "PlusHotKey");}
-	public String getDefaultResetHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("Reset" + teamNumber + "HotKey");}
-	public String getDefaultWarnHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("Warn" + teamNumber + "HotKey");}
-	public String getDefaultKingSeatHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("KingSeat" + teamNumber + "HotKey");}
-	public String getDefaultScoreMinusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("Score" + teamNumber + "MinusHotKey");}
-	public String getDefaultScorePlusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("Score" + teamNumber + "PlusHotKey");}
-	public String getDefaultSwitchScoresHotKey() {return defaultHotKeyProps.getProperty("SwitchScoresHotKey");}
-	public String getDefaultSwitchTimeOutsHotKey() {return defaultHotKeyProps.getProperty("SwitchTimeOutsHotKey");}
-	public String getDefaultSwitchResetWarnsHotKey() {return defaultHotKeyProps.getProperty("SwitchResetWarnsHotKey");}
-	public String getDefaultSwitchPositionsHotKey() {return defaultHotKeyProps.getProperty("SwitchSidesHotKey");}
-	public String getDefaultResetNamesHotKey() {return defaultHotKeyProps.getProperty("resetNamesHotKey");}
-	public String getDefaultResetGameCountsHotKey() {return defaultHotKeyProps.getProperty("ResetGameCountsHotKey");}
-	public String getDefaultResetMatchCountsHotKey() {return defaultHotKeyProps.getProperty("ResetMatchCountsHotKey");}
-	public String getDefaultResetScoresHotKey() {return defaultHotKeyProps.getProperty("ResetScoresHotKey");}
-	public String getDefaultResetTimeOutsHotKey() {return defaultHotKeyProps.getProperty("ResetTimeOutsHotKey");}
-	public String getDefaultResetResetWarnHotKey() {return defaultHotKeyProps.getProperty("ResetResetWarnHotKey");}
-	public String getDefaultResetAllHotKey() {return defaultHotKeyProps.getProperty("ResetAllHotKey");}
-	public String getDefaultClearAllHotKey() {return defaultHotKeyProps.getProperty("ClearAllHotKey");}
-	public String getDefaultShotTimerHotKey() {return defaultHotKeyProps.getProperty("ShotTimerHotKey");}
-	public String getDefaultPassTimerHotKey() {return defaultHotKeyProps.getProperty("PassTimerHotKey");}
-	public String getDefaultTimeOutTimerHotKey() {return defaultHotKeyProps.getProperty("TimeOutTimerHotKey");}
-	public String getDefaultGameTimerHotKey() {return defaultHotKeyProps.getProperty("GameTimerHotKey");}
-	public String getDefaultRecallTimerHotKey() {return defaultHotKeyProps.getProperty("RecallTimerHotKey");}
-	public String getDefaultResetTimersHotKey() {return defaultHotKeyProps.getProperty("ResetTimersHotKey");}
-	public String getDefaultUndoHotKey() {return defaultHotKeyProps.getProperty("UndoHotKey");}
-	public String getDefaultRedoHotKey() {return defaultHotKeyProps.getProperty("RedoHotKey");}
-	public String getConnectDefaultHotKey() {return defaultHotKeyProps.getProperty("ConnectHotKey");}
-	public String getDisconnectDefaultHotKey() {return defaultHotKeyProps.getProperty("DisconnectHotKey");}
-	public String getPushDefaultHotKey() {return defaultHotKeyProps.getProperty("PushHotKey");}
-	public String getPullDefaultHotKey() {return defaultHotKeyProps.getProperty("PullHotKey");}
-	public String getDefaultShowScoresHotKey() {return defaultHotKeyProps.getProperty("ShowScoresHotKey");}
-	public String getDefaultShowTimerHotKey() {return defaultHotKeyProps.getProperty("ShowTimerHotKey");}
-	public String getDefaultShowCutthroatHotKey() {return defaultHotKeyProps.getProperty("ShowCutthroatHotKey");}
-	public String getDefaultShowSkunkHotKey() {return defaultHotKeyProps.getProperty("ShowSkunkHotKey");}
-	public String getDefaultStartStreamHotKey() {return defaultHotKeyProps.getProperty("StartStreamHotKey");}
-	public String getDefaultHotKeyBaseScript() {return defaultHotKeyProps.getProperty("HotKeyBaseScript");}
-	public String getDefaultHotKeyScriptPath() {return defaultHotKeyProps.getProperty("HotKeyScriptPath");}
+	public static String getDefaultStartMatchHotKey() {return defaultHotKeyProps.getProperty("StartMatchHotKey");}
+	public static String getDefaultPauseMatchHotKey() {return defaultHotKeyProps.getProperty("PauseMatchHotKey");}
+	public static String getDefaultEndMatchHotKey() {return defaultHotKeyProps.getProperty("EndMatchHotKey");}
+	public static String getDefaultStartGameHotKey() {return defaultHotKeyProps.getProperty("StartGameHotKey");}
+	public static String getDefaultSwitchTeamsHotKey() {return defaultHotKeyProps.getProperty("SwitchTeamsHotKey");}
+	public static String getDefaultSwitchGameCountsHotKey() {return defaultHotKeyProps.getProperty("SwitchGameCountsHotKey");}
+	public static String getDefaultSwitchMatchCountsHotKey() {return defaultHotKeyProps.getProperty("SwitchMatchCountsHotKey");}
+	public static String getDefaultTeamSwitchPositionsHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("Team" + teamNumber + "SwitchPositionsHotKey");}
+	public static String getDefaultSwitchForwardsHotKey() {return defaultHotKeyProps.getProperty("SwitchForwardsHotKey");}
+	public static String getDefaultSwitchGoaliesHotKey() {return defaultHotKeyProps.getProperty("SwitchGoaliesHotKey");}
+	public static String getDefaultGameCountMinusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("GameCount" + teamNumber + "MinusHotKey");}
+	public static String getDefaultGameCountPlusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("GameCount" + teamNumber + "PlusHotKey");}
+	public static String getDefaultMatchCountMinusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("MatchCount" + teamNumber + "MinusHotKey");}
+	public static String getDefaultMatchCountPlusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("MatchCount" + teamNumber + "PlusHotKey");}
+	public static String getDefaultTimeOutMinusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("TimeOut" + teamNumber + "MinusHotKey");}
+	public static String getDefaultTimeOutPlusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("TimeOut" + teamNumber + "PlusHotKey");}
+	public static String getDefaultResetHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("Reset" + teamNumber + "HotKey");}
+	public static String getDefaultWarnHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("Warn" + teamNumber + "HotKey");}
+	public static String getDefaultKingSeatHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("KingSeat" + teamNumber + "HotKey");}
+	public static String getDefaultScoreMinusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("Score" + teamNumber + "MinusHotKey");}
+	public static String getDefaultScorePlusHotKey(String teamNumber) {return defaultHotKeyProps.getProperty("Score" + teamNumber + "PlusHotKey");}
+	public static String getDefaultSwitchScoresHotKey() {return defaultHotKeyProps.getProperty("SwitchScoresHotKey");}
+	public static String getDefaultSwitchTimeOutsHotKey() {return defaultHotKeyProps.getProperty("SwitchTimeOutsHotKey");}
+	public static String getDefaultSwitchResetWarnsHotKey() {return defaultHotKeyProps.getProperty("SwitchResetWarnsHotKey");}
+	public static String getDefaultSwitchPositionsHotKey() {return defaultHotKeyProps.getProperty("SwitchSidesHotKey");}
+	public static String getDefaultResetNamesHotKey() {return defaultHotKeyProps.getProperty("resetNamesHotKey");}
+	public static String getDefaultResetGameCountsHotKey() {return defaultHotKeyProps.getProperty("ResetGameCountsHotKey");}
+	public static String getDefaultResetMatchCountsHotKey() {return defaultHotKeyProps.getProperty("ResetMatchCountsHotKey");}
+	public static String getDefaultResetScoresHotKey() {return defaultHotKeyProps.getProperty("ResetScoresHotKey");}
+	public static String getDefaultResetTimeOutsHotKey() {return defaultHotKeyProps.getProperty("ResetTimeOutsHotKey");}
+	public static String getDefaultResetResetWarnHotKey() {return defaultHotKeyProps.getProperty("ResetResetWarnHotKey");}
+	public static String getDefaultResetAllHotKey() {return defaultHotKeyProps.getProperty("ResetAllHotKey");}
+	public static String getDefaultClearAllHotKey() {return defaultHotKeyProps.getProperty("ClearAllHotKey");}
+	public static String getDefaultShotTimerHotKey() {return defaultHotKeyProps.getProperty("ShotTimerHotKey");}
+	public static String getDefaultPassTimerHotKey() {return defaultHotKeyProps.getProperty("PassTimerHotKey");}
+	public static String getDefaultTimeOutTimerHotKey() {return defaultHotKeyProps.getProperty("TimeOutTimerHotKey");}
+	public static String getDefaultGameTimerHotKey() {return defaultHotKeyProps.getProperty("GameTimerHotKey");}
+	public static String getDefaultRecallTimerHotKey() {return defaultHotKeyProps.getProperty("RecallTimerHotKey");}
+	public static String getDefaultResetTimersHotKey() {return defaultHotKeyProps.getProperty("ResetTimersHotKey");}
+	public static String getDefaultUndoHotKey() {return defaultHotKeyProps.getProperty("UndoHotKey");}
+	public static String getDefaultRedoHotKey() {return defaultHotKeyProps.getProperty("RedoHotKey");}
+	public static String getConnectDefaultHotKey() {return defaultHotKeyProps.getProperty("ConnectHotKey");}
+	public static String getDisconnectDefaultHotKey() {return defaultHotKeyProps.getProperty("DisconnectHotKey");}
+	public static String getPushDefaultHotKey() {return defaultHotKeyProps.getProperty("PushHotKey");}
+	public static String getPullDefaultHotKey() {return defaultHotKeyProps.getProperty("PullHotKey");}
+	public static String getDefaultShowScoresHotKey() {return defaultHotKeyProps.getProperty("ShowScoresHotKey");}
+	public static String getDefaultShowTimerHotKey() {return defaultHotKeyProps.getProperty("ShowTimerHotKey");}
+	public static String getDefaultShowCutthroatHotKey() {return defaultHotKeyProps.getProperty("ShowCutthroatHotKey");}
+	public static String getDefaultShowSkunkHotKey() {return defaultHotKeyProps.getProperty("ShowSkunkHotKey");}
+	public static String getDefaultStartStreamHotKey() {return defaultHotKeyProps.getProperty("StartStreamHotKey");}
+	public static String getDefaultHotKeyBaseScript() {return defaultHotKeyProps.getProperty("HotKeyBaseScript");}
+	public static String getDefaultHotKeyScriptPath() {return defaultHotKeyProps.getProperty("HotKeyScriptPath");}
 	//AutoScore Settings
-	public String getDefaultAutoScoreSettingsServerAddress() {return defaultAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerAddress");}
-	public int getDefaultAutoScoreSettingsServerPort() {return Integer.parseInt(defaultAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerPort"));}
-	public int getDefaultAutoScoreSettingsAutoConnect() {return Integer.parseInt(defaultAutoScoreSettingsProps.getProperty("AutoScoreSettingsAutoConnect"));}
-	public int getDefaultAutoScoreSettingsDetailLog() {return Integer.parseInt(defaultAutoScoreSettingsProps.getProperty("AutoScoreSettingsDetailLog"));}
+	public static String getDefaultAutoScoreSettingsServerAddress() {return defaultAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerAddress");}
+	public static int getDefaultAutoScoreSettingsServerPort() {return Integer.parseInt(defaultAutoScoreSettingsProps.getProperty("AutoScoreSettingsServerPort"));}
+	public static int getDefaultAutoScoreSettingsAutoConnect() {return Integer.parseInt(defaultAutoScoreSettingsProps.getProperty("AutoScoreSettingsAutoConnect"));}
+	public static int getDefaultAutoScoreSettingsDetailLog() {return Integer.parseInt(defaultAutoScoreSettingsProps.getProperty("AutoScoreSettingsDetailLog"));}
 
-	public void loadFromControlConfig() throws IOException {
+	public static void loadFromControlConfig() throws IOException {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configControlFileName))) {
 			configControlProps.load(inputStream);
 		} catch (NoSuchFileException e) {
@@ -1005,7 +1005,7 @@ public class Settings {
 			saveControlConfig();
 		}
 	}
-	public void loadFromOBSConfig() throws IOException {
+	public static void loadFromOBSConfig() throws IOException {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configOBSFileName))) {
 			configOBSProps.load(inputStream);
 		} catch (NoSuchFileException e) {
@@ -1015,7 +1015,7 @@ public class Settings {
 			saveOBSConfig();
 		}
 	}
-	public void loadFromSourceConfig() throws IOException {
+	public static void loadFromSourceConfig() throws IOException {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configSourceFileName))) {
 			configSourceProps.load(inputStream);
 		} catch (NoSuchFileException e) {
@@ -1025,7 +1025,7 @@ public class Settings {
 			saveSourceConfig();
 		}
 	}
-	public void loadFromStatsSourceConfig() throws IOException {
+	public static void loadFromStatsSourceConfig() throws IOException {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configStatsSourceFileName))) {
 			configStatsSourceProps.load(inputStream);
 		} catch (NoSuchFileException e) {
@@ -1035,7 +1035,7 @@ public class Settings {
 			saveStatsSourceConfig();
 		}
 	}
-	public void loadFromFilterConfig() throws IOException {
+	public static void loadFromFilterConfig() throws IOException {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configFilterFileName))) {
 			configFilterProps.load(inputStream);
 		} catch (NoSuchFileException e) {
@@ -1045,7 +1045,7 @@ public class Settings {
 			saveFilterConfig();
 		}
 	}
-	public void loadFromPartnerProgramConfig() throws IOException {
+	public static void loadFromPartnerProgramConfig() throws IOException {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configPartnerProgramFileName))) {
 			configPartnerProgramProps.load(inputStream);
 		} catch (NoSuchFileException e) {
@@ -1055,7 +1055,7 @@ public class Settings {
 			savePartnerProgramConfig();
 		}
 	}
-	public void loadFromHotKeyConfig() throws IOException {
+	public static void loadFromHotKeyConfig() throws IOException {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configHotKeyFileName))) {
 			configHotKeyProps.load(inputStream);
 		} catch (NoSuchFileException e) {
@@ -1065,7 +1065,7 @@ public class Settings {
 			saveHotKeyConfig();
 		}
 	}
-	public void loadFromAutoScoreSettingsConfig() throws IOException {
+	public static void loadFromAutoScoreSettingsConfig() throws IOException {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(configAutoScoreSettingsFileName))) {
 			configAutoScoreSettingsProps.load(inputStream);
 		} catch (NoSuchFileException e) {
@@ -1075,7 +1075,7 @@ public class Settings {
 			saveAutoScoreSettingsConfig();
 		}
 	}
-	public void saveControlConfig() throws IOException {
+	public static void saveControlConfig() throws IOException {
 		//Control Parameters
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configControlFileName))) {
 			configControlProps.store(outputStream, "FoosOBSPlus Control settings");
@@ -1083,7 +1083,7 @@ public class Settings {
 			logger.error("Could not write to " + Paths.get(configControlFileName));
 		}
 	}
-	public void saveOBSConfig() throws IOException {
+	public static void saveOBSConfig() throws IOException {
 		//OBS
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configOBSFileName))) {
 			configOBSProps.store(outputStream, "FoosOBSPlus OBS Settings");
@@ -1091,7 +1091,7 @@ public class Settings {
 			logger.error("Could not write to " + Paths.get(configOBSFileName));
 		}
 	}
-	public void saveSourceConfig() throws IOException {
+	public static void saveSourceConfig() throws IOException {
 		//Source
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configSourceFileName))) {
 			configSourceProps.store(outputStream, "FoosOBSPlus Source Settings");
@@ -1099,7 +1099,7 @@ public class Settings {
 			logger.error("Could not write to " + Paths.get(configSourceFileName));
 		}
 	}
-	public void saveStatsSourceConfig() throws IOException {
+	public static void saveStatsSourceConfig() throws IOException {
 		//Stats Source
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configStatsSourceFileName))) {
 			configStatsSourceProps.store(outputStream, "FoosOBSPlus Stats Source Settings");
@@ -1107,7 +1107,7 @@ public class Settings {
 			logger.error("Could not write to " + Paths.get(configStatsSourceFileName));
 		}
 	}
-	public void saveFilterConfig() throws IOException {
+	public static void saveFilterConfig() throws IOException {
 		//Filter
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configFilterFileName))) {
 			configFilterProps.store(outputStream, "FoosOBSPlus Filter Settings");
@@ -1115,7 +1115,7 @@ public class Settings {
 			logger.error("Could not write to " + Paths.get(configFilterFileName));
 		}
 	}
-	public void savePartnerProgramConfig() throws IOException {
+	public static void savePartnerProgramConfig() throws IOException {
 		//PartnerProgram
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configPartnerProgramFileName))) {
 			configPartnerProgramProps.store(outputStream, "FoosOBSPlus Partner Program Settings");
@@ -1123,7 +1123,7 @@ public class Settings {
 			logger.error("Could not write to " + Paths.get(configPartnerProgramFileName));
 		}
 	}
-	public void saveHotKeyConfig() throws IOException {
+	public static void saveHotKeyConfig() throws IOException {
 		//HotKeys
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configHotKeyFileName))) {
 			configHotKeyProps.store(outputStream, "FoosOBSPlus Hot Key Settings");
@@ -1131,7 +1131,7 @@ public class Settings {
 			logger.error("Could not write to " + Paths.get(configHotKeyFileName));
 		}
 	}
-	public void saveAutoScoreSettingsConfig() throws IOException {
+	public static void saveAutoScoreSettingsConfig() throws IOException {
 		//AutoScore Settings
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configAutoScoreSettingsFileName))) {
 			configAutoScoreSettingsProps.store(outputStream, "FoosOBSPlus AutoScore Settings");
@@ -1139,7 +1139,7 @@ public class Settings {
 			logger.error("Could not write to " + Paths.get(configAutoScoreSettingsFileName));
 		}
 	}
-	public void generateHotKeyScripts() {
+	public static void generateHotKeyScripts() {
 		String basePath = System.getProperty("user.dir");
 		String baseScriptText = getHotKeyBaseScript();
 		String hotKeyScriptPath = getHotKeyScriptPath();
@@ -1176,7 +1176,7 @@ public class Settings {
 			JOptionPane.showMessageDialog(null, Messages.getString("Errors.DirectoryDoesNotExist") + " " + basePath);
 		}
 	}
-	private void createHotKeyScript(String keyFunction, String hotKey, String[] baseScript, String basePath) {
+	private static void createHotKeyScript(String keyFunction, String hotKey, String[] baseScript, String basePath) {
 		keyFunction = keyFunction.substring(0, keyFunction.length()-6);
 		try {
 			File scriptFile = new File(getHotKeyScriptPath() + File.separator + keyFunction + ".ahk");
@@ -1192,7 +1192,7 @@ public class Settings {
 			JOptionPane.showMessageDialog(null, Messages.getString("Errors.ScriptWriteFailure") + " " + keyFunction, "Scripting Error", 1);
 		}
 	}
-	public int getMaxGameNumber() {
+	public static int getMaxGameNumber() {
 		// 	for cutthroat -> settings.getGamesToWin()*3-2;
 		//  for regular   -> settings.getGamesToWin()*2-1;
 		return getGamesToWin()*(2+getCutThroatMode())-(1+getCutThroatMode());

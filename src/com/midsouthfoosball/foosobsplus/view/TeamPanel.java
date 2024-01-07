@@ -75,91 +75,78 @@ public class TeamPanel extends JPanel {
 	private JToggleButton btnReset;
 	private JToggleButton btnWarn;
 	private JCheckBox ckbxKingSeat;
-	private Settings settings;
 	private int teamNbr;
 	private Border innerBorder;
 	private static CustomFocusTraversalPolicy customTraversalPolicy;
-	
-	public TeamPanel(int teamNbr, String teamColor, Settings settings) {
-		
+	public TeamPanel(int teamNbr, String teamColor) {
 		this.teamNbr = teamNbr;
-		this.settings = settings;
-
 		initializeTeamPanel(teamNbr, teamColor);
-		
 		layoutComponents();
 	}
-
 	private void initializeTeamPanel(int teamNbr, String teamColor) {
 		this.teamNbr = teamNbr;
-		
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
 		dim.height = 300;
 		setPreferredSize(dim);
 		setName(buildTitle());
-		
-		lblTeamName = new JLabel(Messages.getString("TeamPanel.TeamName",settings.getGameType())); //$NON-NLS-1$
+		lblTeamName = new JLabel(Messages.getString("TeamPanel.TeamName",Settings.getGameType())); //$NON-NLS-1$
 		txtTeamName = new JTextField(50);
 		txtTeamName.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
-		lblForwardName = new JLabel(Messages.getString("TeamPanel.ForwardName",settings.getGameType())); //$NON-NLS-1$
+		lblForwardName = new JLabel(Messages.getString("TeamPanel.ForwardName",Settings.getGameType())); //$NON-NLS-1$
 		txtForwardName = new JTextField(50);
 		txtForwardName.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
-		lblGoalieName = new JLabel(Messages.getString("TeamPanel.GoalieName",settings.getGameType())); //$NON-NLS-1$
+		lblGoalieName = new JLabel(Messages.getString("TeamPanel.GoalieName",Settings.getGameType())); //$NON-NLS-1$
 		txtGoalieName = new JTextField(50);
 		txtGoalieName.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
-		btnSwitchPositions = new JButton(Messages.getString("TeamPanel.SwitchPositions",settings.getGameType())); //$NON-NLS-1$
+		btnSwitchPositions = new JButton(Messages.getString("TeamPanel.SwitchPositions",Settings.getGameType())); //$NON-NLS-1$
 		btnSwitchPositions.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
-		lblScore = new JLabel(Messages.getString("TeamPanel.Score",settings.getGameType())); //$NON-NLS-1$
-		btnScoreDecrease = new JButton(Messages.getString("TeamPanel.Decrement",settings.getGameType())); //$NON-NLS-1$
+		lblScore = new JLabel(Messages.getString("TeamPanel.Score",Settings.getGameType())); //$NON-NLS-1$
+		btnScoreDecrease = new JButton(Messages.getString("TeamPanel.Decrement",Settings.getGameType())); //$NON-NLS-1$
 		btnScoreDecrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
 		txtScore = new JTextField(3);
 		txtScore.setHorizontalAlignment(JTextField.CENTER);
 		txtScore.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
-		btnScoreIncrease = new JButton(Messages.getString("TeamPanel.Increment",settings.getGameType())); //$NON-NLS-1$
+		btnScoreIncrease = new JButton(Messages.getString("TeamPanel.Increment",Settings.getGameType())); //$NON-NLS-1$
 		btnScoreIncrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
-
-		lblGameCount = new JLabel(Messages.getString("TeamPanel.GameCount",settings.getGameType())); //$NON-NLS-1$
-		btnGameCountDecrease = new JButton(Messages.getString("TeamPanel.Decrement",settings.getGameType())); //$NON-NLS-1$
+		lblGameCount = new JLabel(Messages.getString("TeamPanel.GameCount",Settings.getGameType())); //$NON-NLS-1$
+		btnGameCountDecrease = new JButton(Messages.getString("TeamPanel.Decrement",Settings.getGameType())); //$NON-NLS-1$
 		btnGameCountDecrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
 		txtGameCount = new JTextField(3);
 		txtGameCount.setHorizontalAlignment(JTextField.CENTER);
 		txtGameCount.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
-		btnGameCountIncrease = new JButton(Messages.getString("TeamPanel.Increment",settings.getGameType())); //$NON-NLS-1$
+		btnGameCountIncrease = new JButton(Messages.getString("TeamPanel.Increment",Settings.getGameType())); //$NON-NLS-1$
 		btnGameCountIncrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
-		
-		lblMatchCount = new JLabel(Messages.getString("TeamPanel.MatchCount",settings.getGameType())); //$NON-NLS-1$
-		btnMatchCountDecrease = new JButton(Messages.getString("TeamPanel.Decrement",settings.getGameType())); //$NON-NLS-1$
+		lblMatchCount = new JLabel(Messages.getString("TeamPanel.MatchCount",Settings.getGameType())); //$NON-NLS-1$
+		btnMatchCountDecrease = new JButton(Messages.getString("TeamPanel.Decrement",Settings.getGameType())); //$NON-NLS-1$
 		btnMatchCountDecrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
 		txtMatchCount = new JTextField(3);
 		txtMatchCount.setHorizontalAlignment(JTextField.CENTER);
 		txtMatchCount.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
-		btnMatchCountIncrease = new JButton(Messages.getString("TeamPanel.Increment",settings.getGameType())); //$NON-NLS-1$
+		btnMatchCountIncrease = new JButton(Messages.getString("TeamPanel.Increment",Settings.getGameType())); //$NON-NLS-1$
 		btnMatchCountIncrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
-		
-		lblTimeOutCount = new JLabel(Messages.getString("TeamPanel.TimeOutCount",settings.getGameType())); //$NON-NLS-1$
-		btnTimeOutCountDecrease = new JButton(Messages.getString("TeamPanel.ReturnTimeOut",settings.getGameType())); //$NON-NLS-1$
+		lblTimeOutCount = new JLabel(Messages.getString("TeamPanel.TimeOutCount",Settings.getGameType())); //$NON-NLS-1$
+		btnTimeOutCountDecrease = new JButton(Messages.getString("TeamPanel.ReturnTimeOut",Settings.getGameType())); //$NON-NLS-1$
 		btnTimeOutCountDecrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
 		txtTimeOutCount = new JTextField(3);
 		txtTimeOutCount.setHorizontalAlignment(JTextField.CENTER);
 		txtTimeOutCount.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
-		btnTimeOutCountIncrease = new JButton(Messages.getString("TeamPanel.UseTimeOut",settings.getGameType())); //$NON-NLS-1$
+		btnTimeOutCountIncrease = new JButton(Messages.getString("TeamPanel.UseTimeOut",Settings.getGameType())); //$NON-NLS-1$
 		btnTimeOutCountIncrease.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
-		btnReset = new JToggleButton(Messages.getString("TeamPanel.Reset",settings.getGameType())); //$NON-NLS-1$
+		btnReset = new JToggleButton(Messages.getString("TeamPanel.Reset",Settings.getGameType())); //$NON-NLS-1$
 		btnReset.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
 		lblLastScoredTime = new JLabel("0"); //$NON-NLS-1$
 		lblLastScoredTime.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
 		lblLastScoredTime.setOpaque(true);
 		lblLastScoredTime.setBackground(Color.CYAN);
-		btnWarn = new JToggleButton(Messages.getString("TeamPanel.Warn",settings.getGameType())); //$NON-NLS-1$
+		btnWarn = new JToggleButton(Messages.getString("TeamPanel.Warn",Settings.getGameType())); //$NON-NLS-1$
 		btnWarn.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
-		ckbxKingSeat = new JCheckBox(Messages.getString("TeamPanel.KingSeat", settings.getGameType())); //$NON-NLS-1$
+		ckbxKingSeat = new JCheckBox(Messages.getString("TeamPanel.KingSeat", Settings.getGameType())); //$NON-NLS-1$
 		ckbxKingSeat.setName("Team " + Integer.toString(teamNbr)); //$NON-NLS-1$
 		setMnemonics(teamNbr);
-
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
-		Border outerBorder = BorderFactory.createEmptyBorder(settings.getBorderTop(),settings.getBorderLeft(),settings.getBorderBottom(),settings.getBorderRight());
+		Border outerBorder = BorderFactory.createEmptyBorder(Settings.getBorderTop(),Settings.getBorderLeft(),Settings.getBorderBottom(),Settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
         Vector<Component> order = new Vector<Component>(16);
         order.add(txtTeamName);
@@ -187,65 +174,65 @@ public class TeamPanel extends JPanel {
 	}
 	private void setMnemonics(int teamNbr) {
 		String teamNumber = Integer.toString(teamNbr);
-		if(settings.getTeamSwitchPositionsHotKey(teamNumber).isEmpty()) {
+		if(Settings.getTeamSwitchPositionsHotKey(teamNumber).isEmpty()) {
 			btnSwitchPositions.setMnemonic(-1);
 		} else {
-			btnSwitchPositions.setMnemonic(settings.getTeamSwitchPositionsHotKey(teamNumber).charAt(0));
+			btnSwitchPositions.setMnemonic(Settings.getTeamSwitchPositionsHotKey(teamNumber).charAt(0));
 		};
-		if(settings.getScorePlusHotKey(teamNumber).isEmpty()) {
+		if(Settings.getScorePlusHotKey(teamNumber).isEmpty()) {
 			btnScoreIncrease.setMnemonic(-1);
 		} else {
-			btnScoreIncrease.setMnemonic(settings.getScorePlusHotKey(teamNumber).charAt(0));
+			btnScoreIncrease.setMnemonic(Settings.getScorePlusHotKey(teamNumber).charAt(0));
 		};
-		if(settings.getScoreMinusHotKey(teamNumber).isEmpty()) {
+		if(Settings.getScoreMinusHotKey(teamNumber).isEmpty()) {
 			btnScoreDecrease.setMnemonic(-1);
 		} else {
-			btnScoreDecrease.setMnemonic(settings.getScoreMinusHotKey(teamNumber).charAt(0));
+			btnScoreDecrease.setMnemonic(Settings.getScoreMinusHotKey(teamNumber).charAt(0));
 		};
-		if(settings.getGameCountPlusHotKey(teamNumber).isEmpty()) {
+		if(Settings.getGameCountPlusHotKey(teamNumber).isEmpty()) {
 			btnGameCountIncrease.setMnemonic(-1);
 		} else {
-			btnGameCountIncrease.setMnemonic(settings.getGameCountPlusHotKey(teamNumber).charAt(0));
+			btnGameCountIncrease.setMnemonic(Settings.getGameCountPlusHotKey(teamNumber).charAt(0));
 		};
-		if(settings.getGameCountMinusHotKey(teamNumber).isEmpty()) {
+		if(Settings.getGameCountMinusHotKey(teamNumber).isEmpty()) {
 			btnGameCountDecrease.setMnemonic(-1);
 		} else {
-			btnGameCountDecrease.setMnemonic(settings.getGameCountMinusHotKey(teamNumber).charAt(0));
+			btnGameCountDecrease.setMnemonic(Settings.getGameCountMinusHotKey(teamNumber).charAt(0));
 		};
-		if(settings.getMatchCountPlusHotKey(teamNumber).isEmpty()) {
+		if(Settings.getMatchCountPlusHotKey(teamNumber).isEmpty()) {
 			btnMatchCountIncrease.setMnemonic(-1);
 		} else {
-			btnMatchCountIncrease.setMnemonic(settings.getMatchCountPlusHotKey(teamNumber).charAt(0));
+			btnMatchCountIncrease.setMnemonic(Settings.getMatchCountPlusHotKey(teamNumber).charAt(0));
 		};
-		if(settings.getMatchCountMinusHotKey(teamNumber).isEmpty()) {
+		if(Settings.getMatchCountMinusHotKey(teamNumber).isEmpty()) {
 			btnMatchCountDecrease.setMnemonic(-1);
 		} else {
-			btnMatchCountDecrease.setMnemonic(settings.getMatchCountMinusHotKey(teamNumber).charAt(0));
+			btnMatchCountDecrease.setMnemonic(Settings.getMatchCountMinusHotKey(teamNumber).charAt(0));
 		};
-		if(settings.getTimeOutPlusHotKey(teamNumber).isEmpty()) {
+		if(Settings.getTimeOutPlusHotKey(teamNumber).isEmpty()) {
 			btnTimeOutCountIncrease.setMnemonic(-1);
 		} else {
-			btnTimeOutCountIncrease.setMnemonic(settings.getTimeOutPlusHotKey(teamNumber).charAt(0));
+			btnTimeOutCountIncrease.setMnemonic(Settings.getTimeOutPlusHotKey(teamNumber).charAt(0));
 		};
-		if(settings.getTimeOutMinusHotKey(teamNumber).isEmpty()) {
+		if(Settings.getTimeOutMinusHotKey(teamNumber).isEmpty()) {
 			btnTimeOutCountDecrease.setMnemonic(-1);
 		} else {
-			btnTimeOutCountDecrease.setMnemonic(settings.getTimeOutMinusHotKey(teamNumber).charAt(0));
+			btnTimeOutCountDecrease.setMnemonic(Settings.getTimeOutMinusHotKey(teamNumber).charAt(0));
 		};
-		if(settings.getResetHotKey(teamNumber).isEmpty()) {
+		if(Settings.getResetHotKey(teamNumber).isEmpty()) {
 			btnReset.setMnemonic(-1);
 		} else {
-			btnReset.setMnemonic(settings.getResetHotKey(teamNumber).charAt(0));
+			btnReset.setMnemonic(Settings.getResetHotKey(teamNumber).charAt(0));
 		};
-		if(settings.getWarnHotKey(teamNumber).isEmpty()) {
+		if(Settings.getWarnHotKey(teamNumber).isEmpty()) {
 			btnWarn.setMnemonic(-1);
 		} else {
-			btnWarn.setMnemonic(settings.getWarnHotKey(teamNumber).charAt(0));
+			btnWarn.setMnemonic(Settings.getWarnHotKey(teamNumber).charAt(0));
 		};
-		if(settings.getKingSeatHotKey(teamNumber).isEmpty()) {
+		if(Settings.getKingSeatHotKey(teamNumber).isEmpty()) {
 			ckbxKingSeat.setMnemonic(-1);
 		} else {
-			ckbxKingSeat.setMnemonic(settings.getKingSeatHotKey(teamNumber).charAt(0));
+			ckbxKingSeat.setMnemonic(Settings.getKingSeatHotKey(teamNumber).charAt(0));
 		};
 	}
 	private void layoutComponents() {
@@ -478,9 +465,7 @@ public class TeamPanel extends JPanel {
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		gc.anchor = GridBagConstraints.CENTER;
 		add(ckbxKingSeat, gc);
-		
 	}
-	
 	////// Listener Methods //////
 	public void addTeamNameListener(ActionListener listenForTxtTeamName) {
 		txtTeamName.addActionListener(listenForTxtTeamName);
@@ -637,14 +622,12 @@ public class TeamPanel extends JPanel {
 		btnWarn.setSelected(isWarn);
 		ckbxKingSeat.setSelected(isKingSeat);
 	}
-
 	public void setTitle(String title) {
 		title=buildTitle();
 		TitledBorder border = BorderFactory.createTitledBorder(title);
 		border.setTitleJustification(TitledBorder.CENTER);
 		this.setBorder(border);
 	}
-
 	public void updateLastScoredTime(int timeElapsed) {
 		lblLastScoredTime.setText(Integer.toString(timeElapsed));
 	}
@@ -660,7 +643,6 @@ public class TeamPanel extends JPanel {
 	public void setLastScoredTimeColor(Color color) {
 		lblLastScoredTime.setBackground(color);
 	}
-
 	public void updateMnemonics() {
 		setMnemonics(teamNbr);
 	}
@@ -670,13 +652,13 @@ public class TeamPanel extends JPanel {
 	private String buildTitle() {
 		String theColor;
 		if (teamNbr==1) {
-			theColor = settings.getSide1Color();
+			theColor = Settings.getSide1Color();
 		} else if (teamNbr==2) {
-			theColor = settings.getSide2Color();
+			theColor = Settings.getSide2Color();
 		} else {
-			theColor = settings.getSide2Color();
+			theColor = Settings.getSide2Color();
 		}
-		return Messages.getString("TeamPanel.Team",settings.getGameType()) + teamNbr + Messages.getString("TeamPanel.Information",settings.getGameType()) + theColor + Messages.getString("TeamPanel.Side",settings.getGameType()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return Messages.getString("TeamPanel.Team",Settings.getGameType()) + teamNbr + Messages.getString("TeamPanel.Information",Settings.getGameType()) + theColor + Messages.getString("TeamPanel.Side",Settings.getGameType()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
     public static class CustomFocusTraversalPolicy extends FocusTraversalPolicy {
     	Vector<Component> order;
@@ -688,7 +670,6 @@ public class TeamPanel extends JPanel {
 			int idx = (order.indexOf(aComponent) + 1) % order.size();
 			return order.get(idx);
 		}
-
 		public Component getComponentBefore(Container focusCycleRoot, Component aComponent) {
 			int idx = order.indexOf(aComponent) - 1;
 			if (idx < 0) {
@@ -696,15 +677,12 @@ public class TeamPanel extends JPanel {
 			}
 			return order.get(idx);
 		}
-	
 		public Component getDefaultComponent(Container focusCycleRoot) {
 			return order.get(0);
 		}
-		
 		public Component getLastComponent(Container focusCycleRoot) {
 			return order.lastElement();
 		}
-		
 		public Component getFirstComponent(Container focusCycleRoot) {
 			return order.get(0);
 		}

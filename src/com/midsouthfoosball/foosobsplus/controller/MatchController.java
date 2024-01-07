@@ -38,7 +38,6 @@ import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
 
 public class MatchController {
-	private Settings settings;
 	private Match match;
 	private Stats stats;
 	private GameClock gameClock;
@@ -53,8 +52,7 @@ public class MatchController {
 	private StreamIndexer streamIndexer;
 	private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 	
-	public MatchController(Settings settings, Match match, Stats stats, GameClock gameClock, LastScoredClock lastScored1Clock, LastScoredClock lastScored2Clock, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, SwitchPanel switchPanel, GameTableWindowPanel gameTableWindowPanel, TeamController teamController, StreamIndexer streamIndexer) {
-		this.settings = settings;
+	public MatchController(Match match, Stats stats, GameClock gameClock, LastScoredClock lastScored1Clock, LastScoredClock lastScored2Clock, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, SwitchPanel switchPanel, GameTableWindowPanel gameTableWindowPanel, TeamController teamController, StreamIndexer streamIndexer) {
 		this.match = match;
 		this.stats = stats;
 		this.gameClock = gameClock;
@@ -91,13 +89,13 @@ public class MatchController {
 			teamController.resetScores();
 			teamController.resetGameCounts();
 			startMatch(createMatchId());
-			if (settings.getCutThroatMode()==1) {
+			if (Settings.getCutThroatMode()==1) {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + " vs " + teamController.getForwardName(3) + "/" + teamController.getGoalieName(3) + "\r\n");
 			} else {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + "\r\n");
 			}
 		}
-		if (settings.getCutThroatMode()==1) {
+		if (Settings.getCutThroatMode()==1) {
 			int won = 0;
 			if (teamNumber == 1) {
 				//Single player scores
@@ -121,14 +119,14 @@ public class MatchController {
 				gameClock.stopGameTimer();
 				match.incrementMatchCount(teamNumber);
 			}
-			switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
+			switchPanel.setLastScored(Settings.getLastScoredStrings()[match.getLastScored()]);
 			updateGameTables();
 		}
 		return rotate;
 	}
 	public void decrementScore(int teamNumber) {
 		teamController.decrementScore(teamNumber);
-		switchPanel.setLastScored(settings.getLastScoredStrings()[match.getLastScored()]);
+		switchPanel.setLastScored(Settings.getLastScoredStrings()[match.getLastScored()]);
 		updateGameTables();
 	}
 	public void updateGameTables() {

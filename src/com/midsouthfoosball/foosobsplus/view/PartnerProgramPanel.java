@@ -59,34 +59,31 @@ public class PartnerProgramPanel extends JPanel {
 
 	// Create the Panel.
 
-	public PartnerProgramPanel(Settings settings) throws IOException {
-
-		setLayout(settings);
-
+	public PartnerProgramPanel() throws IOException {
+		setLayout();
 	}
 
-	private void restoreDefaults(Settings settings) {
-		txtPlayer1FileName.setText(settings.getDefaultPlayer1FileName());
-		txtPlayer2FileName.setText(settings.getDefaultPlayer2FileName());
-		txtPlayer3FileName.setText(settings.getDefaultPlayer3FileName());
-		txtPlayer4FileName.setText(settings.getDefaultPlayer4FileName());
+	private void restoreDefaults() {
+		txtPlayer1FileName.setText(Settings.getDefaultPlayer1FileName());
+		txtPlayer2FileName.setText(Settings.getDefaultPlayer2FileName());
+		txtPlayer3FileName.setText(Settings.getDefaultPlayer3FileName());
+		txtPlayer4FileName.setText(Settings.getDefaultPlayer4FileName());
 	}
 
-	private void saveSettings(Settings settings) {
-		settings.setPartnerProgram("Player1FileName",txtPlayer1FileName.getText());
-		settings.setPartnerProgram("Player2FileName",txtPlayer2FileName.getText());
-		settings.setPartnerProgram("Player3FileName",txtPlayer3FileName.getText());
-		settings.setPartnerProgram("Player4FileName",txtPlayer4FileName.getText());
+	private void saveSettings() {
+		Settings.setPartnerProgram("Player1FileName",txtPlayer1FileName.getText());
+		Settings.setPartnerProgram("Player2FileName",txtPlayer2FileName.getText());
+		Settings.setPartnerProgram("Player3FileName",txtPlayer3FileName.getText());
+		Settings.setPartnerProgram("Player4FileName",txtPlayer4FileName.getText());
 		try {
-			settings.savePartnerProgramConfig();
+			Settings.savePartnerProgramConfig();
 		} catch (IOException ex) {
 			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile")); //$NON-NLS-1$
 			logger.error(ex.toString());
 		}
 	}
-	public void setLayout(Settings settings) {	
+	public void setLayout() {	
 		setLayout(new MigLayout());
-
 		JButton btnSelectPath = new JButton(Messages.getString("PartnerProgramPanel.SelectPath")); //$NON-NLS-1$
 		btnSelectPath.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -95,7 +92,6 @@ public class PartnerProgramPanel extends JPanel {
 				chooser.setDialogTitle(Messages.getString("PartnerProgramPanel.SelectDirectoryForPath")); //$NON-NLS-1$
 				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				chooser.setAcceptAllFileFilterUsed(false);
-
 				int returnVal = chooser.showOpenDialog(PartnerProgramPanel.this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					if (chooser.getSelectedFile().exists()) {
@@ -113,8 +109,8 @@ public class PartnerProgramPanel extends JPanel {
 						formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
 					}
 					try {
-						settings.setPartnerProgramPath(formattedTxtPath.getText());
-						settings.savePartnerProgramConfig();;
+						Settings.setPartnerProgramPath(formattedTxtPath.getText());
+						Settings.savePartnerProgramConfig();;
 					} catch (IOException ex) {
 						logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile")); //$NON-NLS-1$
 						logger.error(ex.toString());
@@ -123,14 +119,13 @@ public class PartnerProgramPanel extends JPanel {
 			}
 		});
 		add(btnSelectPath, "cell 1 0"); //$NON-NLS-1$
-
 		formattedTxtPath = new JFormattedTextField();
-		formattedTxtPath.setText(settings.getPartnerProgramPath());
+		formattedTxtPath.setText(Settings.getPartnerProgramPath());
 		formattedTxtPath.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent arg0) {
 		    	try {
-					settings.setPartnerProgramPath(formattedTxtPath.getText());
-					settings.savePartnerProgramConfig();
+					Settings.setPartnerProgramPath(formattedTxtPath.getText());
+					Settings.savePartnerProgramConfig();
 		    	} catch (IOException ex) {
 		    		logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile"));		 //$NON-NLS-1$
 		    		logger.error(ex.toString());
@@ -142,8 +137,8 @@ public class PartnerProgramPanel extends JPanel {
 				int key = evt.getKeyCode();
 			    if (key == KeyEvent.VK_ENTER) {
 			    	try {
-						settings.setPartnerProgramPath(formattedTxtPath.getText());
-						settings.savePartnerProgramConfig();
+						Settings.setPartnerProgramPath(formattedTxtPath.getText());
+						Settings.savePartnerProgramConfig();
 			    	} catch (IOException ex) {
 			    		logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile"));		 //$NON-NLS-1$
 			    		logger.error(ex.toString());
@@ -170,29 +165,29 @@ public class PartnerProgramPanel extends JPanel {
 		add(lblPlayer4FileName, "cell 1 5,alignx right"); //$NON-NLS-1$
 
 		txtPlayer1FileName = new JTextField();
-		txtPlayer1FileName.setText(settings.getPlayer1FileName());
+		txtPlayer1FileName.setText(Settings.getPlayer1FileName());
 		txtPlayer1FileName.setColumns(10);
 		add(txtPlayer1FileName, "cell 2 2,alignx left"); //$NON-NLS-1$
 
 		txtPlayer2FileName = new JTextField();
-		txtPlayer2FileName.setText(settings.getPlayer2FileName());
+		txtPlayer2FileName.setText(Settings.getPlayer2FileName());
 		txtPlayer2FileName.setColumns(10);
 		add(txtPlayer2FileName, "cell 2 3,alignx left"); //$NON-NLS-1$
 
 		txtPlayer3FileName = new JTextField();
-		txtPlayer3FileName.setText(settings.getPlayer3FileName());
+		txtPlayer3FileName.setText(Settings.getPlayer3FileName());
 		txtPlayer3FileName.setColumns(10);
 		add(txtPlayer3FileName, "cell 2 4,alignx left"); //$NON-NLS-1$
 
 		txtPlayer4FileName = new JTextField();
-		txtPlayer4FileName.setText(settings.getPlayer4FileName());
+		txtPlayer4FileName.setText(Settings.getPlayer4FileName());
 		txtPlayer4FileName.setColumns(10);
 		add(txtPlayer4FileName, "cell 2 5,alignx left"); //$NON-NLS-1$
 
 		JButton btnSavePartnerProgram = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		btnSavePartnerProgram.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveSettings(settings);
+				saveSettings();
 				JComponent comp = (JComponent) e.getSource();
 				Window win = SwingUtilities.getWindowAncestor(comp);
 				win.dispose();
@@ -213,7 +208,7 @@ public class PartnerProgramPanel extends JPanel {
 		JButton btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
 		btnRestoreDefaults.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				restoreDefaults(settings);
+				restoreDefaults();
 			}
 		});
 		add(btnRestoreDefaults, "cell 5 19,alignx center"); //$NON-NLS-1$

@@ -22,10 +22,12 @@ package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Dimension;
 import java.io.IOException;
+
 import javax.swing.JFrame;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.midsouthfoosball.foosobsplus.model.Settings;
+
 import com.midsouthfoosball.foosobsplus.model.AppConfig;
 
 @SuppressWarnings("serial")
@@ -33,12 +35,12 @@ public class HotKeysFrame extends JFrame {
 	private HotKeysPanel hotKeysPanel;
 	private static final String programName = AppConfig.PROGRAM_NAME;
 	private static Logger logger = LoggerFactory.getLogger(HotKeysFrame.class);
-	public HotKeysFrame(Settings settings) {
+	public HotKeysFrame() {
 		super(programName + " " + Messages.getString("HotKeysFrame.HotKeySettings")); //$NON-NLS-1$ //$NON-NLS-2$
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
 		try {
-			hotKeysPanel = new HotKeysPanel(settings);
+			hotKeysPanel = new HotKeysPanel();
 		} catch (IOException e) {
 			logger.error(Messages.getString("HotKeysFrame.ErrorLoadingSettings")); //$NON-NLS-1$
 			logger.error(e.toString());

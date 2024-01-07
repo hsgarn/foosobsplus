@@ -107,11 +107,9 @@ public class StatsDisplayPanel extends JPanel {
 	private JLabel lblTeam2Aces;
 	private JLabel lblTeam2Stuffs;
 	private DecimalFormat df = new DecimalFormat("###.#"); //$NON-NLS-1$
-	private Settings settings;
 	private Border innerBorder;
 
-	public StatsDisplayPanel(Settings settings) {
-		this.settings = settings;
+	public StatsDisplayPanel() {
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
 		dim.height = 550;
@@ -120,30 +118,30 @@ public class StatsDisplayPanel extends JPanel {
 		
 		addMouseListener(new DoubleClickListener());
 
-		lblTeamName1 = new JLabel(Messages.getString("StatsDisplayPanel.TeamName1", settings.getGameType())); //$NON-NLS-1$
-		lblTeamName2 = new JLabel(Messages.getString("StatsDisplayPanel.TeamName2", settings.getGameType())); //$NON-NLS-1$
-		lblPlayerNames1 = new JLabel(Messages.getString("StatsDisplayPanel.Team1", settings.getGameType())); //$NON-NLS-1$
-		lblPlayerNames2 = new JLabel(Messages.getString("StatsDisplayPanel.Team2", settings.getGameType())); //$NON-NLS-1$
-		lblCompleted1 = new JLabel(Messages.getString("StatsDisplayPanel.Completed1", settings.getGameType())); //$NON-NLS-1$
-		lblAttempted1 = new JLabel(Messages.getString("StatsDisplayPanel.Attempted1", settings.getGameType())); //$NON-NLS-1$
-		lblPercentage1 = new JLabel(Messages.getString("StatsDisplayPanel.Percentage1", settings.getGameType())); //$NON-NLS-1$
-		lblCompleted2 = new JLabel(Messages.getString("StatsDisplayPanel.Completed2", settings.getGameType())); //$NON-NLS-1$
-		lblAttempted2 = new JLabel(Messages.getString("StatsDisplayPanel.Attempted2", settings.getGameType())); //$NON-NLS-1$
-		lblPercentage2 = new JLabel(Messages.getString("StatsDisplayPanel.Percentage2", settings.getGameType())); //$NON-NLS-1$
-		lblPassing = new JLabel(Messages.getString("StatsDisplayPanel.Passing", settings.getGameType())); //$NON-NLS-1$
-		lblShooting = new JLabel(Messages.getString("StatsDisplayPanel.Shooting", settings.getGameType())); //$NON-NLS-1$
-		lblClearing = new JLabel(Messages.getString("StatsDisplayPanel.Clearing", settings.getGameType())); //$NON-NLS-1$
-		lblTwoBarPassing = new JLabel(Messages.getString("StatsDisplayPanel.2BarPassing", settings.getGameType())); //$NON-NLS-1$
-		lblCount1 = new JLabel(Messages.getString("StatsDisplayPanel.Count1", settings.getGameType())); //$NON-NLS-1$
-		lblCount2 = new JLabel(Messages.getString("StatsDisplayPanel.Count2", settings.getGameType())); //$NON-NLS-1$
-		lblShotsOnGoal = new JLabel(Messages.getString("StatsDisplayPanel.ShotsOnGoal", settings.getGameType())); //$NON-NLS-1$
-		lblScoring = new JLabel(Messages.getString("StatsDisplayPanel.Scoring", settings.getGameType())); //$NON-NLS-1$
-		lblThreeBarScoring = new JLabel(Messages.getString("StatsDisplayPanel.3Bar", settings.getGameType())); //$NON-NLS-1$
-		lblFiveBarScoring = new JLabel(Messages.getString("StatsDisplayPanel.5Bar", settings.getGameType())); //$NON-NLS-1$
-		lblTwoBarScoring = new JLabel(Messages.getString("StatsDisplayPanel.2Bar", settings.getGameType())); //$NON-NLS-1$
-		lblBreaks = new JLabel(Messages.getString("StatsDisplayPanel.Breaks", settings.getGameType())); //$NON-NLS-1$
-		lblAces = new JLabel(Messages.getString("StatsDisplayPanel.Aces", settings.getGameType())); //$NON-NLS-1$
-		lblStuffs = new JLabel(Messages.getString("StatsDisplayPanel.Stuffs", settings.getGameType())); //$NON-NLS-1$
+		lblTeamName1 = new JLabel(Messages.getString("StatsDisplayPanel.TeamName1", Settings.getGameType())); //$NON-NLS-1$
+		lblTeamName2 = new JLabel(Messages.getString("StatsDisplayPanel.TeamName2", Settings.getGameType())); //$NON-NLS-1$
+		lblPlayerNames1 = new JLabel(Messages.getString("StatsDisplayPanel.Team1", Settings.getGameType())); //$NON-NLS-1$
+		lblPlayerNames2 = new JLabel(Messages.getString("StatsDisplayPanel.Team2", Settings.getGameType())); //$NON-NLS-1$
+		lblCompleted1 = new JLabel(Messages.getString("StatsDisplayPanel.Completed1", Settings.getGameType())); //$NON-NLS-1$
+		lblAttempted1 = new JLabel(Messages.getString("StatsDisplayPanel.Attempted1", Settings.getGameType())); //$NON-NLS-1$
+		lblPercentage1 = new JLabel(Messages.getString("StatsDisplayPanel.Percentage1", Settings.getGameType())); //$NON-NLS-1$
+		lblCompleted2 = new JLabel(Messages.getString("StatsDisplayPanel.Completed2", Settings.getGameType())); //$NON-NLS-1$
+		lblAttempted2 = new JLabel(Messages.getString("StatsDisplayPanel.Attempted2", Settings.getGameType())); //$NON-NLS-1$
+		lblPercentage2 = new JLabel(Messages.getString("StatsDisplayPanel.Percentage2", Settings.getGameType())); //$NON-NLS-1$
+		lblPassing = new JLabel(Messages.getString("StatsDisplayPanel.Passing", Settings.getGameType())); //$NON-NLS-1$
+		lblShooting = new JLabel(Messages.getString("StatsDisplayPanel.Shooting", Settings.getGameType())); //$NON-NLS-1$
+		lblClearing = new JLabel(Messages.getString("StatsDisplayPanel.Clearing", Settings.getGameType())); //$NON-NLS-1$
+		lblTwoBarPassing = new JLabel(Messages.getString("StatsDisplayPanel.2BarPassing", Settings.getGameType())); //$NON-NLS-1$
+		lblCount1 = new JLabel(Messages.getString("StatsDisplayPanel.Count1", Settings.getGameType())); //$NON-NLS-1$
+		lblCount2 = new JLabel(Messages.getString("StatsDisplayPanel.Count2", Settings.getGameType())); //$NON-NLS-1$
+		lblShotsOnGoal = new JLabel(Messages.getString("StatsDisplayPanel.ShotsOnGoal", Settings.getGameType())); //$NON-NLS-1$
+		lblScoring = new JLabel(Messages.getString("StatsDisplayPanel.Scoring", Settings.getGameType())); //$NON-NLS-1$
+		lblThreeBarScoring = new JLabel(Messages.getString("StatsDisplayPanel.3Bar", Settings.getGameType())); //$NON-NLS-1$
+		lblFiveBarScoring = new JLabel(Messages.getString("StatsDisplayPanel.5Bar", Settings.getGameType())); //$NON-NLS-1$
+		lblTwoBarScoring = new JLabel(Messages.getString("StatsDisplayPanel.2Bar", Settings.getGameType())); //$NON-NLS-1$
+		lblBreaks = new JLabel(Messages.getString("StatsDisplayPanel.Breaks", Settings.getGameType())); //$NON-NLS-1$
+		lblAces = new JLabel(Messages.getString("StatsDisplayPanel.Aces", Settings.getGameType())); //$NON-NLS-1$
+		lblStuffs = new JLabel(Messages.getString("StatsDisplayPanel.Stuffs", Settings.getGameType())); //$NON-NLS-1$
 		lblTeam1PassAttempts = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		lblTeam1PassCompletes = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		lblTeam1Passing = new JLabel(String.format("%-5s","0%")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -231,7 +229,7 @@ public class StatsDisplayPanel extends JPanel {
 		
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
-		Border outerBorder = BorderFactory.createEmptyBorder(settings.getBorderTop(),settings.getBorderLeft(),settings.getBorderBottom(),settings.getBorderRight());
+		Border outerBorder = BorderFactory.createEmptyBorder(Settings.getBorderTop(),Settings.getBorderLeft(),Settings.getBorderBottom(),Settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
@@ -914,7 +912,7 @@ public class StatsDisplayPanel extends JPanel {
 		this.setBorder(border);
 	}
 	private String buildTitle() {
-		return Messages.getString("StatsDisplayPanel.StatisticsDisplayPanel", settings.getGameType()); //$NON-NLS-1$
+		return Messages.getString("StatsDisplayPanel.StatisticsDisplayPanel", Settings.getGameType()); //$NON-NLS-1$
 	}
 	public void copyLabelsToClipboard() {
 		Component[] components = getComponents();

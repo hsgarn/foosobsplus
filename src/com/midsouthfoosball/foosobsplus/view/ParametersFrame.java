@@ -22,23 +22,25 @@ package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Dimension;
 import java.io.IOException;
+
 import javax.swing.JFrame;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.midsouthfoosball.foosobsplus.model.AppConfig;
-import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
 public class ParametersFrame extends JFrame {
 	private ParametersPanel parametersPanel;
 	private static final String programName = AppConfig.PROGRAM_NAME;
 	private static Logger logger = LoggerFactory.getLogger(ParametersFrame.class);
-	public ParametersFrame(Settings settings) {
+	public ParametersFrame() {
 		super(programName + " " + Messages.getString("ParametersFrame.ParameterSettings")); //$NON-NLS-1$ //$NON-NLS-2$
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
 		try {
-			parametersPanel = new ParametersPanel(settings);
+			parametersPanel = new ParametersPanel();
 		} catch (IOException e) {
 			logger.error(Messages.getString("Errors.LoadSettingsError")); //$NON-NLS-1$
 			logger.error(e.toString());

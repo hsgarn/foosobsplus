@@ -57,60 +57,52 @@ public class MatchPanel extends JPanel {
 	private JLabel lblGameTimeLabel;
 	private JLabel lblGameTime;
 	private JTable gameTable;
-	private Settings settings;
 	private int matchWinner = 0;
 	private int currentGameNumber = 1;
 	private int gameWinners[] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
 	private int maxGameCount;
 	private Border innerBorder;
 	
-	public MatchPanel(Settings settings) {
-
-		this.settings = settings;
-		this.maxGameCount = settings.getMaxGameNumber(); 
-		
+	public MatchPanel() {
+		this.maxGameCount = Settings.getMaxGameNumber(); 
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
 		dim.height = 325;
 		setPreferredSize(dim);
 		setName(buildTitle());
-		
-		btnStartEvent = new JButton(Messages.getString("MatchPanel.StartEvent", settings.getGameType())); //$NON-NLS-1$
-		btnStartMatch = new JButton(Messages.getString("MatchPanel.StartMatch", settings.getGameType())); //$NON-NLS-1$
-		btnPauseMatch = new JButton(Messages.getString("MatchPanel.PauseMatch", settings.getGameType())); //$NON-NLS-1$
-		btnEndMatch = new JButton(Messages.getString("MatchPanel.EndMatch", settings.getGameType())); //$NON-NLS-1$
-		btnStartGame = new JButton(Messages.getString("MatchPanel.StartGame", settings.getGameType())); //$NON-NLS-1$
-		lblStartTimeLabel = new JLabel(Messages.getString("MatchPanel.StartTime", settings.getGameType())); //$NON-NLS-1$
-		lblElapsedTimeLabel = new JLabel(Messages.getString("MatchPanel.ElapsedTime", settings.getGameType())); //$NON-NLS-1$
-		lblGameTimeLabel = new JLabel(Messages.getString("MatchPanel.GameTime", settings.getGameType())); //$NON-NLS-1$
+		btnStartEvent = new JButton(Messages.getString("MatchPanel.StartEvent", Settings.getGameType())); //$NON-NLS-1$
+		btnStartMatch = new JButton(Messages.getString("MatchPanel.StartMatch", Settings.getGameType())); //$NON-NLS-1$
+		btnPauseMatch = new JButton(Messages.getString("MatchPanel.PauseMatch", Settings.getGameType())); //$NON-NLS-1$
+		btnEndMatch = new JButton(Messages.getString("MatchPanel.EndMatch", Settings.getGameType())); //$NON-NLS-1$
+		btnStartGame = new JButton(Messages.getString("MatchPanel.StartGame", Settings.getGameType())); //$NON-NLS-1$
+		lblStartTimeLabel = new JLabel(Messages.getString("MatchPanel.StartTime", Settings.getGameType())); //$NON-NLS-1$
+		lblElapsedTimeLabel = new JLabel(Messages.getString("MatchPanel.ElapsedTime", Settings.getGameType())); //$NON-NLS-1$
+		lblGameTimeLabel = new JLabel(Messages.getString("MatchPanel.GameTime", Settings.getGameType())); //$NON-NLS-1$
 		lblStartTime = new JLabel("00:00:00"); //$NON-NLS-1$
 		lblElapsedTime = new JLabel("00:00:00"); //$NON-NLS-1$
 		lblGameTime = new JLabel("00:00:00"); //$NON-NLS-1$
-		gameTable = new JTable(new GameTableModel(maxGameCount,settings.getCutThroatMode()));
+		gameTable = new JTable(new GameTableModel(maxGameCount,Settings.getCutThroatMode()));
 		gameTable.setDefaultRenderer(Object.class, new GameTableCellRenderer());
-		
 		setMnemonics();
-		
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
-		Border outerBorder = BorderFactory.createEmptyBorder(settings.getBorderTop(),settings.getBorderLeft(),settings.getBorderBottom(),settings.getBorderRight());
+		Border outerBorder = BorderFactory.createEmptyBorder(Settings.getBorderTop(),Settings.getBorderLeft(),Settings.getBorderBottom(),Settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
-		
 		layoutComponents();
 	}
 	public void changeGameType() {
-		btnStartMatch.setText(Messages.getString("MatchPanel.StartMatch", settings.getGameType())); //$NON-NLS-1$
-		btnPauseMatch.setText(Messages.getString("MatchPanel.PauseMatch", settings.getGameType())); //$NON-NLS-1$
-		btnEndMatch.setText(Messages.getString("MatchPanel.EndMatch", settings.getGameType())); //$NON-NLS-1$
-		btnStartGame.setText(Messages.getString("MatchPanel.StartGame", settings.getGameType())); //$NON-NLS-1$
-		lblStartTimeLabel.setText(Messages.getString("MatchPanel.StartTime", settings.getGameType())); //$NON-NLS-1$
-		lblElapsedTimeLabel.setText(Messages.getString("MatchPanel.ElapsedTime", settings.getGameType())); //$NON-NLS-1$
-		lblGameTimeLabel.setText(Messages.getString("MatchPanel.GameTime", settings.getGameType())); //$NON-NLS-1$
+		btnStartMatch.setText(Messages.getString("MatchPanel.StartMatch", Settings.getGameType())); //$NON-NLS-1$
+		btnPauseMatch.setText(Messages.getString("MatchPanel.PauseMatch", Settings.getGameType())); //$NON-NLS-1$
+		btnEndMatch.setText(Messages.getString("MatchPanel.EndMatch", Settings.getGameType())); //$NON-NLS-1$
+		btnStartGame.setText(Messages.getString("MatchPanel.StartGame", Settings.getGameType())); //$NON-NLS-1$
+		lblStartTimeLabel.setText(Messages.getString("MatchPanel.StartTime", Settings.getGameType())); //$NON-NLS-1$
+		lblElapsedTimeLabel.setText(Messages.getString("MatchPanel.ElapsedTime", Settings.getGameType())); //$NON-NLS-1$
+		lblGameTimeLabel.setText(Messages.getString("MatchPanel.GameTime", Settings.getGameType())); //$NON-NLS-1$
 		setTitle();
 	}
 	public void resizeGameTable() {
-		maxGameCount = settings.getMaxGameNumber();
-		GameTableModel tableModel = new GameTableModel(maxGameCount,settings.getCutThroatMode());
+		maxGameCount = Settings.getMaxGameNumber();
+		GameTableModel tableModel = new GameTableModel(maxGameCount,Settings.getCutThroatMode());
 		gameTable.setModel(tableModel);
 		return;
 	}
@@ -274,8 +266,8 @@ public class MatchPanel extends JPanel {
 	}
 	public void setTime(String time) {
 		int gameNumber = currentGameNumber;
-		int maxGameNumber = settings.getMaxGameNumber();
-		int row = settings.getCutThroatMode() + 3;
+		int maxGameNumber = Settings.getMaxGameNumber();
+		int row = Settings.getCutThroatMode() + 3;
 		if (gameNumber > maxGameNumber) gameNumber = maxGameNumber;
 		gameTable.setValueAt(time, row, gameNumber);
 		gameTable.repaint();
@@ -286,25 +278,25 @@ public class MatchPanel extends JPanel {
 		btnPauseMatch.setText(labelText);
 	}
 	private void setMnemonics() {
-		if(settings.getStartMatchHotKey().isEmpty()) {
+		if(Settings.getStartMatchHotKey().isEmpty()) {
 			btnStartMatch.setMnemonic(-1);
 		} else {
-			btnStartMatch.setMnemonic(settings.getStartMatchHotKey().charAt(0));
+			btnStartMatch.setMnemonic(Settings.getStartMatchHotKey().charAt(0));
 		};
-		if(settings.getPauseMatchHotKey().isEmpty()) {
+		if(Settings.getPauseMatchHotKey().isEmpty()) {
 			btnPauseMatch.setMnemonic(-1);
 		} else {
-			btnPauseMatch.setMnemonic(settings.getPauseMatchHotKey().charAt(0));
+			btnPauseMatch.setMnemonic(Settings.getPauseMatchHotKey().charAt(0));
 		};
-		if(settings.getEndMatchHotKey().isEmpty()) {
+		if(Settings.getEndMatchHotKey().isEmpty()) {
 			btnEndMatch.setMnemonic(-1);
 		} else {
-			btnEndMatch.setMnemonic(settings.getEndMatchHotKey().charAt(0));
+			btnEndMatch.setMnemonic(Settings.getEndMatchHotKey().charAt(0));
 		};
-		if(settings.getStartGameHotKey().isEmpty()) {
+		if(Settings.getStartGameHotKey().isEmpty()) {
 			btnStartGame.setMnemonic(-1);
 		} else {
-			btnStartGame.setMnemonic(settings.getStartGameHotKey().charAt(0));
+			btnStartGame.setMnemonic(Settings.getStartGameHotKey().charAt(0));
 		};
 	}
 	public void updateMnemonics() {
@@ -318,7 +310,7 @@ public class MatchPanel extends JPanel {
 	}
 	public void updateGameTable(String[] scoresTeam1, String[] scoresTeam2, String[] scoresTeam3, String[] times, int currentGameNumber) {
 		this.currentGameNumber = currentGameNumber;
-		if (settings.getCutThroatMode()==1) {
+		if (Settings.getCutThroatMode()==1) {
 			for (int i = 1; i <= maxGameCount; ++i) {
 				gameTable.setValueAt(scoresTeam1[i-1], 1, i);
 				gameTable.setValueAt(scoresTeam2[i-1], 2, i);
@@ -337,13 +329,13 @@ public class MatchPanel extends JPanel {
 	public void clearKingSeat() {
 		gameTable.setValueAt("Team 1",1,0);
 		gameTable.setValueAt("Team 2",2,0);
-		if (settings.getCutThroatMode()==1) {
+		if (Settings.getCutThroatMode()==1) {
 			gameTable.setValueAt("Team 3",3,0);
 		}
 		gameTable.repaint();
 	}
 	public void setKingSeat(int teamNumber) {
-		if (teamNumber > 0 && (teamNumber < 3 || (teamNumber == 3 && settings.getCutThroatMode()==1))) {
+		if (teamNumber > 0 && (teamNumber < 3 || (teamNumber == 3 && Settings.getCutThroatMode()==1))) {
 			String kingSeat = Messages.getString("Global.KingSeat"); //$NON-NLS-1$
 			gameTable.setValueAt(kingSeat + "Team " + Integer.toString(teamNumber), teamNumber, 0);
 			gameTable.repaint();
@@ -380,20 +372,20 @@ public class MatchPanel extends JPanel {
 			  }
 		  }
 		  ////// Highlight team3 name cell if they won the match \\\\\\
-		  if (row == 3 && column == 0 && settings.getCutThroatMode()==1) {
+		  if (row == 3 && column == 0 && Settings.getCutThroatMode()==1) {
 			  if (matchWinner == 3) {
 				  setBackground(Color.GREEN);
 			  }
 		  }
 		  ////// Set score cells to center alignment and highlight winning scores \\\\\\
-          if ((row==1 || row==2 || (row==3 && settings.getCutThroatMode()==1)) && column>= 1 ) {
+          if ((row==1 || row==2 || (row==3 && Settings.getCutThroatMode()==1)) && column>= 1 ) {
         	  if ( gameWinners[column-1] == row) {
         		  setBackground(Color.CYAN);
         	  }
         	  setHorizontalAlignment(SwingConstants.CENTER);
           }
           ////// Center time cells \\\\\\
-          if (((row==3 && settings.getCutThroatMode()==0) || (row==4 && settings.getCutThroatMode()==1)) && column>=1) setHorizontalAlignment(SwingConstants.CENTER);
+          if (((row==3 && Settings.getCutThroatMode()==0) || (row==4 && Settings.getCutThroatMode()==1)) && column>=1) setHorizontalAlignment(SwingConstants.CENTER);
           setText(tmp);
           return this;
 	  }
@@ -405,6 +397,6 @@ public class MatchPanel extends JPanel {
 		this.setBorder(border);
 	}
 	private String buildTitle() {
-		return Messages.getString("MatchPanel.MatchInformation", settings.getGameType()); //$NON-NLS-1$
+		return Messages.getString("MatchPanel.MatchInformation", Settings.getGameType()); //$NON-NLS-1$
 	}
 }

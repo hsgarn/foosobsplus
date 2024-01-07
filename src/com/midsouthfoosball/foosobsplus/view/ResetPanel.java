@@ -43,36 +43,26 @@ public class ResetPanel extends JPanel {
 	private JButton btnResetTimeOuts;
 	private JButton btnResetResetWarns;
 	private JButton btnResetAll;
-	private Settings settings;
 	private Border innerBorder;
-
-	public ResetPanel(Settings settings) {
-		
-		this.settings = settings;
-		
+	public ResetPanel() {
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
 		dim.height = 300;
 		setPreferredSize(dim);
 		setName(buildTitle());
-		
-		btnResetNames = new JButton(Messages.getString("ResetPanel.ResetNames", settings.getGameType())); //$NON-NLS-1$
-		btnResetScores = new JButton(Messages.getString("ResetPanel.ResetScores", settings.getGameType())); //$NON-NLS-1$
-		btnResetGameCounts = new JButton(Messages.getString("ResetPanel.ResetGameCounts", settings.getGameType())); //$NON-NLS-1$
-		btnResetMatchCounts = new JButton(Messages.getString("ResetPanel.ResetMatchCounts", settings.getGameType())); //$NON-NLS-1$
-		btnResetTimeOuts = new JButton(Messages.getString("ResetPanel.ResetTimeOuts", settings.getGameType())); //$NON-NLS-1$
-		btnResetResetWarns = new JButton(Messages.getString("ResetPanel.ResetResetWarns", settings.getGameType())); //$NON-NLS-1$
-		btnResetAll = new JButton(Messages.getString("ResetPanel.ResetAll", settings.getGameType())); //$NON-NLS-1$
-
+		btnResetNames = new JButton(Messages.getString("ResetPanel.ResetNames", Settings.getGameType())); //$NON-NLS-1$
+		btnResetScores = new JButton(Messages.getString("ResetPanel.ResetScores", Settings.getGameType())); //$NON-NLS-1$
+		btnResetGameCounts = new JButton(Messages.getString("ResetPanel.ResetGameCounts", Settings.getGameType())); //$NON-NLS-1$
+		btnResetMatchCounts = new JButton(Messages.getString("ResetPanel.ResetMatchCounts", Settings.getGameType())); //$NON-NLS-1$
+		btnResetTimeOuts = new JButton(Messages.getString("ResetPanel.ResetTimeOuts", Settings.getGameType())); //$NON-NLS-1$
+		btnResetResetWarns = new JButton(Messages.getString("ResetPanel.ResetResetWarns", Settings.getGameType())); //$NON-NLS-1$
+		btnResetAll = new JButton(Messages.getString("ResetPanel.ResetAll", Settings.getGameType())); //$NON-NLS-1$
 		setMnemonics();
-
 		innerBorder = BorderFactory.createTitledBorder(buildTitle()); //$NON-NLS-1$
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
-		Border outerBorder = BorderFactory.createEmptyBorder(settings.getBorderTop(),settings.getBorderLeft(),settings.getBorderBottom(),settings.getBorderRight());
+		Border outerBorder = BorderFactory.createEmptyBorder(Settings.getBorderTop(),Settings.getBorderLeft(),Settings.getBorderBottom(),Settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
-		
 		layoutComponents();
-
 	}
 	
 	public void layoutComponents() {
@@ -166,40 +156,40 @@ public class ResetPanel extends JPanel {
 		add(btnResetAll, gc);
 	}
 	private void setMnemonics() {
-		if(settings.getResetNamesHotKey().isEmpty()) {
+		if(Settings.getResetNamesHotKey().isEmpty()) {
 			btnResetNames.setMnemonic(-1);
 		} else {
-			btnResetNames.setMnemonic(settings.getResetNamesHotKey().charAt(0));
+			btnResetNames.setMnemonic(Settings.getResetNamesHotKey().charAt(0));
 		};
-		if(settings.getResetScoresHotKey().isEmpty()) {
+		if(Settings.getResetScoresHotKey().isEmpty()) {
 			btnResetScores.setMnemonic(-1);
 		} else {
-			btnResetScores.setMnemonic(settings.getResetScoresHotKey().charAt(0));
+			btnResetScores.setMnemonic(Settings.getResetScoresHotKey().charAt(0));
 		};
-		if(settings.getResetGameCountsHotKey().isEmpty()) {
+		if(Settings.getResetGameCountsHotKey().isEmpty()) {
 			btnResetGameCounts.setMnemonic(-1);
 		} else {
-			btnResetGameCounts.setMnemonic(settings.getResetGameCountsHotKey().charAt(0));
+			btnResetGameCounts.setMnemonic(Settings.getResetGameCountsHotKey().charAt(0));
 		};
-		if(settings.getResetMatchCountsHotKey().isEmpty()) {
+		if(Settings.getResetMatchCountsHotKey().isEmpty()) {
 			btnResetMatchCounts.setMnemonic(-1);
 		} else {
-			btnResetMatchCounts.setMnemonic(settings.getResetMatchCountsHotKey().charAt(0));
+			btnResetMatchCounts.setMnemonic(Settings.getResetMatchCountsHotKey().charAt(0));
 		};
-		if(settings.getResetTimeOutsHotKey().isEmpty()) {
+		if(Settings.getResetTimeOutsHotKey().isEmpty()) {
 			btnResetTimeOuts.setMnemonic(-1);
 		} else {
-			btnResetTimeOuts.setMnemonic(settings.getResetTimeOutsHotKey().charAt(0));
+			btnResetTimeOuts.setMnemonic(Settings.getResetTimeOutsHotKey().charAt(0));
 		};
-		if(settings.getResetResetWarnHotKey().isEmpty()) {
+		if(Settings.getResetResetWarnHotKey().isEmpty()) {
 			btnResetResetWarns.setMnemonic(-1);
 		} else {
-			btnResetResetWarns.setMnemonic(settings.getResetResetWarnHotKey().charAt(0));
+			btnResetResetWarns.setMnemonic(Settings.getResetResetWarnHotKey().charAt(0));
 		};
-		if(settings.getResetAllHotKey().isEmpty()) {
+		if(Settings.getResetAllHotKey().isEmpty()) {
 			btnResetAll.setMnemonic(-1);
 		} else {
-			btnResetAll.setMnemonic(settings.getResetAllHotKey().charAt(0));
+			btnResetAll.setMnemonic(Settings.getResetAllHotKey().charAt(0));
 		};
 	}
 	public void updateMnemonics() {
@@ -238,7 +228,7 @@ public class ResetPanel extends JPanel {
 	}
 
 	private String buildTitle() {
-		return Messages.getString("ResetPanel.ResetPanel", settings.getGameType()); //$NON-NLS-1$
+		return Messages.getString("ResetPanel.ResetPanel", Settings.getGameType()); //$NON-NLS-1$
 	}
 
 }

@@ -49,42 +49,32 @@ public class SwitchPanel extends JPanel {
 	private JButton btnSwitchResetWarns;
 	private JButton btnClearAll;
 	private JLabel lblLastScored;
-	private Settings settings;
 	private Border innerBorder;
-
-	public SwitchPanel(Settings settings) {
-		
-		this.settings = settings;
-		
+	public SwitchPanel() {
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
 		dim.height = 300;
 		setPreferredSize(dim);
 		setName(buildTitle());
-		
-		btnSwitchSides = new JButton(Messages.getString("SwitchPanel.SwitchSides", settings.getGameType())); //$NON-NLS-1$
-		btnSwitchTeams = new JButton(Messages.getString("SwitchPanel.SwitchTeams", settings.getGameType())); //$NON-NLS-1$
-		btnSwitchForwards = new JButton(Messages.getString("SwitchPanel.SwitchPlayer1", settings.getGameType()));
-		btnSwitchGoalies = new JButton(Messages.getString("SwitchPanel.SwitchPlayer2", settings.getGameType()));
-		btnSwitchScores = new JButton(Messages.getString("SwitchPanel.SwitchScores", settings.getGameType())); //$NON-NLS-1$
-		btnSwitchGameCounts = new JButton(Messages.getString("SwitchPanel.SwitchGameCounts", settings.getGameType())); //$NON-NLS-1$
-		btnSwitchMatchCounts = new JButton(Messages.getString("SwitchPanel.SwitchMatchCounts", settings.getGameType())); //$NON-NLS-1$
-		btnSwitchTimeOuts = new JButton(Messages.getString("SwitchPanel.SwitchTimeOuts", settings.getGameType())); //$NON-NLS-1$
-		btnSwitchResetWarns = new JButton(Messages.getString("SwitchPanel.SwitchResetWarns", settings.getGameType())); //$NON-NLS-1$
-		btnClearAll = new JButton(Messages.getString("SwitchPanel.ClearAll", settings.getGameType())); //$NON-NLS-1$
-		lblLastScored = new JLabel(Messages.getString("SwitchPanel.LastScored", settings.getGameType())); //$NON-NLS-1$
+		btnSwitchSides = new JButton(Messages.getString("SwitchPanel.SwitchSides", Settings.getGameType())); //$NON-NLS-1$
+		btnSwitchTeams = new JButton(Messages.getString("SwitchPanel.SwitchTeams", Settings.getGameType())); //$NON-NLS-1$
+		btnSwitchForwards = new JButton(Messages.getString("SwitchPanel.SwitchPlayer1", Settings.getGameType()));
+		btnSwitchGoalies = new JButton(Messages.getString("SwitchPanel.SwitchPlayer2", Settings.getGameType()));
+		btnSwitchScores = new JButton(Messages.getString("SwitchPanel.SwitchScores", Settings.getGameType())); //$NON-NLS-1$
+		btnSwitchGameCounts = new JButton(Messages.getString("SwitchPanel.SwitchGameCounts", Settings.getGameType())); //$NON-NLS-1$
+		btnSwitchMatchCounts = new JButton(Messages.getString("SwitchPanel.SwitchMatchCounts", Settings.getGameType())); //$NON-NLS-1$
+		btnSwitchTimeOuts = new JButton(Messages.getString("SwitchPanel.SwitchTimeOuts", Settings.getGameType())); //$NON-NLS-1$
+		btnSwitchResetWarns = new JButton(Messages.getString("SwitchPanel.SwitchResetWarns", Settings.getGameType())); //$NON-NLS-1$
+		btnClearAll = new JButton(Messages.getString("SwitchPanel.ClearAll", Settings.getGameType())); //$NON-NLS-1$
+		lblLastScored = new JLabel(Messages.getString("SwitchPanel.LastScored", Settings.getGameType())); //$NON-NLS-1$
 		lblLastScored.setBorder(BorderFactory.createLoweredBevelBorder());
-		
 		setMnemonics();
-
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
-		Border outerBorder = BorderFactory.createEmptyBorder(settings.getBorderTop(),settings.getBorderLeft(),settings.getBorderBottom(),settings.getBorderRight());
+		Border outerBorder = BorderFactory.createEmptyBorder(Settings.getBorderTop(),Settings.getBorderLeft(),Settings.getBorderBottom(),Settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
-		
 		layoutComponents();
 	}
-	
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
 		
@@ -225,60 +215,58 @@ public class SwitchPanel extends JPanel {
 	}
 
 	private void setMnemonics() {
-		if(settings.getSwitchSidesHotKey().isEmpty()) {
+		if(Settings.getSwitchSidesHotKey().isEmpty()) {
 			btnSwitchSides.setMnemonic(-1);
 		} else {
-			btnSwitchSides.setMnemonic(settings.getSwitchSidesHotKey().charAt(0));
+			btnSwitchSides.setMnemonic(Settings.getSwitchSidesHotKey().charAt(0));
 		};
-		if(settings.getSwitchTeamsHotKey().isEmpty()) {
+		if(Settings.getSwitchTeamsHotKey().isEmpty()) {
 			btnSwitchTeams.setMnemonic(-1);
 		} else {
-			btnSwitchTeams.setMnemonic(settings.getSwitchTeamsHotKey().charAt(0));
+			btnSwitchTeams.setMnemonic(Settings.getSwitchTeamsHotKey().charAt(0));
 		};
-		if(settings.getSwitchForwardsHotKey().isEmpty()) {
+		if(Settings.getSwitchForwardsHotKey().isEmpty()) {
 			btnSwitchForwards.setMnemonic(-1);
 		} else {
-			btnSwitchForwards.setMnemonic(settings.getSwitchForwardsHotKey().charAt(0));
+			btnSwitchForwards.setMnemonic(Settings.getSwitchForwardsHotKey().charAt(0));
 		};
-		if(settings.getSwitchGoaliesHotKey().isEmpty()) {
+		if(Settings.getSwitchGoaliesHotKey().isEmpty()) {
 			btnSwitchGoalies.setMnemonic(-1);
 		} else {
-			btnSwitchGoalies.setMnemonic(settings.getSwitchGoaliesHotKey().charAt(0));
+			btnSwitchGoalies.setMnemonic(Settings.getSwitchGoaliesHotKey().charAt(0));
 		};
-		if(settings.getSwitchScoresHotKey().isEmpty()) {
+		if(Settings.getSwitchScoresHotKey().isEmpty()) {
 			btnSwitchScores.setMnemonic(-1);
 		} else {
-			btnSwitchScores.setMnemonic(settings.getSwitchScoresHotKey().charAt(0));
+			btnSwitchScores.setMnemonic(Settings.getSwitchScoresHotKey().charAt(0));
 		};
-		if(settings.getSwitchGameCountsHotKey().isEmpty()) {
+		if(Settings.getSwitchGameCountsHotKey().isEmpty()) {
 			btnSwitchGameCounts.setMnemonic(-1);
 		} else {
-			btnSwitchGameCounts.setMnemonic(settings.getSwitchGameCountsHotKey().charAt(0));
+			btnSwitchGameCounts.setMnemonic(Settings.getSwitchGameCountsHotKey().charAt(0));
 		};
-		if(settings.getSwitchMatchCountsHotKey().isEmpty()) {
+		if(Settings.getSwitchMatchCountsHotKey().isEmpty()) {
 			btnSwitchMatchCounts.setMnemonic(-1);
 		} else {
-			btnSwitchMatchCounts.setMnemonic(settings.getSwitchMatchCountsHotKey().charAt(0));
+			btnSwitchMatchCounts.setMnemonic(Settings.getSwitchMatchCountsHotKey().charAt(0));
 		};
-		if(settings.getSwitchTimeOutsHotKey().isEmpty()) {
+		if(Settings.getSwitchTimeOutsHotKey().isEmpty()) {
 			btnSwitchTimeOuts.setMnemonic(-1);
 		} else {
-			btnSwitchTimeOuts.setMnemonic(settings.getSwitchTimeOutsHotKey().charAt(0));
+			btnSwitchTimeOuts.setMnemonic(Settings.getSwitchTimeOutsHotKey().charAt(0));
 		};
-		if(settings.getSwitchResetWarnsHotKey().isEmpty()) {
+		if(Settings.getSwitchResetWarnsHotKey().isEmpty()) {
 			btnSwitchResetWarns.setMnemonic(-1);
 		} else {
-			btnSwitchResetWarns.setMnemonic(settings.getSwitchResetWarnsHotKey().charAt(0));
+			btnSwitchResetWarns.setMnemonic(Settings.getSwitchResetWarnsHotKey().charAt(0));
 		};
-		if(settings.getClearAllHotKey().isEmpty()) {
+		if(Settings.getClearAllHotKey().isEmpty()) {
 			btnClearAll.setMnemonic(-1);
 		} else {
-			btnClearAll.setMnemonic(settings.getClearAllHotKey().charAt(0));
+			btnClearAll.setMnemonic(Settings.getClearAllHotKey().charAt(0));
 		};
 	}
-
 	////// Listeners \\\\\\
-	
 	public void addSwitchSidesListener(ActionListener listenForBtnSwitchSides) {
 		btnSwitchSides.addActionListener(listenForBtnSwitchSides);
 	}
@@ -309,9 +297,7 @@ public class SwitchPanel extends JPanel {
 	public void addClearAllListener(ActionListener listenForBtnClearAll) {
 		btnClearAll.addActionListener(listenForBtnClearAll);
 	}
-	
 	////// Utility Methods \\\\\\
-
 	public void setLastScored(String txt) {
 		lblLastScored.setText(txt);
 	}
@@ -324,9 +310,7 @@ public class SwitchPanel extends JPanel {
 		border.setTitleJustification(TitledBorder.CENTER);
 		this.setBorder(border);
 	}
-
 	private String buildTitle() {
-		return Messages.getString("SwitchPanel.SwitchPanel", settings.getGameType()); //$NON-NLS-1$
+		return Messages.getString("SwitchPanel.SwitchPanel", Settings.getGameType()); //$NON-NLS-1$
 	}
-
 }

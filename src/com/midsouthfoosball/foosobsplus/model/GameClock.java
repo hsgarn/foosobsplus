@@ -42,7 +42,6 @@ public class GameClock implements Serializable {
 	private transient long streamStartTime;
 	private transient long currentTime;
 	private transient long pauseStartTime;
-
 	private int gameSeconds;
 	private int gameMinutes;
 	private int gameHours;
@@ -56,15 +55,10 @@ public class GameClock implements Serializable {
 	private int streamHours;
 	private boolean streamTimerRunning;
 	private transient OBSInterface obsInterface;
-	private transient Settings settings;
 	private transient DecimalFormat df = new DecimalFormat("00");
 	private static transient Logger logger = LoggerFactory.getLogger(GameClock.class);
-	
-	public GameClock(OBSInterface obsInterface, Settings settings) {
-
+	public GameClock(OBSInterface obsInterface) {
 		this.obsInterface = obsInterface;
-		this.settings = settings;
-		
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				currentTime = System.currentTimeMillis();
@@ -98,110 +92,84 @@ public class GameClock implements Serializable {
 		timer.setInitialDelay(1000);
 		timer.start();
 	}
-
 	public Timer getTimer() {
 		return timer;
 	}
-
 	public void setTimer(Timer timer) {
 		this.timer = timer;
 	}
-
 	public int getGameSeconds() {
 		return gameSeconds;
 	}
-
 	public void setGameSeconds(int gameSeconds) {
 		this.gameSeconds = gameSeconds;
 	}
-
 	public int getGameMinutes() {
 		return gameMinutes;
 	}
-
 	public void setGameMinutes(int gameMinutes) {
 		this.gameMinutes = gameMinutes;
 	}
-
 	public int getGameHours() {
 		return gameHours;
 	}
-
 	public void setGameHours(int gameHours) {
 		this.gameHours = gameHours;
 	}
-
 	public boolean isGameTimerRunning() {
 		return gameTimerRunning;
 	}
-
 	public void setGameTimerRunning(boolean gameTimerRunning) {
 		this.gameTimerRunning = gameTimerRunning;
 	}
-
 	public int getMatchSeconds() {
 		return matchSeconds;
 	}
-
 	public void setMatchSeconds(int matchSeconds) {
 		this.matchSeconds = matchSeconds;
 	}
-
 	public int getMatchMinutes() {
 		return matchMinutes;
 	}
-
 	public void setMatchMinutes(int matchMinutes) {
 		this.matchMinutes = matchMinutes;
 	}
-
 	public int getMatchHours() {
 		return matchHours;
 	}
-
 	public void setMatchHours(int matchHours) {
 		this.matchHours = matchHours;
 	}
-
 	public boolean isMatchTimerRunning() {
 		return matchTimerRunning;
 	}
-
 	public void setMatchTimerRunning(boolean matchTimerRunning) {
 		this.matchTimerRunning = matchTimerRunning;
 	}
 	public int getStreamSeconds() {
 		return streamSeconds;
 	}
-
 	public void setStreamSeconds(int streamSeconds) {
 		this.streamSeconds = streamSeconds;
 	}
-
 	public int getStreamMinutes() {
 		return streamMinutes;
 	}
-
 	public void setStreamMinutes(int streamMinutes) {
 		this.streamMinutes = streamMinutes;
 	}
-
 	public int getStreamHours() {
 		return streamHours;
 	}
-
 	public void setStreamHours(int streamHours) {
 		this.streamHours = streamHours;
 	}
-
 	public boolean isStreamTimerRunning() {
 		return streamTimerRunning;
 	}
-
 	public void setStreamTimerRunning(boolean streamTimerRunning) {
 		this.streamTimerRunning = streamTimerRunning;
 	}
-
 	public void restartGameTimer() {
 		timer.restart();
 	}
@@ -269,16 +237,16 @@ public class GameClock implements Serializable {
 		timer.addActionListener(alAction);
 	}
 	private void writeGameTime() {
-		writeData(settings.getGameTimeSource(), getGameTime());
+		writeData(Settings.getGameTimeSource(), getGameTime());
 	}
 	private void writeMatchTime() {
-		writeData(settings.getMatchTimeSource(), getMatchTime());
+		writeData(Settings.getMatchTimeSource(), getMatchTime());
 	}
 	private void writeStreamTime() {
-		writeData(settings.getStreamTimeSource(), getStreamTime());
+		writeData(Settings.getStreamTimeSource(), getStreamTime());
 	}
     private void writeData(String source, String data) {
-		obsInterface.writeData(source, data, "GameClock", settings.getShowParsed());
+		obsInterface.writeData(source, data, "GameClock", Settings.getShowParsed());
     }
     public void restoreState(byte[] serializedObject) {
 		GameClock tempGameClock = null;

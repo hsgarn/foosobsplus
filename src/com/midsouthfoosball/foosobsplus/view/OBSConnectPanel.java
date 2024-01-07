@@ -61,107 +61,81 @@ public class OBSConnectPanel extends JPanel {
 	private JCheckBox chckbxUpdateOnConnect;
 	private JButton btnDisconnect;
 	private JButton btnSave;
-	private Settings settings;
-	private OBS obs;
 	private JList<String> lstMessageHistory;
 	private DefaultListModel<String> mdlMessageHistory;
 	private JScrollPane scrMessageHistory;
 	private static Logger logger = LoggerFactory.getLogger(OBSConnectPanel.class);
-	
-	public OBSConnectPanel(Settings settings, OBS obs) throws IOException {
-		this.settings = settings;
-		this.obs = obs;
-		
+	public OBSConnectPanel() throws IOException {
 		mdlMessageHistory = new DefaultListModel<String>();
 		lstMessageHistory = new JList<String>(mdlMessageHistory);
-		
 		setLayout(new MigLayout("", "[][grow]", "[][][][][][][][][][grow]"));
-		
 		JLabel lblPanelTitle = new JLabel("OBS Connection Details:");
 		add(lblPanelTitle, "cell 1 0");
-		
 		JLabel lblHost = new JLabel("Host");
 		add(lblHost, "cell 0 1,alignx right");
-		
 		JLabel lblPort = new JLabel("Port");
 		add(lblPort, "cell 0 2,alignx right");
-		
 		JLabel lblPassword = new JLabel("Password");
 		add(lblPassword, "cell 0 3,alignx right");
-
 		JLabel lblScene = new JLabel("Scene");
 		add(lblScene, "cell 0 4, alignx right");
-		
 		txtHost = new JTextField();
-		txtHost.setText(settings.getOBSHost());
+		txtHost.setText(Settings.getOBSHost());
 		txtHost.setColumns(10);
 		add(txtHost, "cell 1 1,alignx left");
-		
 		txtPort = new JTextField();
-		txtPort.setText(settings.getOBSPort());
+		txtPort.setText(Settings.getOBSPort());
 		txtPort.setColumns(10);
 		add(txtPort, "cell 1 2,alignx left");
-		
 		txtPassword = new JTextField();
-		txtPassword.setText(settings.getOBSPassword());
+		txtPassword.setText(Settings.getOBSPassword());
 		txtPassword.setColumns(10);
 		add(txtPassword, "cell 1 3,alignx left");
-		
 		txtScene = new JTextField();
-		txtScene.setText(settings.getOBSScene());
+		txtScene.setText(Settings.getOBSScene());
 		txtScene.setColumns(10);
 		add(txtScene, "cell 1 4,alignx left");
-		
 		chckbxSavePassword = new JCheckBox("Save Password");
-		if (Integer.toString(settings.getOBSSavePassword()).equals("1")) { //$NON-NLS-1$
+		if (Integer.toString(Settings.getOBSSavePassword()).equals("1")) { //$NON-NLS-1$
 			chckbxSavePassword.setSelected(true);
 		} else {
 			chckbxSavePassword.setSelected(false);
 		}
 		add(chckbxSavePassword, "cell 1 5,alignx left");
-		
 		chckbxAutoLogin = new JCheckBox("Auto Login on Start");
-		if (Integer.toString(settings.getOBSAutoLogin()).equals("1")) { //$NON-NLS-1$
+		if (Integer.toString(Settings.getOBSAutoLogin()).equals("1")) { //$NON-NLS-1$
 			chckbxAutoLogin.setSelected(true);
 		} else {
 			chckbxAutoLogin.setSelected(false);
 		}
 		add(chckbxAutoLogin, "cell 1 6,alignx left");
-		
 		btnConnect = new JButton("Connect");
 		add(btnConnect, "cell 1 7,alignx left");
-		
 		JLabel lblMessage = new JLabel("Message:");
 		add(lblMessage, "cell 1 8, alignx left");
-		
 		scrMessageHistory = new JScrollPane();
 		scrMessageHistory.setViewportView(lstMessageHistory);
 		lstMessageHistory.setLayoutOrientation(JList.VERTICAL);
 		lstMessageHistory.setCellRenderer(new AttributiveCellRenderer());
 		add(scrMessageHistory, "cell 1 9,span 3");
-		
 		btnSetScene = new JButton("Set Scene");
 		add(btnSetScene, "cell 1 4,alignx right");
-		
 		btnDisconnect = new JButton("Disconnect");
 		add(btnDisconnect, "cell 1 7,alignx right");
-
 		chckbxCloseOnConnect = new JCheckBox("Close on Connect");
-		if (Integer.toString(settings.getOBSCloseOnConnect()).equals("1")) { //$NON-NLS-1$
+		if (Integer.toString(Settings.getOBSCloseOnConnect()).equals("1")) { //$NON-NLS-1$
 			chckbxCloseOnConnect.setSelected(true);
 		} else {
 			chckbxCloseOnConnect.setSelected(false);
 		}
 		add(chckbxCloseOnConnect, "cell 3 5,alignx left");
-		
 		chckbxUpdateOnConnect = new JCheckBox("Update on Connect");
-		if (Integer.toString(settings.getOBSUpdateOnConnect()).equals("1")) {
+		if (Integer.toString(Settings.getOBSUpdateOnConnect()).equals("1")) {
 			chckbxUpdateOnConnect.setSelected(true);
 		} else {
 			chckbxUpdateOnConnect.setSelected(false);
 		}
 		add(chckbxUpdateOnConnect, "cell 3 6,alignx left");
-
 		btnSave = new JButton("Save");
 		add(btnSave, "cell 3 7,alignx left");
 	}
@@ -179,42 +153,37 @@ public class OBSConnectPanel extends JPanel {
 	}
 	public boolean isConnectionChanged() {
 		boolean changed = false;
-		if (!txtHost.getText().equals(settings.getOBSHost()) ||
-			!txtPort.getText().equals(settings.getOBSPort())  ||
-			!txtPassword.getText().equals(settings.getOBSPassword())) {
+		if (!txtHost.getText().equals(Settings.getOBSHost()) ||
+			!txtPort.getText().equals(Settings.getOBSPort())  ||
+			!txtPassword.getText().equals(Settings.getOBSPassword())) {
 			changed = true;
 		}
 		return changed;
 	}
 	public void updateOBS() {
-		obs.setHost(txtHost.getText());
-		obs.setPort(txtPort.getText());
-		obs.setPassword(txtPassword.getText());
-		obs.setSavePassword(chckbxSavePassword.isSelected());
-		obs.setAutoLogin(chckbxAutoLogin.isSelected());
-		obs.setUpdateOnConnect(chckbxUpdateOnConnect.isSelected());
-		obs.setCloseOnConnect(chckbxCloseOnConnect.isSelected());
+		OBS.setHost(txtHost.getText());
+		OBS.setPort(txtPort.getText());
+		OBS.setPassword(txtPassword.getText());
 	}
 	public void saveSettings() {
 		updateOBS();
-		settings.setOBS("OBSHost",txtHost.getText());
-		settings.setOBS("OBSPort",txtPort.getText());
-		settings.setOBS("OBSScene",txtScene.getText());
-		obs.setScene(txtScene.getText());
+		Settings.setOBS("OBSHost",txtHost.getText());
+		Settings.setOBS("OBSPort",txtPort.getText());
+		Settings.setOBS("OBSScene",txtScene.getText());
+		OBS.setScene(txtScene.getText());
 		if (chckbxSavePassword.isSelected()) {
-			settings.setOBS("OBSSavePassword",1);
-			settings.setOBS("OBSPassword",txtPassword.getText());
+			Settings.setOBS("OBSSavePassword",1);
+			Settings.setOBS("OBSPassword",txtPassword.getText());
 		} else {
-			settings.setOBS("OBSSavePassword",0);
-			settings.setOBS("OBSPassword","");
+			Settings.setOBS("OBSSavePassword",0);
+			Settings.setOBS("OBSPassword","");
 		}
-		settings.setOBS("OBSAutoLogin", chckbxAutoLogin.isSelected() ? 1 : 0);
-		settings.setOBS("OBSUpdateOnConnect", chckbxUpdateOnConnect.isSelected() ? 1 : 0);
-		settings.setOBS("OBSCloseOnConnect", chckbxCloseOnConnect.isSelected() ? 1 : 0);
-		if (settings.getOBSAutoLogin()==1) {
-			if (settings.getOBSHost().isEmpty() || settings.getOBSPassword().isEmpty() || settings.getOBSPort().isEmpty() || settings.getOBSSavePassword() == 0) {
-				settings.setOBS("OBSAutoLogin",0);
-				obs.setAutoLogin(false);
+		Settings.setOBS("OBSAutoLogin", chckbxAutoLogin.isSelected() ? 1 : 0);
+		Settings.setOBS("OBSUpdateOnConnect", chckbxUpdateOnConnect.isSelected() ? 1 : 0);
+		Settings.setOBS("OBSCloseOnConnect", chckbxCloseOnConnect.isSelected() ? 1 : 0);
+		if (Settings.getOBSAutoLogin()==1) {
+			if (Settings.getOBSHost().isEmpty() || Settings.getOBSPassword().isEmpty() || Settings.getOBSPort().isEmpty() || Settings.getOBSSavePassword() == 0) {
+				Settings.setOBS("OBSAutoLogin",0);
 				chckbxAutoLogin.setSelected(false);
 				String msg = Messages.getString("Errors.OBSConnectPanel.AutoLogin");
 				String ttl = Messages.getString("Errors.OBSConnectPanel.AutoLogin.Title");
@@ -223,7 +192,7 @@ public class OBSConnectPanel extends JPanel {
 			}
 		}
 		try {
-			settings.saveOBSConfig();
+			Settings.saveOBSConfig();
 		} catch (IOException ex) {
 			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile"));
 			logger.error(ex.toString());

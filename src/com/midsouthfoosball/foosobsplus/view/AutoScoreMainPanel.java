@@ -41,100 +41,79 @@ public class AutoScoreMainPanel extends JPanel {
 	private JButton btnDisconnect;
 	private JButton btnSettings;
 	private JCheckBox chkbxIgnore;
-	private Settings settings;
 	private Border innerBorder;
-
-	public AutoScoreMainPanel(Settings settings) {
-		
-		this.settings = settings;
+	public AutoScoreMainPanel() {
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
 		dim.height = 100;
 		setPreferredSize(dim);
 		setName(buildTitle());
-		
-		btnConnect = new JButton(Messages.getString("AutoScoreMainPanel.Connect", settings.getGameType())); //$NON-NLS-1$
-		btnDisconnect = new JButton(Messages.getString("AutoScoreMainPanel.Disconnect", settings.getGameType())); //$NON-NLS-1$
-		btnSettings = new JButton(Messages.getString("AutoScoreMainPanel.Settings", settings.getGameType())); //$NON-NLS-1$
-		chkbxIgnore = new JCheckBox(Messages.getString("AutoScoreMainPanel.Ignore", settings.getGameType())); //$NON-NLS-1$
-
+		btnConnect = new JButton(Messages.getString("AutoScoreMainPanel.Connect", Settings.getGameType())); //$NON-NLS-1$
+		btnDisconnect = new JButton(Messages.getString("AutoScoreMainPanel.Disconnect", Settings.getGameType())); //$NON-NLS-1$
+		btnSettings = new JButton(Messages.getString("AutoScoreMainPanel.Settings", Settings.getGameType())); //$NON-NLS-1$
+		chkbxIgnore = new JCheckBox(Messages.getString("AutoScoreMainPanel.Ignore", Settings.getGameType())); //$NON-NLS-1$
 		setMnemonics();
-		
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
-		Border outerBorder = BorderFactory.createEmptyBorder(settings.getBorderTop(),settings.getBorderLeft(),settings.getBorderBottom(),settings.getBorderRight());
+		Border outerBorder = BorderFactory.createEmptyBorder(Settings.getBorderTop(),Settings.getBorderLeft(),Settings.getBorderBottom(),Settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
-		
 		layoutComponents();
 	}
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
-		
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = 0;
-
 		//////// Connect ////////
 		gc.gridy++;
-
 		gc.weightx = .1;
 		gc.weighty = 0.1;
-		
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_START;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(btnConnect, gc);
-
 		//////// Disconnect ////////
 //		gc.gridy++;
-
 		gc.weightx = .1;
 		gc.weighty = 0.1;
-		
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(btnDisconnect, gc);
-
 		//////// Settings////////
 		gc.gridy++;
-
 		gc.weightx = .1;
 		gc.weighty = 0.1;
-		
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_START;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(btnSettings, gc);
-		
 		//////// Ignore Sensors \\\\\\\\\\\\\
 		gc.weightx = .1;
 		gc.weighty = .1;
-		
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(chkbxIgnore, gc);
-		
 	}
 	private void setMnemonics() {
-		if(settings.getAutoScoreMainConnectHotKey().isEmpty()) {
+		if(Settings.getAutoScoreMainConnectHotKey().isEmpty()) {
 			btnConnect.setMnemonic(-1);
 		} else {
-			btnConnect.setMnemonic(settings.getAutoScoreMainConnectHotKey().charAt(0));
+			btnConnect.setMnemonic(Settings.getAutoScoreMainConnectHotKey().charAt(0));
 		};
-		if(settings.getAutoScoreMainDisconnectHotKey().isEmpty()) {
+		if(Settings.getAutoScoreMainDisconnectHotKey().isEmpty()) {
 			btnDisconnect.setMnemonic(-1);
 		} else {
-			btnDisconnect.setMnemonic(settings.getAutoScoreMainDisconnectHotKey().charAt(0));
+			btnDisconnect.setMnemonic(Settings.getAutoScoreMainDisconnectHotKey().charAt(0));
 		};
-		if(settings.getAutoScoreMainSettingsHotKey().isEmpty()) {
+		if(Settings.getAutoScoreMainSettingsHotKey().isEmpty()) {
 			btnSettings.setMnemonic(-1);
 		} else {
-			btnSettings.setMnemonic(settings.getAutoScoreMainSettingsHotKey().charAt(0));
+			btnSettings.setMnemonic(Settings.getAutoScoreMainSettingsHotKey().charAt(0));
 		};
 	}
 	////// Listeners  //////
@@ -147,9 +126,7 @@ public class AutoScoreMainPanel extends JPanel {
 	public void addSettingsListener(ActionListener listenForBtnSettings) {
 		btnSettings.addActionListener(listenForBtnSettings);
 	}
-
 	////// Utility Methods //////
-	
 	public void updateMnemonics() {
 		setMnemonics();
 	}
@@ -160,7 +137,7 @@ public class AutoScoreMainPanel extends JPanel {
 		this.setBorder(border);
 	}
 	private String buildTitle() {
-		return Messages.getString("AutoScoreMainPanel.AutoScoreMainPanel", settings.getGameType()); //$NON-NLS-1$
+		return Messages.getString("AutoScoreMainPanel.AutoScoreMainPanel", Settings.getGameType()); //$NON-NLS-1$
 	}
 	public boolean isIgnored() {
 		return chkbxIgnore.isSelected();

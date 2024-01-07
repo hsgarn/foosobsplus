@@ -20,99 +20,61 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.model;
 
-//import net.twasi.obsremotejava.OBSRemoteController;
 import io.obswebsocket.community.client.OBSRemoteController;
 
-public class OBS {
-	private static OBS instance = new OBS();
-	private String host;
-	private String port;
-	private String password;
-	private String scene;
-	private OBSRemoteController controller;
-	private Boolean savePassword;
-	private Boolean autoLogin;
-	private Boolean updateOnConnect;
-	private Boolean closeOnConnect;
-	private Boolean connected;
-	private String message;
-	private String currentScene;
-
+public final class OBS {
+	private final static OBS instance = new OBS();
+	private static String host;
+	private static String port;
+	private static String password;
+	private static String scene;
+	private static OBSRemoteController controller;
+	transient private static Boolean connected;
+	transient private static String currentScene;
 	private OBS() {}
-	
 	public static OBS getInstance() {
 		return instance;
 	}
-	public String getHost() {
+	public static String getHost() {
 		return host;
 	}
-	public void setHost(String host) {
-		this.host = host;
+	public static void setHost(String host) {
+		OBS.host = host;
 	}
-	public String getPort() {
+	public static String getPort() {
 		return port;
 	}
-	public String getScene() {
+	public static String getScene() {
 		return scene;
 	}
-	public void setPort(String port) {
-		this.port = port;
+	public static void setPort(String port) {
+		OBS.port = port;
 	}
-	public String getPassword() {
+	public static String getPassword() {
 		return password;
 	}
-	public void setPassword(String password) {
-		this.password = password;
+	public static void setPassword(String password) {
+		OBS.password = password;
 	}
-	public void setScene(String scene) {
-		this.scene = scene;
+	public static void setScene(String scene) {
+		OBS.scene = scene;
 	}
-	public OBSRemoteController getController() {
+	public static OBSRemoteController getController() {
 		return controller;
 	}
-	public void setController(OBSRemoteController controller) {
-		this.controller = controller;
+	public static void setController(OBSRemoteController controller) {
+		OBS.controller = controller;
 	}
-	public Boolean getSavePassword() {
-		return savePassword;
-	}
-	public void setSavePassword(Boolean savePassword) {
-		this.savePassword = savePassword;
-	}
-	public Boolean getAutoLogin() {
-		return autoLogin;
-	}
-	public void setAutoLogin(Boolean autoLogin) {
-		this.autoLogin = autoLogin;
-	}
-	public Boolean getUpdateOnConnect() {
-		return updateOnConnect;
-	}
-	public void setUpdateOnConnect(Boolean updateOnConnect) {
-		this.updateOnConnect = updateOnConnect;
-	}
-	public Boolean getCloseOnConnect() {
-		return closeOnConnect;
-	}
-	public void setCloseOnConnect(Boolean closeOnConnect) {
-		this.closeOnConnect = closeOnConnect;
-	}
-	public Boolean getConnected() {
+	public static Boolean getConnected() {
 		return connected;
 	}
-	public void setConnected(Boolean connected) {
-		this.connected = connected;
+	public static void setConnected(Boolean connected) {
+		OBS.connected = connected;
 	}
-	public String getMessage() {
-		return message;
-	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	public String getCurrentScene() {
+	public static String getCurrentScene() {
 		return currentScene;
 	}
-	public void setCurrentScene(String currentScene) {
-		this.currentScene = currentScene;
-	}	
+	public static void setCurrentScene(String currentScene) {
+		OBS.currentScene = currentScene;
+	}
 }

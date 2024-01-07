@@ -22,24 +22,26 @@ package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Dimension;
 import java.io.IOException;
+
 import javax.swing.JFrame;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.midsouthfoosball.foosobsplus.model.AppConfig;
+
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
-import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.AppConfig;
 
 @SuppressWarnings("serial")
 public class SourcesFrame extends JFrame {
 	private SourcesPanel sourcesPanel;
 	private static final String programName = AppConfig.PROGRAM_NAME;
 	private static Logger logger = LoggerFactory.getLogger(SourcesFrame.class);
-	public SourcesFrame(Settings settings, OBSInterface obsInterface) {
+	public SourcesFrame(OBSInterface obsInterface) {
 		super(programName + " " + Messages.getString("SourcesFrame.SourcesSettings")); //$NON-NLS-1$ //$NON-NLS-2$
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
 		try {
-			sourcesPanel = new SourcesPanel(settings, obsInterface);
+			sourcesPanel = new SourcesPanel(obsInterface);
 		} catch (IOException e) {
 			logger.error(Messages.getString("Errors.LoadSettingsError")); //$NON-NLS-1$
 			logger.error(e.toString());

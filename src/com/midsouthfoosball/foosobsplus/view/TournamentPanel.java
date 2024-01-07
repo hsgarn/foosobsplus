@@ -48,30 +48,27 @@ public class TournamentPanel extends JPanel {
 	private JTextField txtEventName;
 	private JTextField txtTableName;
 	private JButton btnClear;
-	private Settings settings;
 	private Border innerBorder;
 	
-	public TournamentPanel(Settings settings) {
+	public TournamentPanel() {
 		
-		this.settings = settings;
-
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
 		dim.height = 225;
 		setPreferredSize(dim);
 		setName(buildTitle());
 		
-		lblTournamentName = new JLabel(Messages.getString("TournamentPanel.TournamentName", settings.getGameType())); //$NON-NLS-1$
-		lblEventName = new JLabel(Messages.getString("TournamentPanel.EventName", settings.getGameType())); //$NON-NLS-1$
-		lblTableName = new JLabel(Messages.getString("TournamentPanel.TableName", settings.getGameType())); //$NON-NLS-1$
+		lblTournamentName = new JLabel(Messages.getString("TournamentPanel.TournamentName", Settings.getGameType())); //$NON-NLS-1$
+		lblEventName = new JLabel(Messages.getString("TournamentPanel.EventName", Settings.getGameType())); //$NON-NLS-1$
+		lblTableName = new JLabel(Messages.getString("TournamentPanel.TableName", Settings.getGameType())); //$NON-NLS-1$
 		txtTournamentName = new JTextField(50);
 		txtEventName = new JTextField(50);
 		txtTableName = new JTextField(50);
-		btnClear = new JButton(Messages.getString("TournamentPanel.Clear", settings.getGameType())); //$NON-NLS-1$
+		btnClear = new JButton(Messages.getString("TournamentPanel.Clear", Settings.getGameType())); //$NON-NLS-1$
 		
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
-		Border outerBorder = BorderFactory.createEmptyBorder(settings.getBorderTop(),settings.getBorderLeft(),settings.getBorderBottom(),settings.getBorderRight());
+		Border outerBorder = BorderFactory.createEmptyBorder(Settings.getBorderTop(),Settings.getBorderLeft(),Settings.getBorderBottom(),Settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
@@ -216,7 +213,7 @@ public class TournamentPanel extends JPanel {
 		this.setBorder(border);
 	}
 	private String buildTitle() {
-		return Messages.getString("TournamentPanel.TournamentInformation", settings.getGameType()); //$NON-NLS-1$
+		return Messages.getString("TournamentPanel.TournamentInformation", Settings.getGameType()); //$NON-NLS-1$
 	}
 
 }

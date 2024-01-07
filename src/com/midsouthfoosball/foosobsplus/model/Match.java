@@ -40,7 +40,6 @@ public class Match implements Serializable {
 	private transient Team team1;
 	private transient Team team2;
 	private transient Team team3;
-	private transient Settings settings;
 	private transient OBSInterface obsInterface;
 	private transient String startTime;
     private transient Map<Integer, Team> teamsMap = new HashMap<>();
@@ -61,13 +60,12 @@ public class Match implements Serializable {
 	private String[] times;
 	private static transient Logger logger = LoggerFactory.getLogger(Match.class);
 	private StringBuilder gameResults = new StringBuilder();
-	public Match(OBSInterface obsInterface, Settings settings, Team team1, Team team2, Team team3) {
+	public Match(OBSInterface obsInterface, Team team1, Team team2, Team team3) {
 		this.team1 = team1;
 		this.team2 = team2;
 		this.team3 = team3;
-		this.settings = settings;
 		this.obsInterface = obsInterface;
-		this.maxGameCount=settings.getMaxGameNumber();
+		this.maxGameCount=Settings.getMaxGameNumber();
 		this.gameWinners  = new int[maxGamesToShow];
 		this.scoresTeam1 = new String[maxGamesToShow];
 		this.scoresTeam2 = new String[maxGamesToShow];
@@ -172,7 +170,7 @@ public class Match implements Serializable {
 	}
 	public void setMaxPossibleGames(int maxPossibleGames) {
 		if (maxPossibleGames<=0) {
-			maxPossibleGames = settings.getMaxGameNumber();
+			maxPossibleGames = Settings.getMaxGameNumber();
 		}
 		this.maxGameCount = maxPossibleGames;
 	}
@@ -267,10 +265,10 @@ public class Match implements Serializable {
 		writeLastScored();
 	}
 	public void setLastScored(String lastScoredtxt) {
-		if (lastScoredtxt.equals(settings.getLastScoredStrings()[2])) {
+		if (lastScoredtxt.equals(Settings.getLastScoredStrings()[2])) {
 			this.lastScored = 2;
 		} else {
-			if (lastScoredtxt.equals(settings.getLastScoredStrings()[1])) {
+			if (lastScoredtxt.equals(Settings.getLastScoredStrings()[1])) {
 				this.lastScored = 1;
 			} else {
 				this.lastScored = 0;
@@ -379,7 +377,7 @@ public class Match implements Serializable {
 			resetScores();
 			resetTimeOuts();
 			resetResetWarn();
-			int maxGameCount = settings.getMaxGameNumber();
+			int maxGameCount = Settings.getMaxGameNumber();
 			if (currentGameNumber > maxGameCount) currentGameNumber = maxGameCount;
 			winState = 0;
 		}
@@ -442,7 +440,7 @@ public class Match implements Serializable {
 		if (winState>0) {
 			String result = "[" + getCurrentTime() + "] " + team1.getForwardName() + "/" + team1.getGoalieName() + " " + team1.getScore() + " vs " + team2.getForwardName()
 				+ "/" + team2.getGoalieName() + " " + team2.getScore() + " (" + getTimes()[currentGameNumber-1] + ")"; 
-			writeData(settings.getDefaultGameResultsSource(), addGameResults(result).toString());
+			writeData(Settings.getDefaultGameResultsSource(), addGameResults(result).toString());
 			setCurrentTime(gameTime);
 		}
 
@@ -456,13 +454,13 @@ public class Match implements Serializable {
 	}
 	private int checkForGameWin(int score1, int score2, int score3) {
 		int whoWon = 0;// rack mode returns 0, 1 or 2 (1 if scoring team won or 2 if other team won). non rack mode returns 0, 3 (3=team who called checkForGameWin won)  .
-		int pointsToWin = settings.getPointsToWin();
-		int maxWin = settings.getMaxWin();
-		int winBy = settings.getWinBy();
-		int winByFinalOnly = settings.getWinByFinalOnly();
-		int ballsInRack = settings.getBallsInRack();
-		boolean rackMode = settings.getRackMode() == 1;
-		if (settings.getAutoIncrementGame()==1) {
+		int pointsToWin = Settings.getPointsToWin();
+		int maxWin = Settings.getMaxWin();
+		int winBy = Settings.getWinBy();
+		int winByFinalOnly = Settings.getWinByFinalOnly();
+		int ballsInRack = Settings.getBallsInRack();
+		boolean rackMode = Settings.getRackMode() == 1;
+		if (Settings.getAutoIncrementGame()==1) {
 			if (rackMode) {
 				if (score1 + score2 >= ballsInRack) {
 					if(score1 > score2) {
@@ -494,7 +492,7 @@ public class Match implements Serializable {
 		String name = null;
 		if(matchWon) {
 			clearMeatball();
-			if (settings.getAnnounceWinner()==1) {
+			if (Settings.getAnnounceWinner()==1) {
 				boolean skipMatchWinnerDisplay = false;
 				if (team.getTeamName() == null || team.getTeamName().isEmpty()) {
 					if (team.getGoalieName() == null || team.getGoalieName().isEmpty()) {
@@ -514,7 +512,7 @@ public class Match implements Serializable {
 					name = team.getTeamName();
 				}
 				if (!skipMatchWinnerDisplay) {
-					writeMatchWinner(settings.getWinnerPrefix() + name + settings.getWinnerSuffix());
+					writeMatchWinner(Settings.getWinnerPrefix() + name + Settings.getWinnerSuffix());
 				}
 			}
 //			resetScores();
@@ -545,22 +543,22 @@ public class Match implements Serializable {
 		int gameCount1 = team1.getGameCount();
 		int gameCount2 = team2.getGameCount();
 		int gameCount3 = team3.getGameCount();
-		int isCutthroat = settings.getCutThroatMode();
+		int isCutthroat = Settings.getCutThroatMode();
 		boolean isPotentialMeatball = false;
-		if (settings.getAnnounceMeatball() == 1) {
+		if (Settings.getAnnounceMeatball() == 1) {
 			if (isCutthroat == 1) {
-				if (points1 == points2 && points1 == points3 && gameCount1 == gameCount2 && gameCount1 == gameCount3 && settings.getWinBy() < 2) {
+				if (points1 == points2 && points1 == points3 && gameCount1 == gameCount2 && gameCount1 == gameCount3 && Settings.getWinBy() < 2) {
 					isPotentialMeatball = true;
 				}
 			} else {
-				if (points1 == points2 && gameCount1 == gameCount2 && settings.getWinBy() < 2) {
+				if (points1 == points2 && gameCount1 == gameCount2 && Settings.getWinBy() < 2) {
 					isPotentialMeatball = true;
 				}
 			}
 			if (isPotentialMeatball) {			
-				int meatballPoint = settings.getPointsToWin() - 1;
+				int meatballPoint = Settings.getPointsToWin() - 1;
 				if (points1 == meatballPoint) {
-					if (gameCount1 == settings.getGamesToWin() - 1) {
+					if (gameCount1 == Settings.getGamesToWin() - 1) {
 						writeMeatball();
 						return;
 					}
@@ -572,12 +570,12 @@ public class Match implements Serializable {
 	private boolean checkForGameWinOnly() {
 		boolean isGameWon = false;
 		if (currentGameNumber!=0) {
-			int pointsToWin = settings.getPointsToWin();
-			int maxWin = settings.getMaxWin();
-			int winBy = settings.getWinBy();
-			int winByFinalOnly = settings.getWinByFinalOnly();
-			int ballsInRack = settings.getBallsInRack();
-			boolean rackMode = settings.getRackMode() == 1;
+			int pointsToWin = Settings.getPointsToWin();
+			int maxWin = Settings.getMaxWin();
+			int winBy = Settings.getWinBy();
+			int winByFinalOnly = Settings.getWinByFinalOnly();
+			int ballsInRack = Settings.getBallsInRack();
+			boolean rackMode = Settings.getRackMode() == 1;
 			int score1 = Integer.parseInt(scoresTeam1[currentGameNumber-1]);
 			int score2 = Integer.parseInt(scoresTeam2[currentGameNumber-1]);
 			int score3 = Integer.parseInt(scoresTeam3[currentGameNumber-1]);
@@ -605,7 +603,7 @@ public class Match implements Serializable {
 	}
 	private boolean checkForMatchWin(Team team) {
 		boolean matchWon = false;
-		if(team.getGameCount()==settings.getGamesToWin()) {
+		if(team.getGameCount()==Settings.getGamesToWin()) {
 			matchWon=true;
 		}
 		return matchWon;
@@ -635,22 +633,22 @@ public class Match implements Serializable {
 		this.startTime = startTime;
 	}
 	private void writeLastScored() {
-		writeData(settings.getLastScoredSource(), settings.getLastScoredStrings()[lastScored]);
+		writeData(Settings.getLastScoredSource(), Settings.getLastScoredStrings()[lastScored]);
 	}
 	private void writeMatchWinner(String theContents) {
-		writeData(settings.getMatchWinnerSource(), theContents);
+		writeData(Settings.getMatchWinnerSource(), theContents);
 	}
 	private void clearMatchWinner() {
-		writeData(settings.getMatchWinnerSource(), "");
+		writeData(Settings.getMatchWinnerSource(), "");
 	}
 	private void writeMeatball() {
-		writeData(settings.getMeatballSource(), settings.getMeatball());
+		writeData(Settings.getMeatballSource(), Settings.getMeatball());
 	}
 	private void clearMeatball() {
-		writeData(settings.getMeatballSource(), "");
+		writeData(Settings.getMeatballSource(), "");
 	}
     private void writeData(String source, String data) {
-		obsInterface.writeData(source, data, "Match", settings.getShowParsed());
+		obsInterface.writeData(source, data, "Match", Settings.getShowParsed());
     }
     public void restoreState(byte[] serializedObject) {
 

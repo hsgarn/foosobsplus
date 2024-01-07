@@ -2,7 +2,7 @@
 FoosOBSPlus is a tool to enhance your foosball streaming experience.  It is a flexible foosball score keeper and statistics program that will send the match information to your OBS Studio (Version 28 or higher) streaming software. It also plays well with Elagto's Stream Deck products so updating the score, switching sides, calling times out can all be done with simple button presses.
 
 ## Overview
-FoosOBSPlus sends your Foosball game data (Players, scores, game counts, time outs, etc.) to OBS Studio using OBS Studio's web sockets protocol.  Almost every field displayed in FoosOBSPlus can be sent to OBS Studio and displayed to your live stream. FoosOBSPlus can also connect to an auto scoring system using a Raspberry Pico W and some lasers (see https://github.com/hsgarn/FoosScore for more information).  Also a Stream Deck can be used in combination with Auto Hot Keys to control most functions in FoosOBSPlus.
+FoosOBSPlus sends your Foosball game data (Players, scores, game counts, time outs, etc.) to OBS Studio using OBS Studio's web sockets protocol.  Almost every field displayed in FoosOBSPlus can be sent to OBS Studio and displayed to your live stream. FoosOBSPlus can also connect to an auto scoring system using a Raspberry Pico W and some lasers (see <https://github.com/hsgarn/FoosScore for more information>).  Also a Stream Deck can be used in combination with Auto Hot Keys to control most functions in FoosOBSPlus.
 
 FoosOBSPlus Main Screen:
 <img align="left" width="850" height="630" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusScreen1.png">
@@ -11,7 +11,7 @@ OBS Studio scene utilizing FoosOBSPlus to display various data:
 <img align="left" width="1920" height="1090" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusScreen2.png">
 
 ## Setup
-FoosOBSPlus is a java program.  You can download the executable jar file from the Releases section. You will need to have at least Java 1.8 loaded and windows set up to associate jar files with java. There are many resources on the web for how to load java and set windows up to run the jar file.  (see https://www.howtogeek.com/812583/how-to-open-jar-files-windows/ for example.  The executable jar file will run in the directory you placed it. )
+FoosOBSPlus is a java program.  You can download the executable jar file from the Releases section. You will need to have at least Java 1.8 loaded and windows set up to associate jar files with java. There are many resources on the web for how to load java and set windows up to run the jar file.  (see <https://www.howtogeek.com/812583/how-to-open-jar-files-windows/> for example.  The executable jar file will run in the directory you placed it. )
 
 ## Toolbar Items
 ## File
@@ -310,7 +310,7 @@ Click the cancel button to discard any statistics source changes made.
 Click the Restore Defaults button to restore the default statistics sources.
 
 ### Hot Keys
-FoosOBSPlus uses buttons to do various functions such as increase or decrease scores, switch sides, reset game counts, start timers, etc.  Each button can have a Hot Key assigned to it.  Pressing ALT plus the assigned Hot Key for the button will function just like pressing the actual button.  Unfortunately, there are more buttons than available hot keys so you can not assign a hot key to every button. The hot keys can be used in Stream Deck commands to make operating FoosOBSPlus a simple push button affair.  TouchPortal is another program that can be used to activate the buttons in FoosOBSPlus.  These will require that AutoHotKey be installed. (See https://www.autohotkey.com/docs/Tutorial.htm).  FoosOBSPlus will generate the AutoHotKey scripts for any hot keys defined (see the Generate AutoHotKey Scripts button below).
+FoosOBSPlus uses buttons to do various functions such as increase or decrease scores, switch sides, reset game counts, start timers, etc.  Each button can have a Hot Key assigned to it.  Pressing ALT plus the assigned Hot Key for the button will function just like pressing the actual button.  Unfortunately, there are more buttons than available hot keys so you can not assign a hot key to every button. The hot keys can be used in Stream Deck commands to make operating FoosOBSPlus a simple push button affair.  TouchPortal is another program that can be used to activate the buttons in FoosOBSPlus.  These will require that AutoHotKey be installed. (See <https://www.autohotkey.com/docs/Tutorial.htm>).  FoosOBSPlus will generate the AutoHotKey scripts for any hot keys defined (see the Generate AutoHotKey Scripts button below).
 
 <img  width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings4.png">
 
@@ -1148,7 +1148,22 @@ bgs - ball shot into black goal (score y=2, b=1)
 * xpkt2 - push king seat team 2
 * xpkt3 - push king seat team 3
 
+# Found this useful? Consider donating a refreshing beverage to me :)</br>
+As you can see by the revision history below, I have spent many hours working on this software.  It has grown from a simple score keeper application to a fairly sophisticated application able to interface with an Auto Scoring system and OBS Streaming software. I have licensed the software so it is free to use and modify as you see fit.  The source code is freely available.  However, if you find the software helpful in any way and would like to buy me a refreshing beverage or a foosball, please feel free to make a donation here:  
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
+
 ## Revision History</br>
+v2.039 01/07/2024</br>
+Inserted and then commented out code to getSceneItemList and getGroupSceneItemList in the main OnReady method.</br>
+Add donation section to README.md and make proper hyperlinks for the HTTPS references.</br>
+Allow sources to contain scenename,sourcename to override currently set scene. This allows nested scenes to work for showSource() method.</br>
+Create a CurrentProgramSceneChanged event listener. Set OBS.currentScene.</br>
+Refactor checkItemEnableStageChange() in main to reduce duplicated code.</br>
+Use OBS.getCurrentScene instead of calling scene from OBS.</br>
+Made Settings class final static.</br>
+Refactored Settings methods to static.</br>
+Refactored OBS methods to static.</br>
+</br>
 v2.038 01/01/2024</br>
 Add some logging to showSource and setSourceFilterVisiblity in main and writeData in OBSInterface.</br>
 </br>

@@ -168,8 +168,11 @@ import io.obswebsocket.community.client.OBSRemoteController;
 import io.obswebsocket.community.client.WebSocketCloseCode;
 import io.obswebsocket.community.client.listener.lifecycle.ReasonThrowable;
 import io.obswebsocket.community.client.message.event.inputs.InputActiveStateChangedEvent;
+import io.obswebsocket.community.client.message.event.sceneitems.SceneItemCreatedEvent;
 import io.obswebsocket.community.client.message.event.sceneitems.SceneItemEnableStateChangedEvent;
-import io.obswebsocket.community.client.message.response.scenes.GetCurrentProgramSceneResponse;
+import io.obswebsocket.community.client.message.event.sceneitems.SceneItemListReindexedEvent;
+import io.obswebsocket.community.client.message.event.sceneitems.SceneItemRemovedEvent;
+import io.obswebsocket.community.client.message.event.scenes.CurrentProgramSceneChangedEvent;
 
 public class Main {
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
@@ -192,15 +195,13 @@ public class Main {
 		}
 	}	
 	////// Settings and OBSInterface setup \\\\\\
-	final static OBS 				obs			 			= OBS.getInstance();
-	private Settings				settings				= new Settings();
-	private OBSInterface 			obsInterface 			= new OBSInterface(settings);
+	private OBSInterface 			obsInterface 			= new OBSInterface();
 	private String					matchId					= "";
 	private DateTimeFormatter 		dtf 					= DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 	private boolean 				autoScoreConnected		= false;
 	private Socket 					autoScoreSocket;
 	private PrintWriter 			autoScoreSocketWriter;
-	private StreamIndexer 			streamIndexer      		= new StreamIndexer(settings.getDatapath());
+	private StreamIndexer 			streamIndexer      		= new StreamIndexer(Settings.getDatapath());
 	private Boolean 				allowAutoScoreReconnect	= true;
 	private Boolean 				blockAutoScoreReconnect	= false;
     private Map<String, String>		teamGameShowSourcesMap	= new HashMap<>();
@@ -221,48 +222,48 @@ public class Main {
 	private CommandSwitch 	mySwitch;
 
 	////// Generate the Data Models (Mvc) \\\\\\
-	private Tournament		tournament				= new Tournament(obsInterface, settings);
-	private Team 			team1 					= new Team(obsInterface, settings, 1, settings.getSide1Color());
-	private Team 			team2 					= new Team(obsInterface, settings, 2, settings.getSide2Color());
-	private Team            team3              		= new Team(obsInterface, settings, 3, "None");
-	private Match 			match					= new Match(obsInterface, settings, team1, team2, team3);
-	private Stats 			stats 					= new Stats(settings, team1, team2, team3);
+	private Tournament		tournament				= new Tournament(obsInterface);
+	private Team 			team1 					= new Team(obsInterface, 1, Settings.getSide1Color());
+	private Team 			team2 					= new Team(obsInterface, 2, Settings.getSide2Color());
+	private Team            team3              		= new Team(obsInterface, 3, "None");
+	private Match 			match					= new Match(obsInterface, team1, team2, team3);
+	private Stats 			stats 					= new Stats(team1, team2);
 	
 	////// Create a TimeClock to be the Timer \\\\\\
-	private TimeClock 		timeClock 				= new TimeClock(obsInterface, settings);
-	private GameClock       gameClock           	= new GameClock(obsInterface, settings);
+	private TimeClock 		timeClock 				= new TimeClock(obsInterface);
+	private GameClock       gameClock           	= new GameClock(obsInterface);
 	private LastScoredClock lastScored1Clock   		= new LastScoredClock();
 	private LastScoredClock	lastScored2Clock    	= new LastScoredClock();
 	private LastScoredClock lastScored3Clock		= new LastScoredClock();
 
 	////// Create the View Panels to Display (mVc) \\\\\\
-	private TournamentPanel 	tournamentPanel 	= new TournamentPanel(settings);
-	private TimerPanel 			timerPanel 			= new TimerPanel(settings);
-	private OBSPanel            obsPanel            = new OBSPanel(settings);
-	private AutoScoreMainPanel	autoScoreMainPanel  = new AutoScoreMainPanel(settings);
-	private MatchPanel			matchPanel			= new MatchPanel(settings);
-	private TeamPanel 			teamPanel1 			= new TeamPanel(1, settings.getSide1Color(), settings);
-	private TeamPanel 			teamPanel2 			= new TeamPanel(2, settings.getSide2Color(), settings);
-	private TeamPanel			teamPanel3			= new TeamPanel(3, "None", settings);
-	private StatsEntryPanel 	statsEntryPanel 	= new StatsEntryPanel(settings);
-	private SwitchPanel 		switchPanel 		= new SwitchPanel(settings);
-	private ResetPanel 			resetPanel 			= new ResetPanel(settings);
-	private StatsDisplayPanel 	statsDisplayPanel 	= new StatsDisplayPanel(settings);
+	private TournamentPanel 	tournamentPanel 	= new TournamentPanel();
+	private TimerPanel 			timerPanel 			= new TimerPanel();
+	private OBSPanel            obsPanel            = new OBSPanel();
+	private AutoScoreMainPanel	autoScoreMainPanel  = new AutoScoreMainPanel();
+	private MatchPanel			matchPanel			= new MatchPanel();
+	private TeamPanel 			teamPanel1 			= new TeamPanel(1, Settings.getSide1Color());
+	private TeamPanel 			teamPanel2 			= new TeamPanel(2, Settings.getSide2Color());
+	private TeamPanel			teamPanel3			= new TeamPanel(3, "None");
+	private StatsEntryPanel 	statsEntryPanel 	= new StatsEntryPanel();
+	private SwitchPanel 		switchPanel 		= new SwitchPanel();
+	private ResetPanel 			resetPanel 			= new ResetPanel();
+	private StatsDisplayPanel 	statsDisplayPanel 	= new StatsDisplayPanel();
 
 	////// Set up Timer and Settings Windows \\\\\\
-	private ParametersFrame 		parametersFrame 		= new ParametersFrame(settings);
+	private ParametersFrame 		parametersFrame 		= new ParametersFrame();
 	private ParametersPanel			parametersPanel			= parametersFrame.getSettingsPanel();
-	private HotKeysFrame 			hotKeysFrame 			= new HotKeysFrame(settings);
+	private HotKeysFrame 			hotKeysFrame 			= new HotKeysFrame();
 	private HotKeysPanel 			hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
-	private SourcesFrame			sourcesFrame			= new SourcesFrame(settings, obsInterface);
+	private SourcesFrame			sourcesFrame			= new SourcesFrame(obsInterface);
 	private SourcesPanel			sourcesPanel			= sourcesFrame.getSourcesPanel();
-	private StatSourcesFrame		statSourcesFrame		= new StatSourcesFrame(settings, obsInterface);
-	private FiltersFrame        	filtersFrame        	= new FiltersFrame(settings, obsInterface);
+	private StatSourcesFrame		statSourcesFrame		= new StatSourcesFrame(obsInterface);
+	private FiltersFrame        	filtersFrame        	= new FiltersFrame(obsInterface);
 	private FiltersPanel        	filtersPanel        	= filtersFrame.getFiltersPanel();
-	private PartnerProgramFrame 	partnerProgramFrame 	= new PartnerProgramFrame(settings);
-	private OBSConnectFrame			obsConnectFrame			= new OBSConnectFrame(settings, obs);
+	private PartnerProgramFrame 	partnerProgramFrame 	= new PartnerProgramFrame();
+	private OBSConnectFrame			obsConnectFrame			= new OBSConnectFrame();
 	private OBSConnectPanel			obsConnectPanel			= obsConnectFrame.getOBSConnectPanel();
-	private AutoScoreSettingsFrame	autoScoreSettingsFrame	= new AutoScoreSettingsFrame(settings);
+	private AutoScoreSettingsFrame	autoScoreSettingsFrame	= new AutoScoreSettingsFrame();
 	private AutoScoreSettingsPanel	autoScoreSettingsPanel	= autoScoreSettingsFrame.getAutoScoreSettingsPanel();
 	private AutoScoreConfigFrame	autoScoreConfigFrame	= new AutoScoreConfigFrame();
 	private AutoScoreConfigPanel	autoScoreConfigPanel	= autoScoreConfigFrame.getAutoScoreConfigPanel();
@@ -293,14 +294,14 @@ public class Main {
 	    
 		loadWindowsAndControllers();
 		
-		obs.setHost(settings.getOBSHost());
-		obs.setPort(settings.getOBSPort());
-		obs.setPassword(settings.getOBSPassword());
-		obs.setScene(settings.getOBSScene());
+		OBS.setHost(Settings.getOBSHost());
+		OBS.setPort(Settings.getOBSPort());
+		OBS.setPassword(Settings.getOBSPassword());
+		OBS.setScene(Settings.getOBSScene());
 		updateOBSDisconnected();
 
-		if (settings.getOBSAutoLogin()==1) {
-			if (obs.getPassword().isEmpty() || obs.getHost().isEmpty() || obs.getPort().isEmpty()) {
+		if (Settings.getOBSAutoLogin()==1) {
+			if (OBS.getPassword().isEmpty() || OBS.getHost().isEmpty() || OBS.getPort().isEmpty()) {
 				String msg = Messages.getString("Errors.Main.AutoLogin");
 				String ttl = Messages.getString("Errors.Main.AutoLogin.Title");
 				logger.warn(msg);
@@ -312,7 +313,7 @@ public class Main {
 		loadListeners();
 		loadCommands();
 		createAutoScoreWorker();
-		if (settings.getAutoScoreSettingsAutoConnect() == 1) {
+		if (Settings.getAutoScoreSettingsAutoConnect() == 1) {
 			connectAutoScore();
 		}
 		createFileWatchWorker();
@@ -322,20 +323,20 @@ public class Main {
 		teamGameShowSourcesMap.clear();
 		for (int x = 1; x <= 3; x++) {
 			for (int y = 1; y <= 3; y++) {
-				teamGameShowSourcesMap.put(Integer.toString(x)+Integer.toString(y), settings.getTeamGameShowSource(x, y));
+				teamGameShowSourcesMap.put(Integer.toString(x)+Integer.toString(y), Settings.getTeamGameShowSource(x, y));
 			}
 		}
 	}
 	private void buildOBSController() {
-		if(obs.getController() != null) {
-			obs.getController().stop();
-			obs.setController(null);
+		if(OBS.getController() != null) {
+			OBS.getController().stop();
+			OBS.setController(null);
 		}
-		obs.setController( OBSRemoteController.builder()
+		OBS.setController( OBSRemoteController.builder()
 			.autoConnect(false)
-			.host(obs.getHost())
-			.port(Integer.parseInt(obs.getPort()))
-			.password(obs.getPassword())
+			.host(OBS.getHost())
+			.port(Integer.parseInt(OBS.getPort()))
+			.password(OBS.getPassword())
 			.connectionTimeout(3)
 			.lifecycle()
 			.onReady(this::onReady)
@@ -346,40 +347,77 @@ public class Main {
 			.and()
 			.registerEventListener(InputActiveStateChangedEvent.class, this::checkActiveStateChange)
 			.registerEventListener(SceneItemEnableStateChangedEvent.class, this::checkItemEnableStateChange)
+			.registerEventListener(CurrentProgramSceneChangedEvent.class, this::checkCurrentProgramSceneChange)
+			.registerEventListener(SceneItemCreatedEvent.class, this::checkSceneItemCreated)
+			.registerEventListener(SceneItemRemovedEvent.class, this::checkSceneItemRemoved)
+			.registerEventListener(SceneItemListReindexedEvent.class, this::checkSceneItemListReindexed)
 			.build()
 		);
 	}
+	private void checkSceneItemCreated(SceneItemCreatedEvent sceneItemCreatedEvent) {
+		loadSceneItemMap();
+	}
+	private void checkSceneItemRemoved(SceneItemRemovedEvent sceneItemRemovedEvent) {
+		loadSceneItemMap();
+	}
+	private void checkSceneItemListReindexed(SceneItemListReindexedEvent sceneItemListReindexedEvent) {
+		loadSceneItemMap();
+	}
+	private void loadSceneItemMap() {
+		
+	}
+	private void checkCurrentProgramSceneChange(CurrentProgramSceneChangedEvent currentProgramSceneChanged) {
+    	boolean showParsed = Settings.getShowParsed();
+		String sceneName = currentProgramSceneChanged.getSceneName();
+		if (sceneName != null && !sceneName.isEmpty()) {
+			OBS.setCurrentScene(sceneName);
+			if(showParsed) {
+				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS Scene changed to " + sceneName + ".");
+			}
+		} else {
+			if(showParsed) {
+				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS checkCurrentProgramSceneChange failed: sceneName was null or empty.");
+			}
+	   }
+	}
 	private void checkItemEnableStateChange(SceneItemEnableStateChangedEvent sceneItemEnableStateChanged) {
+    	boolean showParsed = Settings.getShowParsed();
 		String sceneName = sceneItemEnableStateChanged.getSceneName();
 		Number itemId = sceneItemEnableStateChanged.getSceneItemId();
-		boolean show = sceneItemEnableStateChanged.getMessageData().getEventData().getSceneItemEnabled();
-		obs.getController().getSceneItemId(sceneName, settings.getShowScoresSource(), null,
-				getSceneItemIdResponse -> {
-		        	if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
-			           	if (getSceneItemIdResponse.getSceneItemId().toString().equals(itemId.toString())) {
-			           		obsPanel.setShowScores(show);	
-			           	}
-			        }
-		    });
-		obs.getController().getSceneItemId(sceneName, settings.getShowCutthroatSource(), null,
-				getSceneItemIdResponse -> {
-		        	if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
-			           	if (getSceneItemIdResponse.getSceneItemId().toString().equals(itemId.toString())) {
-			           		obsPanel.setShowCutthroat(show);	
-			           	}
-			        }
-		    });
+		boolean show = sceneItemEnableStateChanged.getSceneItemEnabled();
+		checkItemEnableStageChangeHelper(sceneName, show, Settings.getShowScoresSource(), itemId, showParsed);
+		checkItemEnableStageChangeHelper(sceneName, show, Settings.getShowCutthroatSource(), itemId, showParsed);
+	}
+	private void checkItemEnableStageChangeHelper(String sceneName, boolean show, String sourceToCheck, Number itemId, boolean showParsed) {
+		OBS.getController().getSceneItemId(sceneName, sourceToCheck, null, getSceneItemIdResponse -> {
+        	if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
+	           	if (getSceneItemIdResponse.getSceneItemId().toString().equals(itemId.toString())) {
+	           		if (sourceToCheck.equals(Settings.getShowScoresSource())) {
+	           			obsPanel.setShowScores(show);
+	           		} else if (sourceToCheck.equals(Settings.getShowCutthroatSource())) {
+	           			obsPanel.setShowCutthroat(show);
+	           		}
+					if(showParsed) {
+						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS " + sourceToCheck + " enable state change received and is now: " + show + ".");
+					}
+	           	}
+	        } else {
+				if(showParsed) {
+					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS checkItemEnableStateChange failed: getSceneItemIdResponse was null or unsuccessful.");
+				}
+	        }
+	    });
 	}
 	private void checkActiveStateChange(InputActiveStateChangedEvent inputActiveStateChangedEvent) {
 		String name = inputActiveStateChangedEvent.getInputName();
-		if (!settings.getShowTimerSource().isEmpty() && name.equals(settings.getShowTimerSource())) {
+		if (!Settings.getShowTimerSource().isEmpty() && name.equals(Settings.getShowTimerSource())) {
 			boolean show = inputActiveStateChangedEvent.getVideoActive();
 			obsPanel.setShowTimer(show);
 			mainController.showTimerWindow(show);
-		} else if (!settings.getShowScoresSource().isEmpty() && name.equals(settings.getShowScoresSource())) {
+		} else if (!Settings.getShowScoresSource().isEmpty() && name.equals(Settings.getShowScoresSource())) {
 			boolean show = inputActiveStateChangedEvent.getVideoActive();
 			obsPanel.setShowScores(show);
-		} else if (!settings.getShowCutthroatSource().isEmpty() && name.equals(settings.getShowCutthroatSource())) {
+		} else if (!Settings.getShowCutthroatSource().isEmpty() && name.equals(Settings.getShowCutthroatSource())) {
 			boolean show = inputActiveStateChangedEvent.getVideoActive();
 			obsPanel.setShowCutthroat(show);
 		}
@@ -388,21 +426,21 @@ public class Main {
 	public void connectToOBS() {
 		logger.info("Trying to connect to OBS...");
 		buildOBSController();
-		obs.getController().connect();
+		OBS.getController().connect();
 	}
 	public void updateOBSConnected() {
-		obs.setConnected(true);
+		OBS.setConnected(true);
 		obsConnectPanel.disableConnect();
 		mainFrame.enableConnect(false);
 		mainFrame.setOBSIconConnected(true);
-		if(settings.getOBSUpdateOnConnect()==1) {
+		if(Settings.getOBSUpdateOnConnect()==1) {
 			tournamentController.writeAll();
 			teamController.writeAll();
 			statsController.displayAllStats();
 		}
 	}
 	public void updateOBSDisconnected() {
-		obs.setConnected(false);
+		OBS.setConnected(false);
 		obsConnectPanel.enableConnect();
 		mainFrame.enableConnect(true);
 		mainFrame.setOBSIconConnected(false);
@@ -411,37 +449,39 @@ public class Main {
 		updateOBSConnected();
 		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS Ready. ");
 		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS Controller Connected. ");
-		obs.getController().getVersion(versionInfo -> {
+		OBS.getController().getVersion(versionInfo -> {
 			if(versionInfo != null && versionInfo.isSuccessful()) {
 				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " OBS Version: " + versionInfo.getObsVersion());
 				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " WebSocket Version: " + versionInfo.getObsWebSocketVersion());
 			}
 		});
-		obs.getController().setCurrentProgramScene(settings.getOBSScene(), response -> { 
+		OBS.getController().setCurrentProgramScene(Settings.getOBSScene(), response -> { 
+			String sceneName = Settings.getOBSScene();
 			if(response != null && response.isSuccessful()) {
-				if(settings.getShowParsed()) {
-						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Scene set to: " + settings.getOBSScene());
+				OBS.setCurrentScene(sceneName);
+				if(Settings.getShowParsed()) {
+						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Scene set to: " + sceneName);
 				}
 			} else {
-				if(settings.getShowParsed()) {
-					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Unable to set scene to: " + settings.getOBSScene());
+				if(Settings.getShowParsed()) {
+					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Unable to set scene to: " + sceneName);
 				}
 			}
 		});
-		obs.getController().getSourceActive(settings.getShowTimerSource(), response -> 
+		OBS.getController().getSourceActive(Settings.getShowTimerSource(), response -> 
 			{boolean show = response.getMessageData().getResponseData().getVideoActive();
 				obsPanel.setShowTimer(show);
 				mainController.showTimerWindow(show);		
 			});
-		obs.getController().getSourceActive(settings.getShowScoresSource(), response ->
+		OBS.getController().getSourceActive(Settings.getShowScoresSource(), response ->
 			{boolean show = response.getMessageData().getResponseData().getVideoActive();
 				obsPanel.setShowScores(show);
 			});
-		obs.getController().getSourceActive(settings.getShowCutthroatSource(), response ->
+		OBS.getController().getSourceActive(Settings.getShowCutthroatSource(), response ->
 		{boolean show = response.getMessageData().getResponseData().getVideoActive();
 			obsPanel.setShowCutthroat(show);
 		});
-		if(settings.getOBSCloseOnConnect()==1) { 
+		if(Settings.getOBSCloseOnConnect()==1) { 
 			obsConnectFrame.setVisible(false);
 		}
 	}
@@ -465,8 +505,8 @@ public class Main {
 			@Override
 			protected Boolean doInBackground() throws Exception {
 		    	boolean isConnected = false;
-		    	String address = settings.getAutoScoreSettingsServerAddress();
-		    	int port = settings.getAutoScoreSettingsServerPort();
+		    	String address = Settings.getAutoScoreSettingsServerAddress();
+		    	int port = Settings.getAutoScoreSettingsServerPort();
 		    	try {
 		            autoScoreSocket = new Socket(address, port);
 		            autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Connected to " + address + ": " + port);
@@ -510,7 +550,7 @@ public class Main {
                 		logger.info("Received raw data: [" + raw + "]");
 		        		cmd = raw.split(":");
 		        		logger.info("Parse command: " + cmd[0]);
-	                	if (settings.getAutoScoreSettingsDetailLog()==1) {
+	                	if (Settings.getAutoScoreSettingsDetailLog()==1) {
 	                		autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Received " + raw);
 	                	}
 	                	if (cmd[0].equals("Team")) {
@@ -580,7 +620,7 @@ public class Main {
 				if (isCancelled()) return;
 				int mostRecentValue = chunks.get(chunks.size()-1);
 				boolean ignoreSensors = autoScoreMainPanel.isIgnored();
-            	if (settings.getAutoScoreSettingsDetailLog()==1) {
+            	if (Settings.getAutoScoreSettingsDetailLog()==1) {
             		if (ignoreSensors) {
             			if (mostRecentValue == 1 || mostRecentValue == 2) {
             				autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team "+mostRecentValue+ " scored! but ignored!");
@@ -631,7 +671,7 @@ public class Main {
 					int a = Integer.parseInt(match.getScoresTeam1()[gn-2]); 
 					int b = Integer.parseInt(match.getScoresTeam2()[gn-2]);
 					if (a == 0 || b == 0) {
-						if(settings.getShowSkunk()==1) {
+						if(Settings.getShowSkunk()==1) {
 							filter = "Team" + teamNbr + "Skunk";
 							activateFilter(filter);
 						}
@@ -639,7 +679,7 @@ public class Main {
 					filter = "Team" + teamNbr + "WinGame";
 					activateFilter(filter);
 					if(gameClock.isStreamTimerRunning()) {
-						if(settings.getCutThroatMode()==1) {
+						if(Settings.getCutThroatMode()==1) {
 							int c = Integer.parseInt(match.getScoresTeam3()[gn-2]);
 							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Game end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + ": " + a + " to " + b + " to " + c + "\r\n");
 						} else {
@@ -652,7 +692,7 @@ public class Main {
 					int a = team1.getScore();
 					int b = team2.getScore();
 					if (a == 0 || b == 0) {
-						if(settings.getShowSkunk()==1) {
+						if(Settings.getShowSkunk()==1) {
 							filter = "Team" + teamNbr + "Skunk";
 							activateFilter(filter);
 						}
@@ -660,7 +700,7 @@ public class Main {
 					filter = "Team" + teamNbr + "WinMatch";
 					activateFilter(filter);
 					if(gameClock.isStreamTimerRunning()) {
-						if(settings.getCutThroatMode()==1) {
+						if(Settings.getCutThroatMode()==1) {
 							int c = team3.getScore();
 							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Match end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + ": " + a + " to " + b + " to " + c + "\r\n");
 						} else {
@@ -680,26 +720,26 @@ public class Main {
 		}
 	}
 	private void activateFilter(String filter) {
-		setSourceFilterVisibility(obs.getScene(), settings.getFiltersFilter(filter), true);
+		setSourceFilterVisibility(OBS.getScene(), Settings.getFiltersFilter(filter), true);
 	}
 	public void loadWindowsAndControllers() {
-		mainFrame = new MainFrame(settings, tournamentPanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, teamPanel3, statsEntryPanel, 
+		mainFrame = new MainFrame(Settings.getInstance(), tournamentPanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, teamPanel3, statsEntryPanel, 
 				switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, sourcesFrame, statSourcesFrame, filtersFrame, 
 				partnerProgramFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, this);
 		////// Set up independent Windows \\\\\\
 		mainFrame.windowActivated(null);
-		gameTableWindowPanel		= new GameTableWindowPanel(settings);
-		gameTableWindowFrame		= new GameTableWindowFrame(settings, gameTableWindowPanel, mainFrame);
+		gameTableWindowPanel		= new GameTableWindowPanel();
+		gameTableWindowFrame		= new GameTableWindowFrame(gameTableWindowPanel, mainFrame);
 		timerWindowFrame 			= new TimerWindowFrame(mainFrame);
 		lastScored1WindowFrame 		= new LastScoredWindowFrame(mainFrame, 1);
 		lastScored2WindowFrame 		= new LastScoredWindowFrame(mainFrame, 2);
 		lastScored3WindowFrame  	= new LastScoredWindowFrame(mainFrame, 3);
 		////// Build and Start the Controllers (mvC) \\\\\\
 		mainController 			= new MainController(mainFrame, timerWindowFrame, lastScored1WindowFrame, lastScored2WindowFrame, lastScored3WindowFrame, gameTableWindowFrame);
-		timerController 		= new TimerController(obsInterface, settings, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock, lastScored3WindowFrame, lastScored3Clock);
-		teamController 			= new TeamController(obsInterface, settings, team1, team2, team3, match, teamPanel1, teamPanel2, teamPanel3, switchPanel, matchPanel, gameTableWindowPanel, statsDisplayPanel, timerController, lastScored1Clock, lastScored2Clock, lastScored3Clock, gameClock, mainController);
-		tournamentController 	= new TournamentController(obsInterface, settings, tournament, match, tournamentPanel);
-		matchController 		= new MatchController(settings, match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, switchPanel, gameTableWindowPanel, teamController, streamIndexer);
+		timerController 		= new TimerController(obsInterface, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock, lastScored3WindowFrame, lastScored3Clock);
+		teamController 			= new TeamController(obsInterface, team1, team2, team3, match, teamPanel1, teamPanel2, teamPanel3, switchPanel, matchPanel, gameTableWindowPanel, statsDisplayPanel, timerController, lastScored1Clock, lastScored2Clock, lastScored3Clock, gameClock, mainController);
+		tournamentController 	= new TournamentController(obsInterface, tournament, match, tournamentPanel);
+		matchController 		= new MatchController(match, stats, gameClock, lastScored1Clock, lastScored2Clock, matchPanel, statsEntryPanel, statsDisplayPanel, switchPanel, gameTableWindowPanel, teamController, streamIndexer);
 		statsController 		= new StatsController(stats, statsDisplayPanel, teamController);
 		gameClock.addGameClockTimerListener(new GameClockTimerListener());
 	}
@@ -854,32 +894,32 @@ public class Main {
 	}
 	public void startEvent() {
 		if(gameClock.isStreamTimerRunning()) {
-			streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartEvent", settings.getGameType()) + " Pressed: " + tournament.getTournamentName() + ": " + tournament.getEventName() + "\r\n");
+			streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartEvent", Settings.getGameType()) + " Pressed: " + tournament.getTournamentName() + ": " + tournament.getEventName() + "\r\n");
 		}
 	}
 	public void startMatch() {
 		matchId = createMatchId();
 		matchController.startMatch(matchId);
 		if(gameClock.isStreamTimerRunning()) {
-			if(settings.getCutThroatMode()==1) {
-				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch", settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + "\r\n");
+			if(Settings.getCutThroatMode()==1) {
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch", Settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + "\r\n");
 			} else {
-				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch", settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n");
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch", Settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n");
 			}
 		}
 	}
 	public void endMatch() {
 		matchController.endMatch();
 		if(gameClock.isStreamTimerRunning()) {
-			streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.EndMatch", settings.getGameType()) + " Pressed.\r\n");
+			streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.EndMatch", Settings.getGameType()) + " Pressed.\r\n");
 		}
 	}
 	public void startGame() {
 		if(gameClock.isStreamTimerRunning()) {
-			if(settings.getCutThroatMode()==1) {
-				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame", settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + "\r\n");
+			if(Settings.getCutThroatMode()==1) {
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame", Settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + "\r\n");
 			} else {
-				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame", settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n");
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame", Settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n");
 			}
 		}
 		matchController.startGame();
@@ -895,9 +935,9 @@ public class Main {
 		teamController.switchSides();
 	}
 	public void setShowParsed(boolean showParsed) {
-		settings.setShowParsed(showParsed);
+		Settings.setShowParsed(showParsed);
 		try {
-			settings.saveControlConfig();
+			Settings.saveControlConfig();
 		} catch (IOException e) {
         	logger.error(e.toString());
 		}
@@ -1168,12 +1208,12 @@ public class Main {
 	}
 	public void showScores(boolean show) {
 		obsPanel.setShowScores(show);
-		showSource(settings.getShowScoresSource(), show);
+		showSource(Settings.getShowScoresSource(), show);
 		setFocusOnCode();
 	}
 	public void showTimer(boolean show) {
 		mainController.showTimerWindow(show);
-		showSource(settings.getShowTimerSource(), show);
+		showSource(Settings.getShowTimerSource(), show);
 		setFocusOnCode();
 	}
 	public void setFocusOnCode() {
@@ -1181,42 +1221,60 @@ public class Main {
 	}
 	public void showCutthroat(boolean show) {
 		obsPanel.setShowCutthroat(show);
-		showSource(settings.getShowCutthroatSource(), show);
+		showSource(Settings.getShowCutthroatSource(), show);
 		setFocusOnCode();
 	}
 	public void showSource(String source, boolean show) {
+		String sceneName;
+		String sourceItem;
 		if (source == null || source.isEmpty()) return;
-		if (obs.getConnected()) {
-			boolean showParsed = settings.getShowParsed();
-			if (showParsed) obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled called: " + source + ", " + show);
-		    String sceneName;
-		    GetCurrentProgramSceneResponse getCurrentProgramSceneResponse = obs.getController().getCurrentProgramScene(1000);
-		    if (getCurrentProgramSceneResponse != null && getCurrentProgramSceneResponse.isSuccessful()) {
-		       sceneName = getCurrentProgramSceneResponse.getCurrentProgramSceneName();
-			   obs.getController().getSceneItemId(sceneName, source, null,
-			        getSceneItemIdResponse -> { 
-			            if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
-			                obs.getController().setSceneItemEnabled(sceneName,getSceneItemIdResponse.getSceneItemId(),show,
-			                    setSceneItemEnabledResponse -> {
-            						if(showParsed) {
-            							obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled response obtained: " + source + ", " + show);
-            						}
-			                    });
-			            }
-			        });
-		    } else {
-				if(showParsed) {
-					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled failed: " + source + ", " + show);
-				}
-		    }
+		if (source.contains(",")) {
+			String[] parts = source.split(",");
+			sceneName = parts[0];
+			sourceItem = parts[1];
+			if (OBS.getConnected()) {
+				boolean showParsed = Settings.getShowParsed();
+				if (showParsed) obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled called: " + sceneName + ", " + sourceItem + ", " + show);
+				OBS.getController().getSceneItemId(sceneName, sourceItem, null,	getSceneItemIdResponse -> { 
+					if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
+						if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
+							OBS.getController().setSceneItemEnabled(sceneName,getSceneItemIdResponse.getSceneItemId(),show,setSceneItemEnabledResponse -> {
+								if(showParsed) {
+									obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled response obtained: " + sceneName + ", " + sourceItem + ", " + show);
+	            				}
+				             });
+						}
+					} else {
+						if(showParsed) {
+							obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled failed: " + sceneName + ", " + sourceItem + ", " + show);
+						}
+					}
+				});
+			}
+		} else {
+			sourceItem = source;
+			if (OBS.getConnected()) {
+				boolean showParsed = Settings.getShowParsed();
+				if (showParsed) obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled called: " + sourceItem + ", " + show);
+				sceneName = OBS.getCurrentScene();
+				OBS.getController().getSceneItemId(sceneName, sourceItem, null, getSceneItemIdResponse -> { 
+		            if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
+		                OBS.getController().setSceneItemEnabled(sceneName,getSceneItemIdResponse.getSceneItemId(),show,setSceneItemEnabledResponse -> {
+		                	if(showParsed) {
+								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled response obtained: " + sceneName + ", "+ sourceItem + ", " + show);
+		                	}
+		                });
+		            }
+				});
+			}
 		}
 	}
 	public void setSourceFilterVisibility(String source, String filter, boolean show) {
 		if(source == null || filter == null) return;
-		if (obs.getConnected()) {
-			boolean showParsed = settings.getShowParsed();
+		if (OBS.getConnected()) {
+			boolean showParsed = Settings.getShowParsed();
 			if (showParsed) obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceFilterEnabled called: " + source + ", " + filter + ", " + show);
-			obs.getController().setSourceFilterEnabled(source, filter, show, response -> {
+			OBS.getController().setSourceFilterEnabled(source, filter, show, response -> {
 				if(response != null && response.isSuccessful()) {
 					if(showParsed) {
 						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceFilterEnabled response obtained: " + source + ", " + filter + ", " + show);
@@ -1423,7 +1481,7 @@ public class Main {
 	}
 	private class HotKeysSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if (hotKeysPanel.saveSettings(settings)) {
+			if (hotKeysPanel.saveSettings()) {
 				JComponent comp = (JComponent) e.getSource();
 				Window win = SwingUtilities.getWindowAncestor(comp);
 				win.dispose();
@@ -1440,7 +1498,7 @@ public class Main {
 	}
 	private class SourcesSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if (sourcesPanel.saveSettings(settings)) {
+			if (sourcesPanel.saveSettings()) {
 				JComponent comp = (JComponent) e.getSource();
 				Window win = SwingUtilities.getWindowAncestor(comp);
 				win.dispose();
@@ -1508,13 +1566,13 @@ public class Main {
 	private class OBSSceneFocusListener extends FocusAdapter {
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
-			obs.setScene(txt.getText());
+			OBS.setScene(txt.getText());
 		}
 	}
 	private class OBSDisconnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Requesting disconnect.");
-			obs.getController().disconnect();
+			OBS.getController().disconnect();
 			setFocusOnCode();
 		}
 	}
@@ -1528,7 +1586,7 @@ public class Main {
 	private class OBSDisconnectItemListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Requesting disconnect.");
-			obs.getController().disconnect();
+			OBS.getController().disconnect();
 			obsConnectPanel.updateOBS();
 			setFocusOnCode();
 		}
@@ -1541,7 +1599,7 @@ public class Main {
 	}
 	private class OBSPushListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if (obs.getConnected()) {
+			if (OBS.getConnected()) {
 				tournamentController.writeAll();
 				teamController.writeAll();
 				statsController.displayAllStats();
@@ -1551,7 +1609,7 @@ public class Main {
 	}
 	private class OBSPullListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if (obs.getConnected()) {
+			if (OBS.getConnected()) {
 				teamController.fetchAll();
 				teamController.displayAll();
 				tournamentController.fetchAll();
@@ -1561,7 +1619,7 @@ public class Main {
 	}
 	private class OBSShowScoresListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if (obs.getConnected()) {
+			if (OBS.getConnected()) {
 				AbstractButton abstractButton = (AbstractButton) e.getSource();
 				showScores(abstractButton.getModel().isSelected());
 			}
@@ -1570,7 +1628,7 @@ public class Main {
 	}
 	private class OBSShowTimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if (obs.getConnected()) {
+			if (OBS.getConnected()) {
 				AbstractButton abstractButton = (AbstractButton) e.getSource();
 				showTimer(abstractButton.getModel().isSelected());
 			}
@@ -1579,7 +1637,7 @@ public class Main {
 	}
 	private class OBSShowCutthroatListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if (obs.getConnected()) {
+			if (OBS.getConnected()) {
 				AbstractButton abstractButton = (AbstractButton) e.getSource();
 				showCutthroat(abstractButton.getModel().isSelected());
 			}
@@ -1593,9 +1651,9 @@ public class Main {
 			obsPanel.setEnableSkunk(showSkunkFlag);
 			parametersPanel.setEnableShowSkunk(showSkunkFlag);
 			if (showSkunkFlag) {
-				settings.setShowSkunk(1);
+				Settings.setShowSkunk(1);
 			} else {
-				settings.setShowSkunk(0);
+				Settings.setShowSkunk(0);
 			}
 			setFocusOnCode();
 		}
@@ -1620,15 +1678,15 @@ public class Main {
 	}
 	private class ParametersSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			int oldGamesToWin = settings.getGamesToWin();
-			int oldCutthroatMode = settings.getCutThroatMode();
-			parametersPanel.saveSettings(settings);
-			int newGamesToWin = settings.getGamesToWin();
-			int newCutthroatMode = settings.getCutThroatMode();
+			int oldGamesToWin = Settings.getGamesToWin();
+			int oldCutthroatMode = Settings.getCutThroatMode();
+			parametersPanel.saveSettings(Settings.getInstance());
+			int newGamesToWin = Settings.getGamesToWin();
+			int newCutthroatMode = Settings.getCutThroatMode();
 			if (oldGamesToWin != newGamesToWin || oldCutthroatMode != newCutthroatMode) {
 				matchPanel.resizeGameTable();
 				gameTableWindowPanel.resizeGameTable();
-				match.setMaxPossibleGames(settings.getMaxGameNumber());
+				match.setMaxPossibleGames(Settings.getMaxGameNumber());
 			}
 			teamPanel1.setTitle();
 			teamPanel2.setTitle();
@@ -2132,17 +2190,17 @@ public class Main {
 		return codes;
 	}
 	private void setScene() {
-		if(obs.getController() == null ) {
+		if(OBS.getController() == null ) {
 			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " ERROR! Must connect before setting Scene");	
 		} else {
-			if (obs.getScene() != null && !obs.getScene().isEmpty()) {
-				if (obs.getConnected()) {
-					obs.getController().setCurrentProgramScene(settings.getOBSScene(), response -> { 
-						if(settings.getShowParsed()) {
+			if (OBS.getScene() != null && !OBS.getScene().isEmpty()) {
+				if (OBS.getConnected()) {
+					OBS.getController().setCurrentProgramScene(Settings.getOBSScene(), response -> { 
+						if(Settings.getShowParsed()) {
 							if (response != null && response.isSuccessful()) {
-								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Scene set to: " + settings.getOBSScene());
+								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Scene set to: " + Settings.getOBSScene());
 							} else {
-								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Unable to set scene to: " + settings.getOBSScene());
+								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Unable to set scene to: " + Settings.getOBSScene());
 							}
 						} 
 					});
@@ -2156,12 +2214,12 @@ public class Main {
 		fileWatchWorker = new SwingWorker<Boolean, String>() {
 			@Override
 			protected Boolean doInBackground() throws Exception {
-				String partnerProgramDir = settings.getPartnerProgramPath();
-				final String clearString = "XXX_ALREADY_READ_XXX";//= settings.getPartnerProgramClearString();
-				String partnerProgramPlayer1FileName = settings.getPlayer1FileName();
-				String partnerProgramPlayer2FileName = settings.getPlayer2FileName();
-				String partnerProgramPlayer3FileName = settings.getPlayer3FileName();
-				String partnerProgramPlayer4FileName = settings.getPlayer4FileName();
+				String partnerProgramDir = Settings.getPartnerProgramPath();
+				final String clearString = "XXX_ALREADY_READ_XXX";//= Settings.getPartnerProgramClearString();
+				String partnerProgramPlayer1FileName = Settings.getPlayer1FileName();
+				String partnerProgramPlayer2FileName = Settings.getPlayer2FileName();
+				String partnerProgramPlayer3FileName = Settings.getPlayer3FileName();
+				String partnerProgramPlayer4FileName = Settings.getPlayer4FileName();
 				Path partnerPath = Paths.get(partnerProgramDir);
 				watchService = FileSystems.getDefault().newWatchService(); 
 				partnerPath.getFileSystem().newWatchService();
@@ -2231,10 +2289,10 @@ public class Main {
 			protected void process(List<String> chunks) {
 				if (isCancelled()) return;
 				for (String value : chunks) {
-					String partnerProgramPlayer1FileName = settings.getPlayer1FileName();
-					String partnerProgramPlayer2FileName = settings.getPlayer2FileName();
-					String partnerProgramPlayer3FileName = settings.getPlayer3FileName();
-					String partnerProgramPlayer4FileName = settings.getPlayer4FileName();
+					String partnerProgramPlayer1FileName = Settings.getPlayer1FileName();
+					String partnerProgramPlayer2FileName = Settings.getPlayer2FileName();
+					String partnerProgramPlayer3FileName = Settings.getPlayer3FileName();
+					String partnerProgramPlayer4FileName = Settings.getPlayer4FileName();
 					String newName;
 					String[] pieces = value.split("=");
 					if (pieces.length == 1) {

@@ -35,13 +35,8 @@ public class TimeClock {
 	private Timer timer;
 	private String timerInUse;
 	private OBSInterface obsInterface;
-	private Settings settings;
-	
-	public TimeClock(OBSInterface obsInterface, Settings settings) {
-		
+	public TimeClock(OBSInterface obsInterface) {
 		this.obsInterface = obsInterface;
-		this.settings = settings;
-		
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				currentTime = System.currentTimeMillis();
@@ -82,9 +77,9 @@ public class TimeClock {
 		timer.addActionListener(alAction);
 	}
 	private void writeTimerInUse() {
-		writeData(settings.getTimerInUseSource(), getTimerInUse());
+		writeData(Settings.getTimerInUseSource(), getTimerInUse());
 	}
     private void writeData(String source, String data) {
-		obsInterface.writeData(source, data, "TimeClock", settings.getShowParsed());
+		obsInterface.writeData(source, data, "TimeClock", Settings.getShowParsed());
     }
 }

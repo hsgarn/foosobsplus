@@ -145,7 +145,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewAllWindows 			= new JCheckBoxMenuItem(Messages.getString("MainFrame.ShowAllWindows")); //$NON-NLS-1$
 		viewAlwaysOnTop 		= new JCheckBoxMenuItem(Messages.getString("MainFrame.AlwaysOnTop")); //$NON-NLS-1$
 		helpShowParsed 			= new JCheckBoxMenuItem(Messages.getString("MainFrame.ShowParsed")); //$NON-NLS-1$
-		helpShowParsed.setSelected(settings.getShowParsed());
+		helpShowParsed.setSelected(Settings.getShowParsed());
 		setLayout(new GridBagLayout());
 		
 		setJMenuBar(createMenuBar());
@@ -162,7 +162,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		pack();
 		setVisible(true);
 
-		if(settings.getShowParsed()) {
+		if(Settings.getShowParsed()) {
 			Dimension windowSize = getSize();
 	        System.out.println("Current window size: " + windowSize.width + " x " + windowSize.height);
 	        Component[] components = getContentPane().getComponents();

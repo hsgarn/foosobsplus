@@ -61,72 +61,56 @@ public class AutoScoreSettingsPanel extends JPanel {
 	private JButton btnSave;
 	private JButton btnConnect;
 	private JButton btnDisconnect;
-	private Settings settings;
 	private JList<String> lstMessageHistory;
 	private DefaultListModel<String> mdlMessageHistory;
 	private JScrollPane scrMessageHistory;
 	private static Logger logger = LoggerFactory.getLogger(AutoScoreSettingsPanel.class);
-
-	public AutoScoreSettingsPanel(Settings settings) throws IOException {
-		this.settings = settings;
+	public AutoScoreSettingsPanel() throws IOException {
 		mdlMessageHistory = new DefaultListModel<String>();
 		lstMessageHistory = new JList<String>(mdlMessageHistory);
-		
 		setLayout(new MigLayout("", "[][grow][10.00][][grow][10.00][][grow][10.00][][grow]", "[][][][][][][][][][][][][][][][][][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		
-		JLabel lblServerAddress = new JLabel(Messages.getString("AutoScoreSettingsPanel.ServerAddress", settings.getGameType())); //$NON-NLS-1$
+		JLabel lblServerAddress = new JLabel(Messages.getString("AutoScoreSettingsPanel.ServerAddress", Settings.getGameType())); //$NON-NLS-1$
 		add(lblServerAddress, "cell 0 2,alignx trailing"); //$NON-NLS-1$
-		
 		txtServerAddress = new JTextField();
 		txtServerAddress.setHorizontalAlignment(SwingConstants.CENTER);
 		txtServerAddress.setInputVerifier(new IPAddrInputVerifier());
-		txtServerAddress.setText(settings.getAutoScoreSettingsServerAddress());
+		txtServerAddress.setText(Settings.getAutoScoreSettingsServerAddress());
 		txtServerAddress.setColumns(10);
 		add(txtServerAddress, "cell 1 2,alignx left"); //$NON-NLS-1$
-		
 		chckbxAutoConnect = new JCheckBox("Auto Connect on Start Up");
-		if (Integer.toString(settings.getAutoScoreSettingsAutoConnect()).equals("1")) {
+		if (Integer.toString(Settings.getAutoScoreSettingsAutoConnect()).equals("1")) {
 			chckbxAutoConnect.setSelected(true);
 		} else {
 			chckbxAutoConnect.setSelected(false);
 		}
 		add(chckbxAutoConnect, "cell 2 2, alignx left"); //$NON-NLS-1$
-		
-		JLabel lblServerPort = new JLabel(Messages.getString("AutoScoreSettingsPanel.ServerPort", settings.getGameType())); //$NON-NLS-1$
+		JLabel lblServerPort = new JLabel(Messages.getString("AutoScoreSettingsPanel.ServerPort", Settings.getGameType())); //$NON-NLS-1$
 		add(lblServerPort, "cell 0 3,alignx trailing"); //$NON-NLS-1$
-		
 		txtServerPort = new JTextField();
 		txtServerPort.setHorizontalAlignment(SwingConstants.CENTER);
-		txtServerPort.setText(Integer.toString(settings.getAutoScoreSettingsServerPort()));
+		txtServerPort.setText(Integer.toString(Settings.getAutoScoreSettingsServerPort()));
 		txtServerPort.setColumns(10);
 		add(txtServerPort, "cell 1 3,alignx left,aligny top"); //$NON-NLS-1$
-
 		chckbxDetailLog = new JCheckBox("Detail Log");
-		if (Integer.toString(settings.getAutoScoreSettingsDetailLog()).equals("1")) {
+		if (Integer.toString(Settings.getAutoScoreSettingsDetailLog()).equals("1")) {
 			chckbxDetailLog.setSelected(true);
 		} else {
 			chckbxDetailLog.setSelected(false);
 		}
 		add(chckbxDetailLog, "cell 2 3, alignx left"); //$NON-NLS-1$
-		
 		btnConnect = new JButton("Connect");
 		add(btnConnect, "flowx,cell 1 4,alignx left");
-		
 		btnDisconnect = new JButton("Disconnect");
 		add(btnDisconnect, "cell 2 4,growx");
-
 		scrMessageHistory = new JScrollPane();
 		scrMessageHistory.setViewportView(lstMessageHistory);
 		lstMessageHistory.setLayoutOrientation(JList.VERTICAL);
 		lstMessageHistory.setCellRenderer(new AttributiveCellRenderer());
 		add(scrMessageHistory, "cell 1 9 3,grow");
-		
 		JLabel lblMessage = new JLabel("Message:");
 		add(lblMessage, "cell 1 8");
-		
 		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		add(btnSave, "flowx,cell 1 18,alignx center"); //$NON-NLS-1$
-		
 		JButton btnCancel = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -136,22 +120,19 @@ public class AutoScoreSettingsPanel extends JPanel {
 			}
 		});
 		add(btnCancel, "cell 1 18,alignx center"); //$NON-NLS-1$
-		
 		JButton btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
 		btnRestoreDefaults.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				restoreDefaults(settings);
+				restoreDefaults();
 			}
 		});
 		add(btnRestoreDefaults, "cell 2 18,alignx center"); //$NON-NLS-1$
-
 	}
     public class AttributiveCellRenderer extends DefaultListCellRenderer {
 	  private static final long serialVersionUID = 1L;
 	  public AttributiveCellRenderer() {
 	    setOpaque(true);
 	  }
-
 	  public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) 
 	  {
 		  String tmp = ""; //$NON-NLS-1$
@@ -182,18 +163,17 @@ public class AutoScoreSettingsPanel extends JPanel {
 	public void addMessage(String message) {
 		mdlMessageHistory.insertElementAt(message, 0);
 	}
-	private void restoreDefaults(Settings settings) {
-		txtServerAddress.setText(settings.getDefaultAutoScoreSettingsServerAddress());
-		txtServerPort.setText(Integer.toString(settings.getDefaultAutoScoreSettingsServerPort()));
+	private void restoreDefaults() {
+		txtServerAddress.setText(Settings.getDefaultAutoScoreSettingsServerAddress());
+		txtServerPort.setText(Integer.toString(Settings.getDefaultAutoScoreSettingsServerPort()));
 	}
-	
 	public void saveSettings() {
-		settings.setAutoScore("AutoScoreSettingsServerAddress",txtServerAddress.getText());
-		settings.setAutoScore("AutoScoreSettingsServerPort",txtServerPort.getText());
-		settings.setAutoScore("AutoScoreSettingsAutoConnect",chckbxAutoConnect.isSelected() ? 1 : 0);
-		settings.setAutoScore("AutoScoreSettingsDetailLog",chckbxDetailLog.isSelected() ? 1 : 0);
+		Settings.setAutoScore("AutoScoreSettingsServerAddress",txtServerAddress.getText());
+		Settings.setAutoScore("AutoScoreSettingsServerPort",txtServerPort.getText());
+		Settings.setAutoScore("AutoScoreSettingsAutoConnect",chckbxAutoConnect.isSelected() ? 1 : 0);
+		Settings.setAutoScore("AutoScoreSettingsDetailLog",chckbxDetailLog.isSelected() ? 1 : 0);
 		try {
-			settings.saveAutoScoreSettingsConfig();
+			Settings.saveAutoScoreSettingsConfig();
 		} catch (IOException ex) {
 			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
 			logger.error(ex.toString());

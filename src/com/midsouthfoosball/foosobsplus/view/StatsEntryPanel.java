@@ -64,11 +64,8 @@ public class StatsEntryPanel extends JPanel {
 	private JButton btnRedo;
 	private JButton btnClear;
 	private JScrollPane scrCodeHistory;
-	private Settings settings;
 	private Border innerBorder;
-
-	public StatsEntryPanel(Settings settings) {
-		this.settings = settings;
+	public StatsEntryPanel() {
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
 		dim.height = 550;
@@ -76,13 +73,13 @@ public class StatsEntryPanel extends JPanel {
 		setName(buildTitle());
 		
 		lblCode = new JLabel(buildTitle());
-		lblCodeHistory = new JLabel(Messages.getString("StatsEntryPanel.History", settings.getGameType())); //$NON-NLS-1$
+		lblCodeHistory = new JLabel(Messages.getString("StatsEntryPanel.History", Settings.getGameType())); //$NON-NLS-1$
 		txtCode = new JTextField();
 		mdlCodeHistory = new DefaultListModel<String>();
 		lstCodeHistory = new JList<String>(mdlCodeHistory);
-		btnUndo = new JButton(Messages.getString("StatsEntryPanel.Undo", settings.getGameType())); //$NON-NLS-1$
-		btnRedo = new JButton(Messages.getString("StatsEntryPanel.Redo", settings.getGameType())); //$NON-NLS-1$
-		btnClear = new JButton(Messages.getString("StatsEntryPanel.Clear", settings.getGameType())); //$NON-NLS-1$
+		btnUndo = new JButton(Messages.getString("StatsEntryPanel.Undo", Settings.getGameType())); //$NON-NLS-1$
+		btnRedo = new JButton(Messages.getString("StatsEntryPanel.Redo", Settings.getGameType())); //$NON-NLS-1$
+		btnClear = new JButton(Messages.getString("StatsEntryPanel.Clear", Settings.getGameType())); //$NON-NLS-1$
 		scrCodeHistory = new JScrollPane();
 		scrCodeHistory.setViewportView(lstCodeHistory);
 		lstCodeHistory.setLayoutOrientation(JList.VERTICAL);
@@ -119,9 +116,9 @@ public class StatsEntryPanel extends JPanel {
 
 		setMnemonics();
 		
-		innerBorder = BorderFactory.createTitledBorder(Messages.getString("StatsEntryPanel.StatisticsEntryPanel", settings.getGameType())); //$NON-NLS-1$
+		innerBorder = BorderFactory.createTitledBorder(Messages.getString("StatsEntryPanel.StatisticsEntryPanel", Settings.getGameType())); //$NON-NLS-1$
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
-		Border outerBorder = BorderFactory.createEmptyBorder(settings.getBorderTop(),settings.getBorderLeft(),settings.getBorderBottom(),settings.getBorderRight());
+		Border outerBorder = BorderFactory.createEmptyBorder(Settings.getBorderTop(),Settings.getBorderLeft(),Settings.getBorderBottom(),Settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		
 		layoutComponents();
@@ -210,15 +207,15 @@ public class StatsEntryPanel extends JPanel {
 		add(btnRedo, gc);
 	}
 	private void setMnemonics() {
-		if(settings.getUndoHotKey().isEmpty()) {
+		if(Settings.getUndoHotKey().isEmpty()) {
 			btnUndo.setMnemonic(-1);
 		} else {
-			btnUndo.setMnemonic(settings.getUndoHotKey().charAt(0));
+			btnUndo.setMnemonic(Settings.getUndoHotKey().charAt(0));
 		};
-		if(settings.getRedoHotKey().isEmpty()) {
+		if(Settings.getRedoHotKey().isEmpty()) {
 			btnRedo.setMnemonic(-1);
 		} else {
-			btnRedo.setMnemonic(settings.getRedoHotKey().charAt(0));
+			btnRedo.setMnemonic(Settings.getRedoHotKey().charAt(0));
 		};
 	}
 	////// Listeners  //////
@@ -245,7 +242,7 @@ public class StatsEntryPanel extends JPanel {
 		mdlCodeHistory.insertElementAt(code, 0);
 	}
 	public void errorCodeHistory() {
-		mdlCodeHistory.set(0, mdlCodeHistory.firstElement() + Messages.getString("StatsEntryPanel.Invalid", settings.getGameType())); //$NON-NLS-1$
+		mdlCodeHistory.set(0, mdlCodeHistory.firstElement() + Messages.getString("StatsEntryPanel.Invalid", Settings.getGameType())); //$NON-NLS-1$
 	}
 	public void removeCodeHistory() {
 		if (mdlCodeHistory.getSize() > 0) {
@@ -291,6 +288,6 @@ public class StatsEntryPanel extends JPanel {
 		this.setBorder(border);
 	}
 	private String buildTitle() {
-		return Messages.getString("StatsEntryPanel.Code", settings.getGameType()); //$NON-NLS-1$
+		return Messages.getString("StatsEntryPanel.Code", Settings.getGameType()); //$NON-NLS-1$
 	}
 }

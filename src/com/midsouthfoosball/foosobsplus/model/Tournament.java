@@ -30,11 +30,8 @@ public class Tournament {
 	private String side1Color;
 	private String side2Color;
 	private OBSInterface obsInterface;
-	private Settings settings;
-	
-	public Tournament(OBSInterface obsInterface, Settings settings) {
+	public Tournament(OBSInterface obsInterface) {
 		this.obsInterface = obsInterface;
-		this.settings = settings;
 	}
 	public String getTournamentName() {
 		return tournamentName;
@@ -76,13 +73,13 @@ public class Tournament {
 		writeAll();
 	}
 	private void writeTournamentName() {
-   		writeData(settings.getTournamentSource(), getTournamentName());
+   		writeData(Settings.getTournamentSource(), getTournamentName());
 	}
     private void writeEventName() {
-    	writeData(settings.getEventSource(), getEventName());
+    	writeData(Settings.getEventSource(), getEventName());
     }
     private void writeTableName() {
-   		writeData(settings.getTableNameSource(), getTableName());
+   		writeData(Settings.getTableNameSource(), getTableName());
     }
     public void writeAll() {
     	writeTournamentName();
@@ -90,6 +87,6 @@ public class Tournament {
     	writeTableName();
      }
 	private void writeData(String source, String data) {
-		obsInterface.writeData(source, data, "Tournament", settings.getShowParsed());
+		obsInterface.writeData(source, data, "Tournament", Settings.getShowParsed());
 	}
   }

@@ -26,18 +26,16 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.midsouthfoosball.foosobsplus.model.OBS;
-import com.midsouthfoosball.foosobsplus.model.Settings;
 
 import io.obswebsocket.community.client.OBSRemoteController;
 import io.obswebsocket.community.client.message.response.inputs.GetInputSettingsResponse;
 
 public class OBSInterface {
 	private static Logger logger = LoggerFactory.getLogger(OBSInterface.class);
-	public OBSInterface(Settings settings) {}
+	public OBSInterface() {}
 	public String getContents(String whichSource) {
-		OBS obs = OBS.getInstance();
-		OBSRemoteController obsRemoteController = obs.getController();
-		if (!(obsRemoteController==null) && obs.getConnected()) {
+		OBSRemoteController obsRemoteController = OBS.getController();
+		if (!(obsRemoteController==null) && OBS.getConnected()) {
 			GetInputSettingsResponse getInputSettings = obsRemoteController.getInputSettings(whichSource, 500);
 			return (getInputSettings != null && getInputSettings.isSuccessful()) 
 					? getInputSettings.getInputSettings().get("text").getAsString()
@@ -47,9 +45,8 @@ public class OBSInterface {
 	}
 	public void writeData(String source, String data, String className, Boolean showParsed) {
 		if (source == null || source.isEmpty()) return;
-		OBS obs = OBS.getInstance();
-		OBSRemoteController obsRemoteController = obs.getController();
-		if (obsRemoteController != null && obs.getConnected()) {
+		OBSRemoteController obsRemoteController = OBS.getController();
+		if (obsRemoteController != null && OBS.getConnected()) {
 			if (showParsed) logger.info(className + " class: Write Source: [" + source + "] Text: [" + data + "]]");
 			String jsonString = "{'text':'" + data + "'}";
 			JsonObject jsonObject = (JsonObject) JsonParser.parseString(jsonString);

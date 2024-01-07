@@ -51,41 +51,33 @@ public class TimerPanel extends JPanel {
 	private JButton btnTimeOutTimer;
 	private JButton btnRecallTimer;
 	private JButton btnResetTimer;
-	private Settings settings;
 	private Border innerBorder;
-
-	public TimerPanel(Settings settings) {
-		
-		this.settings = settings;
+	public TimerPanel() {
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
 		dim.height = 225;
 		setPreferredSize(dim);
 		setName(buildTitle());
-		
 		lblTimerDisplay = new JLabel("0.0"); //$NON-NLS-1$
 		lblTimerDisplay.setOpaque(true);
 		lblTimerDisplay.setBackground(Color.GREEN);
-		lblTimerInUse = new JLabel(Messages.getString("TimerPanel.TimerReset", settings.getGameType())); //$NON-NLS-1$
-		lblShotTimer = new JLabel(Messages.getString("TimerPanel.ShotTimer", settings.getGameType())); //$NON-NLS-1$
-		lblPassTimer = new JLabel(Messages.getString("TimerPanel.PassTimer", settings.getGameType())); //$NON-NLS-1$
-		lblTimeOutTimer = new JLabel(Messages.getString("TimerPanel.TimeOutTimer", settings.getGameType())); //$NON-NLS-1$
-		lblGameTimer = new JLabel(Messages.getString("TimerPanel.GameTimer", settings.getGameType())); //$NON-NLS-1$
-		lblRecallTimer = new JLabel(Messages.getString("TimerPanel.RecallTimer", settings.getGameType())); //$NON-NLS-1$
-		btnShotTimer = new JButton(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
-		btnPassTimer = new JButton(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
-		btnTimeOutTimer = new JButton(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
-		btnGameTimer = new JButton(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
-		btnRecallTimer = new JButton(Messages.getString("TimerPanel.Start", settings.getGameType())); //$NON-NLS-1$
-		btnResetTimer = new JButton(Messages.getString("TimerPanel.Reset", settings.getGameType())); //$NON-NLS-1$
-
+		lblTimerInUse = new JLabel(Messages.getString("TimerPanel.TimerReset", Settings.getGameType())); //$NON-NLS-1$
+		lblShotTimer = new JLabel(Messages.getString("TimerPanel.ShotTimer", Settings.getGameType())); //$NON-NLS-1$
+		lblPassTimer = new JLabel(Messages.getString("TimerPanel.PassTimer", Settings.getGameType())); //$NON-NLS-1$
+		lblTimeOutTimer = new JLabel(Messages.getString("TimerPanel.TimeOutTimer", Settings.getGameType())); //$NON-NLS-1$
+		lblGameTimer = new JLabel(Messages.getString("TimerPanel.GameTimer", Settings.getGameType())); //$NON-NLS-1$
+		lblRecallTimer = new JLabel(Messages.getString("TimerPanel.RecallTimer", Settings.getGameType())); //$NON-NLS-1$
+		btnShotTimer = new JButton(Messages.getString("TimerPanel.Start", Settings.getGameType())); //$NON-NLS-1$
+		btnPassTimer = new JButton(Messages.getString("TimerPanel.Start", Settings.getGameType())); //$NON-NLS-1$
+		btnTimeOutTimer = new JButton(Messages.getString("TimerPanel.Start", Settings.getGameType())); //$NON-NLS-1$
+		btnGameTimer = new JButton(Messages.getString("TimerPanel.Start", Settings.getGameType())); //$NON-NLS-1$
+		btnRecallTimer = new JButton(Messages.getString("TimerPanel.Start", Settings.getGameType())); //$NON-NLS-1$
+		btnResetTimer = new JButton(Messages.getString("TimerPanel.Reset", Settings.getGameType())); //$NON-NLS-1$
 		setMnemonics();
-		
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
-		Border outerBorder = BorderFactory.createEmptyBorder(settings.getBorderTop(),settings.getBorderLeft(),settings.getBorderBottom(),settings.getBorderRight());
+		Border outerBorder = BorderFactory.createEmptyBorder(Settings.getBorderTop(),Settings.getBorderLeft(),Settings.getBorderBottom(),Settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
-		
 		layoutComponents();
 	}
 	public void layoutComponents() {
@@ -234,35 +226,35 @@ public class TimerPanel extends JPanel {
 		add(btnResetTimer, gc);
 	}
 	private void setMnemonics() {
-		if(settings.getShotTimerHotKey().isEmpty()) {
+		if(Settings.getShotTimerHotKey().isEmpty()) {
 			btnShotTimer.setMnemonic(-1);
 		} else {
-			btnShotTimer.setMnemonic(settings.getShotTimerHotKey().charAt(0));
+			btnShotTimer.setMnemonic(Settings.getShotTimerHotKey().charAt(0));
 		};
-		if(settings.getPassTimerHotKey().isEmpty()) {
+		if(Settings.getPassTimerHotKey().isEmpty()) {
 			btnPassTimer.setMnemonic(-1);
 		} else {
-			btnPassTimer.setMnemonic(settings.getPassTimerHotKey().charAt(0));
+			btnPassTimer.setMnemonic(Settings.getPassTimerHotKey().charAt(0));
 		};
-		if(settings.getTimeOutTimerHotKey().isEmpty()) {
+		if(Settings.getTimeOutTimerHotKey().isEmpty()) {
 			btnTimeOutTimer.setMnemonic(-1);
 		} else {
-			btnTimeOutTimer.setMnemonic(settings.getTimeOutTimerHotKey().charAt(0));
+			btnTimeOutTimer.setMnemonic(Settings.getTimeOutTimerHotKey().charAt(0));
 		};
-		if(settings.getGameTimerHotKey().isEmpty()) {
+		if(Settings.getGameTimerHotKey().isEmpty()) {
 			btnGameTimer.setMnemonic(-1);
 		} else {
-			btnGameTimer.setMnemonic(settings.getGameTimerHotKey().charAt(0));
+			btnGameTimer.setMnemonic(Settings.getGameTimerHotKey().charAt(0));
 		};
-		if(settings.getRecallTimerHotKey().isEmpty()) {
+		if(Settings.getRecallTimerHotKey().isEmpty()) {
 			btnRecallTimer.setMnemonic(-1);
 		} else {
-			btnRecallTimer.setMnemonic(settings.getRecallTimerHotKey().charAt(0));
+			btnRecallTimer.setMnemonic(Settings.getRecallTimerHotKey().charAt(0));
 		};
-		if(settings.getResetTimersHotKey().isEmpty()) {
+		if(Settings.getResetTimersHotKey().isEmpty()) {
 			btnResetTimer.setMnemonic(-1);
 		} else {
-			btnResetTimer.setMnemonic(settings.getResetTimersHotKey().charAt(0));
+			btnResetTimer.setMnemonic(Settings.getResetTimersHotKey().charAt(0));
 		};
 	}
 	////// Listeners  //////
@@ -314,6 +306,6 @@ public class TimerPanel extends JPanel {
 		this.setBorder(border);
 	}
 	private String buildTitle() {
-		return Messages.getString("TimerPanel.TimerPanel", settings.getGameType()); //$NON-NLS-1$
+		return Messages.getString("TimerPanel.TimerPanel", Settings.getGameType()); //$NON-NLS-1$
 	}
 }

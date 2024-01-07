@@ -110,18 +110,14 @@ public class Stats implements Serializable {
 	private transient char protocolChar = new Character('R');
 	private transient char otherChar = new Character('O');
 	
-	private transient Settings settings;
 	private transient Team team1;
 	private transient Team team2;
-//	private transient Team team3;
 	private static transient Logger logger = LoggerFactory.getLogger(Stats.class);
 
-	public Stats(Settings settings, Team team1, Team team2, Team team3) {
+	public Stats(Team team1, Team team2) {
 		codeHistory = new DefaultListModel<String>();
-		this.settings = settings;
 		this.team1 = team1;
 		this.team2 = team2;
-//		this.team3 = team3;
 	}
 
 	public String getCode() {
@@ -348,7 +344,7 @@ public class Stats implements Serializable {
 				errorMsg = errorMsg + "Invalid modifier: " + currentModifier + ". ";
 			}
 		}
-		if (settings.getShowParsed()) {
+		if (Settings.getShowParsed()) {
 			logger.warn("ErrorMsg: " + errorMsg);
 		}
 	}
@@ -718,7 +714,7 @@ public class Stats implements Serializable {
 		}
 	}
 	public void showParsed() {
-		if (!settings.getShowParsed()) {
+		if (!Settings.getShowParsed()) {
 			return;
 		}
 		logger.info("----------------------------------------");

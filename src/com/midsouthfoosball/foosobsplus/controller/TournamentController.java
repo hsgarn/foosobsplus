@@ -36,12 +36,10 @@ import com.midsouthfoosball.foosobsplus.model.Tournament;
 import com.midsouthfoosball.foosobsplus.view.TournamentPanel;
 
 public class TournamentController {
-	private Settings settings;
 	private OBSInterface obsInterface;
 	private Tournament tournament;
 	private TournamentPanel tournamentPanel;
-	public TournamentController(OBSInterface obsInterface, Settings settings, Tournament tournament, Match match, TournamentPanel tournamentPanel) {
-		this.settings = settings;
+	public TournamentController(OBSInterface obsInterface, Tournament tournament, Match match, TournamentPanel tournamentPanel) {
 		this.obsInterface = obsInterface;
 		this.tournament = tournament;
 		this.tournamentPanel = tournamentPanel;
@@ -133,11 +131,11 @@ public class TournamentController {
 		}
 	}
 	public void fetchAll() {
-		tournament.setTournamentName(obsInterface.getContents(settings.getTournamentSource()));
+		tournament.setTournamentName(obsInterface.getContents(Settings.getTournamentSource()));
 		tournamentPanel.updateTournamentName(tournament.getTournamentName());
-		tournament.setEventName(obsInterface.getContents(settings.getEventSource()));
+		tournament.setEventName(obsInterface.getContents(Settings.getEventSource()));
 		tournamentPanel.updateEventName(tournament.getEventName());
-		tournament.setTableName(obsInterface.getContents(settings.getTableNameSource()));
+		tournament.setTableName(obsInterface.getContents(Settings.getTableNameSource()));
 		tournamentPanel.updateTableName(tournament.getTableName());
 	}
 	public void writeAll() {
