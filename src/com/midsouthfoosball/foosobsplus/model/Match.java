@@ -24,8 +24,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -60,6 +62,8 @@ public class Match implements Serializable {
 	private String[] times;
 	private static transient Logger logger = LoggerFactory.getLogger(Match.class);
 	private StringBuilder gameResults = new StringBuilder();
+	private List<MatchObserver> observers = new ArrayList<>();
+
 	public Match(OBSInterface obsInterface, Team team1, Team team2, Team team3) {
 		this.team1 = team1;
 		this.team2 = team2;
@@ -81,6 +85,14 @@ public class Match implements Serializable {
 		teamsMap.put(1, team1);
 		teamsMap.put(2, team2);
 		teamsMap.put(3, team3);
+	}
+	public void addObserver(MatchObserver observer) {
+		observers.add(observer);
+	}
+	private void notifyObservers() {
+		for (MatchObserver observer : observers) {
+			observer.onMeatball();
+		}
 	}
 	public void startMatch(String matchId) {
 		setMatchId(matchId);
@@ -560,6 +572,7 @@ public class Match implements Serializable {
 				if (points1 == meatballPoint) {
 					if (gameCount1 == Settings.getGamesToWin() - 1) {
 						writeMeatball();
+						notifyObservers();
 						return;
 					}
 				}

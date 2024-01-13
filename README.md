@@ -603,6 +603,9 @@ This is the name of the filter activated when the Start Game button is pressed.
 #### Switch Sides
 This is the name of the filter activated when the Switch Sides button is pressed.
 
+#### Meatball
+This is the name of the filter activated when both teams are tied and next ball wins the match.
+
 #### Save
 Click the save button to save any filter changes made.
 
@@ -1153,6 +1156,10 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.041 01/13/2024</br>
+Add Meatball Filter to enable filter when match is tied and next point wins.</br>
+Refactor getDefaultFilters in Settings.</br>
+</br>
 v2.040 01/07/2024</br>
 Modify Copyright to include the fancy copyright symbol ©. </br>
 Make default properties final in Settings.</br>

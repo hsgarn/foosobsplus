@@ -125,6 +125,7 @@ import com.midsouthfoosball.foosobsplus.controller.TournamentController;
 import com.midsouthfoosball.foosobsplus.model.GameClock;
 import com.midsouthfoosball.foosobsplus.model.LastScoredClock;
 import com.midsouthfoosball.foosobsplus.model.Match;
+import com.midsouthfoosball.foosobsplus.model.MatchObserver;
 import com.midsouthfoosball.foosobsplus.model.OBS;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.Stats;
@@ -174,7 +175,7 @@ import io.obswebsocket.community.client.message.event.sceneitems.SceneItemListRe
 import io.obswebsocket.community.client.message.event.sceneitems.SceneItemRemovedEvent;
 import io.obswebsocket.community.client.message.event.scenes.CurrentProgramSceneChangedEvent;
 
-public class Main {
+public class Main implements MatchObserver {
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
 	{
 		try {
@@ -312,6 +313,7 @@ public class Main {
 		}
 		loadListeners();
 		loadCommands();
+		match.addObserver(this);
 		createAutoScoreWorker();
 		if (Settings.getAutoScoreSettingsAutoConnect() == 1) {
 			connectAutoScore();
@@ -864,9 +866,13 @@ public class Main {
 		filtersPanel.addStartMatchFilterListener(new StartMatchFilterListener());
 		filtersPanel.addStartGameFilterListener(new StartGameFilterListener());
 		filtersPanel.addSwitchSidesFilterListener(new SwitchSidesFilterListener());
+		filtersPanel.addMeatballFilterListener(new MeatballFilterListener());
 		team1.addPropertyChangeListener(new TeamPropertyListener());
 		team2.addPropertyChangeListener(new TeamPropertyListener());
 		team3.addPropertyChangeListener(new TeamPropertyListener());
+	}
+	public void onMeatball() {
+		activateFilter("Meatball");
 	}
 	public void cutthroatRotate(int rotate) {
 		if (rotate ==1) {
@@ -2123,6 +2129,11 @@ public class Main {
 	private class SwitchSidesFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("SwitchSides");
+		}
+	}
+	private class MeatballFilterListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			activateFilter("Meatball");
 		}
 	}
 	private class TeamPropertyListener implements PropertyChangeListener{

@@ -269,6 +269,7 @@ public final class Settings {
 		defaultFilterProps.setProperty("StartMatch", "startmatch");
 		defaultFilterProps.setProperty("StartGame", "startgame");
 		defaultFilterProps.setProperty("SwitchSides", "switchsides");
+		defaultFilterProps.setProperty("Meatball", "meatball");
 		//PartnerProgram
 		defaultPartnerProgramProps.setProperty("PartnerProgramPath", "C:\\FoosTourney");
 		defaultPartnerProgramProps.setProperty("Player1FileName", "Player1.txt");
@@ -562,25 +563,26 @@ public final class Settings {
 	}
 	//Filters
 	public static String getFiltersFilter(String filter) {return configFilterProps.getProperty(filter);}
-	public static String getTeam1ScoreFilter() {return configFilterProps.getProperty("Team1Score");}
-	public static String getTeam2ScoreFilter() {return configFilterProps.getProperty("Team2Score");}
-	public static String getTeam1WinGameFilter() {return configFilterProps.getProperty("Team1WinGame");}
-	public static String getTeam2WinGameFilter() {return configFilterProps.getProperty("Team2WinGame");}
-	public static String getTeam1WinMatchFilter() {return configFilterProps.getProperty("Team1WinMatch");}
-	public static String getTeam2WinMatchFilter() {return configFilterProps.getProperty("Team2WinMatch");}
-	public static String getTeam1TimeOutFilter() {return configFilterProps.getProperty("Team1TimeOut");}
-	public static String getTeam2TimeOutFilter() {return configFilterProps.getProperty("Team2TimeOut");}
-	public static String getTeam1ResetFilter() {return configFilterProps.getProperty("Team1Reset");}
-	public static String getTeam2ResetFilter() {return configFilterProps.getProperty("Team2Reset");}
-	public static String getTeam1WarnFilter() {return configFilterProps.getProperty("Team1Warn");}
-	public static String getTeam2WarnFilter() {return configFilterProps.getProperty("Team2Warn");}
-	public static String getTeam1SwitchPositionsFilter() {return configFilterProps.getProperty("Team1SwitchPositions");}
-	public static String getTeam2SwitchPositionsFilter() {return configFilterProps.getProperty("Team2SwitchPositions");}
-	public static String getTeam1SkunkFilter() {return configFilterProps.getProperty("Team1Skunk");}
-	public static String getTeam2SkunkFilter() {return configFilterProps.getProperty("Team2Skunk");}
-	public static String getStartMatchFilter() {return configFilterProps.getProperty("StartMatch");}
-	public static String getStartGameFilter() {return configFilterProps.getProperty("StartGame");}
-	public static String getSwitchSidesFilter() {return configFilterProps.getProperty("SwitchSides");}	//PartnerProgram
+//	public static String getTeam1ScoreFilter() {return configFilterProps.getProperty("Team1Score");}
+//	public static String getTeam2ScoreFilter() {return configFilterProps.getProperty("Team2Score");}
+//	public static String getTeam1WinGameFilter() {return configFilterProps.getProperty("Team1WinGame");}
+//	public static String getTeam2WinGameFilter() {return configFilterProps.getProperty("Team2WinGame");}
+//	public static String getTeam1WinMatchFilter() {return configFilterProps.getProperty("Team1WinMatch");}
+//	public static String getTeam2WinMatchFilter() {return configFilterProps.getProperty("Team2WinMatch");}
+//	public static String getTeam1TimeOutFilter() {return configFilterProps.getProperty("Team1TimeOut");}
+//	public static String getTeam2TimeOutFilter() {return configFilterProps.getProperty("Team2TimeOut");}
+//	public static String getTeam1ResetFilter() {return configFilterProps.getProperty("Team1Reset");}
+//	public static String getTeam2ResetFilter() {return configFilterProps.getProperty("Team2Reset");}
+//	public static String getTeam1WarnFilter() {return configFilterProps.getProperty("Team1Warn");}
+//	public static String getTeam2WarnFilter() {return configFilterProps.getProperty("Team2Warn");}
+//	public static String getTeam1SwitchPositionsFilter() {return configFilterProps.getProperty("Team1SwitchPositions");}
+//	public static String getTeam2SwitchPositionsFilter() {return configFilterProps.getProperty("Team2SwitchPositions");}
+//	public static String getTeam1SkunkFilter() {return configFilterProps.getProperty("Team1Skunk");}
+//	public static String getTeam2SkunkFilter() {return configFilterProps.getProperty("Team2Skunk");}
+//	public static String getStartMatchFilter() {return configFilterProps.getProperty("StartMatch");}
+//	public static String getStartGameFilter() {return configFilterProps.getProperty("StartGame");}
+//	public static String getSwitchSidesFilter() {return configFilterProps.getProperty("SwitchSides");}
+//	public static String getMeatballFilter() {return configFilterProps.getProperty("Meatball");}
 	public static String getPartnerProgramPath() {return configPartnerProgramProps.getProperty("PartnerProgramPath");}
 	public static String getPlayer1FileName() {return configPartnerProgramProps.getProperty("Player1FileName");}
 	public static String getPlayer2FileName() {return configPartnerProgramProps.getProperty("Player2FileName");}
@@ -907,25 +909,7 @@ public final class Settings {
 	public static String getDefaultTeamTwoBarScoringSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "TwoBarScoring");}	
 	public static String getDefaultTeamShotsOnGoalSource(String teamNumber) {return defaultStatsSourceProps.getProperty("Team" + teamNumber + "ShotsOnGoal");}
 	//Filters
-	public static String getDefaultTeam1ScoreFilter() {return defaultFilterProps.getProperty("Team1Score");}
-	public static String getDefaultTeam2ScoreFilter() {return defaultFilterProps.getProperty("Team2Score");}
-	public static String getDefaultTeam1WinGameFilter() {return defaultFilterProps.getProperty("Team1WinGame");}
-	public static String getDefaultTeam2WinGameFilter() {return defaultFilterProps.getProperty("Team2WinGame");}
-	public static String getDefaultTeam1WinMatchFilter() {return defaultFilterProps.getProperty("Team1WinMatch");}
-	public static String getDefaultTeam2WinMatchFilter() {return defaultFilterProps.getProperty("Team2WinMatch");}
-	public static String getDefaultTeam1TimeOutFilter() {return defaultFilterProps.getProperty("Team1TimeOut");}
-	public static String getDefaultTeam2TimeOutFilter() {return defaultFilterProps.getProperty("Team2TimeOut");}
-	public static String getDefaultTeam1ResetFilter() {return defaultFilterProps.getProperty("Team1Reset");}
-	public static String getDefaultTeam2ResetFilter() {return defaultFilterProps.getProperty("Team2Reset");}
-	public static String getDefaultTeam1WarnFilter() {return defaultFilterProps.getProperty("Team1Warn");}
-	public static String getDefaultTeam2WarnFilter() {return defaultFilterProps.getProperty("Team2Warn");}
-	public static String getDefaultTeam1SwitchPositionsFilter() {return defaultFilterProps.getProperty("Team1SwitchPositions");}
-	public static String getDefaultTeam2SwitchPositionsFilter() {return defaultFilterProps.getProperty("Team2SwitchPositions");}
-	public static String getDefaultTeam1SkunkFilter() {return defaultFilterProps.getProperty("Team1Skunk");}
-	public static String getDefaultTeam2SkunkFilter() {return defaultFilterProps.getProperty("Team2Skunk");}
-	public static String getDefaultStartMatchFilter() {return defaultFilterProps.getProperty("StartMatch");}
-	public static String getDefaultStartGameFilter() {return defaultFilterProps.getProperty("StartGame");}
-	public static String getDefaultSwitchSidesFilter() {return defaultFilterProps.getProperty("SwitchSides");}
+	public static String getDefaultFilter(String filter) {return defaultFilterProps.getProperty(filter);}
 	//PartnerProgram
 	public static String getDefaultPartnerProgramPath() {return defaultPartnerProgramProps.getProperty("PartnerProgramPath");}
 	public static String getDefaultPlayer1FileName() {return defaultPartnerProgramProps.getProperty("Player1FileName");}
