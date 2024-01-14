@@ -116,60 +116,60 @@ public class SourcesPanel extends JPanel {
 		setLayout();
 	}
 	private void restoreDefaults() {
-		txtTournamentSource.setText(Settings.getDefaultTournamentSource());
-		txtEventSource.setText(Settings.getDefaultEventSource());
-		txtTeam1NameSource.setText(Settings.getDefaultTeam1NameSource());
-		txtTeam1ForwardSource.setText(Settings.getDefaultTeam1ForwardSource());
-		txtTeam1GoalieSource.setText(Settings.getDefaultTeam1GoalieSource());
-		txtTeam2NameSource.setText(Settings.getDefaultTeam2NameSource());
-		txtTeam2ForwardSource.setText(Settings.getDefaultTeam2ForwardSource());
-		txtTeam2GoalieSource.setText(Settings.getDefaultTeam2GoalieSource());
-		txtTeam3NameSource.setText(Settings.getDefaultTeam3NameSource());
-		txtTeam3ForwardSource.setText(Settings.getDefaultTeam3ForwardSource());
-		txtTeam3GoalieSource.setText(Settings.getDefaultTeam3GoalieSource());
-		txtTableNameSource.setText(Settings.getDefaultTableNameSource());
-		txtTeam1GameCountSource.setText(Settings.getDefaultTeam1GameCountSource());
-		txtTeam2GameCountSource.setText(Settings.getDefaultTeam2GameCountSource());
-		txtTeam3GameCountSource.setText(Settings.getDefaultTeam3GameCount3Source());
-		txtTeam1MatchCountSource.setText(Settings.getDefaultTeam1MatchCountSource());
-		txtTeam2MatchCountSource.setText(Settings.getDefaultTeam2MatchCountSource());
-		txtTeam3MatchCountSource.setText(Settings.getDefaultTeam3MatchCount3Source());
-		txtTeam1ScoreSource.setText(Settings.getDefaultTeam1ScoreSource());
-		txtTeam2ScoreSource.setText(Settings.getDefaultTeam2ScoreSource());
-		txtTeam3ScoreSource.setText(Settings.getDefaultTeam3ScoreSource());
-		txtTeam1TimeOutSource.setText(Settings.getDefaultTeam1TimeOutSource());
-		txtTeam2TimeOutSource.setText(Settings.getDefaultTeam2TimeOutSource());
-		txtTeam3TimeOutSource.setText(Settings.getDefaultTeam3TimeOutSource());
-		txtTeam1ResetSource.setText(Settings.getDefaultTeam1ResetSource());
-		txtTeam2ResetSource.setText(Settings.getDefaultTeam2ResetSource());
-		txtTeam3ResetSource.setText(Settings.getDefaultTeam3ResetSource());
-		txtTeam1WarnSource.setText(Settings.getDefaultTeam1WarnSource());
-		txtTeam2WarnSource.setText(Settings.getDefaultTeam2WarnSource());
-		txtTeam3WarnSource.setText(Settings.getDefaultTeam3WarnSource());
-		txtTeam1KingSeatSource.setText(Settings.getDefaultTeam1KingSeatSource());
-		txtTeam2KingSeatSource.setText(Settings.getDefaultTeam2KingSeatSource());
-		txtTeam3KingSeatSource.setText(Settings.getDefaultTeam3KingSeatSource());
-		txtTeam1Game1ShowSource.setText(Settings.getDefaultTeamGameShowSource("1","1"));
-		txtTeam2Game1ShowSource.setText(Settings.getDefaultTeamGameShowSource("2","1"));
-		txtTeam3Game1ShowSource.setText(Settings.getDefaultTeamGameShowSource("3","1"));
-		txtTeam1Game2ShowSource.setText(Settings.getDefaultTeamGameShowSource("1","2"));
-		txtTeam2Game2ShowSource.setText(Settings.getDefaultTeamGameShowSource("2","2"));
-		txtTeam3Game2ShowSource.setText(Settings.getDefaultTeamGameShowSource("3","2"));
-		txtTeam1Game3ShowSource.setText(Settings.getDefaultTeamGameShowSource("1","3"));
-		txtTeam2Game3ShowSource.setText(Settings.getDefaultTeamGameShowSource("2","3"));
-		txtTeam3Game3ShowSource.setText(Settings.getDefaultTeamGameShowSource("3","3"));
-		txtTimeRemainingSource.setText(Settings.getDefaultTimeRemainingSource());
-		txtTimerInUseSource.setText(Settings.getDefaultTimerInUseSource());
-		txtMatchWinnerSource.setText(Settings.getDefaultMatchWinnerSource());
-		txtMeatballSource.setText(Settings.getDefaultMeatballSource());
-		txtGameResultsSource.setText(Settings.getDefaultGameResultsSource());
-		txtLastScoredSource.setText(Settings.getDefaultLastScoredSource());
-		txtGameTimeSource.setText(Settings.getDefaultGameTimeSource());
-		txtMatchTimeSource.setText(Settings.getDefaultMatchTimeSource());
-		txtStreamTimeSource.setText(Settings.getDefaultStreamTimeSource());
-		txtShowScoresSource.setText(Settings.getDefaultShowScoresSource());
-		txtShowTimerSource.setText(Settings.getDefaultShowTimerSource());
-		txtShowCutthroatSource.setText(Settings.getDefaultShowCutthroatSource());
+		txtTournamentSource.setText(Settings.getDefaultSource("Tournament"));
+		txtEventSource.setText(Settings.getDefaultSource("Event"));
+		txtTeam1NameSource.setText(Settings.getDefaultSource("Team1Name"));
+		txtTeam1ForwardSource.setText(Settings.getDefaultSource("Team1Forward"));
+		txtTeam1GoalieSource.setText(Settings.getDefaultSource("Team1Goalie"));
+		txtTeam2NameSource.setText(Settings.getDefaultSource("Team2Name"));
+		txtTeam2ForwardSource.setText(Settings.getDefaultSource("Team2Forward"));
+		txtTeam2GoalieSource.setText(Settings.getDefaultSource("Team2Goalie"));
+		txtTeam3NameSource.setText(Settings.getDefaultSource("Team3Name"));
+		txtTeam3ForwardSource.setText(Settings.getDefaultSource("Team3Forward"));
+		txtTeam3GoalieSource.setText(Settings.getDefaultSource("Team3Goalie"));
+		txtTableNameSource.setText(Settings.getDefaultSource("TableName"));
+		txtTeam1GameCountSource.setText(Settings.getDefaultSource("Team1GameCount"));
+		txtTeam2GameCountSource.setText(Settings.getDefaultSource("Team2GameCount"));
+		txtTeam3GameCountSource.setText(Settings.getDefaultSource("Team3GameCount3"));
+		txtTeam1MatchCountSource.setText(Settings.getDefaultSource("Team1MatchCount"));
+		txtTeam2MatchCountSource.setText(Settings.getDefaultSource("Team2MatchCount"));
+		txtTeam3MatchCountSource.setText(Settings.getDefaultSource("Team3MatchCount3"));
+		txtTeam1ScoreSource.setText(Settings.getDefaultSource("Team1Score"));
+		txtTeam2ScoreSource.setText(Settings.getDefaultSource("Team2Score"));
+		txtTeam3ScoreSource.setText(Settings.getDefaultSource("Team3Score"));
+		txtTeam1TimeOutSource.setText(Settings.getDefaultSource("Team1TimeOut"));
+		txtTeam2TimeOutSource.setText(Settings.getDefaultSource("Team2TimeOut"));
+		txtTeam3TimeOutSource.setText(Settings.getDefaultSource("Team3TimeOut"));
+		txtTeam1ResetSource.setText(Settings.getDefaultSource("Team1Reset"));
+		txtTeam2ResetSource.setText(Settings.getDefaultSource("Team2Reset"));
+		txtTeam3ResetSource.setText(Settings.getDefaultSource("Team3Reset"));
+		txtTeam1WarnSource.setText(Settings.getDefaultSource("Team1Warn"));
+		txtTeam2WarnSource.setText(Settings.getDefaultSource("Team2Warn"));
+		txtTeam3WarnSource.setText(Settings.getDefaultSource("Team3Warn"));
+		txtTeam1KingSeatSource.setText(Settings.getDefaultSource("Team1KingSeat"));
+		txtTeam2KingSeatSource.setText(Settings.getDefaultSource("Team2KingSeat"));
+		txtTeam3KingSeatSource.setText(Settings.getDefaultSource("Team3KingSeat"));
+		txtTeam1Game1ShowSource.setText(Settings.getDefaultSource("Team1Game1Show"));
+		txtTeam2Game1ShowSource.setText(Settings.getDefaultSource("Team2Game1Show"));
+		txtTeam3Game1ShowSource.setText(Settings.getDefaultSource("Team3Game1Show"));
+		txtTeam1Game2ShowSource.setText(Settings.getDefaultSource("Team1Game2Show"));
+		txtTeam2Game2ShowSource.setText(Settings.getDefaultSource("Team2Game2Show"));
+		txtTeam3Game2ShowSource.setText(Settings.getDefaultSource("Team3Game2Show"));
+		txtTeam1Game3ShowSource.setText(Settings.getDefaultSource("Team1Game3Show"));
+		txtTeam2Game3ShowSource.setText(Settings.getDefaultSource("Team2Game3Show"));
+		txtTeam3Game3ShowSource.setText(Settings.getDefaultSource("Team3Game3Show"));
+		txtTimeRemainingSource.setText(Settings.getDefaultSource("TimeRemaining"));
+		txtTimerInUseSource.setText(Settings.getDefaultSource("TimerInUse"));
+		txtMatchWinnerSource.setText(Settings.getDefaultSource("MatchWinner"));
+		txtMeatballSource.setText(Settings.getDefaultSource("Meatball"));
+		txtGameResultsSource.setText(Settings.getDefaultSource("GameResults"));
+		txtLastScoredSource.setText(Settings.getDefaultSource("LastScored"));
+		txtGameTimeSource.setText(Settings.getDefaultSource("GameTime"));
+		txtMatchTimeSource.setText(Settings.getDefaultSource("MatchTime"));
+		txtStreamTimeSource.setText(Settings.getDefaultSource("StreamTime"));
+		txtShowScoresSource.setText(Settings.getDefaultSource("ShowScores"));
+		txtShowTimerSource.setText(Settings.getDefaultSource("ShowTimer"));
+		txtShowCutthroatSource.setText(Settings.getDefaultSource("ShowCutthroat"));
 	}
 	public boolean saveSettings() {
 		boolean okToCloseWindow = false;
@@ -267,7 +267,7 @@ public class SourcesPanel extends JPanel {
 						formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
 					}
 					try {
-						Settings.setDatapath(formattedTxtPath.getText());
+						Settings.setControlParameter("datapath",formattedTxtPath.getText());
 						Settings.saveSourceConfig();
 					} catch (IOException ex) {
 						logger.error(Messages.getString("SourcesPanel.ErrorSavingPropertiesFile")); //$NON-NLS-1$
@@ -278,11 +278,11 @@ public class SourcesPanel extends JPanel {
 		});
 		add(btnSelectPath, "cell 1 0"); //$NON-NLS-1$
 		formattedTxtPath = new JFormattedTextField(defaultFilePath);
-		formattedTxtPath.setText(Settings.getDatapath());
+		formattedTxtPath.setText(Settings.getControlParameter("datapath"));
 		formattedTxtPath.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent arg0) {
 		    	try {
-					Settings.setDatapath(formattedTxtPath.getText());
+					Settings.setControlParameter("datapath",formattedTxtPath.getText());
 					Settings.saveSourceConfig();
 		    	} catch (IOException ex) {
 		    		logger.error(Messages.getString("SourcesPanel.ErrorSavingPropertiesFile"));		 //$NON-NLS-1$
@@ -295,7 +295,7 @@ public class SourcesPanel extends JPanel {
 				int key = evt.getKeyCode();
 			    if (key == KeyEvent.VK_ENTER) {
 			    	try {
-						Settings.setDatapath(formattedTxtPath.getText());
+						Settings.setControlParameter("datapath",formattedTxtPath.getText());
 						Settings.saveSourceConfig();
 			    	} catch (IOException ex) {
 			    		logger.error(Messages.getString("SourcesPanel.ErrorSavingPropertiesFile"));		 //$NON-NLS-1$
@@ -341,17 +341,17 @@ public class SourcesPanel extends JPanel {
 		add(lblNameSource, "cell 1 3,alignx right"); //$NON-NLS-1$
 
 		txtTeam1NameSource = new JTextField();
-		txtTeam1NameSource.setText(Settings.getTeamNameSource("1"));
+		txtTeam1NameSource.setText(Settings.getTeamSourceParameter("1","Name"));
 		txtTeam1NameSource.setColumns(10);
 		add(txtTeam1NameSource, "cell 2 3,alignx left"); //$NON-NLS-1$
 
 		txtTeam2NameSource = new JTextField();
-		txtTeam2NameSource.setText(Settings.getTeamNameSource("2"));
+		txtTeam2NameSource.setText(Settings.getTeamSourceParameter("2","Name"));
 		txtTeam2NameSource.setColumns(10);
 		add(txtTeam2NameSource, "cell 3 3,alignx left"); //$NON-NLS-1$
 
 		txtTeam3NameSource = new JTextField();
-		txtTeam3NameSource.setText(Settings.getTeamNameSource("3"));
+		txtTeam3NameSource.setText(Settings.getTeamSourceParameter("3","Name"));
 		txtTeam3NameSource.setColumns(10);
 		add(txtTeam3NameSource, "cell 4 3,alignx left"); //$NON-NLS-1$
 
@@ -360,17 +360,17 @@ public class SourcesPanel extends JPanel {
 		add(lblTeam1Forward, "cell 1 4,alignx right"); //$NON-NLS-1$
 
 		txtTeam1ForwardSource = new JTextField();
-		txtTeam1ForwardSource.setText(Settings.getTeamForwardSource("1"));
+		txtTeam1ForwardSource.setText(Settings.getTeamSourceParameter("1","Forward"));
 		txtTeam1ForwardSource.setColumns(10);
 		add(txtTeam1ForwardSource, "cell 2 4,alignx left"); //$NON-NLS-1$
 		
 		txtTeam2ForwardSource = new JTextField();
-		txtTeam2ForwardSource.setText(Settings.getTeamForwardSource("2"));
+		txtTeam2ForwardSource.setText(Settings.getTeamSourceParameter("2","Forward"));
 		txtTeam2ForwardSource.setColumns(10);
 		add(txtTeam2ForwardSource, "cell 3 4,alignx left"); //$NON-NLS-1$
 
 		txtTeam3ForwardSource = new JTextField();
-		txtTeam3ForwardSource.setText(Settings.getTeamForwardSource("3"));
+		txtTeam3ForwardSource.setText(Settings.getTeamSourceParameter("3","Forward"));
 		txtTeam3ForwardSource.setColumns(10);
 		add(txtTeam3ForwardSource, "cell 4 4,alignx left"); //$NON-NLS-1$
 
@@ -379,17 +379,17 @@ public class SourcesPanel extends JPanel {
 		add(lblGoalieName, "cell 1 5,alignx right"); //$NON-NLS-1$
 
 		txtTeam1GoalieSource = new JTextField();
-		txtTeam1GoalieSource.setText(Settings.getTeamGoalieSource("1"));
+		txtTeam1GoalieSource.setText(Settings.getTeamSourceParameter("1","Goalie"));
 		txtTeam1GoalieSource.setColumns(10);
 		add(txtTeam1GoalieSource, "cell 2 5,alignx left"); //$NON-NLS-1$
 		
 		txtTeam2GoalieSource = new JTextField();
-		txtTeam2GoalieSource.setText(Settings.getTeamGoalieSource("2"));
+		txtTeam2GoalieSource.setText(Settings.getTeamSourceParameter("2","Goalie"));
 		txtTeam2GoalieSource.setColumns(10);
 		add(txtTeam2GoalieSource, "cell 3 5,alignx left"); //$NON-NLS-1$
 
 		txtTeam3GoalieSource = new JTextField();
-		txtTeam3GoalieSource.setText(Settings.getTeamGoalieSource("3"));
+		txtTeam3GoalieSource.setText(Settings.getTeamSourceParameter("3","Goalie"));
 		txtTeam3GoalieSource.setColumns(10);
 		add(txtTeam3GoalieSource, "cell 4 5,alignx left"); //$NON-NLS-1$
 
@@ -398,17 +398,17 @@ public class SourcesPanel extends JPanel {
 		add(lblScore, "cell 1 6,alignx right"); //$NON-NLS-1$
 
 		txtTeam1ScoreSource = new JTextField();
-		txtTeam1ScoreSource.setText(Settings.getTeamScoreSource("1"));
+		txtTeam1ScoreSource.setText(Settings.getTeamSourceParameter("1","Score"));
 		txtTeam1ScoreSource.setColumns(10);
 		add(txtTeam1ScoreSource, "cell 2 6,alignx left"); //$NON-NLS-1$
 
 		txtTeam2ScoreSource = new JTextField();
-		txtTeam2ScoreSource.setText(Settings.getTeamScoreSource("2"));
+		txtTeam2ScoreSource.setText(Settings.getTeamSourceParameter("2","Score"));
 		txtTeam2ScoreSource.setColumns(10);
 		add(txtTeam2ScoreSource, "cell 3 6,alignx left"); //$NON-NLS-1$
 
 		txtTeam3ScoreSource = new JTextField();
-		txtTeam3ScoreSource.setText(Settings.getTeamScoreSource("3"));
+		txtTeam3ScoreSource.setText(Settings.getTeamSourceParameter("3","Score"));
 		txtTeam3ScoreSource.setColumns(10);
 		add(txtTeam3ScoreSource, "cell 4 6,alignx left"); //$NON-NLS-1$
 
@@ -417,17 +417,17 @@ public class SourcesPanel extends JPanel {
 		add(lblGameCount, "cell 1 7,alignx right"); //$NON-NLS-1$
 
 		txtTeam1GameCountSource = new JTextField();
-		txtTeam1GameCountSource.setText(Settings.getTeamGameCountSource("1"));
+		txtTeam1GameCountSource.setText(Settings.getTeamSourceParameter("1","GameCount"));
 		txtTeam1GameCountSource.setColumns(10);
 		add(txtTeam1GameCountSource, "cell 2 7,alignx left"); //$NON-NLS-1$
 
 		txtTeam2GameCountSource = new JTextField();
-		txtTeam2GameCountSource.setText(Settings.getTeamGameCountSource("2"));
+		txtTeam2GameCountSource.setText(Settings.getTeamSourceParameter("2","GameCount"));
 		txtTeam2GameCountSource.setColumns(10);
 		add(txtTeam2GameCountSource, "cell 3 7,alignx left"); //$NON-NLS-1$
 
 		txtTeam3GameCountSource = new JTextField();
-		txtTeam3GameCountSource.setText(Settings.getTeamGameCountSource("3"));
+		txtTeam3GameCountSource.setText(Settings.getTeamSourceParameter("3","GameCount"));
 		txtTeam3GameCountSource.setColumns(10);
 		add(txtTeam3GameCountSource, "cell 4 7,alignx left"); //$NON-NLS-1$
 
@@ -436,17 +436,17 @@ public class SourcesPanel extends JPanel {
 		add(lblMatchCount, "cell 1 8,alignx right"); //$NON-NLS-1$
 
 		txtTeam1MatchCountSource = new JTextField();
-		txtTeam1MatchCountSource.setText(Settings.getTeamMatchCountSource("1"));
+		txtTeam1MatchCountSource.setText(Settings.getTeamSourceParameter("1","MatchCount"));
 		txtTeam1MatchCountSource.setColumns(10);
 		add(txtTeam1MatchCountSource, "cell 2 8,alignx left"); //$NON-NLS-1$
 
 		txtTeam2MatchCountSource = new JTextField();
-		txtTeam2MatchCountSource.setText(Settings.getTeamMatchCountSource("2"));
+		txtTeam2MatchCountSource.setText(Settings.getTeamSourceParameter("2","MatchCount"));
 		txtTeam2MatchCountSource.setColumns(10);
 		add(txtTeam2MatchCountSource, "cell 3 8,alignx left"); //$NON-NLS-1$
 
 		txtTeam3MatchCountSource = new JTextField();
-		txtTeam3MatchCountSource.setText(Settings.getTeamMatchCountSource("3"));
+		txtTeam3MatchCountSource.setText(Settings.getTeamSourceParameter("3","MatchCount"));
 		txtTeam3MatchCountSource.setColumns(10);
 		add(txtTeam3MatchCountSource, "cell 4 8,alignx left"); //$NON-NLS-1$
 
@@ -455,17 +455,17 @@ public class SourcesPanel extends JPanel {
 		add(lblTimeOut, "cell 1 9,alignx right"); //$NON-NLS-1$
 
 		txtTeam1TimeOutSource = new JTextField();
-		txtTeam1TimeOutSource.setText(Settings.getTeamTimeOutSource("1"));
+		txtTeam1TimeOutSource.setText(Settings.getTeamSourceParameter("1","TimeOut"));
 		txtTeam1TimeOutSource.setColumns(10);
 		add(txtTeam1TimeOutSource, "cell 2 9,alignx left"); //$NON-NLS-1$
 
 		txtTeam2TimeOutSource = new JTextField();
-		txtTeam2TimeOutSource.setText(Settings.getTeamTimeOutSource("2"));
+		txtTeam2TimeOutSource.setText(Settings.getTeamSourceParameter("2","TimeOut"));
 		txtTeam2TimeOutSource.setColumns(10);
 		add(txtTeam2TimeOutSource, "cell 3 9,alignx left"); //$NON-NLS-1$
 
 		txtTeam3TimeOutSource = new JTextField();
-		txtTeam3TimeOutSource.setText(Settings.getTeamTimeOutSource("3"));
+		txtTeam3TimeOutSource.setText(Settings.getTeamSourceParameter("3","TimeOut"));
 		txtTeam3TimeOutSource.setColumns(10);
 		add(txtTeam3TimeOutSource, "cell 4 9,alignx left"); //$NON-NLS-1$
 
@@ -474,17 +474,17 @@ public class SourcesPanel extends JPanel {
 		add(lblReset, "cell 1 10,alignx right"); //$NON-NLS-1$
 
 		txtTeam1ResetSource = new JTextField();
-		txtTeam1ResetSource.setText(Settings.getTeamResetSource("1"));
+		txtTeam1ResetSource.setText(Settings.getTeamSourceParameter("1","Reset"));
 		txtTeam1ResetSource.setColumns(10);
 		add(txtTeam1ResetSource, "cell 2 10,alignx left"); //$NON-NLS-1$
 
 		txtTeam2ResetSource = new JTextField();
-		txtTeam2ResetSource.setText(Settings.getTeamResetSource("2"));
+		txtTeam2ResetSource.setText(Settings.getTeamSourceParameter("2","Reset"));
 		txtTeam2ResetSource.setColumns(10);
 		add(txtTeam2ResetSource, "cell 3 10,alignx left"); //$NON-NLS-1$
 
 		txtTeam3ResetSource = new JTextField();
-		txtTeam3ResetSource.setText(Settings.getTeamResetSource("3"));
+		txtTeam3ResetSource.setText(Settings.getTeamSourceParameter("3","Reset"));
 		txtTeam3ResetSource.setColumns(10);
 		add(txtTeam3ResetSource, "cell 4 10,alignx left"); //$NON-NLS-1$
 		
@@ -493,17 +493,17 @@ public class SourcesPanel extends JPanel {
 		add(lblWarn, "cell 1 11,alignx right"); //$NON-NLS-1$
 
 		txtTeam1WarnSource = new JTextField();
-		txtTeam1WarnSource.setText(Settings.getTeamWarnSource("1"));
+		txtTeam1WarnSource.setText(Settings.getTeamSourceParameter("1","Warn"));
 		txtTeam1WarnSource.setColumns(10);
 		add(txtTeam1WarnSource, "cell 2 11,alignx left"); //$NON-NLS-1$
 
 		txtTeam2WarnSource = new JTextField();
-		txtTeam2WarnSource.setText(Settings.getTeamWarnSource("2"));
+		txtTeam2WarnSource.setText(Settings.getTeamSourceParameter("2","Warn"));
 		txtTeam2WarnSource.setColumns(10);
 		add(txtTeam2WarnSource, "cell 3 11,alignx left"); //$NON-NLS-1$
 		
 		txtTeam3WarnSource = new JTextField();
-		txtTeam3WarnSource.setText(Settings.getTeamWarnSource("3"));
+		txtTeam3WarnSource.setText(Settings.getTeamSourceParameter("3","Warn"));
 		txtTeam3WarnSource.setColumns(10);
 		add(txtTeam3WarnSource, "cell 4 11,alignx left"); //$NON-NLS-1$
 		
@@ -512,17 +512,17 @@ public class SourcesPanel extends JPanel {
 		add(lblKingSeat, "cell 1 12,alignx right"); //$NON-NLS-1$
 		
 		txtTeam1KingSeatSource = new JTextField();
-		txtTeam1KingSeatSource.setText(Settings.getTeamKingSeatSource("1"));
+		txtTeam1KingSeatSource.setText(Settings.getTeamSourceParameter("1","KingSeat"));
 		txtTeam1KingSeatSource.setColumns(10);
 		add(txtTeam1KingSeatSource, "cell 2 12, alignx left"); //$NON-NLS-1$
 		
 		txtTeam2KingSeatSource = new JTextField();
-		txtTeam2KingSeatSource.setText(Settings.getTeamKingSeatSource("2"));
+		txtTeam2KingSeatSource.setText(Settings.getTeamSourceParameter("2","KingSeat"));
 		txtTeam2KingSeatSource.setColumns(10);
 		add(txtTeam2KingSeatSource, "cell 3 12, alignx left"); //$NON-NLS-1$
 		
 		txtTeam3KingSeatSource = new JTextField();
-		txtTeam3KingSeatSource.setText(Settings.getTeamKingSeatSource("3"));
+		txtTeam3KingSeatSource.setText(Settings.getTeamSourceParameter("3","KingSeat"));
 		txtTeam3KingSeatSource.setColumns(10);
 		add(txtTeam3KingSeatSource, "cell 4 12, alignx left"); //$NON-NLS-1$
 		
@@ -586,7 +586,7 @@ public class SourcesPanel extends JPanel {
 		add(lblTournamentSource, "cell 5 3,alignx right"); //$NON-NLS-1$
 
 		txtTournamentSource = new JTextField();
-		txtTournamentSource.setText(Settings.getTournamentSource());
+		txtTournamentSource.setText(Settings.getSourceParameter("Tournament"));
 		add(txtTournamentSource, "cell 6 3,alignx left"); //$NON-NLS-1$
 		txtTournamentSource.setColumns(10);
 
@@ -595,7 +595,7 @@ public class SourcesPanel extends JPanel {
 		add(lblEventSource, "cell 5 4,alignx right"); //$NON-NLS-1$
 
 		txtEventSource = new JTextField();
-		txtEventSource.setText(Settings.getEventSource());
+		txtEventSource.setText(Settings.getSourceParameter("Event"));
 		add(txtEventSource, "cell 6 4,alignx left"); //$NON-NLS-1$
 		txtEventSource.setColumns(10);
 		
@@ -604,7 +604,7 @@ public class SourcesPanel extends JPanel {
 		add(lblTableNameSource, "cell 5 5,alignx right"); //$NON-NLS-1$
 		
 		txtTableNameSource = new JTextField();
-		txtTableNameSource.setText(Settings.getTableNameSource());
+		txtTableNameSource.setText(Settings.getSourceParameter("TableName"));
 		add(txtTableNameSource, "cell 6 5,alignx left");
 		txtTableNameSource.setColumns(10);
 
@@ -613,7 +613,7 @@ public class SourcesPanel extends JPanel {
 		add(lblTimerSource, "cell 5 6,alignx right"); //$NON-NLS-1$
 
 		txtTimerInUseSource = new JTextField();
-		txtTimerInUseSource.setText(Settings.getTimerInUseSource());
+		txtTimerInUseSource.setText(Settings.getSourceParameter("TimerInUse"));
 		add(txtTimerInUseSource, "cell 6 6,alignx left"); //$NON-NLS-1$
 		txtTimerInUseSource.setColumns(10);
 
@@ -622,7 +622,7 @@ public class SourcesPanel extends JPanel {
 		add(lblTimeRemainingSource, "cell 5 7,alignx right"); //$NON-NLS-1$
 
 		txtTimeRemainingSource = new JTextField();
-		txtTimeRemainingSource.setText(Settings.getTimeRemainingSource());
+		txtTimeRemainingSource.setText(Settings.getSourceParameter("TimeRemaining"));
 		add(txtTimeRemainingSource, "cell 6 7,alignx left"); //$NON-NLS-1$
 		txtTimeRemainingSource.setColumns(10);
 
@@ -631,7 +631,7 @@ public class SourcesPanel extends JPanel {
 		add(lblGameTimeSource, "cell 5 8,alignx right"); //$NON-NLS-1$
 		
 		txtGameTimeSource = new JTextField();
-		txtGameTimeSource.setText(Settings.getGameTimeSource());
+		txtGameTimeSource.setText(Settings.getSourceParameter("GameTime"));
 		add(txtGameTimeSource, "cell 6 8,alignx left"); //$NON-NLS-1$
 		txtGameTimeSource.setColumns(10);
 		
@@ -640,7 +640,7 @@ public class SourcesPanel extends JPanel {
 		add(lblMatchTimeSource, "cell 5 9,alignx right"); //$NON-NLS-1$
 		
 		txtMatchTimeSource = new JTextField();
-		txtMatchTimeSource.setText(Settings.getMatchTimeSource());
+		txtMatchTimeSource.setText(Settings.getSourceParameter("MatchTime"));
 		add(txtMatchTimeSource, "cell 6 9,alignx left"); //$NON-NLS-1$
 		txtMatchTimeSource.setColumns(10);
 		
@@ -649,7 +649,7 @@ public class SourcesPanel extends JPanel {
 		add(lblStreamTimeSource, "cell 5 10,alignx right"); //$NON-NLS-1$
 		
 		txtStreamTimeSource = new JTextField();
-		txtStreamTimeSource.setText(Settings.getStreamTimeSource());
+		txtStreamTimeSource.setText(Settings.getSourceParameter("StreamTime"));
 		add(txtStreamTimeSource, "cell 6 10,alignx left"); //$NON-NLS-1$
 		txtStreamTimeSource.setColumns(10);
 
@@ -658,7 +658,7 @@ public class SourcesPanel extends JPanel {
 		add(lblLastScoredSource, "cell 5 11,alignx right"); //$NON-NLS-1$
 
 		txtLastScoredSource = new JTextField();
-		txtLastScoredSource.setText(Settings.getLastScoredSource());
+		txtLastScoredSource.setText(Settings.getSourceParameter("LastScored"));
 		add(txtLastScoredSource, "cell 6 11,alignx left"); //$NON-NLS-1$
 		txtLastScoredSource.setColumns(10);
 
@@ -667,7 +667,7 @@ public class SourcesPanel extends JPanel {
 		add(lblMatchWinnerSource, "cell 5 12,alignx right"); //$NON-NLS-1$
 
 		txtMatchWinnerSource = new JTextField();
-		txtMatchWinnerSource.setText(Settings.getMatchWinnerSource());
+		txtMatchWinnerSource.setText(Settings.getSourceParameter("MatchWinner"));
 		add(txtMatchWinnerSource, "cell 6 12,alignx left"); //$NON-NLS-1$
 		txtMatchWinnerSource.setColumns(10);
 
@@ -676,7 +676,7 @@ public class SourcesPanel extends JPanel {
 		add(lblMeatball, "cell 5 13,alignx right"); //$NON-NLS-1$
 
 		txtMeatballSource = new JTextField();
-		txtMeatballSource.setText(Settings.getMeatballSource());
+		txtMeatballSource.setText(Settings.getSourceParameter("Meatball"));
 		add(txtMeatballSource, "cell 6 13,alignx left"); //$NON-NLS-1$
 		txtMeatballSource.setColumns(10);
 		
@@ -685,7 +685,7 @@ public class SourcesPanel extends JPanel {
 		add(lblGameResults, "cell 5 14,alignx right"); //$NON-NLS-1$
 
 		txtGameResultsSource = new JTextField();
-		txtGameResultsSource.setText(Settings.getGameResultsSource());
+		txtGameResultsSource.setText(Settings.getSourceParameter("GameResults"));
 		add(txtGameResultsSource, "cell 6 14,alignx left"); //$NON-NLS-1$
 		txtGameResultsSource.setColumns(10);
 
@@ -694,7 +694,7 @@ public class SourcesPanel extends JPanel {
 		add(lblShowScoresSource, "cell 5 15,alignx trailing"); //$NON-NLS-1$
 		
 		txtShowScoresSource = new JTextField();
-		txtShowScoresSource.setText(Settings.getShowScoresSource());
+		txtShowScoresSource.setText(Settings.getSourceParameter("ShowScores"));
 		add(txtShowScoresSource, "cell 6 15,alignx left"); //$NON-NLS-1$
 		txtShowScoresSource.setColumns(10);
 		
@@ -703,7 +703,7 @@ public class SourcesPanel extends JPanel {
 		add(lblShowTimerSource, "cell 5 16,alignx trailing"); //$NON-NLS-1$
 		
 		txtShowTimerSource = new JTextField();
-		txtShowTimerSource.setText(Settings.getShowTimerSource());
+		txtShowTimerSource.setText(Settings.getSourceParameter("ShowTimer"));
 		add(txtShowTimerSource, "cell 6 16,alignx left"); //$NON-NLS-1$
 		txtShowTimerSource.setColumns(10);
 		
@@ -712,7 +712,7 @@ public class SourcesPanel extends JPanel {
 		add(lblShowCutthroatSource, "cell 5 17,alignx trailing"); //$NON-NLS-1$
 		
 		txtShowCutthroatSource = new JTextField();
-		txtShowCutthroatSource.setText(Settings.getShowCutthroatSource());
+		txtShowCutthroatSource.setText(Settings.getSourceParameter("ShowCutthroatSource"));
 		add(txtShowCutthroatSource, "cell 6 17,alignx left"); //$NON-NLS-1$
 		txtShowCutthroatSource.setColumns(10);
 		

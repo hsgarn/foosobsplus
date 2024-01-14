@@ -64,10 +64,10 @@ public class PartnerProgramPanel extends JPanel {
 	}
 
 	private void restoreDefaults() {
-		txtPlayer1FileName.setText(Settings.getDefaultPlayer1FileName());
-		txtPlayer2FileName.setText(Settings.getDefaultPlayer2FileName());
-		txtPlayer3FileName.setText(Settings.getDefaultPlayer3FileName());
-		txtPlayer4FileName.setText(Settings.getDefaultPlayer4FileName());
+		txtPlayer1FileName.setText(Settings.getDefaultPartnerProgram("Player1FileName"));
+		txtPlayer2FileName.setText(Settings.getDefaultPartnerProgram("Player2FileName"));
+		txtPlayer3FileName.setText(Settings.getDefaultPartnerProgram("Player3FileName"));
+		txtPlayer4FileName.setText(Settings.getDefaultPartnerProgram("Player4FileName"));
 	}
 
 	private void saveSettings() {
@@ -120,7 +120,7 @@ public class PartnerProgramPanel extends JPanel {
 		});
 		add(btnSelectPath, "cell 1 0"); //$NON-NLS-1$
 		formattedTxtPath = new JFormattedTextField();
-		formattedTxtPath.setText(Settings.getPartnerProgramPath());
+		formattedTxtPath.setText(Settings.getPartnerProgramParameter("PartnerProgramPath"));
 		formattedTxtPath.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent arg0) {
 		    	try {
@@ -165,22 +165,22 @@ public class PartnerProgramPanel extends JPanel {
 		add(lblPlayer4FileName, "cell 1 5,alignx right"); //$NON-NLS-1$
 
 		txtPlayer1FileName = new JTextField();
-		txtPlayer1FileName.setText(Settings.getPlayer1FileName());
+		txtPlayer1FileName.setText(Settings.getPartnerProgramParameter("Player1FileName"));
 		txtPlayer1FileName.setColumns(10);
 		add(txtPlayer1FileName, "cell 2 2,alignx left"); //$NON-NLS-1$
 
 		txtPlayer2FileName = new JTextField();
-		txtPlayer2FileName.setText(Settings.getPlayer2FileName());
+		txtPlayer2FileName.setText(Settings.getPartnerProgramParameter("Player2FileName"));
 		txtPlayer2FileName.setColumns(10);
 		add(txtPlayer2FileName, "cell 2 3,alignx left"); //$NON-NLS-1$
 
 		txtPlayer3FileName = new JTextField();
-		txtPlayer3FileName.setText(Settings.getPlayer3FileName());
+		txtPlayer3FileName.setText(Settings.getPartnerProgramParameter("Player3FileName"));
 		txtPlayer3FileName.setColumns(10);
 		add(txtPlayer3FileName, "cell 2 4,alignx left"); //$NON-NLS-1$
 
 		txtPlayer4FileName = new JTextField();
-		txtPlayer4FileName.setText(Settings.getPlayer4FileName());
+		txtPlayer4FileName.setText(Settings.getPartnerProgramParameter("Player4FileName"));
 		txtPlayer4FileName.setColumns(10);
 		add(txtPlayer4FileName, "cell 2 5,alignx left"); //$NON-NLS-1$
 

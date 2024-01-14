@@ -32,7 +32,7 @@ public class GameTableWindowFrame extends JFrame {
 	public GameTableWindowFrame(GameTableWindowPanel gameTableWindowPanel, MainFrame mainFrame) {
 		super(programName + " " + Messages.getString("GameTableWindowFrame.GameTableWindow")); //$NON-NLS-1$ //$NON-NLS-2$
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		if (Settings.getCutThroatMode()==1) {
+		if (Settings.getControlParameter("CutThroatMode").equals("1")) {
 			gameTableWindowPanel.setPreferredSize(new Dimension(440, 100));
 		} else {
 			gameTableWindowPanel.setPreferredSize(new Dimension(440, 100));

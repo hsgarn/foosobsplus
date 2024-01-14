@@ -73,13 +73,13 @@ public class Tournament {
 		writeAll();
 	}
 	private void writeTournamentName() {
-   		writeData(Settings.getTournamentSource(), getTournamentName());
+   		writeData(Settings.getSourceParameter("Tournament"), getTournamentName());
 	}
     private void writeEventName() {
-    	writeData(Settings.getEventSource(), getEventName());
+    	writeData(Settings.getSourceParameter("Event"), getEventName());
     }
     private void writeTableName() {
-   		writeData(Settings.getTableNameSource(), getTableName());
+   		writeData(Settings.getSourceParameter("TableName"), getTableName());
     }
     public void writeAll() {
     	writeTournamentName();

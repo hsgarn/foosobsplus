@@ -188,7 +188,7 @@ public class Team implements Serializable {
 		}
 	}
 	public int callTimeOut() {
-		if(Settings.getShowTimeOutsUsed() == 1) {
+		if(Settings.getControlParameter("ShowTimeOutsUsed").equals("1")) {
 			setTimeOutCount(getTimeOutCount()+1);
 		} else {
 			setTimeOutCount(getTimeOutCount()-1);
@@ -196,15 +196,16 @@ public class Team implements Serializable {
 		return getTimeOutCount();
 	}
 	public int restoreTimeOut() {
-		if(Settings.getShowTimeOutsUsed()==1) {
+		if(Settings.getControlParameter("ShowTimeOutsUsed").equals("1")) {
 			setTimeOutCount(getTimeOutCount()-1);
 			if(getTimeOutCount()<0) {
 				setTimeOutCount(0);
 			}
 		} else {
 			setTimeOutCount(getTimeOutCount()+1);
-			if(getTimeOutCount()>Settings.getMaxTimeOuts()) {
-				setTimeOutCount(Settings.getMaxTimeOuts());
+			int maxTimeOuts = Settings.getControlParameter("MaxTimeOuts",Integer::parseInt);
+			if(getTimeOutCount()>maxTimeOuts) {
+				setTimeOutCount(maxTimeOuts);
 			}
 		}
 		return getTimeOutCount();
@@ -336,10 +337,10 @@ public class Team implements Serializable {
 		writeAll();
 	}
 	public void resetTimeOuts() {
-		if(Settings.getShowTimeOutsUsed() == 1) {
+		if(Settings.getControlParameter("ShowTimeOutsUsed").equals("1")) {
 			setTimeOutCount(0);
 		} else {
-			setTimeOutCount(Settings.getMaxTimeOuts());
+			setTimeOutCount(Settings.getControlParameter("MaxTimeOuts",Integer::parseInt));
 		}
 	}
 	public void resetResetWarns() {
@@ -650,29 +651,29 @@ public class Team implements Serializable {
 	////// Writes to Files \\\\\\
 	
 	private void writeTeamName() {
-		writeData(Settings.getTeamNameSource(Integer.toString(teamNbr)), getTeamName());
+		writeData(Settings.getTeamSourceParameter(Integer.toString(teamNbr), "Name"), getTeamName());
     }
     private void writeForwardName() {
     	String forwardName;
    		forwardName = getForwardName();
-    	writeData(Settings.getTeamForwardSource(Integer.toString(teamNbr)), forwardName);
+    	writeData(Settings.getTeamSourceParameter(Integer.toString(teamNbr), "Forward"), forwardName);
     }
     private void writeGoalieName() {
     	String goalieName;
    		goalieName = getGoalieName();
-    	writeData(Settings.getTeamGoalieSource(Integer.toString(teamNbr)), goalieName);
+    	writeData(Settings.getTeamSourceParameter(Integer.toString(teamNbr), "Goalie"), goalieName);
     }
     private void writeGameCount() {
-    	writeData(Settings.getTeamGameCountSource(Integer.toString(teamNbr)), Integer.toString(getGameCount()));
+    	writeData(Settings.getTeamSourceParameter(Integer.toString(teamNbr),"GameCount"), Integer.toString(getGameCount()));
     }
     private void writeMatchCount() {
-    	writeData(Settings.getTeamMatchCountSource(Integer.toString(teamNbr)), Integer.toString(getMatchCount()));
+    	writeData(Settings.getTeamSourceParameter(Integer.toString(teamNbr),"MatchCount"), Integer.toString(getMatchCount()));
     }
     private void writeTimeOuts() {
-   		writeData(Settings.getTeamTimeOutSource(Integer.toString(teamNbr)), Integer.toString(getTimeOutCount()));
+   		writeData(Settings.getTeamSourceParameter(Integer.toString(teamNbr),"TimeOut"), Integer.toString(getTimeOutCount()));
     }
 	private void writeReset() {
-		String src = Settings.getTeamResetSource(Integer.toString(teamNbr));
+		String src = Settings.getTeamSourceParameter(Integer.toString(teamNbr),"Reset");
 		if(resetState) {
 			writeData(src, "RESET");
 		} else {
@@ -680,7 +681,7 @@ public class Team implements Serializable {
 		}
 	}
 	private void writeWarn() {
-		String src = Settings.getTeamWarnSource(Integer.toString(teamNbr));
+		String src = Settings.getTeamSourceParameter(Integer.toString(teamNbr),"Warn");
 		if(warnState) {
 			writeData(src, "WARNING");
 		} else {
@@ -688,81 +689,81 @@ public class Team implements Serializable {
 		}
 	}
 	private void writeKingSeat() {
-		String src = Settings.getTeamKingSeatSource(Integer.toString(teamNbr));
+		String src = Settings.getTeamSourceParameter(Integer.toString(teamNbr),"KingSeat");
 		if(kingSeatState) {
 			writeData(src, Messages.getString("Global.KingSeat")); //$NON-NLS-1$
 		} else {
 			writeData(src, "");
 		}
 	}
-    private void writePassAttempts() {
-		writeData(Settings.getPassAttemptsSource(Integer.toString(teamNbr)), Integer.toString(getPassAttempts()));
-    }
-    private void writePassCompletes() {
-		writeData(Settings.getPassCompletesSource(Integer.toString(teamNbr)), Integer.toString(getPassCompletes()));
-    }
-    private void writePassPercent() {
-		writeData(Settings.getPassPercentSource(Integer.toString(teamNbr)), String.format("%-5s",df.format(getPassPercent())+"%"));
-    }
     private void writePassBreaks() {
-// 		writeData(Settings.getPassBreaksSource(Integer.toString(teamNbr)), Integer.toString(getPassBreaks()));
+// 		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"PassBreaks"), Integer.toString(getPassBreaks()));
     }
     private void writeShotBreaks() {
-// 		writeData(Settings.getShotBreaksSource(Integer.toString(teamNbr)), Integer.toString(getShotBreaks()));
+// 		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"ShotBreaks"), Integer.toString(getShotBreaks()));
+    }
+    private void writePassAttempts() {
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"PassAttempts"), Integer.toString(getPassAttempts()));
+    }
+    private void writePassCompletes() {
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"PassCompletes"), Integer.toString(getPassCompletes()));
+    }
+    private void writePassPercent() {
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"PassPercent"), String.format("%-5s",df.format(getPassPercent())+"%"));
     }
     private void writeShotAttempts() {
-		writeData(Settings.getShotAttemptsSource(Integer.toString(teamNbr)), Integer.toString(getShotAttempts()));
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"ShotAttempts"), Integer.toString(getShotAttempts()));
     }
     private void writeShotCompletes() {
-		writeData(Settings.getShotCompletesSource(Integer.toString(teamNbr)), Integer.toString(getShotCompletes()));
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"ShotCompletes"), Integer.toString(getShotCompletes()));
     }
     private void writeShotPercent() {
-		writeData(Settings.getShotPercentSource(Integer.toString(teamNbr)), String.format("%-5s",df.format(getShotPercent())+"%"));
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"ShotPercent"), String.format("%-5s",df.format(getShotPercent())+"%"));
     }
     private void writeClearAttempts() {
-		writeData(Settings.getClearAttemptsSource(Integer.toString(teamNbr)), Integer.toString(getClearAttempts()));
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"ClearAttempts"), Integer.toString(getClearAttempts()));
     }
     private void writeClearCompletes() {
-		writeData(Settings.getClearCompletesSource(Integer.toString(teamNbr)), Integer.toString(getClearCompletes()));
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"ClearCompletes"), Integer.toString(getClearCompletes()));
     }
     private void writeClearPercent() {
-		writeData(Settings.getClearPercentSource(Integer.toString(teamNbr)), String.format("%-5s",df.format(getClearPercent())+"%"));
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"ClearPercent"), String.format("%-5s",df.format(getClearPercent())+"%"));
     }
     private void writeTwoBarPassAttempts() {
-		writeData(Settings.getTwoBarPassAttemptsSource(Integer.toString(teamNbr)), Integer.toString(getTwoBarPassAttempts()));
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"TwoBarPassAttempts"), Integer.toString(getTwoBarPassAttempts()));
     }
     private void writeTwoBarPassCompletes() {
-		writeData(Settings.getTwoBarPassCompletesSource(Integer.toString(teamNbr)), Integer.toString(getTwoBarPassCompletes()));
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"TwoBarPassCompletes"), Integer.toString(getTwoBarPassCompletes()));
     }
     private void writeTwoBarPassPercent() {
-		writeData(Settings.getTwoBarPassPercentSource(Integer.toString(teamNbr)), String.format("%-5s",df.format(getTwoBarPassPercent())+"%"));
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"TwoBarPassPercent"), String.format("%-5s",df.format(getTwoBarPassPercent())+"%"));
     }
 	private void writeScoring() {
-		writeData(Settings.getScoringSource(Integer.toString(teamNbr)), Integer.toString(getScoring()));
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"Scoring"), Integer.toString(getScoring()));
 	}
 	private void writeThreeBarScoring() {
-		writeData(Settings.getThreeBarScoringSource(Integer.toString(teamNbr)), Integer.toString(getThreeBarScoring()));
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"ThreeBarScoring"), Integer.toString(getThreeBarScoring()));
 	}
 	private void writeFiveBarScoring() {
-		writeData(Settings.getFiveBarScoringSource(Integer.toString(teamNbr)), Integer.toString(getFiveBarScoring()));
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"FiveBarScoring"), Integer.toString(getFiveBarScoring()));
 	}
 	private void writeTwoBarScoring() {
-		writeData(Settings.getTwoBarScoringSource(Integer.toString(teamNbr)), Integer.toString(getTwoBarScoring()));
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"TwoBarScoring"), Integer.toString(getTwoBarScoring()));
 	}
 	   private void writeShotsOnGoal() {
-		writeData(Settings.getShotsOnGoalSource(Integer.toString(teamNbr)), Integer.toString(getShotsOnGoal()));
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"ShotsOnGoal"), Integer.toString(getShotsOnGoal()));
     }
 	private void writeStuffs() {
-		writeData(Settings.getStuffsSource(Integer.toString(teamNbr)), Integer.toString(getStuffs()));
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"Stuffs"), Integer.toString(getStuffs()));
 	}
 	private void writeBreaks() {
-		writeData(Settings.getBreaksSource(Integer.toString(teamNbr)), Integer.toString(getBreaks()));
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"Breaks"), Integer.toString(getBreaks()));
 	}
 	private void writeAces() {
-		writeData(Settings.getAcesSource(Integer.toString(teamNbr)), Integer.toString(getAces()));
+		writeData(Settings.getTeamStatsSourceParameter(Integer.toString(teamNbr),"Aces"), Integer.toString(getAces()));
 	}
     private void writeScore() {
-    	writeData(Settings.getTeamScoreSource(Integer.toString(teamNbr)), Integer.toString(getScore()));
+    	writeData(Settings.getTeamSourceParameter(Integer.toString(teamNbr),"Score"), Integer.toString(getScore()));
     }
 	private void writeData(String source, String data) {
 		obsInterface.writeData(source, data, "Team", Settings.getShowParsed());

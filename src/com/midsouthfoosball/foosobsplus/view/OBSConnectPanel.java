@@ -80,30 +80,30 @@ public class OBSConnectPanel extends JPanel {
 		JLabel lblScene = new JLabel("Scene");
 		add(lblScene, "cell 0 4, alignx right");
 		txtHost = new JTextField();
-		txtHost.setText(Settings.getOBSHost());
+		txtHost.setText(Settings.getOBSParameter("OBSHost"));
 		txtHost.setColumns(10);
 		add(txtHost, "cell 1 1,alignx left");
 		txtPort = new JTextField();
-		txtPort.setText(Settings.getOBSPort());
+		txtPort.setText(Settings.getOBSParameter("OBSPort"));
 		txtPort.setColumns(10);
 		add(txtPort, "cell 1 2,alignx left");
 		txtPassword = new JTextField();
-		txtPassword.setText(Settings.getOBSPassword());
+		txtPassword.setText(Settings.getOBSParameter("OBSPassword"));
 		txtPassword.setColumns(10);
 		add(txtPassword, "cell 1 3,alignx left");
 		txtScene = new JTextField();
-		txtScene.setText(Settings.getOBSScene());
+		txtScene.setText(Settings.getOBSParameter("OBSScene"));
 		txtScene.setColumns(10);
 		add(txtScene, "cell 1 4,alignx left");
 		chckbxSavePassword = new JCheckBox("Save Password");
-		if (Integer.toString(Settings.getOBSSavePassword()).equals("1")) { //$NON-NLS-1$
+		if (Settings.getOBSParameter("OBSSavePassword").equals("1")) { //$NON-NLS-1$
 			chckbxSavePassword.setSelected(true);
 		} else {
 			chckbxSavePassword.setSelected(false);
 		}
 		add(chckbxSavePassword, "cell 1 5,alignx left");
 		chckbxAutoLogin = new JCheckBox("Auto Login on Start");
-		if (Integer.toString(Settings.getOBSAutoLogin()).equals("1")) { //$NON-NLS-1$
+		if (Settings.getOBSParameter("OBSAutoLogin").equals("1")) { //$NON-NLS-1$
 			chckbxAutoLogin.setSelected(true);
 		} else {
 			chckbxAutoLogin.setSelected(false);
@@ -123,14 +123,14 @@ public class OBSConnectPanel extends JPanel {
 		btnDisconnect = new JButton("Disconnect");
 		add(btnDisconnect, "cell 1 7,alignx right");
 		chckbxCloseOnConnect = new JCheckBox("Close on Connect");
-		if (Integer.toString(Settings.getOBSCloseOnConnect()).equals("1")) { //$NON-NLS-1$
+		if (Settings.getOBSParameter("OBSCloseOnConnect").equals("1")) { //$NON-NLS-1$
 			chckbxCloseOnConnect.setSelected(true);
 		} else {
 			chckbxCloseOnConnect.setSelected(false);
 		}
 		add(chckbxCloseOnConnect, "cell 3 5,alignx left");
 		chckbxUpdateOnConnect = new JCheckBox("Update on Connect");
-		if (Integer.toString(Settings.getOBSUpdateOnConnect()).equals("1")) {
+		if (Settings.getOBSParameter("OBSUpdateOnConnect").equals("1")) {
 			chckbxUpdateOnConnect.setSelected(true);
 		} else {
 			chckbxUpdateOnConnect.setSelected(false);
@@ -153,9 +153,9 @@ public class OBSConnectPanel extends JPanel {
 	}
 	public boolean isConnectionChanged() {
 		boolean changed = false;
-		if (!txtHost.getText().equals(Settings.getOBSHost()) ||
-			!txtPort.getText().equals(Settings.getOBSPort())  ||
-			!txtPassword.getText().equals(Settings.getOBSPassword())) {
+		if (!txtHost.getText().equals(Settings.getOBSParameter("OBSHost")) ||
+			!txtPort.getText().equals(Settings.getOBSParameter("OBSPort"))  ||
+			!txtPassword.getText().equals(Settings.getOBSParameter("OBSPassword"))) {
 			changed = true;
 		}
 		return changed;
@@ -181,8 +181,8 @@ public class OBSConnectPanel extends JPanel {
 		Settings.setOBS("OBSAutoLogin", chckbxAutoLogin.isSelected() ? 1 : 0);
 		Settings.setOBS("OBSUpdateOnConnect", chckbxUpdateOnConnect.isSelected() ? 1 : 0);
 		Settings.setOBS("OBSCloseOnConnect", chckbxCloseOnConnect.isSelected() ? 1 : 0);
-		if (Settings.getOBSAutoLogin()==1) {
-			if (Settings.getOBSHost().isEmpty() || Settings.getOBSPassword().isEmpty() || Settings.getOBSPort().isEmpty() || Settings.getOBSSavePassword() == 0) {
+		if (Settings.getOBSParameter("OBSAutoLogin").equals("1")) {
+			if (Settings.getOBSParameter("OBSHost").isEmpty() || Settings.getOBSParameter("OBSPassword").isEmpty() || Settings.getOBSParameter("OBSPort").isEmpty() || Settings.getOBSParameter("OBSSavePassword").equals("0")) {
 				Settings.setOBS("OBSAutoLogin",0);
 				chckbxAutoLogin.setSelected(false);
 				String msg = Messages.getString("Errors.OBSConnectPanel.AutoLogin");

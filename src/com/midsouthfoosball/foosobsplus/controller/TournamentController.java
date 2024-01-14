@@ -131,11 +131,11 @@ public class TournamentController {
 		}
 	}
 	public void fetchAll() {
-		tournament.setTournamentName(obsInterface.getContents(Settings.getTournamentSource()));
+		tournament.setTournamentName(obsInterface.getContents(Settings.getSourceParameter("Tournament")));
 		tournamentPanel.updateTournamentName(tournament.getTournamentName());
-		tournament.setEventName(obsInterface.getContents(Settings.getEventSource()));
+		tournament.setEventName(obsInterface.getContents(Settings.getSourceParameter("Event")));
 		tournamentPanel.updateEventName(tournament.getEventName());
-		tournament.setTableName(obsInterface.getContents(Settings.getTableNameSource()));
+		tournament.setTableName(obsInterface.getContents(Settings.getSourceParameter("TableName")));
 		tournamentPanel.updateTableName(tournament.getTableName());
 	}
 	public void writeAll() {

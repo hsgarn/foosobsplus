@@ -226,35 +226,35 @@ public class TimerPanel extends JPanel {
 		add(btnResetTimer, gc);
 	}
 	private void setMnemonics() {
-		if(Settings.getShotTimerHotKey().isEmpty()) {
+		if(Settings.getHotKeyParameter("ShotTimerHotKey").isEmpty()) {
 			btnShotTimer.setMnemonic(-1);
 		} else {
-			btnShotTimer.setMnemonic(Settings.getShotTimerHotKey().charAt(0));
+			btnShotTimer.setMnemonic(Settings.getHotKeyParameter("ShotTimerHotKey").charAt(0));
 		};
-		if(Settings.getPassTimerHotKey().isEmpty()) {
+		if(Settings.getHotKeyParameter("PassTimerHotKey").isEmpty()) {
 			btnPassTimer.setMnemonic(-1);
 		} else {
-			btnPassTimer.setMnemonic(Settings.getPassTimerHotKey().charAt(0));
+			btnPassTimer.setMnemonic(Settings.getHotKeyParameter("PassTimerHotKey").charAt(0));
 		};
-		if(Settings.getTimeOutTimerHotKey().isEmpty()) {
+		if(Settings.getHotKeyParameter("TimeOutTimerHotKey").isEmpty()) {
 			btnTimeOutTimer.setMnemonic(-1);
 		} else {
-			btnTimeOutTimer.setMnemonic(Settings.getTimeOutTimerHotKey().charAt(0));
+			btnTimeOutTimer.setMnemonic(Settings.getHotKeyParameter("TimeOutTimerHotKey").charAt(0));
 		};
-		if(Settings.getGameTimerHotKey().isEmpty()) {
+		if(Settings.getHotKeyParameter("GameTimerHotKey").isEmpty()) {
 			btnGameTimer.setMnemonic(-1);
 		} else {
-			btnGameTimer.setMnemonic(Settings.getGameTimerHotKey().charAt(0));
+			btnGameTimer.setMnemonic(Settings.getHotKeyParameter("GameTimerHotKey").charAt(0));
 		};
-		if(Settings.getRecallTimerHotKey().isEmpty()) {
+		if(Settings.getHotKeyParameter("RecallTimerHotKey").isEmpty()) {
 			btnRecallTimer.setMnemonic(-1);
 		} else {
-			btnRecallTimer.setMnemonic(Settings.getRecallTimerHotKey().charAt(0));
+			btnRecallTimer.setMnemonic(Settings.getHotKeyParameter("RecallTimerHotKey").charAt(0));
 		};
-		if(Settings.getResetTimersHotKey().isEmpty()) {
+		if(Settings.getHotKeyParameter("ResetTimersHotKey").isEmpty()) {
 			btnResetTimer.setMnemonic(-1);
 		} else {
-			btnResetTimer.setMnemonic(Settings.getResetTimersHotKey().charAt(0));
+			btnResetTimer.setMnemonic(Settings.getHotKeyParameter("ResetTimersHotKey").charAt(0));
 		};
 	}
 	////// Listeners  //////

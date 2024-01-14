@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.function.Function;
 
 import com.midsouthfoosball.foosobsplus.main.StreamIndexer;
 import com.midsouthfoosball.foosobsplus.model.GameClock;
@@ -89,13 +90,13 @@ public class MatchController {
 			teamController.resetScores();
 			teamController.resetGameCounts();
 			startMatch(createMatchId());
-			if (Settings.getCutThroatMode()==1) {
+			if (Settings.getControlParameter("CutThroatMode",Function.identity()).equals("1")) {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + " vs " + teamController.getForwardName(3) + "/" + teamController.getGoalieName(3) + "\r\n");
 			} else {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + "\r\n");
 			}
 		}
-		if (Settings.getCutThroatMode()==1) {
+		if (Settings.getControlParameter("CutThroatMode",Function.identity()).equals("1")) {
 			int won = 0;
 			if (teamNumber == 1) {
 				//Single player scores

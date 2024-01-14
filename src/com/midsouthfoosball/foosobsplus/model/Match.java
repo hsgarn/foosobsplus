@@ -452,7 +452,7 @@ public class Match implements Serializable {
 		if (winState>0) {
 			String result = "[" + getCurrentTime() + "] " + team1.getForwardName() + "/" + team1.getGoalieName() + " " + team1.getScore() + " vs " + team2.getForwardName()
 				+ "/" + team2.getGoalieName() + " " + team2.getScore() + " (" + getTimes()[currentGameNumber-1] + ")"; 
-			writeData(Settings.getDefaultGameResultsSource(), addGameResults(result).toString());
+			writeData(Settings.getSourceParameter("GameResults"), addGameResults(result).toString());
 			setCurrentTime(gameTime);
 		}
 
@@ -466,13 +466,13 @@ public class Match implements Serializable {
 	}
 	private int checkForGameWin(int score1, int score2, int score3) {
 		int whoWon = 0;// rack mode returns 0, 1 or 2 (1 if scoring team won or 2 if other team won). non rack mode returns 0, 3 (3=team who called checkForGameWin won)  .
-		int pointsToWin = Settings.getPointsToWin();
-		int maxWin = Settings.getMaxWin();
-		int winBy = Settings.getWinBy();
-		int winByFinalOnly = Settings.getWinByFinalOnly();
-		int ballsInRack = Settings.getBallsInRack();
-		boolean rackMode = Settings.getRackMode() == 1;
-		if (Settings.getAutoIncrementGame()==1) {
+		int pointsToWin = Settings.getControlParameter("PointsToWin",Integer::parseInt);
+		int maxWin = Settings.getControlParameter("MaxWin",Integer::parseInt);
+		int winBy = Settings.getControlParameter("WinBy",Integer::parseInt);
+		int winByFinalOnly = Settings.getControlParameter("WinByFinalOnly",Integer::parseInt);
+		int ballsInRack = Settings.getControlParameter("BallsInRack",Integer::parseInt);
+		boolean rackMode = Settings.getControlParameter("RackMode",Integer::parseInt) == 1;
+		if (Settings.getControlParameter("AutoIncrementGame",Integer::parseInt)==1) {
 			if (rackMode) {
 				if (score1 + score2 >= ballsInRack) {
 					if(score1 > score2) {
@@ -504,7 +504,7 @@ public class Match implements Serializable {
 		String name = null;
 		if(matchWon) {
 			clearMeatball();
-			if (Settings.getAnnounceWinner()==1) {
+			if (Settings.getControlParameter("AnnounceWinner").equals("1")) {
 				boolean skipMatchWinnerDisplay = false;
 				if (team.getTeamName() == null || team.getTeamName().isEmpty()) {
 					if (team.getGoalieName() == null || team.getGoalieName().isEmpty()) {
@@ -524,7 +524,7 @@ public class Match implements Serializable {
 					name = team.getTeamName();
 				}
 				if (!skipMatchWinnerDisplay) {
-					writeMatchWinner(Settings.getWinnerPrefix() + name + Settings.getWinnerSuffix());
+					writeMatchWinner(Settings.getControlParameter("WinnerPrefix") + name + Settings.getControlParameter("WinnerSuffix"));
 				}
 			}
 //			resetScores();
@@ -555,22 +555,24 @@ public class Match implements Serializable {
 		int gameCount1 = team1.getGameCount();
 		int gameCount2 = team2.getGameCount();
 		int gameCount3 = team3.getGameCount();
-		int isCutthroat = Settings.getCutThroatMode();
+		Boolean isCutthroat = Settings.getControlParameter("CutThroatMode").equals("1");
+		int winBy = Settings.getControlParameter("WinBy",Integer::parseInt);
+		int pointsToWin = Settings.getControlParameter("PointsToWin",Integer::parseInt);
 		boolean isPotentialMeatball = false;
-		if (Settings.getAnnounceMeatball() == 1) {
-			if (isCutthroat == 1) {
-				if (points1 == points2 && points1 == points3 && gameCount1 == gameCount2 && gameCount1 == gameCount3 && Settings.getWinBy() < 2) {
+		if (Settings.getControlParameter("AnnounceMeatball").equals("1")) {
+			if (isCutthroat) {
+				if (points1 == points2 && points1 == points3 && gameCount1 == gameCount2 && gameCount1 == gameCount3 && winBy < 2) {
 					isPotentialMeatball = true;
 				}
 			} else {
-				if (points1 == points2 && gameCount1 == gameCount2 && Settings.getWinBy() < 2) {
+				if (points1 == points2 && gameCount1 == gameCount2 && winBy < 2) {
 					isPotentialMeatball = true;
 				}
 			}
 			if (isPotentialMeatball) {			
-				int meatballPoint = Settings.getPointsToWin() - 1;
+				int meatballPoint = pointsToWin - 1;
 				if (points1 == meatballPoint) {
-					if (gameCount1 == Settings.getGamesToWin() - 1) {
+					if (gameCount1 == pointsToWin - 1) {
 						writeMeatball();
 						notifyObservers();
 						return;
@@ -583,12 +585,12 @@ public class Match implements Serializable {
 	private boolean checkForGameWinOnly() {
 		boolean isGameWon = false;
 		if (currentGameNumber!=0) {
-			int pointsToWin = Settings.getPointsToWin();
-			int maxWin = Settings.getMaxWin();
-			int winBy = Settings.getWinBy();
-			int winByFinalOnly = Settings.getWinByFinalOnly();
-			int ballsInRack = Settings.getBallsInRack();
-			boolean rackMode = Settings.getRackMode() == 1;
+			int pointsToWin = Settings.getControlParameter("PointsToWin",Integer::parseInt);
+			int winBy = Settings.getControlParameter("WinBy",Integer::parseInt);
+			int maxWin = Settings.getControlParameter("maxWin",Integer::parseInt);
+			int winByFinalOnly = Settings.getControlParameter("WinByFinalOnly",Integer::parseInt);
+			int ballsInRack = Settings.getControlParameter("ballsInRack",Integer::parseInt);
+			boolean rackMode = Settings.getControlParameter("RackMode").equals("1");
 			int score1 = Integer.parseInt(scoresTeam1[currentGameNumber-1]);
 			int score2 = Integer.parseInt(scoresTeam2[currentGameNumber-1]);
 			int score3 = Integer.parseInt(scoresTeam3[currentGameNumber-1]);
@@ -616,7 +618,7 @@ public class Match implements Serializable {
 	}
 	private boolean checkForMatchWin(Team team) {
 		boolean matchWon = false;
-		if(team.getGameCount()==Settings.getGamesToWin()) {
+		if(team.getGameCount()==Settings.getControlParameter("GamesToWin",Integer::parseInt)) {
 			matchWon=true;
 		}
 		return matchWon;
@@ -646,19 +648,19 @@ public class Match implements Serializable {
 		this.startTime = startTime;
 	}
 	private void writeLastScored() {
-		writeData(Settings.getLastScoredSource(), Settings.getLastScoredStrings()[lastScored]);
+		writeData(Settings.getSourceParameter("LastScored"), Settings.getLastScoredStrings()[lastScored]);
 	}
 	private void writeMatchWinner(String theContents) {
-		writeData(Settings.getMatchWinnerSource(), theContents);
+		writeData(Settings.getSourceParameter("MatchWinner"), theContents);
 	}
 	private void clearMatchWinner() {
-		writeData(Settings.getMatchWinnerSource(), "");
+		writeData(Settings.getSourceParameter("MatchWinner"), "");
 	}
 	private void writeMeatball() {
-		writeData(Settings.getMeatballSource(), Settings.getMeatball());
+		writeData(Settings.getSourceParameter("Meatball"), Settings.getControlParameter("Meatball"));
 	}
 	private void clearMeatball() {
-		writeData(Settings.getMeatballSource(), "");
+		writeData(Settings.getSourceParameter("Meatball"), "");
 	}
     private void writeData(String source, String data) {
 		obsInterface.writeData(source, data, "Match", Settings.getShowParsed());

@@ -92,7 +92,7 @@ public class TimerController {
 	////// Utility Methods //////
 	
 	public void startShotTimer() {
-		int count = Settings.getShotTime() * 10;
+		int count = Settings.getControlParameter("ShotTime",Integer::parseInt) * 10;
 		timeClock.setTimerInUse("Shot Timer");
 		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
 		timerPanel.setTimerDisplayColor(Color.GREEN);
@@ -101,7 +101,7 @@ public class TimerController {
 		timeClock.setTimer(count);
 	}
 	public void startPassTimer() {
-		int count = Settings.getPassTime() * 10;
+		int count = Settings.getControlParameter("PassTime",Integer::parseInt) * 10;
 		timeClock.setTimerInUse("Pass Timer");
 		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
 		timerPanel.setTimerDisplayColor(Color.GREEN);
@@ -110,7 +110,7 @@ public class TimerController {
 		timeClock.setTimer(count);
 	}
 	public void startTimeOutTimer() {
-		int count = Settings.getTimeOutTime() * 10;
+		int count = Settings.getControlParameter("TimeOutTime",Integer::parseInt) * 10;
 		timeClock.setTimerInUse("Time Out Timer");
 		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
 		timerPanel.setTimerDisplayColor(Color.GREEN);
@@ -119,7 +119,7 @@ public class TimerController {
 		timeClock.setTimer(count);
 	}
 	public void startGameTimer() {
-		int count = Settings.getGameTime() * 10;
+		int count = Settings.getControlParameter("GameTime",Integer::parseInt) * 10;
 		timeClock.setTimerInUse("Game Timer");
 		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
 		timerPanel.setTimerDisplayColor(Color.GREEN);
@@ -128,7 +128,7 @@ public class TimerController {
 		timeClock.setTimer(count);
 	}
 	public void startRecallTimer() {
-		int count = Settings.getRecallTime() * 600;
+		int count = Settings.getControlParameter("RecallTime",Integer::parseInt) * 600;
 		timeClock.setTimerInUse("Recall Timer");
 		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
 		timerPanel.setTimerDisplayColor(Color.GREEN);
@@ -189,6 +189,6 @@ public class TimerController {
 		lastScored3WindowFrame.setTimerDisplay(lastScored3Clock.getLastScoredTime());
 	}
 	private void writeTimeRemaining() {
-		obsInterface.writeData(Settings.getTimeRemainingSource(), timerPanel.getTimerDisplayText(),"TimerController",Settings.getShowParsed());
+		obsInterface.writeData(Settings.getSourceParameter("TimeRemaining"), timerPanel.getTimerDisplayText(),"TimerController",Settings.getShowParsed());
 	}
 }

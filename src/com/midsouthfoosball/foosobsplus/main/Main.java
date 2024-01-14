@@ -56,6 +56,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -202,7 +203,7 @@ public class Main implements MatchObserver {
 	private boolean 				autoScoreConnected		= false;
 	private Socket 					autoScoreSocket;
 	private PrintWriter 			autoScoreSocketWriter;
-	private StreamIndexer 			streamIndexer      		= new StreamIndexer(Settings.getDatapath());
+	private StreamIndexer 			streamIndexer      		= new StreamIndexer(Settings.getControlParameter("datapath",Function.identity()));
 	private Boolean 				allowAutoScoreReconnect	= true;
 	private Boolean 				blockAutoScoreReconnect	= false;
     private Map<String, String>		teamGameShowSourcesMap	= new HashMap<>();
@@ -224,8 +225,8 @@ public class Main implements MatchObserver {
 
 	////// Generate the Data Models (Mvc) \\\\\\
 	private Tournament		tournament				= new Tournament(obsInterface);
-	private Team 			team1 					= new Team(obsInterface, 1, Settings.getSide1Color());
-	private Team 			team2 					= new Team(obsInterface, 2, Settings.getSide2Color());
+	private Team 			team1 					= new Team(obsInterface, 1, Settings.getControlParameter("Side1Color",Function.identity()));
+	private Team 			team2 					= new Team(obsInterface, 2, Settings.getControlParameter("Side2Color",Function.identity()));
 	private Team            team3              		= new Team(obsInterface, 3, "None");
 	private Match 			match					= new Match(obsInterface, team1, team2, team3);
 	private Stats 			stats 					= new Stats(team1, team2);
@@ -243,8 +244,8 @@ public class Main implements MatchObserver {
 	private OBSPanel            obsPanel            = new OBSPanel();
 	private AutoScoreMainPanel	autoScoreMainPanel  = new AutoScoreMainPanel();
 	private MatchPanel			matchPanel			= new MatchPanel();
-	private TeamPanel 			teamPanel1 			= new TeamPanel(1, Settings.getSide1Color());
-	private TeamPanel 			teamPanel2 			= new TeamPanel(2, Settings.getSide2Color());
+	private TeamPanel 			teamPanel1 			= new TeamPanel(1, Settings.getControlParameter("Side1Color",Function.identity()));
+	private TeamPanel 			teamPanel2 			= new TeamPanel(2, Settings.getControlParameter("Side2Color",Function.identity()));
 	private TeamPanel			teamPanel3			= new TeamPanel(3, "None");
 	private StatsEntryPanel 	statsEntryPanel 	= new StatsEntryPanel();
 	private SwitchPanel 		switchPanel 		= new SwitchPanel();
@@ -295,13 +296,13 @@ public class Main implements MatchObserver {
 	    
 		loadWindowsAndControllers();
 		
-		OBS.setHost(Settings.getOBSHost());
-		OBS.setPort(Settings.getOBSPort());
-		OBS.setPassword(Settings.getOBSPassword());
-		OBS.setScene(Settings.getOBSScene());
+		OBS.setHost(Settings.getOBSParameter("OBSHost"));
+		OBS.setPort(Settings.getOBSParameter("OBSPort"));
+		OBS.setPassword(Settings.getOBSParameter("OBSPassword"));
+		OBS.setScene(Settings.getOBSParameter("OBSScene"));
 		updateOBSDisconnected();
 
-		if (Settings.getOBSAutoLogin()==1) {
+		if (Settings.getOBSParameter("OBSAutoLogin").equals("1")) {
 			if (OBS.getPassword().isEmpty() || OBS.getHost().isEmpty() || OBS.getPort().isEmpty()) {
 				String msg = Messages.getString("Errors.Main.AutoLogin");
 				String ttl = Messages.getString("Errors.Main.AutoLogin.Title");
@@ -315,7 +316,7 @@ public class Main implements MatchObserver {
 		loadCommands();
 		match.addObserver(this);
 		createAutoScoreWorker();
-		if (Settings.getAutoScoreSettingsAutoConnect() == 1) {
+		if (Settings.getAutoScoreParameter("AutoScoreSettingsAutoConnect").equals("1")) {
 			connectAutoScore();
 		}
 		createFileWatchWorker();
@@ -387,16 +388,16 @@ public class Main implements MatchObserver {
 		String sceneName = sceneItemEnableStateChanged.getSceneName();
 		Number itemId = sceneItemEnableStateChanged.getSceneItemId();
 		boolean show = sceneItemEnableStateChanged.getSceneItemEnabled();
-		checkItemEnableStageChangeHelper(sceneName, show, Settings.getShowScoresSource(), itemId, showParsed);
-		checkItemEnableStageChangeHelper(sceneName, show, Settings.getShowCutthroatSource(), itemId, showParsed);
+		checkItemEnableStageChangeHelper(sceneName, show, Settings.getSourceParameter("ShowScores"), itemId, showParsed);
+		checkItemEnableStageChangeHelper(sceneName, show, Settings.getSourceParameter("ShowCutthroat"), itemId, showParsed);
 	}
 	private void checkItemEnableStageChangeHelper(String sceneName, boolean show, String sourceToCheck, Number itemId, boolean showParsed) {
 		OBS.getController().getSceneItemId(sceneName, sourceToCheck, null, getSceneItemIdResponse -> {
         	if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
 	           	if (getSceneItemIdResponse.getSceneItemId().toString().equals(itemId.toString())) {
-	           		if (sourceToCheck.equals(Settings.getShowScoresSource())) {
+	           		if (sourceToCheck.equals(Settings.getSourceParameter("ShowScores"))) {
 	           			obsPanel.setShowScores(show);
-	           		} else if (sourceToCheck.equals(Settings.getShowCutthroatSource())) {
+	           		} else if (sourceToCheck.equals(Settings.getSourceParameter("ShowCutthroat"))) {
 	           			obsPanel.setShowCutthroat(show);
 	           		}
 					if(showParsed) {
@@ -412,14 +413,14 @@ public class Main implements MatchObserver {
 	}
 	private void checkActiveStateChange(InputActiveStateChangedEvent inputActiveStateChangedEvent) {
 		String name = inputActiveStateChangedEvent.getInputName();
-		if (!Settings.getShowTimerSource().isEmpty() && name.equals(Settings.getShowTimerSource())) {
+		if (!Settings.getSourceParameter("ShowTimer").isEmpty() && name.equals(Settings.getSourceParameter("ShowTimer"))) {
 			boolean show = inputActiveStateChangedEvent.getVideoActive();
 			obsPanel.setShowTimer(show);
 			mainController.showTimerWindow(show);
-		} else if (!Settings.getShowScoresSource().isEmpty() && name.equals(Settings.getShowScoresSource())) {
+		} else if (!Settings.getSourceParameter("ShowScores").isEmpty() && name.equals(Settings.getSourceParameter("ShowScores"))) {
 			boolean show = inputActiveStateChangedEvent.getVideoActive();
 			obsPanel.setShowScores(show);
-		} else if (!Settings.getShowCutthroatSource().isEmpty() && name.equals(Settings.getShowCutthroatSource())) {
+		} else if (!Settings.getSourceParameter("ShowCutthroat").isEmpty() && name.equals(Settings.getSourceParameter("ShowCutthroat"))) {
 			boolean show = inputActiveStateChangedEvent.getVideoActive();
 			obsPanel.setShowCutthroat(show);
 		}
@@ -435,7 +436,7 @@ public class Main implements MatchObserver {
 		obsConnectPanel.disableConnect();
 		mainFrame.enableConnect(false);
 		mainFrame.setOBSIconConnected(true);
-		if(Settings.getOBSUpdateOnConnect()==1) {
+		if(Settings.getOBSParameter("OBSUpdateOnConnect").equals("1")) {
 			tournamentController.writeAll();
 			teamController.writeAll();
 			statsController.displayAllStats();
@@ -457,8 +458,8 @@ public class Main implements MatchObserver {
 				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " WebSocket Version: " + versionInfo.getObsWebSocketVersion());
 			}
 		});
-		OBS.getController().setCurrentProgramScene(Settings.getOBSScene(), response -> { 
-			String sceneName = Settings.getOBSScene();
+		OBS.getController().setCurrentProgramScene(Settings.getOBSParameter("OBSScene"), response -> { 
+			String sceneName = Settings.getOBSParameter("OBSScene");
 			if(response != null && response.isSuccessful()) {
 				OBS.setCurrentScene(sceneName);
 				if(Settings.getShowParsed()) {
@@ -470,20 +471,20 @@ public class Main implements MatchObserver {
 				}
 			}
 		});
-		OBS.getController().getSourceActive(Settings.getShowTimerSource(), response -> 
+		OBS.getController().getSourceActive(Settings.getSourceParameter("ShowTimer"), response -> 
 			{boolean show = response.getMessageData().getResponseData().getVideoActive();
 				obsPanel.setShowTimer(show);
 				mainController.showTimerWindow(show);		
 			});
-		OBS.getController().getSourceActive(Settings.getShowScoresSource(), response ->
+		OBS.getController().getSourceActive(Settings.getSourceParameter("ShowScores"), response ->
 			{boolean show = response.getMessageData().getResponseData().getVideoActive();
 				obsPanel.setShowScores(show);
 			});
-		OBS.getController().getSourceActive(Settings.getShowCutthroatSource(), response ->
+		OBS.getController().getSourceActive(Settings.getSourceParameter("ShowCutthroat"), response ->
 		{boolean show = response.getMessageData().getResponseData().getVideoActive();
 			obsPanel.setShowCutthroat(show);
 		});
-		if(Settings.getOBSCloseOnConnect()==1) { 
+		if(Settings.getOBSParameter("OBSCloseOnConnect").equals("1")) { 
 			obsConnectFrame.setVisible(false);
 		}
 	}
@@ -507,8 +508,8 @@ public class Main implements MatchObserver {
 			@Override
 			protected Boolean doInBackground() throws Exception {
 		    	boolean isConnected = false;
-		    	String address = Settings.getAutoScoreSettingsServerAddress();
-		    	int port = Settings.getAutoScoreSettingsServerPort();
+		    	String address = Settings.getAutoScoreParameter("AutoScoreSettingsServerAddress");
+		    	int port = Settings.getAutoScoreParameter("AutoScoreSettingsServerPort",Integer::parseInt);
 		    	try {
 		            autoScoreSocket = new Socket(address, port);
 		            autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Connected to " + address + ": " + port);
@@ -552,7 +553,7 @@ public class Main implements MatchObserver {
                 		logger.info("Received raw data: [" + raw + "]");
 		        		cmd = raw.split(":");
 		        		logger.info("Parse command: " + cmd[0]);
-	                	if (Settings.getAutoScoreSettingsDetailLog()==1) {
+	                	if (Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals("1")) {
 	                		autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Received " + raw);
 	                	}
 	                	if (cmd[0].equals("Team")) {
@@ -622,7 +623,7 @@ public class Main implements MatchObserver {
 				if (isCancelled()) return;
 				int mostRecentValue = chunks.get(chunks.size()-1);
 				boolean ignoreSensors = autoScoreMainPanel.isIgnored();
-            	if (Settings.getAutoScoreSettingsDetailLog()==1) {
+            	if (Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals("1")) {
             		if (ignoreSensors) {
             			if (mostRecentValue == 1 || mostRecentValue == 2) {
             				autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team "+mostRecentValue+ " scored! but ignored!");
@@ -673,7 +674,7 @@ public class Main implements MatchObserver {
 					int a = Integer.parseInt(match.getScoresTeam1()[gn-2]); 
 					int b = Integer.parseInt(match.getScoresTeam2()[gn-2]);
 					if (a == 0 || b == 0) {
-						if(Settings.getShowSkunk()==1) {
+						if(Settings.getControlParameter("ShowSkunk",Integer::parseInt)==1) {
 							filter = "Team" + teamNbr + "Skunk";
 							activateFilter(filter);
 						}
@@ -681,7 +682,7 @@ public class Main implements MatchObserver {
 					filter = "Team" + teamNbr + "WinGame";
 					activateFilter(filter);
 					if(gameClock.isStreamTimerRunning()) {
-						if(Settings.getCutThroatMode()==1) {
+						if(Settings.getControlParameter("CutThroatMode",Integer::parseInt)==1) {
 							int c = Integer.parseInt(match.getScoresTeam3()[gn-2]);
 							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Game end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + ": " + a + " to " + b + " to " + c + "\r\n");
 						} else {
@@ -694,7 +695,7 @@ public class Main implements MatchObserver {
 					int a = team1.getScore();
 					int b = team2.getScore();
 					if (a == 0 || b == 0) {
-						if(Settings.getShowSkunk()==1) {
+						if(Settings.getControlParameter("ShowSkunk",Integer::parseInt)==1) {
 							filter = "Team" + teamNbr + "Skunk";
 							activateFilter(filter);
 						}
@@ -702,7 +703,7 @@ public class Main implements MatchObserver {
 					filter = "Team" + teamNbr + "WinMatch";
 					activateFilter(filter);
 					if(gameClock.isStreamTimerRunning()) {
-						if(Settings.getCutThroatMode()==1) {
+						if(Settings.getControlParameter("CutThroatMode",Integer::parseInt)==1) {
 							int c = team3.getScore();
 							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Match end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + ": " + a + " to " + b + " to " + c + "\r\n");
 						} else {
@@ -907,7 +908,7 @@ public class Main implements MatchObserver {
 		matchId = createMatchId();
 		matchController.startMatch(matchId);
 		if(gameClock.isStreamTimerRunning()) {
-			if(Settings.getCutThroatMode()==1) {
+			if(Settings.getControlParameter("CutThroatMode",Integer::parseInt)==1) {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch", Settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + "\r\n");
 			} else {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch", Settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n");
@@ -922,7 +923,7 @@ public class Main implements MatchObserver {
 	}
 	public void startGame() {
 		if(gameClock.isStreamTimerRunning()) {
-			if(Settings.getCutThroatMode()==1) {
+			if(Settings.getControlParameter("CutThroatMode",Integer::parseInt)==1) {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame", Settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + "\r\n");
 			} else {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame", Settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n");
@@ -941,7 +942,7 @@ public class Main implements MatchObserver {
 		teamController.switchSides();
 	}
 	public void setShowParsed(boolean showParsed) {
-		Settings.setShowParsed(showParsed);
+		Settings.setControlParameter("ShowParsed",showParsed);
 		try {
 			Settings.saveControlConfig();
 		} catch (IOException e) {
@@ -1214,12 +1215,12 @@ public class Main implements MatchObserver {
 	}
 	public void showScores(boolean show) {
 		obsPanel.setShowScores(show);
-		showSource(Settings.getShowScoresSource(), show);
+		showSource(Settings.getSourceParameter("ShowScores"), show);
 		setFocusOnCode();
 	}
 	public void showTimer(boolean show) {
 		mainController.showTimerWindow(show);
-		showSource(Settings.getShowTimerSource(), show);
+		showSource(Settings.getSourceParameter("ShowTimer"), show);
 		setFocusOnCode();
 	}
 	public void setFocusOnCode() {
@@ -1227,7 +1228,7 @@ public class Main implements MatchObserver {
 	}
 	public void showCutthroat(boolean show) {
 		obsPanel.setShowCutthroat(show);
-		showSource(Settings.getShowCutthroatSource(), show);
+		showSource(Settings.getSourceParameter("ShowCutthroat"), show);
 		setFocusOnCode();
 	}
 	public void showSource(String source, boolean show) {
@@ -1657,9 +1658,9 @@ public class Main implements MatchObserver {
 			obsPanel.setEnableSkunk(showSkunkFlag);
 			parametersPanel.setEnableShowSkunk(showSkunkFlag);
 			if (showSkunkFlag) {
-				Settings.setShowSkunk(1);
+				Settings.setControlParameter("ShowSkunk",1);
 			} else {
-				Settings.setShowSkunk(0);
+				Settings.setControlParameter("ShowSkunk",0);
 			}
 			setFocusOnCode();
 		}
@@ -1684,11 +1685,11 @@ public class Main implements MatchObserver {
 	}
 	private class ParametersSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			int oldGamesToWin = Settings.getGamesToWin();
-			int oldCutthroatMode = Settings.getCutThroatMode();
+			int oldGamesToWin = Settings.getControlParameter("GamesToWin",Integer::parseInt);
+			int oldCutthroatMode = Settings.getControlParameter("CutThroatMode",Integer::parseInt);
 			parametersPanel.saveSettings(Settings.getInstance());
-			int newGamesToWin = Settings.getGamesToWin();
-			int newCutthroatMode = Settings.getCutThroatMode();
+			int newGamesToWin = Settings.getControlParameter("GamesToWin",Integer::parseInt);
+			int newCutthroatMode = Settings.getControlParameter("CutThroatMode",Integer::parseInt);
 			if (oldGamesToWin != newGamesToWin || oldCutthroatMode != newCutthroatMode) {
 				matchPanel.resizeGameTable();
 				gameTableWindowPanel.resizeGameTable();
@@ -2206,12 +2207,12 @@ public class Main implements MatchObserver {
 		} else {
 			if (OBS.getScene() != null && !OBS.getScene().isEmpty()) {
 				if (OBS.getConnected()) {
-					OBS.getController().setCurrentProgramScene(Settings.getOBSScene(), response -> { 
+					OBS.getController().setCurrentProgramScene(Settings.getOBSParameter("OBSScene"), response -> { 
 						if(Settings.getShowParsed()) {
 							if (response != null && response.isSuccessful()) {
-								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Scene set to: " + Settings.getOBSScene());
+								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Scene set to: " + Settings.getOBSParameter("OBSScene"));
 							} else {
-								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Unable to set scene to: " + Settings.getOBSScene());
+								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Unable to set scene to: " + Settings.getOBSParameter("OBSScene"));
 							}
 						} 
 					});
@@ -2225,12 +2226,12 @@ public class Main implements MatchObserver {
 		fileWatchWorker = new SwingWorker<Boolean, String>() {
 			@Override
 			protected Boolean doInBackground() throws Exception {
-				String partnerProgramDir = Settings.getPartnerProgramPath();
+				String partnerProgramDir = Settings.getPartnerProgramParameter("PartnerProgramPath");
 				final String clearString = "XXX_ALREADY_READ_XXX";//= Settings.getPartnerProgramClearString();
-				String partnerProgramPlayer1FileName = Settings.getPlayer1FileName();
-				String partnerProgramPlayer2FileName = Settings.getPlayer2FileName();
-				String partnerProgramPlayer3FileName = Settings.getPlayer3FileName();
-				String partnerProgramPlayer4FileName = Settings.getPlayer4FileName();
+				String partnerProgramPlayer1FileName = Settings.getPartnerProgramParameter("Player1FileName");
+				String partnerProgramPlayer2FileName = Settings.getPartnerProgramParameter("Player2FileName");
+				String partnerProgramPlayer3FileName = Settings.getPartnerProgramParameter("Player3FileName");
+				String partnerProgramPlayer4FileName = Settings.getPartnerProgramParameter("Player4FileName");
 				Path partnerPath = Paths.get(partnerProgramDir);
 				watchService = FileSystems.getDefault().newWatchService(); 
 				partnerPath.getFileSystem().newWatchService();
@@ -2300,10 +2301,10 @@ public class Main implements MatchObserver {
 			protected void process(List<String> chunks) {
 				if (isCancelled()) return;
 				for (String value : chunks) {
-					String partnerProgramPlayer1FileName = Settings.getPlayer1FileName();
-					String partnerProgramPlayer2FileName = Settings.getPlayer2FileName();
-					String partnerProgramPlayer3FileName = Settings.getPlayer3FileName();
-					String partnerProgramPlayer4FileName = Settings.getPlayer4FileName();
+					String partnerProgramPlayer1FileName = Settings.getPartnerProgramParameter("Player1FileName");
+					String partnerProgramPlayer2FileName = Settings.getPartnerProgramParameter("Player2FileName");
+					String partnerProgramPlayer3FileName = Settings.getPartnerProgramParameter("Player3FileName");
+					String partnerProgramPlayer4FileName = Settings.getPartnerProgramParameter("Player4FileName");
 					String newName;
 					String[] pieces = value.split("=");
 					if (pieces.length == 1) {

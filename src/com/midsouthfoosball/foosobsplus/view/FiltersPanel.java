@@ -106,7 +106,7 @@ public class FiltersPanel extends JPanel {
 		txtTeam1SwitchPositionsFilter.setText(Settings.getDefaultFilter("Team1SwitchPositions"));
 		txtTeam2SwitchPositionsFilter.setText(Settings.getDefaultFilter("Team2SwitchPositions"));
 		txtTeam1SkunkFilter.setText(Settings.getDefaultFilter("Team1Skunk"));
-		txtTeam1SkunkFilter.setText(Settings.getDefaultFilter("Team2Skunk"));
+		txtTeam2SkunkFilter.setText(Settings.getDefaultFilter("Team2Skunk"));
 		txtStartMatchFilter.setText(Settings.getDefaultFilter("StartMatch"));
 		txtStartGameFilter.setText(Settings.getDefaultFilter("StartGame"));
 		txtSwitchSidesFilter.setText(Settings.getDefaultFilter("SwitchSides"));

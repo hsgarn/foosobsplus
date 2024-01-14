@@ -1156,6 +1156,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.042 01/14/2024</br>
+More Settings refactoring.</br>
+</br>
 v2.041 01/13/2024</br>
 Add Meatball Filter to enable filter when match is tied and next point wins.</br>
 Refactor getDefaultFilters in Settings.</br>

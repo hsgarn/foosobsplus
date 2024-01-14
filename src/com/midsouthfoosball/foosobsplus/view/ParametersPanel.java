@@ -25,6 +25,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.function.Function;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -104,7 +105,7 @@ public class ParametersPanel extends JPanel {
 		add(lblPointsToWin, "flowx,cell 0 1,alignx right"); //$NON-NLS-1$
 		
 		txtPointsToWin = new JTextField();
-		txtPointsToWin.setText(Integer.toString(Settings.getPointsToWin()));
+		txtPointsToWin.setText(Settings.getControlParameter("PointsToWin"));
 		txtPointsToWin.setColumns(10);
 		add(txtPointsToWin, "cell 1 1,alignx left"); //$NON-NLS-1$
 		
@@ -112,7 +113,7 @@ public class ParametersPanel extends JPanel {
 		add(lblShotTime, "cell 2 1,alignx trailing"); //$NON-NLS-1$
 		
 		txtShotTime = new JTextField();
-		txtShotTime.setText(Integer.toString(Settings.getShotTime()));
+		txtShotTime.setText(Settings.getControlParameter("ShotTime"));
 		txtShotTime.setColumns(10);
 		add(txtShotTime, "cell 3 1,growx"); //$NON-NLS-1$
 		
@@ -120,7 +121,7 @@ public class ParametersPanel extends JPanel {
 		add(lblMaxWin, "flowx,cell 0 2,alignx right"); //$NON-NLS-1$
 		
 		txtMaxWin = new JTextField();
-		txtMaxWin.setText(Integer.toString(Settings.getMaxWin()));
+		txtMaxWin.setText(Settings.getControlParameter("MaxWin"));
 		txtMaxWin.setColumns(10);
 		add(txtMaxWin, "cell 1 2,alignx left"); //$NON-NLS-1$
 		
@@ -128,7 +129,7 @@ public class ParametersPanel extends JPanel {
 		add(lblPassTime, "cell 2 2,alignx trailing"); //$NON-NLS-1$
 		
 		txtPassTime = new JTextField();
-		txtPassTime.setText(Integer.toString(Settings.getPassTime()));
+		txtPassTime.setText(Settings.getControlParameter("PassTime"));
 		txtPassTime.setColumns(10);
 		add(txtPassTime, "cell 3 2,growx"); //$NON-NLS-1$
 		
@@ -136,7 +137,7 @@ public class ParametersPanel extends JPanel {
 		add(lblWinBy, "cell 0 3,alignx trailing"); //$NON-NLS-1$
 		
 		txtWinBy = new JTextField();
-		txtWinBy.setText(Integer.toString(Settings.getWinBy()));
+		txtWinBy.setText(Settings.getControlParameter("WinBy"));
 		txtWinBy.setColumns(10);
 		add(txtWinBy, "cell 1 3,alignx left"); //$NON-NLS-1$
 		
@@ -144,7 +145,7 @@ public class ParametersPanel extends JPanel {
 		add(lblTimeOutTime, "cell 2 3,alignx trailing"); //$NON-NLS-1$
 		
 		txtTimeOutTime = new JTextField();
-		txtTimeOutTime.setText(Integer.toString(Settings.getTimeOutTime()));
+		txtTimeOutTime.setText(Settings.getControlParameter("TimeOutTime"));
 		txtTimeOutTime.setColumns(10);
 		add(txtTimeOutTime, "cell 3 3,growx"); //$NON-NLS-1$
 		
@@ -152,7 +153,7 @@ public class ParametersPanel extends JPanel {
 		add(lblGamesToWin, "cell 0 4,alignx trailing"); //$NON-NLS-1$
 		
 		txtGamesToWin = new JTextField();
-		txtGamesToWin.setText(Integer.toString(Settings.getGamesToWin()));
+		txtGamesToWin.setText(Settings.getControlParameter("GamesToWin"));
 		txtGamesToWin.setColumns(10);
 		add(txtGamesToWin, "cell 1 4,alignx left"); //$NON-NLS-1$
 		
@@ -160,7 +161,7 @@ public class ParametersPanel extends JPanel {
 		add(lblGameTime, "cell 2 4,alignx trailing"); //$NON-NLS-1$
 		
 		txtGameTime = new JTextField();
-		txtGameTime.setText(Integer.toString(Settings.getGameTime()));
+		txtGameTime.setText(Settings.getControlParameter("GameTime"));
 		txtGameTime.setColumns(10);
 		add(txtGameTime, "cell 3 4,growx"); //$NON-NLS-1$
 		
@@ -168,7 +169,7 @@ public class ParametersPanel extends JPanel {
 		add(lblMaxTimeOuts, "flowx,cell 0 5,alignx right"); //$NON-NLS-1$
 		
 		txtMaxTimeOuts = new JTextField();
-		txtMaxTimeOuts.setText(Integer.toString(Settings.getMaxTimeOuts()));
+		txtMaxTimeOuts.setText(Settings.getControlParameter("MaxTimeOuts"));
 		txtMaxTimeOuts.setColumns(10);
 		add(txtMaxTimeOuts, "cell 1 5"); //$NON-NLS-1$
 		
@@ -176,7 +177,7 @@ public class ParametersPanel extends JPanel {
 		add(lblRecallTime, "cell 2 5,alignx trailing"); //$NON-NLS-1$
 		
 		txtRecallTime = new JTextField();
-		txtRecallTime.setText(Integer.toString(Settings.getRecallTime()));
+		txtRecallTime.setText(Settings.getControlParameter("RecallTime"));
 		txtRecallTime.setColumns(10);
 		add(txtRecallTime, "cell 3 5,growx,aligny top"); //$NON-NLS-1$
 		
@@ -184,7 +185,7 @@ public class ParametersPanel extends JPanel {
 		add(lblTeam1LastScored, "cell 2 6,alignx trailing"); //$NON-NLS-1$
 		
 		txtTeam1LastScored = new JTextField();
-		txtTeam1LastScored.setText(Settings.getTeam1LastScored());
+		txtTeam1LastScored.setText(Settings.getControlParameter("Team1LastScored"));
 		txtTeam1LastScored.setColumns(10);
 		add(txtTeam1LastScored, "cell 3 6,growx"); //$NON-NLS-1$
 
@@ -192,7 +193,7 @@ public class ParametersPanel extends JPanel {
 		add(lblTeam2LastScored, "cell 2 7,alignx trailing"); //$NON-NLS-1$
 		
 		txtTeam2LastScored = new JTextField();
-		txtTeam2LastScored.setText(Settings.getTeam2LastScored());
+		txtTeam2LastScored.setText(Settings.getControlParameter("Team2LastScored"));
 		txtTeam2LastScored.setColumns(10);
 		add(txtTeam2LastScored, "cell 3 7,growx"); //$NON-NLS-1$
 		
@@ -200,7 +201,7 @@ public class ParametersPanel extends JPanel {
 		add(lblClearLastScored, "cell 2 8,alignx trailing"); //$NON-NLS-1$
 		
 		txtClearLastScored = new JTextField();
-		txtClearLastScored.setText(Settings.getClearLastScored());
+		txtClearLastScored.setText(Settings.getControlParameter("ClearLastScored"));
 		txtClearLastScored.setColumns(10);
 		add(txtClearLastScored, "cell 3 8,growx"); //$NON-NLS-1$
 		
@@ -208,7 +209,7 @@ public class ParametersPanel extends JPanel {
 		add(lblSide1Color, "cell 0 6,alignx trailing"); //$NON-NLS-1$
 		
 		txtSide1Color = new JTextField();
-		txtSide1Color.setText(Settings.getSide1Color());
+		txtSide1Color.setText(Settings.getControlParameter("Side1Color"));
 		txtSide1Color.setColumns(10);
 		add(txtSide1Color, "cell 1 6,growx,aligny top"); //$NON-NLS-1$
 		
@@ -216,7 +217,7 @@ public class ParametersPanel extends JPanel {
 		add(lblSide2Color, "cell 0 7,alignx trailing"); //$NON-NLS-1$
 		
 		txtSide2Color = new JTextField();
-		txtSide2Color.setText(Settings.getSide2Color());
+		txtSide2Color.setText(Settings.getControlParameter("Side2Color"));
 		txtSide2Color.setColumns(10);
 		add(txtSide2Color, "cell 1 7,growx"); //$NON-NLS-1$
 		
@@ -224,7 +225,7 @@ public class ParametersPanel extends JPanel {
 		add(lblBallsInRack, "cell 0 8,alignx trailing"); //$NON-NLS-1$
 		
 		txtBallsInRack = new JTextField();
-		txtBallsInRack.setText(Integer.toString(Settings.getBallsInRack()));
+		txtBallsInRack.setText(Settings.getControlParameter("BallsInRack"));
 		txtBallsInRack.setColumns(10);
 		add(txtBallsInRack, "cell 1 8,growx"); //$NON-NLS-1$
 		
@@ -232,7 +233,7 @@ public class ParametersPanel extends JPanel {
 		add(lblRackMode, "cell 0 9,alignx right"); //$NON-NLS-1$
 		
 		chckbxRackMode = new JCheckBox(""); //$NON-NLS-1$
-		if (Integer.toString(Settings.getRackMode()).equals("1")) { //$NON-NLS-1$
+		if (Settings.getControlParameter("RackMode").equals("1")) { //$NON-NLS-1$
 			chckbxRackMode.setSelected(true);
 		} else {
 			chckbxRackMode.setSelected(false);
@@ -243,7 +244,7 @@ public class ParametersPanel extends JPanel {
 		add(lblAutoIncrementGame, "cell 0 12,alignx right"); //$NON-NLS-1$
 		
 		chckbxAutoIncrementGame = new JCheckBox(""); //$NON-NLS-1$
-		if (Integer.toString(Settings.getAutoIncrementGame()).equals("1")) { //$NON-NLS-1$
+		if (Settings.getControlParameter("AutoIncrementGame").equals("1")) { //$NON-NLS-1$
 			chckbxAutoIncrementGame.setSelected(true);
 		} else {
 			chckbxAutoIncrementGame.setSelected(false);
@@ -260,7 +261,7 @@ public class ParametersPanel extends JPanel {
 		add(lblAnnounceWinner, "cell 0 13,alignx right"); //$NON-NLS-1$
 		
 		chckbxAnnounceWinner = new JCheckBox(""); //$NON-NLS-1$
-		if (Integer.toString(Settings.getAnnounceWinner()).equals("1")) { //$NON-NLS-1$
+		if (Settings.getControlParameter("AnnounceWinner").equals("1")) { //$NON-NLS-1$
 			chckbxAnnounceWinner.setSelected(true);
 		} else {
 			chckbxAnnounceWinner.setSelected(false);
@@ -269,12 +270,12 @@ public class ParametersPanel extends JPanel {
 		
 		txtWinnerPrefix = new JTextField();
 		txtWinnerPrefix.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtWinnerPrefix.setText(Settings.getWinnerPrefix());
+		txtWinnerPrefix.setText(Settings.getControlParameter("WinnerPrefix"));
 		txtWinnerPrefix.setColumns(10);
 		add(txtWinnerPrefix, "cell 2 12,alignx center"); //$NON-NLS-1$
 		
 		txtWinnerSuffix = new JTextField();
-		txtWinnerSuffix.setText(Settings.getWinnerSuffix());
+		txtWinnerSuffix.setText(Settings.getControlParameter("WinnerSuffix"));
 		txtWinnerSuffix.setColumns(10);
 		add(txtWinnerSuffix, "cell 3 12,growx,aligny top"); //$NON-NLS-1$
 		
@@ -282,7 +283,7 @@ public class ParametersPanel extends JPanel {
 		add(lblAnnounceMeatball, "cell 0 14,alignx right"); //$NON-NLS-1$
 		
 		chckbxAnnounceMeatball = new JCheckBox(""); //$NON-NLS-1$
-		if (Integer.toString(Settings.getAnnounceMeatball()).equals("1")) { //$NON-NLS-1$
+		if (Settings.getControlParameter("AnnounceMeatball").equals("1")) { //$NON-NLS-1$
 			chckbxAnnounceMeatball.setSelected(true);
 		} else {
 			chckbxAnnounceMeatball.setSelected(false);
@@ -291,7 +292,7 @@ public class ParametersPanel extends JPanel {
 		
 		txtMeatball = new JTextField();
 		txtMeatball.setHorizontalAlignment(SwingConstants.CENTER);
-		txtMeatball.setText(Settings.getMeatball());
+		txtMeatball.setText(Settings.getControlParameter("Meatball"));
 		txtMeatball.setColumns(10);
 		add(txtMeatball, "cell 2 13,alignx center"); //$NON-NLS-1$
 		
@@ -299,7 +300,7 @@ public class ParametersPanel extends JPanel {
 		add(lblShowTimeOutsUsed, "cell 0 15,alignx right"); //$NON-NLS-1$
 		
 		chckbxShowTimeOutsUsed = new JCheckBox(""); //$NON-NLS-1$
-		if (Integer.toString(Settings.getShowTimeOutsUsed()).equals("1")) { //$NON-NLS-1$
+		if (Settings.getControlParameter("ShowTimeOutsUsed").equals("1")) { //$NON-NLS-1$
 			chckbxShowTimeOutsUsed.setSelected(true);
 		} else {
 			chckbxShowTimeOutsUsed.setSelected(false);
@@ -310,7 +311,7 @@ public class ParametersPanel extends JPanel {
 		add(lblAutoCapitalizeTeam, "cell 0 16,alignx right"); //$NON-NLS-1$
 		
 		chckbxAutoCapNames = new JCheckBox(""); //$NON-NLS-1$
-		if (Integer.toString(Settings.getAutoCapNames()).equals("1")) { //$NON-NLS-1$
+		if (Settings.getControlParameter("AutoCapNames").equals("1")) { //$NON-NLS-1$
 			chckbxAutoCapNames.setSelected(true);
 		} else {
 			chckbxAutoCapNames.setSelected(false);
@@ -321,7 +322,7 @@ public class ParametersPanel extends JPanel {
 		add(lblWinByFinalOnly, "cell 0 17,alignx right"); //$NON-NLS-1$
 		
 		chckbxWinByFinalOnly = new JCheckBox(""); //$NON-NLS-1$
-		if (Integer.toString(Settings.getWinByFinalOnly()).equals("1")) { //$NON-NLS-1$
+		if (Settings.getControlParameter("WinByFinalOnly").equals("1")) { //$NON-NLS-1$
 			chckbxWinByFinalOnly.setSelected(true);
 		} else {
 			chckbxWinByFinalOnly.setSelected(false);
@@ -332,7 +333,7 @@ public class ParametersPanel extends JPanel {
 		add(lblEnableShowSkunk, "cell 0 18,alignx right"); //$NON-NLS-1$
 		
 		chckbxEnableShowSkunk = new JCheckBox(""); //$NON-NLS-1$
-		if (Integer.toString(Settings.getShowSkunk()).equals("1")) { //$NON-NLS-1$
+		if (Settings.getControlParameter("ShowSkunk").equals("1")) { //$NON-NLS-1$
 			chckbxEnableShowSkunk.setSelected(true);
 		} else {
 			chckbxEnableShowSkunk.setSelected(false);
@@ -343,7 +344,7 @@ public class ParametersPanel extends JPanel {
 		add(lblCutThroatMode, "cell 0 19, alignx right"); //$NON-NLS-1$
 		
 		chckbxCutThroatMode = new JCheckBox(""); //$NON-NLS-1$
-		if (Integer.toString(Settings.getCutThroatMode()).equals("1")) { //$NON-NLS-1$
+		if (Settings.getControlParameter("CutThroatMode").equals("1")) { //$NON-NLS-1$
 			chckbxCutThroatMode.setSelected(true);
 		} else {
 			chckbxCutThroatMode.setSelected(false);
@@ -373,90 +374,91 @@ public class ParametersPanel extends JPanel {
 		add(btnRestoreDefaults, "cell 3 21,alignx center"); //$NON-NLS-1$
 	}
 	private void restoreDefaults() {
-		txtPointsToWin.setText(Integer.toString(Settings.getDefaultPointsToWin()));
-		txtShotTime.setText(Integer.toString(Settings.getDefaultShotTime()));
-		txtMaxWin.setText(Integer.toString(Settings.getDefaultMaxWin()));
-		txtPassTime.setText(Integer.toString(Settings.getDefaultPassTime()));
-		txtWinBy.setText(Integer.toString(Settings.getDefaultWinBy()));
-		txtTimeOutTime.setText(Integer.toString(Settings.getDefaultTimeOutTime()));
-		Integer checkValue = Settings.getDefaultGamesToWin();
+		txtPointsToWin.setText(Settings.getDefaultParameter("PointsToWin",Function.identity())); //$NON-NLS-1$
+		txtShotTime.setText(Settings.getDefaultParameter("ShotTime",Function.identity())); //$NON-NLS-1$
+		txtMaxWin.setText(Settings.getDefaultParameter("MaxWin",Function.identity())); //$NON-NLS-1$
+		txtPassTime.setText(Settings.getDefaultParameter("PassTime",Function.identity())); //$NON-NLS-1$
+		txtWinBy.setText(Settings.getDefaultParameter("WinBy",Function.identity()));; //$NON-NLS-1$
+		txtTimeOutTime.setText(Settings.getDefaultParameter("TimeOutTime",Function.identity())); //$NON-NLS-1$
+		int checkValue = Settings.getDefaultParameter("GamesToWin",Integer::parseInt); //$NON-NLS-1$
 		if (checkValue > maxGamesToWin) checkValue = maxGamesToWin;
 		txtGamesToWin.setText(Integer.toString(checkValue));
-		txtGameTime.setText(Integer.toString(Settings.getDefaultGameTime()));
-		txtMaxTimeOuts.setText(Integer.toString(Settings.getDefaultMaxTimeOuts()));
-		txtRecallTime.setText(Integer.toString(Settings.getDefaultRecallTime()));
-		if (Integer.toString(Settings.getDefaultRackMode()).equals("1")) { //$NON-NLS-1$
+		txtGameTime.setText(Settings.getDefaultParameter("GameTime",Function.identity())); //$NON-NLS-1$
+		txtMaxTimeOuts.setText(Settings.getDefaultParameter("MaxTimeOuts",Function.identity())); //$NON-NLS-1$
+		txtRecallTime.setText(Settings.getDefaultParameter("RecallTime",Function.identity())); //$NON-NLS-1$
+		if (Settings.getDefaultParameter("RackMode",Function.identity()).equals("1")) { //$NON-NLS-1$
 			chckbxRackMode.setSelected(true);
 		} else {
 			chckbxRackMode.setSelected(false);
 		}
-		if (Integer.toString(Settings.getDefaultAutoIncrementGame()).equals("1")) { //$NON-NLS-1$
+		if (Settings.getDefaultParameter("AutoIncrementGame",Function.identity()).equals("1")) { //$NON-NLS-1$
 			chckbxAutoIncrementGame.setSelected(true);
 		} else {
 			chckbxAutoIncrementGame.setSelected(false);
 		}
-		if (Integer.toString(Settings.getDefaultAnnounceWinner()).equals("1")) { //$NON-NLS-1$
+		if (Settings.getDefaultParameter("AnnounceWinner",Function.identity()).equals("1")) { //$NON-NLS-1$
 			chckbxAnnounceWinner.setSelected(true);
 		} else {
 			chckbxAnnounceWinner.setSelected(false);
 		}
-		txtWinnerPrefix.setText(Settings.getDefaultWinnerPrefix());
-		txtWinnerSuffix.setText(Settings.getDefaultWinnerSuffix());
-		if (Integer.toString(Settings.getDefaultAnnounceMeatball()).equals("1")) { //$NON-NLS-1$
+		txtWinnerPrefix.setText(Settings.getDefaultParameter("WinnerPrefix",Function.identity())); //$NON-NLS-1$
+		txtWinnerSuffix.setText(Settings.getDefaultParameter("WinnerSuffix",Function.identity())); //$NON-NLS-1$
+		if (Settings.getDefaultParameter("AnnounceMeatball",Function.identity()).equals("1")) { //$NON-NLS-1$
 			chckbxAnnounceMeatball.setSelected(true);
 		} else {
 			chckbxAnnounceMeatball.setSelected(false);
 		}
-		txtMeatball.setText(Settings.getDefaultMeatball());
-		if (Integer.toString(Settings.getDefaultShowTimeOutsUsed()).equals("1")) { //$NON-NLS-1$
+		txtMeatball.setText(Settings.getDefaultParameter("Meatball",Function.identity()));
+		if (Settings.getDefaultParameter("ShowTimeOutsUsed",Function.identity()).equals("1")) { //$NON-NLS-1$
 			chckbxShowTimeOutsUsed.setSelected(true);
 		} else {
 			chckbxShowTimeOutsUsed.setSelected(false);
 		}
-		if (Integer.toString(Settings.getDefaultAutoCapNames()).equals("1")) { //$NON-NLS-1$
+		if (Settings.getDefaultParameter("AutoCapNames",Function.identity()).equals("1")) { //$NON-NLS-1$
 			chckbxAutoCapNames.setSelected(true);
 		} else {
 			chckbxAutoCapNames.setSelected(false);
 		}
-		if (Integer.toString(Settings.getDefaultWinByFinalOnly()).equals("1")) { //$NON-NLS-1$
+		if (Settings.getDefaultParameter("WinByFinalOnly",Function.identity()).equals("1")) { //$NON-NLS-1$
 			chckbxWinByFinalOnly.setSelected(true);
 		} else {
 			chckbxWinByFinalOnly.setSelected(false);
 		}
-		if (Integer.toString(Settings.getDefaultShowSkunk()).equals("1")) { //$NON-NLS-1$
+		if (Settings.getDefaultParameter("ShowSkunk",Function.identity()).equals("1")) { //$NON-NLS-1$
 			chckbxEnableShowSkunk.setSelected(true);
 		} else {
 			chckbxEnableShowSkunk.setSelected(false);
 		}
-		if (Integer.toString(Settings.getDefaultCutThroatMode()).equals("1")) { //$NON-NLS-1$
+		if (Settings.getDefaultParameter("CutThroatMode",Function.identity()).equals("1")) { //$NON-NLS-1$
 			chckbxCutThroatMode.setSelected(true);
 		} else {
 			chckbxCutThroatMode.setSelected(false);
 		}
-		txtTeam1LastScored.setText(Settings.getDefaultTeam1LastScored());
-		txtTeam2LastScored.setText(Settings.getDefaultTeam2LastScored());
-		txtClearLastScored.setText(Settings.getDefaultClearLastScored());
-		txtSide1Color.setText(Settings.getDefaultSide1Color());
-		txtSide2Color.setText(Settings.getDefaultSide2Color());
-		txtBallsInRack.setText(Settings.getDefaultBallsInRack());
+		txtTeam1LastScored.setText(Settings.getDefaultParameter("Team1LastScored",Function.identity())); //$NON-NLS-1$
+		txtTeam2LastScored.setText(Settings.getDefaultParameter("Team2LastScored",Function.identity())); //$NON-NLS-1$
+		txtClearLastScored.setText(Settings.getDefaultParameter("ClearLastScored",Function.identity())); //$NON-NLS-1$
+		txtSide1Color.setText(Settings.getDefaultParameter("Side1Color",Function.identity())); //$NON-NLS-1$
+		txtSide2Color.setText(Settings.getDefaultParameter("Side2Color",Function.identity())); //$NON-NLS-1$
+		txtBallsInRack.setText(Settings.getDefaultParameter("BallsInRack",Function.identity())); //$NON-NLS-1$
 	}
 	public void saveSettings(Settings settings) {
     	if (isValidInteger(txtPointsToWin.getText())) {
-			Settings.setPointsToWin(Integer.parseInt(txtPointsToWin.getText()));
+			Settings.setControlParameter("PointsToWin",txtPointsToWin.getText());
     	}
+		int pointsToWin = Settings.getControlParameter("PointsToWin",Integer::parseInt);
     	if (isValidInteger(txtMaxWin.getText())) {
     		int maxWin = Integer.parseInt(txtMaxWin.getText());
-    		if (Settings.getPointsToWin() > maxWin) {
-    			Settings.setMaxWin(Settings.getPointsToWin());
-    			txtMaxWin.setText(Integer.toString(Settings.getPointsToWin()));
+    		if (pointsToWin > maxWin) {
+    			Settings.setControlParameter("MaxWin",pointsToWin);
+    			txtMaxWin.setText(Integer.toString(pointsToWin));
     		} else {
-    			Settings.setMaxWin(Integer.parseInt(txtMaxWin.getText()));
+    			Settings.setControlParameter("MaxWin",txtMaxWin.getText());
     		}
     	} else {
-    		Settings.setMaxWin(Settings.getPointsToWin());
+    		Settings.setControlParameter("MaxWin",pointsToWin);
     	}
     	if (isValidInteger(txtWinBy.getText())) {
-    		Settings.setWinBy(Integer.parseInt(txtWinBy.getText()));
+    		Settings.setControlParameter("WinBy",txtWinBy.getText());
     	}
     	if (isValidInteger(txtGamesToWin.getText())) {
     		Integer checkValue = Integer.parseInt(txtGamesToWin.getText());
@@ -465,79 +467,79 @@ public class ParametersPanel extends JPanel {
     			JOptionPane.showMessageDialog(null,Messages.getString("ParametersPanel.GamesToWinExceedError", Settings.getGameType()) + maxGamesToWin + Messages.getString("ParametersPanel.SettingTo", Settings.getGameType()) + maxGamesToWin + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     		}
     		txtGamesToWin.setText(Integer.toString(checkValue));
-    		Settings.setGamesToWin(Integer.parseInt(txtGamesToWin.getText()));
+    		Settings.setControlParameter("GamesToWin",txtGamesToWin.getText());
     	}
     	if (isValidInteger(txtMaxTimeOuts.getText())) {
-    		Settings.setMaxTimeOuts(Integer.parseInt(txtMaxTimeOuts.getText()));
+    		Settings.setControlParameter("MaxTimeOuts",txtMaxTimeOuts.getText());
     	}
     	if (chckbxRackMode.isSelected()) {
-    		Settings.setRackMode(1);
+    		Settings.setControlParameter("RackMode",1);
     	} else {
-    		Settings.setRackMode(0);
+    		Settings.setControlParameter("RackMode",0);
     	}
 		if (chckbxAutoIncrementGame.isSelected()) {
-			Settings.setAutoIncrementGame(1);
+			Settings.setControlParameter("AutoIncrementGame",1);
 		} else {
-			Settings.setAutoIncrementGame(0);
+			Settings.setControlParameter("AutoIncrementGame",0);
 		}
 		if (chckbxAnnounceWinner.isSelected()) {
-			Settings.setAnnounceWinner(1);
+			Settings.setControlParameter("AnnounceWinner",1);
 		} else {
-			Settings.setAnnounceWinner(0);
+			Settings.setControlParameter("AnnounceWinner",0);
 		}
 		if (chckbxAnnounceMeatball.isSelected()) {
-			Settings.setAnnounceMeatball(1);
+			Settings.setControlParameter("AnnounceMeatball",1);
 		} else {
-			Settings.setAnnounceMeatball(0);
+			Settings.setControlParameter("AnnounceMeatball",0);
 		}
-		Settings.setMeatball(txtMeatball.getText());
-		Settings.setWinnerPrefix(txtWinnerPrefix.getText());
-		Settings.setWinnerSuffix(txtWinnerSuffix.getText());
-		Settings.setTeam1LastScored(txtTeam1LastScored.getText());
-		Settings.setTeam2LastScored(txtTeam2LastScored.getText());
-		Settings.setClearLastScored(txtClearLastScored.getText());
-		Settings.setSide1Color(txtSide1Color.getText());
-		Settings.setSide2Color(txtSide2Color.getText());
-		Settings.setBallsInRack(txtBallsInRack.getText());
+		Settings.setControlParameter("Meatball",txtMeatball.getText());
+		Settings.setControlParameter("WinnerPrefix",txtWinnerPrefix.getText());
+		Settings.setControlParameter("WinnerSuffix",txtWinnerSuffix.getText());
+		Settings.setControlParameter("Team1LastScored",txtTeam1LastScored.getText());
+		Settings.setControlParameter("Team2LastScored",txtTeam2LastScored.getText());
+		Settings.setControlParameter("ClearLastScored",txtClearLastScored.getText());
+		Settings.setControlParameter("Side1Color",txtSide1Color.getText());
+		Settings.setControlParameter("Side2Color",txtSide2Color.getText());
+		Settings.setControlParameter("BallsInRack",txtBallsInRack.getText());
 		if (isValidInteger(txtShotTime.getText())) {
-    		Settings.setShotTime(Integer.parseInt(txtShotTime.getText()));
+    		Settings.setControlParameter("ShotTime",txtShotTime.getText());
     	}
     	if (isValidInteger(txtPassTime.getText())) {
-    		Settings.setPassTime(Integer.parseInt(txtPassTime.getText()));
+    		Settings.setControlParameter("PassTime",txtPassTime.getText());
     	}
     	if (isValidInteger(txtTimeOutTime.getText())) {
-    		Settings.setTimeOutTime(Integer.parseInt(txtTimeOutTime.getText()));
+    		Settings.setControlParameter("TimeOutTime",txtTimeOutTime.getText());
     	}
     	if (isValidInteger(txtGameTime.getText())) {
-    		Settings.setGameTime(Integer.parseInt(txtGameTime.getText()));
+    		Settings.setControlParameter("GameTime",txtGameTime.getText());
     	}
     	if (isValidInteger(txtRecallTime.getText())) {
-    		Settings.setRecallTime(Integer.parseInt(txtRecallTime.getText()));
+    		Settings.setControlParameter("RecallTime",txtRecallTime.getText());
     	}
 		if (chckbxShowTimeOutsUsed.isSelected()) {
-			Settings.setShowTimeOutsUsed(1);
+			Settings.setControlParameter("ShowTimeOutsUsed",1);
 		} else {
-			Settings.setShowTimeOutsUsed(0);
+			Settings.setControlParameter("ShowTimeOutsUsed",0);
 		}
 		if (chckbxAutoCapNames.isSelected()) {
-			Settings.setAutoCapNames(1);
+			Settings.setControlParameter("AutoCapNames",1);
 		} else {
-			Settings.setAutoCapNames(0);
+			Settings.setControlParameter("AutoCapNames",0);
 		}
 		if (chckbxWinByFinalOnly.isSelected()) {
-			Settings.setWinByFinalOnly(1);
+			Settings.setControlParameter("WinByFinalOnly",1);
 		} else {
-			Settings.setWinByFinalOnly(0);
+			Settings.setControlParameter("WinByFinalOnly",0);
 		}
 		if (chckbxEnableShowSkunk.isSelected()) {
-			Settings.setShowSkunk(1);
+			Settings.setControlParameter("ShowSkunk",1);
 		} else {
-			Settings.setShowSkunk(0);
+			Settings.setControlParameter("ShowSkunk",0);
 		}
 		if (chckbxCutThroatMode.isSelected()) {
-			Settings.setCutThroatMode(1);
+			Settings.setControlParameter("CutThroatMode",1);
 		} else {
-			Settings.setCutThroatMode(0);
+			Settings.setControlParameter("CutThroatMode",0);
 		}
 		try {
 			Settings.saveControlConfig();

@@ -74,11 +74,11 @@ public class AutoScoreSettingsPanel extends JPanel {
 		txtServerAddress = new JTextField();
 		txtServerAddress.setHorizontalAlignment(SwingConstants.CENTER);
 		txtServerAddress.setInputVerifier(new IPAddrInputVerifier());
-		txtServerAddress.setText(Settings.getAutoScoreSettingsServerAddress());
+		txtServerAddress.setText(Settings.getAutoScoreParameter("AutoScoreSettingsServerAddress"));
 		txtServerAddress.setColumns(10);
 		add(txtServerAddress, "cell 1 2,alignx left"); //$NON-NLS-1$
 		chckbxAutoConnect = new JCheckBox("Auto Connect on Start Up");
-		if (Integer.toString(Settings.getAutoScoreSettingsAutoConnect()).equals("1")) {
+		if (Settings.getAutoScoreParameter("AutoScoreSettingsAutoConnect").equals("1")) {
 			chckbxAutoConnect.setSelected(true);
 		} else {
 			chckbxAutoConnect.setSelected(false);
@@ -88,11 +88,11 @@ public class AutoScoreSettingsPanel extends JPanel {
 		add(lblServerPort, "cell 0 3,alignx trailing"); //$NON-NLS-1$
 		txtServerPort = new JTextField();
 		txtServerPort.setHorizontalAlignment(SwingConstants.CENTER);
-		txtServerPort.setText(Integer.toString(Settings.getAutoScoreSettingsServerPort()));
+		txtServerPort.setText(Settings.getAutoScoreParameter("AutoScoreSettingsServerPort("));
 		txtServerPort.setColumns(10);
 		add(txtServerPort, "cell 1 3,alignx left,aligny top"); //$NON-NLS-1$
 		chckbxDetailLog = new JCheckBox("Detail Log");
-		if (Integer.toString(Settings.getAutoScoreSettingsDetailLog()).equals("1")) {
+		if (Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals("1")) {
 			chckbxDetailLog.setSelected(true);
 		} else {
 			chckbxDetailLog.setSelected(false);
@@ -164,8 +164,8 @@ public class AutoScoreSettingsPanel extends JPanel {
 		mdlMessageHistory.insertElementAt(message, 0);
 	}
 	private void restoreDefaults() {
-		txtServerAddress.setText(Settings.getDefaultAutoScoreSettingsServerAddress());
-		txtServerPort.setText(Integer.toString(Settings.getDefaultAutoScoreSettingsServerPort()));
+		txtServerAddress.setText(Settings.getDefaultAutoScoreSettings("AutoScoreSettingsServerAddress"));
+		txtServerPort.setText(Settings.getDefaultAutoScoreSettings("AutoScoreSettingsServerPort"));
 	}
 	public void saveSettings() {
 		Settings.setAutoScore("AutoScoreSettingsServerAddress",txtServerAddress.getText());

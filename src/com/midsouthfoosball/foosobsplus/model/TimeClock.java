@@ -77,7 +77,7 @@ public class TimeClock {
 		timer.addActionListener(alAction);
 	}
 	private void writeTimerInUse() {
-		writeData(Settings.getTimerInUseSource(), getTimerInUse());
+		writeData(Settings.getSourceParameter("TimerInUse"), getTimerInUse());
 	}
     private void writeData(String source, String data) {
 		obsInterface.writeData(source, data, "TimeClock", Settings.getShowParsed());
