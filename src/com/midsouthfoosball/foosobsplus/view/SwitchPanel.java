@@ -215,55 +215,55 @@ public class SwitchPanel extends JPanel {
 	}
 
 	private void setMnemonics() {
-		if(Settings.getHotKeyParameter("SwitchSidesHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("SwitchSides").isEmpty()) {
 			btnSwitchSides.setMnemonic(-1);
 		} else {
-			btnSwitchSides.setMnemonic(Settings.getHotKeyParameter("SwitchSidesHotKey").charAt(0));
+			btnSwitchSides.setMnemonic(Settings.getHotKeyParameter("SwitchSides").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("SwitchTeamsHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("SwitchTeams").isEmpty()) {
 			btnSwitchTeams.setMnemonic(-1);
 		} else {
-			btnSwitchTeams.setMnemonic(Settings.getHotKeyParameter("SwitchTeamsHotKey").charAt(0));
+			btnSwitchTeams.setMnemonic(Settings.getHotKeyParameter("SwitchTeams").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("SwitchForwardsHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("SwitchForwards").isEmpty()) {
 			btnSwitchForwards.setMnemonic(-1);
 		} else {
-			btnSwitchForwards.setMnemonic(Settings.getHotKeyParameter("SwitchForwardsHotKey").charAt(0));
+			btnSwitchForwards.setMnemonic(Settings.getHotKeyParameter("SwitchForwards").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("SwitchGoaliesHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("SwitchGoalies").isEmpty()) {
 			btnSwitchGoalies.setMnemonic(-1);
 		} else {
-			btnSwitchGoalies.setMnemonic(Settings.getHotKeyParameter("SwitchGoaliesHotKey").charAt(0));
+			btnSwitchGoalies.setMnemonic(Settings.getHotKeyParameter("SwitchGoalies").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("SwitchScoresHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("SwitchScores").isEmpty()) {
 			btnSwitchScores.setMnemonic(-1);
 		} else {
-			btnSwitchScores.setMnemonic(Settings.getHotKeyParameter("SwitchScoresHotKey").charAt(0));
+			btnSwitchScores.setMnemonic(Settings.getHotKeyParameter("SwitchScores").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("SwitchGameCountsHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("SwitchGameCounts").isEmpty()) {
 			btnSwitchGameCounts.setMnemonic(-1);
 		} else {
-			btnSwitchGameCounts.setMnemonic(Settings.getHotKeyParameter("SwitchGameCountsHotKey").charAt(0));
+			btnSwitchGameCounts.setMnemonic(Settings.getHotKeyParameter("SwitchGameCounts").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("SwitchMatchCountsHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("SwitchMatchCounts").isEmpty()) {
 			btnSwitchMatchCounts.setMnemonic(-1);
 		} else {
-			btnSwitchMatchCounts.setMnemonic(Settings.getHotKeyParameter("SwitchMatchCountsHotKey").charAt(0));
+			btnSwitchMatchCounts.setMnemonic(Settings.getHotKeyParameter("SwitchMatchCounts").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("SwitchTimeOutsHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("SwitchTimeOuts").isEmpty()) {
 			btnSwitchTimeOuts.setMnemonic(-1);
 		} else {
-			btnSwitchTimeOuts.setMnemonic(Settings.getHotKeyParameter("SwitchTimeOutsHotKey").charAt(0));
+			btnSwitchTimeOuts.setMnemonic(Settings.getHotKeyParameter("SwitchTimeOuts").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("SwitchResetWarnsHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("SwitchResetWarns").isEmpty()) {
 			btnSwitchResetWarns.setMnemonic(-1);
 		} else {
-			btnSwitchResetWarns.setMnemonic(Settings.getHotKeyParameter("SwitchResetWarnsHotKey").charAt(0));
+			btnSwitchResetWarns.setMnemonic(Settings.getHotKeyParameter("SwitchResetWarns").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("ClearAllHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("ClearAll").isEmpty()) {
 			btnClearAll.setMnemonic(-1);
 		} else {
-			btnClearAll.setMnemonic(Settings.getHotKeyParameter("ClearAllHotKey").charAt(0));
+			btnClearAll.setMnemonic(Settings.getHotKeyParameter("ClearAll").charAt(0));
 		};
 	}
 	////// Listeners \\\\\\

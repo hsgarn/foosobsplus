@@ -24,7 +24,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.function.Function;
 
 import com.midsouthfoosball.foosobsplus.main.StreamIndexer;
 import com.midsouthfoosball.foosobsplus.model.GameClock;
@@ -52,7 +51,7 @@ public class MatchController {
 	private TeamController teamController;
 	private StreamIndexer streamIndexer;
 	private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-	
+	private static final String ON = "1";
 	public MatchController(Match match, Stats stats, GameClock gameClock, LastScoredClock lastScored1Clock, LastScoredClock lastScored2Clock, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, SwitchPanel switchPanel, GameTableWindowPanel gameTableWindowPanel, TeamController teamController, StreamIndexer streamIndexer) {
 		this.match = match;
 		this.stats = stats;
@@ -90,13 +89,13 @@ public class MatchController {
 			teamController.resetScores();
 			teamController.resetGameCounts();
 			startMatch(createMatchId());
-			if (Settings.getControlParameter("CutThroatMode",Function.identity()).equals("1")) {
+			if (Settings.getControlParameter("CutThroatMode").equals(ON)) {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + " vs " + teamController.getForwardName(3) + "/" + teamController.getGoalieName(3) + "\r\n");
 			} else {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + "\r\n");
 			}
 		}
-		if (Settings.getControlParameter("CutThroatMode",Function.identity()).equals("1")) {
+		if (Settings.getControlParameter("CutThroatMode").equals(ON)) {
 			int won = 0;
 			if (teamNumber == 1) {
 				//Single player scores
@@ -210,7 +209,6 @@ public class MatchController {
 	public void resetMatch() {
 		match.resetMatch();
 	}
-	
 	public void displayAllStats() {
 		statsDisplayPanel.updateTeams(1,teamController.getDisplayName(1),teamController.getTeamName(1));
 		statsDisplayPanel.updateTeams(2,teamController.getDisplayName(2),teamController.getTeamName(2));
@@ -239,5 +237,4 @@ public class MatchController {
 		statsDisplayPanel.updateShotsOnGoal(1, teamController.getShotsOnGoal(1));
 		statsDisplayPanel.updateShotsOnGoal(2, teamController.getShotsOnGoal(2));
 	}
-
 }

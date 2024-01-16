@@ -32,7 +32,6 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Function;
 
 import javax.swing.JTextField;
 
@@ -78,7 +77,10 @@ public class TeamController {
     private Map<Integer, TeamPanel> teamPanelsMap = new HashMap<>();
     private Map<Integer, LastScoredClock> lastScoredClocksMap = new HashMap<>();
 	private static transient Logger logger = LoggerFactory.getLogger(TeamController.class);
-   
+	private static final String TEAM1 = "1";
+	private static final String TEAM2 = "2";
+	private static final String TEAM3 = "3";
+	private static final String ON = "1";
 	public TeamController(OBSInterface obsInterface, Team team1, Team team2, Team team3, Match match, TeamPanel teamPanel1, TeamPanel teamPanel2, TeamPanel teamPanel3, SwitchPanel switchPanel, MatchPanel matchPanel, GameTableWindowPanel gameTableWindowPanel, StatsDisplayPanel statsDisplayPanel, TimerController timerController, LastScoredClock lastScored1Clock, LastScoredClock lastScored2Clock, LastScoredClock lastScored3Clock, GameClock gameClock, MainController mainController) {
 		this.obsInterface = obsInterface;
 		this.team1 = team1;
@@ -408,7 +410,7 @@ public class TeamController {
 		String name = txt.getText();
 		if (name == null || name.isEmpty()) {
 			teamName = Messages.getString("TeamPanel.Team",Settings.getGameType()) + teamNumber; 
-		} else if(Settings.getControlParameter("AutoCapNames",Function.identity()).equals("1")) {
+		} else if(Settings.getControlParameter("AutoCapNames").equals(ON)) {
 			teamName = capitalizeWords(name);
 		} else {
 			teamName = name;
@@ -437,7 +439,7 @@ public class TeamController {
 	}
 	private void forwardNameChange(JTextField txt) {
 		String forwardName;
-		if(Settings.getControlParameter("AutoCapNames",Function.identity()).equals("1")) {
+		if(Settings.getControlParameter("AutoCapNames").equals(ON)) {
 			forwardName = capitalizeWords(txt.getText());
 		} else {
 			forwardName = txt.getText();
@@ -470,7 +472,7 @@ public class TeamController {
 	}
 	private void goalieNameChange(JTextField txt) {
 		String goalieName;
-		if(Settings.getControlParameter("AutoCapNames",Function.identity()).equals("1")) {
+		if(Settings.getControlParameter("AutoCapNames").equals(ON)) {
 			goalieName = capitalizeWords(txt.getText());
 		} else {
 			goalieName = txt.getText();
@@ -1042,65 +1044,65 @@ public class TeamController {
 		teamMethodMap.put(Settings.getSourceParameter("Team2TimeOut"), new SimpleEntry<Team, String>(team2, "setTimeOutCount"));
 		teamMethodMap.put(Settings.getSourceParameter("Team3TimeOut"), new SimpleEntry<Team, String>(team3, "setTimeOutCount"));
 		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","PassAttempts"), new SimpleEntry<Team, String>(team1, "setPassAttempts"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","PassAttempts"), new SimpleEntry<Team, String>(team2, "setPassAttempts"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","PassAttempts"), new SimpleEntry<Team, String>(team3, "setPassAttempts"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","ShotAttempts"), new SimpleEntry<Team, String>(team1, "setShotAttempts"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","ShotAttempts"), new SimpleEntry<Team, String>(team2, "setShotAttempts"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","ShotAttempts"), new SimpleEntry<Team, String>(team3, "setShotAttempts"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","ClearAttempts"), new SimpleEntry<Team, String>(team1, "setClearAttempts"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","ClearAttempts"), new SimpleEntry<Team, String>(team2, "setClearAttempts"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","ClearAttempts"), new SimpleEntry<Team, String>(team3, "setClearAttempts"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","PassCompletes"), new SimpleEntry<Team, String>(team1, "setPassCompletes"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","PassCompletes"), new SimpleEntry<Team, String>(team2, "setPassCompletes"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","PassCompletes"), new SimpleEntry<Team, String>(team3, "setPassCompletes"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","ShotCompletes"), new SimpleEntry<Team, String>(team1, "setShotCompletes"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","ShotCompletes"), new SimpleEntry<Team, String>(team2, "setShotCompletes"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","ShotCompletes"), new SimpleEntry<Team, String>(team3, "setShotCompletes"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","ClearCompletes"), new SimpleEntry<Team, String>(team1, "setClearCompletes"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","ClearCompletes"), new SimpleEntry<Team, String>(team2, "setClearCompletes"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","ClearCompletes"), new SimpleEntry<Team, String>(team3, "setClearCompletes"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","PassPercent"), new SimpleEntry<Team, String>(team1, "setPassPercent"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","PassPercent"), new SimpleEntry<Team, String>(team2, "setPassPercent"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","PassPercent"), new SimpleEntry<Team, String>(team3, "setPassPercent"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","ShotPercent"), new SimpleEntry<Team, String>(team1, "setShotPercent"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","ShotPercent"), new SimpleEntry<Team, String>(team2, "setShotPercent"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","ShotPercent"), new SimpleEntry<Team, String>(team3, "setShotPercent"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","ClearPercent"), new SimpleEntry<Team, String>(team1, "setClearPercent"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","ClearPercent"), new SimpleEntry<Team, String>(team2, "setClearPercent"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","ClearPercent"), new SimpleEntry<Team, String>(team3, "setClearPercent"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","TwoBarPassAttempts"), new SimpleEntry<Team, String>(team1, "setTwoBarPassAttempts"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","TwoBarPassAttempts"), new SimpleEntry<Team, String>(team2, "setTwoBarPassAttempts"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","TwoBarPassAttempts"), new SimpleEntry<Team, String>(team3, "setTwoBarPassAttempts"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","TwoBarPassCompletes"), new SimpleEntry<Team, String>(team1, "setTwoBarPassCompletes"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","TwoBarPassCompletes"), new SimpleEntry<Team, String>(team2, "setTwoBarPassCompletes"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","TwoBarPassCompletes"), new SimpleEntry<Team, String>(team3, "setTwoBarPassCompletes"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","TwoBarPassPercent"), new SimpleEntry<Team, String>(team1, "setTwoBarPassPercent"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","TwoBarPassPercent"), new SimpleEntry<Team, String>(team2, "setTwoBarPassPercent"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","TwoBarPassPercent"), new SimpleEntry<Team, String>(team3, "setTwoBarPassPercent"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","Scoring"), new SimpleEntry<Team, String>(team1, "setScoring"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","Scoring"), new SimpleEntry<Team, String>(team2, "setScoring"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","Scoring"), new SimpleEntry<Team, String>(team3, "setScoring"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","ThreeBarScoring"), new SimpleEntry<Team, String>(team1, "setThreeBarScoring"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","ThreeBarScoring"), new SimpleEntry<Team, String>(team2, "setThreeBarScoring"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","ThreeBarScoring"), new SimpleEntry<Team, String>(team3, "setThreeBarScoring"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","FiveBarScoring"), new SimpleEntry<Team, String>(team1, "setFiveBarScoring"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","FiveBarScoring"), new SimpleEntry<Team, String>(team2, "setFiveBarScoring"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","FiveBarScoring"), new SimpleEntry<Team, String>(team3, "setFiveBarScoring"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","TwoBarScoring"), new SimpleEntry<Team, String>(team1, "setTwoBarScoring"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","TwoBarScoring"), new SimpleEntry<Team, String>(team2, "setTwoBarScoring"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","TwoBarScoring"), new SimpleEntry<Team, String>(team3, "setTwoBarScoring"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","ShotsOnGoal"), new SimpleEntry<Team, String>(team1, "setShotsOnGoal"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","ShotsOnGoal"), new SimpleEntry<Team, String>(team2, "setShotsOnGoal"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","ShotsOnGoal"), new SimpleEntry<Team, String>(team3, "setShotsOnGoal"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","Stuffs"), new SimpleEntry<Team, String>(team1, "setStuffs"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","Stuffs"), new SimpleEntry<Team, String>(team2, "setStuffs"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","Stuffs"), new SimpleEntry<Team, String>(team3, "setStuffs"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","Breaks"), new SimpleEntry<Team, String>(team1, "setBreaks"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","Breaks"), new SimpleEntry<Team, String>(team2, "setBreaks"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","Breaks"), new SimpleEntry<Team, String>(team3, "setBreaks"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","Aces"), new SimpleEntry<Team, String>(team1, "setAces"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("2","Aces"), new SimpleEntry<Team, String>(team2, "setAces"));
-		teamMethodMap.put(Settings.getTeamStatsSourceParameter("3","Aces"), new SimpleEntry<Team, String>(team3, "setAces"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"PassAttempts"), new SimpleEntry<Team, String>(team2, "setPassAttempts"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"PassAttempts"), new SimpleEntry<Team, String>(team3, "setPassAttempts"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"ShotAttempts"), new SimpleEntry<Team, String>(team1, "setShotAttempts"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"ShotAttempts"), new SimpleEntry<Team, String>(team2, "setShotAttempts"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"ShotAttempts"), new SimpleEntry<Team, String>(team3, "setShotAttempts"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"ClearAttempts"), new SimpleEntry<Team, String>(team1, "setClearAttempts"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"ClearAttempts"), new SimpleEntry<Team, String>(team2, "setClearAttempts"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"ClearAttempts"), new SimpleEntry<Team, String>(team3, "setClearAttempts"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"PassCompletes"), new SimpleEntry<Team, String>(team1, "setPassCompletes"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"PassCompletes"), new SimpleEntry<Team, String>(team2, "setPassCompletes"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"PassCompletes"), new SimpleEntry<Team, String>(team3, "setPassCompletes"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"ShotCompletes"), new SimpleEntry<Team, String>(team1, "setShotCompletes"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"ShotCompletes"), new SimpleEntry<Team, String>(team2, "setShotCompletes"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"ShotCompletes"), new SimpleEntry<Team, String>(team3, "setShotCompletes"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"ClearCompletes"), new SimpleEntry<Team, String>(team1, "setClearCompletes"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"ClearCompletes"), new SimpleEntry<Team, String>(team2, "setClearCompletes"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"ClearCompletes"), new SimpleEntry<Team, String>(team3, "setClearCompletes"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"PassPercent"), new SimpleEntry<Team, String>(team1, "setPassPercent"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"PassPercent"), new SimpleEntry<Team, String>(team2, "setPassPercent"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"PassPercent"), new SimpleEntry<Team, String>(team3, "setPassPercent"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"ShotPercent"), new SimpleEntry<Team, String>(team1, "setShotPercent"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"ShotPercent"), new SimpleEntry<Team, String>(team2, "setShotPercent"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"ShotPercent"), new SimpleEntry<Team, String>(team3, "setShotPercent"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"ClearPercent"), new SimpleEntry<Team, String>(team1, "setClearPercent"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"ClearPercent"), new SimpleEntry<Team, String>(team2, "setClearPercent"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"ClearPercent"), new SimpleEntry<Team, String>(team3, "setClearPercent"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"TwoBarPassAttempts"), new SimpleEntry<Team, String>(team1, "setTwoBarPassAttempts"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"TwoBarPassAttempts"), new SimpleEntry<Team, String>(team2, "setTwoBarPassAttempts"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"TwoBarPassAttempts"), new SimpleEntry<Team, String>(team3, "setTwoBarPassAttempts"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"TwoBarPassCompletes"), new SimpleEntry<Team, String>(team1, "setTwoBarPassCompletes"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"TwoBarPassCompletes"), new SimpleEntry<Team, String>(team2, "setTwoBarPassCompletes"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"TwoBarPassCompletes"), new SimpleEntry<Team, String>(team3, "setTwoBarPassCompletes"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"TwoBarPassPercent"), new SimpleEntry<Team, String>(team1, "setTwoBarPassPercent"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"TwoBarPassPercent"), new SimpleEntry<Team, String>(team2, "setTwoBarPassPercent"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"TwoBarPassPercent"), new SimpleEntry<Team, String>(team3, "setTwoBarPassPercent"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"Scoring"), new SimpleEntry<Team, String>(team1, "setScoring"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"Scoring"), new SimpleEntry<Team, String>(team2, "setScoring"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"Scoring"), new SimpleEntry<Team, String>(team3, "setScoring"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"ThreeBarScoring"), new SimpleEntry<Team, String>(team1, "setThreeBarScoring"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"ThreeBarScoring"), new SimpleEntry<Team, String>(team2, "setThreeBarScoring"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"ThreeBarScoring"), new SimpleEntry<Team, String>(team3, "setThreeBarScoring"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"FiveBarScoring"), new SimpleEntry<Team, String>(team1, "setFiveBarScoring"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"FiveBarScoring"), new SimpleEntry<Team, String>(team2, "setFiveBarScoring"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"FiveBarScoring"), new SimpleEntry<Team, String>(team3, "setFiveBarScoring"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"TwoBarScoring"), new SimpleEntry<Team, String>(team1, "setTwoBarScoring"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"TwoBarScoring"), new SimpleEntry<Team, String>(team2, "setTwoBarScoring"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"TwoBarScoring"), new SimpleEntry<Team, String>(team3, "setTwoBarScoring"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"ShotsOnGoal"), new SimpleEntry<Team, String>(team1, "setShotsOnGoal"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"ShotsOnGoal"), new SimpleEntry<Team, String>(team2, "setShotsOnGoal"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"ShotsOnGoal"), new SimpleEntry<Team, String>(team3, "setShotsOnGoal"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"Stuffs"), new SimpleEntry<Team, String>(team1, "setStuffs"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"Stuffs"), new SimpleEntry<Team, String>(team2, "setStuffs"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"Stuffs"), new SimpleEntry<Team, String>(team3, "setStuffs"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"Breaks"), new SimpleEntry<Team, String>(team1, "setBreaks"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"Breaks"), new SimpleEntry<Team, String>(team2, "setBreaks"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"Breaks"), new SimpleEntry<Team, String>(team3, "setBreaks"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"Aces"), new SimpleEntry<Team, String>(team1, "setAces"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"Aces"), new SimpleEntry<Team, String>(team2, "setAces"));
+		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"Aces"), new SimpleEntry<Team, String>(team3, "setAces"));
 		teamMethodMap.put(Settings.getSourceParameter("Team1Reset"), new SimpleEntry<Team, String>(team1, "setReset"));
 		teamMethodMap.put(Settings.getSourceParameter("Team2Reset"), new SimpleEntry<Team, String>(team2, "setReset"));
 		teamMethodMap.put(Settings.getSourceParameter("Team3Reset"), new SimpleEntry<Team, String>(team3, "setReset"));

@@ -156,40 +156,40 @@ public class ResetPanel extends JPanel {
 		add(btnResetAll, gc);
 	}
 	private void setMnemonics() {
-		if(Settings.getHotKeyParameter("ResetNamesHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("ResetNames").isEmpty()) {
 			btnResetNames.setMnemonic(-1);
 		} else {
-			btnResetNames.setMnemonic(Settings.getHotKeyParameter("ResetNamesHotKey").charAt(0));
+			btnResetNames.setMnemonic(Settings.getHotKeyParameter("ResetNames").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("ResetScoresHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("ResetScores").isEmpty()) {
 			btnResetScores.setMnemonic(-1);
 		} else {
-			btnResetScores.setMnemonic(Settings.getHotKeyParameter("ResetScoresHotKey").charAt(0));
+			btnResetScores.setMnemonic(Settings.getHotKeyParameter("ResetScores").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("ResetGameCountsHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("ResetGameCounts").isEmpty()) {
 			btnResetGameCounts.setMnemonic(-1);
 		} else {
-			btnResetGameCounts.setMnemonic(Settings.getHotKeyParameter("ResetGameCountsHotKey").charAt(0));
+			btnResetGameCounts.setMnemonic(Settings.getHotKeyParameter("ResetGameCounts").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("ResetMatchCountsHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("ResetMatchCounts").isEmpty()) {
 			btnResetMatchCounts.setMnemonic(-1);
 		} else {
-			btnResetMatchCounts.setMnemonic(Settings.getHotKeyParameter("ResetMatchCountsHotKey").charAt(0));
+			btnResetMatchCounts.setMnemonic(Settings.getHotKeyParameter("ResetMatchCounts").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("ResetTimeOutsHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("ResetTimeOuts").isEmpty()) {
 			btnResetTimeOuts.setMnemonic(-1);
 		} else {
-			btnResetTimeOuts.setMnemonic(Settings.getHotKeyParameter("ResetTimeOutsHotKey").charAt(0));
+			btnResetTimeOuts.setMnemonic(Settings.getHotKeyParameter("ResetTimeOuts").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("ResetResetWarnHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("ResetResetWarn").isEmpty()) {
 			btnResetResetWarns.setMnemonic(-1);
 		} else {
-			btnResetResetWarns.setMnemonic(Settings.getHotKeyParameter("ResetResetWarnHotKey").charAt(0));
+			btnResetResetWarns.setMnemonic(Settings.getHotKeyParameter("ResetResetWarn").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("ResetAllHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("ResetAll").isEmpty()) {
 			btnResetAll.setMnemonic(-1);
 		} else {
-			btnResetAll.setMnemonic(Settings.getHotKeyParameter("ResetAllHotKey").charAt(0));
+			btnResetAll.setMnemonic(Settings.getHotKeyParameter("ResetAll").charAt(0));
 		};
 	}
 	public void updateMnemonics() {

@@ -174,65 +174,65 @@ public class TeamPanel extends JPanel {
 	}
 	private void setMnemonics(int teamNbr) {
 		String teamNumber = Integer.toString(teamNbr);
-		if(Settings.getTeamHotKeyParameter(teamNumber,"SwitchPositionsHotKey").isEmpty()) {
+		if(Settings.getTeamHotKeyParameter(teamNumber,"SwitchPositions").isEmpty()) {
 			btnSwitchPositions.setMnemonic(-1);
 		} else {
-			btnSwitchPositions.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"SwitchPositionsHotKey").charAt(0));
+			btnSwitchPositions.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"SwitchPositions").charAt(0));
 		};
-		if(Settings.getTeamHotKeyParameter(teamNumber,"ScorePlusHotKey").isEmpty()) {
+		if(Settings.getTeamHotKeyParameter(teamNumber,"ScorePlus").isEmpty()) {
 			btnScoreIncrease.setMnemonic(-1);
 		} else {
-			btnScoreIncrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"ScorePlusHotKey").charAt(0));
+			btnScoreIncrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"ScorePlus").charAt(0));
 		};
-		if(Settings.getTeamHotKeyParameter(teamNumber,"ScoreMinusHotKey").isEmpty()) {
+		if(Settings.getTeamHotKeyParameter(teamNumber,"ScoreMinus").isEmpty()) {
 			btnScoreDecrease.setMnemonic(-1);
 		} else {
-			btnScoreDecrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"ScoreMinusHotKey").charAt(0));
+			btnScoreDecrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"ScoreMinus").charAt(0));
 		};
-		if(Settings.getTeamHotKeyParameter(teamNumber,"GameCountPlusHotKey").isEmpty()) {
+		if(Settings.getTeamHotKeyParameter(teamNumber,"GameCountPlus").isEmpty()) {
 			btnGameCountIncrease.setMnemonic(-1);
 		} else {
-			btnGameCountIncrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"GameCountPlusHotKey").charAt(0));
+			btnGameCountIncrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"GameCountPlus").charAt(0));
 		};
-		if(Settings.getTeamHotKeyParameter(teamNumber,"GameCountMinusHotKey").isEmpty()) {
+		if(Settings.getTeamHotKeyParameter(teamNumber,"GameCountMinus").isEmpty()) {
 			btnGameCountDecrease.setMnemonic(-1);
 		} else {
-			btnGameCountDecrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"GameCountMinusHotKey").charAt(0));
+			btnGameCountDecrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"GameCountMinus").charAt(0));
 		};
-		if(Settings.getTeamHotKeyParameter(teamNumber,"MatchCountPlusHotKey").isEmpty()) {
+		if(Settings.getTeamHotKeyParameter(teamNumber,"MatchCountPlus").isEmpty()) {
 			btnMatchCountIncrease.setMnemonic(-1);
 		} else {
-			btnMatchCountIncrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"MatchCountPlusHotKey").charAt(0));
+			btnMatchCountIncrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"MatchCountPlus").charAt(0));
 		};
-		if(Settings.getTeamHotKeyParameter(teamNumber,"MatchCountMinusHotKey").isEmpty()) {
+		if(Settings.getTeamHotKeyParameter(teamNumber,"MatchCountMinus").isEmpty()) {
 			btnMatchCountDecrease.setMnemonic(-1);
 		} else {
-			btnMatchCountDecrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"MatchCountMinusHotKey").charAt(0));
+			btnMatchCountDecrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"MatchCountMinus").charAt(0));
 		};
-		if(Settings.getTeamHotKeyParameter(teamNumber,"TimeOutPlusHotKey").isEmpty()) {
+		if(Settings.getTeamHotKeyParameter(teamNumber,"TimeOutPlus").isEmpty()) {
 			btnTimeOutCountIncrease.setMnemonic(-1);
 		} else {
-			btnTimeOutCountIncrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"TimeOutPlusHotKey").charAt(0));
+			btnTimeOutCountIncrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"TimeOutPlus").charAt(0));
 		};
-		if(Settings.getTeamHotKeyParameter(teamNumber,"TimeOutMinusHotKey").isEmpty()) {
+		if(Settings.getTeamHotKeyParameter(teamNumber,"TimeOutMinus").isEmpty()) {
 			btnTimeOutCountDecrease.setMnemonic(-1);
 		} else {
-			btnTimeOutCountDecrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"TimeOutMinusHotKey").charAt(0));
+			btnTimeOutCountDecrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"TimeOutMinus").charAt(0));
 		};
-		if(Settings.getTeamHotKeyParameter(teamNumber,"ResetHotKey").isEmpty()) {
+		if(Settings.getTeamHotKeyParameter(teamNumber,"Reset").isEmpty()) {
 			btnReset.setMnemonic(-1);
 		} else {
-			btnReset.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"ResetHotKey").charAt(0));
+			btnReset.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"Reset").charAt(0));
 		};
-		if(Settings.getTeamHotKeyParameter(teamNumber,"WarnHotKey").isEmpty()) {
+		if(Settings.getTeamHotKeyParameter(teamNumber,"Warn").isEmpty()) {
 			btnWarn.setMnemonic(-1);
 		} else {
-			btnWarn.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"WarnHotKey").charAt(0));
+			btnWarn.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"Warn").charAt(0));
 		};
-		if(Settings.getTeamHotKeyParameter(teamNumber,"KingSeatHotKey").isEmpty()) {
+		if(Settings.getTeamHotKeyParameter(teamNumber,"KingSeat").isEmpty()) {
 			ckbxKingSeat.setMnemonic(-1);
 		} else {
-			ckbxKingSeat.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"KingSeatHotKey").charAt(0));
+			ckbxKingSeat.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"KingSeat").charAt(0));
 		};
 	}
 	private void layoutComponents() {

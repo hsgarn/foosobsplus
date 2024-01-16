@@ -63,7 +63,7 @@ public class Match implements Serializable {
 	private static transient Logger logger = LoggerFactory.getLogger(Match.class);
 	private StringBuilder gameResults = new StringBuilder();
 	private List<MatchObserver> observers = new ArrayList<>();
-
+	private static final String ON = "1";
 	public Match(OBSInterface obsInterface, Team team1, Team team2, Team team3) {
 		this.team1 = team1;
 		this.team2 = team2;
@@ -466,13 +466,13 @@ public class Match implements Serializable {
 	}
 	private int checkForGameWin(int score1, int score2, int score3) {
 		int whoWon = 0;// rack mode returns 0, 1 or 2 (1 if scoring team won or 2 if other team won). non rack mode returns 0, 3 (3=team who called checkForGameWin won)  .
-		int pointsToWin = Settings.getControlParameter("PointsToWin",Integer::parseInt);
-		int maxWin = Settings.getControlParameter("MaxWin",Integer::parseInt);
-		int winBy = Settings.getControlParameter("WinBy",Integer::parseInt);
-		int winByFinalOnly = Settings.getControlParameter("WinByFinalOnly",Integer::parseInt);
-		int ballsInRack = Settings.getControlParameter("BallsInRack",Integer::parseInt);
-		boolean rackMode = Settings.getControlParameter("RackMode",Integer::parseInt) == 1;
-		if (Settings.getControlParameter("AutoIncrementGame",Integer::parseInt)==1) {
+		int pointsToWin = Integer.parseInt(Settings.getControlParameter("PointsToWin"));
+		int maxWin = Integer.parseInt(Settings.getControlParameter("MaxWin"));
+		int winBy = Integer.parseInt(Settings.getControlParameter("WinBy"));
+		int winByFinalOnly = Integer.parseInt(Settings.getControlParameter("WinByFinalOnly"));
+		int ballsInRack = Integer.parseInt(Settings.getControlParameter("BallsInRack"));
+		boolean rackMode = Settings.getControlParameter("RackMode").equals(ON);
+		if (Settings.getControlParameter("AutoIncrementGame").equals(ON)) {
 			if (rackMode) {
 				if (score1 + score2 >= ballsInRack) {
 					if(score1 > score2) {
@@ -555,11 +555,11 @@ public class Match implements Serializable {
 		int gameCount1 = team1.getGameCount();
 		int gameCount2 = team2.getGameCount();
 		int gameCount3 = team3.getGameCount();
-		Boolean isCutthroat = Settings.getControlParameter("CutThroatMode").equals("1");
-		int winBy = Settings.getControlParameter("WinBy",Integer::parseInt);
-		int pointsToWin = Settings.getControlParameter("PointsToWin",Integer::parseInt);
+		Boolean isCutthroat = Settings.getControlParameter("CutThroatMode").equals(ON);
+		int winBy = Integer.parseInt(Settings.getControlParameter("WinBy"));
+		int pointsToWin = Integer.parseInt(Settings.getControlParameter("PointsToWin"));
 		boolean isPotentialMeatball = false;
-		if (Settings.getControlParameter("AnnounceMeatball").equals("1")) {
+		if (Settings.getControlParameter("AnnounceMeatball").equals(ON)) {
 			if (isCutthroat) {
 				if (points1 == points2 && points1 == points3 && gameCount1 == gameCount2 && gameCount1 == gameCount3 && winBy < 2) {
 					isPotentialMeatball = true;
@@ -585,12 +585,12 @@ public class Match implements Serializable {
 	private boolean checkForGameWinOnly() {
 		boolean isGameWon = false;
 		if (currentGameNumber!=0) {
-			int pointsToWin = Settings.getControlParameter("PointsToWin",Integer::parseInt);
-			int winBy = Settings.getControlParameter("WinBy",Integer::parseInt);
-			int maxWin = Settings.getControlParameter("maxWin",Integer::parseInt);
-			int winByFinalOnly = Settings.getControlParameter("WinByFinalOnly",Integer::parseInt);
-			int ballsInRack = Settings.getControlParameter("ballsInRack",Integer::parseInt);
-			boolean rackMode = Settings.getControlParameter("RackMode").equals("1");
+			int pointsToWin = Integer.parseInt(Settings.getControlParameter("PointsToWin"));
+			int winBy = Integer.parseInt(Settings.getControlParameter("WinBy"));
+			int maxWin = Integer.parseInt(Settings.getControlParameter("MaxWin"));
+			int winByFinalOnly = Integer.parseInt(Settings.getControlParameter("WinByFinalOnly"));
+			int ballsInRack = Integer.parseInt(Settings.getControlParameter("BallsInRack"));
+			boolean rackMode = Settings.getControlParameter("RackMode").equals(ON);
 			int score1 = Integer.parseInt(scoresTeam1[currentGameNumber-1]);
 			int score2 = Integer.parseInt(scoresTeam2[currentGameNumber-1]);
 			int score3 = Integer.parseInt(scoresTeam3[currentGameNumber-1]);
@@ -618,7 +618,7 @@ public class Match implements Serializable {
 	}
 	private boolean checkForMatchWin(Team team) {
 		boolean matchWon = false;
-		if(team.getGameCount()==Settings.getControlParameter("GamesToWin",Integer::parseInt)) {
+		if(team.getGameCount()==Integer.parseInt(Settings.getControlParameter("GamesToWin"))) {
 			matchWon=true;
 		}
 		return matchWon;

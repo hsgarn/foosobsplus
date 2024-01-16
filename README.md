@@ -219,8 +219,11 @@ This is the source that holds the Meatball text when a game is tied just prior t
 #### Game Results:
 This is the source that holds the results of all the games played since the program was started or the Start Event button was pressed.  It is intended to be a Text (GDI+) source with a scrolling filter applied.   Every time a game is won, the current time, team 1 forward & goalie names, team 1 score, team 2 forward & goalie names, team 2 score, and the game time length is added to the text on a new line.  Default source is gameresults.
 
-#### Save
-Click the save button to save any source changes made.
+#### Apply
+Click the Apply button to save any source changes made and keep the window open.
+
+#### Apply and Close
+Click the Apply and Close button to save any source changes made and close the window.
 
 #### Cancel
 Click the cancel button to discard any source changes made.
@@ -300,8 +303,11 @@ This is the source that holds the number of scores from the 2-bar for a team.  D
 #### Shots On Goal:
 This is the source that holds the number of shots on goal for a team.  Default source is teamXshotsongoal.
 
-#### Save
-Click the save button to save any statistics source changes made.
+#### Apply
+Click the Apply button to save any statistics source changes made.
+
+#### Apply and Close
+Click the Apply and Close button to save any statistics source changes made and close the window.
 
 #### Cancel
 Click the cancel button to discard any statistics source changes made.
@@ -470,6 +476,9 @@ Assigns the hot key for the Show Skunk button. Default hot key is k.
 #### Start Stream
 Assigns the hot key for the Start Stream button. Default hot key is z.
 
+#### Clear Tournament
+Assigns the hot key for the Clear button for the Tournament Information panel. Default hot key is unassigned.
+
 #### Switch Match Counts
 Assigns the hot key for the Switch Match Counts button. Default hot key is unassigned.
 
@@ -527,8 +536,11 @@ This button will generate an AutoHotKey script for each defined hot key.  The ba
 #### Select Path
 The Select Path allows you to choose the directory in which the AutoHotKey scripts will be created. Optionally you can just type the path in the box to the right of the Select Path button.
 
-#### Save
-Click the save button to save any hot key changes made.
+#### Apply
+Click the Apply button to save any hot key changes made.
+
+#### Apply and Close
+Click the Apply and Close button to save any hot key changes made and close the window.
 
 #### Cancel
 Click the cancel button to discard any hot key changes made.
@@ -606,8 +618,11 @@ This is the name of the filter activated when the Switch Sides button is pressed
 #### Meatball
 This is the name of the filter activated when both teams are tied and next ball wins the match.
 
-#### Save
-Click the save button to save any filter changes made.
+#### Apply
+Click the Apply button to save any filter changes made.
+
+#### Apply and Close
+Click the Apply and Close button to save any filter changes made and close the window.
 
 #### Cancel
 Click the cancel button to discard any filter changes made.
@@ -638,8 +653,11 @@ This is the name of the file containing the name of Team 2's forward.  Default i
 #### Player 4
 This is the name of the file containing the name of Team 2's goalie.  Default is Player4.txt.
 
-#### Save
-Click the save button to save any changes made.
+#### Apply
+Click the Apply button to save any changes made.
+
+#### Apply and Close
+Click the Apply and Close button to save any changes made and close the window.
 
 #### Cancel
 Click the cancel button to discard any changes made.
@@ -718,8 +736,8 @@ This button will connect to the FoosScore AutoScore system at the given Server A
 This button will disconnect the current active FoosScore AutoScore session.
 ### Message
 This box shows communication and information for the FoosScore AutoScore system.
-### Save
-This button will save the current settings in the AutoScore Settings window.  New settings will not take affect until the Save button is pressed.
+### Apply and Close
+This button will save the current settings in the AutoScore Settings window.  New settings will not take affect until this button is pressed.
 ### Cancel
 This button will close the AutoScore Settings window without permanently saving any changes.  If you reopen the window, you may see your changes still there, but they will not be permanently stored until the Save button is pressed.
 ### Restore Defaults
@@ -1156,6 +1174,16 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.043 01/16/2024</br>
+Add link to ITSF Rules in Help menu.</br>
+Change Save buttons to Apply and Close globally.</br>
+Add Apply button to Parameters, HotKey, Source, Stats Source, Filters & Partner Program Panels.</br>
+Cancel button now returns settings displayed to last saved stated.</br>
+Fix bugs in HotKeyPanel resulting from typos in refactoring.</br>
+Fix bug where Enable Skunk and StartStream hotkeys would not register change until program restarted.</br>
+Fix HotKeyPanel path bug.</br>
+Add Available HotKeys field to HotKeysPanel.</br>
+</br>
 v2.042 01/14/2024</br>
 More Settings refactoring.</br>
 </br>

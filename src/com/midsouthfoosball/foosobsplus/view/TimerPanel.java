@@ -226,35 +226,35 @@ public class TimerPanel extends JPanel {
 		add(btnResetTimer, gc);
 	}
 	private void setMnemonics() {
-		if(Settings.getHotKeyParameter("ShotTimerHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("ShotTimer").isEmpty()) {
 			btnShotTimer.setMnemonic(-1);
 		} else {
-			btnShotTimer.setMnemonic(Settings.getHotKeyParameter("ShotTimerHotKey").charAt(0));
+			btnShotTimer.setMnemonic(Settings.getHotKeyParameter("ShotTimer").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("PassTimerHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("PassTimer").isEmpty()) {
 			btnPassTimer.setMnemonic(-1);
 		} else {
-			btnPassTimer.setMnemonic(Settings.getHotKeyParameter("PassTimerHotKey").charAt(0));
+			btnPassTimer.setMnemonic(Settings.getHotKeyParameter("PassTimer").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("TimeOutTimerHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("TimeOutTimer").isEmpty()) {
 			btnTimeOutTimer.setMnemonic(-1);
 		} else {
-			btnTimeOutTimer.setMnemonic(Settings.getHotKeyParameter("TimeOutTimerHotKey").charAt(0));
+			btnTimeOutTimer.setMnemonic(Settings.getHotKeyParameter("TimeOutTimer").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("GameTimerHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("GameTimer").isEmpty()) {
 			btnGameTimer.setMnemonic(-1);
 		} else {
-			btnGameTimer.setMnemonic(Settings.getHotKeyParameter("GameTimerHotKey").charAt(0));
+			btnGameTimer.setMnemonic(Settings.getHotKeyParameter("GameTimer").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("RecallTimerHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("RecallTimer").isEmpty()) {
 			btnRecallTimer.setMnemonic(-1);
 		} else {
-			btnRecallTimer.setMnemonic(Settings.getHotKeyParameter("RecallTimerHotKey").charAt(0));
+			btnRecallTimer.setMnemonic(Settings.getHotKeyParameter("RecallTimer").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("ResetTimersHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("ResetTimers").isEmpty()) {
 			btnResetTimer.setMnemonic(-1);
 		} else {
-			btnResetTimer.setMnemonic(Settings.getHotKeyParameter("ResetTimersHotKey").charAt(0));
+			btnResetTimer.setMnemonic(Settings.getHotKeyParameter("ResetTimers").charAt(0));
 		};
 	}
 	////// Listeners  //////

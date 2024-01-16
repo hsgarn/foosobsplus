@@ -21,33 +21,25 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Dimension;
-import java.io.IOException;
 
 import javax.swing.JFrame;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 import com.midsouthfoosball.foosobsplus.model.AppConfig;
 
 @SuppressWarnings("serial")
 public class StatSourcesFrame extends JFrame {
 	private StatSourcesPanel statSourcesPanel;
 	private static final String programName = AppConfig.PROGRAM_NAME;
-	private static Logger logger = LoggerFactory.getLogger(StatSourcesFrame.class);
-	public StatSourcesFrame(OBSInterface obsInterface) {
+	public StatSourcesFrame() {
 		super(programName + " " + Messages.getString("StatSourcesFrame.StatSourcesSettings")); //$NON-NLS-1$ //$NON-NLS-2$
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
-		try {
-			statSourcesPanel = new StatSourcesPanel(obsInterface);
-		} catch (IOException e) {
-			logger.error(Messages.getString("Errors.LoadSettingsError")); //$NON-NLS-1$
-			logger.error(e.toString());
-		}
-		statSourcesPanel.setPreferredSize(new Dimension(1100, 650));
+		statSourcesPanel = new StatSourcesPanel();
+		statSourcesPanel.setPreferredSize(new Dimension(1100, 490));
 		getContentPane().add(statSourcesPanel);
 		pack();
+	}
+	public StatSourcesPanel getStatSourcesPanel() {
+		return statSourcesPanel;
 	}
 }

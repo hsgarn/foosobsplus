@@ -64,6 +64,8 @@ public class AutoScoreSettingsPanel extends JPanel {
 	private JList<String> lstMessageHistory;
 	private DefaultListModel<String> mdlMessageHistory;
 	private JScrollPane scrMessageHistory;
+	private static final String ON = "1";
+	private static final String OFF = "0";
 	private static Logger logger = LoggerFactory.getLogger(AutoScoreSettingsPanel.class);
 	public AutoScoreSettingsPanel() throws IOException {
 		mdlMessageHistory = new DefaultListModel<String>();
@@ -170,8 +172,8 @@ public class AutoScoreSettingsPanel extends JPanel {
 	public void saveSettings() {
 		Settings.setAutoScore("AutoScoreSettingsServerAddress",txtServerAddress.getText());
 		Settings.setAutoScore("AutoScoreSettingsServerPort",txtServerPort.getText());
-		Settings.setAutoScore("AutoScoreSettingsAutoConnect",chckbxAutoConnect.isSelected() ? 1 : 0);
-		Settings.setAutoScore("AutoScoreSettingsDetailLog",chckbxDetailLog.isSelected() ? 1 : 0);
+		Settings.setAutoScore("AutoScoreSettingsAutoConnect",chckbxAutoConnect.isSelected() ? ON : OFF);
+		Settings.setAutoScore("AutoScoreSettingsDetailLog",chckbxDetailLog.isSelected() ? ON : OFF);
 		try {
 			Settings.saveAutoScoreSettingsConfig();
 		} catch (IOException ex) {

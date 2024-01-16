@@ -248,9 +248,12 @@ public final class MainFrame extends JFrame implements WindowListener {
 
 		JMenu helpMenu 		= new JMenu(Messages.getString("MainFrame.Help")); //$NON-NLS-1$
 		JMenuItem helpPage 	= new JMenuItem(programName + " " + Messages.getString("MainFrame.Help")); //$NON-NLS-1$ //$NON-NLS-2$
+		JMenuItem helpRules = new JMenuItem(Messages.getString("MainFrame.Rules"));
 		JMenuItem helpAbout = new JMenuItem(Messages.getString("MainFrame.About")); //$NON-NLS-1$
 		
 		helpMenu.add(helpPage);
+		helpMenu.add(helpRules);
+		helpMenu.addSeparator();
 		helpMenu.add(helpShowParsed);
 		helpMenu.addSeparator();
 		helpMenu.add(helpAbout);
@@ -320,9 +323,25 @@ public final class MainFrame extends JFrame implements WindowListener {
 		helpPage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				try {
-					URI helpURI = new URI("https://github.com/hsgarn/foosOBSPlus#foosOBSPlus"); //$NON-NLS-1$
+					URI helpURI = new URI(Messages.getString("MainFrame.HelpURL")); //$NON-NLS-1$
 					try {
 						java.awt.Desktop.getDesktop().browse(helpURI);
+					} catch (IOException ex) {
+						logger.error(Messages.getString("Errors.URICallingError"));		 //$NON-NLS-1$
+						logger.error(ex.toString());
+					}
+		    	} catch (URISyntaxException ex) {
+					logger.error(Messages.getString("Errors.URISyntaxError"));		 //$NON-NLS-1$
+					logger.error(ex.toString());
+				}
+			}
+		});
+		helpRules.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				try {
+					URI rulesURI = new URI(Messages.getString("MainFrame.RulesURL")); //$NON-NLS-1$
+					try {
+						java.awt.Desktop.getDesktop().browse(rulesURI);
 					} catch (IOException ex) {
 						logger.error(Messages.getString("Errors.URICallingError"));		 //$NON-NLS-1$
 						logger.error(ex.toString());

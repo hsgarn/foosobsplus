@@ -41,6 +41,8 @@ import com.midsouthfoosball.foosobsplus.view.Messages;
 
 public final class Settings {
 	private final static Settings instance 			= new Settings();
+	private final static String ON = "1";
+	private final static String OFF = "0";
 	// Parameter settings
 	private final static String separator 			= FileSystems.getDefault().getSeparator();
 	private final static String gameType			= "Foosball";
@@ -85,9 +87,9 @@ public final class Settings {
 		defaultControlProps.setProperty("WinBy", "1");
 		defaultControlProps.setProperty("GamesToWin", "2");
 		defaultControlProps.setProperty("MaxTimeOuts", "2");
-		defaultControlProps.setProperty("AutoIncrementGame", "1");
-		defaultControlProps.setProperty("AnnounceWinner", "1");
-		defaultControlProps.setProperty("AnnounceMeatball", "1");
+		defaultControlProps.setProperty("AutoIncrementGame", ON);
+		defaultControlProps.setProperty("AnnounceWinner", ON);
+		defaultControlProps.setProperty("AnnounceMeatball", ON);
 		defaultControlProps.setProperty("WinnerPrefix", "Match Winner: ");
 		defaultControlProps.setProperty("WinnerSuffix", "!!!");
 		defaultControlProps.setProperty("Meatball", "Meatball!!!");
@@ -105,12 +107,12 @@ public final class Settings {
 		defaultControlProps.setProperty("TimeOutTime", "30");
 		defaultControlProps.setProperty("GameTime", "90");
 		defaultControlProps.setProperty("RecallTime", "10");
-		defaultControlProps.setProperty("ShowTimeOutsUsed", "1");
-		defaultControlProps.setProperty("AutoCapNames",  "1");
-		defaultControlProps.setProperty("WinByFinalOnly", "1");
-		defaultControlProps.setProperty("ShowSkunk",  "1");
-		defaultControlProps.setProperty("CutThroatMode", "0");
-		defaultControlProps.setProperty("RackMode", "0");
+		defaultControlProps.setProperty("ShowTimeOutsUsed", ON);
+		defaultControlProps.setProperty("AutoCapNames",  ON);
+		defaultControlProps.setProperty("WinByFinalOnly", ON);
+		defaultControlProps.setProperty("ShowSkunk",  ON);
+		defaultControlProps.setProperty("CutThroatMode", OFF);
+		defaultControlProps.setProperty("RackMode", OFF);
 		defaultControlProps.setProperty("LogoImageURL", "/imgs/MidsouthFoosballLogo4.png");
 		defaultControlProps.setProperty("LogoLinkURI", "https://www.facebook.com/midsouthfoosball");
 		//OBS
@@ -118,10 +120,10 @@ public final class Settings {
 		defaultOBSProps.setProperty("OBSPort", "4455");
 		defaultOBSProps.setProperty("OBSPassword","");
 		defaultOBSProps.setProperty("OBSScene", "FoosObs+ Main");
-		defaultOBSProps.setProperty("OBSAutoLogin", "0");
-		defaultOBSProps.setProperty("OBSSavePassword", "0");
-		defaultOBSProps.setProperty("OBSCloseOnConnect", "1");
-		defaultOBSProps.setProperty("OBSUpdateOnConnect",  "1");
+		defaultOBSProps.setProperty("OBSAutoLogin", OFF);
+		defaultOBSProps.setProperty("OBSSavePassword", OFF);
+		defaultOBSProps.setProperty("OBSCloseOnConnect", ON);
+		defaultOBSProps.setProperty("OBSUpdateOnConnect",  ON);
 		//Sources
 		defaultSourceProps.setProperty("Tournament", "tournament");
 		defaultSourceProps.setProperty("Team1Name", "team1name");
@@ -278,93 +280,92 @@ public final class Settings {
 		defaultPartnerProgramProps.setProperty("Player3FileName", "Player3.txt");
 		defaultPartnerProgramProps.setProperty("Player4FileName", "Player4.txt");
 		//HotKeys
-		defaultHotKeyProps.setProperty("StartMatchHotKey", "b");
-		defaultHotKeyProps.setProperty("PauseMatchHotKey", ",");
-		defaultHotKeyProps.setProperty("EndMatchHotKey", "");
-		defaultHotKeyProps.setProperty("StartGameHotKey", ".");
-		defaultHotKeyProps.setProperty("TournamentNameClearHotKey", "");
-		defaultHotKeyProps.setProperty("Team1SwitchPositionsHotKey", "t");
-		defaultHotKeyProps.setProperty("Team2SwitchPositionsHotKey", "m");
-		defaultHotKeyProps.setProperty("Team3SwitchPositionsHotKey", "");
-		defaultHotKeyProps.setProperty("SwitchTeamsHotKey", "e");
-		defaultHotKeyProps.setProperty("SwitchForwardsHotKey", ";");
-		defaultHotKeyProps.setProperty("SwitchGoaliesHotKey", "x");
-		defaultHotKeyProps.setProperty("Team1GameCountMinusHotKey", "j");
-		defaultHotKeyProps.setProperty("Team2GameCountMinusHotKey", "i");
-		defaultHotKeyProps.setProperty("Team3GameCountMinusHotKey", "");
-		defaultHotKeyProps.setProperty("Team1GameCountPlusHotKey", "5");
-		defaultHotKeyProps.setProperty("Team2GameCountPlusHotKey", "6");
-		defaultHotKeyProps.setProperty("Team3GameCountPlusHotKey", "");
-		defaultHotKeyProps.setProperty("GameCountSwitchHotKey", "l");
-		defaultHotKeyProps.setProperty("Team1MatchCountMinusHotKey", "");
-		defaultHotKeyProps.setProperty("Team2MatchCountMinusHotKey", "");
-		defaultHotKeyProps.setProperty("Team3MatchCountMinusHotKey", "");
-		defaultHotKeyProps.setProperty("Team1MatchCountPlusHotKey", "");
-		defaultHotKeyProps.setProperty("Team2MatchCountPlusHotKey", "");
-		defaultHotKeyProps.setProperty("Team3MatchCountPlusHotKey", "");
-		defaultHotKeyProps.setProperty("MatchCountSwitchHotKey", "");
-		defaultHotKeyProps.setProperty("Team1ScoreMinusHotKey", "4");
-		defaultHotKeyProps.setProperty("Team2ScoreMinusHotKey", "8");
-		defaultHotKeyProps.setProperty("Team3ScoreMinusHotKey", "");
-		defaultHotKeyProps.setProperty("Team1ScorePlusHotKey", "1");
-		defaultHotKeyProps.setProperty("Team2ScorePlusHotKey", "2");
-		defaultHotKeyProps.setProperty("Team3ScorePlusHotKey", "");
-		defaultHotKeyProps.setProperty("SwitchScoresHotKey", "");
-		defaultHotKeyProps.setProperty("SwitchGameCountsHotKey", "");
-		defaultHotKeyProps.setProperty("SwitchMatchCountsHotKey", "");
-		defaultHotKeyProps.setProperty("Team1TimeOutMinusHotKey", "n");
-		defaultHotKeyProps.setProperty("Team2TimeOutMinusHotKey", "q");
-		defaultHotKeyProps.setProperty("Team3TimeOutMinusHotKey", "");
-		defaultHotKeyProps.setProperty("Team1TimeOutPlusHotKey", "9");
-		defaultHotKeyProps.setProperty("Team2TimeOutPlusHotKey", "0");
-		defaultHotKeyProps.setProperty("Team3TimeOutPlusHotKey", "");
-		defaultHotKeyProps.setProperty("SwitchTimeOutsHotKey", "[");
-		defaultHotKeyProps.setProperty("Team1ResetHotKey", "");
-		defaultHotKeyProps.setProperty("Team2ResetHotKey", "");
-		defaultHotKeyProps.setProperty("Team3ResetHotKey", "");
-		defaultHotKeyProps.setProperty("Team1WarnHotKey", "");
-		defaultHotKeyProps.setProperty("Team2WarnHotKey", "");
-		defaultHotKeyProps.setProperty("Team3WarnHotKey", "");
-		defaultHotKeyProps.setProperty("Team1KingSeatHotKey", "");
-		defaultHotKeyProps.setProperty("Team2KingSeatHotKey", "");
-		defaultHotKeyProps.setProperty("Team3KingSeatHotKey", "");
-		defaultHotKeyProps.setProperty("SwitchResetWarnsHotKey", "");
-		defaultHotKeyProps.setProperty("SwitchSidesHotKey", "w");
-		defaultHotKeyProps.setProperty("ResetNamesHotKey", "");
-		defaultHotKeyProps.setProperty("ResetGameCountsHotKey", "7");
-		defaultHotKeyProps.setProperty("ResetMatchCountsHotKey", "");
-		defaultHotKeyProps.setProperty("ResetScoresHotKey", "3");
-		defaultHotKeyProps.setProperty("ResetTimeOutsHotKey", "-");
-		defaultHotKeyProps.setProperty("ResetResetWarnHotKey", "");
-		defaultHotKeyProps.setProperty("ResetAllHotKey", "a");
-		defaultHotKeyProps.setProperty("ClearAllHotKey", "");
-		defaultHotKeyProps.setProperty("ShotTimerHotKey", "s");
-		defaultHotKeyProps.setProperty("PassTimerHotKey", "p");
-		defaultHotKeyProps.setProperty("TimeOutTimerHotKey", "o");
-		defaultHotKeyProps.setProperty("GameTimerHotKey", "g");
-		defaultHotKeyProps.setProperty("RecallTimerHotKey", "c");
-		defaultHotKeyProps.setProperty("ResetTimersHotKey", "r");
-		defaultHotKeyProps.setProperty("UndoHotKey", "u");
-		defaultHotKeyProps.setProperty("RedoHotKey", "d");
-		defaultHotKeyProps.setProperty("ConnectHotKey", "");
-		defaultHotKeyProps.setProperty("DisconnectHotKey", "");
-		defaultHotKeyProps.setProperty("PushHotKey", "");
-		defaultHotKeyProps.setProperty("PullHotKey", "");
-		defaultHotKeyProps.setProperty("ShowScoresHotKey", "");
-		defaultHotKeyProps.setProperty("ShowTimerHotKey", "");
-		defaultHotKeyProps.setProperty("ShowSkunkHotKey", "k");
-		defaultHotKeyProps.setProperty("StartStreamHotKey", "z");
-		defaultHotKeyProps.setProperty("ShowCutthroatHotKey", "");
-		defaultHotKeyProps.setProperty("AutoScoreMainConnectHotKey", "");
-		defaultHotKeyProps.setProperty("AutoScoreMainDisconnectHotKey", "");
-		defaultHotKeyProps.setProperty("AutoScoreMainSettingsHotKey", "");
+		defaultHotKeyProps.setProperty("Team1SwitchPositions", "t");
+		defaultHotKeyProps.setProperty("Team2SwitchPositions", "m");
+		defaultHotKeyProps.setProperty("Team3SwitchPositions", "");
+		defaultHotKeyProps.setProperty("Team1ScorePlus", "1");
+		defaultHotKeyProps.setProperty("Team2ScorePlus", "2");
+		defaultHotKeyProps.setProperty("Team3ScorePlus", "");
+		defaultHotKeyProps.setProperty("Team1ScoreMinus", "4");
+		defaultHotKeyProps.setProperty("Team2ScoreMinus", "8");
+		defaultHotKeyProps.setProperty("Team3ScoreMinus", "");
+		defaultHotKeyProps.setProperty("Team1GameCountPlus", "5");
+		defaultHotKeyProps.setProperty("Team2GameCountPlus", "6");
+		defaultHotKeyProps.setProperty("Team3GameCountPlus", "");
+		defaultHotKeyProps.setProperty("Team1GameCountMinus", "j");
+		defaultHotKeyProps.setProperty("Team2GameCountMinus", "i");
+		defaultHotKeyProps.setProperty("Team3GameCountMinus", "");
+		defaultHotKeyProps.setProperty("Team1MatchCountPlus", "");
+		defaultHotKeyProps.setProperty("Team2MatchCountPlus", "");
+		defaultHotKeyProps.setProperty("Team3MatchCountPlus", "");
+		defaultHotKeyProps.setProperty("Team1MatchCountMinus", "");
+		defaultHotKeyProps.setProperty("Team2MatchCountMinus", "");
+		defaultHotKeyProps.setProperty("Team3MatchCountMinus", "");
+		defaultHotKeyProps.setProperty("Team1TimeOutPlus", "9");
+		defaultHotKeyProps.setProperty("Team2TimeOutPlus", "0");
+		defaultHotKeyProps.setProperty("Team3TimeOutPlus", "");
+		defaultHotKeyProps.setProperty("Team1TimeOutMinus", "n");
+		defaultHotKeyProps.setProperty("Team2TimeOutMinus", "q");
+		defaultHotKeyProps.setProperty("Team3TimeOutMinus", "");
+		defaultHotKeyProps.setProperty("Team1Reset", "");
+		defaultHotKeyProps.setProperty("Team2Reset", "");
+		defaultHotKeyProps.setProperty("Team3Reset", "");
+		defaultHotKeyProps.setProperty("Team1Warn", "");
+		defaultHotKeyProps.setProperty("Team2Warn", "");
+		defaultHotKeyProps.setProperty("Team3Warn", "");
+		defaultHotKeyProps.setProperty("Team1KingSeat", "");
+		defaultHotKeyProps.setProperty("Team2KingSeat", "");
+		defaultHotKeyProps.setProperty("Team3KingSeat", "");
+		defaultHotKeyProps.setProperty("StartMatch", "b");
+		defaultHotKeyProps.setProperty("PauseMatch", ",");
+		defaultHotKeyProps.setProperty("EndMatch", "");
+		defaultHotKeyProps.setProperty("StartGame", ".");
+		defaultHotKeyProps.setProperty("ShotTimer", "s");
+		defaultHotKeyProps.setProperty("PassTimer", "p");
+		defaultHotKeyProps.setProperty("TimeOutTimer", "o");
+		defaultHotKeyProps.setProperty("GameTimer", "g");
+		defaultHotKeyProps.setProperty("RecallTimer", "c");
+		defaultHotKeyProps.setProperty("ResetTimers", "r");
+		defaultHotKeyProps.setProperty("ClearAll", "");
+		defaultHotKeyProps.setProperty("Undo", "u");
+		defaultHotKeyProps.setProperty("Redo", "d");
+		defaultHotKeyProps.setProperty("ShowSkunk", "k");
+		defaultHotKeyProps.setProperty("StartStream", "z");
+		defaultHotKeyProps.setProperty("ClearTournament", "");
+		defaultHotKeyProps.setProperty("SwitchMatchCounts", "");
+		defaultHotKeyProps.setProperty("SwitchSides", "w");
+		defaultHotKeyProps.setProperty("SwitchTeams", "e");
+		defaultHotKeyProps.setProperty("SwitchScores", "");
+		defaultHotKeyProps.setProperty("SwitchGameCounts", "");
+		defaultHotKeyProps.setProperty("SwitchTimeOuts", "[");
+		defaultHotKeyProps.setProperty("SwitchResetWarns", "");
+		defaultHotKeyProps.setProperty("SwitchForwards", ";");
+		defaultHotKeyProps.setProperty("SwitchGoalies", "x");
+		defaultHotKeyProps.setProperty("ResetNames", "");
+		defaultHotKeyProps.setProperty("ResetScores", "3");
+		defaultHotKeyProps.setProperty("ResetGameCounts", "7");
+		defaultHotKeyProps.setProperty("ResetTimeOuts", "-");
+		defaultHotKeyProps.setProperty("ResetResetWarn", "");
+		defaultHotKeyProps.setProperty("ResetAll", "a");
+		defaultHotKeyProps.setProperty("ResetMatchCounts", "");
+
+		defaultHotKeyProps.setProperty("Connect", "");
+		defaultHotKeyProps.setProperty("Disconnect", "");
+		defaultHotKeyProps.setProperty("Push", "");
+		defaultHotKeyProps.setProperty("Pull", "");
+		defaultHotKeyProps.setProperty("ShowScores", "");
+		defaultHotKeyProps.setProperty("ShowTimer", "");
+		defaultHotKeyProps.setProperty("ShowCutthroat", "");
+		defaultHotKeyProps.setProperty("AutoScoreMainConnect", "");
+		defaultHotKeyProps.setProperty("AutoScoreMainDisconnect", "");
+		defaultHotKeyProps.setProperty("AutoScoreMainSettings", "");
 		defaultHotKeyProps.setProperty("HotKeyBaseScript", Messages.getString("Settings.HotKeyBaseScript"));
-		defaultHotKeyProps.setProperty("HotKeyScriptPath", "C:\\FoosOBSPlusScripts\\");
+		defaultHotKeyProps.setProperty("HotKeyScriptPath", Messages.getString("Settings.HotKeyScriptPath"));
 		//AutoScore Settings Properties
 		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsServerAddress", "192.168.68.69");
 		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsServerPort", "5051");
-		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsAutoConnect", "0");
-		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsDetailLog", "0");
+		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsAutoConnect", OFF);
+		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsDetailLog", OFF);
 		//Config Properties
 		configControlProps 				= new Properties(defaultControlProps);
 		configSourceProps 				= new Properties(defaultSourceProps);
@@ -397,16 +398,16 @@ public final class Settings {
 	public static int getBorderLeft() {return borderLeft;};
 	public static int getBorderRight() {return borderRight;};
 	public static String[] getLastScoredStrings() {
-		lastScoredStrings[0] = getControlParameter("ClearLastScored",Function.identity());
-		lastScoredStrings[1] = getControlParameter("Team1LastScored",Function.identity());
-		lastScoredStrings[2] = getControlParameter("Team2LastScored",Function.identity());
-		lastScoredStrings[3] = getControlParameter("Team3LastScored",Function.identity());
+		lastScoredStrings[0] = getControlParameter("ClearLastScored");
+		lastScoredStrings[1] = getControlParameter("Team1LastScored");
+		lastScoredStrings[2] = getControlParameter("Team2LastScored");
+		lastScoredStrings[3] = getControlParameter("Team3LastScored");
 		return lastScoredStrings;
 	}
 	public static String getGameType() {return gameType;}
 	//Getters
 	//Control Parameters
-	public static <T> T getControlParameter(String parameter, Function<String, T> parser) {return parser.apply(configControlProps.getProperty(parameter));}
+//	public static <T> T getControlParameter(String parameter, Function<String, T> parser) {return parser.apply(configControlProps.getProperty(parameter));}
 	public static String getControlParameter(String parameter) {return configControlProps.getProperty(parameter);}
 	public static boolean getShowParsed() {return Boolean.parseBoolean(configControlProps.getProperty("ShowParsed"));}
 	//OBS
@@ -420,6 +421,7 @@ public final class Settings {
 		return configSourceProps.getProperty("Team" + teamNumber + source);
 	}
 	//Stat Sources
+	public static String getStatsSourceParameter(String parameter) {return configStatsSourceProps.getProperty(parameter);}
 	public static String getTeamStatsSourceParameter(String teamNumber, String source) {
 		return configStatsSourceProps.getProperty("Team" + teamNumber + source);
 	}
@@ -441,15 +443,9 @@ public final class Settings {
 	public static void setControlParameter(String parameter, Boolean value) {
 		configControlProps.setProperty(parameter, Boolean.toString(value));
 	}
-	public static void setControlParameter(String parameter, int value) {
-		configControlProps.setProperty(parameter, Integer.toString(value));
-	}
 	//OBS
 	public static void setOBS(String property, String OBSValue) {
 		configOBSProps.setProperty(property, OBSValue);
-	}
-	public static void setOBS(String property, int value) {
-		configOBSProps.setProperty(property, Integer.toString(value));
 	}
 	//Sources
 	public static void setSource(String property, String source) {
@@ -484,14 +480,11 @@ public final class Settings {
 	public static void setAutoScore(String property, String value) {
 		configAutoScoreSettingsProps.setProperty(property, value);
 	}
-	public static void setAutoScore(String property, int value) {
-		configAutoScoreSettingsProps.setProperty(property, Integer.toString(value));
-	}
 //Get Defaults
 	//Control Parameters
-	public static <T> T getDefaultParameter(String parameter, Function<String, T> parser) {return parser.apply(defaultControlProps.getProperty(parameter));}
+	public static String getDefaultParameter(String parameter) {return defaultControlProps.getProperty(parameter);}
 	//OBS
-	public static <T> T getDefaultOBSParameter(String parameter, Function<String, T> parser) {return parser.apply(defaultOBSProps.getProperty(parameter));}
+//	public static <T> T getDefaultOBSParameter(String parameter, Function<String, T> parser) {return parser.apply(defaultOBSProps.getProperty(parameter));}
 	//Sources
 	public static String getDefaultSource(String property) {return defaultSourceProps.getProperty(property);}
 	//Stat Sources
@@ -687,7 +680,6 @@ public final class Settings {
 		}
 	}
 	private static void createHotKeyScript(String keyFunction, String hotKey, String[] baseScript, String basePath) {
-		keyFunction = keyFunction.substring(0, keyFunction.length()-6);
 		try {
 			File scriptFile = new File(getHotKeyParameter("HotKeyScriptPath") + File.separator + keyFunction + ".ahk");
 			scriptFile.createNewFile();
@@ -705,8 +697,8 @@ public final class Settings {
 	public static int getMaxGameNumber() {
 		// 	for cutthroat -> GamesToWin*3-2;
 		//  for regular   -> GamesToWin*2-1;
-		int gamesToWin = getControlParameter("GamesToWin",Integer::parseInt);
-		int cutThroatMode = getControlParameter("CutThroatMode",Integer::parseInt);
+		int gamesToWin = Integer.parseInt(getControlParameter("GamesToWin"));
+		int cutThroatMode = Integer.parseInt(getControlParameter("CutThroatMode"));
 		return gamesToWin*(2+cutThroatMode)-(1+cutThroatMode);
 	}
 }

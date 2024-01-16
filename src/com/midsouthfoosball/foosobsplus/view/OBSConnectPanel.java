@@ -64,6 +64,8 @@ public class OBSConnectPanel extends JPanel {
 	private JList<String> lstMessageHistory;
 	private DefaultListModel<String> mdlMessageHistory;
 	private JScrollPane scrMessageHistory;
+	private static final String ONE = "1";
+	private static final String ZERO = "0";
 	private static Logger logger = LoggerFactory.getLogger(OBSConnectPanel.class);
 	public OBSConnectPanel() throws IOException {
 		mdlMessageHistory = new DefaultListModel<String>();
@@ -96,14 +98,14 @@ public class OBSConnectPanel extends JPanel {
 		txtScene.setColumns(10);
 		add(txtScene, "cell 1 4,alignx left");
 		chckbxSavePassword = new JCheckBox("Save Password");
-		if (Settings.getOBSParameter("OBSSavePassword").equals("1")) { //$NON-NLS-1$
+		if (Settings.getOBSParameter("OBSSavePassword").equals(ONE)) { //$NON-NLS-1$
 			chckbxSavePassword.setSelected(true);
 		} else {
 			chckbxSavePassword.setSelected(false);
 		}
 		add(chckbxSavePassword, "cell 1 5,alignx left");
 		chckbxAutoLogin = new JCheckBox("Auto Login on Start");
-		if (Settings.getOBSParameter("OBSAutoLogin").equals("1")) { //$NON-NLS-1$
+		if (Settings.getOBSParameter("OBSAutoLogin").equals(ONE)) { //$NON-NLS-1$
 			chckbxAutoLogin.setSelected(true);
 		} else {
 			chckbxAutoLogin.setSelected(false);
@@ -123,14 +125,14 @@ public class OBSConnectPanel extends JPanel {
 		btnDisconnect = new JButton("Disconnect");
 		add(btnDisconnect, "cell 1 7,alignx right");
 		chckbxCloseOnConnect = new JCheckBox("Close on Connect");
-		if (Settings.getOBSParameter("OBSCloseOnConnect").equals("1")) { //$NON-NLS-1$
+		if (Settings.getOBSParameter("OBSCloseOnConnect").equals(ONE)) { //$NON-NLS-1$
 			chckbxCloseOnConnect.setSelected(true);
 		} else {
 			chckbxCloseOnConnect.setSelected(false);
 		}
 		add(chckbxCloseOnConnect, "cell 3 5,alignx left");
 		chckbxUpdateOnConnect = new JCheckBox("Update on Connect");
-		if (Settings.getOBSParameter("OBSUpdateOnConnect").equals("1")) {
+		if (Settings.getOBSParameter("OBSUpdateOnConnect").equals(ONE)) {
 			chckbxUpdateOnConnect.setSelected(true);
 		} else {
 			chckbxUpdateOnConnect.setSelected(false);
@@ -170,20 +172,15 @@ public class OBSConnectPanel extends JPanel {
 		Settings.setOBS("OBSHost",txtHost.getText());
 		Settings.setOBS("OBSPort",txtPort.getText());
 		Settings.setOBS("OBSScene",txtScene.getText());
+		Settings.setOBS("OBSAutoLogin", chckbxAutoLogin.isSelected() ? ONE : ZERO);
+		Settings.setOBS("OBSUpdateOnConnect", chckbxUpdateOnConnect.isSelected() ? ONE : ZERO);
+		Settings.setOBS("OBSCloseOnConnect", chckbxCloseOnConnect.isSelected() ? ONE : ZERO);
+		Settings.setOBS("OBSSavePassword",chckbxSavePassword.isSelected() ? ONE : ZERO);
+		Settings.setOBS("OBSPassword",chckbxSavePassword.isSelected() ? txtPassword.getText() : "");
 		OBS.setScene(txtScene.getText());
-		if (chckbxSavePassword.isSelected()) {
-			Settings.setOBS("OBSSavePassword",1);
-			Settings.setOBS("OBSPassword",txtPassword.getText());
-		} else {
-			Settings.setOBS("OBSSavePassword",0);
-			Settings.setOBS("OBSPassword","");
-		}
-		Settings.setOBS("OBSAutoLogin", chckbxAutoLogin.isSelected() ? 1 : 0);
-		Settings.setOBS("OBSUpdateOnConnect", chckbxUpdateOnConnect.isSelected() ? 1 : 0);
-		Settings.setOBS("OBSCloseOnConnect", chckbxCloseOnConnect.isSelected() ? 1 : 0);
-		if (Settings.getOBSParameter("OBSAutoLogin").equals("1")) {
-			if (Settings.getOBSParameter("OBSHost").isEmpty() || Settings.getOBSParameter("OBSPassword").isEmpty() || Settings.getOBSParameter("OBSPort").isEmpty() || Settings.getOBSParameter("OBSSavePassword").equals("0")) {
-				Settings.setOBS("OBSAutoLogin",0);
+		if (Settings.getOBSParameter("OBSAutoLogin").equals(ONE)) {
+			if (Settings.getOBSParameter("OBSHost").isEmpty() || Settings.getOBSParameter("OBSPassword").isEmpty() || Settings.getOBSParameter("OBSPort").isEmpty() || Settings.getOBSParameter("OBSSavePassword").equals(ZERO)) {
+				Settings.setOBS("OBSAutoLogin",ZERO);
 				chckbxAutoLogin.setSelected(false);
 				String msg = Messages.getString("Errors.OBSConnectPanel.AutoLogin");
 				String ttl = Messages.getString("Errors.OBSConnectPanel.AutoLogin.Title");

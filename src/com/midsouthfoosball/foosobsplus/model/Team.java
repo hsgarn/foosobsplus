@@ -72,6 +72,7 @@ public class Team implements Serializable {
 	private int fiveBarScoring = 0;
 	private int twoBarScoring = 0;
 	private int shotsOnGoal = 0;
+	private static final String ON = "1";
 	private DecimalFormat df = new DecimalFormat("###.#");
 	private static Logger logger = LoggerFactory.getLogger(Team.class);
 	
@@ -188,7 +189,7 @@ public class Team implements Serializable {
 		}
 	}
 	public int callTimeOut() {
-		if(Settings.getControlParameter("ShowTimeOutsUsed").equals("1")) {
+		if(Settings.getControlParameter("ShowTimeOutsUsed").equals(ON)) {
 			setTimeOutCount(getTimeOutCount()+1);
 		} else {
 			setTimeOutCount(getTimeOutCount()-1);
@@ -196,14 +197,14 @@ public class Team implements Serializable {
 		return getTimeOutCount();
 	}
 	public int restoreTimeOut() {
-		if(Settings.getControlParameter("ShowTimeOutsUsed").equals("1")) {
+		if(Settings.getControlParameter("ShowTimeOutsUsed").equals(ON)) {
 			setTimeOutCount(getTimeOutCount()-1);
 			if(getTimeOutCount()<0) {
 				setTimeOutCount(0);
 			}
 		} else {
 			setTimeOutCount(getTimeOutCount()+1);
-			int maxTimeOuts = Settings.getControlParameter("MaxTimeOuts",Integer::parseInt);
+			int maxTimeOuts = Integer.parseInt(Settings.getControlParameter("MaxTimeOuts"));
 			if(getTimeOutCount()>maxTimeOuts) {
 				setTimeOutCount(maxTimeOuts);
 			}
@@ -337,10 +338,10 @@ public class Team implements Serializable {
 		writeAll();
 	}
 	public void resetTimeOuts() {
-		if(Settings.getControlParameter("ShowTimeOutsUsed").equals("1")) {
+		if(Settings.getControlParameter("ShowTimeOutsUsed").equals(ON)) {
 			setTimeOutCount(0);
 		} else {
-			setTimeOutCount(Settings.getControlParameter("MaxTimeOuts",Integer::parseInt));
+			setTimeOutCount(Integer.parseInt(Settings.getControlParameter("MaxTimeOuts")));
 		}
 	}
 	public void resetResetWarns() {

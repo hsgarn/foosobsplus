@@ -56,7 +56,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Function;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -158,6 +157,7 @@ import com.midsouthfoosball.foosobsplus.view.ResetPanel;
 import com.midsouthfoosball.foosobsplus.view.SourcesFrame;
 import com.midsouthfoosball.foosobsplus.view.SourcesPanel;
 import com.midsouthfoosball.foosobsplus.view.StatSourcesFrame;
+import com.midsouthfoosball.foosobsplus.view.StatSourcesPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
@@ -195,7 +195,8 @@ public class Main implements MatchObserver {
 				logger.error(e1.toString());
 			}
 		}
-	}	
+	}
+	private static final String ON = "1";
 	////// Settings and OBSInterface setup \\\\\\
 	private OBSInterface 			obsInterface 			= new OBSInterface();
 	private String					matchId					= "";
@@ -203,7 +204,7 @@ public class Main implements MatchObserver {
 	private boolean 				autoScoreConnected		= false;
 	private Socket 					autoScoreSocket;
 	private PrintWriter 			autoScoreSocketWriter;
-	private StreamIndexer 			streamIndexer      		= new StreamIndexer(Settings.getControlParameter("datapath",Function.identity()));
+	private StreamIndexer 			streamIndexer      		= new StreamIndexer(Settings.getControlParameter("datapath"));
 	private Boolean 				allowAutoScoreReconnect	= true;
 	private Boolean 				blockAutoScoreReconnect	= false;
     private Map<String, String>		teamGameShowSourcesMap	= new HashMap<>();
@@ -225,8 +226,8 @@ public class Main implements MatchObserver {
 
 	////// Generate the Data Models (Mvc) \\\\\\
 	private Tournament		tournament				= new Tournament(obsInterface);
-	private Team 			team1 					= new Team(obsInterface, 1, Settings.getControlParameter("Side1Color",Function.identity()));
-	private Team 			team2 					= new Team(obsInterface, 2, Settings.getControlParameter("Side2Color",Function.identity()));
+	private Team 			team1 					= new Team(obsInterface, 1, Settings.getControlParameter("Side1Color"));
+	private Team 			team2 					= new Team(obsInterface, 2, Settings.getControlParameter("Side2Color"));
 	private Team            team3              		= new Team(obsInterface, 3, "None");
 	private Match 			match					= new Match(obsInterface, team1, team2, team3);
 	private Stats 			stats 					= new Stats(team1, team2);
@@ -244,8 +245,8 @@ public class Main implements MatchObserver {
 	private OBSPanel            obsPanel            = new OBSPanel();
 	private AutoScoreMainPanel	autoScoreMainPanel  = new AutoScoreMainPanel();
 	private MatchPanel			matchPanel			= new MatchPanel();
-	private TeamPanel 			teamPanel1 			= new TeamPanel(1, Settings.getControlParameter("Side1Color",Function.identity()));
-	private TeamPanel 			teamPanel2 			= new TeamPanel(2, Settings.getControlParameter("Side2Color",Function.identity()));
+	private TeamPanel 			teamPanel1 			= new TeamPanel(1, Settings.getControlParameter("Side1Color"));
+	private TeamPanel 			teamPanel2 			= new TeamPanel(2, Settings.getControlParameter("Side2Color"));
 	private TeamPanel			teamPanel3			= new TeamPanel(3, "None");
 	private StatsEntryPanel 	statsEntryPanel 	= new StatsEntryPanel();
 	private SwitchPanel 		switchPanel 		= new SwitchPanel();
@@ -257,9 +258,10 @@ public class Main implements MatchObserver {
 	private ParametersPanel			parametersPanel			= parametersFrame.getSettingsPanel();
 	private HotKeysFrame 			hotKeysFrame 			= new HotKeysFrame();
 	private HotKeysPanel 			hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
-	private SourcesFrame			sourcesFrame			= new SourcesFrame(obsInterface);
+	private SourcesFrame			sourcesFrame			= new SourcesFrame();
 	private SourcesPanel			sourcesPanel			= sourcesFrame.getSourcesPanel();
-	private StatSourcesFrame		statSourcesFrame		= new StatSourcesFrame(obsInterface);
+	private StatSourcesFrame		statSourcesFrame		= new StatSourcesFrame();
+	private StatSourcesPanel		statSourcesPanel		= statSourcesFrame.getStatSourcesPanel();
 	private FiltersFrame        	filtersFrame        	= new FiltersFrame(obsInterface);
 	private FiltersPanel        	filtersPanel        	= filtersFrame.getFiltersPanel();
 	private PartnerProgramFrame 	partnerProgramFrame 	= new PartnerProgramFrame();
@@ -674,7 +676,7 @@ public class Main implements MatchObserver {
 					int a = Integer.parseInt(match.getScoresTeam1()[gn-2]); 
 					int b = Integer.parseInt(match.getScoresTeam2()[gn-2]);
 					if (a == 0 || b == 0) {
-						if(Settings.getControlParameter("ShowSkunk",Integer::parseInt)==1) {
+						if(Settings.getControlParameter("ShowSkunk").equals(ON)) {
 							filter = "Team" + teamNbr + "Skunk";
 							activateFilter(filter);
 						}
@@ -682,7 +684,7 @@ public class Main implements MatchObserver {
 					filter = "Team" + teamNbr + "WinGame";
 					activateFilter(filter);
 					if(gameClock.isStreamTimerRunning()) {
-						if(Settings.getControlParameter("CutThroatMode",Integer::parseInt)==1) {
+						if(Settings.getControlParameter("CutThroatMode").equals(ON)) {
 							int c = Integer.parseInt(match.getScoresTeam3()[gn-2]);
 							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Game end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + ": " + a + " to " + b + " to " + c + "\r\n");
 						} else {
@@ -695,7 +697,7 @@ public class Main implements MatchObserver {
 					int a = team1.getScore();
 					int b = team2.getScore();
 					if (a == 0 || b == 0) {
-						if(Settings.getControlParameter("ShowSkunk",Integer::parseInt)==1) {
+						if(Settings.getControlParameter("ShowSkunk").equals(ON)) {
 							filter = "Team" + teamNbr + "Skunk";
 							activateFilter(filter);
 						}
@@ -703,7 +705,7 @@ public class Main implements MatchObserver {
 					filter = "Team" + teamNbr + "WinMatch";
 					activateFilter(filter);
 					if(gameClock.isStreamTimerRunning()) {
-						if(Settings.getControlParameter("CutThroatMode",Integer::parseInt)==1) {
+						if(Settings.getControlParameter("CutThroatMode").equals(ON)) {
 							int c = team3.getScore();
 							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Match end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + ": " + a + " to " + b + " to " + c + "\r\n");
 						} else {
@@ -747,8 +749,12 @@ public class Main implements MatchObserver {
 		gameClock.addGameClockTimerListener(new GameClockTimerListener());
 	}
 	public void loadListeners() {
+		hotKeysPanel.addApplyListener(new HotKeysApplyListener());
 		hotKeysPanel.addSaveListener(new HotKeysSaveListener());
+		sourcesPanel.addApplyListener(new SourcesApplyListener());
 		sourcesPanel.addSaveListener(new SourcesSaveListener());
+		statSourcesPanel.addApplyListener(new StatSourcesApplyListener());
+		statSourcesPanel.addSaveListener(new StatSourcesSaveListener());
 		autoScoreSettingsPanel.addSaveListener(new AutoScoreSettingsSaveListener());
 		autoScoreSettingsPanel.addConnectListener(new AutoScoreSettingsConnectListener());
 		autoScoreSettingsPanel.addDisconnectListener(new AutoScoreSettingsDisconnectListener());
@@ -757,6 +763,7 @@ public class Main implements MatchObserver {
 		autoScoreConfigPanel.addValidateConfigListener(new AutoScoreConfigValidateListener());
 		autoScoreConfigPanel.addResetConfigListener(new AutoScoreConfigResetListener());
 		autoScoreConfigPanel.addClearConfigListener(new AutoScoreConfigClearListener());
+		parametersPanel.addApplyListener(new ParametersApplyListener());
 		parametersPanel.addSaveListener(new ParametersSaveListener());
 		parametersPanel.addEnableShowSkunkListener(new OBSEnableSkunkListener());
 		obsConnectPanel.addSetSceneListener(new OBSSetSceneListener());
@@ -908,7 +915,7 @@ public class Main implements MatchObserver {
 		matchId = createMatchId();
 		matchController.startMatch(matchId);
 		if(gameClock.isStreamTimerRunning()) {
-			if(Settings.getControlParameter("CutThroatMode",Integer::parseInt)==1) {
+			if(Settings.getControlParameter("CutThroatMode").equals(ON)) {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch", Settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + "\r\n");
 			} else {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch", Settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n");
@@ -923,7 +930,7 @@ public class Main implements MatchObserver {
 	}
 	public void startGame() {
 		if(gameClock.isStreamTimerRunning()) {
-			if(Settings.getControlParameter("CutThroatMode",Integer::parseInt)==1) {
+			if(Settings.getControlParameter("CutThroatMode").equals(ON)) {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame", Settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + "\r\n");
 			} else {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame", Settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n");
@@ -1486,30 +1493,60 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
+	private void hotKeysSaveSettings() {
+		if (hotKeysPanel.saveSettings()) {
+			matchPanel.updateMnemonics();
+			teamPanel1.updateMnemonics();
+			teamPanel2.updateMnemonics();
+			teamPanel3.updateMnemonics();
+			timerPanel.updateMnemonics();
+			switchPanel.updateMnemonics();
+			resetPanel.updateMnemonics();
+			statsEntryPanel.updateMnemonics();
+			obsPanel.updateMnemonics();
+		}
+	}
+	private class HotKeysApplyListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			hotKeysSaveSettings();
+		}
+	}
 	private class HotKeysSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if (hotKeysPanel.saveSettings()) {
-				JComponent comp = (JComponent) e.getSource();
-				Window win = SwingUtilities.getWindowAncestor(comp);
-				win.dispose();
-				matchPanel.updateMnemonics();
-				teamPanel1.updateMnemonics();
-				teamPanel2.updateMnemonics();
-				teamPanel3.updateMnemonics();
-				timerPanel.updateMnemonics();
-				switchPanel.updateMnemonics();
-				resetPanel.updateMnemonics();
-				statsEntryPanel.updateMnemonics();
+			hotKeysSaveSettings();
+			JComponent comp = (JComponent) e.getSource();
+			Window win = SwingUtilities.getWindowAncestor(comp);
+			win.dispose();
+		}
+	}
+	private class SourcesApplyListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if (sourcesPanel.saveSettings()) {
+				buildTeamGameShowSourcesMap();
 			}
 		}
 	}
 	private class SourcesSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (sourcesPanel.saveSettings()) {
+				buildTeamGameShowSourcesMap();
 				JComponent comp = (JComponent) e.getSource();
 				Window win = SwingUtilities.getWindowAncestor(comp);
 				win.dispose();
-				buildTeamGameShowSourcesMap();
+			}
+		}
+	}
+	private class StatSourcesApplyListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			statSourcesPanel.saveSettings();
+		}
+	}
+	private class StatSourcesSaveListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if (statSourcesPanel.saveSettings()) {
+				JComponent comp = (JComponent) e.getSource();
+				Window win = SwingUtilities.getWindowAncestor(comp);
+				win.dispose();
 			}
 		}
 	}
@@ -1658,9 +1695,9 @@ public class Main implements MatchObserver {
 			obsPanel.setEnableSkunk(showSkunkFlag);
 			parametersPanel.setEnableShowSkunk(showSkunkFlag);
 			if (showSkunkFlag) {
-				Settings.setControlParameter("ShowSkunk",1);
+				Settings.setControlParameter("ShowSkunk","1");
 			} else {
-				Settings.setControlParameter("ShowSkunk",0);
+				Settings.setControlParameter("ShowSkunk","0");
 			}
 			setFocusOnCode();
 		}
@@ -1683,27 +1720,35 @@ public class Main implements MatchObserver {
 			obsPanel.updateTimerDisplay(gameClock.getStreamTime());
 		}
 	}
+	private class ParametersApplyListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			saveParameterSettings();
+		}
+	}
 	private class ParametersSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			int oldGamesToWin = Settings.getControlParameter("GamesToWin",Integer::parseInt);
-			int oldCutthroatMode = Settings.getControlParameter("CutThroatMode",Integer::parseInt);
-			parametersPanel.saveSettings(Settings.getInstance());
-			int newGamesToWin = Settings.getControlParameter("GamesToWin",Integer::parseInt);
-			int newCutthroatMode = Settings.getControlParameter("CutThroatMode",Integer::parseInt);
-			if (oldGamesToWin != newGamesToWin || oldCutthroatMode != newCutthroatMode) {
-				matchPanel.resizeGameTable();
-				gameTableWindowPanel.resizeGameTable();
-				match.setMaxPossibleGames(Settings.getMaxGameNumber());
-			}
-			teamPanel1.setTitle();
-			teamPanel2.setTitle();
-			teamPanel3.setTitle();
-			teamController.displayAll();
+			saveParameterSettings();
 			JComponent comp = (JComponent) e.getSource();
 			Window win = SwingUtilities.getWindowAncestor(comp);
 			win.dispose();
 			setFocusOnCode();
 		}
+	}
+	private void saveParameterSettings() {
+		int oldGamesToWin = Integer.parseInt(Settings.getControlParameter("GamesToWin"));
+		int oldCutthroatMode = Integer.parseInt(Settings.getControlParameter("CutThroatMode"));
+		parametersPanel.saveSettings(Settings.getInstance());
+		int newGamesToWin = Integer.parseInt(Settings.getControlParameter("GamesToWin"));
+		int newCutthroatMode = Integer.parseInt(Settings.getControlParameter("CutThroatMode"));
+		if (oldGamesToWin != newGamesToWin || oldCutthroatMode != newCutthroatMode) {
+			matchPanel.resizeGameTable();
+			gameTableWindowPanel.resizeGameTable();
+			match.setMaxPossibleGames(Settings.getMaxGameNumber());
+		}
+		teamPanel1.setTitle();
+		teamPanel2.setTitle();
+		teamPanel3.setTitle();
+		teamController.displayAll();
 	}
 	private class AutoScoreMainPanelConnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {

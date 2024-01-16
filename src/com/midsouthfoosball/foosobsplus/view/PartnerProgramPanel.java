@@ -48,7 +48,6 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 import net.miginfocom.swing.MigLayout;
 
 public class PartnerProgramPanel extends JPanel {
-	
 	private static final long serialVersionUID = 1L;
 	private JFormattedTextField formattedTxtPath;
 	private JTextField txtPlayer1FileName;
@@ -56,20 +55,22 @@ public class PartnerProgramPanel extends JPanel {
 	private JTextField txtPlayer3FileName;
 	private JTextField txtPlayer4FileName;
 	private static Logger logger = LoggerFactory.getLogger(PartnerProgramPanel.class);
-
 	// Create the Panel.
-
 	public PartnerProgramPanel() throws IOException {
 		setLayout();
 	}
-
 	private void restoreDefaults() {
 		txtPlayer1FileName.setText(Settings.getDefaultPartnerProgram("Player1FileName"));
 		txtPlayer2FileName.setText(Settings.getDefaultPartnerProgram("Player2FileName"));
 		txtPlayer3FileName.setText(Settings.getDefaultPartnerProgram("Player3FileName"));
 		txtPlayer4FileName.setText(Settings.getDefaultPartnerProgram("Player4FileName"));
 	}
-
+	private void revertChanges() {
+		txtPlayer1FileName.setText(Settings.getPartnerProgramParameter("Player1FileName"));
+		txtPlayer2FileName.setText(Settings.getPartnerProgramParameter("Player2FileName"));
+		txtPlayer3FileName.setText(Settings.getPartnerProgramParameter("Player3FileName"));
+		txtPlayer4FileName.setText(Settings.getPartnerProgramParameter("Player4FileName"));
+	}
 	private void saveSettings() {
 		Settings.setPartnerProgram("Player1FileName",txtPlayer1FileName.getText());
 		Settings.setPartnerProgram("Player2FileName",txtPlayer2FileName.getText());
@@ -148,42 +149,39 @@ public class PartnerProgramPanel extends JPanel {
 		});
 		add(formattedTxtPath, "cell 2 0 4 1,alignx left"); //$NON-NLS-1$
 		formattedTxtPath.setColumns(50);
-
 		JLabel lblFileName = new JLabel(Messages.getString("PartnerProgramPanel.FileName")); //$NON-NLS-1$
 		add(lblFileName, "cell 2 1,alignx left"); //$NON-NLS-1$
-
 		JLabel lblPlayer1FileName = new JLabel(Messages.getString("PartnerProgramPanel.Player1")); //$NON-NLS-1$
 		add(lblPlayer1FileName, "cell 1 2,alignx right"); //$NON-NLS-1$
-
 		JLabel lblPlayer2FileName = new JLabel(Messages.getString("PartnerProgramPanel.Player2")); //$NON-NLS-1$
 		add(lblPlayer2FileName, "cell 1 3,alignx right"); //$NON-NLS-1$
-
 		JLabel lblPlayer3FileName = new JLabel(Messages.getString("PartnerProgramPanel.Player3")); //$NON-NLS-1$
 		add(lblPlayer3FileName, "cell 1 4,alignx right"); //$NON-NLS-1$
-
 		JLabel lblPlayer4FileName = new JLabel(Messages.getString("PartnerProgramPanel.Player4")); //$NON-NLS-1$
 		add(lblPlayer4FileName, "cell 1 5,alignx right"); //$NON-NLS-1$
-
 		txtPlayer1FileName = new JTextField();
 		txtPlayer1FileName.setText(Settings.getPartnerProgramParameter("Player1FileName"));
 		txtPlayer1FileName.setColumns(10);
 		add(txtPlayer1FileName, "cell 2 2,alignx left"); //$NON-NLS-1$
-
 		txtPlayer2FileName = new JTextField();
 		txtPlayer2FileName.setText(Settings.getPartnerProgramParameter("Player2FileName"));
 		txtPlayer2FileName.setColumns(10);
 		add(txtPlayer2FileName, "cell 2 3,alignx left"); //$NON-NLS-1$
-
 		txtPlayer3FileName = new JTextField();
 		txtPlayer3FileName.setText(Settings.getPartnerProgramParameter("Player3FileName"));
 		txtPlayer3FileName.setColumns(10);
 		add(txtPlayer3FileName, "cell 2 4,alignx left"); //$NON-NLS-1$
-
 		txtPlayer4FileName = new JTextField();
 		txtPlayer4FileName.setText(Settings.getPartnerProgramParameter("Player4FileName"));
 		txtPlayer4FileName.setColumns(10);
 		add(txtPlayer4FileName, "cell 2 5,alignx left"); //$NON-NLS-1$
-
+		JButton btnApplyPartnerProgram = new JButton(Messages.getString("Global.Apply")); //$NON-NLS-1$
+		btnApplyPartnerProgram.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveSettings();
+			}
+		});
+		add(btnApplyPartnerProgram, "cell 1 19,alignx center"); //$NON-NLS-1$
 		JButton btnSavePartnerProgram = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		btnSavePartnerProgram.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -194,17 +192,16 @@ public class PartnerProgramPanel extends JPanel {
 			}
 		});
 		add(btnSavePartnerProgram, "cell 2 19,alignx center"); //$NON-NLS-1$
-
 		JButton btnCancelPartnerProgram = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
 		btnCancelPartnerProgram.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				revertChanges();
 				JComponent comp = (JComponent) e.getSource();
 				Window win = SwingUtilities.getWindowAncestor(comp);
 				win.dispose();
 			}
 		});
 		add(btnCancelPartnerProgram, "cell 4 19,alignx center"); //$NON-NLS-1$
-		
 		JButton btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
 		btnRestoreDefaults.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

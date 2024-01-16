@@ -94,50 +94,50 @@ public class OBSPanel extends JPanel {
 		add(ckbxShowCutthroat, "wrap");
 	}
 	private void setMnemonics() {
-		if(Settings.getHotKeyParameter("ConnectHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("Connect").isEmpty()) {
 			btnConnect.setMnemonic(-1);
 		} else {
-			btnConnect.setMnemonic(Settings.getHotKeyParameter("ConnectHotKey").charAt(0));
+			btnConnect.setMnemonic(Settings.getHotKeyParameter("Connect").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("DisconnectHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("Disconnect").isEmpty()) {
 			btnDisconnect.setMnemonic(-1);
 		} else {
-			btnDisconnect.setMnemonic(Settings.getHotKeyParameter("DisconnectHotKey").charAt(0));
+			btnDisconnect.setMnemonic(Settings.getHotKeyParameter("Disconnect").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("PushHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("Push").isEmpty()) {
 			btnPush.setMnemonic(-1);
 		} else {
-			btnPush.setMnemonic(Settings.getHotKeyParameter("PushHotKey").charAt(0));
+			btnPush.setMnemonic(Settings.getHotKeyParameter("Push").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("PullHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("Pull").isEmpty()) {
 			btnPull.setMnemonic(-1);
 		} else {
-			btnPull.setMnemonic(Settings.getHotKeyParameter("PullHotKey").charAt(0));
+			btnPull.setMnemonic(Settings.getHotKeyParameter("Pull").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("ShowScoresHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("ShowScores").isEmpty()) {
 			ckbxShowScores.setMnemonic(-1);
 		} else {
-			ckbxShowScores.setMnemonic(Settings.getHotKeyParameter("ShowScoresHotKey").charAt(0));
+			ckbxShowScores.setMnemonic(Settings.getHotKeyParameter("ShowScores").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("ShowTimerHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("ShowTimer").isEmpty()) {
 			ckbxShowTimer.setMnemonic(-1);
 		} else {
-			ckbxShowTimer.setMnemonic(Settings.getHotKeyParameter("ShowTimerHotKey").charAt(0));
+			ckbxShowTimer.setMnemonic(Settings.getHotKeyParameter("ShowTimer").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("ShowSkunkHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("ShowSkunk").isEmpty()) {
 			ckbxEnableSkunk.setMnemonic(-1);
 		} else {
-			ckbxEnableSkunk.setMnemonic(Settings.getHotKeyParameter("ShowSkunkHotKey").charAt(0));
+			ckbxEnableSkunk.setMnemonic(Settings.getHotKeyParameter("ShowSkunk").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("StartStreamHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("StartStream").isEmpty()) {
 			tglbtnStartStream.setMnemonic(-1);
 		} else {
-			tglbtnStartStream.setMnemonic(Settings.getHotKeyParameter("StartStreamHotKey").charAt(0));
+			tglbtnStartStream.setMnemonic(Settings.getHotKeyParameter("StartStream").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("ShowCutthroatHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("ShowCutthroat").isEmpty()) {
 			ckbxShowCutthroat.setMnemonic(-1);
 		} else {
-			ckbxShowCutthroat.setMnemonic(Settings.getHotKeyParameter("ShowCutthroatHotKey").charAt(0));
+			ckbxShowCutthroat.setMnemonic(Settings.getHotKeyParameter("ShowCutthroat").charAt(0));
 		};
 	}
 	////// Listeners  //////

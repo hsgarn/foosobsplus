@@ -207,15 +207,15 @@ public class StatsEntryPanel extends JPanel {
 		add(btnRedo, gc);
 	}
 	private void setMnemonics() {
-		if(Settings.getHotKeyParameter("UndoHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("Undo").isEmpty()) {
 			btnUndo.setMnemonic(-1);
 		} else {
-			btnUndo.setMnemonic(Settings.getHotKeyParameter("UndoHotKey").charAt(0));
+			btnUndo.setMnemonic(Settings.getHotKeyParameter("Undo").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("RedoHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("Redo").isEmpty()) {
 			btnRedo.setMnemonic(-1);
 		} else {
-			btnRedo.setMnemonic(Settings.getHotKeyParameter("RedoHotKey").charAt(0));
+			btnRedo.setMnemonic(Settings.getHotKeyParameter("Redo").charAt(0));
 		};
 	}
 	////// Listeners  //////

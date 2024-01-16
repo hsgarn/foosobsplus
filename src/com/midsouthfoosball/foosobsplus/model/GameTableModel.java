@@ -24,22 +24,23 @@ import javax.swing.table.AbstractTableModel;
 
 @SuppressWarnings("serial")
 public class GameTableModel extends AbstractTableModel {
+	private static final String OFF = "0";
 	static int defaultMaxGameCount = 5;
 	static int maxGamesToShow = 12;
-	static int defaultCutthroatMode = 0;
+	static String defaultCutthroatMode = OFF;
 	private String[] columnNames;
 	private Object[][] data;
 	public GameTableModel() {
 		this(defaultMaxGameCount,defaultCutthroatMode);
 	}
-	public GameTableModel(int maxGameCount, int cutthroatMode) {
+	public GameTableModel(int maxGameCount, String cutthroatMode) {
 		this.columnNames = new String[maxGameCount+1];
 		this.data = new Object[5][maxGameCount+1];
 		this.columnNames[0] = "Game:";
 		this.data[0][0] = (Object) "Game:";
 		this.data[1][0] = (Object) "Team 1:";
 		this.data[2][0] = (Object) "Team 2:";
-		if (cutthroatMode==0) {
+		if (cutthroatMode.equals(OFF)) {
 			this.data[3][0] = (Object) "Time:";
 			for(int i=1;i <= maxGameCount;i++) {
 				this.columnNames[i] = Integer.toString(i);

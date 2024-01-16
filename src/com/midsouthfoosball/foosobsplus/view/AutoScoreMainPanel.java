@@ -100,20 +100,20 @@ public class AutoScoreMainPanel extends JPanel {
 		add(chkbxIgnore, gc);
 	}
 	private void setMnemonics() {
-		if(Settings.getHotKeyParameter("AutoScoreMainConnectHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("AutoScoreMainConnect").isEmpty()) {
 			btnConnect.setMnemonic(-1);
 		} else {
-			btnConnect.setMnemonic(Settings.getHotKeyParameter("AutoScoreMainConnectHotKey").charAt(0));
+			btnConnect.setMnemonic(Settings.getHotKeyParameter("AutoScoreMainConnect").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("AutoScoreMainDisconnectHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("AutoScoreMainDisconnect").isEmpty()) {
 			btnDisconnect.setMnemonic(-1);
 		} else {
-			btnDisconnect.setMnemonic(Settings.getHotKeyParameter("AutoScoreMainDisconnectHotKey").charAt(0));
+			btnDisconnect.setMnemonic(Settings.getHotKeyParameter("AutoScoreMainDisconnect").charAt(0));
 		};
-		if(Settings.getHotKeyParameter("AutoScoreMainSettingsHotKey").isEmpty()) {
+		if(Settings.getHotKeyParameter("AutoScoreMainSettings").isEmpty()) {
 			btnSettings.setMnemonic(-1);
 		} else {
-			btnSettings.setMnemonic(Settings.getHotKeyParameter("AutoScoreMainSettingsHotKey").charAt(0));
+			btnSettings.setMnemonic(Settings.getHotKeyParameter("AutoScoreMainSettings").charAt(0));
 		};
 	}
 	////// Listeners  //////
