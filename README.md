@@ -773,6 +773,9 @@ This button will first validate the configuration. If validated successfully, th
 This will cause the FoosScore AutoScore system to restart allowing any configuration changes to take affect.
 
 ## View
+
+<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusViewMenu.png">
+
 ### Always on Top
 When checked, the main FoosOBSPlus program window will stay on top of other programs.
 ### Timer Window
@@ -785,8 +788,16 @@ When checked, the Team 2 Last Scored Timer Window will display.  This shows how 
 When checked, the Team 3 Last Scored Timer Window will display.  This shows how long it has been since Team 3 has scored.  To show in OBS, create a Window Capture source and set Window to "[javaw.exe]:FoosOBSPlus Team 3 Last Scored Timer Window", Capture Method to Automatic and  Window Match Priority to "Window title must match".
 ### Game Table Window
 When checked, the Game Table Window will display.  This shows the games for the current match being played. To show in OBS, create a Window Capture source and set Window to "[javaw.exe]:FoosOBSPlus Game Table Window", Capture Method to Automatic and  Window Match Priority to "Window title must match".
+### Game Results Window
+When checked, the Game Results Window will display showing all the game results since the program started. The contents of the Game Results window are pushed to a Text (GDI+) source designated in Source Settings under Game Results.
+
+<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusGameResultsWindow.png">
+
+Each game result has a check box before it that will control whether that line will be pushed or not.  The Clear button will uncheck all the games and will clear the source in OBS.  The Update button will send any checked games to OBS.
 ### Show All Windows
 When checked, all the above windows will display.  Unchecking the box will close all the above windows.
+
+<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAllWindows.png">
 
 ## Help
 ### FoosOBSPlus Help
