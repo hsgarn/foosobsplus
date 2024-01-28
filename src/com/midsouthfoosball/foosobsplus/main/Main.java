@@ -139,6 +139,7 @@ import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsFrame;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsPanel;
 import com.midsouthfoosball.foosobsplus.view.FiltersFrame;
 import com.midsouthfoosball.foosobsplus.view.FiltersPanel;
+import com.midsouthfoosball.foosobsplus.view.GameResultsWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowPanel;
 import com.midsouthfoosball.foosobsplus.view.HotKeysFrame;
@@ -278,6 +279,7 @@ public class Main implements MatchObserver {
 	////// Set up independent Windows \\\\\\
 	private GameTableWindowPanel	gameTableWindowPanel;
 	private GameTableWindowFrame	gameTableWindowFrame;
+	private GameResultsWindowFrame  gameResultsWindowFrame;
 	private TimerWindowFrame 		timerWindowFrame;
 	private LastScoredWindowFrame 	lastScored1WindowFrame;
 	private LastScoredWindowFrame 	lastScored2WindowFrame;
@@ -324,6 +326,7 @@ public class Main implements MatchObserver {
 		createFileWatchWorker();
 		fileWatchWorker.execute();
 	}
+	
 	private void buildTeamGameShowSourcesMap() {
 		teamGameShowSourcesMap.clear();
 		for (int x = 1; x <= 3; x++) {
@@ -683,7 +686,14 @@ public class Main implements MatchObserver {
 					}
 					filter = "Team" + teamNbr + "WinGame";
 					activateFilter(filter);
-					if(gameClock.isStreamTimerRunning()) {
+//					String result = "[" + gameClock.getStreamTime() + "] " + team1.getForwardName() + "/" + team1.getGoalieName() + " " + a + " vs " 
+//							+ team2.getForwardName() + "/" + team2.getGoalieName() + " " + b + " (" + match.getTimes()[match.getCurrentGameNumber()] + ")";
+					String result = "[" + gameClock.getStreamTime() + "] " + a + " " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " 
+							+ team2.getForwardName() + "/" + team2.getGoalieName() + " " + b;
+					gameResultsWindowFrame.addLine(result);
+					StringBuilder results = new StringBuilder();
+					results = gameResultsWindowFrame.buildGameResults();
+					matchController.updateGameResults(results);					if(gameClock.isStreamTimerRunning()) {
 						if(Settings.getControlParameter("CutThroatMode").equals(ON)) {
 							int c = Integer.parseInt(match.getScoresTeam3()[gn-2]);
 							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Game end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + ": " + a + " to " + b + " to " + c + "\r\n");
@@ -704,6 +714,14 @@ public class Main implements MatchObserver {
 					}
 					filter = "Team" + teamNbr + "WinMatch";
 					activateFilter(filter);
+//					String result = "[" + gameClock.getStreamTime() + "] " + team1.getForwardName() + "/" + team1.getGoalieName() + " " + a + " vs " 
+//							+ team2.getForwardName() + "/" + team2.getGoalieName() + " " + b + " (" + match.getTimes()[match.getCurrentGameNumber()] + ")";
+					String result = "[" + gameClock.getStreamTime() + "] " + a + " " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " 
+							+ team2.getForwardName() + "/" + team2.getGoalieName() + " " + b;
+					gameResultsWindowFrame.addLine(result);
+					StringBuilder results = new StringBuilder();
+					results = gameResultsWindowFrame.buildGameResults();
+					matchController.updateGameResults(results);
 					if(gameClock.isStreamTimerRunning()) {
 						if(Settings.getControlParameter("CutThroatMode").equals(ON)) {
 							int c = team3.getScore();
@@ -712,6 +730,23 @@ public class Main implements MatchObserver {
 							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Match end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + ": " + a + " to " + b + "\r\n");
 						}
 					}
+//				} else {
+//					int gn = match.getCurrentGameNumber();
+//					int a;
+//					int b;
+//					if (gn > 1) {
+//						a = Integer.parseInt(match.getScoresTeam1()[gn-2]); 
+//						b = Integer.parseInt(match.getScoresTeam2()[gn-2]);
+//					} else {
+//						a = 0;
+//						b = 0;
+//					}
+//					String result = "[" + gameClock.getStreamTime() + "] " + team1.getForwardName() + "/" + team1.getGoalieName() + " " + a + " vs " 
+//							+ team2.getForwardName() + "/" + team2.getGoalieName() + " " + b + " (" + match.getTimes()[match.getCurrentGameNumber()] + ")";
+//					gameResultsWindowFrame.addLine(result);
+//					StringBuilder results = new StringBuilder();
+//					results = gameResultsWindowFrame.buildGameResults();
+//					matchController.updateGameResults(results);
 				}
 			}
 		} else {
@@ -735,12 +770,13 @@ public class Main implements MatchObserver {
 		mainFrame.windowActivated(null);
 		gameTableWindowPanel		= new GameTableWindowPanel();
 		gameTableWindowFrame		= new GameTableWindowFrame(gameTableWindowPanel, mainFrame);
+		gameResultsWindowFrame		= new GameResultsWindowFrame();
 		timerWindowFrame 			= new TimerWindowFrame(mainFrame);
 		lastScored1WindowFrame 		= new LastScoredWindowFrame(mainFrame, 1);
 		lastScored2WindowFrame 		= new LastScoredWindowFrame(mainFrame, 2);
 		lastScored3WindowFrame  	= new LastScoredWindowFrame(mainFrame, 3);
 		////// Build and Start the Controllers (mvC) \\\\\\
-		mainController 			= new MainController(mainFrame, timerWindowFrame, lastScored1WindowFrame, lastScored2WindowFrame, lastScored3WindowFrame, gameTableWindowFrame);
+		mainController 			= new MainController(mainFrame, timerWindowFrame, lastScored1WindowFrame, lastScored2WindowFrame, lastScored3WindowFrame, gameTableWindowFrame, gameResultsWindowFrame);
 		timerController 		= new TimerController(obsInterface, timerPanel, timerWindowFrame, timeClock, lastScored1WindowFrame, lastScored1Clock, lastScored2WindowFrame, lastScored2Clock, lastScored3WindowFrame, lastScored3Clock);
 		teamController 			= new TeamController(obsInterface, team1, team2, team3, match, teamPanel1, teamPanel2, teamPanel3, switchPanel, matchPanel, gameTableWindowPanel, statsDisplayPanel, timerController, lastScored1Clock, lastScored2Clock, lastScored3Clock, gameClock, mainController);
 		tournamentController 	= new TournamentController(obsInterface, tournament, match, tournamentPanel);
@@ -755,6 +791,7 @@ public class Main implements MatchObserver {
 		sourcesPanel.addSaveListener(new SourcesSaveListener());
 		statSourcesPanel.addApplyListener(new StatSourcesApplyListener());
 		statSourcesPanel.addSaveListener(new StatSourcesSaveListener());
+		autoScoreSettingsPanel.addApplyListener(new AutoScoreSettingsApplyListener());
 		autoScoreSettingsPanel.addSaveListener(new AutoScoreSettingsSaveListener());
 		autoScoreSettingsPanel.addConnectListener(new AutoScoreSettingsConnectListener());
 		autoScoreSettingsPanel.addDisconnectListener(new AutoScoreSettingsDisconnectListener());
@@ -1550,9 +1587,17 @@ public class Main implements MatchObserver {
 			}
 		}
 	}
+	private class AutoScoreSettingsApplyListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			autoScoreSettingsPanel.saveSettings();
+		}
+	}
 	private class AutoScoreSettingsSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			autoScoreSettingsPanel.saveSettings();
+			JComponent comp = (JComponent) e.getSource();
+			Window win = SwingUtilities.getWindowAncestor(comp);
+			win.dispose();
 		}
 	}
 	private class AutoScoreSettingsConnectListener implements ActionListener {
@@ -2384,5 +2429,10 @@ public class Main implements MatchObserver {
 				}
 			}
 		};
+	}
+
+	public void updateGameResults(StringBuilder gameResults) {
+		matchController.updateGameResults(gameResults);
+		
 	}
 }

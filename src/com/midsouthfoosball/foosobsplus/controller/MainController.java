@@ -29,6 +29,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JCheckBoxMenuItem;
 
+import com.midsouthfoosball.foosobsplus.view.GameResultsWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.LastScoredWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.MainFrame;
@@ -41,30 +42,36 @@ public class MainController {
 	private LastScoredWindowFrame lastScored2WindowFrame;
 	private LastScoredWindowFrame lastScored3WindowFrame;
 	private GameTableWindowFrame gameTableWindowFrame;
+	private GameResultsWindowFrame gameResultsWindowFrame;
 	
-	public MainController(MainFrame mainFrame, TimerWindowFrame timerWindowFrame, LastScoredWindowFrame lastScored1WindowFrame, LastScoredWindowFrame lastScored2WindowFrame, LastScoredWindowFrame lastScored3WindowFrame, GameTableWindowFrame gameTableWindowFrame) {
+	public MainController(MainFrame mainFrame, TimerWindowFrame timerWindowFrame, LastScoredWindowFrame lastScored1WindowFrame, LastScoredWindowFrame lastScored2WindowFrame, LastScoredWindowFrame lastScored3WindowFrame, GameTableWindowFrame gameTableWindowFrame, GameResultsWindowFrame gameResultsWindowFrame) {
 		this.mainFrame = mainFrame;
 		this.timerWindowFrame = timerWindowFrame;
 		this.lastScored1WindowFrame = lastScored1WindowFrame;
 		this.lastScored2WindowFrame = lastScored2WindowFrame;
 		this.lastScored3WindowFrame = lastScored3WindowFrame;
 		this.gameTableWindowFrame = gameTableWindowFrame;
+		this.gameResultsWindowFrame = gameResultsWindowFrame;
 		this.mainFrame.addTimerWindowListener(new TimerWindowListener());
 		this.mainFrame.addLastScored1WindowListener(new LastScored1WindowListener());
 		this.mainFrame.addLastScored2WindowListener(new LastScored2WindowListener());
 		this.mainFrame.addLastScored3WindowListener(new LastScored3WindowListener());
 		this.mainFrame.addGameTableWindowListener(new GameTableWindowListener());
+		this.mainFrame.addGameResultsWindowListener(new GameResultsWindowListener());
 		this.mainFrame.addViewAllWindowsListener(new ViewAllWindowsListener());
 		this.mainFrame.addViewTimerWindowItemListener(new TimerWindowViewItemListener());
 		this.mainFrame.addLastScored1WindowItemListener(new LastScored1ViewItemListener());
 		this.mainFrame.addLastScored2WindowItemListener(new LastScored2ViewItemListener());
 		this.mainFrame.addLastScored3WindowItemListener(new LastScored3ViewItemListener());
 		this.mainFrame.addGameTableWindowItemListener(new GameTableViewItemListener());
+		this.mainFrame.addGameResultsWindowItemListener(new GameResultsViewItemListener());
 		this.timerWindowFrame.addTimerWindowClosedListener(new TimerWindowCloseListener());
 		this.lastScored1WindowFrame.addLastScoredWindowClosedListener(new LastScoredWindow1CloseListener());
 		this.lastScored2WindowFrame.addLastScoredWindowClosedListener(new LastScoredWindow2CloseListener());
 		this.lastScored3WindowFrame.addLastScoredWindowClosedListener(new LastScoredWindow3CloseListener());
 		this.gameTableWindowFrame.addGameTableWindowClosedListener(new GameTableWindowCloseListener());
+		this.gameResultsWindowFrame.addGameResultsWindowClosedListener(new GameResultsWindowCloseListener());
+		this.gameResultsWindowFrame.addUpdateBtnListener(new GameResultsUpdateBtnListener());
 	}
 	public void setFocusOnCode() {
 		mainFrame.setFocusOnCode();
@@ -114,6 +121,18 @@ public class MainController {
 			mainFrame.setGameTableWindowSelected(false);
 		}
 	}
+	private class GameResultsWindowCloseListener extends WindowAdapter {
+		@Override
+		public void windowClosed(WindowEvent we) {
+			mainFrame.setGameResultsWindowSelected(false);
+		}
+	}
+	private class GameResultsUpdateBtnListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			mainFrame.updateGameResults(gameResultsWindowFrame.buildGameResults());
+		}
+	}
 	private class TimerWindowViewItemListener implements ItemListener {
 		public void itemStateChanged(ItemEvent e) {
 			checkForAllOff();
@@ -135,6 +154,11 @@ public class MainController {
 		}
 	}
 	private class GameTableViewItemListener implements ItemListener {
+		public void itemStateChanged(ItemEvent e) {
+			checkForAllOff();
+		}
+	}
+	private class GameResultsViewItemListener implements ItemListener {
 		public void itemStateChanged(ItemEvent e) {
 			checkForAllOff();
 		}
@@ -174,6 +198,13 @@ public class MainController {
 			checkForAllOff();
 		}
 	}
+	private class GameResultsWindowListener implements ActionListener {
+		public void actionPerformed(ActionEvent ae) {
+			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
+			gameResultsWindowFrame.setVisible(box.isSelected());
+			checkForAllOff();
+		}
+	}
 	private class ViewAllWindowsListener implements ActionListener {
 		public void actionPerformed(ActionEvent ae) {
 			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
@@ -183,7 +214,9 @@ public class MainController {
 			lastScored2WindowFrame.setVisible(state);
 			lastScored3WindowFrame.setVisible(state);
 			gameTableWindowFrame.setVisible(state);
+			gameResultsWindowFrame.setVisible(state);
 			mainFrame.setGameTableWindowSelected(state);
+			mainFrame.setGameResultsWindowSelected(state);
 			mainFrame.setTimerWindowSelected(state);
 			mainFrame.setLastScored1WindowSelected(state);
 			mainFrame.setLastScored2WindowSelected(state);
@@ -192,7 +225,8 @@ public class MainController {
 	}
 	private void checkForAllOff() {
 		if (mainFrame.getAllWindowsSelected() 
-				&& !mainFrame.getGameTableWindowSelected() 
+				&& !mainFrame.getGameTableWindowSelected()
+				&& !mainFrame.getGameResultsWindowSelected()
 				&& !mainFrame.getTimerWindowSelected() 
 				&& !mainFrame.getLastScored1WindowSelected() 
 				&& !mainFrame.getLastScored2WindowSelected()

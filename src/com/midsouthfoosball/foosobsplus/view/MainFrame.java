@@ -88,6 +88,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private JCheckBoxMenuItem viewLastScored2Window;
 	private JCheckBoxMenuItem viewLastScored3Window;
 	private JCheckBoxMenuItem viewGameTableWindow;
+	private JCheckBoxMenuItem viewGameResultsWindow;
 	private JCheckBoxMenuItem viewAllWindows;
 	private JCheckBoxMenuItem helpShowParsed;
 	private JMenuItem obsConnectItem;
@@ -141,7 +142,8 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewLastScored2Window 	= new JCheckBoxMenuItem(Messages.getString("MainFrame.Team2LastScoredWindow")); //$NON-NLS-1$
 		viewLastScored3Window   = new JCheckBoxMenuItem(Messages.getString("MainFrame.Team3LastScoredWindow")); //$NON-NLS-1$
 		viewTimerWindow 		= new JCheckBoxMenuItem(Messages.getString("MainFrame.TimerWindow")); //$NON-NLS-1$
-		viewGameTableWindow 	= new JCheckBoxMenuItem(Messages.getString("MainFrame.GameTableWIndow")); //$NON-NLS-1$
+		viewGameTableWindow 	= new JCheckBoxMenuItem(Messages.getString("MainFrame.GameTableWindow")); //$NON-NLS-1$
+		viewGameResultsWindow 	= new JCheckBoxMenuItem(Messages.getString("MainFrame.GameResultsWindow")); //$NON-NLS-1$
 		viewAllWindows 			= new JCheckBoxMenuItem(Messages.getString("MainFrame.ShowAllWindows")); //$NON-NLS-1$
 		viewAlwaysOnTop 		= new JCheckBoxMenuItem(Messages.getString("MainFrame.AlwaysOnTop")); //$NON-NLS-1$
 		helpShowParsed 			= new JCheckBoxMenuItem(Messages.getString("MainFrame.ShowParsed")); //$NON-NLS-1$
@@ -244,6 +246,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewMenu.add(viewLastScored2Window);
 		viewMenu.add(viewLastScored3Window);
 		viewMenu.add(viewGameTableWindow);
+		viewMenu.add(viewGameResultsWindow);
 		viewMenu.add(viewAllWindows);
 
 		JMenu helpMenu 		= new JMenu(Messages.getString("MainFrame.Help")); //$NON-NLS-1$
@@ -470,6 +473,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 	public boolean getGameTableWindowSelected() {
 		return viewGameTableWindow.isSelected();
 	}
+	public boolean getGameResultsWindowSelected() {
+		return viewGameResultsWindow.isSelected();
+	}
 	public boolean getTimerWindowSelected() {
 		return viewTimerWindow.isSelected();
 	}
@@ -487,6 +493,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 	}
 	public void setGameTableWindowSelected(Boolean state) {
 		viewGameTableWindow.setSelected(state);
+	}
+	public void setGameResultsWindowSelected(Boolean state) {
+		viewGameResultsWindow.setSelected(state);
 	}
 	public void setTimerWindowSelected(Boolean state) {
 		viewTimerWindow.setSelected(state);
@@ -702,6 +711,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 	public void addGameTableWindowListener(ActionListener listenForChkBoxGameTableWindow) {
 		viewGameTableWindow.addActionListener(listenForChkBoxGameTableWindow);
 	}
+	public void addGameResultsWindowListener(ActionListener listenForChkBoxGameResultsWindow) {
+		viewGameResultsWindow.addActionListener(listenForChkBoxGameResultsWindow);
+	}
 	public void addViewAllWindowsListener(ActionListener listenForChkBoxViewAllWindows) {
 		viewAllWindows.addActionListener(listenForChkBoxViewAllWindows);
 	}
@@ -719,6 +731,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 	}
 	public void addGameTableWindowItemListener(ItemListener listenForGameTableWindowItem) {
 		viewGameTableWindow.addItemListener(listenForGameTableWindowItem);
+	}
+	public void addGameResultsWindowItemListener(ItemListener listenForGameResultsWindowItem) {
+		viewGameResultsWindow.addItemListener(listenForGameResultsWindowItem);
 	}
 	public void addOBSDisconnectItemListener(ActionListener listenForOBSDisconnectItemListener) {
 		obsDisconnectItem.addActionListener(listenForOBSDisconnectItemListener);
@@ -745,7 +760,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 	public void showAutoScoreSettings() {
 		autoScoreSettingsFrame.setVisible(true);
 	}
-
 	@Override
 	public void windowActivated(WindowEvent arg0) {
 		statsEntryPanel.setFocusOnCode();
@@ -767,6 +781,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 	}
 	@Override
 	public void windowOpened(WindowEvent arg0) {
+	}
+	public void updateGameResults(StringBuilder gameResults) {
+		main.updateGameResults(gameResults);
 	}
 }
 

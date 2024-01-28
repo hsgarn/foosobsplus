@@ -58,6 +58,7 @@ public class AutoScoreSettingsPanel extends JPanel {
 	private JTextField txtServerPort;
 	private JCheckBox chckbxAutoConnect;
 	private JCheckBox chckbxDetailLog;
+	private JButton btnApply;
 	private JButton btnSave;
 	private JButton btnConnect;
 	private JButton btnDisconnect;
@@ -111,6 +112,8 @@ public class AutoScoreSettingsPanel extends JPanel {
 		add(scrMessageHistory, "cell 1 9 3,grow");
 		JLabel lblMessage = new JLabel("Message:");
 		add(lblMessage, "cell 1 8");
+		btnApply = new JButton(Messages.getString("Global.Apply")); //$NON-NLS-1$
+		add(btnApply, "flowx,cell 0 18, alignx center"); //$NON-NLS-1$
 		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		add(btnSave, "flowx,cell 1 18,alignx center"); //$NON-NLS-1$
 		JButton btnCancel = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
@@ -210,5 +213,8 @@ public class AutoScoreSettingsPanel extends JPanel {
 	}
 	public void addSaveListener(ActionListener listenForBtnSave) {
 		btnSave.addActionListener(listenForBtnSave);
+	}
+	public void addApplyListener(ActionListener listenForBtnApply) {
+		btnApply.addActionListener(listenForBtnApply);
 	}
 }

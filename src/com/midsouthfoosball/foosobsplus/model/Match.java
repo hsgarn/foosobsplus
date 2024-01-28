@@ -450,12 +450,11 @@ public class Match implements Serializable {
 			
 		}
 		if (winState>0) {
-			String result = "[" + getCurrentTime() + "] " + team1.getForwardName() + "/" + team1.getGoalieName() + " " + team1.getScore() + " vs " + team2.getForwardName()
-				+ "/" + team2.getGoalieName() + " " + team2.getScore() + " (" + getTimes()[currentGameNumber-1] + ")"; 
-			writeData(Settings.getSourceParameter("GameResults"), addGameResults(result).toString());
+//			String result = "[" + getCurrentTime() + "] " + team1.getForwardName() + "/" + team1.getGoalieName() + " " + team1.getScore() + " vs " + team2.getForwardName()
+//				+ "/" + team2.getGoalieName() + " " + team2.getScore() + " (" + getTimes()[currentGameNumber-1] + ")"; 
+//			writeData(Settings.getSourceParameter("GameResults"), addGameResults(result).toString());
 			setCurrentTime(gameTime);
 		}
-
 		if(matchWon) {
 			winState = 2;
 		} else {
@@ -463,6 +462,12 @@ public class Match implements Serializable {
 		};
 		checkMeatball();
 		return winState;
+	}
+	public void updateGameResults(StringBuilder results) {
+		writeData(Settings.getSourceParameter("GameResults"), results.toString());
+	}
+	public void updateGameResults() {
+		updateGameResults(getGameResults());
 	}
 	private int checkForGameWin(int score1, int score2, int score3) {
 		int whoWon = 0;// rack mode returns 0, 1 or 2 (1 if scoring team won or 2 if other team won). non rack mode returns 0, 3 (3=team who called checkForGameWin won)  .

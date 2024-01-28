@@ -237,4 +237,10 @@ public class MatchController {
 		statsDisplayPanel.updateShotsOnGoal(1, teamController.getShotsOnGoal(1));
 		statsDisplayPanel.updateShotsOnGoal(2, teamController.getShotsOnGoal(2));
 	}
+	public void updateGameResults(StringBuilder results) {
+		match.updateGameResults(results);
+	}
+	public void updateGameResults() {
+		match.updateGameResults();
+	}
 }

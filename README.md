@@ -1174,6 +1174,10 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.044 01/27/2024</br>
+Add Apply button and fix Apply and Close button in AutoScoreSettings window.</br>
+Add Game Results Window and allow control over displaying each line.</br>
+</br>
 v2.043 01/16/2024</br>
 Add link to ITSF Rules in Help menu.</br>
 Change Save buttons to Apply and Close globally.</br>
