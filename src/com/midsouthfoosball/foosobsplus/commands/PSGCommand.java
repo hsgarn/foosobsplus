@@ -23,16 +23,18 @@ package com.midsouthfoosball.foosobsplus.commands;
 
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.main.Main;
-
+/**
+ * Press Start Game Button Command
+ * @author Hugh Garner
+ *
+ */
 public class PSGCommand implements Command {
 	private final StatsController statsController;
-	private final Main main;
-	public PSGCommand(StatsController statsController, Main main) {
+	public PSGCommand(StatsController statsController) {
 		this.statsController = statsController;
-		this.main = main;
 	}
 	public void execute() {
-		main.startGame();
+		Main.startGame();
 	}
 	public String getCode() {
 		return statsController.getLastCode();

@@ -23,7 +23,11 @@ package com.midsouthfoosball.foosobsplus.commands;
 
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
-
+/**
+ * Press Decrement Match Count Button Command
+ * @author Hugh Garner
+ *
+ */
 public class DMTCommand implements Command {
 	private final StatsController statsController;
 	private final TeamController teamController;

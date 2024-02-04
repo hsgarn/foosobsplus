@@ -25,25 +25,27 @@ import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
 import com.midsouthfoosball.foosobsplus.main.Main;
-
+/**
+ * Press Reset All Button Command
+ * @author Hugh Garner
+ *
+ */
 public class PRACommand implements Command {
 	private final StatsController statsController;
 	private final TeamController teamController;
 	private final MatchController matchController;
-	private final Main main;
-	public PRACommand(StatsController statsController, TeamController teamController, MatchController matchController, Main main) {
+	public PRACommand(StatsController statsController, TeamController teamController, MatchController matchController) {
 		this.statsController = statsController;
 		this.teamController = teamController;
 		this.matchController = matchController;
-		this.main = main;
 	}
 	public void execute() {
 		teamController.resetAll();
 		matchController.resetMatch();
 		statsController.displayAllStats();
-		main.setTeamGameCountVisible("1","0");
-		main.setTeamGameCountVisible("2", "0");
-		main.setTeamGameCountVisible("3", "0");
+		Main.setTeamGameCountVisible("1","0");
+		Main.setTeamGameCountVisible("2", "0");
+		Main.setTeamGameCountVisible("3", "0");
 	}
 	public String getCode() {
 		return statsController.getLastCode();

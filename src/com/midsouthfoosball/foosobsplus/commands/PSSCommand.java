@@ -23,16 +23,18 @@ package com.midsouthfoosball.foosobsplus.commands;
 
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.main.Main;
-
+/**
+ * Press Switch Sides Button Command
+ * @author Hugh Garner
+ *
+ */
 public class PSSCommand implements Command {
 	private final StatsController statsController;
-	private final Main main;
-	public PSSCommand(StatsController statsController, Main main) {
+	public PSSCommand(StatsController statsController) {
 		this.statsController = statsController;
-		this.main = main;
 	}
 	public void execute() {
-		main.switchSides();
+		Main.switchSides();
 	}
 	public String getCode() {
 		return statsController.getLastCode();

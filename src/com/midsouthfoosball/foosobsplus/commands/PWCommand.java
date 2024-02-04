@@ -23,7 +23,11 @@ package com.midsouthfoosball.foosobsplus.commands;
 
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
-
+/**
+ * Press Toggle Warn Button Command
+ * @author Hugh Garner
+ *
+ */
 public class PWCommand implements Command {
 	private final StatsController statsController;
 	private final TeamController teamController;

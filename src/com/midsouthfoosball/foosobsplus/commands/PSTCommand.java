@@ -23,7 +23,11 @@ package com.midsouthfoosball.foosobsplus.commands;
 
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
-
+/**
+ * Press Switch Teams Button Command
+ * @author Hugh Garner
+ *
+ */
 public class PSTCommand implements Command {
 	private final StatsController statsController;
 	private final TeamController teamController;

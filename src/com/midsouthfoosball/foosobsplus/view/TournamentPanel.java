@@ -39,8 +39,7 @@ import javax.swing.border.TitledBorder;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
-public class TournamentPanel extends JPanel {
-
+public final class TournamentPanel extends JPanel {
 	private JLabel lblTournamentName;
 	private JLabel lblEventName;
 	private JLabel lblTableName;
@@ -49,15 +48,12 @@ public class TournamentPanel extends JPanel {
 	private JTextField txtTableName;
 	private JButton btnClear;
 	private Border innerBorder;
-	
 	public TournamentPanel() {
-		
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
 		dim.height = 225;
 		setPreferredSize(dim);
 		setName(buildTitle());
-		
 		lblTournamentName = new JLabel(Messages.getString("TournamentPanel.TournamentName", Settings.getGameType())); //$NON-NLS-1$
 		lblEventName = new JLabel(Messages.getString("TournamentPanel.EventName", Settings.getGameType())); //$NON-NLS-1$
 		lblTableName = new JLabel(Messages.getString("TournamentPanel.TableName", Settings.getGameType())); //$NON-NLS-1$
@@ -65,15 +61,12 @@ public class TournamentPanel extends JPanel {
 		txtEventName = new JTextField(50);
 		txtTableName = new JTextField(50);
 		btnClear = new JButton(Messages.getString("TournamentPanel.Clear", Settings.getGameType())); //$NON-NLS-1$
-		
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
 		Border outerBorder = BorderFactory.createEmptyBorder(Settings.getBorderTop(),Settings.getBorderLeft(),Settings.getBorderBottom(),Settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
-		
 		layoutComponents();
 	}
-	
 	private final void layoutComponents() {
 		setLayout(new GridBagLayout());
 		

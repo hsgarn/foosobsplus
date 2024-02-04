@@ -21,7 +21,11 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TournamentController;
-
+/**
+ * Press Tournament Clear All Button Command
+ * @author Hugh Garner
+ *
+ */
 public class PTCACommand implements Command {
 	private final StatsController statsController;
 	private final TournamentController tournamentController;

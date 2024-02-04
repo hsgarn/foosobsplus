@@ -66,8 +66,6 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -176,136 +174,109 @@ import io.obswebsocket.community.client.message.event.sceneitems.SceneItemEnable
 import io.obswebsocket.community.client.message.event.sceneitems.SceneItemListReindexedEvent;
 import io.obswebsocket.community.client.message.event.sceneitems.SceneItemRemovedEvent;
 import io.obswebsocket.community.client.message.event.scenes.CurrentProgramSceneChangedEvent;
-
-public class Main implements MatchObserver {
+/**
+ * Main FoosOBS Object
+ * @author Hugh Garner
+ *
+ */
+public final class Main implements MatchObserver {
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
-	{
-		try {
-			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
-		} catch (Exception e) {
-			logger.error(e.toString());
-			try {
-				UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-			} catch (Exception e1) {
-				logger.info("Can't set look and feel.");
-				logger.error(e1.toString());
-			}
-		}
-	}
 	private static final String ON = "1";
 	////// Settings and OBSInterface setup \\\\\\
-	private OBSInterface 			obsInterface 			= new OBSInterface();
-	private String					matchId					= "";
-	private DateTimeFormatter 		dtf 					= DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-	private boolean 				autoScoreConnected		= false;
-	private Socket 					autoScoreSocket;
-	private PrintWriter 			autoScoreSocketWriter;
-	private StreamIndexer 			streamIndexer      		= new StreamIndexer(Settings.getControlParameter("datapath"));
-	private Boolean 				allowAutoScoreReconnect	= true;
-	private Boolean 				blockAutoScoreReconnect	= false;
-    private Map<String, String>		teamGameShowSourcesMap	= new HashMap<>();
-
+	private static final OBSInterface 		obsInterface 			= new OBSInterface();
+	private static String					matchId					= "";
+	private static final DateTimeFormatter 	dtf 					= DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+	private static boolean 					autoScoreConnected		= false;
+	private static Socket 					autoScoreSocket;
+	private static PrintWriter 				autoScoreSocketWriter;
+	private static StreamIndexer 			streamIndexer      		= new StreamIndexer(Settings.getControlParameter("datapath"));
+	private static Boolean 					allowAutoScoreReconnect	= true;
+	private static Boolean 					blockAutoScoreReconnect	= false;
+    private static Map<String, String>		teamGameShowSourcesMap	= new HashMap<>();
 	////// Watch Service for File changes \\\\\\
-	WatchService watchService;
-	
+	private static WatchService watchService;
 	////// CommandStack and UndoRedo setup \\\\\\
-	private int 			undoRedoPointer			= -1;
-	private Stack<Command> 	commandStack 			= new Stack<>();
-	private Stack<Memento> 	mementoStackTeam1 		= new Stack<>();
-	private Stack<Memento> 	mementoStackTeam2		= new Stack<>();
-	private Stack<Memento> 	mementoStackTeam3       = new Stack<>();
-	private Stack<Memento> 	mementoStackStats 		= new Stack<>();
-	private Stack<Memento> 	mementoStackMatch		= new Stack<>();
-	private Stack<Memento> 	mementoStackGameClock	= new Stack<>();
-	private Stack<String>	codeStack 				= new Stack<>();
-	private CommandSwitch 	mySwitch;
-
+	private static int 						undoRedoPointer			= -1;
+	private static Stack<Command> 			commandStack 			= new Stack<>();
+	private static Stack<Memento> 			mementoStackTeam1 		= new Stack<>();
+	private static Stack<Memento> 			mementoStackTeam2		= new Stack<>();
+	private static Stack<Memento> 			mementoStackTeam3       = new Stack<>();
+	private static Stack<Memento> 			mementoStackStats 		= new Stack<>();
+	private static Stack<Memento> 			mementoStackMatch		= new Stack<>();
+	private static Stack<Memento> 			mementoStackGameClock	= new Stack<>();
+	private static Stack<String>			codeStack 				= new Stack<>();
+	private static CommandSwitch 			mySwitch;
 	////// Generate the Data Models (Mvc) \\\\\\
-	private Tournament		tournament				= new Tournament(obsInterface);
-	private Team 			team1 					= new Team(obsInterface, 1, Settings.getControlParameter("Side1Color"));
-	private Team 			team2 					= new Team(obsInterface, 2, Settings.getControlParameter("Side2Color"));
-	private Team            team3              		= new Team(obsInterface, 3, "None");
-	private Match 			match					= new Match(obsInterface, team1, team2, team3);
-	private Stats 			stats 					= new Stats(team1, team2);
-	
+	private static Tournament				tournament				= new Tournament(obsInterface);
+	private static Team 					team1 					= new Team(obsInterface, 1, Settings.getControlParameter("Side1Color"));
+	private static Team 					team2 					= new Team(obsInterface, 2, Settings.getControlParameter("Side2Color"));
+	private static Team         			team3              		= new Team(obsInterface, 3, "None");
+	private static Match 					match					= new Match(obsInterface, team1, team2, team3);
+	private static Stats 					stats 					= new Stats(team1, team2);
 	////// Create a TimeClock to be the Timer \\\\\\
-	private TimeClock 		timeClock 				= new TimeClock(obsInterface);
-	private GameClock       gameClock           	= new GameClock(obsInterface);
-	private LastScoredClock lastScored1Clock   		= new LastScoredClock();
-	private LastScoredClock	lastScored2Clock    	= new LastScoredClock();
-	private LastScoredClock lastScored3Clock		= new LastScoredClock();
-
+	private static TimeClock 				timeClock 				= new TimeClock(obsInterface);
+	private static GameClock       			gameClock           	= new GameClock(obsInterface);
+	private static LastScoredClock 			lastScored1Clock   		= new LastScoredClock();
+	private static LastScoredClock			lastScored2Clock    	= new LastScoredClock();
+	private static LastScoredClock 			lastScored3Clock		= new LastScoredClock();
 	////// Create the View Panels to Display (mVc) \\\\\\
-	private TournamentPanel 	tournamentPanel 	= new TournamentPanel();
-	private TimerPanel 			timerPanel 			= new TimerPanel();
-	private OBSPanel            obsPanel            = new OBSPanel();
-	private AutoScoreMainPanel	autoScoreMainPanel  = new AutoScoreMainPanel();
-	private MatchPanel			matchPanel			= new MatchPanel();
-	private TeamPanel 			teamPanel1 			= new TeamPanel(1, Settings.getControlParameter("Side1Color"));
-	private TeamPanel 			teamPanel2 			= new TeamPanel(2, Settings.getControlParameter("Side2Color"));
-	private TeamPanel			teamPanel3			= new TeamPanel(3, "None");
-	private StatsEntryPanel 	statsEntryPanel 	= new StatsEntryPanel();
-	private SwitchPanel 		switchPanel 		= new SwitchPanel();
-	private ResetPanel 			resetPanel 			= new ResetPanel();
-	private StatsDisplayPanel 	statsDisplayPanel 	= new StatsDisplayPanel();
-
+	private static TournamentPanel			tournamentPanel 		= new TournamentPanel();
+	private static TimerPanel 				timerPanel 				= new TimerPanel();
+	private static OBSPanel					obsPanel				= new OBSPanel();
+	private static AutoScoreMainPanel		autoScoreMainPanel  	= new AutoScoreMainPanel();
+	private static MatchPanel				matchPanel				= new MatchPanel();
+	private static TeamPanel 				teamPanel1 				= new TeamPanel(1, Settings.getControlParameter("Side1Color"));
+	private static TeamPanel 				teamPanel2 				= new TeamPanel(2, Settings.getControlParameter("Side2Color"));
+	private static TeamPanel				teamPanel3				= new TeamPanel(3, "None");
+	private static StatsEntryPanel 			statsEntryPanel 		= new StatsEntryPanel();
+	private static SwitchPanel 				switchPanel 			= new SwitchPanel();
+	private static ResetPanel 				resetPanel 				= new ResetPanel();
+	private static StatsDisplayPanel 		statsDisplayPanel 		= new StatsDisplayPanel();
 	////// Set up Timer and Settings Windows \\\\\\
-	private ParametersFrame 		parametersFrame 		= new ParametersFrame();
-	private ParametersPanel			parametersPanel			= parametersFrame.getSettingsPanel();
-	private HotKeysFrame 			hotKeysFrame 			= new HotKeysFrame();
-	private HotKeysPanel 			hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
-	private SourcesFrame			sourcesFrame			= new SourcesFrame();
-	private SourcesPanel			sourcesPanel			= sourcesFrame.getSourcesPanel();
-	private StatSourcesFrame		statSourcesFrame		= new StatSourcesFrame();
-	private StatSourcesPanel		statSourcesPanel		= statSourcesFrame.getStatSourcesPanel();
-	private FiltersFrame        	filtersFrame        	= new FiltersFrame(obsInterface);
-	private FiltersPanel        	filtersPanel        	= filtersFrame.getFiltersPanel();
-	private PartnerProgramFrame 	partnerProgramFrame 	= new PartnerProgramFrame();
-	private OBSConnectFrame			obsConnectFrame			= new OBSConnectFrame();
-	private OBSConnectPanel			obsConnectPanel			= obsConnectFrame.getOBSConnectPanel();
-	private AutoScoreSettingsFrame	autoScoreSettingsFrame	= new AutoScoreSettingsFrame();
-	private AutoScoreSettingsPanel	autoScoreSettingsPanel	= autoScoreSettingsFrame.getAutoScoreSettingsPanel();
-	private AutoScoreConfigFrame	autoScoreConfigFrame	= new AutoScoreConfigFrame();
-	private AutoScoreConfigPanel	autoScoreConfigPanel	= autoScoreConfigFrame.getAutoScoreConfigPanel();
-	
+	private static ParametersFrame 			parametersFrame 		= new ParametersFrame();
+	private static ParametersPanel			parametersPanel			= parametersFrame.getSettingsPanel();
+	private static HotKeysFrame 			hotKeysFrame 			= new HotKeysFrame();
+	private static HotKeysPanel 			hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
+	private static SourcesFrame				sourcesFrame			= new SourcesFrame();
+	private static SourcesPanel				sourcesPanel			= sourcesFrame.getSourcesPanel();
+	private static StatSourcesFrame			statSourcesFrame		= new StatSourcesFrame();
+	private static StatSourcesPanel			statSourcesPanel		= statSourcesFrame.getStatSourcesPanel();
+	private static FiltersFrame        		filtersFrame        	= new FiltersFrame(obsInterface);
+	private static FiltersPanel        		filtersPanel        	= filtersFrame.getFiltersPanel();
+	private static PartnerProgramFrame 		partnerProgramFrame 	= new PartnerProgramFrame();
+	private static OBSConnectFrame			obsConnectFrame			= new OBSConnectFrame();
+	private static OBSConnectPanel			obsConnectPanel			= obsConnectFrame.getOBSConnectPanel();
+	private static AutoScoreSettingsFrame	autoScoreSettingsFrame	= new AutoScoreSettingsFrame();
+	private static AutoScoreSettingsPanel	autoScoreSettingsPanel	= autoScoreSettingsFrame.getAutoScoreSettingsPanel();
+	private static AutoScoreConfigFrame		autoScoreConfigFrame	= new AutoScoreConfigFrame();
+	private static AutoScoreConfigPanel		autoScoreConfigPanel	= autoScoreConfigFrame.getAutoScoreConfigPanel();
 	////// Display the View Panels on a JFrame \\\\\\
-	private MainFrame mainFrame; // The Main Window JFrame with multiple View Panels on it
-
+	private static MainFrame 				mainFrame; // The Main Window JFrame with multiple View Panels on it
 	////// Set up independent Windows \\\\\\
-	private GameTableWindowPanel	gameTableWindowPanel;
-	private GameTableWindowFrame	gameTableWindowFrame;
-	private GameResultsWindowFrame  gameResultsWindowFrame;
-	private TimerWindowFrame 		timerWindowFrame;
-	private LastScoredWindowFrame 	lastScored1WindowFrame;
-	private LastScoredWindowFrame 	lastScored2WindowFrame;
-	private LastScoredWindowFrame   lastScored3WindowFrame;
-
+	private static GameTableWindowPanel		gameTableWindowPanel;
+	private static GameTableWindowFrame		gameTableWindowFrame;
+	private static GameResultsWindowFrame	gameResultsWindowFrame;
+	private static TimerWindowFrame 		timerWindowFrame;
+	private static LastScoredWindowFrame 	lastScored1WindowFrame;
+	private static LastScoredWindowFrame 	lastScored2WindowFrame;
+	private static LastScoredWindowFrame	lastScored3WindowFrame;
 	////// Build and Start the Controllers (mvC) \\\\\\
-	private MainController 					mainController;
-	private TimerController 				timerController;
-	private TeamController 					teamController;
-	private TournamentController 			tournamentController;
-	private MatchController 				matchController;
-	private StatsController 				statsController;
-	private SwingWorker<Boolean, Integer> 	autoScoreWorker;
-	private SwingWorker<Boolean, String> 	fileWatchWorker;
+	private static MainController 					mainController;
+	private static TimerController 					timerController;
+	private static TeamController 					teamController;
+	private static TournamentController 			tournamentController;
+	private static MatchController 					matchController;
+	private static StatsController 					statsController;
+	private static SwingWorker<Boolean, Integer> 	autoScoreWorker;
+	private static SwingWorker<Boolean, String> 	fileWatchWorker;
 	public  Main() throws IOException {
-
 		buildTeamGameShowSourcesMap();
-	    
 		loadWindowsAndControllers();
-		
 		OBS.setHost(Settings.getOBSParameter("OBSHost"));
 		OBS.setPort(Settings.getOBSParameter("OBSPort"));
 		OBS.setPassword(Settings.getOBSParameter("OBSPassword"));
 		OBS.setScene(Settings.getOBSParameter("OBSScene"));
 		updateOBSDisconnected();
-
 		if (Settings.getOBSParameter("OBSAutoLogin").equals("1")) {
 			if (OBS.getPassword().isEmpty() || OBS.getHost().isEmpty() || OBS.getPort().isEmpty()) {
 				String msg = Messages.getString("Errors.Main.AutoLogin");
@@ -326,8 +297,7 @@ public class Main implements MatchObserver {
 		createFileWatchWorker();
 		fileWatchWorker.execute();
 	}
-	
-	private void buildTeamGameShowSourcesMap() {
+	private static void buildTeamGameShowSourcesMap() {
 		teamGameShowSourcesMap.clear();
 		for (int x = 1; x <= 3; x++) {
 			for (int y = 1; y <= 3; y++) {
@@ -335,46 +305,46 @@ public class Main implements MatchObserver {
 			}
 		}
 	}
-	private void buildOBSController() {
+	private static void buildOBSController() {
 		if(OBS.getController() != null) {
 			OBS.getController().stop();
 			OBS.setController(null);
 		}
-		OBS.setController( OBSRemoteController.builder()
+		OBS.setController(OBSRemoteController.builder()
 			.autoConnect(false)
 			.host(OBS.getHost())
 			.port(Integer.parseInt(OBS.getPort()))
 			.password(OBS.getPassword())
 			.connectionTimeout(3)
 			.lifecycle()
-			.onReady(this::onReady)
-			.onDisconnect(this::onDisconnect)
-			.onClose(webSocketCloseCode -> this.onClose(webSocketCloseCode))
-			.onControllerError(reason -> this.onControllerError(reason))
-			.onCommunicatorError(reason -> this.onCommunicationError(reason))
+			.onReady(Main::onReady)
+			.onDisconnect(Main::onDisconnect)
+			.onClose(webSocketCloseCode -> Main.onClose(webSocketCloseCode))
+			.onControllerError(reason -> Main.onControllerError(reason))
+			.onCommunicatorError(reason -> Main.onCommunicationError(reason))
 			.and()
-			.registerEventListener(InputActiveStateChangedEvent.class, this::checkActiveStateChange)
-			.registerEventListener(SceneItemEnableStateChangedEvent.class, this::checkItemEnableStateChange)
-			.registerEventListener(CurrentProgramSceneChangedEvent.class, this::checkCurrentProgramSceneChange)
-			.registerEventListener(SceneItemCreatedEvent.class, this::checkSceneItemCreated)
-			.registerEventListener(SceneItemRemovedEvent.class, this::checkSceneItemRemoved)
-			.registerEventListener(SceneItemListReindexedEvent.class, this::checkSceneItemListReindexed)
+			.registerEventListener(InputActiveStateChangedEvent.class, Main::checkActiveStateChange)
+			.registerEventListener(SceneItemEnableStateChangedEvent.class, Main::checkItemEnableStateChange)
+			.registerEventListener(CurrentProgramSceneChangedEvent.class, Main::checkCurrentProgramSceneChange)
+			.registerEventListener(SceneItemCreatedEvent.class, Main::checkSceneItemCreated)
+			.registerEventListener(SceneItemRemovedEvent.class, Main::checkSceneItemRemoved)
+			.registerEventListener(SceneItemListReindexedEvent.class, Main::checkSceneItemListReindexed)
 			.build()
 		);
 	}
-	private void checkSceneItemCreated(SceneItemCreatedEvent sceneItemCreatedEvent) {
+	private static void checkSceneItemCreated(SceneItemCreatedEvent sceneItemCreatedEvent) {
 		loadSceneItemMap();
 	}
-	private void checkSceneItemRemoved(SceneItemRemovedEvent sceneItemRemovedEvent) {
+	private static void checkSceneItemRemoved(SceneItemRemovedEvent sceneItemRemovedEvent) {
 		loadSceneItemMap();
 	}
-	private void checkSceneItemListReindexed(SceneItemListReindexedEvent sceneItemListReindexedEvent) {
+	private static void checkSceneItemListReindexed(SceneItemListReindexedEvent sceneItemListReindexedEvent) {
 		loadSceneItemMap();
 	}
-	private void loadSceneItemMap() {
+	private static void loadSceneItemMap() {
 		
 	}
-	private void checkCurrentProgramSceneChange(CurrentProgramSceneChangedEvent currentProgramSceneChanged) {
+	private static void checkCurrentProgramSceneChange(CurrentProgramSceneChangedEvent currentProgramSceneChanged) {
     	boolean showParsed = Settings.getShowParsed();
 		String sceneName = currentProgramSceneChanged.getSceneName();
 		if (sceneName != null && !sceneName.isEmpty()) {
@@ -388,7 +358,7 @@ public class Main implements MatchObserver {
 			}
 	   }
 	}
-	private void checkItemEnableStateChange(SceneItemEnableStateChangedEvent sceneItemEnableStateChanged) {
+	private static void checkItemEnableStateChange(SceneItemEnableStateChangedEvent sceneItemEnableStateChanged) {
     	boolean showParsed = Settings.getShowParsed();
 		String sceneName = sceneItemEnableStateChanged.getSceneName();
 		Number itemId = sceneItemEnableStateChanged.getSceneItemId();
@@ -396,7 +366,7 @@ public class Main implements MatchObserver {
 		checkItemEnableStageChangeHelper(sceneName, show, Settings.getSourceParameter("ShowScores"), itemId, showParsed);
 		checkItemEnableStageChangeHelper(sceneName, show, Settings.getSourceParameter("ShowCutthroat"), itemId, showParsed);
 	}
-	private void checkItemEnableStageChangeHelper(String sceneName, boolean show, String sourceToCheck, Number itemId, boolean showParsed) {
+	private static void checkItemEnableStageChangeHelper(String sceneName, boolean show, String sourceToCheck, Number itemId, boolean showParsed) {
 		OBS.getController().getSceneItemId(sceneName, sourceToCheck, null, getSceneItemIdResponse -> {
         	if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
 	           	if (getSceneItemIdResponse.getSceneItemId().toString().equals(itemId.toString())) {
@@ -416,7 +386,7 @@ public class Main implements MatchObserver {
 	        }
 	    });
 	}
-	private void checkActiveStateChange(InputActiveStateChangedEvent inputActiveStateChangedEvent) {
+	private static void checkActiveStateChange(InputActiveStateChangedEvent inputActiveStateChangedEvent) {
 		String name = inputActiveStateChangedEvent.getInputName();
 		if (!Settings.getSourceParameter("ShowTimer").isEmpty() && name.equals(Settings.getSourceParameter("ShowTimer"))) {
 			boolean show = inputActiveStateChangedEvent.getVideoActive();
@@ -431,12 +401,12 @@ public class Main implements MatchObserver {
 		}
 		setFocusOnCode();
 	}
-	public void connectToOBS() {
+	public static void connectToOBS() {
 		logger.info("Trying to connect to OBS...");
 		buildOBSController();
 		OBS.getController().connect();
 	}
-	public void updateOBSConnected() {
+	public static void updateOBSConnected() {
 		OBS.setConnected(true);
 		obsConnectPanel.disableConnect();
 		mainFrame.enableConnect(false);
@@ -447,13 +417,13 @@ public class Main implements MatchObserver {
 			statsController.displayAllStats();
 		}
 	}
-	public void updateOBSDisconnected() {
+	public static void updateOBSDisconnected() {
 		OBS.setConnected(false);
 		obsConnectPanel.enableConnect();
 		mainFrame.enableConnect(true);
 		mainFrame.setOBSIconConnected(false);
 	}
-	private void onReady() {
+	private static void onReady() {
 		updateOBSConnected();
 		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS Ready. ");
 		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS Controller Connected. ");
@@ -493,21 +463,21 @@ public class Main implements MatchObserver {
 			obsConnectFrame.setVisible(false);
 		}
 	}
-	private void onClose(WebSocketCloseCode webSocketCloseCode) {
+	private static void onClose(WebSocketCloseCode webSocketCloseCode) {
 		updateOBSDisconnected();
 		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS Controller Closed. " + webSocketCloseCode.getCode());
 	}
-	private void onDisconnect() {
+	private static void onDisconnect() {
 		updateOBSDisconnected();
 		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS Controller Disconnected. ");
 	}
-	private void onControllerError(ReasonThrowable reason) {
+	private static void onControllerError(ReasonThrowable reason) {
 		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " Controller Error: " + reason.getReason());
 	}
-	private void onCommunicationError(ReasonThrowable reason) {
+	private static void onCommunicationError(ReasonThrowable reason) {
 		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " Commucnication Error: " + reason.getReason());
 	}
-	private void createAutoScoreWorker() {
+	private static void createAutoScoreWorker() {
 		autoScoreWorker = new SwingWorker<Boolean, Integer>() {
 			BufferedReader dataIn;
 			@Override
@@ -661,7 +631,7 @@ public class Main implements MatchObserver {
 		};
 		autoScoreWorker.addPropertyChangeListener(new AutoScoreWorkerStateChangeListener());
 	}
-	private void checkFilters(String code) {
+	private static void checkFilters(String code) {
 		String filter = "";
 		Integer teamNbr = 0;
 		if (code.equals("XIST1") || code.equals("XIST2")) {
@@ -759,13 +729,13 @@ public class Main implements MatchObserver {
 			}	
 		}
 	}
-	private void activateFilter(String filter) {
+	private static void activateFilter(String filter) {
 		setSourceFilterVisibility(OBS.getScene(), Settings.getFiltersFilter(filter), true);
 	}
-	public void loadWindowsAndControllers() {
+	public static void loadWindowsAndControllers() {
 		mainFrame = new MainFrame(Settings.getInstance(), tournamentPanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, teamPanel3, statsEntryPanel, 
 				switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, sourcesFrame, statSourcesFrame, filtersFrame, 
-				partnerProgramFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, this);
+				partnerProgramFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame);
 		////// Set up independent Windows \\\\\\
 		mainFrame.windowActivated(null);
 		gameTableWindowPanel		= new GameTableWindowPanel();
@@ -784,7 +754,7 @@ public class Main implements MatchObserver {
 		statsController 		= new StatsController(stats, statsDisplayPanel, teamController);
 		gameClock.addGameClockTimerListener(new GameClockTimerListener());
 	}
-	public void loadListeners() {
+	public static void loadListeners() {
 		hotKeysPanel.addApplyListener(new HotKeysApplyListener());
 		hotKeysPanel.addSaveListener(new HotKeysSaveListener());
 		sourcesPanel.addApplyListener(new SourcesApplyListener());
@@ -919,7 +889,7 @@ public class Main implements MatchObserver {
 	public void onMeatball() {
 		activateFilter("Meatball");
 	}
-	public void cutthroatRotate(int rotate) {
+	public static void cutthroatRotate(int rotate) {
 		if (rotate ==1) {
 			Memento tmpTeam2 = saveState(team2);
 			Memento tmpTeam3 = saveState(team3);
@@ -943,12 +913,12 @@ public class Main implements MatchObserver {
 			teamController.displayAll();
 		}
 	}
-	public void startEvent() {
+	public static void startEvent() {
 		if(gameClock.isStreamTimerRunning()) {
 			streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartEvent", Settings.getGameType()) + " Pressed: " + tournament.getTournamentName() + ": " + tournament.getEventName() + "\r\n");
 		}
 	}
-	public void startMatch() {
+	public static void startMatch() {
 		matchId = createMatchId();
 		matchController.startMatch(matchId);
 		if(gameClock.isStreamTimerRunning()) {
@@ -959,13 +929,13 @@ public class Main implements MatchObserver {
 			}
 		}
 	}
-	public void endMatch() {
+	public static void endMatch() {
 		matchController.endMatch();
 		if(gameClock.isStreamTimerRunning()) {
 			streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.EndMatch", Settings.getGameType()) + " Pressed.\r\n");
 		}
 	}
-	public void startGame() {
+	public static void startGame() {
 		if(gameClock.isStreamTimerRunning()) {
 			if(Settings.getControlParameter("CutThroatMode").equals(ON)) {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame", Settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + "\r\n");
@@ -975,7 +945,7 @@ public class Main implements MatchObserver {
 		}
 		matchController.startGame();
 	}
-	public void switchSides() {
+	public static void switchSides() {
 		Memento tmpTeam1 = saveState(team1);
 		Memento tmpTeam2 = saveState(team2);
 		team1.restoreState(tmpTeam2.getState());
@@ -985,7 +955,7 @@ public class Main implements MatchObserver {
 		matchController.switchSides();
 		teamController.switchSides();
 	}
-	public void setShowParsed(boolean showParsed) {
+	public static void setShowParsed(boolean showParsed) {
 		Settings.setControlParameter("ShowParsed",showParsed);
 		try {
 			Settings.saveControlConfig();
@@ -993,10 +963,10 @@ public class Main implements MatchObserver {
         	logger.error(e.toString());
 		}
 	}
-	private String createMatchId() {
+	private static String createMatchId() {
 		return matchController.createMatchId();
 	}
-	public void processCode(String code, Boolean isRedo) {
+	public static void processCode(String code, Boolean isRedo) {
 		Command commandStatus;
 		if (!isRedo) { 
 			makeMementos();
@@ -1047,7 +1017,7 @@ public class Main implements MatchObserver {
 		}
 		statsController.displayAllStats();
 	}
-	private void makeMementos() {
+	private static void makeMementos() {
 		deleteElementsAfterPointer(undoRedoPointer);
 		mementoStackTeam1.push(saveState(team1));
 		mementoStackTeam2.push(saveState(team2));
@@ -1056,10 +1026,10 @@ public class Main implements MatchObserver {
 		mementoStackMatch.push(saveState(match));
 		mementoStackGameClock.push(saveState(gameClock));
 	}
-	private Memento saveState(Object object) {
+	private static Memento saveState(Object object) {
 		return new Memento(object);
 	}
-	public void undo() 	{
+	public static void undo() 	{
 		if(undoRedoPointer < 0) return;
 		codeStack.get(undoRedoPointer);
 	    commandStack.get(undoRedoPointer);
@@ -1083,7 +1053,7 @@ public class Main implements MatchObserver {
 		setFocusOnCode();	
 		matchController.updateGameTables();
 	}
- 	public void redo() 	{
+ 	public static void redo() 	{
  		char commandChar = new Character('X');
  		Boolean isRedo = true;
  		String tempCode;
@@ -1107,7 +1077,7 @@ public class Main implements MatchObserver {
 		statsController.displayAllStats();
 		matchController.updateGameTables();
 	}
-	private void deleteElementsAfterPointer(int undoRedoPointer) {
+	private static void deleteElementsAfterPointer(int undoRedoPointer) {
 	    if (commandStack.size() >= 1)  {
 		    for(int i = commandStack.size()-1; i > undoRedoPointer; i--)
 		    {
@@ -1122,21 +1092,21 @@ public class Main implements MatchObserver {
 		    }
 	    }
     }
-	private void loadCommands() {
-		Command pse = new PSECommand(statsController, this);
-		Command psm = new PSMCommand(statsController, this);
-		Command pem = new PEMCommand(statsController, this);
+	private static void loadCommands() {
+		Command pse = new PSECommand(statsController);
+		Command psm = new PSMCommand(statsController);
+		Command pem = new PEMCommand(statsController);
 		Command ppm = new PPMCommand(statsController, matchController);
-		Command psg = new PSGCommand(statsController, this);
+		Command psg = new PSGCommand(statsController);
 		Command sst = new SSTCommand(statsController, teamController);
 		Command spt = new SPTCommand(statsController, teamController);
 		Command sgt = new SGTCommand(statsController, teamController);
 		Command stt = new STTCommand(statsController, teamController);
 		Command srt = new SRTCommand(statsController, teamController);
 		Command prt = new PRTCommand(statsController, teamController);
-		Command ist1 = new ISTCommand(this, statsController, matchController, 1);
-		Command ist2 = new ISTCommand(this, statsController, matchController, 2);
-		Command ist3 = new ISTCommand(this, statsController, matchController, 3);
+		Command ist1 = new ISTCommand(statsController, matchController, 1);
+		Command ist2 = new ISTCommand(statsController, matchController, 2);
+		Command ist3 = new ISTCommand(statsController, matchController, 3);
 		Command dst1 = new DSTCommand(statsController, matchController, 1);
 		Command dst2 = new DSTCommand(statsController, matchController, 2);
 		Command dst3 = new DSTCommand(statsController, matchController, 3);
@@ -1167,7 +1137,7 @@ public class Main implements MatchObserver {
 		Command pkt1 = new PKCommand(statsController, teamController, 1);
 		Command pkt2 = new PKCommand(statsController, teamController, 2);
 		Command pkt3 = new PKCommand(statsController, teamController, 3);
-		Command pss = new PSSCommand(statsController, this);
+		Command pss = new PSSCommand(statsController);
 		Command xpt1 = new XPTCommand(statsController, teamController, 1);
 		Command xpt2 = new XPTCommand(statsController, teamController, 2);
 		Command xpt3 = new XPTCommand(statsController, teamController, 3);
@@ -1179,16 +1149,16 @@ public class Main implements MatchObserver {
 		Command psmc = new PSMCCommand(statsController, teamController);
 		Command psto = new PSTOCommand(statsController, teamController);
 		Command psr = new PSRCommand(statsController, teamController);
-		Command pca = new PCACommand(statsController, teamController, matchController, this);
+		Command pca = new PCACommand(statsController, teamController, matchController);
 		Command prn= new PRNCommand(statsController, teamController);
 		Command prs = new PRSCommand(statsController, teamController);
 		Command prg = new PRGCommand(statsController, teamController);
 		Command prm = new PRMCommand(statsController, teamController);
 		Command prto = new PRTOCommand(statsController, teamController);
 		Command prr = new PRRCommand(statsController, teamController);
-		Command pra = new PRACommand(statsController, teamController, matchController, this);
-		Command codeCommand = new CodeCommand(statsController);
+		Command pra = new PRACommand(statsController, teamController, matchController);
 		Command ptca = new PTCACommand(statsController, tournamentController);
+		Command codeCommand = new CodeCommand(statsController);
 		mySwitch = new CommandSwitch();
 		mySwitch.register("PSE", pse);
 		mySwitch.register("PSM", psm);
@@ -1257,25 +1227,25 @@ public class Main implements MatchObserver {
 		mySwitch.register("code", codeCommand);
 		mySwitch.register("PTCA", ptca);
 	}
-	public void showScores(boolean show) {
+	public static void showScores(boolean show) {
 		obsPanel.setShowScores(show);
 		showSource(Settings.getSourceParameter("ShowScores"), show);
 		setFocusOnCode();
 	}
-	public void showTimer(boolean show) {
+	public static void showTimer(boolean show) {
 		mainController.showTimerWindow(show);
 		showSource(Settings.getSourceParameter("ShowTimer"), show);
 		setFocusOnCode();
 	}
-	public void setFocusOnCode() {
+	public static void setFocusOnCode() {
 		statsEntryPanel.setFocusOnCode();
 	}
-	public void showCutthroat(boolean show) {
+	public static void showCutthroat(boolean show) {
 		obsPanel.setShowCutthroat(show);
 		showSource(Settings.getSourceParameter("ShowCutthroat"), show);
 		setFocusOnCode();
 	}
-	public void showSource(String source, boolean show) {
+	public static void showSource(String source, boolean show) {
 		String sceneName;
 		String sourceItem;
 		if (source == null || source.isEmpty()) return;
@@ -1320,7 +1290,7 @@ public class Main implements MatchObserver {
 			}
 		}
 	}
-	public void setSourceFilterVisibility(String source, String filter, boolean show) {
+	public static void setSourceFilterVisibility(String source, String filter, boolean show) {
 		if(source == null || filter == null) return;
 		if (OBS.getConnected()) {
 			boolean showParsed = Settings.getShowParsed();
@@ -1338,20 +1308,20 @@ public class Main implements MatchObserver {
 			});
 		}
 	}
-	private void connectAutoScore() {
+	private static void connectAutoScore() {
 		autoScoreSettingsPanel.addMessage("Trying to connect to AutoScore...");
 		logger.info("Trying to connect to AutoScore...");
 		createAutoScoreWorker();
 		autoScoreWorker.execute();
 	}
-	private void disconnectAutoScore() {
+	private static void disconnectAutoScore() {
 		autoScoreSettingsPanel.addMessage("Disconnecting...");
 		logger.info("Trying to disconnect from AutoScore...");
 		autoScoreWorker.cancel(true);
 		mainFrame.setAutoScoreIconConnected(false);
 		autoScoreConnected = false;
 	}
-	private void readAutoScoreConfig() {
+	private static void readAutoScoreConfig() {
 		if(autoScoreConnected) {
 			autoScoreSocketWriter.println("read:");
 			if (autoScoreSocketWriter.checkError()) {
@@ -1359,7 +1329,7 @@ public class Main implements MatchObserver {
 			}
 		}
 	}
-	private boolean validateAutoScoreConfig() {
+	private static boolean validateAutoScoreConfig() {
 		boolean validated = true;
 		String configErrors = "";
 		String[] paramNames = {"PORT","SENSOR1","SENSOR2","SENSOR3","LED1","LED2","DELAY_SENSOR","DELAY_PB","PB1","PB2"};
@@ -1460,7 +1430,7 @@ public class Main implements MatchObserver {
 		}
 		return validated;
 	}
-	private void resetAutoScoreConfig() {
+	private static void resetAutoScoreConfig() {
 		if(autoScoreConnected) {
 			autoScoreSocketWriter.println("reset:");
 			if (autoScoreSocketWriter.checkError()) {
@@ -1469,10 +1439,10 @@ public class Main implements MatchObserver {
 			disconnectAutoScore();
 		}
 	}
-	private void clearAutoScoreConfig() {
+	private static void clearAutoScoreConfig() {
 		autoScoreConfigPanel.clearConfigTextArea();
 	}
-	private void writeAutoScoreConfig() {
+	private static void writeAutoScoreConfig() {
 		if(validateAutoScoreConfig()) {
 			if(autoScoreConnected) {
 				String config = autoScoreConfigPanel.getConfigTextArea();
@@ -1494,7 +1464,7 @@ public class Main implements MatchObserver {
 		return name.replaceAll("[^0-9]", "");
 	}
 	////// Listeners \\\\\\
-	private class CodeListener implements ActionListener {
+	private static class CodeListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			Boolean isRedo = false;
 			JTextField txt = (JTextField) e.getSource();
@@ -1511,18 +1481,18 @@ public class Main implements MatchObserver {
 			}
 		}
 	}
-	private class StatsEntryUndoListener implements ActionListener {
+	private static class StatsEntryUndoListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			undo();
 		}
 	}
-	private class StatsEntryRedoListener implements ActionListener {
+	private static class StatsEntryRedoListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			redo();
 			setFocusOnCode();	
 		}
 	}
-	private class StatsClearListener implements ActionListener{
+	private static class StatsClearListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			stats.clearAll();
 			statsEntryPanel.clearAll();
@@ -1530,7 +1500,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private void hotKeysSaveSettings() {
+	private static void hotKeysSaveSettings() {
 		if (hotKeysPanel.saveSettings()) {
 			matchPanel.updateMnemonics();
 			teamPanel1.updateMnemonics();
@@ -1543,12 +1513,12 @@ public class Main implements MatchObserver {
 			obsPanel.updateMnemonics();
 		}
 	}
-	private class HotKeysApplyListener implements ActionListener {
+	private static class HotKeysApplyListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			hotKeysSaveSettings();
 		}
 	}
-	private class HotKeysSaveListener implements ActionListener {
+	private static class HotKeysSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			hotKeysSaveSettings();
 			JComponent comp = (JComponent) e.getSource();
@@ -1556,14 +1526,14 @@ public class Main implements MatchObserver {
 			win.dispose();
 		}
 	}
-	private class SourcesApplyListener implements ActionListener {
+	private static class SourcesApplyListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (sourcesPanel.saveSettings()) {
 				buildTeamGameShowSourcesMap();
 			}
 		}
 	}
-	private class SourcesSaveListener implements ActionListener {
+	private static class SourcesSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (sourcesPanel.saveSettings()) {
 				buildTeamGameShowSourcesMap();
@@ -1573,12 +1543,12 @@ public class Main implements MatchObserver {
 			}
 		}
 	}
-	private class StatSourcesApplyListener implements ActionListener {
+	private static class StatSourcesApplyListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			statSourcesPanel.saveSettings();
 		}
 	}
-	private class StatSourcesSaveListener implements ActionListener {
+	private static class StatSourcesSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (statSourcesPanel.saveSettings()) {
 				JComponent comp = (JComponent) e.getSource();
@@ -1587,12 +1557,12 @@ public class Main implements MatchObserver {
 			}
 		}
 	}
-	private class AutoScoreSettingsApplyListener implements ActionListener {
+	private static class AutoScoreSettingsApplyListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			autoScoreSettingsPanel.saveSettings();
 		}
 	}
-	private class AutoScoreSettingsSaveListener implements ActionListener {
+	private static class AutoScoreSettingsSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			autoScoreSettingsPanel.saveSettings();
 			JComponent comp = (JComponent) e.getSource();
@@ -1600,30 +1570,30 @@ public class Main implements MatchObserver {
 			win.dispose();
 		}
 	}
-	private class AutoScoreSettingsConnectListener implements ActionListener {
+	private static class AutoScoreSettingsConnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			blockAutoScoreReconnect = false;
 			connectAutoScore();
 		}
 	}
-	private class AutoScoreSettingsDisconnectListener implements ActionListener {
+	private static class AutoScoreSettingsDisconnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			logger.info("AutoScore Settings Window Disconnect Button Pressed.");
 			blockAutoScoreReconnect = true;
 			disconnectAutoScore();
 		}
 	}
-	private class AutoScoreConfigReadListener implements ActionListener {
+	private static class AutoScoreConfigReadListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			readAutoScoreConfig();
 		}
 	}
-	private class AutoScoreConfigWriteListener implements ActionListener {
+	private static class AutoScoreConfigWriteListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			writeAutoScoreConfig();
 		}
 	}
-	private class AutoScoreConfigValidateListener implements ActionListener {
+	private static class AutoScoreConfigValidateListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (validateAutoScoreConfig()) {
 				logger.info("Validation passed.");
@@ -1631,48 +1601,48 @@ public class Main implements MatchObserver {
 			}
 		}
 	}
-	private class AutoScoreConfigResetListener implements ActionListener {
+	private static class AutoScoreConfigResetListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			logger.info("AutoScore Configuration Reset Pico Button Pressed.");
 			resetAutoScoreConfig();
 		}
 	}
-	private class AutoScoreConfigClearListener implements ActionListener {
+	private static class AutoScoreConfigClearListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			clearAutoScoreConfig();
 		}
 	}
-	private class OBSSceneListener implements ActionListener {
+	private static class OBSSceneListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			setScene();
 		}
 	}
-	private class OBSSetSceneListener implements ActionListener {
+	private static class OBSSetSceneListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			setScene();
 		}
 	}
-	private class OBSSceneFocusListener extends FocusAdapter {
+	private static class OBSSceneFocusListener extends FocusAdapter {
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			OBS.setScene(txt.getText());
 		}
 	}
-	private class OBSDisconnectListener implements ActionListener {
+	private static class OBSDisconnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Requesting disconnect.");
 			OBS.getController().disconnect();
 			setFocusOnCode();
 		}
 	}
-	private class OBSConnectListener implements ActionListener {
+	private static class OBSConnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.updateOBS();
 			connectToOBS();
 			setFocusOnCode();
 		}
 	}
-	private class OBSDisconnectItemListener implements ActionListener {
+	private static class OBSDisconnectItemListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Requesting disconnect.");
 			OBS.getController().disconnect();
@@ -1680,13 +1650,13 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class OBSSaveListener implements ActionListener {
+	private static class OBSSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.saveSettings();
 			setFocusOnCode();
 		}
 	}
-	private class OBSPushListener implements ActionListener {
+	private static class OBSPushListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (OBS.getConnected()) {
 				tournamentController.writeAll();
@@ -1696,7 +1666,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class OBSPullListener implements ActionListener {
+	private static class OBSPullListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (OBS.getConnected()) {
 				teamController.fetchAll();
@@ -1706,7 +1676,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class OBSShowScoresListener implements ActionListener {
+	private static class OBSShowScoresListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (OBS.getConnected()) {
 				AbstractButton abstractButton = (AbstractButton) e.getSource();
@@ -1715,7 +1685,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class OBSShowTimerListener implements ActionListener {
+	private static class OBSShowTimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (OBS.getConnected()) {
 				AbstractButton abstractButton = (AbstractButton) e.getSource();
@@ -1724,7 +1694,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class OBSShowCutthroatListener implements ActionListener {
+	private static class OBSShowCutthroatListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (OBS.getConnected()) {
 				AbstractButton abstractButton = (AbstractButton) e.getSource();
@@ -1733,7 +1703,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class OBSEnableSkunkListener implements ActionListener {
+	private static class OBSEnableSkunkListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			AbstractButton abstractButton = (AbstractButton) e.getSource();
 			boolean showSkunkFlag = abstractButton.getModel().isSelected();
@@ -1747,7 +1717,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class OBSStartStreamListener implements ActionListener {
+	private static class OBSStartStreamListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			AbstractButton abstractButton = (AbstractButton) e.getSource();
 			boolean startStreamFlag = abstractButton.getModel().isSelected();
@@ -1760,17 +1730,17 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class GameClockTimerListener implements ActionListener {
+	private static class GameClockTimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			obsPanel.updateTimerDisplay(gameClock.getStreamTime());
 		}
 	}
-	private class ParametersApplyListener implements ActionListener {
+	private static class ParametersApplyListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			saveParameterSettings();
 		}
 	}
-	private class ParametersSaveListener implements ActionListener {
+	private static class ParametersSaveListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			saveParameterSettings();
 			JComponent comp = (JComponent) e.getSource();
@@ -1779,7 +1749,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private void saveParameterSettings() {
+	private static void saveParameterSettings() {
 		int oldGamesToWin = Integer.parseInt(Settings.getControlParameter("GamesToWin"));
 		int oldCutthroatMode = Integer.parseInt(Settings.getControlParameter("CutThroatMode"));
 		parametersPanel.saveSettings(Settings.getInstance());
@@ -1795,7 +1765,7 @@ public class Main implements MatchObserver {
 		teamPanel3.setTitle();
 		teamController.displayAll();
 	}
-	private class AutoScoreMainPanelConnectListener implements ActionListener {
+	private static class AutoScoreMainPanelConnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			blockAutoScoreReconnect = false;
 			logger.info("AutoScore Main Panel Connect Button Pressed.");
@@ -1803,7 +1773,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class AutoScoreMainPanelDisconnectListener implements ActionListener {
+	private static class AutoScoreMainPanelDisconnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			blockAutoScoreReconnect = true;
 			logger.info("AutoScore Main Panel Disconnect Button Pressed.");
@@ -1811,12 +1781,12 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class AutoScoreMainPanelSettingsListener implements ActionListener {
+	private static class AutoScoreMainPanelSettingsListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			mainController.showAutoScore();
 		}
 	}
-	private class ScoreIncreaseListener implements ActionListener{
+	private static class ScoreIncreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String code = "XIST" + ripTeamNumber(btn.getName());//XIST1
@@ -1824,7 +1794,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class ScoreDecreaseListener implements ActionListener{
+	private static class ScoreDecreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String code = "XDST" + ripTeamNumber(btn.getName());//XDST1
@@ -1832,7 +1802,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class GameCountIncreaseListener implements ActionListener{
+	private static class GameCountIncreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String code = "XIGT" + ripTeamNumber(btn.getName());//XIGT1
@@ -1840,7 +1810,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class GameCountDecreaseListener implements ActionListener{
+	private static class GameCountDecreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String code = "XDGT" + ripTeamNumber(btn.getName());//XDGT1
@@ -1848,7 +1818,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class MatchCountIncreaseListener implements ActionListener{
+	private static class MatchCountIncreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String code = "XIMT" + ripTeamNumber(btn.getName());//XIMT1
@@ -1856,7 +1826,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class MatchCountDecreaseListener implements ActionListener{
+	private static class MatchCountDecreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String code = "XDMT" + ripTeamNumber(btn.getName());//XDMT1
@@ -1864,7 +1834,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class TimeOutCountIncreaseListener implements ActionListener{
+	private static class TimeOutCountIncreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String code = "XUTT" + ripTeamNumber(btn.getName());//XUTT1
@@ -1872,7 +1842,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class TimeOutCountDecreaseListener implements ActionListener{
+	private static class TimeOutCountDecreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String code = "XRTT" + ripTeamNumber(btn.getName());//XRTT1
@@ -1880,7 +1850,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class ResetListener implements ActionListener{
+	private static class ResetListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JToggleButton btn = (JToggleButton) e.getSource();
 			String teamNumber = ripTeamNumber(btn.getName());
@@ -1891,7 +1861,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class WarnListener implements ActionListener{
+	private static class WarnListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JToggleButton btn = (JToggleButton) e.getSource();
 			String teamNumber = ripTeamNumber(btn.getName());
@@ -1902,7 +1872,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class KingSeatListener implements ActionListener{
+	private static class KingSeatListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JCheckBox ckbx = (JCheckBox) e.getSource();
 			String teamNumber = ripTeamNumber(ckbx.getName());
@@ -1913,7 +1883,7 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class SwitchPositionsListener implements ActionListener{
+	private static class SwitchPositionsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String teamNumber = ripTeamNumber(btn.getName());
@@ -1924,190 +1894,190 @@ public class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private class SwitchSidesListener implements ActionListener{
+	private static class SwitchSidesListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSS",false);
 			activateFilter("SwitchSides");
 			setFocusOnCode();
 		}
 	}
-	private class ShotTimerListener implements ActionListener{
+	private static class ShotTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSST",false);
 			setFocusOnCode();
 		}
 	}
-	private class PassTimerListener implements ActionListener{
+	private static class PassTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSPT",false);
 			setFocusOnCode();
 		}
 	}
-	private class TimeOutTimerListener implements ActionListener{
+	private static class TimeOutTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSTT",false);
 			setFocusOnCode();
 		}
 	}
-	private class GameTimerListener implements ActionListener{
+	private static class GameTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSGT",false);
 			setFocusOnCode();
 		}
 	}
-	private class RecallTimerListener implements ActionListener{
+	private static class RecallTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSRT",false);
 			setFocusOnCode();
 		}
 	}
-	private class ResetTimerListener implements ActionListener{
+	private static class ResetTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRT",false);
 			setFocusOnCode();
 		}
 	}
-	private class StartEventListener implements ActionListener{
+	private static class StartEventListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSE",false);
 			setFocusOnCode();
 		}
 	}
-	private class StartMatchListener implements ActionListener{
+	private static class StartMatchListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSM",false);
 			activateFilter("StartMatch");
 			setFocusOnCode();
 		}
 	}
-	private class PauseMatchListener implements ActionListener{
+	private static class PauseMatchListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPPM",false);
 			setFocusOnCode();
 		}
 	}
-	private class EndMatchListener implements ActionListener{
+	private static class EndMatchListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPEM",false);
 			setFocusOnCode();
 		}
 	}
-	private class StartGameListener implements ActionListener{
+	private static class StartGameListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSG",false);
 			activateFilter("StartGame");
 			setFocusOnCode();
 		}
 	}
-	private class SwitchTeamsListener implements ActionListener{
+	private static class SwitchTeamsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPST",false);
 			setFocusOnCode();
 		}
 	}
-	private class SwitchPlayer1Listener implements ActionListener{
+	private static class SwitchPlayer1Listener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XXP1",false);
 			setFocusOnCode();
 		}
 	}
-	private class SwitchPlayer2Listener implements ActionListener{
+	private static class SwitchPlayer2Listener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XXP2",false);
 			setFocusOnCode();
 		}
 	}
-	private class SwitchScoresListener implements ActionListener{
+	private static class SwitchScoresListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSSC",false);
 			setFocusOnCode();
 		}
 	}
-	private class SwitchGameCountsListener implements ActionListener{
+	private static class SwitchGameCountsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSGC",false);
 			setFocusOnCode();
 		}
 	}
-	private class SwitchMatchCountsListener implements ActionListener{
+	private static class SwitchMatchCountsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSMC",false);
 			setFocusOnCode();
 		}
 	}
-	private class SwitchTimeOutsListener implements ActionListener{
+	private static class SwitchTimeOutsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSTO",false);
 			setFocusOnCode();
 		}
 	}
-	private class SwitchResetWarnsListener implements ActionListener{
+	private static class SwitchResetWarnsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSR",false);
 			setFocusOnCode();
 		}
 	}
-	private class ClearAllListener implements ActionListener{
+	private static class ClearAllListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPCA",false);
 			setFocusOnCode();
 		}
 	}
-	private class ResetNamesListener implements ActionListener{
+	private static class ResetNamesListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRN",false);
 			setFocusOnCode();
 		}
 	}
-	private class ResetScoresListener implements ActionListener{
+	private static class ResetScoresListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRS",false);
 			setFocusOnCode();
 		}
 	}
-	private class ResetGameCountsListener implements ActionListener{
+	private static class ResetGameCountsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRG",false);
 			setFocusOnCode();
 		}
 	}
-	private class ResetMatchCountsListener implements ActionListener{
+	private static class ResetMatchCountsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRM",false);
 			setFocusOnCode();
 		}
 	}
-	private class ResetTimeOutsListener implements ActionListener{
+	private static class ResetTimeOutsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRTO",false);
 			setFocusOnCode();
 		}
 	}
-	private class ResetResetWarnsListener implements ActionListener{
+	private static class ResetResetWarnsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRR",false);
 			setFocusOnCode();
 		}
 	}
-	private class ResetAllListener implements ActionListener{
+	private static class ResetAllListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRA",false);
 			statsController.displayAllStats();
 			setFocusOnCode();
 		}
 	}
-	private class TableClearAllListener implements ActionListener {
+	private static class TableClearAllListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPTCA",false);
 			setFocusOnCode();
 		}
 	}
-	private class TimerWindowCloseListener extends WindowAdapter {
+	private static class TimerWindowCloseListener extends WindowAdapter {
 		public void windowClosed(WindowEvent we) {
 			showTimer(false);
 		}
 	}
-	private class AutoScoreWorkerStateChangeListener implements PropertyChangeListener {
+	private static class AutoScoreWorkerStateChangeListener implements PropertyChangeListener {
 		public void propertyChange(PropertyChangeEvent e) {
 			SwingWorker.StateValue state = null;
 			Object source = e.getSource();
@@ -2127,107 +2097,107 @@ public class Main implements MatchObserver {
 			}
 		}
 	}
-	private class Team1ScoreFilterListener implements ActionListener{
+	private static class Team1ScoreFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team1Score");
 		}
 	}
-	private class Team2ScoreFilterListener implements ActionListener{
+	private static class Team2ScoreFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team2Score");
 		}
 	}
-	private class Team1WinGameFilterListener implements ActionListener{
+	private static class Team1WinGameFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team1WinGame");
 		}
 	}
-	private class Team2WinGameFilterListener implements ActionListener{
+	private static class Team2WinGameFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team2WinGame");
 		}
 	}
-	private class Team1WinMatchFilterListener implements ActionListener{
+	private static class Team1WinMatchFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team1WinMatch");
 		}
 	}
-	private class Team2WinMatchFilterListener implements ActionListener{
+	private static class Team2WinMatchFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team2WinMatch");
 		}
 	}
-	private class Team1TimeOutFilterListener implements ActionListener{
+	private static class Team1TimeOutFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team1TimeOut");
 		}
 	}
-	private class Team2TimeOutFilterListener implements ActionListener{
+	private static class Team2TimeOutFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team2TimeOut");
 		}
 	}
-	private class Team1ResetFilterListener implements ActionListener{
+	private static class Team1ResetFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team1Reset");
 		}
 	}
-	private class Team2ResetFilterListener implements ActionListener{
+	private static class Team2ResetFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team2Reset");
 		}
 	}
-	private class Team1WarnFilterListener implements ActionListener{
+	private static class Team1WarnFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team1Warn");
 		}
 	}
-	private class Team2WarnFilterListener implements ActionListener{
+	private static class Team2WarnFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team2Warn");
 		}
 	}
-	private class Team1SwitchPositionsFilterListener implements ActionListener{
+	private static class Team1SwitchPositionsFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team1SwitchPositions");
 		}
 	}
-	private class Team2SwitchPositionsFilterListener implements ActionListener{
+	private static class Team2SwitchPositionsFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team2SwitchPositions");
 		}
 	}
-	private class Team1SkunkFilterListener implements ActionListener{
+	private static class Team1SkunkFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team1Skunk");
 		}
 	}
-	private class Team2SkunkFilterListener implements ActionListener{
+	private static class Team2SkunkFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team2Skunk");
 		}
 	}
-	private class StartMatchFilterListener implements ActionListener{
+	private static class StartMatchFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("StartMatch");
 		}
 	}
-	private class StartGameFilterListener implements ActionListener{
+	private static class StartGameFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("StartGame");
 		}
 	}
-	private class SwitchSidesFilterListener implements ActionListener{
+	private static class SwitchSidesFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("SwitchSides");
 		}
 	}
-	private class MeatballFilterListener implements ActionListener{
+	private static class MeatballFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Meatball");
 		}
 	}
-	private class TeamPropertyListener implements PropertyChangeListener{
+	private static class TeamPropertyListener implements PropertyChangeListener{
 		@Override
 		public void propertyChange(PropertyChangeEvent e) {
 			String name = e.getPropertyName();
@@ -2267,7 +2237,7 @@ public class Main implements MatchObserver {
 			}
 		}
 	}
-	public void setTeamGameCountVisible(String name, String value) {
+	public static void setTeamGameCountVisible(String name, String value) {
 		String teamNumber = ripTeamNumber(name);
 		if (value != null) {
 			boolean show = false;
@@ -2278,20 +2248,20 @@ public class Main implements MatchObserver {
 			}
 		}
 	}
-//	private void testProcessCodes() {
+//	private static void testProcessCodes() {
 //		String codes[] = {"XPSE", "XPSM", "Y5D", "Y3P", "BGS", "B5D", "B3P", "YGS" };
 //		autoProcessCodes(codes);
 //	}
-//	private void autoProcessCodes(String[] codes) {
+//	private static void autoProcessCodes(String[] codes) {
 //		for (String code: codes) {
 //			processCode(code, false);
 //		}
 //	}
-	public List<String> getCodeHistory() {
+	public static List<String> getCodeHistory() {
 		List<String> codes = stats.getCodeHistoryAsList();
 		return codes;
 	}
-	private void setScene() {
+	private static void setScene() {
 		if(OBS.getController() == null ) {
 			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " ERROR! Must connect before setting Scene");	
 		} else {
@@ -2312,7 +2282,7 @@ public class Main implements MatchObserver {
 			}
 		}
 	}
-	private void createFileWatchWorker() {
+	private static void createFileWatchWorker() {
 		fileWatchWorker = new SwingWorker<Boolean, String>() {
 			@Override
 			protected Boolean doInBackground() throws Exception {
@@ -2431,8 +2401,7 @@ public class Main implements MatchObserver {
 		};
 	}
 
-	public void updateGameResults(StringBuilder gameResults) {
+	public static void updateGameResults(StringBuilder gameResults) {
 		matchController.updateGameResults(gameResults);
-		
 	}
 }

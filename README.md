@@ -1185,6 +1185,12 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.045 02/04/2024</br>
+Add JavaDoc to Command classes.</br>
+Make Main more Static and stop passing Main where can be used statically.</br>
+Refactor FoosOGBSPlusApp.</br>
+Increase match count in cutthroat mode when match won.</br>
+</br>
 v2.044 01/27/2024</br>
 Add Apply button and fix Apply and Close button in AutoScoreSettings window.</br>
 Add Game Results Window and allow control over displaying each line.</br>

@@ -23,7 +23,11 @@ package com.midsouthfoosball.foosobsplus.commands;
 
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
-
+/**
+ * Click King Seat Checkbox Command
+ * @author Hugh Garner
+ *
+ */
 public class PKCommand implements Command {
 	private final StatsController statsController;
 	private final TeamController teamController;

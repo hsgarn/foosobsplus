@@ -59,7 +59,6 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
 public final class MainFrame extends JFrame implements WindowListener {
-	
 	private TournamentPanel tournamentPanel;
 	private TeamPanel team1Panel;
 	private TeamPanel team2Panel;
@@ -81,7 +80,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private OBSConnectFrame obsConnectFrame;
 	private AutoScoreSettingsFrame autoScoreSettingsFrame;
 	private AutoScoreConfigFrame autoScoreConfigFrame;
-	private Main main;
 	private JCheckBoxMenuItem viewTimerWindow;
 	private JCheckBoxMenuItem viewAlwaysOnTop;
 	private JCheckBoxMenuItem viewLastScored1Window;
@@ -111,10 +109,8 @@ public final class MainFrame extends JFrame implements WindowListener {
 			TeamPanel team1Panel, TeamPanel team2Panel, TeamPanel team3Panel, StatsEntryPanel statsEntryPanel, SwitchPanel switchPanel, ResetPanel resetPanel, 
 			StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,	SourcesFrame sourcesFrame, 
 			StatSourcesFrame statSourcesFrame, FiltersFrame filtersFrame, PartnerProgramFrame partnerProgramFrame, OBSConnectFrame obsConnectFrame, 
-			AutoScoreSettingsFrame autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame, Main main) {
-
+			AutoScoreSettingsFrame autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame) {
 		super(programName + ": Foosball"); //$NON-NLS-1$
-
 		this.tournamentPanel 		= tournamentPanel;
 		this.timerPanel 			= timerPanel;
 		this.obsPanel           	= obsPanel;
@@ -136,8 +132,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 		this.obsConnectFrame 		= obsConnectFrame;
 		this.autoScoreSettingsFrame = autoScoreSettingsFrame;
 		this.autoScoreConfigFrame 	= autoScoreConfigFrame;
-		this.main 					= main;
-		
 		viewLastScored1Window 	= new JCheckBoxMenuItem(Messages.getString("MainFrame.Team1LastScoredWindow")); //$NON-NLS-1$
 		viewLastScored2Window 	= new JCheckBoxMenuItem(Messages.getString("MainFrame.Team2LastScoredWindow")); //$NON-NLS-1$
 		viewLastScored3Window   = new JCheckBoxMenuItem(Messages.getString("MainFrame.Team3LastScoredWindow")); //$NON-NLS-1$
@@ -149,7 +143,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 		helpShowParsed 			= new JCheckBoxMenuItem(Messages.getString("MainFrame.ShowParsed")); //$NON-NLS-1$
 		helpShowParsed.setSelected(Settings.getShowParsed());
 		setLayout(new GridBagLayout());
-		
 		setJMenuBar(createMenuBar());
 		layoutFoosballComponents();
 		addWindowListener(new WindowAdapter() {
@@ -158,12 +151,10 @@ public final class MainFrame extends JFrame implements WindowListener {
 				System.gc();
 			}
 		});
-		
 		setSize(1480,860);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
-
 		if(Settings.getShowParsed()) {
 			Dimension windowSize = getSize();
 	        System.out.println("Current window size: " + windowSize.width + " x " + windowSize.height);
@@ -177,22 +168,17 @@ public final class MainFrame extends JFrame implements WindowListener {
 	        }
 		}
 	}
-	
 	private JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
-		
 		JMenu fileMenu 			= new JMenu(Messages.getString("MainFrame.File")); //$NON-NLS-1$
 		JMenuItem exportItem 	= new JMenuItem(Messages.getString("MainFrame.ExportStats")); //$NON-NLS-1$
 		JMenuItem importItem 	= new JMenuItem(Messages.getString("MainFrame.ImportStats")); //$NON-NLS-1$
 		JMenuItem exitItem 		= new JMenuItem(Messages.getString("MainFrame.Exit")); //$NON-NLS-1$
-		
 		fileMenu.add(importItem);
 		fileMenu.add(exportItem);
 		fileMenu.addSeparator();
 		fileMenu.add(exitItem);
-		
 		JMenu editMenu 			= new JMenu(Messages.getString("MainFrame.Edit")); //$NON-NLS-1$
-		
 		JMenu settingsMenu 						= new JMenu(Messages.getString("MainFrame.Settings")); //$NON-NLS-1$
 		JMenuItem settingsParamItem 			= new JMenuItem(Messages.getString("MainFrame.Parameters")); //$NON-NLS-1$
 		JMenuItem settingsHotKeyItem 			= new JMenuItem(Messages.getString("MainFrame.HotKeys")); //$NON-NLS-1$
@@ -200,7 +186,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 		JMenuItem settingsStatsSourceItem 		= new JMenuItem(Messages.getString("MainFrame.StatSources")); //$NON-NLS-1$
 		JMenuItem settingsFilterItem    		= new JMenuItem(Messages.getString("MainFrame.Filters")); //$NON-NLS-1$
 		JMenuItem settingsPartnerProgramItem 	= new JMenuItem(Messages.getString("MainFrame.PartnerProgram")); //$NON-NLS-1$
-		
 		settingsMenu.add(settingsParamItem);
 		settingsMenu.add(settingsHotKeyItem);
 		settingsMenu.add(settingsSourceItem);
@@ -208,37 +193,30 @@ public final class MainFrame extends JFrame implements WindowListener {
 		settingsMenu.add(settingsFilterItem);
 		settingsMenu.add(settingsPartnerProgramItem);
 		editMenu.add(settingsMenu);
-		
 		obsMenu 			= new JMenu(Messages.getString("MainFrame.OBS")); //$NON-NLS-1$
 		obsConnectItem 		= new JMenuItem(Messages.getString("MainFrame.OBSConnect")); //$NON-NLS-1$
 		obsDisconnectItem 	= new JMenuItem(Messages.getString("MainFrame.OBSDisconnect")); //$NON-NLS-1$
-		
 		imgOBSConnected = new ImageIcon(this.getClass().getResource("Connected.png"));; //$NON-NLS-1$
 		imgOBSConnected.setImage(imgOBSConnected.getImage().getScaledInstance(12, 12,  Image.SCALE_DEFAULT));
 		imgIconOBSConnected = imgOBSConnected;
 		imgOBSDisconnected = new ImageIcon(this.getClass().getResource("Disconnected.png"));; //$NON-NLS-1$
 		imgOBSDisconnected.setImage(imgOBSDisconnected.getImage().getScaledInstance(12, 12,  Image.SCALE_DEFAULT));
 		imgIconOBSDisconnected = imgOBSDisconnected;
-		
 		obsMenu.add(obsConnectItem);
 		obsMenu.add(obsDisconnectItem);
 		obsMenu.setIcon(imgIconOBSDisconnected);
-		
 		autoScoreMenu  = new JMenu(Messages.getString("MainFrame.AutoScore")); //$NON-NLS-1$
 		autoScoreSettingsItem  = new JMenuItem(Messages.getString("MainFrame.AutoScoreSettings")); //$NON-NLS-1$
 		autoScoreConfigItem  = new JMenuItem(Messages.getString("MainFrame.AutoScoreConfig")); //$NON-NLS-1$
-		
 		imgAutoScoreConnected = new ImageIcon(this.getClass().getResource("Connected.png"));; //$NON-NLS-1$
 		imgAutoScoreConnected.setImage(imgAutoScoreConnected.getImage().getScaledInstance(12, 12, Image.SCALE_DEFAULT));
 		imgIconAutoScoreConnected = imgAutoScoreConnected;
 		imgAutoScoreDisconnected = new ImageIcon(this.getClass().getResource("Disconnected.png"));; //$NON-NLS-1$
 		imgAutoScoreDisconnected.setImage(imgOBSDisconnected.getImage().getScaledInstance(12, 12,  Image.SCALE_DEFAULT));
 		imgIconAutoScoreDisconnected = imgOBSDisconnected;
-		
 		autoScoreMenu.add(autoScoreSettingsItem);
 		autoScoreMenu.setIcon(imgIconAutoScoreDisconnected);
 		autoScoreMenu.add(autoScoreConfigItem);
-		
 		JMenu viewMenu = new JMenu(Messages.getString("MainFrame.View")); //$NON-NLS-1$
 		viewMenu.add(viewAlwaysOnTop);
 		viewMenu.add(viewTimerWindow);
@@ -248,41 +226,34 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewMenu.add(viewGameTableWindow);
 		viewMenu.add(viewGameResultsWindow);
 		viewMenu.add(viewAllWindows);
-
 		JMenu helpMenu 		= new JMenu(Messages.getString("MainFrame.Help")); //$NON-NLS-1$
 		JMenuItem helpPage 	= new JMenuItem(programName + " " + Messages.getString("MainFrame.Help")); //$NON-NLS-1$ //$NON-NLS-2$
 		JMenuItem helpRules = new JMenuItem(Messages.getString("MainFrame.Rules"));
 		JMenuItem helpAbout = new JMenuItem(Messages.getString("MainFrame.About")); //$NON-NLS-1$
-		
 		helpMenu.add(helpPage);
 		helpMenu.add(helpRules);
 		helpMenu.addSeparator();
 		helpMenu.add(helpShowParsed);
 		helpMenu.addSeparator();
 		helpMenu.add(helpAbout);
-		
 		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
 		menuBar.add(obsMenu);
 		menuBar.add(autoScoreMenu);
 		menuBar.add(viewMenu);
 		menuBar.add(helpMenu);
-		
 		obsMenu.setIcon(imgIconOBSDisconnected);
 		autoScoreMenu.setIcon(imgIconAutoScoreDisconnected);
-		
 		viewAlwaysOnTop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				setAlwaysOnTop(viewAlwaysOnTop.isSelected());
  				}
 		});
-		
 		settingsParamItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				parametersFrame.setVisible(true);
 			}
 			});
-
 		settingsHotKeyItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				hotKeysFrame.setVisible(true);
@@ -372,7 +343,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		});
 		helpShowParsed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				main.setShowParsed(helpShowParsed.isSelected());
+				Main.setShowParsed(helpShowParsed.isSelected());
  			}
 		});
 		exitItem.addActionListener(new ActionListener() {
@@ -451,11 +422,11 @@ public final class MainFrame extends JFrame implements WindowListener {
 			logger.error(e.toString());
 			JOptionPane.showMessageDialog(null, Messages.getString("Errors.ReadFileError") + file, "Import Error", 1);
 		}
-		lines.forEach(line -> main.processCode(line.toUpperCase(), false));
+		lines.forEach(line -> Main.processCode(line.toUpperCase(), false));
 	}
 	
 	private void exportStatsFile(String file) {
-		List<String> codes = main.getCodeHistory();
+		List<String> codes = Main.getCodeHistory();
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
 			for(String code:codes) {
 				bw.write(code);
@@ -783,7 +754,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	public void windowOpened(WindowEvent arg0) {
 	}
 	public void updateGameResults(StringBuilder gameResults) {
-		main.updateGameResults(gameResults);
+		Main.updateGameResults(gameResults);
 	}
 }
 

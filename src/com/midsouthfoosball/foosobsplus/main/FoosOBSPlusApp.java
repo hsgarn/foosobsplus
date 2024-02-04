@@ -22,22 +22,45 @@ package com.midsouthfoosball.foosobsplus.main;
 import java.io.IOException;
 
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FoosOBSPlusApp {
 	private static final Logger logger = LoggerFactory.getLogger(FoosOBSPlusApp.class);
-
 	public static void main(String[] args) {	
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new Main();
-				} catch (IOException e) {
-					logger.error(e.toString());
-				}
+		SwingUtilities.invokeLater(() -> {
+			try {
+				setNimbusLookAndFeel();
+			} catch (Exception e) {
+				logger.error(e.toString());
+				setCrossPlatformLookAndFeel();
+			}
+			try {
+				new Main();
+			} catch (IOException e) {
+				logger.error(e.toString());
 			}
 		});
+	}
+    private static void setNimbusLookAndFeel() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+		for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		    if ("Nimbus".equals(info.getName())) {
+		        UIManager.setLookAndFeel(info.getClassName());
+		        return;
+		    }
+		}
+		setCrossPlatformLookAndFeel();
+	}
+	private static void setCrossPlatformLookAndFeel() {
+		try {
+		    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+		} catch (Exception e1) {
+		    logger.info("Can't set look and feel.");
+		    logger.error(e1.toString());
+		}
 	}
 }

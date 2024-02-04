@@ -24,14 +24,16 @@ package com.midsouthfoosball.foosobsplus.commands;
 import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.main.Main;
-
+/**
+ * Press Increment Score Button Command
+ * @author Hugh Garner
+ *
+ */
 public class ISTCommand implements Command {
 	private final StatsController statsController;
 	private final MatchController matchController;
-	private final Main main;
 	private final int teamNumber;
-	public ISTCommand(Main main, StatsController statsController, MatchController matchController, int teamNumber) {
-		this.main = main;
+	public ISTCommand(StatsController statsController, MatchController matchController, int teamNumber) {
 		this.statsController = statsController;
 		this.matchController = matchController;
 		this.teamNumber = teamNumber;
@@ -39,7 +41,7 @@ public class ISTCommand implements Command {
 	public void execute() {
 		int rotate = 0;
 		rotate = matchController.incrementScore(teamNumber);
-		if (rotate > 0) main.cutthroatRotate(rotate); 
+		if (rotate > 0) Main.cutthroatRotate(rotate); 
 	}
 	public String getCode() {
 		return statsController.getLastCode();

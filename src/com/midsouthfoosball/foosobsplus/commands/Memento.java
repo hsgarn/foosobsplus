@@ -26,7 +26,11 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+/**
+ * Memento - Holds a serialized copy of an object to use in undo logic and switching logic.
+ * @author Hugh Garner
+ *
+ */
 public class Memento {
 	private static final transient Logger logger = LoggerFactory.getLogger(Memento.class);
 	byte[] serializedObject;

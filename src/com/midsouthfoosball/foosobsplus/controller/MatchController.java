@@ -96,13 +96,13 @@ public class MatchController {
 			}
 		}
 		if (Settings.getControlParameter("CutThroatMode").equals(ON)) {
-			int won = 0;
 			if (teamNumber == 1) {
 				//Single player scores
-				won = teamController.incrementScore(teamNumber);
+				int won = teamController.incrementScore(teamNumber);
 				if (won > 0) {
 					//Rotate teams 2 & 3
 					rotate = 1;
+					if (won==2) match.incrementMatchCount(teamNumber);
 				}
 			} else {
 				//Rotate all players and scores

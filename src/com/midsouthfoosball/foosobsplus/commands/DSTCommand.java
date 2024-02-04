@@ -23,7 +23,11 @@ package com.midsouthfoosball.foosobsplus.commands;
 
 import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
-
+/**
+ * Press Decrement Score Button Command
+ * @author Hugh Garner
+ *
+ */
 public class DSTCommand implements Command {
 	private final StatsController statsController;
 	private final MatchController matchController;

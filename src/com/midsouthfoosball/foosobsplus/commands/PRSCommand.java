@@ -23,7 +23,11 @@ package com.midsouthfoosball.foosobsplus.commands;
 
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
-
+/**
+ * Press Reset Scores Button Command
+ * @author Hugh Garner
+ *
+ */
 public class PRSCommand implements Command {
 	private final StatsController statsController;
 	private final TeamController teamController;

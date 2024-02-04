@@ -23,16 +23,18 @@ package com.midsouthfoosball.foosobsplus.commands;
 
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.main.Main;
-
+/**
+ * Press End Match Button Command
+ * @author Hugh Garner
+ *
+ */
 public class PEMCommand implements Command {
 	private final StatsController statsController;
-	private final Main main;
-	public PEMCommand(StatsController statsController, Main main) {
+	public PEMCommand(StatsController statsController) {
 		this.statsController = statsController;
-		this.main = main;
 	}
 	public void execute() {
-		main.endMatch();
+		Main.endMatch();
 	}
 	public String getCode() {
 		return statsController.getLastCode();

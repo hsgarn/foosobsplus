@@ -23,16 +23,18 @@ package com.midsouthfoosball.foosobsplus.commands;
 
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.main.Main;
-
+/**
+ * Press Start Match Button Command
+ * @author Hugh Garner
+ *
+ */
 public class PSMCommand implements Command {
 	private final StatsController statsController;
-	private final Main main;
-	public PSMCommand(StatsController statsController, Main main) {
+	public PSMCommand(StatsController statsController) {
 		this.statsController = statsController;
-		this.main = main;
 	}
 	public void execute() {
-		main.startMatch();
+		Main.startMatch();
 	}
 	public String getCode() {
 		return statsController.getLastCode();

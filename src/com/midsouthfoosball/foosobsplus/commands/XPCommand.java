@@ -23,7 +23,11 @@ package com.midsouthfoosball.foosobsplus.commands;
 
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
 import com.midsouthfoosball.foosobsplus.controller.TeamController;
-
+/**
+ * Press Switch Player Button Command
+ * @author Hugh Garner
+ *
+ */
 public class XPCommand implements Command {
 	private final StatsController statsController;
 	private final TeamController teamController;
