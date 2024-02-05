@@ -33,7 +33,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
-
+/**
+ * Game Clock - Clock for Game, Match and Stream times.
+ * @author Hugh Garner
+ *
+ */
 public class GameClock implements Serializable {
 	private static final long serialVersionUID = -4482700813986069170L;
 	private transient Timer timer;
@@ -53,6 +57,7 @@ public class GameClock implements Serializable {
 	private int streamSeconds;
 	private int streamMinutes;
 	private int streamHours;
+	private String lastGameTime;
 	private boolean streamTimerRunning;
 	private transient OBSInterface obsInterface;
 	private transient DecimalFormat df = new DecimalFormat("00");
@@ -171,10 +176,14 @@ public class GameClock implements Serializable {
 		this.streamTimerRunning = streamTimerRunning;
 	}
 	public void restartGameTimer() {
+		lastGameTime = getGameTime();
 		timer.restart();
 	}
 	public String getGameTime() {
 		return df.format(gameHours) + ":" + df.format(gameMinutes) + ":" + df.format(gameSeconds);
+	}
+	public String getLastGameTime() {
+		return lastGameTime;
 	}
 	public String getMatchTime() {
 		return df.format(matchHours) + ":" + df.format(matchMinutes) + ":" + df.format(matchSeconds);
@@ -183,6 +192,7 @@ public class GameClock implements Serializable {
 		return df.format(streamHours) + ":" + df.format(streamMinutes) + ":" + df.format(streamSeconds);
 	}
 	public void startGameTimer() {
+		lastGameTime = getGameTime();
 		gameStartTime = System.currentTimeMillis();
 		pauseStartTime = System.currentTimeMillis();
 		gameSeconds=0;

@@ -46,7 +46,9 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchEvent.Kind;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -180,86 +182,86 @@ import io.obswebsocket.community.client.message.event.scenes.CurrentProgramScene
  *
  */
 public final class Main implements MatchObserver {
-	private static final Logger logger = LoggerFactory.getLogger(Main.class);
-	private static final String ON = "1";
+	private static final Logger 					logger 					= LoggerFactory.getLogger(Main.class);
+	private static final String 					ON 						= "1";
 	////// Settings and OBSInterface setup \\\\\\
-	private static final OBSInterface 		obsInterface 			= new OBSInterface();
-	private static String					matchId					= "";
-	private static final DateTimeFormatter 	dtf 					= DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-	private static boolean 					autoScoreConnected		= false;
-	private static Socket 					autoScoreSocket;
-	private static PrintWriter 				autoScoreSocketWriter;
-	private static StreamIndexer 			streamIndexer      		= new StreamIndexer(Settings.getControlParameter("datapath"));
-	private static Boolean 					allowAutoScoreReconnect	= true;
-	private static Boolean 					blockAutoScoreReconnect	= false;
-    private static Map<String, String>		teamGameShowSourcesMap	= new HashMap<>();
+	private static final OBSInterface 				obsInterface 			= new OBSInterface();
+	private static String							matchId					= "";
+	private static final DateTimeFormatter 			dtf 					= DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+	private static boolean 							autoScoreConnected		= false;
+	private static Socket 							autoScoreSocket;
+	private static PrintWriter 						autoScoreSocketWriter;
+	private static StreamIndexer 					streamIndexer      		= new StreamIndexer(Settings.getControlParameter("datapath"));
+	private static Boolean 							allowAutoScoreReconnect	= true;
+	private static Boolean 							blockAutoScoreReconnect	= false;
+    private static Map<String, String>				teamGameShowSourcesMap	= new HashMap<>();
 	////// Watch Service for File changes \\\\\\
-	private static WatchService watchService;
+	private static WatchService 					watchService;
 	////// CommandStack and UndoRedo setup \\\\\\
-	private static int 						undoRedoPointer			= -1;
-	private static Stack<Command> 			commandStack 			= new Stack<>();
-	private static Stack<Memento> 			mementoStackTeam1 		= new Stack<>();
-	private static Stack<Memento> 			mementoStackTeam2		= new Stack<>();
-	private static Stack<Memento> 			mementoStackTeam3       = new Stack<>();
-	private static Stack<Memento> 			mementoStackStats 		= new Stack<>();
-	private static Stack<Memento> 			mementoStackMatch		= new Stack<>();
-	private static Stack<Memento> 			mementoStackGameClock	= new Stack<>();
-	private static Stack<String>			codeStack 				= new Stack<>();
-	private static CommandSwitch 			mySwitch;
+	private static int 								undoRedoPointer			= -1;
+	private static Stack<Command> 					commandStack 			= new Stack<>();
+	private static Stack<Memento> 					mementoStackTeam1 		= new Stack<>();
+	private static Stack<Memento> 					mementoStackTeam2		= new Stack<>();
+	private static Stack<Memento> 					mementoStackTeam3       = new Stack<>();
+	private static Stack<Memento> 					mementoStackStats 		= new Stack<>();
+	private static Stack<Memento> 					mementoStackMatch		= new Stack<>();
+	private static Stack<Memento> 					mementoStackGameClock	= new Stack<>();
+	private static Stack<String>					codeStack 				= new Stack<>();
+	private static CommandSwitch 					mySwitch;
 	////// Generate the Data Models (Mvc) \\\\\\
-	private static Tournament				tournament				= new Tournament(obsInterface);
-	private static Team 					team1 					= new Team(obsInterface, 1, Settings.getControlParameter("Side1Color"));
-	private static Team 					team2 					= new Team(obsInterface, 2, Settings.getControlParameter("Side2Color"));
-	private static Team         			team3              		= new Team(obsInterface, 3, "None");
-	private static Match 					match					= new Match(obsInterface, team1, team2, team3);
-	private static Stats 					stats 					= new Stats(team1, team2);
+	private static Tournament						tournament				= new Tournament(obsInterface);
+	private static Team 							team1 					= new Team(obsInterface, 1, Settings.getControlParameter("Side1Color"));
+	private static Team 							team2 					= new Team(obsInterface, 2, Settings.getControlParameter("Side2Color"));
+	private static Team         					team3              		= new Team(obsInterface, 3, "None");
+	private static Match 							match					= new Match(obsInterface, team1, team2, team3);
+	private static Stats 							stats 					= new Stats(team1, team2);
 	////// Create a TimeClock to be the Timer \\\\\\
-	private static TimeClock 				timeClock 				= new TimeClock(obsInterface);
-	private static GameClock       			gameClock           	= new GameClock(obsInterface);
-	private static LastScoredClock 			lastScored1Clock   		= new LastScoredClock();
-	private static LastScoredClock			lastScored2Clock    	= new LastScoredClock();
-	private static LastScoredClock 			lastScored3Clock		= new LastScoredClock();
+	private static TimeClock 						timeClock 				= new TimeClock(obsInterface);
+	private static GameClock       					gameClock           	= new GameClock(obsInterface);
+	private static LastScoredClock 					lastScored1Clock   		= new LastScoredClock();
+	private static LastScoredClock					lastScored2Clock    	= new LastScoredClock();
+	private static LastScoredClock 					lastScored3Clock		= new LastScoredClock();
 	////// Create the View Panels to Display (mVc) \\\\\\
-	private static TournamentPanel			tournamentPanel 		= new TournamentPanel();
-	private static TimerPanel 				timerPanel 				= new TimerPanel();
-	private static OBSPanel					obsPanel				= new OBSPanel();
-	private static AutoScoreMainPanel		autoScoreMainPanel  	= new AutoScoreMainPanel();
-	private static MatchPanel				matchPanel				= new MatchPanel();
-	private static TeamPanel 				teamPanel1 				= new TeamPanel(1, Settings.getControlParameter("Side1Color"));
-	private static TeamPanel 				teamPanel2 				= new TeamPanel(2, Settings.getControlParameter("Side2Color"));
-	private static TeamPanel				teamPanel3				= new TeamPanel(3, "None");
-	private static StatsEntryPanel 			statsEntryPanel 		= new StatsEntryPanel();
-	private static SwitchPanel 				switchPanel 			= new SwitchPanel();
-	private static ResetPanel 				resetPanel 				= new ResetPanel();
-	private static StatsDisplayPanel 		statsDisplayPanel 		= new StatsDisplayPanel();
+	private static TournamentPanel					tournamentPanel 		= new TournamentPanel();
+	private static TimerPanel 						timerPanel 				= new TimerPanel();
+	private static OBSPanel							obsPanel				= new OBSPanel();
+	private static AutoScoreMainPanel				autoScoreMainPanel  	= new AutoScoreMainPanel();
+	private static MatchPanel						matchPanel				= new MatchPanel();
+	private static TeamPanel 						teamPanel1 				= new TeamPanel(1, Settings.getControlParameter("Side1Color"));
+	private static TeamPanel 						teamPanel2 				= new TeamPanel(2, Settings.getControlParameter("Side2Color"));
+	private static TeamPanel						teamPanel3				= new TeamPanel(3, "None");
+	private static StatsEntryPanel 					statsEntryPanel 		= new StatsEntryPanel();
+	private static SwitchPanel 						switchPanel 			= new SwitchPanel();
+	private static ResetPanel 						resetPanel 				= new ResetPanel();
+	private static StatsDisplayPanel 				statsDisplayPanel 		= new StatsDisplayPanel();
 	////// Set up Timer and Settings Windows \\\\\\
-	private static ParametersFrame 			parametersFrame 		= new ParametersFrame();
-	private static ParametersPanel			parametersPanel			= parametersFrame.getSettingsPanel();
-	private static HotKeysFrame 			hotKeysFrame 			= new HotKeysFrame();
-	private static HotKeysPanel 			hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
-	private static SourcesFrame				sourcesFrame			= new SourcesFrame();
-	private static SourcesPanel				sourcesPanel			= sourcesFrame.getSourcesPanel();
-	private static StatSourcesFrame			statSourcesFrame		= new StatSourcesFrame();
-	private static StatSourcesPanel			statSourcesPanel		= statSourcesFrame.getStatSourcesPanel();
-	private static FiltersFrame        		filtersFrame        	= new FiltersFrame(obsInterface);
-	private static FiltersPanel        		filtersPanel        	= filtersFrame.getFiltersPanel();
-	private static PartnerProgramFrame 		partnerProgramFrame 	= new PartnerProgramFrame();
-	private static OBSConnectFrame			obsConnectFrame			= new OBSConnectFrame();
-	private static OBSConnectPanel			obsConnectPanel			= obsConnectFrame.getOBSConnectPanel();
-	private static AutoScoreSettingsFrame	autoScoreSettingsFrame	= new AutoScoreSettingsFrame();
-	private static AutoScoreSettingsPanel	autoScoreSettingsPanel	= autoScoreSettingsFrame.getAutoScoreSettingsPanel();
-	private static AutoScoreConfigFrame		autoScoreConfigFrame	= new AutoScoreConfigFrame();
-	private static AutoScoreConfigPanel		autoScoreConfigPanel	= autoScoreConfigFrame.getAutoScoreConfigPanel();
-	////// Display the View Panels on a JFrame \\\\\\
-	private static MainFrame 				mainFrame; // The Main Window JFrame with multiple View Panels on it
+	private static ParametersFrame 					parametersFrame 		= new ParametersFrame();
+	private static ParametersPanel					parametersPanel			= parametersFrame.getSettingsPanel();
+	private static HotKeysFrame 					hotKeysFrame 			= new HotKeysFrame();
+	private static HotKeysPanel 					hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
+	private static SourcesFrame						sourcesFrame			= new SourcesFrame();
+	private static SourcesPanel						sourcesPanel			= sourcesFrame.getSourcesPanel();
+	private static StatSourcesFrame					statSourcesFrame		= new StatSourcesFrame();
+	private static StatSourcesPanel					statSourcesPanel		= statSourcesFrame.getStatSourcesPanel();
+	private static FiltersFrame        				filtersFrame        	= new FiltersFrame(obsInterface);
+	private static FiltersPanel        				filtersPanel        	= filtersFrame.getFiltersPanel();
+	private static PartnerProgramFrame 				partnerProgramFrame 	= new PartnerProgramFrame();
+	private static OBSConnectFrame					obsConnectFrame			= new OBSConnectFrame();
+	private static OBSConnectPanel					obsConnectPanel			= obsConnectFrame.getOBSConnectPanel();
+	private static AutoScoreSettingsFrame			autoScoreSettingsFrame	= new AutoScoreSettingsFrame();
+	private static AutoScoreSettingsPanel			autoScoreSettingsPanel	= autoScoreSettingsFrame.getAutoScoreSettingsPanel();
+	private static AutoScoreConfigFrame				autoScoreConfigFrame	= new AutoScoreConfigFrame();
+	private static AutoScoreConfigPanel				autoScoreConfigPanel	= autoScoreConfigFrame.getAutoScoreConfigPanel();
+	////// Set up The Main Window JFrame \\\\\\
+	private static MainFrame 						mainFrame;
 	////// Set up independent Windows \\\\\\
-	private static GameTableWindowPanel		gameTableWindowPanel;
-	private static GameTableWindowFrame		gameTableWindowFrame;
-	private static GameResultsWindowFrame	gameResultsWindowFrame;
-	private static TimerWindowFrame 		timerWindowFrame;
-	private static LastScoredWindowFrame 	lastScored1WindowFrame;
-	private static LastScoredWindowFrame 	lastScored2WindowFrame;
-	private static LastScoredWindowFrame	lastScored3WindowFrame;
+	private static GameTableWindowPanel				gameTableWindowPanel;
+	private static GameTableWindowFrame				gameTableWindowFrame;
+	private static GameResultsWindowFrame			gameResultsWindowFrame;
+	private static TimerWindowFrame 				timerWindowFrame;
+	private static LastScoredWindowFrame 			lastScored1WindowFrame;
+	private static LastScoredWindowFrame 			lastScored2WindowFrame;
+	private static LastScoredWindowFrame			lastScored3WindowFrame;
 	////// Build and Start the Controllers (mvC) \\\\\\
 	private static MainController 					mainController;
 	private static TimerController 					timerController;
@@ -269,7 +271,9 @@ public final class Main implements MatchObserver {
 	private static StatsController 					statsController;
 	private static SwingWorker<Boolean, Integer> 	autoScoreWorker;
 	private static SwingWorker<Boolean, String> 	fileWatchWorker;
-	public  Main() throws IOException {
+	public static enum FoosCodes {
+	}
+	public Main() throws IOException {
 		buildTeamGameShowSourcesMap();
 		loadWindowsAndControllers();
 		OBS.setHost(Settings.getOBSParameter("OBSHost"));
@@ -644,79 +648,10 @@ public final class Main implements MatchObserver {
 			activateFilter(filter);
 			int winState = match.getWinState();
 			if (winState == 1) {
-				int gn = match.getCurrentGameNumber();
-				if (gn > 1) {
-					int a = Integer.parseInt(match.getScoresTeam1()[gn-2]); 
-					int b = Integer.parseInt(match.getScoresTeam2()[gn-2]);
-					if (a == 0 || b == 0) {
-						if(Settings.getControlParameter("ShowSkunk").equals(ON)) {
-							filter = "Team" + teamNbr + "Skunk";
-							activateFilter(filter);
-						}
-					}
-					filter = "Team" + teamNbr + "WinGame";
-					activateFilter(filter);
-//					String result = "[" + gameClock.getStreamTime() + "] " + team1.getForwardName() + "/" + team1.getGoalieName() + " " + a + " vs " 
-//							+ team2.getForwardName() + "/" + team2.getGoalieName() + " " + b + " (" + match.getTimes()[match.getCurrentGameNumber()] + ")";
-					String result = "[" + gameClock.getStreamTime() + "] " + a + " " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " 
-							+ team2.getForwardName() + "/" + team2.getGoalieName() + " " + b;
-					gameResultsWindowFrame.addLine(result);
-					StringBuilder results = new StringBuilder();
-					results = gameResultsWindowFrame.buildGameResults();
-					matchController.updateGameResults(results);					if(gameClock.isStreamTimerRunning()) {
-						if(Settings.getControlParameter("CutThroatMode").equals(ON)) {
-							int c = Integer.parseInt(match.getScoresTeam3()[gn-2]);
-							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Game end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + ": " + a + " to " + b + " to " + c + "\r\n");
-						} else {
-							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Game end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + ": " + a + " to " + b + "\r\n");
-						}
-					}
-				}
+				winFilters(winState, teamNbr);
 			} else {
 				if (winState == 2) {
-					int a = team1.getScore();
-					int b = team2.getScore();
-					if (a == 0 || b == 0) {
-						if(Settings.getControlParameter("ShowSkunk").equals(ON)) {
-							filter = "Team" + teamNbr + "Skunk";
-							activateFilter(filter);
-						}
-					}
-					filter = "Team" + teamNbr + "WinMatch";
-					activateFilter(filter);
-//					String result = "[" + gameClock.getStreamTime() + "] " + team1.getForwardName() + "/" + team1.getGoalieName() + " " + a + " vs " 
-//							+ team2.getForwardName() + "/" + team2.getGoalieName() + " " + b + " (" + match.getTimes()[match.getCurrentGameNumber()] + ")";
-					String result = "[" + gameClock.getStreamTime() + "] " + a + " " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " 
-							+ team2.getForwardName() + "/" + team2.getGoalieName() + " " + b;
-					gameResultsWindowFrame.addLine(result);
-					StringBuilder results = new StringBuilder();
-					results = gameResultsWindowFrame.buildGameResults();
-					matchController.updateGameResults(results);
-					if(gameClock.isStreamTimerRunning()) {
-						if(Settings.getControlParameter("CutThroatMode").equals(ON)) {
-							int c = team3.getScore();
-							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Match end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + ": " + a + " to " + b + " to " + c + "\r\n");
-						} else {
-							streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Match end: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + ": " + a + " to " + b + "\r\n");
-						}
-					}
-//				} else {
-//					int gn = match.getCurrentGameNumber();
-//					int a;
-//					int b;
-//					if (gn > 1) {
-//						a = Integer.parseInt(match.getScoresTeam1()[gn-2]); 
-//						b = Integer.parseInt(match.getScoresTeam2()[gn-2]);
-//					} else {
-//						a = 0;
-//						b = 0;
-//					}
-//					String result = "[" + gameClock.getStreamTime() + "] " + team1.getForwardName() + "/" + team1.getGoalieName() + " " + a + " vs " 
-//							+ team2.getForwardName() + "/" + team2.getGoalieName() + " " + b + " (" + match.getTimes()[match.getCurrentGameNumber()] + ")";
-//					gameResultsWindowFrame.addLine(result);
-//					StringBuilder results = new StringBuilder();
-//					results = gameResultsWindowFrame.buildGameResults();
-//					matchController.updateGameResults(results);
+					winFilters(winState, teamNbr);
 				}
 			}
 		} else {
@@ -728,6 +663,65 @@ public final class Main implements MatchObserver {
 				}
 			}	
 		}
+	}
+	private static void winFilters(int winState, int teamNbr) {
+		int a;
+		int b;
+		int c;
+		String filter;
+		String gameDuration;
+		String type;
+		boolean cutThroatMode = Settings.getControlParameter("CutThroatMode").equals(ON);
+		boolean isStreamTimerRunning = gameClock.isStreamTimerRunning();
+		if(winState==1) {
+			int gn = match.getCurrentGameNumber();
+			if (gn > 1) {
+				a = Integer.parseInt(match.getScoresTeam1()[gn-2]); 
+				b = Integer.parseInt(match.getScoresTeam2()[gn-2]);
+				c = Integer.parseInt(match.getScoresTeam3()[gn-2]);
+			} else {
+				a = 0;
+				b = 0;
+				c = 0;
+			}
+			filter = "Team" + teamNbr + "WinGame";
+			gameDuration = gameClock.getLastGameTime();
+			type = "Game";
+		} else {
+			a = team1.getScore();
+			b = team2.getScore();
+			c = team3.getScore();
+			filter = "Team" + teamNbr + "WinMatch";
+			gameDuration = match.getTimes()[match.getCurrentGameNumber()-1];
+			type = "Match";
+		}
+		if (a == 0 || b == 0 || (cutThroatMode && c == 0)) {
+			if(Settings.getControlParameter("ShowSkunk").equals(ON)) {
+				filter = "Team" + teamNbr + "Skunk";
+				activateFilter(filter);
+			}
+		}
+		activateFilter(filter);
+		String result;
+		String gameEndTime = gameClock.getStreamTime();
+		LocalTime endTime = LocalTime.parse(gameEndTime, DateTimeFormatter.ofPattern("HH:mm:ss"));
+		Duration gameLength = Duration.ofHours(Long.parseLong(gameDuration.substring(0,2)))
+				.plus(Duration.ofMinutes(Long.parseLong(gameDuration.substring(3,5))))
+				.plus(Duration.ofSeconds(Long.parseLong(gameDuration.substring(6,8))));
+		LocalTime startTime = endTime.minus(gameLength);
+		if(cutThroatMode) {
+			result = a + " " + team1.getForwardName() + " vs " + b + " " + team2.getForwardName() + "/" + team3.getForwardName() + " " + c + " (" + gameDuration + ")";
+		} else {
+			result = a + " " + combinePlayerNames(1) + " vs " + combinePlayerNames(2) + " " + b + " (" + gameDuration + ")";
+		}
+		gameResultsWindowFrame.addLine("[" + ((isStreamTimerRunning) ? startTime : "00:00:00") + "] " + result);
+		StringBuilder results = new StringBuilder();
+		results = gameResultsWindowFrame.buildGameResults();
+		matchController.updateGameResults(results);
+		if(isStreamTimerRunning) {
+			streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameEndTime + ": " + type + " end: " + result + "\r\n");
+		}
+		
 	}
 	private static void activateFilter(String filter) {
 		setSourceFilterVisibility(OBS.getScene(), Settings.getFiltersFilter(filter), true);
@@ -1224,8 +1218,8 @@ public final class Main implements MatchObserver {
 		mySwitch.register("PRTO", prto);
 		mySwitch.register("PRR", prr);
 		mySwitch.register("PRA", pra);
-		mySwitch.register("code", codeCommand);
 		mySwitch.register("PTCA", ptca);
+		mySwitch.register("code", codeCommand);
 	}
 	public static void showScores(boolean show) {
 		obsPanel.setShowScores(show);
@@ -2236,6 +2230,15 @@ public final class Main implements MatchObserver {
 //				System.out.println("Team3 old TimeOut: " + e.getOldValue().toString());
 			}
 		}
+	}
+	public static String combinePlayerNames(int teamNumber) {
+		String forwardName = teamController.getForwardName(teamNumber);
+		String goalieName = teamController.getGoalieName(teamNumber);
+		String name = (forwardName.isEmpty() && goalieName.isEmpty()) ? "?" : ( 
+				((forwardName.isEmpty()) ? "" : forwardName) +
+				((!forwardName.isEmpty() && !goalieName.isEmpty()) ? "/" : "") +
+				((goalieName.isEmpty()) ? "" : goalieName));
+		return name;
 	}
 	public static void setTeamGameCountVisible(String name, String value) {
 		String teamNumber = ripTeamNumber(name);

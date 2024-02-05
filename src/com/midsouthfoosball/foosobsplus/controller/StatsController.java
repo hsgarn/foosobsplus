@@ -20,42 +20,26 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.controller;
 
+import com.midsouthfoosball.foosobsplus.main.Main;
 import com.midsouthfoosball.foosobsplus.model.Stats;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 
 public class StatsController {
-
 	private Stats stats;
 	private StatsDisplayPanel statsDisplayPanel;
 	private TeamController teamController;
-	
 	public StatsController(Stats stats, StatsDisplayPanel statsDisplayPanel, TeamController teamController) {
 		this.stats = stats;
 		this.statsDisplayPanel = statsDisplayPanel;
 		this.teamController = teamController;
 	}
-
 	////// Utility Methods \\\\\\
-	
 	public String getLastCode() {
 		return stats.getLastCode();
 	}
-	
 	public void displayAllStats() {
-		String name1;
-		String name2;
-		if (teamController.getGoalieName(1).isEmpty()) {
-			name1 = teamController.getForwardName(1);
-		} else {
-			name1 = teamController.getForwardName(1) + "/" + teamController.getGoalieName(1);
-		}
-		if (teamController.getGoalieName(2).isEmpty()) {
-			name2 = teamController.getForwardName(2);
-		} else {
-			name2 = teamController.getForwardName(2) + "/" + teamController.getGoalieName(2);
-		}
-		statsDisplayPanel.updateTeams(1,name1,teamController.getTeamName(1));
-		statsDisplayPanel.updateTeams(2,name2,teamController.getTeamName(2));
+		statsDisplayPanel.updateTeams(1,Main.combinePlayerNames(1),teamController.getTeamName(1));
+		statsDisplayPanel.updateTeams(2,Main.combinePlayerNames(2),teamController.getTeamName(2));
 		statsDisplayPanel.updatePassStats(1, teamController.getPassCompletes(1),teamController.getPassAttempts(1),teamController.getPassPercent(1));
 		statsDisplayPanel.updatePassStats(2, teamController.getPassCompletes(2),teamController.getPassAttempts(2),teamController.getPassPercent(2));
 		statsDisplayPanel.updateShotStats(1, teamController.getShotCompletes(1),teamController.getShotAttempts(1),teamController.getShotPercent(1));

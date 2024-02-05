@@ -76,50 +76,45 @@ public class Stats implements Serializable {
 	private transient boolean isShotOnGoal;
 	private transient boolean isError = false;
 	private transient String errorMsg = "";
-	
-	private transient char breakChar = new Character('B');
-	private transient char stuffChar = new Character('F');
-	private transient char goalChar = new Character('G');
-	private transient char penaltyChar = new Character('X');
-	private transient char passChar = new Character('P');
-	private transient char shotChar = new Character('S');
-	private transient char clearChar = new Character('C');
-	private transient char timeOutChar = new Character('T');
-	private transient char fiveRodChar = new Character('5');
-	private transient char twoRodChar = new Character('2');
-	private transient char threeRodChar = new Character('3');
-	private transient char offTableChar = new Character('O');
-	private transient char deadBallChar = new Character('D');
-	private transient char team1Char = new Character('Y');
-	private transient char team2Char = new Character('B');
-	private transient char commandChar = new Character('X');
-	private transient char dropChar = new Character('D');
-	private transient char resetChar = new Character('R');
-	private transient char warnChar = new Character('W');
-	private transient char ballChar = new Character('Y');
-	private transient char errorChar = new Character('E');
-	private transient char aceChar = new Character('A');
-
-	private transient char wallsChar = new Character('W');
-	private transient char spinChar = new Character('S');
-	private transient char jarChar = new Character('J');
-	private transient char distractionChar = new Character('D');
-	private transient char timeOutsOutChar = new Character('T');
-	private transient char illegalPassChar = new Character('P');
-	private transient char technicalChar = new Character('X');
-	private transient char protocolChar = new Character('R');
-	private transient char otherChar = new Character('O');
-	
+	private static final transient char BREAKCHAR 			= new Character('B');
+	private static final transient char STUFFCHAR 			= new Character('F');
+	private static final transient char GOALCHAR 			= new Character('G');
+	private static final transient char PENALTYCHAR 		= new Character('X');
+	private static final transient char PASSCHAR			= new Character('P');
+	private static final transient char SHOTCHAR 			= new Character('S');
+	private static final transient char CLEARCHAR 			= new Character('C');
+	private static final transient char TIMEOUTCHAR 		= new Character('T');
+	private static final transient char FIVERODCHAR 		= new Character('5');
+	private static final transient char TWORODCHAR 			= new Character('2');
+	private static final transient char THREERODCHAR 		= new Character('3');
+	private static final transient char OFFTABLECHAR 		= new Character('O');
+	private static final transient char DEADBALLCHAR 		= new Character('D');
+	private static final transient char TEAM1CHAR 			= new Character('Y');
+	private static final transient char TEAM2CHAR 			= new Character('B');
+	private static final transient char COMMANDCHAR 		= new Character('X');
+	private static final transient char DROPCHAR 			= new Character('D');
+	private static final transient char RESETCHAR 			= new Character('R');
+	private static final transient char WARNCHAR 			= new Character('W');
+	private static final transient char BALLCHAR 			= new Character('Y');
+	private static final transient char ERRORCHAR 			= new Character('E');
+	private static final transient char ACECHAR 			= new Character('A');
+	private static final transient char WALLSCHAR 			= new Character('W');
+	private static final transient char SPINCHAR 			= new Character('S');
+	private static final transient char JARCHAR 			= new Character('J');
+	private static final transient char DISTRACTIONCHAR		= new Character('D');
+	private static final transient char TIMEOUTSOUTCHAR 	= new Character('T');
+	private static final transient char ILLEGALPASSCHAR 	= new Character('P');
+	private static final transient char TECHNICALCHAR 		= new Character('X');
+	private static final transient char PROTOCOLCHAR 		= new Character('R');
+	private static final transient char OTHERCHAR 			= new Character('O');
 	private transient Team team1;
 	private transient Team team2;
-	private static transient Logger logger = LoggerFactory.getLogger(Stats.class);
-
+	private transient Logger logger = LoggerFactory.getLogger(Stats.class);
 	public Stats(Team team1, Team team2) {
 		codeHistory = new DefaultListModel<String>();
 		this.team1 = team1;
 		this.team2 = team2;
 	}
-
 	public String getCode() {
 		return code;
 	}
@@ -185,16 +180,9 @@ public class Stats implements Serializable {
 	public boolean getIsError() {
 		return isError;
 	}
-//	public void setIsShowParsed(boolean isShowParsed) {
-//		this.isShowParsed = isShowParsed;
-//	}
-//	public boolean getShowParsed() {
-//		return isShowParsed;
-//	}
 	public void setCodeHistory(DefaultListModel<String> codeHistory) {
 		this.codeHistory = codeHistory;
 	}
-
 	public void setPreviousCode(String previousCode) {
 		this.previousCode = previousCode;
 	}
@@ -229,7 +217,6 @@ public class Stats implements Serializable {
 		if(isDrop) dropLogic();
 		if(isBreak) breakLogic();
 		if(isTimeOut) timeOutLogic();
-		
 		showParsed();
 	}
 	private void parseCode(String previousCode, String code) {
@@ -242,7 +229,7 @@ public class Stats implements Serializable {
 			return;
 		}
 		currentTeam = code.charAt(0);
-		isCommand = currentTeam==commandChar;
+		isCommand = currentTeam==COMMANDCHAR;
 		if(isCommand) return;
 		if (previousCode.length()>0) {
 			previousTeam = previousCode.charAt(0);
@@ -252,8 +239,8 @@ public class Stats implements Serializable {
 				previousModifier = previousCode.charAt(3);
 			}
 		}
-		isTeam1 = currentTeam==team1Char;
-		isTeam2 = currentTeam==team2Char;
+		isTeam1 = currentTeam==TEAM1CHAR;
+		isTeam2 = currentTeam==TEAM2CHAR;
 		currentPosition = code.charAt(1);
 		currentAction = code.charAt(2);
 		if (code.length() > 3) {
@@ -266,32 +253,29 @@ public class Stats implements Serializable {
 			return;
 		};
 		isSameTeam = previousTeam==currentTeam;
-		isTeamScored = currentPosition==goalChar;
+		isTeamScored = currentPosition==GOALCHAR;
 		isSameRod = isSameTeam && currentPosition==previousPosition;
-		isBreak = currentModifier==breakChar;
-		isStuff = currentModifier==stuffChar && isSameTeam;
-		isPenalty = currentAction==penaltyChar;
-		isPass = currentAction==passChar;
-		isShot = currentAction==shotChar;
-		isAce = currentAction==aceChar;
-		isClear = currentAction==clearChar;
-		isDrop = currentAction==dropChar;
-		isTimeOut = currentAction==timeOutChar;
-		isFiveRod = currentPosition==fiveRodChar;
-		isTwoRod = currentPosition==twoRodChar;
-		isThreeRod = currentPosition==threeRodChar;
-		isOffTable = currentPosition==offTableChar;
-		isDeadBall = currentPosition==deadBallChar;
-		wasFiveRod = previousPosition==fiveRodChar;
-		wasTwoRod = previousPosition==twoRodChar;
-		wasThreeRod = previousPosition==threeRodChar;
-		
+		isBreak = currentModifier==BREAKCHAR;
+		isStuff = currentModifier==STUFFCHAR && isSameTeam;
+		isPenalty = currentAction==PENALTYCHAR;
+		isPass = currentAction==PASSCHAR;
+		isShot = currentAction==SHOTCHAR;
+		isAce = currentAction==ACECHAR;
+		isClear = currentAction==CLEARCHAR;
+		isDrop = currentAction==DROPCHAR;
+		isTimeOut = currentAction==TIMEOUTCHAR;
+		isFiveRod = currentPosition==FIVERODCHAR;
+		isTwoRod = currentPosition==TWORODCHAR;
+		isThreeRod = currentPosition==THREERODCHAR;
+		isOffTable = currentPosition==OFFTABLECHAR;
+		isDeadBall = currentPosition==DEADBALLCHAR;
+		wasFiveRod = previousPosition==FIVERODCHAR;
+		wasTwoRod = previousPosition==TWORODCHAR;
+		wasThreeRod = previousPosition==THREERODCHAR;
 		isForwardDirection = isSameTeam && !isSameRod && ((isFiveRod && wasTwoRod) || (isThreeRod && (wasFiveRod || wasTwoRod)));
-
 		isPassComplete = isPass && isSameTeam && !isSameRod && isForwardDirection;
 		isClearComplete = isClear && ((isSameTeam && isThreeRod) || (!isSameTeam && (isFiveRod || isTwoRod)));
-		isShotOnGoal = isShot && previousPosition==twoRodChar;
-
+		isShotOnGoal = isShot && previousPosition==TWORODCHAR;
 	}
 	private void validateCode() {
 		isError=false;
@@ -299,45 +283,45 @@ public class Stats implements Serializable {
 			isError=true;
 			errorMsg = "Invalid team code: " + currentTeam + ". ";
 		}
-		if (!(	currentPosition==goalChar 		||
-				currentPosition==fiveRodChar 	||
-				currentPosition==twoRodChar 	||
-				currentPosition==threeRodChar 	||
-				currentPosition==offTableChar   ||
-				currentPosition==deadBallChar)
+		if (!(	currentPosition==GOALCHAR 		||
+				currentPosition==FIVERODCHAR 	||
+				currentPosition==TWORODCHAR 	||
+				currentPosition==THREERODCHAR 	||
+				currentPosition==OFFTABLECHAR   ||
+				currentPosition==DEADBALLCHAR)
 				) 
 		{
 			isError=true;
 			errorMsg = errorMsg + "Invalid position: " + currentPosition + ". ";
 		}
-		if (!(	currentAction==passChar 	||
-				currentAction==shotChar 	||
-				currentAction==clearChar 	||
-				currentAction==dropChar 	||
-				currentAction==timeOutChar 	||
-				currentAction==resetChar 	||
-				currentAction==warnChar 	||
-				currentAction==penaltyChar 	||
-				currentAction==ballChar 	||
-				currentAction==errorChar    ||
-				currentAction==aceChar)
+		if (!(	currentAction==PASSCHAR 	||
+				currentAction==SHOTCHAR 	||
+				currentAction==CLEARCHAR 	||
+				currentAction==DROPCHAR 	||
+				currentAction==TIMEOUTCHAR 	||
+				currentAction==RESETCHAR 	||
+				currentAction==WARNCHAR 	||
+				currentAction==PENALTYCHAR 	||
+				currentAction==BALLCHAR 	||
+				currentAction==ERRORCHAR    ||
+				currentAction==ACECHAR)
 				) 
 		{
 			isError=true;
 			errorMsg = errorMsg + "Invalid action: " + currentAction + ". ";
 		}
 		if (code.length() > 3) {
-			if (!(	currentModifier==breakChar	 		||
-					currentModifier==stuffChar 			||
-					currentModifier==wallsChar 			||
-					currentModifier==spinChar 			||
-					currentModifier==jarChar 			||
-					currentModifier==distractionChar 	||
-					currentModifier==timeOutsOutChar 	||
-					currentModifier==illegalPassChar 	||
-					currentModifier==technicalChar 		||
-					currentModifier==protocolChar		||
-					currentModifier==otherChar)
+			if (!(	currentModifier==BREAKCHAR	 		||
+					currentModifier==STUFFCHAR 			||
+					currentModifier==WALLSCHAR 			||
+					currentModifier==SPINCHAR 			||
+					currentModifier==JARCHAR 			||
+					currentModifier==DISTRACTIONCHAR 	||
+					currentModifier==TIMEOUTSOUTCHAR 	||
+					currentModifier==ILLEGALPASSCHAR 	||
+					currentModifier==TECHNICALCHAR 		||
+					currentModifier==PROTOCOLCHAR		||
+					currentModifier==OTHERCHAR)
 					) 
 			{
 				isError=true;
@@ -749,11 +733,9 @@ public class Stats implements Serializable {
 		logger.info("Team2ShotsOnGoal: " + team2.getShotsOnGoal());
 		logger.info("Team1Stuffs: " + team1.getStuffs() + "       Team2Stuffs: " + team2.getStuffs());
 		logger.info("Team1Breaks: " + team1.getBreaks() + "       Team2Breaks: " + team2.getBreaks());
-//		logger.info("Team1Errors: " + team1.getErrors() + "       Team2Errors: " + team2.getErrors());
 		logger.info("");
 	}
 	public void restoreState(byte[] serializedObject) {
-
 		Stats tempStats = null;
 		try {
 			byte b[] = serializedObject;

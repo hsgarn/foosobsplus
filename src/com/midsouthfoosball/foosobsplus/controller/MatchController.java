@@ -25,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import com.midsouthfoosball.foosobsplus.main.Main;
 import com.midsouthfoosball.foosobsplus.main.StreamIndexer;
 import com.midsouthfoosball.foosobsplus.model.GameClock;
 import com.midsouthfoosball.foosobsplus.model.LastScoredClock;
@@ -130,12 +131,12 @@ public class MatchController {
 		updateGameTables();
 	}
 	public void updateGameTables() {
-		statsDisplayPanel.updateTeams(1,teamController.getDisplayName(1),teamController.getTeamName(1));
-		statsDisplayPanel.updateTeams(2,teamController.getDisplayName(2),teamController.getTeamName(2));
+		statsDisplayPanel.updateTeams(1,Main.combinePlayerNames(1),teamController.getTeamName(1));
+		statsDisplayPanel.updateTeams(2,Main.combinePlayerNames(2),teamController.getTeamName(2));
 		matchPanel.setGameWinners(match.getGameWinners());
 		matchPanel.setMatchWinner(match.getMatchWinner());
 		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getScoresTeam3(), match.getTimes(), match.getCurrentGameNumber());
-		gameTableWindowPanel.setTeams(teamController.getDisplayName(1) + ":",teamController.getDisplayName(2) + ":",teamController.getDisplayName(3) + ":");
+		gameTableWindowPanel.setTeams(Main.combinePlayerNames(1) + ":",Main.combinePlayerNames(2) + ":",Main.combinePlayerNames(3) + ":");
 		gameTableWindowPanel.setGameWinners(match.getGameWinners());
 		gameTableWindowPanel.setMatchWinner(match.getMatchWinner());
 		gameTableWindowPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getScoresTeam3(), match.getTimes(),match.getCurrentGameNumber());
@@ -210,8 +211,8 @@ public class MatchController {
 		match.resetMatch();
 	}
 	public void displayAllStats() {
-		statsDisplayPanel.updateTeams(1,teamController.getDisplayName(1),teamController.getTeamName(1));
-		statsDisplayPanel.updateTeams(2,teamController.getDisplayName(2),teamController.getTeamName(2));
+		statsDisplayPanel.updateTeams(1,Main.combinePlayerNames(1),teamController.getTeamName(1));
+		statsDisplayPanel.updateTeams(2,Main.combinePlayerNames(2),teamController.getTeamName(2));
 		statsDisplayPanel.updatePassStats(1, teamController.getPassCompletes(1),teamController.getPassAttempts(1),teamController.getPassPercent(1));
 		statsDisplayPanel.updatePassStats(2, teamController.getPassCompletes(2),teamController.getPassAttempts(2),teamController.getPassPercent(2));
 		statsDisplayPanel.updateShotStats(1, teamController.getShotCompletes(1),teamController.getShotAttempts(1),teamController.getShotPercent(1));
