@@ -1185,6 +1185,10 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.047 02/13/2024</br>
+Add OBSConnectPanel strings to message.properties.</br>
+Rough in Monitor Combo Box in OBSConnectPanel.</br>
+</br>
 v2.046 02/04/2024</br>
 Add cutthroat output for Game Results Window.</br>
 Refactor Stats class.</br>

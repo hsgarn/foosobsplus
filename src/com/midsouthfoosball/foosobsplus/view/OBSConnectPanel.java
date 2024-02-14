@@ -30,6 +30,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -64,82 +65,105 @@ public class OBSConnectPanel extends JPanel {
 	private JList<String> lstMessageHistory;
 	private DefaultListModel<String> mdlMessageHistory;
 	private JScrollPane scrMessageHistory;
+	private JComboBox<String> monitorComboBox;
 	private static final String ONE = "1";
 	private static final String ZERO = "0";
 	private static Logger logger = LoggerFactory.getLogger(OBSConnectPanel.class);
 	public OBSConnectPanel() throws IOException {
+		int row = 0;
+		monitorComboBox = new JComboBox<>();
 		mdlMessageHistory = new DefaultListModel<String>();
 		lstMessageHistory = new JList<String>(mdlMessageHistory);
 		setLayout(new MigLayout("", "[][grow]", "[][][][][][][][][][grow]"));
-		JLabel lblPanelTitle = new JLabel("OBS Connection Details:");
-		add(lblPanelTitle, "cell 1 0");
-		JLabel lblHost = new JLabel("Host");
-		add(lblHost, "cell 0 1,alignx right");
-		JLabel lblPort = new JLabel("Port");
-		add(lblPort, "cell 0 2,alignx right");
-		JLabel lblPassword = new JLabel("Password");
-		add(lblPassword, "cell 0 3,alignx right");
-		JLabel lblScene = new JLabel("Scene");
-		add(lblScene, "cell 0 4, alignx right");
+		JLabel lblPanelTitle = new JLabel(Messages.getString("OBSConnectPanel.Title"));
+		add(lblPanelTitle, "cell 1 " + row);
+		row += 1;
+		JLabel lblHost = new JLabel(Messages.getString("OBSConnectPanel.Host"));
+		add(lblHost, "cell 0 " + row + ",alignx right");
+		row += 1;
+		JLabel lblPort = new JLabel(Messages.getString("OBSConnectPanel.Port"));
+		add(lblPort, "cell 0 " + row + ",alignx right");
+		row += 1;
+		JLabel lblPassword = new JLabel(Messages.getString("OBSConnectPanel.Password"));
+		add(lblPassword, "cell 0 " + row + ",alignx right");
+		row += 1;
+		JLabel lblScene = new JLabel(Messages.getString("OBSConnectPanel.Scene"));
+		add(lblScene, "cell 0 " + row + ", alignx right");
+		row += 1;
+		JLabel lblMonitor = new JLabel(Messages.getString("OBSConnectPanel.Monitor"));
+		add(lblMonitor, "cell 0 " + row + ", alignx right");
+		row = 1;
 		txtHost = new JTextField();
 		txtHost.setText(Settings.getOBSParameter("OBSHost"));
 		txtHost.setColumns(10);
-		add(txtHost, "cell 1 1,alignx left");
+		add(txtHost, "cell 1 " + row + ",alignx left");
+		row += 1;
 		txtPort = new JTextField();
 		txtPort.setText(Settings.getOBSParameter("OBSPort"));
 		txtPort.setColumns(10);
-		add(txtPort, "cell 1 2,alignx left");
+		add(txtPort, "cell 1 " + row + ",alignx left");
+		row += 1;
 		txtPassword = new JTextField();
 		txtPassword.setText(Settings.getOBSParameter("OBSPassword"));
 		txtPassword.setColumns(10);
-		add(txtPassword, "cell 1 3,alignx left");
+		add(txtPassword, "cell 1 " + row + ",alignx left");
+		row += 1;
 		txtScene = new JTextField();
 		txtScene.setText(Settings.getOBSParameter("OBSScene"));
 		txtScene.setColumns(10);
-		add(txtScene, "cell 1 4,alignx left");
-		chckbxSavePassword = new JCheckBox("Save Password");
+		add(txtScene, "cell 1 " + row + ",alignx left");
+		row += 1;
+// 		populate monitorComboBox here. Also onReady should populate it from Main. Good Luck
+		add(monitorComboBox, "cell 1 " + row + ",alignx left");
+		row += 1;
+		chckbxSavePassword = new JCheckBox(Messages.getString("OBSConnectPanel.SavePassword"));
 		if (Settings.getOBSParameter("OBSSavePassword").equals(ONE)) { //$NON-NLS-1$
 			chckbxSavePassword.setSelected(true);
 		} else {
 			chckbxSavePassword.setSelected(false);
 		}
-		add(chckbxSavePassword, "cell 1 5,alignx left");
-		chckbxAutoLogin = new JCheckBox("Auto Login on Start");
+		add(chckbxSavePassword, "cell 1 " + row + ",alignx left");
+		row += 1;
+		chckbxAutoLogin = new JCheckBox(Messages.getString("OBSConnectPanel.AutoLoginOnStart"));
 		if (Settings.getOBSParameter("OBSAutoLogin").equals(ONE)) { //$NON-NLS-1$
 			chckbxAutoLogin.setSelected(true);
 		} else {
 			chckbxAutoLogin.setSelected(false);
 		}
-		add(chckbxAutoLogin, "cell 1 6,alignx left");
-		btnConnect = new JButton("Connect");
-		add(btnConnect, "cell 1 7,alignx left");
-		JLabel lblMessage = new JLabel("Message:");
-		add(lblMessage, "cell 1 8, alignx left");
+		add(chckbxAutoLogin, "cell 1 " + row + ",alignx left");
+		row += 1;
+		btnConnect = new JButton(Messages.getString("OBSConnectPanel.Connect"));
+		add(btnConnect, "cell 1 " + row + ",alignx left");
+		row += 1;
+		JLabel lblMessage = new JLabel(Messages.getString("OBSConnectPanel.Message"));
+		add(lblMessage, "cell 1 " + row + ", alignx left");
+		row += 1;
 		scrMessageHistory = new JScrollPane();
 		scrMessageHistory.setViewportView(lstMessageHistory);
 		lstMessageHistory.setLayoutOrientation(JList.VERTICAL);
 		lstMessageHistory.setCellRenderer(new AttributiveCellRenderer());
 		add(scrMessageHistory, "cell 1 9,span 3");
-		btnSetScene = new JButton("Set Scene");
+		row += 1;
+		btnSetScene = new JButton(Messages.getString("OBSConnectPanel.SetScene"));
 		add(btnSetScene, "cell 1 4,alignx right");
-		btnDisconnect = new JButton("Disconnect");
-		add(btnDisconnect, "cell 1 7,alignx right");
-		chckbxCloseOnConnect = new JCheckBox("Close on Connect");
+		btnDisconnect = new JButton(Messages.getString("OBSConnectPanel.Disconnect"));
+		add(btnDisconnect, "cell 1 8,alignx right");
+		chckbxCloseOnConnect = new JCheckBox(Messages.getString("OBSConnectPanel.CloseOnConnect"));
 		if (Settings.getOBSParameter("OBSCloseOnConnect").equals(ONE)) { //$NON-NLS-1$
 			chckbxCloseOnConnect.setSelected(true);
 		} else {
 			chckbxCloseOnConnect.setSelected(false);
 		}
-		add(chckbxCloseOnConnect, "cell 3 5,alignx left");
-		chckbxUpdateOnConnect = new JCheckBox("Update on Connect");
+		add(chckbxCloseOnConnect, "cell 3 6,alignx left");
+		chckbxUpdateOnConnect = new JCheckBox(Messages.getString("OBSConnectPanel.UpdateOnConnect"));
 		if (Settings.getOBSParameter("OBSUpdateOnConnect").equals(ONE)) {
 			chckbxUpdateOnConnect.setSelected(true);
 		} else {
 			chckbxUpdateOnConnect.setSelected(false);
 		}
-		add(chckbxUpdateOnConnect, "cell 3 6,alignx left");
-		btnSave = new JButton("Save");
-		add(btnSave, "cell 3 7,alignx left");
+		add(chckbxUpdateOnConnect, "cell 3 7,alignx left");
+		btnSave = new JButton("Global.Apply");
+		add(btnSave, "cell 3 8,alignx left");
 	}
 	public void disableConnect() {
 		btnConnect.setEnabled(false);

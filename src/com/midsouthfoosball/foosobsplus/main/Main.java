@@ -176,6 +176,7 @@ import io.obswebsocket.community.client.message.event.sceneitems.SceneItemEnable
 import io.obswebsocket.community.client.message.event.sceneitems.SceneItemListReindexedEvent;
 import io.obswebsocket.community.client.message.event.sceneitems.SceneItemRemovedEvent;
 import io.obswebsocket.community.client.message.event.scenes.CurrentProgramSceneChangedEvent;
+import io.obswebsocket.community.client.model.Monitor;
 /**
  * Main FoosOBS Object
  * @author Hugh Garner
@@ -466,6 +467,14 @@ public final class Main implements MatchObserver {
 		if(Settings.getOBSParameter("OBSCloseOnConnect").equals("1")) { 
 			obsConnectFrame.setVisible(false);
 		}
+//		OBS.getController().getMonitorList(response -> {
+//			List<Monitor> monitors = null;
+//			if(response != null && response.isSuccessful()) {
+//				monitors = response.getMonitors();
+//				System.out.println(monitors);
+////				updateMonitorList();
+//			}
+//		});
 	}
 	private static void onClose(WebSocketCloseCode webSocketCloseCode) {
 		updateOBSDisconnected();
