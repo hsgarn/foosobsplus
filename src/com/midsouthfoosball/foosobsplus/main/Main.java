@@ -63,6 +63,7 @@ import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
@@ -467,14 +468,39 @@ public final class Main implements MatchObserver {
 		if(Settings.getOBSParameter("OBSCloseOnConnect").equals("1")) { 
 			obsConnectFrame.setVisible(false);
 		}
-//		OBS.getController().getMonitorList(response -> {
-//			List<Monitor> monitors = null;
-//			if(response != null && response.isSuccessful()) {
-//				monitors = response.getMonitors();
-//				System.out.println(monitors);
-////				updateMonitorList();
-//			}
-//		});
+		fetchMonitorList();
+	}
+	private static void projectSource() {
+		if (OBS.getConnected()) {
+			Number monitorIndex = obsConnectPanel.getSelectedMonitor();
+			if (monitorIndex.intValue() != -1) {
+				OBS.getController().openSourceProjector(OBS.getScene(), monitorIndex, null, response -> 
+				{
+					if (!response.isSuccessful()) {
+						JFrame jFrame = new JFrame();
+						JOptionPane.showMessageDialog(jFrame, "Project Source Failed", "Project Source Error",JOptionPane.ERROR_MESSAGE);
+					}
+				});
+			}
+		}
+	}
+	private static void fetchMonitorList() {
+		if (OBS.getConnected()) {
+			OBS.getController().getMonitorList(response -> {
+				List<Monitor> monitors = null;
+				if(response != null && response.isSuccessful()) {
+					monitors = response.getMonitors();
+					HashMap<Integer, String> monitorMap = new HashMap<>();
+					for (Monitor monitor : monitors) {
+						monitorMap.put(monitor.getMonitorIndex(),  monitor.getMonitorName());
+					}
+					obsConnectPanel.updateMonitorList(monitorMap);
+				} else {
+					JFrame jFrame = new JFrame();
+					JOptionPane.showMessageDialog(jFrame, "Fetch Monitors Failed", "Fetch Monitors Error",JOptionPane.ERROR_MESSAGE);
+				}
+			});
+		}
 	}
 	private static void onClose(WebSocketCloseCode webSocketCloseCode) {
 		updateOBSDisconnected();
@@ -777,6 +803,8 @@ public final class Main implements MatchObserver {
 		parametersPanel.addSaveListener(new ParametersSaveListener());
 		parametersPanel.addEnableShowSkunkListener(new OBSEnableSkunkListener());
 		obsConnectPanel.addSetSceneListener(new OBSSetSceneListener());
+		obsConnectPanel.addFetchMonitorsListener(new OBSFetchMonitorsListener());
+		obsConnectPanel.addProjectListener(new OBSProjectListener());
 		obsConnectPanel.addConnectListener(new OBSConnectListener());
 		obsConnectPanel.addDisconnectListener(new OBSDisconnectListener());
 		obsConnectPanel.addSceneFocusListener(new OBSSceneFocusListener());
@@ -1623,6 +1651,16 @@ public final class Main implements MatchObserver {
 	private static class OBSSetSceneListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			setScene();
+		}
+	}
+	private static class OBSFetchMonitorsListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			fetchMonitorList();
+		}
+	}
+	private static class OBSProjectListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			projectSource();
 		}
 	}
 	private static class OBSSceneFocusListener extends FocusAdapter {

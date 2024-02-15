@@ -688,6 +688,15 @@ THis is the name of the scene in OBS Studio that FoosOBSPlus will be sending it'
 #### Set Scene
 Press the Set Scene button to get OBS Studio to show the scene in the Scene box.
 
+#### Monitor
+This is a list of the monitors on the computer that OBS can project a scene to. The monitor selected in the box will be the one that the scene will project to.
+
+#### Fetch Monitors
+This will retrieve the list of available monitors.  Generally this is not needed as the list will be populated when OBS first connects.
+
+#### Project
+Press this button to project the Scene specified in the Scene field to the monitor specified in the Monitor combo box.  This is the same as right clicking on a scene in OBS and clicking the Fullscreen Projector (Scene) entry.
+
 #### Save Password
 Check this box if you want FoosOBSPlus to save the password when it exits.  Otherwise, you will have to enter each time you run FoosOBSPlus and wnat to connect to OBS Studio.
 
@@ -1185,6 +1194,10 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.048 02/14/2024</br>
+Add MonitorComboBox logic.</br>
+Add Fetch Monitors and Project buttons and implement.</br>
+</br>
 v2.047 02/13/2024</br>
 Add OBSConnectPanel strings to message.properties.</br>
 Rough in Monitor Combo Box in OBSConnectPanel.</br>

@@ -25,6 +25,7 @@ import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -61,6 +62,8 @@ public class OBSConnectPanel extends JPanel {
 	private JCheckBox chckbxCloseOnConnect;
 	private JCheckBox chckbxUpdateOnConnect;
 	private JButton btnDisconnect;
+	private JButton btnFetchMonitors;
+	private JButton btnProject;
 	private JButton btnSave;
 	private JList<String> lstMessageHistory;
 	private DefaultListModel<String> mdlMessageHistory;
@@ -69,6 +72,10 @@ public class OBSConnectPanel extends JPanel {
 	private static final String ONE = "1";
 	private static final String ZERO = "0";
 	private static Logger logger = LoggerFactory.getLogger(OBSConnectPanel.class);
+	private static final int COLUMN0 = 0;
+	private static final int COLUMN1 = 1;
+	private static final int COLUMN2 = 2;
+	
 	public OBSConnectPanel() throws IOException {
 		int row = 0;
 		monitorComboBox = new JComboBox<>();
@@ -76,45 +83,47 @@ public class OBSConnectPanel extends JPanel {
 		lstMessageHistory = new JList<String>(mdlMessageHistory);
 		setLayout(new MigLayout("", "[][grow]", "[][][][][][][][][][grow]"));
 		JLabel lblPanelTitle = new JLabel(Messages.getString("OBSConnectPanel.Title"));
-		add(lblPanelTitle, "cell 1 " + row);
+		add(lblPanelTitle, "cell " + COLUMN1 + " " + row);
 		row += 1;
 		JLabel lblHost = new JLabel(Messages.getString("OBSConnectPanel.Host"));
-		add(lblHost, "cell 0 " + row + ",alignx right");
+		add(lblHost, "cell " + COLUMN0 + " " + row + ",alignx right");
 		row += 1;
 		JLabel lblPort = new JLabel(Messages.getString("OBSConnectPanel.Port"));
-		add(lblPort, "cell 0 " + row + ",alignx right");
+		add(lblPort, "cell " + COLUMN0 + " " + row + ",alignx right");
 		row += 1;
 		JLabel lblPassword = new JLabel(Messages.getString("OBSConnectPanel.Password"));
-		add(lblPassword, "cell 0 " + row + ",alignx right");
+		add(lblPassword, "cell " + COLUMN0 + " " + row + ",alignx right");
 		row += 1;
 		JLabel lblScene = new JLabel(Messages.getString("OBSConnectPanel.Scene"));
-		add(lblScene, "cell 0 " + row + ", alignx right");
+		add(lblScene, "cell " + COLUMN0 + " " + row + ", alignx right");
 		row += 1;
 		JLabel lblMonitor = new JLabel(Messages.getString("OBSConnectPanel.Monitor"));
-		add(lblMonitor, "cell 0 " + row + ", alignx right");
+		add(lblMonitor, "cell " + COLUMN0 + " " + row + ", alignx right");
+		row += 4;
+		JLabel lblMessage = new JLabel(Messages.getString("OBSConnectPanel.Message"));
+		add(lblMessage, "cell " + COLUMN0 + " " + row + ", alignx left");
 		row = 1;
 		txtHost = new JTextField();
 		txtHost.setText(Settings.getOBSParameter("OBSHost"));
 		txtHost.setColumns(10);
-		add(txtHost, "cell 1 " + row + ",alignx left");
+		add(txtHost, "cell " + COLUMN1 + " " + row + ",alignx left");
 		row += 1;
 		txtPort = new JTextField();
 		txtPort.setText(Settings.getOBSParameter("OBSPort"));
 		txtPort.setColumns(10);
-		add(txtPort, "cell 1 " + row + ",alignx left");
+		add(txtPort, "cell " + COLUMN1 + " " + row + ",alignx left");
 		row += 1;
 		txtPassword = new JTextField();
 		txtPassword.setText(Settings.getOBSParameter("OBSPassword"));
 		txtPassword.setColumns(10);
-		add(txtPassword, "cell 1 " + row + ",alignx left");
+		add(txtPassword, "cell " + COLUMN1 + " " + row + ",alignx left");
 		row += 1;
 		txtScene = new JTextField();
 		txtScene.setText(Settings.getOBSParameter("OBSScene"));
 		txtScene.setColumns(10);
-		add(txtScene, "cell 1 " + row + ",alignx left");
+		add(txtScene, "cell " + COLUMN1 + " " + row + ",alignx left");
 		row += 1;
-// 		populate monitorComboBox here. Also onReady should populate it from Main. Good Luck
-		add(monitorComboBox, "cell 1 " + row + ",alignx left");
+		add(monitorComboBox, "cell " + COLUMN1 + " " + row + ",alignx left");
 		row += 1;
 		chckbxSavePassword = new JCheckBox(Messages.getString("OBSConnectPanel.SavePassword"));
 		if (Settings.getOBSParameter("OBSSavePassword").equals(ONE)) { //$NON-NLS-1$
@@ -122,7 +131,7 @@ public class OBSConnectPanel extends JPanel {
 		} else {
 			chckbxSavePassword.setSelected(false);
 		}
-		add(chckbxSavePassword, "cell 1 " + row + ",alignx left");
+		add(chckbxSavePassword, "cell " + COLUMN1 + " " + row + ",alignx left");
 		row += 1;
 		chckbxAutoLogin = new JCheckBox(Messages.getString("OBSConnectPanel.AutoLoginOnStart"));
 		if (Settings.getOBSParameter("OBSAutoLogin").equals(ONE)) { //$NON-NLS-1$
@@ -130,40 +139,45 @@ public class OBSConnectPanel extends JPanel {
 		} else {
 			chckbxAutoLogin.setSelected(false);
 		}
-		add(chckbxAutoLogin, "cell 1 " + row + ",alignx left");
+		add(chckbxAutoLogin, "cell " + COLUMN1 + " " + row + ",alignx left");
 		row += 1;
 		btnConnect = new JButton(Messages.getString("OBSConnectPanel.Connect"));
-		add(btnConnect, "cell 1 " + row + ",alignx left");
-		row += 1;
-		JLabel lblMessage = new JLabel(Messages.getString("OBSConnectPanel.Message"));
-		add(lblMessage, "cell 1 " + row + ", alignx left");
+		add(btnConnect, "cell " + COLUMN1 + " " + row + ",alignx left");
 		row += 1;
 		scrMessageHistory = new JScrollPane();
 		scrMessageHistory.setViewportView(lstMessageHistory);
 		lstMessageHistory.setLayoutOrientation(JList.VERTICAL);
 		lstMessageHistory.setCellRenderer(new AttributiveCellRenderer());
-		add(scrMessageHistory, "cell 1 9,span 3");
-		row += 1;
+		add(scrMessageHistory, "cell " + COLUMN1 + " " + row + ",span 3");
+		row = 4;
 		btnSetScene = new JButton(Messages.getString("OBSConnectPanel.SetScene"));
-		add(btnSetScene, "cell 1 4,alignx right");
+		add(btnSetScene, "cell " + COLUMN1 + " " + row + ",alignx left");
+		row += 1;
+		btnFetchMonitors = new JButton(Messages.getString("OBSConnectPanel.FetchMonitors"));
+		add(btnFetchMonitors, "cell " + COLUMN1 + " " + row + ",alignx left");
+		btnProject = new JButton(Messages.getString("OBSConnectPanel.Project"));
+		add(btnProject, "cell " + COLUMN1 + " " + row + ",alignx left");
+		row = 8;
 		btnDisconnect = new JButton(Messages.getString("OBSConnectPanel.Disconnect"));
-		add(btnDisconnect, "cell 1 8,alignx right");
+		add(btnDisconnect, "cell " + COLUMN1 + " " + row + ",alignx left");
 		chckbxCloseOnConnect = new JCheckBox(Messages.getString("OBSConnectPanel.CloseOnConnect"));
 		if (Settings.getOBSParameter("OBSCloseOnConnect").equals(ONE)) { //$NON-NLS-1$
 			chckbxCloseOnConnect.setSelected(true);
 		} else {
 			chckbxCloseOnConnect.setSelected(false);
 		}
-		add(chckbxCloseOnConnect, "cell 3 6,alignx left");
+		row = 6;
+		add(chckbxCloseOnConnect, "cell " + COLUMN2 + " " + row + ",alignx left");
 		chckbxUpdateOnConnect = new JCheckBox(Messages.getString("OBSConnectPanel.UpdateOnConnect"));
 		if (Settings.getOBSParameter("OBSUpdateOnConnect").equals(ONE)) {
 			chckbxUpdateOnConnect.setSelected(true);
 		} else {
 			chckbxUpdateOnConnect.setSelected(false);
 		}
-		add(chckbxUpdateOnConnect, "cell 3 7,alignx left");
-		btnSave = new JButton("Global.Apply");
-		add(btnSave, "cell 3 8,alignx left");
+		row += 1;
+		add(chckbxUpdateOnConnect, "cell " + COLUMN2 + " " + row + ",alignx left");
+		btnSave = new JButton(Messages.getString("Global.Apply"));
+		add(btnSave, "cell " + COLUMN2 + " 8,alignx left");
 	}
 	public void disableConnect() {
 		btnConnect.setEnabled(false);
@@ -225,7 +239,6 @@ public class OBSConnectPanel extends JPanel {
 	  public AttributiveCellRenderer() {
 	    setOpaque(true);
 	  }
-
 	  public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) 
 	  {
 		  String tmp = ""; //$NON-NLS-1$
@@ -241,6 +254,19 @@ public class OBSConnectPanel extends JPanel {
           setText(tmp);
           return this;
 	  }
+    }
+    public void updateMonitorList(HashMap<Integer, String> monitorMap) {
+    	monitorComboBox.removeAllItems();
+    	for (HashMap.Entry<Integer, String> entry : monitorMap.entrySet()) {
+    		int index = entry.getKey();
+    		String monitor = entry.getValue();
+    		monitorComboBox.addItem(index + ": " + monitor);
+    	}
+    	monitorComboBox.repaint();
+    }
+    public Number getSelectedMonitor() {
+		Number monitorIndex = monitorComboBox.getSelectedIndex();
+		return monitorIndex;
     }
 	////// Listeners \\\\\\
 	public void addSceneFocusListener(FocusListener focusListenerForTxtScene) {
@@ -269,5 +295,11 @@ public class OBSConnectPanel extends JPanel {
 	}
 	public void addPasswordListener(ActionListener listenForTxtPassword) {
 		txtPassword.addActionListener(listenForTxtPassword);
+	}
+	public void addFetchMonitorsListener(ActionListener listenForBtnFetchMonitors) {
+		btnFetchMonitors.addActionListener(listenForBtnFetchMonitors);
+	}
+	public void addProjectListener(ActionListener listenForBtnProject) {
+		btnProject.addActionListener(listenForBtnProject);
 	}
 }
