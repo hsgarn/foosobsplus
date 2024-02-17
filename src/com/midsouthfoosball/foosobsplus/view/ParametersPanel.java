@@ -194,12 +194,12 @@ public class ParametersPanel extends JPanel {
 		JLabel lblRackMode = new JLabel(Messages.getString("ParametersPanel.RackMode", Settings.getGameType())); //$NON-NLS-1$
 		add(lblRackMode, "cell 0 9,alignx right"); //$NON-NLS-1$
 		chckbxRackMode = new JCheckBox(""); //$NON-NLS-1$
-		chckbxRackMode.setSelected(Settings.getControlParameter("RackMode").equals(ON) ? true : false); //$NON-NLS-1$
+		chckbxRackMode.setSelected(Settings.getControlParameter("RackMode").equals(ON)); //$NON-NLS-1$
 		add(chckbxRackMode, "cell 1 9"); //$NON-NLS-1$
 		JLabel lblAutoIncrementGame = new JLabel(Messages.getString("ParametersPanel.AutoIncrementGame", Settings.getGameType())); //$NON-NLS-1$
 		add(lblAutoIncrementGame, "cell 0 12,alignx right"); //$NON-NLS-1$
 		chckbxAutoIncrementGame = new JCheckBox(""); //$NON-NLS-1$
-		chckbxAutoIncrementGame.setSelected(Settings.getControlParameter("AutoIncrementGame").equals(ON) ? true : false); //$NON-NLS-1$
+		chckbxAutoIncrementGame.setSelected(Settings.getControlParameter("AutoIncrementGame").equals(ON)); //$NON-NLS-1$
 		add(chckbxAutoIncrementGame, "cell 1 12"); //$NON-NLS-1$
 		JLabel lblWinnerPrefix = new JLabel(Messages.getString("ParametersPanel.WinnerPrefix", Settings.getGameType())); //$NON-NLS-1$
 		add(lblWinnerPrefix, "cell 2 11,alignx center"); //$NON-NLS-1$
@@ -208,7 +208,7 @@ public class ParametersPanel extends JPanel {
 		JLabel lblAnnounceWinner = new JLabel(Messages.getString("ParametersPanel.AnnounceWinner", Settings.getGameType())); //$NON-NLS-1$
 		add(lblAnnounceWinner, "cell 0 13,alignx right"); //$NON-NLS-1$
 		chckbxAnnounceWinner = new JCheckBox(""); //$NON-NLS-1$
-		chckbxAnnounceWinner.setSelected(Settings.getControlParameter("AnnounceWinner").equals(ON) ? true : false); //$NON-NLS-1$
+		chckbxAnnounceWinner.setSelected(Settings.getControlParameter("AnnounceWinner").equals(ON)); //$NON-NLS-1$
 		add(chckbxAnnounceWinner, "cell 1 13,alignx left"); //$NON-NLS-1$
 		txtWinnerPrefix = new JTextField();
 		txtWinnerPrefix.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -222,7 +222,7 @@ public class ParametersPanel extends JPanel {
 		JLabel lblAnnounceMeatball = new JLabel(Messages.getString("ParametersPanel.AnnounceMeatball", Settings.getGameType())); //$NON-NLS-1$
 		add(lblAnnounceMeatball, "cell 0 14,alignx right"); //$NON-NLS-1$
 		chckbxAnnounceMeatball = new JCheckBox(""); //$NON-NLS-1$
-		chckbxAnnounceMeatball.setSelected(Settings.getControlParameter("AnnounceMeatball").equals(ON) ? true : false); //$NON-NLS-1$
+		chckbxAnnounceMeatball.setSelected(Settings.getControlParameter("AnnounceMeatball").equals(ON)); //$NON-NLS-1$
 		add(chckbxAnnounceMeatball, "cell 1 14,alignx left"); //$NON-NLS-1$
 		txtMeatball = new JTextField();
 		txtMeatball.setHorizontalAlignment(SwingConstants.CENTER);
@@ -232,27 +232,27 @@ public class ParametersPanel extends JPanel {
 		JLabel lblShowTimeOutsUsed = new JLabel(Messages.getString("ParametersPanel.ShowTimeOutsUsed", Settings.getGameType())); //$NON-NLS-1$
 		add(lblShowTimeOutsUsed, "cell 0 15,alignx right"); //$NON-NLS-1$
 		chckbxShowTimeOutsUsed = new JCheckBox(""); //$NON-NLS-1$
-		chckbxShowTimeOutsUsed.setSelected(Settings.getControlParameter("ShowTimeOutsUsed").equals(ON) ? true : false); //$NON-NLS-1$
+		chckbxShowTimeOutsUsed.setSelected(Settings.getControlParameter("ShowTimeOutsUsed").equals(ON)); //$NON-NLS-1$
 		add(chckbxShowTimeOutsUsed, "cell 1 15"); //$NON-NLS-1$
 		JLabel lblAutoCapitalizeTeam = new JLabel(Messages.getString("ParametersPanel.AutoCapitalizeNames", Settings.getGameType())); //$NON-NLS-1$
 		add(lblAutoCapitalizeTeam, "cell 0 16,alignx right"); //$NON-NLS-1$
 		chckbxAutoCapNames = new JCheckBox(""); //$NON-NLS-1$
-		chckbxAutoCapNames.setSelected(Settings.getControlParameter("AutoCapNames").equals(ON) ? true : false); //$NON-NLS-1$
+		chckbxAutoCapNames.setSelected(Settings.getControlParameter("AutoCapNames").equals(ON)); //$NON-NLS-1$
 		add(chckbxAutoCapNames, "cell 1 16"); //$NON-NLS-1$
 		JLabel lblWinByFinalOnly = new JLabel(Messages.getString("ParametersPanel.WinByFinalGameOnly", Settings.getGameType())); //$NON-NLS-1$
 		add(lblWinByFinalOnly, "cell 0 17,alignx right"); //$NON-NLS-1$
 		chckbxWinByFinalOnly = new JCheckBox(""); //$NON-NLS-1$
-		chckbxWinByFinalOnly.setSelected(Settings.getControlParameter("WinByFinalOnly").equals(ON) ? true : false); //$NON-NLS-1$
+		chckbxWinByFinalOnly.setSelected(Settings.getControlParameter("WinByFinalOnly").equals(ON)); //$NON-NLS-1$
 		add(chckbxWinByFinalOnly, "cell 1 17"); //$NON-NLS-1$
 		JLabel lblEnableShowSkunk = new JLabel(Messages.getString("ParametersPanel.EnableShowSkunk", Settings.getGameType())); //$NON-NLS-1$
 		add(lblEnableShowSkunk, "cell 0 18,alignx right"); //$NON-NLS-1$
 		chckbxEnableShowSkunk = new JCheckBox(""); //$NON-NLS-1$
-		chckbxEnableShowSkunk.setSelected(Settings.getControlParameter("ShowSkunk").equals(ON) ? true : false); //$NON-NLS-1$
+		chckbxEnableShowSkunk.setSelected(Settings.getControlParameter("ShowSkunk").equals(ON)); //$NON-NLS-1$
 		add(chckbxEnableShowSkunk, "cell 1 18"); //$NON-NLS-1$
 		JLabel lblCutThroatMode = new JLabel(Messages.getString("ParametersPanel.CutThroatMode", Settings.getGameType())); //$NON-NLS-1$
 		add(lblCutThroatMode, "cell 0 19, alignx right"); //$NON-NLS-1$
 		chckbxCutThroatMode = new JCheckBox(""); //$NON-NLS-1$
-		chckbxCutThroatMode.setSelected(Settings.getControlParameter("CutThroatMode").equals(ON) ? true : false); //$NON-NLS-1$
+		chckbxCutThroatMode.setSelected(Settings.getControlParameter("CutThroatMode").equals(ON)); //$NON-NLS-1$
 		add(chckbxCutThroatMode, "cell 1 19"); //$NON-NLS-1$
 		btnApply = new JButton(Messages.getString("Global.Apply")); //$NON-NLS-1$
 		add(btnApply, "cell 0 21,alignx center"); //$NON-NLS-1$
@@ -340,7 +340,7 @@ public class ParametersPanel extends JPanel {
 		txtSide1Color.setText(Settings.getControlParameter("Side1Color")); //$NON-NLS-1$
 		txtSide2Color.setText(Settings.getControlParameter("Side2Color")); //$NON-NLS-1$
 		txtBallsInRack.setText(Settings.getControlParameter("BallsInRack")); //$NON-NLS-1$
-		setEnableShowSkunk(Settings.getControlParameter("ShowSkunk").equals(ON) ? true : false); //$NON-NLS-1$
+		setEnableShowSkunk(Settings.getControlParameter("ShowSkunk").equals(ON)); //$NON-NLS-1$
 	}
 	private void saveIntegerSetting(String parameter, String value) {
 		if (isValidInteger(value)) {

@@ -118,8 +118,8 @@ public final class Settings {
 		//OBS
 		defaultOBSProps.setProperty("OBSHost", "localhost");
 		defaultOBSProps.setProperty("OBSPort", "4455");
-		defaultOBSProps.setProperty("OBSPassword","");
-		defaultOBSProps.setProperty("OBSScene", "FoosObs+ Main");
+		defaultOBSProps.setProperty("OBSPassword","OBSWebSocketPasswordGoesHere");
+		defaultOBSProps.setProperty("OBSMainScene", "FoosObs+ Main");
 		defaultOBSProps.setProperty("OBSAutoLogin", OFF);
 		defaultOBSProps.setProperty("OBSSavePassword", OFF);
 		defaultOBSProps.setProperty("OBSCloseOnConnect", ON);
@@ -484,6 +484,7 @@ public final class Settings {
 	//Control Parameters
 	public static String getDefaultParameter(String parameter) {return defaultControlProps.getProperty(parameter);}
 	//OBS
+	public static String getDefaultOBSParameter(String property) {return defaultOBSProps.getProperty(property);}
 //	public static <T> T getDefaultOBSParameter(String parameter, Function<String, T> parser) {return parser.apply(defaultOBSProps.getProperty(parameter));}
 	//Sources
 	public static String getDefaultSource(String property) {return defaultSourceProps.getProperty(property);}

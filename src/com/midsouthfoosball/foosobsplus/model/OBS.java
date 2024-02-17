@@ -27,7 +27,11 @@ public final class OBS {
 	private static String host;
 	private static String port;
 	private static String password;
-	private static String scene;
+	private static String mainScene;
+	private static boolean AutoLogin;
+	private static boolean UpdateOnConnect;
+	private static boolean CloseOnConnect;
+	private static boolean SavePassword;
 	private static OBSRemoteController controller;
 	transient private static Boolean connected;
 	transient private static String currentScene;
@@ -44,8 +48,8 @@ public final class OBS {
 	public static String getPort() {
 		return port;
 	}
-	public static String getScene() {
-		return scene;
+	public static String getMainScene() {
+		return mainScene;
 	}
 	public static void setPort(String port) {
 		OBS.port = port;
@@ -56,8 +60,8 @@ public final class OBS {
 	public static void setPassword(String password) {
 		OBS.password = password;
 	}
-	public static void setScene(String scene) {
-		OBS.scene = scene;
+	public static void setMainScene(String scene) {
+		OBS.mainScene = scene;
 	}
 	public static OBSRemoteController getController() {
 		return controller;
@@ -76,5 +80,29 @@ public final class OBS {
 	}
 	public static void setCurrentScene(String currentScene) {
 		OBS.currentScene = currentScene;
+	}
+	public static boolean isAutoLogin() {
+		return AutoLogin;
+	}
+	public static void setAutoLogin(boolean autoLogin) {
+		AutoLogin = autoLogin;
+	}
+	public static boolean isUpdateOnConnect() {
+		return UpdateOnConnect;
+	}
+	public static void setUpdateOnConnect(boolean updateOnConnect) {
+		UpdateOnConnect = updateOnConnect;
+	}
+	public static boolean isCloseOnConnect() {
+		return CloseOnConnect;
+	}
+	public static void setCloseOnConnect(boolean closeOnConnect) {
+		CloseOnConnect = closeOnConnect;
+	}
+	public static boolean isSavePassword() {
+		return SavePassword;
+	}
+	public static void setSavePassword(boolean savePassword) {
+		SavePassword = savePassword;
 	}
 }

@@ -63,7 +63,6 @@ import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
@@ -178,6 +177,7 @@ import io.obswebsocket.community.client.message.event.sceneitems.SceneItemListRe
 import io.obswebsocket.community.client.message.event.sceneitems.SceneItemRemovedEvent;
 import io.obswebsocket.community.client.message.event.scenes.CurrentProgramSceneChangedEvent;
 import io.obswebsocket.community.client.model.Monitor;
+import io.obswebsocket.community.client.model.Scene;
 /**
  * Main FoosOBS Object
  * @author Hugh Garner
@@ -281,9 +281,9 @@ public final class Main implements MatchObserver {
 		OBS.setHost(Settings.getOBSParameter("OBSHost"));
 		OBS.setPort(Settings.getOBSParameter("OBSPort"));
 		OBS.setPassword(Settings.getOBSParameter("OBSPassword"));
-		OBS.setScene(Settings.getOBSParameter("OBSScene"));
+		setMainScene(Settings.getOBSParameter("OBSMainScene"));
 		updateOBSDisconnected();
-		if (Settings.getOBSParameter("OBSAutoLogin").equals("1")) {
+		if (Settings.getOBSParameter("OBSAutoLogin").equals(ON)) {
 			if (OBS.getPassword().isEmpty() || OBS.getHost().isEmpty() || OBS.getPort().isEmpty()) {
 				String msg = Messages.getString("Errors.Main.AutoLogin");
 				String ttl = Messages.getString("Errors.Main.AutoLogin.Title");
@@ -297,7 +297,7 @@ public final class Main implements MatchObserver {
 		loadCommands();
 		match.addObserver(this);
 		createAutoScoreWorker();
-		if (Settings.getAutoScoreParameter("AutoScoreSettingsAutoConnect").equals("1")) {
+		if (Settings.getAutoScoreParameter("AutoScoreSettingsAutoConnect").equals(ON)) {
 			connectAutoScore();
 		}
 		createFileWatchWorker();
@@ -439,46 +439,47 @@ public final class Main implements MatchObserver {
 				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " WebSocket Version: " + versionInfo.getObsWebSocketVersion());
 			}
 		});
-		OBS.getController().setCurrentProgramScene(Settings.getOBSParameter("OBSScene"), response -> { 
-			String sceneName = Settings.getOBSParameter("OBSScene");
+		String sceneName = Settings.getOBSParameter("OBSMainScene");
+		OBS.getController().setCurrentProgramScene(sceneName, response -> { 
 			if(response != null && response.isSuccessful()) {
 				OBS.setCurrentScene(sceneName);
 				if(Settings.getShowParsed()) {
-						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Scene set to: " + sceneName);
+					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Scene set to: " + sceneName);
 				}
 			} else {
+				String msg = dtf.format(LocalDateTime.now()) + ": Unable to set scene to: " + sceneName;
+				logger.warn(msg);
 				if(Settings.getShowParsed()) {
-					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Unable to set scene to: " + sceneName);
+					obsConnectPanel.addMessage(msg);
 				}
 			}
 		});
 		OBS.getController().getSourceActive(Settings.getSourceParameter("ShowTimer"), response -> 
-			{boolean show = response.getMessageData().getResponseData().getVideoActive();
+			{boolean show = response.getVideoActive();
 				obsPanel.setShowTimer(show);
 				mainController.showTimerWindow(show);		
 			});
-		OBS.getController().getSourceActive(Settings.getSourceParameter("ShowScores"), response ->
-			{boolean show = response.getMessageData().getResponseData().getVideoActive();
-				obsPanel.setShowScores(show);
-			});
-		OBS.getController().getSourceActive(Settings.getSourceParameter("ShowCutthroat"), response ->
-		{boolean show = response.getMessageData().getResponseData().getVideoActive();
-			obsPanel.setShowCutthroat(show);
-		});
-		if(Settings.getOBSParameter("OBSCloseOnConnect").equals("1")) { 
+		OBS.getController().getSourceActive(Settings.getSourceParameter("ShowScores"), response -> obsPanel.setShowScores(response.getVideoActive()));
+		OBS.getController().getSourceActive(Settings.getSourceParameter("ShowCutthroat"), response -> obsPanel.setShowCutthroat(response.getVideoActive()));
+		if(Settings.getOBSParameter("OBSCloseOnConnect").equals(ON)) { 
 			obsConnectFrame.setVisible(false);
 		}
 		fetchMonitorList();
+		fetchSceneList();
 	}
 	private static void projectSource() {
 		if (OBS.getConnected()) {
 			Number monitorIndex = obsConnectPanel.getSelectedMonitor();
 			if (monitorIndex.intValue() != -1) {
-				OBS.getController().openSourceProjector(OBS.getScene(), monitorIndex, null, response -> 
+				String sceneName = obsConnectPanel.getSelectedSceneName();
+				if (sceneName.isEmpty()) sceneName = OBS.getMainScene();
+				OBS.getController().openSourceProjector(sceneName, monitorIndex, null, response -> 
 				{
 					if (!response.isSuccessful()) {
-						JFrame jFrame = new JFrame();
-						JOptionPane.showMessageDialog(jFrame, "Project Source Failed", "Project Source Error",JOptionPane.ERROR_MESSAGE);
+						String msg = Messages.getString("Errors.Main.ProjectError");
+						String ttl = Messages.getString("Errors.Main.Project.Title");
+						logger.warn(msg);
+						JOptionPane.showMessageDialog(null, msg, ttl, 1);
 					}
 				});
 			}
@@ -487,6 +488,9 @@ public final class Main implements MatchObserver {
 	private static void fetchMonitorList() {
 		if (OBS.getConnected()) {
 			OBS.getController().getMonitorList(response -> {
+				if(Settings.getShowParsed()) {
+					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Fetching Monitors.");
+				}
 				List<Monitor> monitors = null;
 				if(response != null && response.isSuccessful()) {
 					monitors = response.getMonitors();
@@ -495,9 +499,34 @@ public final class Main implements MatchObserver {
 						monitorMap.put(monitor.getMonitorIndex(),  monitor.getMonitorName());
 					}
 					obsConnectPanel.updateMonitorList(monitorMap);
+					if(Settings.getShowParsed()) {
+						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Monitors Fetched.");
+					}
 				} else {
-					JFrame jFrame = new JFrame();
-					JOptionPane.showMessageDialog(jFrame, "Fetch Monitors Failed", "Fetch Monitors Error",JOptionPane.ERROR_MESSAGE);
+					String msg = Messages.getString("Errors.Main.FetchMonitorError");
+					String ttl = Messages.getString("Errors.Main.FetchMonitor.Title");
+					logger.warn(msg);
+					JOptionPane.showMessageDialog(null, msg, ttl, 1);
+				}
+			});
+		}
+	}
+	private static void fetchSceneList() {
+		if (OBS.getConnected()) {
+			OBS.getController().getSceneList(response -> {
+				List<Scene> scenes = null;
+				if(response != null && response.isSuccessful()) {
+					scenes = response.getScenes();
+					HashMap<Integer, String> sceneMap = new HashMap<>();
+					for (Scene scene : scenes) {
+						sceneMap.put(scene.getSceneIndex(), scene.getSceneName());
+					}
+					obsConnectPanel.updateSceneList(sceneMap);
+				} else {
+					String msg = Messages.getString("Errors.Main.FetchSourceError");
+					String ttl = Messages.getString("Errors.Main.FetchSource.Title");
+					logger.warn(msg);
+					JOptionPane.showMessageDialog(null, msg, ttl, 1);
 				}
 			});
 		}
@@ -759,7 +788,7 @@ public final class Main implements MatchObserver {
 		
 	}
 	private static void activateFilter(String filter) {
-		setSourceFilterVisibility(OBS.getScene(), Settings.getFiltersFilter(filter), true);
+		setSourceFilterVisibility(OBS.getMainScene(), Settings.getFiltersFilter(filter), true);
 	}
 	public static void loadWindowsAndControllers() {
 		mainFrame = new MainFrame(Settings.getInstance(), tournamentPanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, teamPanel3, statsEntryPanel, 
@@ -802,13 +831,15 @@ public final class Main implements MatchObserver {
 		parametersPanel.addApplyListener(new ParametersApplyListener());
 		parametersPanel.addSaveListener(new ParametersSaveListener());
 		parametersPanel.addEnableShowSkunkListener(new OBSEnableSkunkListener());
-		obsConnectPanel.addSetSceneListener(new OBSSetSceneListener());
+		obsConnectPanel.addSetMainSceneListener(new OBSSetMainSceneListener());
 		obsConnectPanel.addFetchMonitorsListener(new OBSFetchMonitorsListener());
 		obsConnectPanel.addProjectListener(new OBSProjectListener());
+		obsConnectPanel.addActivateSceneListener(new OBSActivateSceneListener());
 		obsConnectPanel.addConnectListener(new OBSConnectListener());
 		obsConnectPanel.addDisconnectListener(new OBSDisconnectListener());
-		obsConnectPanel.addSceneFocusListener(new OBSSceneFocusListener());
-		obsConnectPanel.addSceneListener(new OBSSceneListener());
+		obsConnectPanel.addMainSceneFocusListener(new OBSMainSceneFocusListener());
+		obsConnectPanel.addMainSceneListener(new OBSMainSceneListener());
+		obsConnectPanel.addApplyListener(new OBSApplyListener());
 		obsConnectPanel.addSaveListener(new OBSSaveListener());
 		obsPanel.addConnectListener(new OBSConnectListener());
 		obsPanel.addDisconnectListener(new OBSDisconnectListener());
@@ -1643,14 +1674,19 @@ public final class Main implements MatchObserver {
 			clearAutoScoreConfig();
 		}
 	}
-	private static class OBSSceneListener implements ActionListener {
+	private static class OBSMainSceneListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			setScene();
+			JTextField txt = (JTextField) e.getSource();
+			setMainScene(txt.getText());
 		}
 	}
-	private static class OBSSetSceneListener implements ActionListener {
+	private static class OBSSetMainSceneListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			setScene();
+			String scene = obsConnectPanel.getSelectedSceneName();
+			if (scene != null && !scene.isEmpty()) {
+				obsConnectPanel.updateMainScene(scene);
+				setMainScene(scene);
+			}
 		}
 	}
 	private static class OBSFetchMonitorsListener implements ActionListener {
@@ -1663,10 +1699,16 @@ public final class Main implements MatchObserver {
 			projectSource();
 		}
 	}
-	private static class OBSSceneFocusListener extends FocusAdapter {
+	private static class OBSActivateSceneListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			String scene = obsConnectPanel.getSelectedSceneName();
+			activateOBSScene(scene);
+		}
+	}
+	private static class OBSMainSceneFocusListener extends FocusAdapter {
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
-			OBS.setScene(txt.getText());
+			setMainScene(txt.getText());
 		}
 	}
 	private static class OBSDisconnectListener implements ActionListener {
@@ -1691,9 +1733,17 @@ public final class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private static class OBSSaveListener implements ActionListener {
+	private static class OBSApplyListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.saveSettings();
+			setFocusOnCode();
+		}
+	}	private static class OBSSaveListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			obsConnectPanel.saveSettings();
+			JComponent comp = (JComponent) e.getSource();
+			Window win = SwingUtilities.getWindowAncestor(comp);
+			win.dispose();
 			setFocusOnCode();
 		}
 	}
@@ -2311,23 +2361,26 @@ public final class Main implements MatchObserver {
 		List<String> codes = stats.getCodeHistoryAsList();
 		return codes;
 	}
-	private static void setScene() {
+	private static void setMainScene(String scene) {
+		OBS.setMainScene(scene);
+	}
+	private static void activateOBSScene(String scene) {
 		if(OBS.getController() == null ) {
-			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " ERROR! Must connect before setting Scene");	
+			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " ERROR! Must connect before activating Scene");
 		} else {
-			if (OBS.getScene() != null && !OBS.getScene().isEmpty()) {
+			if (scene != null && !scene.isEmpty()) {
 				if (OBS.getConnected()) {
-					OBS.getController().setCurrentProgramScene(Settings.getOBSParameter("OBSScene"), response -> { 
+					OBS.getController().setCurrentProgramScene(scene, response -> { 
 						if(Settings.getShowParsed()) {
 							if (response != null && response.isSuccessful()) {
-								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Scene set to: " + Settings.getOBSParameter("OBSScene"));
+								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Scene " + scene + " activated.");
 							} else {
-								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Unable to set scene to: " + Settings.getOBSParameter("OBSScene"));
+								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Unable to activate scene: " + scene);
 							}
 						} 
 					});
 				}else {
-					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " ERROR! Must connect before setting Scene");
+					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " ERROR! Must connect before activating scene");
 				}
 			}
 		}

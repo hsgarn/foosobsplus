@@ -19,7 +19,7 @@ FoosOBSPlus is a java program.  You can download the executable jar file from th
 This opens up a window for you to select a stats file to import.  A stats file is a simple text file with one code per line.  The file will be read in and the stats will be displayed in the Statistics Display Panel.  The idea is that you can just write the codes in a text editor as a game is being played and then later import them into FoosOBSPlus for it to generate the stats.
 
 ### Export Stats
-This option writes the current codes in the Statistics Entry Panel History window to a file so that they can be imported later.  Not sure what the practicality of this is, but the option is here if you ever need it. :)
+This option writes the current codes in the Statistics Entry Panel History window to a file of your choosing so that they can be imported later.  Not sure what the practicality of this is, but the option is here if you ever need it. :)
 
 ### Exit
 This option can be used to exit the program.  A confirmation window will ask if you really want to exit the application.  Just click OK to exit or Cancel to return to the program.
@@ -38,85 +38,67 @@ Parameter Settings Page:</br>
 
 #### Points to Win
 This is the number of points required to win a game.  This is only used if the Auto Increment Game checkbox is checked and the Rack Mode check box is unchecked. Once a team's score reaches this number, it will reset the scores to zero and increase the game counter for the team.  If the Announce Winner check box is set and the team has reached the number set in the Games to Win parameter, then the Team's name will be sent to the Match Winner OBS source along with the text specified in the Winner Prefix and Winner Suffix parameters.  Points to Win is also utilized to determine if it is meatball (both teams 1 point away from winning score in final game).
-
 #### Max Win
 The Max Win parameter is only used when the Win By parameter is greater than 1.  If a team has to win by more than 1 point, then Max Win is the maximum score a team can get and at that point it does not matter if they won by more than 1 point.
-
 #### Win By
 The Win By parameter is used to force a team to win by a specified number of points.  Default is 1 which means that a team only has to win by 1 point (normal game behavior).  Setting the parameter to 2 would require that a team win by two points.  If a team reaches the Points to Win value without being ahead by the Win By value, then the game continues until either a team wins by the Win By margin, or the Max Win value is reached.  Note: If Win By in Final Game Only is checked, then the Win By points are only considered in the last game of the match (prior games are win by 1).
-
 #### Games to Win
 The Games to Win parameter is used to determine when a match is won.  Specify the number of games required to win the match.  Default is 2 for a 2 out of 3 match.  Use 3 for a 3 out of 5 match. etc.  6 is the maximum value supported at this time.
-
 #### Max Time Outs
 The Max Time Outs parameter is used to set how many time outs each team has.  The default is 2.
-
 #### Team 1 Color
 This is the color of the player figures for Team 1. Default is Yellow. This is used to help recognize which side of the table Team 1 is on.
-
 #### Team 2 Color
 This is the color of the player figures for Team 2. Default is Black. This is used to help recognize which side of the table Team 2 is on.
-
 #### Balls in Rack
 This is the number of balls in the table when using a coin op table.  This is used in Rack Mode.  In Rack Mode, the winner is determined by whoever has the most points after the number of balls in the Balls in Rack field have been scored.  The default is 9.
-
 #### Rack Mode
 When checked, Rack Mode is on.  A game is completed in Rack Mode when the number of balls in the Balls in Rack field have been scored. Whoever scored the most, wins.  So if Balls in Rack is 9, then the game ends when 9 points have been scored (the score could be 8 to 1, or 5 to 4 or 3 to 6, etc).  This mode is typically played on pay tables with pick up games as people play the full rack before starting a new game.
 When unchecked, Rack Mode is off and a game is completed after a team scores the number of points required to win a game.  This is the typical mode used for tournaments and is the default.
-
 #### Shot Time
 This is the time allowed to shoot the ball from the forward 3 rod or the goalie area in seconds.  The default is 15 seconds.
-
 #### Pass Time
 This is the time allowed to pass the ball from the 5 row to the 3 row in seconds.  The default is 10 seconds.
-
 #### Time Out Time
 This is the time allowed for a time out in seconds.  The default is 30 seconds.
-
 #### Game Time
 This is the time allowed between games in seconds.  The default is 90 seconds.
-
 #### Recall Time (min)
 This is the number of minutes a player may be on recall before forfeiting the match.  The default is 10 minutes.
-
 #### Team 1 Last Scored
 This parameter defines the text that will be sent to the Last Scored OBS source when Team 1 scores.  The default value is "<--- Last Scored".
-
 #### Team 2 Last Scored
 This parameter defines the text that will be sent to the Last Scored OBS source when Team 2 scores.  The default value is "Last Scored --->".
-
 #### Clear Last Scored
 This parameter defines the text that will be sent to the Last Scored OBS source when neither team has scored (after the Reset All button is clicked or a score is reduced by the - button).
-
 #### Auto Increment Game checkbox
 When checked, the game count for the team that just scored will be automatically incremented when their score is incremented and reaches the number of points required to win a game.
-
 #### Announce Winner checkbox
 When checked, the Match Winner OBS source will be populated with the winning team name (prefixed by the Winner Prefix parameter and suffixed by the Winner Suffix parameter) when the game count for a team reaches the Games to Win parameter value.  Use the Start Match, Reset Scores or Reset All buttons to clear the Match Winner for the next match.  Team names will be used if they are populated, otherwise the Forward and Goalie names display.  If team name, forward and goalie fields are all empty, then the match winner will not be displayed.
-
 #### Winner Prefix
 Text to be displayed in front of the winning teams name when the match is won.  The default is Match Winner:.
-
 #### Winner Suffix
 Text to be displayed after the winning teams name when the match is won.  The default is !!!.
-
 #### Announce Meatball checkbox and text field
 When checked, the Meatball OBS source will be populated with the text in the Announce Meatball parameter when both teams' scores are one point away from winning.  Once the score changes, the text in the Meatball OBS source will be automatically cleared.
-
 #### Show Time Outs Used
 When checked, the program will put the number of time outs used for each team in the Time Out OBS sources.  When unchecked, the program will put the number of time outs remaining for each team in the Time Out OBS sources.
-
 #### Auto Capitalize Names
 When checked, the program will automatically capitalize the first letter of each team's player's names.  If not checked, the team names are left as entered.
-
 #### Win By in Final Game Only
 When checked, a team must win by the margin in Win By parameter in the final game of the match only.  The prior games will be win by 1 point.  When unchecked, a team must always win by the margin in the Win By field in every game.
-
 #### Show Skunk
 When checked, the program will activate the OBS filter defined in the OBS Connect dialogue box when a team wins a game without the opposing team scoring a single point in the game.
-
 #### CutThroat Mode
 When checked, the program activates CutThroat Mode to support the game of CutThroat.  In CutThroat, three people play against each other. One player starts on the scoring side (Team 1) while the other players play on Team 2. The player on the scoring side always serves the ball and when scores, gets a point.  If the players on other side score, then everybody rotates so that Team 2 Forward moves to the scoring side. Team 2 Goalie moves to the Team 1 Forward position.  And the player who was on the scoring side moves to the Team 2 Goalie position.  The scores in this mode are appended to the players names.
+#### Apply
+Click the Apply button to save any parameter changes made and keep the window open.
+#### Apply and Close
+Click the Apply and Close button to save any parameter changes made and close the window.
+#### Cancel
+Click the cancel button to discard any parameter changes made.
+#### Restore Defaults
+Click the Restore Defaults button to restore the default parameters.
 
 ### Sources
 FoosOBSPlus sends most of its data to sources in OBS Studio so it can be displayed in a live stream.  The names of these sources are configurable if the default names do not suit you. The vast majority of these sources should be Text (GDI+) sources with the Read from file checkbox unchecked.  Exceptions to this will be specifically noted below.  There are enough sources that they were split into two windows.  The sources window is described below and the statistics sources window will be described in the following section. To get to the sources configuration, click on Edit, then Settings, then Sources:
@@ -130,104 +112,73 @@ Below are the sources that can be configured:
 
 #### Name: (Team 1, Team 2, Team 3)
 A source can be entered for each team's name.  The default source is teamXname where X is the team number (1, 2 or 3).
-
 #### Forward Name: (Team 1, Team 2, Team 3)
 A source can be entered for each team's forward.  The default source is teamXforward where X is the team number (1, 2 or 3).
-
 #### Goalie Name: (Team 1, Team 2, Team 3)
 A source can be entered for each team's goalie.  The default source is teamXgoalie where X is the team number (1, 2 or 3).
-
 #### Score: (Team 1, Team 2, Team 3)
 The score source for each team can be set.  The default source is teamXscore where X is the team number (1, 2 or 3).
-
 #### Game Count: (Team 1, Team 2, Team 3)
 The game count source for each team can be set.  The default source is teamXgamecount where X is the team number (1, 2 or 3).
-
 #### Match Count: (Team 1, Team 2, Team 3)
 The match count source for each team can be set.  The default source is teamXmatchcount where X is the team number (1, 2 or 3).
-
 #### Time Out: (Team 1, Team 2, Team 3)
 The time out count source for each team can be set.  The default source is teamXtimeout where X is the team number (1, 2 or 3).
-
 #### Reset: (Team 1, Team 2, Team 3)
 The reset source for each team can be set.  The default source is teamXreset where X is the team number (1, 2 or 3).
-
 #### Warn: (Team 1, Team 2, Team 3)
 The warn source for each team can be set.  The default source is teamXwarn where X is the team number (1, 2 or 3).
-
 #### King Seat: (Team 1, Team 2, Team 3)
 The king seat source for each team can be set.  The default source is teamXkingseat where X is the team number (1, 2 or 3).
-
 #### Game 1: (Team 1, Team 2, Team 3)
 This is the source that will be made visible when team X wins their first game.  This source can be any source type as long as it has the visible property (i.e. Text GUI+, Image, etc.).  The default source is teamXgame1 where X is the team number (1, 2 or 3).
-
 #### Game 2: (Team 1, Team 2, Team 3)
 This is the source that will be made visible when team X wins their second game.  Game 1's source will remain visible.  This source can be any source type as long as it has the visible property (i.e. Text GUI+, Image, etc.).  The default source is teamXgame2 where X is the team number (1, 2 or 3).
-
 #### Game 3: (Team 1, Team 2, Team 3)
 This is the source that will be made visible when team X wins their third game.  Game 1 and 2 sources will remain visible.  This source can be any source type as long as it has the visible property (i.e. Text GUI+, Image, etc.).  The default source is teamXgame3 where X is the team number (1, 2 or 3).
-
 #### Show Scores:
 This is the source that is controlled by the Show Score check box in the OBS Panel on the main screen.  This is intended to be a named group of sources within within OBS or a scene with OBS that contains all the scoring fields and their associated labels.  This group or scene can then be included in your main streaming scene.  When you want to keep score, check the Show Score check box on the main screen.  When no one is keeping the score, uncheck the Show Scores button which will turn the scene/group in the Show Scores: source box off.
 The following sources would typically be contained in this scene or group:
 Last Scored, Time Out (Teams 1 & 2), Match Count 1 (Teams 1 & 2), Game Count (Teams 1 & 2), Score (Teams 1 & 2), King Seat (Teams 1 & 2).
 Not team 3 sources are controlled by Show Cutthroat discussed later.
 Also include any labels that would look out of place without the above fields.
-
 #### Show Timer:
 This is the source that shows the time remaining.  This should be a Window Capture source in OBS. The window should be setup as follows:</br>
 <img width="500" height="200" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettingsTimerWindow.png">
-
 #### Show Cutthroat:
 This is the source that is controlled by the Show Cutthroat check box in the OBS Panel on the main screen.  This is intended to be a named group of sources within within OBS or a scene with OBS that contains all the scoring fields and their associated labels for team 3.  This group or scene can then be included in your main streaming scene.  When you want to show team 3's information, check the Show Cutthroat check box on the main screen.  When no one is keeping the score, uncheck the Show Scores button which will turn the scene/group in the Show Scores: source box off.
 The following sources would typically be contained in this scene or group:
 Time Out (Team 3), Match Count (Team 3), Game Count (Team 3), Score (Team 3), King Seat (Team 3).
-
 #### Tournament:
 This is the source of a freeform text field that can be used for the name of the tournament or venue.  Default source is tournament.
-
 #### Event:
 This is the source of a freeform text field that can be used for the name of the event being played (i.e. DYP, Open Singles, etc).  Default source is event.
-
 #### Table Name:
 This is the source for the table name.  Default source is tablename.
-
 #### Timer:
 This is the source that holds the name of the current timer that is running (Shot, Pass, Game, Timeout, Recall). Default source is timerinuse.
-
 #### Time Remaining:
 This is the source for the Time Remaining on the current timer.  Default source is timeremaining.  An alternative and arguably better method to show time remaining is to use a Window Capture source in OBS. This will show the background color of the timer which is a nice touch since it starts green and goes red when time runs out.
-
 #### Game Time:
 This is the source for the game clock time.  Default source is gametime.
-
 #### Match Time:
 This is the source for the match time.  Default source is matchtime.
-
 #### Stream Time:
 This is the source for the stream time. Default source is streamtime.
-
 #### Last Scored:
 This is the source that holds the indicator for which team scored last.  Default source is lastscored.
-
 #### Match Winner:
 This is the source that holds the Winner Prefix, Team's Name and Winner Suffix of the team that won the match.  Default source is matchwinner.
-
 #### Meatball:
 This is the source that holds the Meatball text when a game is tied just prior to the final point.  Default source is meatball.
-
 #### Game Results:
 This is the source that holds the results of all the games played since the program was started or the Start Event button was pressed.  It is intended to be a Text (GDI+) source with a scrolling filter applied.   Every time a game is won, the current time, team 1 forward & goalie names, team 1 score, team 2 forward & goalie names, team 2 score, and the game time length is added to the text on a new line.  Default source is gameresults.
-
 #### Apply
 Click the Apply button to save any source changes made and keep the window open.
-
 #### Apply and Close
 Click the Apply and Close button to save any source changes made and close the window.
-
 #### Cancel
 Click the cancel button to discard any source changes made.
-
 #### Restore Defaults
 Click the Restore Defaults button to restore the default sources.
 
@@ -245,73 +196,50 @@ Each field below has a source for Team 1, Team 2 and Team 3.  For the defaults, 
 
 #### Pass Attempts:
 This is the source that holds the number of pass attempts for a team.  Default source is teamXpassattempts.
-
 #### Pass Completes:
 This is the source that holds the number of pass completions for a team.  Default source is teamXpasscompletes.
-
 #### Pass Percent:
 This is the source that holds the successful passing percentage for a team.  Default source is teamXpasspercent.
-
 #### Shot Attempts:
 This is the source that holds the number of shot attempts for a team.  Default source is teamXshotattempts.
-
 #### Shot Completes:
 This is the source that holds the number of shots made for a team.  Default source is teamXshotcompletes.
-
 #### Shot Percent:
 This is the source that holds the successful shot percentage for a team.  Default source is teamXshotpercent.
-
 #### Clear Attempts:
 This is the source that holds the number of clearing attempts for a team.  Default source is teamXclearattempts.
-
 #### Clear Completes:
 This is the source that holds the number of successful clears for a team from the goalie area to the 5 bar or beyond.  Default source is teamXclearcompletes.
-
 #### Clear Percent:
 This is the source that holds the successful clear percentage for a team.  Default source is teamXclearpercent.
-
 #### 2-Bar Pass Attempts:
 This is the source that holds the number of pass attempts for a team from the 2-bar to the 5-bar or 3-bar.  Default source is teamXtwobarpassattempts.
-
 #### 2-Bar Pass Completes:
 This is the source that holds the number of successful pass completions for a team from the 2-bar to the 5-bar or 3-bar.  Default source is teamXtwobarpasscompletes.
-
 #### 2-Bar Pass Percent:
 This is the source that holds the successful 2-bar to the 5-bar or 3-bar passing percentage for a team.  Default source is teamXtwobarpasspercent.
-
 #### Aces:
 This is the source that holds the number of aces for a team. Default source is teamXaces.
-
 #### Stuffs:
 This is the source that holds the number of stuffs for a team.  Default source is teamXstuffs.
-
 #### Breaks:
 This is the source that holds the number of breaks for a team.  Default source is teamXbreaks.
-
 #### Scoring:
 This is the source that holds the number of scores for a team.  Default source is teamXscoring.
-
 #### 3-Bar Scoring:
 This is the source that holds the number of scores from the 3-bar for a team.  Default source is teamXthreebarscoring.
-
 #### 5-Bar Scoring:
 This is the source that holds the number of scores from the 5-bar for a team.  Default source is teamXfivebarscoring.
-
 #### 2-Bar Scoring:
 This is the source that holds the number of scores from the 2-bar for a team.  Default source is teamXtwobarscoring.
-
 #### Shots On Goal:
 This is the source that holds the number of shots on goal for a team.  Default source is teamXshotsongoal.
-
 #### Apply
 Click the Apply button to save any statistics source changes made.
-
 #### Apply and Close
 Click the Apply and Close button to save any statistics source changes made and close the window.
-
 #### Cancel
 Click the cancel button to discard any statistics source changes made.
-
 #### Restore Defaults
 Click the Restore Defaults button to restore the default statistics sources.
 
@@ -323,228 +251,156 @@ FoosOBSPlus uses buttons to do various functions such as increase or decrease sc
 Hot Key Settings Page:</br>
 <img width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings6.png">
 
-##### Team 1 Switch Positions
+Below are the Hot Keys that can be configured and their default values:
+
+#### Team 1 Switch Positions
 Assigns the hot key to Switch Team 1's forward and goalie names. Default hot key is t.
-
-##### Team 2 Switch Positions
+#### Team 2 Switch Positions
 Assigns the hot key to Switch Team 2's forward and goalie names. Default hot key is m.
-
-##### Team 3 Switch Positions
+#### Team 3 Switch Positions
 Assigns the hot key to Switch Team 3's forward and goalie names. Default hot key is m.
-
-##### Team 1 Increment Score
+#### Team 1 Increment Score
 Assigns the hot key for the + (increment score) button for Team 1. Default hot key is 1.
-
-##### Team 2 Increment Score
+#### Team 2 Increment Score
 Assigns the hot key for the + (increment score) button for Team 2. Default hot key is 2.
-
-##### Team 3 Increment Score
+#### Team 3 Increment Score
 Assigns the hot key for the + (increment score) button for Team 3. Default hot key is unassigned.
-
-##### Team 1 Decrement Score
+#### Team 1 Decrement Score
 Assigns the hot key for the - (decrement score) button for Team 1. Default hot key is 4.
-
-##### Team 2 Decrement Score
+#### Team 2 Decrement Score
 Assigns the hot key for the - (decrement score) button for Team 2. Default hot key is 8.
-
-##### Team 3 Decrement Score
+#### Team 3 Decrement Score
 Assigns the hot key for the - (decrement score) button for Team 3. Default hot key is unassigned.
-
-##### Team 1 Increment Game
+#### Team 1 Increment Game
 Assigns the hot key for the + (increment game count) button to increase Team 1's game count. Default hot key is 5.
-
-##### Team 2 Increment Game
+#### Team 2 Increment Game
 Assigns the hot key for the + (increment game count) button to increase Team 2's game count. Default hot key is 6.
-
-##### Team 3 Increment Game
+#### Team 3 Increment Game
 Assigns the hot key for the + (increment game count) button to increase Team 3's game count. Default hot key is unassigned.
-
-##### Team 1 Decrement Game
+#### Team 1 Decrement Game
 Assigns the hot key for the - (decrement game count) button for Team 1's score. Default hot key is j.
-
-##### Team 2 Decrement Game
+#### Team 2 Decrement Game
 Assigns the hot key for the - (decrement game count) button for Team 2's score. Default hot key is i.
-
-##### Team 3 Decrement Game
+#### Team 3 Decrement Game
 Assigns the hot key for the - (decrement game count) button for Team 3's score. Default hot key is unassigned.
-
-##### Team 1 Increment Match
+#### Team 1 Increment Match
 Assigns the hot key for the + (increment match) button for Team 1. Default hot key is unassigned.
-
-##### Team 2 Increment Match
+#### Team 2 Increment Match
 Assigns the hot key for the + (increment match) button for Team 2. Default hot key is unassigned2.
-
-##### Team 3 Increment Match
+#### Team 3 Increment Match
 Assigns the hot key for the + (increment match) button for Team 3. Default hot key is unassigned.
-
-##### Team 1 Decrement Match
+#### Team 1 Decrement Match
 Assigns the hot key for the - (decrement match) button for Team 1. Default hot key is unassigned.
-
-##### Team 2 Decrement Match
+#### Team 2 Decrement Match
 Assigns the hot key for the - (decrement match) button for Team 2. Default hot key is unassigned.
-
-##### Team 3 Decrement Match
+#### Team 3 Decrement Match
 Assigns the hot key for the - (decrement match) button for Team 3. Default hot key is unassigned.
-
-##### Team 1 Use Time Out
+#### Team 1 Use Time Out
 Assigns the hot key to use a time out for Team 1.  Default hot key is 9.
-
-##### Team 2 Use Time Out
+#### Team 2 Use Time Out
 Assigns the hot key to use a time out for Team 2.  Default hot key is 0.
-
-##### Team 3 Use Time Out
+#### Team 3 Use Time Out
 Assigns the hot key to use a time out for Team 3.  Default hot key is unassigned.
-
-##### Team 1 Return Time Out
+#### Team 1 Return Time Out
 Assigns the hot key to return a time out to Team 1's available pool of timeouts or used pool of time outs depending on how the Show Time Outs Used setting is set.  Default hot key is n.
-
-##### Team 2 Return Time Out
+#### Team 2 Return Time Out
 Assigns the hot key to return a time out to Team 2's available pool of timeouts or used pool of time outs depending on how the Show Time Outs Used setting is set.  Default hot key is q.
-
-##### Team 3 Return Time Out
+#### Team 3 Return Time Out
 Assigns the hot key to return a time out to Team 3's available pool of timeouts or used pool of time outs depending on how the Show Time Outs Used setting is set.  Default hot key is unassigned.
-
 #### Team 1 Reset
 Assigns the hot key for the Reset button for Team 1.  Default hot key is unassigned.
-
 #### Team 2 Reset
 Assigns the hot key for the Reset button for Team 2.  Default hot key is unassigned.
-
 #### Team 3 Reset
 Assigns the hot key for the Reset button for Team 3.  Default hot key is unassigned.
-
 #### Team 1 Warn
 Assigns the hot key for the Warn button for Team 1. Default hot key is unassigned.
-
 #### Team 2 Warn
 Assigns the hot key for the Warn button for Team 2. Default hot key is unassigned.
-
 #### Team 3 Warn
 Assigns the hot key for the Warn button for Team 3. Default hot key is unassigned.
-
 #### Team 1 King Seat
 Assigns the hot key for the King Seat check box for Team 1. Default hot key is unassigned.
-
 #### Team 2 King Seat
 Assigns the hot key for the King Seat check box for Team 2. Default hot key is unassigned.
-
 #### Team 3 King Seat
 Assigns the hot key for the King Seat check box for Team 3. Default hot key is unassigned.
-
 #### Start Match
 Assigns the hot key for the Start Match button.  Default hot key is b.
-
 #### Pause Match
 Assigns the hot key for the Pause Match button.  Default hot key is ,.
-
 #### End Match
 Assigns the hot key for the End Match button.  Default hot key is unassigned.
-
 #### Start Game
 Assigns the hot key for the Start Game button.  Default hot key is ..
-
-##### Shot Timer
+#### Shot Timer
 Assigns the hot key to start the Shot timer.  Default hot key is s.
-
-##### Pass Timer
+#### Pass Timer
 Assigns the hot key to start the Pass timer.  Default hot key is p.
-
-##### Time Out Timer
+#### Time Out Timer
 Assigns the hot key to start the Time Out timer.  Default hot key is o.
-
-##### Game Timer
+#### Game Timer
 Assigns the hot key to start the Game timer.  Default hot key is g.
-
-##### Recall Timer
+#### Recall Timer
 Assigns the hot key to start the Recall timer.  Default hot key is c.
-
-##### Reset Timer
+#### Reset Timer
 Assigns the hot key to reset the timer to 0 regardless of what it is currently timing.  Default hot key is r.
-
 #### Clear All
 Assigns the hot key for the Clear All button in the Switch Panel.  Default hot key is unassigned.
-
 #### Undo
 Assigns the hot key for the Undo button.  Default hot key is u.
-
 #### Redo
 Assigns the hot key for the Redo button.  Default hot key is d.
-
 #### Show Skunk
 Assigns the hot key for the Show Skunk button. Default hot key is k.
-
 #### Start Stream
 Assigns the hot key for the Start Stream button. Default hot key is z.
-
 #### Clear Tournament
 Assigns the hot key for the Clear button for the Tournament Information panel. Default hot key is unassigned.
-
 #### Switch Match Counts
 Assigns the hot key for the Switch Match Counts button. Default hot key is unassigned.
-
 #### Switch Sides
 Assigns the hot key to swap all Team 1's data with Team 2's data.  Use this when the teams switch sides. Default hot key is w.
-
-##### Switch Teams
+#### Switch Teams
 Assigns the hot key to swap Team 1's and Team 2's names (Team, Forward & Goalie) with each other.  Default hot key is e.
-
-##### Switch Scores
+#### Switch Scores
 Assigns the hot key to Switch Team 1 and Team 2's scores.  Default hot key is unassigned.
-
-##### Switch Game Counts
+#### Switch Game Counts
 Assigns the hot key to switch the game counts. Team 1's game count will be swapped with Team 2's game count.  Default hot key is unassigned.
-
-##### Switch Time Outs
+#### Switch Time Outs
 Assigns the hot key to switch the time out counts. Team 1's time out count will be swapped with Team 2's time out count.  Default hot key is [.
-
 #### Switch Reset/Warns
 Assigns the hot key to swap the Reset and Warn flags for Team 1 with Team 2.  Default hot key is unassigned.
-
 #### Switch Forwards
 Assigns the hot key for switching only the names of the Forwards of Team 1 and Team 2.  Default hot key is ;.
-
 #### Switch Goalies
 Assigns the hot key for switching only the names of the Goalies of Team 1 and Team 2.  Default hot key is x.
-
 #### Reset Names
 Assigns the hot key for the Reset Names button in the Reset Panel.  Default hot key is unassigned.
-
 #### Reset Scores
 Assigns the hot key for the Reset Scores button in the Reset Panel.  Default hot key is 3.
-
 #### Reset Game Counts
 Assigns the hot key to reset Team 1's, Team 2's and Team 3's game counts to 0.  Default hot key is 7.
-
 #### Reset Time Outs
 Assigns the hot key to reset Team 1's, Team 2's and Team 3's time outs to 0 or the max time outs depending on how the Show Time Outs Used setting is set.  Default hot key is -.
-
 #### Reset Reset/Warn
 Assigns the hot key to clear the Reset and Warn flags for both Team 1 and Team 2.  Default hot key is unassigned.
-
 #### Reset All
 Assigns the hot key to clear the game counts, scores, time outs, reset flags and warn flags for both Team 1 and Team 2.  Default hot key is a.
-
 #### Reset Match Counts
 Assigns the hot key to reset Team 1's, Team 2's and Team 3's match counts to 0.  Default hot key is 7.
-
 #### AutoHotKey Script Path
 This is the path to where the AutoHotKey scripts will be generated.  The default is C:\FoosOBSPlusScripts\.
-
 #### Generate AutoHotKey Scripts
 This button will generate an AutoHotKey script for each defined hot key.  The basic idea of the scripts is to bring the FoosOBSPlus window into focus and then press the hot key for the associated hot key for the action desired. It then moves the FoosOBSPlus window to the bottom of the screen so that your OBS program can stay the main focus.  The scripts will be placed into the directory specified in the AutoHotKey Script Path field.
-
 #### Select Path
 The Select Path allows you to choose the directory in which the AutoHotKey scripts will be created. Optionally you can just type the path in the box to the right of the Select Path button.
-
 #### Apply
 Click the Apply button to save any hot key changes made.
-
 #### Apply and Close
 Click the Apply and Close button to save any hot key changes made and close the window.
-
 #### Cancel
 Click the cancel button to discard any hot key changes made.
-
 #### Restore Defaults
 Click the Restore Defaults button to restore the default hot keys.
 
@@ -560,73 +416,50 @@ Below are the filters that can be configured:
 
 #### Team 1 Score
 This is the name of the filter activated when Team 1 scores.
-
 #### Team 2 Score
 This is the name of the filter activated when Team 2 scores.
-
 #### Team 1 Win Game
 This is the name of the filter activated when Team 1 wins a game.
-
 #### Team 2 Win Game
 This is the name of the filter activated when Team 2 wins a game.
-
 #### Team 1 Win Match
 This is the name of the filter activated when Team 1 wins a match.
-
 #### Team 2 Win Match
 This is the name of the filter activated when Team 2 wins a match.
-
 #### Team 1 Time Out
 This is the name of the filter activated when Team 1 calls a time out.
-
 #### Team 2 Time Out
 This is the name of the filter activated when Team 2 calls a time out.
-
 #### Team 1 Reset
 This is the name of the filter activated when the Team 1 Reset button is pressed.
-
 #### Team 2 Reset
 This is the name of the filter activated when the Team 2 Reset button is pressed.
-
 #### Team 1 Warn
 This is the name of the filter activated when the Team 1 Warn button is pressed.
-
 #### Team 2 Warn
 This is the name of the filter activated when the Team 2 Warn button is pressed.
-
 #### Team 1 Switch Positions
 This is the name of the filter activated when the Team 1 Switch Positions button is pressed.
-
 #### Team 2 Switch Positions
 This is the name of the filter activated when the Team 2 Switch Positions button is pressed.
-
 #### Team 1 Skunks
 This is the name of the filter activated when Team 1 skunks Team 2.
-
 #### Team 2 Skunks
 This is the name of the filter activated when Team 2 skunks Team 1.
-
 #### Start Match
 This is the name of the filter activated when the Start Match button is pressed.
-
 #### Start Game
 This is the name of the filter activated when the Start Game button is pressed.
-
 #### Switch Sides
 This is the name of the filter activated when the Switch Sides button is pressed.
-
 #### Meatball
 This is the name of the filter activated when both teams are tied and next ball wins the match.
-
 #### Apply
 Click the Apply button to save any filter changes made.
-
 #### Apply and Close
 Click the Apply and Close button to save any filter changes made and close the window.
-
 #### Cancel
 Click the cancel button to discard any filter changes made.
-
 #### Restore Defaults
 Click the Restore Defaults button to restore the default filters.
 
@@ -640,28 +473,20 @@ Partner Program Settings Page:</br>
 
 #### Select Path
 The Select Path allows you to choose the directory that will contain the files of the players' names.  Optionally you can just type the path in the box to the right of the Select Path button.
-
 #### Player 1
 This is the name of the file containing the name of Team 1's forward.  Default is Player1.txt.
-
 #### Player 2
 This is the name of the file containing the name of Team 1's goalie.  Default is Player2.txt.
-
 #### Player 3
 This is the name of the file containing the name of Team 2's forward.  Default is Player3.txt.
-
 #### Player 4
 This is the name of the file containing the name of Team 2's goalie.  Default is Player4.txt.
-
 #### Apply
 Click the Apply button to save any changes made.
-
 #### Apply and Close
 Click the Apply and Close button to save any changes made and close the window.
-
 #### Cancel
 Click the cancel button to discard any changes made.
-
 #### Restore Defaults
 Click the Restore Defaults button to restore the default file names.
 
@@ -674,50 +499,49 @@ This opens the OBS Connect window.  Here you can set the connection details for 
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusOBSConnect.png">
 
 #### Host
-This is the host name or ip address of the computer running OBS Studio. FoosOBSPlus must be running on the same network as OBS Studio.  If they are running on the same computer, then you can use localhost as the host name.  OBS Studio will provide the connection details by going to Tools -> obs-websocket Settings -> Show Connect Info.
-
+This is the host name or ip address of the computer running OBS Studio. FoosOBSPlus must be running on the same network as OBS Studio.  If they are running on the same computer, then you can use localhost as the host name.  OBS Studio will provide the connection details by going to Tools -> WebSocket Server Settings -> Show Connect Info.
 #### Port
-This is the port that OBS Studio is listening too for connections.  OBS Studio will provide the connection details by going to Tools -> obs-websocket Settings -> Show Connect Info.
-
+This is the port that OBS Studio is listening too for connections.  OBS Studio will provide the connection details by going to Tools -> WebSocket Server Settings -> Show Connect Info.
 #### Password
-This is the password for OBS Studio.  OBS Studio will provide the connection details by going to Tools -> obs-websocket Settings -> Show Connect Info.
-
-#### Scene
-THis is the name of the scene in OBS Studio that FoosOBSPlus will be sending it's data to.
-
-#### Set Scene
-Press the Set Scene button to get OBS Studio to show the scene in the Scene box.
-
+This is the password for OBS Studio.  OBS Studio will provide the connection details by going to Tools -> WebSocket Server Settings -> Show Connect Info.
+#### Main Scene
+This is the name of the scene in OBS Studio that FoosOBSPlus will be sending it's data to.  You can type the scene name in, or you can choose it from the Scene drop down box and press the Set Main Scene button.
+#### Set Main Scene
+Press the Set Main Scene button to grab the current scene shown in the Scene drop down box.  If there is nothing showing in the Scene drop down box, then the button is ignored.
 #### Monitor
 This is a list of the monitors on the computer that OBS can project a scene to. The monitor selected in the box will be the one that the scene will project to.
-
 #### Fetch Monitors
-This will retrieve the list of available monitors.  Generally this is not needed as the list will be populated when OBS first connects.
-
+This will retrieve the list of available monitors.  Generally this is not needed as the list will be populated when OBS first connects.  But if you are actively adding monitors to your system, you can use this button to update the list of monitors.
 #### Project
-Press this button to project the Scene specified in the Scene field to the monitor specified in the Monitor combo box.  This is the same as right clicking on a scene in OBS and clicking the Fullscreen Projector (Scene) entry.
-
+Press this button to project the Scene specified in the Scene drop down box to the monitor specified in the Monitor drop down box.  This is the same as right clicking on a scene in OBS and clicking the Fullscreen Projector (Scene) entry.
+#### Scene
+This is a list of the scenes in OBS Studio.  The scene displayed in this field will be the scene that the Set Main Scene button, the Project button and the Activate Scene button will use to perform their functions.
+#### Fetch Scenes
+This will retrieve the list of available scenes in OBS Studio.  Select the scene that you wish to perform the Set Main Scene, or Project or Activate Scene actions on.
+#### Activate Scene
+This button will make the current entry in the Scene drop down box display in OBS Studio.
+#### Set Main Scene
+Press the Set Main Scene button to get OBS Studio to show the scene in the Scene box.
 #### Save Password
 Check this box if you want FoosOBSPlus to save the password when it exits.  Otherwise, you will have to enter each time you run FoosOBSPlus and wnat to connect to OBS Studio.
-
 #### Auto Login on Start
 If this box is checked, then when FoosOBSPlus first starts, it will try to connect to OBS Studio using the details saved in the OBS Connect window.
-
 #### Close on Connect
 If this box is checked, then the OBS Connect window will close when FoosOBSPlus successfully connects to OBS Studio.
-
 #### Update on Connect
 If this box is checked, then when FoosOBSPlus connects to OBS Studio, it will immediately send the current data in FoosOBSPlus to OBS Studio. Otherwise, data will only be sent when fields change in FoosOBSPlus.
-
 #### Connect
 This button attempts to connect FoosOBSPlus to OBS Studio.  The Host, Port and Password fields must be set correctly and OBS Studio must be running on the same network for a successful connection. The button will be grayed out if already FoosOBSPlus is already connected to OBS Studio.
-
 #### Disconnect
 This button will disconnect FoosOBSPlus from OBS Studio.  This button will be grayed out if FoosOBSPlus is already disconnected from OBS Studio.
-
-#### Save
-This button will save the current settings in the OBS Connect window.
-
+#### Apply
+This button will save the current settings in the OBS Connect window.  New settings will not take affect until this button or the Apply and Close button is pressed.
+#### Apply and Close
+This button will save the current settings in the OBS Connect window.  New settings will not take affect until this button or the Apply button is pressed.
+#### Cancel
+This button will close the OBS Connect window without permanently saving any changes.  If you reopen the window, you may see your changes still there, but they will not be permanently stored until the Apply button  or the Apply and Close button is pressed.
+#### Restore Defaults
+This button will restore the OBS Connect defaults.  The Apply or Apply and Close buttons must be pressed to make these changes permanent.
 #### Message
 This window will show any messages relevant to communicating with OBS Studio.
 
@@ -745,12 +569,14 @@ This button will connect to the FoosScore AutoScore system at the given Server A
 This button will disconnect the current active FoosScore AutoScore session.
 ### Message
 This box shows communication and information for the FoosScore AutoScore system.
+#### Apply
+Click the Apply button to save any changes made.
 ### Apply and Close
-This button will save the current settings in the AutoScore Settings window.  New settings will not take affect until this button is pressed.
+This button will save the current settings in the AutoScore Settings window.  New settings will not take affect until this button or the Apply button is pressed.
 ### Cancel
-This button will close the AutoScore Settings window without permanently saving any changes.  If you reopen the window, you may see your changes still there, but they will not be permanently stored until the Save button is pressed.
+This button will close the AutoScore Settings window without permanently saving any changes.  If you reopen the window, you may see your changes still there, but they will not be permanently stored until the Apply button or the Apply and Close button is pressed.
 ### Restore Defaults
-This button will restore the AutoScore Settings defaults.  The Save button must be pressed to make these changes permanent.
+This button will restore the AutoScore Settings defaults.  The Apply button or the Apply and Close button must be pressed to make these changes permanent.
 
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScoreConfig.png">
 
@@ -1194,6 +1020,15 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.049 02/17/2024</br>
+Add AutoScoreSettingsPanel strings to message.properties.</br>
+Increase size of Message box in OBSConnectPanel.</br>
+Refactor OBSConnectPanel.</br>
+Add Scene combo box, Apply and Close button, Cancel button and Restore Defaults button.</br>
+Change SetScene to SetMainScene. Button now pulls scene selected from the Scene combo box and puts it in Main Scene text box.</br>
+Added Activate Scene button that will activate scene from scene Combo box.</br>
+Update ReadMe.md file.</br>
+</br>
 v2.048 02/14/2024</br>
 Add MonitorComboBox logic.</br>
 Add Fetch Monitors and Project buttons and implement.</br>
