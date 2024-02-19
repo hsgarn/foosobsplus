@@ -36,7 +36,7 @@ public class AutoScoreSettingsFrame extends JFrame {
 	private static final String programName = AppConfig.PROGRAM_NAME;
 	private static Logger logger = LoggerFactory.getLogger(AutoScoreSettingsFrame.class);
 	public AutoScoreSettingsFrame() {
-		super(programName + " " + Messages.getString("AutoScoreSettingsFrame.AutoScoreSettings")); //$NON-NLS-1$ //$NON-NLS-2$
+		super(programName + " " + Messages.getString("AutoScoreSettingsFrame.Title")); //$NON-NLS-1$ //$NON-NLS-2$
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
 		try {

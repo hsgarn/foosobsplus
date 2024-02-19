@@ -410,7 +410,7 @@ public class TeamController {
 		String teamName;
 		String name = txt.getText();
 		if (name == null || name.isEmpty()) {
-			teamName = Messages.getString("TeamPanel.Team",Settings.getGameType()) + teamNumber; 
+			teamName = Messages.getString("TeamPanel.Team") + teamNumber; 
 		} else if(Settings.getControlParameter("AutoCapNames").equals(ON)) {
 			teamName = capitalizeWords(name);
 		} else {
@@ -432,7 +432,7 @@ public class TeamController {
 		teamsMap.forEach((k,v) -> {
 			String name = v.getTeamName();
 			if (name == null || name.isEmpty()) {
-				String newName = Messages.getString("TeamPanel.Team",Settings.getGameType()) + k;
+				String newName = Messages.getString("TeamPanel.Team") + k;
 				v.setTeamName(newName);
 				teamPanelsMap.get(k).updateTeamName(newName);
 			}

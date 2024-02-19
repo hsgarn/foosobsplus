@@ -32,15 +32,15 @@ public class Messages {
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 	private static Logger logger = LoggerFactory.getLogger(Messages.class);
 	private Messages() {}
-	public static String getString(String key, String gameType) {
-		return getString(gameType + "." + key);
-	}
+//	public static String getString(String key, String gameType) {
+//		return getString(gameType + "." + key); //$NON-NLS-1$
+//	}
 	public static String getString(String key) {
 		try {
 			return RESOURCE_BUNDLE.getString(key);
 		} catch (MissingResourceException e) {
 			logger.error(e.toString());
-			return '!' + key + '!';
+			return '!' + key + '!'; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 }

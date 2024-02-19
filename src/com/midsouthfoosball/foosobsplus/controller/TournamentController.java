@@ -43,9 +43,7 @@ public class TournamentController {
 		this.obsInterface = obsInterface;
 		this.tournament = tournament;
 		this.tournamentPanel = tournamentPanel;
-		
 		////// Tournament Panel Listener Methods //////
-
 		this.tournamentPanel.addTournamentNameListener(new TournamentNameListener());
 		this.tournamentPanel.addTournamentNameFocusListener(new TournamentNameFocusListener());
 		this.tournamentPanel.addTournamentNameMouseListener(new TournamentNameMouseListener());
@@ -57,9 +55,7 @@ public class TournamentController {
 		this.tournamentPanel.addTableNameMouseListener(new TableNameMouseListener());
 		this.tournamentPanel.addClearListener(new ClearListener());
 	}
-	
 	////// Tournament Panel Listener Objects //////
-
 	private class TournamentNameListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JTextField txt = (JTextField) e.getSource();

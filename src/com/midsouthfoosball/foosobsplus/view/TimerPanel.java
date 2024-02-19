@@ -61,18 +61,18 @@ public class TimerPanel extends JPanel {
 		lblTimerDisplay = new JLabel("0.0"); //$NON-NLS-1$
 		lblTimerDisplay.setOpaque(true);
 		lblTimerDisplay.setBackground(Color.GREEN);
-		lblTimerInUse = new JLabel(Messages.getString("TimerPanel.TimerReset", Settings.getGameType())); //$NON-NLS-1$
-		lblShotTimer = new JLabel(Messages.getString("TimerPanel.ShotTimer", Settings.getGameType())); //$NON-NLS-1$
-		lblPassTimer = new JLabel(Messages.getString("TimerPanel.PassTimer", Settings.getGameType())); //$NON-NLS-1$
-		lblTimeOutTimer = new JLabel(Messages.getString("TimerPanel.TimeOutTimer", Settings.getGameType())); //$NON-NLS-1$
-		lblGameTimer = new JLabel(Messages.getString("TimerPanel.GameTimer", Settings.getGameType())); //$NON-NLS-1$
-		lblRecallTimer = new JLabel(Messages.getString("TimerPanel.RecallTimer", Settings.getGameType())); //$NON-NLS-1$
-		btnShotTimer = new JButton(Messages.getString("TimerPanel.Start", Settings.getGameType())); //$NON-NLS-1$
-		btnPassTimer = new JButton(Messages.getString("TimerPanel.Start", Settings.getGameType())); //$NON-NLS-1$
-		btnTimeOutTimer = new JButton(Messages.getString("TimerPanel.Start", Settings.getGameType())); //$NON-NLS-1$
-		btnGameTimer = new JButton(Messages.getString("TimerPanel.Start", Settings.getGameType())); //$NON-NLS-1$
-		btnRecallTimer = new JButton(Messages.getString("TimerPanel.Start", Settings.getGameType())); //$NON-NLS-1$
-		btnResetTimer = new JButton(Messages.getString("TimerPanel.Reset", Settings.getGameType())); //$NON-NLS-1$
+		lblTimerInUse = new JLabel(Messages.getString("TimerPanel.TimerReset")); //$NON-NLS-1$
+		lblShotTimer = new JLabel(Messages.getString("TimerPanel.ShotTimer")); //$NON-NLS-1$
+		lblPassTimer = new JLabel(Messages.getString("TimerPanel.PassTimer")); //$NON-NLS-1$
+		lblTimeOutTimer = new JLabel(Messages.getString("TimerPanel.TimeOutTimer")); //$NON-NLS-1$
+		lblGameTimer = new JLabel(Messages.getString("TimerPanel.GameTimer")); //$NON-NLS-1$
+		lblRecallTimer = new JLabel(Messages.getString("TimerPanel.RecallTimer")); //$NON-NLS-1$
+		btnShotTimer = new JButton(Messages.getString("TimerPanel.Start")); //$NON-NLS-1$
+		btnPassTimer = new JButton(Messages.getString("TimerPanel.Start")); //$NON-NLS-1$
+		btnTimeOutTimer = new JButton(Messages.getString("TimerPanel.Start")); //$NON-NLS-1$
+		btnGameTimer = new JButton(Messages.getString("TimerPanel.Start")); //$NON-NLS-1$
+		btnRecallTimer = new JButton(Messages.getString("TimerPanel.Start")); //$NON-NLS-1$
+		btnResetTimer = new JButton(Messages.getString("TimerPanel.Reset")); //$NON-NLS-1$
 		setMnemonics();
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
@@ -82,142 +82,108 @@ public class TimerPanel extends JPanel {
 	}
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
-		
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = 0;
-
 		//////// Timer In Use ////////
 		gc.gridy++;
-
 		gc.weightx = .1;
 		gc.weighty = 0.1;
-		
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(lblTimerInUse, gc);
-
 		gc.weightx = .1;
 		gc.weighty = 0.1;
-		
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(lblTimerDisplay, gc);
-
 		//////// Shot Timer ////////
 		gc.gridy++;
-
 		gc.weightx = .1;
 		gc.weighty = 0.1;
-		
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(lblShotTimer, gc);
-		
 		gc.weightx = .1;
 		gc.weighty = 0.1;
-		
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(btnShotTimer, gc);
-		
 		//////// Pass Timer ////////
 		gc.gridy++;
-
 		gc.weightx = .1;
 		gc.weighty = 0.1;
-		
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(lblPassTimer, gc);
-		
 		gc.weightx = .1;
 		gc.weighty = 0.1;
-		
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(btnPassTimer, gc);
-		
 		//////// Time Out Timer ////////
 		gc.gridy++;
-
 		gc.weightx = .1;
 		gc.weighty = 0.1;
-		
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(lblTimeOutTimer, gc);
-		
 		gc.weightx = .1;
 		gc.weighty = 0.1;
-		
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(btnTimeOutTimer, gc);
-		
 		//////// Game Timer ////////
 		gc.gridy++;
-
 		gc.weightx = .1;
 		gc.weighty = 0.1;
-		
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(lblGameTimer, gc);
-		
 		gc.weightx = .1;
 		gc.weighty = 0.1;
-		
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(btnGameTimer, gc);
-		
 		//////// Recall Timer ////////
 		gc.gridy++;
-
 		gc.weightx = .1;
 		gc.weighty = 0.1;
-		
 		gc.gridx = 0;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(lblRecallTimer, gc);
-		
 		gc.weightx = .1;
 		gc.weighty = 0.1;
-		
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(btnRecallTimer, gc);
-	
 		//////// Reset Timer ////////
 		gc.gridy++;
-
 		gc.weightx = .1;
 		gc.weighty = 0.1;
-		
 		gc.gridx = 0;
 		gc.gridwidth = 2;
 		gc.fill = GridBagConstraints.HORIZONTAL;
@@ -226,35 +192,35 @@ public class TimerPanel extends JPanel {
 		add(btnResetTimer, gc);
 	}
 	private void setMnemonics() {
-		if(Settings.getHotKeyParameter("ShotTimer").isEmpty()) {
+		if(Settings.getHotKeyParameter("ShotTimer").isEmpty()) { //$NON-NLS-1$
 			btnShotTimer.setMnemonic(-1);
 		} else {
-			btnShotTimer.setMnemonic(Settings.getHotKeyParameter("ShotTimer").charAt(0));
+			btnShotTimer.setMnemonic(Settings.getHotKeyParameter("ShotTimer").charAt(0)); //$NON-NLS-1$
 		};
-		if(Settings.getHotKeyParameter("PassTimer").isEmpty()) {
+		if(Settings.getHotKeyParameter("PassTimer").isEmpty()) { //$NON-NLS-1$
 			btnPassTimer.setMnemonic(-1);
 		} else {
-			btnPassTimer.setMnemonic(Settings.getHotKeyParameter("PassTimer").charAt(0));
+			btnPassTimer.setMnemonic(Settings.getHotKeyParameter("PassTimer").charAt(0)); //$NON-NLS-1$
 		};
-		if(Settings.getHotKeyParameter("TimeOutTimer").isEmpty()) {
+		if(Settings.getHotKeyParameter("TimeOutTimer").isEmpty()) { //$NON-NLS-1$
 			btnTimeOutTimer.setMnemonic(-1);
 		} else {
-			btnTimeOutTimer.setMnemonic(Settings.getHotKeyParameter("TimeOutTimer").charAt(0));
+			btnTimeOutTimer.setMnemonic(Settings.getHotKeyParameter("TimeOutTimer").charAt(0)); //$NON-NLS-1$
 		};
-		if(Settings.getHotKeyParameter("GameTimer").isEmpty()) {
+		if(Settings.getHotKeyParameter("GameTimer").isEmpty()) { //$NON-NLS-1$
 			btnGameTimer.setMnemonic(-1);
 		} else {
-			btnGameTimer.setMnemonic(Settings.getHotKeyParameter("GameTimer").charAt(0));
+			btnGameTimer.setMnemonic(Settings.getHotKeyParameter("GameTimer").charAt(0)); //$NON-NLS-1$
 		};
-		if(Settings.getHotKeyParameter("RecallTimer").isEmpty()) {
+		if(Settings.getHotKeyParameter("RecallTimer").isEmpty()) { //$NON-NLS-1$
 			btnRecallTimer.setMnemonic(-1);
 		} else {
-			btnRecallTimer.setMnemonic(Settings.getHotKeyParameter("RecallTimer").charAt(0));
+			btnRecallTimer.setMnemonic(Settings.getHotKeyParameter("RecallTimer").charAt(0)); //$NON-NLS-1$
 		};
-		if(Settings.getHotKeyParameter("ResetTimers").isEmpty()) {
+		if(Settings.getHotKeyParameter("ResetTimers").isEmpty()) { //$NON-NLS-1$
 			btnResetTimer.setMnemonic(-1);
 		} else {
-			btnResetTimer.setMnemonic(Settings.getHotKeyParameter("ResetTimers").charAt(0));
+			btnResetTimer.setMnemonic(Settings.getHotKeyParameter("ResetTimers").charAt(0)); //$NON-NLS-1$
 		};
 	}
 	////// Listeners  //////
@@ -276,7 +242,6 @@ public class TimerPanel extends JPanel {
 	public void addResetTimerListener(ActionListener listenForBtnResetTimer) {
 		btnResetTimer.addActionListener(listenForBtnResetTimer);
 	}
-
 	////// Utility Methods //////
 	public void updateTimerDisplay(int timeRemaining) {
 		updateTimerDisplay(Integer.toString(timeRemaining));
@@ -306,6 +271,6 @@ public class TimerPanel extends JPanel {
 		this.setBorder(border);
 	}
 	private String buildTitle() {
-		return Messages.getString("TimerPanel.TimerPanel", Settings.getGameType()); //$NON-NLS-1$
+		return Messages.getString("TimerPanel.TimerPanel"); //$NON-NLS-1$
 	}
 }

@@ -29,31 +29,27 @@ import java.awt.Font;
 import java.util.Arrays;
 
 public class LastScoredWindowPanel extends JPanel {
-
 	private static final long serialVersionUID = 1L;
 	private JLabel lblTimerDisplay;
 	private int displayWidth = 9;
 	private int prefixWidth;
 	private int suffixWidth = 3;
-
 	/**
 	 * Create the panel.
 	 */
 	public LastScoredWindowPanel(String timeToDisplay, Color backgroundColor) {
-		setLayout(new MigLayout("", "[280.00]", "[67.00]"));
+		setLayout(new MigLayout("", "[280.00]", "[67.00]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		prefixWidth = displayWidth - timeToDisplay.length() - suffixWidth;
 		char[] c1 = new char[prefixWidth];
 	    Arrays.fill(c1, ' ');
 	    char[] c2 = new char[suffixWidth];
 	    Arrays.fill(c2, ' ');
 		lblTimerDisplay = new JLabel(String.valueOf(c1) + timeToDisplay + String.valueOf(c2));
-		lblTimerDisplay.setFont(new Font("Consolas", Font.BOLD, 50));
+		lblTimerDisplay.setFont(new Font("Consolas", Font.BOLD, 50)); //$NON-NLS-1$
 		lblTimerDisplay.setOpaque(true);
 		lblTimerDisplay.setBackground(backgroundColor);
-		add(lblTimerDisplay, "cell 0 0,alignx center,aligny baseline");
-
+		add(lblTimerDisplay, "cell 0 0,alignx center,aligny baseline"); //$NON-NLS-1$
 	}
-	
 	public void setWindowText(String timeToDisplay) {
 		prefixWidth = displayWidth - timeToDisplay.length() - suffixWidth;
 		if(prefixWidth<0) prefixWidth = 0;
@@ -63,7 +59,6 @@ public class LastScoredWindowPanel extends JPanel {
 	    Arrays.fill(c2, ' ');
 		lblTimerDisplay.setText(String.valueOf(c1) + timeToDisplay + String.valueOf(c2));
 	}
-	
 	public void setWindowColor(Color colorToDisplay) {
 		lblTimerDisplay.setBackground(colorToDisplay);
 	}

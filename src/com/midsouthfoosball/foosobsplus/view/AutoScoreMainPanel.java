@@ -48,10 +48,10 @@ public class AutoScoreMainPanel extends JPanel {
 		dim.height = 100;
 		setPreferredSize(dim);
 		setName(buildTitle());
-		btnConnect = new JButton(Messages.getString("AutoScoreMainPanel.Connect", Settings.getGameType())); //$NON-NLS-1$
-		btnDisconnect = new JButton(Messages.getString("AutoScoreMainPanel.Disconnect", Settings.getGameType())); //$NON-NLS-1$
-		btnSettings = new JButton(Messages.getString("AutoScoreMainPanel.Settings", Settings.getGameType())); //$NON-NLS-1$
-		chkbxIgnore = new JCheckBox(Messages.getString("AutoScoreMainPanel.Ignore", Settings.getGameType())); //$NON-NLS-1$
+		btnConnect = new JButton(Messages.getString("AutoScoreMainPanel.Connect")); //$NON-NLS-1$
+		btnDisconnect = new JButton(Messages.getString("AutoScoreMainPanel.Disconnect")); //$NON-NLS-1$
+		btnSettings = new JButton(Messages.getString("AutoScoreMainPanel.Settings")); //$NON-NLS-1$
+		chkbxIgnore = new JCheckBox(Messages.getString("AutoScoreMainPanel.Ignore")); //$NON-NLS-1$
 		setMnemonics();
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
@@ -100,20 +100,20 @@ public class AutoScoreMainPanel extends JPanel {
 		add(chkbxIgnore, gc);
 	}
 	private void setMnemonics() {
-		if(Settings.getHotKeyParameter("AutoScoreMainConnect").isEmpty()) {
+		if(Settings.getHotKeyParameter("AutoScoreMainConnect").isEmpty()) { //$NON-NLS-1$
 			btnConnect.setMnemonic(-1);
 		} else {
-			btnConnect.setMnemonic(Settings.getHotKeyParameter("AutoScoreMainConnect").charAt(0));
+			btnConnect.setMnemonic(Settings.getHotKeyParameter("AutoScoreMainConnect").charAt(0)); //$NON-NLS-1$
 		};
-		if(Settings.getHotKeyParameter("AutoScoreMainDisconnect").isEmpty()) {
+		if(Settings.getHotKeyParameter("AutoScoreMainDisconnect").isEmpty()) { //$NON-NLS-1$
 			btnDisconnect.setMnemonic(-1);
 		} else {
-			btnDisconnect.setMnemonic(Settings.getHotKeyParameter("AutoScoreMainDisconnect").charAt(0));
+			btnDisconnect.setMnemonic(Settings.getHotKeyParameter("AutoScoreMainDisconnect").charAt(0)); //$NON-NLS-1$
 		};
-		if(Settings.getHotKeyParameter("AutoScoreMainSettings").isEmpty()) {
+		if(Settings.getHotKeyParameter("AutoScoreMainSettings").isEmpty()) { //$NON-NLS-1$
 			btnSettings.setMnemonic(-1);
 		} else {
-			btnSettings.setMnemonic(Settings.getHotKeyParameter("AutoScoreMainSettings").charAt(0));
+			btnSettings.setMnemonic(Settings.getHotKeyParameter("AutoScoreMainSettings").charAt(0)); //$NON-NLS-1$
 		};
 	}
 	////// Listeners  //////
@@ -137,7 +137,7 @@ public class AutoScoreMainPanel extends JPanel {
 		this.setBorder(border);
 	}
 	private String buildTitle() {
-		return Messages.getString("AutoScoreMainPanel.AutoScoreMainPanel", Settings.getGameType()); //$NON-NLS-1$
+		return Messages.getString("AutoScoreMainPanel.Title"); //$NON-NLS-1$
 	}
 	public boolean isIgnored() {
 		return chkbxIgnore.isSelected();

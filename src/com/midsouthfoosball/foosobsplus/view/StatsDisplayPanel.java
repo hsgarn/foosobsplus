@@ -108,40 +108,37 @@ public class StatsDisplayPanel extends JPanel {
 	private JLabel lblTeam2Stuffs;
 	private DecimalFormat df = new DecimalFormat("###.#"); //$NON-NLS-1$
 	private Border innerBorder;
-
 	public StatsDisplayPanel() {
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
 		dim.height = 550;
 		setPreferredSize(dim);
 		setName(buildTitle());
-		
 		addMouseListener(new DoubleClickListener());
-
-		lblTeamName1 = new JLabel(Messages.getString("StatsDisplayPanel.TeamName1", Settings.getGameType())); //$NON-NLS-1$
-		lblTeamName2 = new JLabel(Messages.getString("StatsDisplayPanel.TeamName2", Settings.getGameType())); //$NON-NLS-1$
-		lblPlayerNames1 = new JLabel(Messages.getString("StatsDisplayPanel.Team1", Settings.getGameType())); //$NON-NLS-1$
-		lblPlayerNames2 = new JLabel(Messages.getString("StatsDisplayPanel.Team2", Settings.getGameType())); //$NON-NLS-1$
-		lblCompleted1 = new JLabel(Messages.getString("StatsDisplayPanel.Completed1", Settings.getGameType())); //$NON-NLS-1$
-		lblAttempted1 = new JLabel(Messages.getString("StatsDisplayPanel.Attempted1", Settings.getGameType())); //$NON-NLS-1$
-		lblPercentage1 = new JLabel(Messages.getString("StatsDisplayPanel.Percentage1", Settings.getGameType())); //$NON-NLS-1$
-		lblCompleted2 = new JLabel(Messages.getString("StatsDisplayPanel.Completed2", Settings.getGameType())); //$NON-NLS-1$
-		lblAttempted2 = new JLabel(Messages.getString("StatsDisplayPanel.Attempted2", Settings.getGameType())); //$NON-NLS-1$
-		lblPercentage2 = new JLabel(Messages.getString("StatsDisplayPanel.Percentage2", Settings.getGameType())); //$NON-NLS-1$
-		lblPassing = new JLabel(Messages.getString("StatsDisplayPanel.Passing", Settings.getGameType())); //$NON-NLS-1$
-		lblShooting = new JLabel(Messages.getString("StatsDisplayPanel.Shooting", Settings.getGameType())); //$NON-NLS-1$
-		lblClearing = new JLabel(Messages.getString("StatsDisplayPanel.Clearing", Settings.getGameType())); //$NON-NLS-1$
-		lblTwoBarPassing = new JLabel(Messages.getString("StatsDisplayPanel.2BarPassing", Settings.getGameType())); //$NON-NLS-1$
-		lblCount1 = new JLabel(Messages.getString("StatsDisplayPanel.Count1", Settings.getGameType())); //$NON-NLS-1$
-		lblCount2 = new JLabel(Messages.getString("StatsDisplayPanel.Count2", Settings.getGameType())); //$NON-NLS-1$
-		lblShotsOnGoal = new JLabel(Messages.getString("StatsDisplayPanel.ShotsOnGoal", Settings.getGameType())); //$NON-NLS-1$
-		lblScoring = new JLabel(Messages.getString("StatsDisplayPanel.Scoring", Settings.getGameType())); //$NON-NLS-1$
-		lblThreeBarScoring = new JLabel(Messages.getString("StatsDisplayPanel.3Bar", Settings.getGameType())); //$NON-NLS-1$
-		lblFiveBarScoring = new JLabel(Messages.getString("StatsDisplayPanel.5Bar", Settings.getGameType())); //$NON-NLS-1$
-		lblTwoBarScoring = new JLabel(Messages.getString("StatsDisplayPanel.2Bar", Settings.getGameType())); //$NON-NLS-1$
-		lblBreaks = new JLabel(Messages.getString("StatsDisplayPanel.Breaks", Settings.getGameType())); //$NON-NLS-1$
-		lblAces = new JLabel(Messages.getString("StatsDisplayPanel.Aces", Settings.getGameType())); //$NON-NLS-1$
-		lblStuffs = new JLabel(Messages.getString("StatsDisplayPanel.Stuffs", Settings.getGameType())); //$NON-NLS-1$
+		lblTeamName1 = new JLabel(Messages.getString("StatsDisplayPanel.TeamName1")); //$NON-NLS-1$
+		lblTeamName2 = new JLabel(Messages.getString("StatsDisplayPanel.TeamName2")); //$NON-NLS-1$
+		lblPlayerNames1 = new JLabel(Messages.getString("StatsDisplayPanel.Team1")); //$NON-NLS-1$
+		lblPlayerNames2 = new JLabel(Messages.getString("StatsDisplayPanel.Team2")); //$NON-NLS-1$
+		lblCompleted1 = new JLabel(Messages.getString("StatsDisplayPanel.Completed1")); //$NON-NLS-1$
+		lblAttempted1 = new JLabel(Messages.getString("StatsDisplayPanel.Attempted1")); //$NON-NLS-1$
+		lblPercentage1 = new JLabel(Messages.getString("StatsDisplayPanel.Percentage1")); //$NON-NLS-1$
+		lblCompleted2 = new JLabel(Messages.getString("StatsDisplayPanel.Completed2")); //$NON-NLS-1$
+		lblAttempted2 = new JLabel(Messages.getString("StatsDisplayPanel.Attempted2")); //$NON-NLS-1$
+		lblPercentage2 = new JLabel(Messages.getString("StatsDisplayPanel.Percentage2")); //$NON-NLS-1$
+		lblPassing = new JLabel(Messages.getString("StatsDisplayPanel.Passing")); //$NON-NLS-1$
+		lblShooting = new JLabel(Messages.getString("StatsDisplayPanel.Shooting")); //$NON-NLS-1$
+		lblClearing = new JLabel(Messages.getString("StatsDisplayPanel.Clearing")); //$NON-NLS-1$
+		lblTwoBarPassing = new JLabel(Messages.getString("StatsDisplayPanel.2BarPassing")); //$NON-NLS-1$
+		lblCount1 = new JLabel(Messages.getString("StatsDisplayPanel.Count1")); //$NON-NLS-1$
+		lblCount2 = new JLabel(Messages.getString("StatsDisplayPanel.Count2")); //$NON-NLS-1$
+		lblShotsOnGoal = new JLabel(Messages.getString("StatsDisplayPanel.ShotsOnGoal")); //$NON-NLS-1$
+		lblScoring = new JLabel(Messages.getString("StatsDisplayPanel.Scoring")); //$NON-NLS-1$
+		lblThreeBarScoring = new JLabel(Messages.getString("StatsDisplayPanel.3Bar")); //$NON-NLS-1$
+		lblFiveBarScoring = new JLabel(Messages.getString("StatsDisplayPanel.5Bar")); //$NON-NLS-1$
+		lblTwoBarScoring = new JLabel(Messages.getString("StatsDisplayPanel.2Bar")); //$NON-NLS-1$
+		lblBreaks = new JLabel(Messages.getString("StatsDisplayPanel.Breaks")); //$NON-NLS-1$
+		lblAces = new JLabel(Messages.getString("StatsDisplayPanel.Aces")); //$NON-NLS-1$
+		lblStuffs = new JLabel(Messages.getString("StatsDisplayPanel.Stuffs")); //$NON-NLS-1$
 		lblTeam1PassAttempts = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		lblTeam1PassCompletes = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		lblTeam1Passing = new JLabel(String.format("%-5s","0%")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -182,62 +179,58 @@ public class StatsDisplayPanel extends JPanel {
 		lblTeam2Breaks = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		lblTeam2Aces = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
 		lblTeam2Stuffs = new JLabel(String.format("%-3s","0")); //$NON-NLS-1$ //$NON-NLS-2$
-		lblTeamName1.setName("TeamName1");
-		lblTeamName2.setName("TeamName2");
-		lblPlayerNames1.setName("PlayerNames1");
-		lblPlayerNames2.setName("PlayerNames2");
-		lblTeam1PassAttempts.setName("Team1PassAttempts");
-		lblTeam1PassCompletes.setName("Team1PassCompletes");
-		lblTeam1Passing.setName("Team1Passing");
-		lblTeam1ShotAttempts.setName("Team1ShotAttempts");
-		lblTeam1ShotCompletes.setName("Team1ShotCompletes");
-		lblTeam1Shooting.setName("Team1Shooting");
-		lblTeam1ClearAttempts.setName("Team1ClearAttempts");
-		lblTeam1ClearCompletes.setName("Team1ClearCompletes");
-		lblTeam1Clearing.setName("Team1Clearing");
-		lblTeam1TwoBarPassAttempts.setName("Team1TwoBarPassAttempts");
-		lblTeam1TwoBarPassCompletes.setName("Team1TwoBarPassCompletes");
-		lblTeam1TwoBarPassing.setName("Team1TwoBarPassing");
-		lblTeam1ShotsOnGoal.setName("Team1ShotsOnGoal");
-		lblTeam1Scoring.setName("Team1Scoring");
-		lblTeam1ThreeBarScoring.setName("Team1ThreeBarScoring");
-		lblTeam1FiveBarScoring.setName("Team1FiveBarScoring");
-		lblTeam1TwoBarScoring.setName("Team1TwoBarScoring");
-		lblTeam1Breaks.setName("Team1Breaks");
-		lblTeam1Aces.setName("Team1Aces");
-		lblTeam1Stuffs.setName("Team1Stuffs");
-		lblTeam2PassAttempts.setName("Team2PassAttempts");
-		lblTeam2PassCompletes.setName("Team2PassCompletes");
-		lblTeam2Passing.setName("Team2Passing");
-		lblTeam2ShotAttempts.setName("Team2ShotAttempts");
-		lblTeam2ShotCompletes.setName("Team2ShotCompletes");
-		lblTeam2Shooting.setName("Team2Shooting");
-		lblTeam2ClearAttempts.setName("Team2ClearAttempts");
-		lblTeam2ClearCompletes.setName("Team2ClearCompletes");
-		lblTeam2Clearing.setName("Team2Clearing");
-		lblTeam2TwoBarPassAttempts.setName("Team2TwoBarPassAttempts");
-		lblTeam2TwoBarPassCompletes.setName("Team2TwoBarPassCompletes");
-		lblTeam2TwoBarPassing.setName("Team2TwoBarPassing");
-		lblTeam2ShotsOnGoal.setName("Team2ShotsOnGoal");
-		lblTeam2Scoring.setName("Team2Scoring");
-		lblTeam2ThreeBarScoring.setName("Team2ThreeBarScoring");
-		lblTeam2FiveBarScoring.setName("Team2FiveBarScoring");
-		lblTeam2TwoBarScoring.setName("Team2TwoBarScoring");
-		lblTeam2Breaks.setName("Team2Breaks");
-		lblTeam2Aces.setName("Team2Aces");
-		lblTeam2Stuffs.setName("Team2Stuffs");
-		
+		lblTeamName1.setName("TeamName1"); //$NON-NLS-1$
+		lblTeamName2.setName("TeamName2"); //$NON-NLS-1$
+		lblPlayerNames1.setName("PlayerNames1"); //$NON-NLS-1$
+		lblPlayerNames2.setName("PlayerNames2"); //$NON-NLS-1$
+		lblTeam1PassAttempts.setName("Team1PassAttempts"); //$NON-NLS-1$
+		lblTeam1PassCompletes.setName("Team1PassCompletes"); //$NON-NLS-1$
+		lblTeam1Passing.setName("Team1Passing"); //$NON-NLS-1$
+		lblTeam1ShotAttempts.setName("Team1ShotAttempts"); //$NON-NLS-1$
+		lblTeam1ShotCompletes.setName("Team1ShotCompletes"); //$NON-NLS-1$
+		lblTeam1Shooting.setName("Team1Shooting"); //$NON-NLS-1$
+		lblTeam1ClearAttempts.setName("Team1ClearAttempts"); //$NON-NLS-1$
+		lblTeam1ClearCompletes.setName("Team1ClearCompletes"); //$NON-NLS-1$
+		lblTeam1Clearing.setName("Team1Clearing"); //$NON-NLS-1$
+		lblTeam1TwoBarPassAttempts.setName("Team1TwoBarPassAttempts"); //$NON-NLS-1$
+		lblTeam1TwoBarPassCompletes.setName("Team1TwoBarPassCompletes"); //$NON-NLS-1$
+		lblTeam1TwoBarPassing.setName("Team1TwoBarPassing"); //$NON-NLS-1$
+		lblTeam1ShotsOnGoal.setName("Team1ShotsOnGoal"); //$NON-NLS-1$
+		lblTeam1Scoring.setName("Team1Scoring"); //$NON-NLS-1$
+		lblTeam1ThreeBarScoring.setName("Team1ThreeBarScoring"); //$NON-NLS-1$
+		lblTeam1FiveBarScoring.setName("Team1FiveBarScoring"); //$NON-NLS-1$
+		lblTeam1TwoBarScoring.setName("Team1TwoBarScoring"); //$NON-NLS-1$
+		lblTeam1Breaks.setName("Team1Breaks"); //$NON-NLS-1$
+		lblTeam1Aces.setName("Team1Aces"); //$NON-NLS-1$
+		lblTeam1Stuffs.setName("Team1Stuffs"); //$NON-NLS-1$
+		lblTeam2PassAttempts.setName("Team2PassAttempts"); //$NON-NLS-1$
+		lblTeam2PassCompletes.setName("Team2PassCompletes"); //$NON-NLS-1$
+		lblTeam2Passing.setName("Team2Passing"); //$NON-NLS-1$
+		lblTeam2ShotAttempts.setName("Team2ShotAttempts"); //$NON-NLS-1$
+		lblTeam2ShotCompletes.setName("Team2ShotCompletes"); //$NON-NLS-1$
+		lblTeam2Shooting.setName("Team2Shooting"); //$NON-NLS-1$
+		lblTeam2ClearAttempts.setName("Team2ClearAttempts"); //$NON-NLS-1$
+		lblTeam2ClearCompletes.setName("Team2ClearCompletes"); //$NON-NLS-1$
+		lblTeam2Clearing.setName("Team2Clearing"); //$NON-NLS-1$
+		lblTeam2TwoBarPassAttempts.setName("Team2TwoBarPassAttempts"); //$NON-NLS-1$
+		lblTeam2TwoBarPassCompletes.setName("Team2TwoBarPassCompletes"); //$NON-NLS-1$
+		lblTeam2TwoBarPassing.setName("Team2TwoBarPassing"); //$NON-NLS-1$
+		lblTeam2ShotsOnGoal.setName("Team2ShotsOnGoal"); //$NON-NLS-1$
+		lblTeam2Scoring.setName("Team2Scoring"); //$NON-NLS-1$
+		lblTeam2ThreeBarScoring.setName("Team2ThreeBarScoring"); //$NON-NLS-1$
+		lblTeam2FiveBarScoring.setName("Team2FiveBarScoring"); //$NON-NLS-1$
+		lblTeam2TwoBarScoring.setName("Team2TwoBarScoring"); //$NON-NLS-1$
+		lblTeam2Breaks.setName("Team2Breaks"); //$NON-NLS-1$
+		lblTeam2Aces.setName("Team2Aces"); //$NON-NLS-1$
+		lblTeam2Stuffs.setName("Team2Stuffs"); //$NON-NLS-1$
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
 		Border outerBorder = BorderFactory.createEmptyBorder(Settings.getBorderTop(),Settings.getBorderLeft(),Settings.getBorderBottom(),Settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
-		
 		layoutComponents();
 	}
-	
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
-		
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = -1;
 		gc.gridy++;
@@ -249,7 +242,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeamName1, gc);
-
 		gc.weightx = 1;
 		gc.weighty = .1;
 		gc.gridx = 4;
@@ -258,7 +250,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeamName2, gc);
-
 		//////// Player Names ////////
 		gc.gridy++;
 		gc.weightx = 1;
@@ -269,7 +260,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblPlayerNames1, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx = 4;
@@ -278,7 +268,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblPlayerNames2, gc);
-		
 		////////Labels   //////////
 		gc.gridy++;
 		gc.weightx = 1;
@@ -289,7 +278,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblCompleted1, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx = 1;
@@ -298,7 +286,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblAttempted1, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx = 2;
@@ -307,7 +294,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblPercentage1, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx = 4;
@@ -316,7 +302,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblPercentage2, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx = 5;
@@ -325,7 +310,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblCompleted2, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx = 6;
@@ -334,7 +318,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblAttempted2, gc);
-
 		//////// Passing Row ////////
 		gc.gridy++;
 		gc.weightx = 1;
@@ -345,7 +328,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1PassCompletes, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -353,7 +335,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1PassAttempts, gc);
-		
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -361,7 +342,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1Passing, gc);
-		
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -369,7 +349,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblPassing, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -377,7 +356,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2Passing, gc);
-		
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -385,7 +363,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2PassCompletes, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -393,7 +370,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2PassAttempts, gc);
-		
 		//////// Shooting Row ////////
 		gc.gridy++;
 		gc.weightx = 1;
@@ -403,7 +379,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1ShotCompletes, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -411,7 +386,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1ShotAttempts, gc);
-		
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -419,7 +393,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1Shooting, gc);
-		
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -427,7 +400,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblShooting, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -435,7 +407,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2Shooting, gc);
-		
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -443,7 +414,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2ShotCompletes, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -451,7 +421,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2ShotAttempts, gc);
-		
 		//////// Clearing Row ////////
 		gc.gridy++;
 		gc.weightx = 1;
@@ -461,7 +430,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1ClearCompletes, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -469,7 +437,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1ClearAttempts, gc);
-		
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -477,7 +444,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1Clearing, gc);
-		
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -485,7 +451,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblClearing, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -493,7 +458,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2Clearing, gc);
-		
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -501,7 +465,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2ClearCompletes, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -509,7 +472,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2ClearAttempts, gc);
-		
 		/////// Two Bar Passing Row \\\\\\
 		gc.gridy++;
 		gc.weightx = 1;
@@ -519,7 +481,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1TwoBarPassCompletes, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -527,7 +488,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1TwoBarPassAttempts, gc);
-		
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -535,7 +495,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1TwoBarPassing, gc);
-		
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -543,7 +502,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTwoBarPassing, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -551,7 +509,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2TwoBarPassing, gc);
-		
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -559,7 +516,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2TwoBarPassCompletes, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -567,7 +523,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2TwoBarPassAttempts, gc);
-		
 		/////// Count Label Row \\\\\\
 		gc.gridy++;
 		gc.weightx = 1;
@@ -577,7 +532,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblCount1, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx = 4;
@@ -585,7 +539,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblCount2, gc);
-
 		/////// ShotsOnGoal Row \\\\\\
 		gc.gridy++;
 		gc.weightx = 1;
@@ -595,7 +548,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1ShotsOnGoal, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -603,7 +555,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblShotsOnGoal, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -611,7 +562,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2ShotsOnGoal, gc);
-		
 		/////// Scoring Row \\\\\\
 		gc.gridy++;
 		gc.weightx = 1;
@@ -621,7 +571,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1Scoring, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -629,7 +578,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblScoring, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -637,7 +585,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2Scoring, gc);
-		
 		/////// ThreeBarScoring Row \\\\\\
 		gc.gridy++;
 		gc.weightx = 1;
@@ -647,7 +594,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1ThreeBarScoring, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -655,7 +601,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblThreeBarScoring, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -663,7 +608,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2ThreeBarScoring, gc);
-		
 		/////// FiveBarScoring Row \\\\\\
 		gc.gridy++;
 		gc.weightx = 1;
@@ -673,7 +617,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1FiveBarScoring, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -681,7 +624,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblFiveBarScoring, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -689,7 +631,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2FiveBarScoring, gc);
-		
 		/////// TwoBarScoring Row \\\\\\
 		gc.gridy++;
 		gc.weightx = 1;
@@ -699,7 +640,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1TwoBarScoring, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -707,7 +647,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTwoBarScoring, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -715,7 +654,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2TwoBarScoring, gc);
-		
 		/////// Breaks Row \\\\\\
 		gc.gridy++;
 		gc.weightx = 1;
@@ -725,7 +663,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1Breaks, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -733,7 +670,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblBreaks, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -741,7 +677,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2Breaks, gc);
-		
 		/////// Stuffs Row \\\\\\
 		gc.gridy++;
 		gc.weightx = 1;
@@ -751,7 +686,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1Stuffs, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -759,7 +693,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblStuffs, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -767,7 +700,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2Stuffs, gc);
-		
 		/////// Aces Row \\\\\\
 		gc.gridy++;
 		gc.weightx = 1;
@@ -777,7 +709,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam1Aces, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -785,7 +716,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblAces, gc);
-
 		gc.weightx = 1;
 		gc.weighty = 1;
 		gc.gridx++;
@@ -794,7 +724,6 @@ public class StatsDisplayPanel extends JPanel {
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(lblTeam2Aces, gc);
 	}
-
 	////// Utility Methods \\\\\\
 	public void updatePassStats(int teamNbr, int completes, int attempts, Float percent) {
 		if(teamNbr==1) {
@@ -912,7 +841,7 @@ public class StatsDisplayPanel extends JPanel {
 		this.setBorder(border);
 	}
 	private String buildTitle() {
-		return Messages.getString("StatsDisplayPanel.StatisticsDisplayPanel", Settings.getGameType()); //$NON-NLS-1$
+		return Messages.getString("StatsDisplayPanel.StatisticsDisplayPanel"); //$NON-NLS-1$
 	}
 	public void copyLabelsToClipboard() {
 		Component[] components = getComponents();
@@ -922,7 +851,7 @@ public class StatsDisplayPanel extends JPanel {
 				JLabel label = (JLabel) component;
 				String name = label.getName();
 				String value = label.getText();
-				if (name != null && !value.isEmpty()) lines.append(name + ": " + value).append("\n"); 
+				if (name != null && !value.isEmpty()) lines.append(name + ": " + value).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		StringSelection selection = new StringSelection(lines.toString());

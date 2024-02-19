@@ -157,13 +157,13 @@ public final class MainFrame extends JFrame implements WindowListener {
 		setVisible(true);
 		if(Settings.getShowParsed()) {
 			Dimension windowSize = getSize();
-	        System.out.println("Current window size: " + windowSize.width + " x " + windowSize.height);
+	        System.out.println("Current window size: " + windowSize.width + " x " + windowSize.height); //$NON-NLS-1$ //$NON-NLS-2$
 	        Component[] components = getContentPane().getComponents();
 	        for (Component component : components) {
 	            if (component instanceof JPanel) {
 	                JPanel panel = (JPanel) component;
 	                Dimension panelSize = panel.getSize();
-	                System.out.println("Panel " + panel.getName() + ":  Panel size: " + panelSize.width + " x " + panelSize.height);
+	                System.out.println("Panel " + panel.getName() + ":  Panel size: " + panelSize.width + " x " + panelSize.height); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	            }
 	        }
 		}
@@ -228,7 +228,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewMenu.add(viewAllWindows);
 		JMenu helpMenu 		= new JMenu(Messages.getString("MainFrame.Help")); //$NON-NLS-1$
 		JMenuItem helpPage 	= new JMenuItem(programName + " " + Messages.getString("MainFrame.Help")); //$NON-NLS-1$ //$NON-NLS-2$
-		JMenuItem helpRules = new JMenuItem(Messages.getString("MainFrame.Rules"));
+		JMenuItem helpRules = new JMenuItem(Messages.getString("MainFrame.Rules")); //$NON-NLS-1$
 		JMenuItem helpAbout = new JMenuItem(Messages.getString("MainFrame.About")); //$NON-NLS-1$
 		helpMenu.add(helpPage);
 		helpMenu.add(helpRules);
@@ -301,11 +301,11 @@ public final class MainFrame extends JFrame implements WindowListener {
 					try {
 						java.awt.Desktop.getDesktop().browse(helpURI);
 					} catch (IOException ex) {
-						logger.error(Messages.getString("Errors.URICallingError"));		 //$NON-NLS-1$
+						logger.error(Messages.getString("Errors.URICallingError"));	//$NON-NLS-1$
 						logger.error(ex.toString());
 					}
 		    	} catch (URISyntaxException ex) {
-					logger.error(Messages.getString("Errors.URISyntaxError"));		 //$NON-NLS-1$
+					logger.error(Messages.getString("Errors.URISyntaxError")); //$NON-NLS-1$
 					logger.error(ex.toString());
 				}
 			}
@@ -317,11 +317,11 @@ public final class MainFrame extends JFrame implements WindowListener {
 					try {
 						java.awt.Desktop.getDesktop().browse(rulesURI);
 					} catch (IOException ex) {
-						logger.error(Messages.getString("Errors.URICallingError"));		 //$NON-NLS-1$
+						logger.error(Messages.getString("Errors.URICallingError")); //$NON-NLS-1$
 						logger.error(ex.toString());
 					}
 		    	} catch (URISyntaxException ex) {
-					logger.error(Messages.getString("Errors.URISyntaxError"));		 //$NON-NLS-1$
+					logger.error(Messages.getString("Errors.URISyntaxError")); //$NON-NLS-1$
 					logger.error(ex.toString());
 				}
 			}
@@ -420,7 +420,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		catch (IOException e) {
 			logger.error(Messages.getString("Errors.ReadFileError") + file); //$NON-NLS-1$
 			logger.error(e.toString());
-			JOptionPane.showMessageDialog(null, Messages.getString("Errors.ReadFileError") + file, "Import Error", 1);
+			JOptionPane.showMessageDialog(null, Messages.getString("Errors.ReadFileError") + file, Messages.getString("MainFrame.ImportError"), 1); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		lines.forEach(line -> Main.processCode(line.toUpperCase(), false));
 	}
@@ -435,7 +435,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		} catch (IOException e) {
 			logger.error(Messages.getString("Errors.WriteFileError") + file); //$NON-NLS-1$
 			logger.error(e.toString());
-			JOptionPane.showMessageDialog(null, Messages.getString("Errors.WriteFileError") + file, "Export Error", 1);
+			JOptionPane.showMessageDialog(null, Messages.getString("Errors.WriteFileError") + file, Messages.getString("MainFrame.ExportError"), 1); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	public void closeWindow() {
@@ -486,14 +486,10 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private void layoutFoosballComponents() {
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = -1;
-
 		//////// Tournament Panel ////////
-		
 		gc.gridy++;
-
 		gc.weightx = .5;
 		gc.weighty = .5;
-		
 		gc.gridx = 0;
 		gc.gridwidth = 1;
 		gc.gridheight = 1;
@@ -502,12 +498,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.insets = new Insets(0, 0, 0, 0);
 		tournamentPanel.setPreferredSize(new Dimension(350,200));
 		add(tournamentPanel, gc);
-		
 		//////// Timer Panel ////////
-		
 		gc.weightx = .5;
 		gc.weighty = .5;
-		
 		gc.gridx = 1;
 		gc.gridwidth =1;
 		gc.gridheight = 1;
@@ -516,12 +509,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.insets = new Insets(0, 0, 0, 0);
 		timerPanel.setPreferredSize(new Dimension(270,200));
 		add(timerPanel, gc);
-
 		//////// Stats Entry Panel ////////
-		
 		gc.weightx = .5;
 		gc.weighty = 1;
-		
 		gc.gridx = 2;
 		gc.gridwidth =1;
 		gc.gridheight = 4;
@@ -530,12 +520,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.insets = new Insets(0, 0, 0, 0);
 		statsEntryPanel.setPreferredSize(new Dimension(350,450));
 		add(statsEntryPanel, gc);
-		
 		//////// Stats Display Panel ////////
-		
 		gc.weightx = .5;
 		gc.weighty = .5;
-		
 		gc.gridx = 3;
 		gc.gridwidth =2;
 		gc.gridheight = 4;
@@ -544,15 +531,11 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.insets = new Insets(0, 0, 0, 0);
 		statsDisplayPanel.setPreferredSize(new Dimension(300,450));
 		add(statsDisplayPanel, gc);
-		
 		////////// Match Panel  ///////////
-		
 		gc.gridy++;
 		gc.gridy++;
-
 		gc.weightx = .5;
 		gc.weighty = .5;
-		
 		gc.gridx = 0;
 		gc.gridwidth =1;
 		gc.gridheight = 2;
@@ -561,12 +544,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.insets = new Insets(0, 0, 0, 0);
 		matchPanel.setPreferredSize(new Dimension(350,300));
 		add(matchPanel, gc);
-
 		////////// OBS Panel  ///////////
-		
 		gc.weightx = .5;
 		gc.weighty = .75;
-		
 		gc.gridx = 1;
 		gc.gridwidth =1;
 		gc.gridheight = 1;
@@ -575,13 +555,10 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.insets = new Insets(0, 0, 0, 0);
 		obsPanel.setPreferredSize(new Dimension(270,175));
 		add(obsPanel, gc);
-
 		////////// AutoScore Main Panel  ///////////
 		gc.gridy++;
-		
 		gc.weightx = .5;
 		gc.weighty = .25;
-		
 		gc.gridx = 1;
 		gc.gridwidth =1;
 		gc.gridheight = 1;
@@ -590,14 +567,10 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.insets = new Insets(0, 0, 0, 0);
 		autoScoreMainPanel.setPreferredSize(new Dimension(270,100));
 		add(autoScoreMainPanel, gc);
-
 		////////// Team 1 Panel ///////////
-		
 		gc.gridy++;
-
 		gc.weightx = .5;
 		gc.weighty = .5;
-		
 		gc.gridx = 0;
 		gc.gridwidth =1;
 		gc.gridheight = 1;
@@ -606,12 +579,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.insets = new Insets(0, 0, 0, 0);
 		team1Panel.setPreferredSize(new Dimension(350,400));
 		add(team1Panel, gc);
-		
 		////////// Switch Panel ///////////
-
 		gc.weightx = .5;
 		gc.weighty = .5;
-		
 		gc.gridx = 1;
 		gc.gridwidth =1;
 		gc.gridheight = 1;
@@ -620,12 +590,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.insets = new Insets(0, 0, 0, 0);
 		switchPanel.setPreferredSize(new Dimension(270,400));
 		add(switchPanel, gc);
-
 		//////// Team 2 Panel ////////
-
 		gc.weightx = .5;
 		gc.weighty = .5;
-		
 		gc.gridx = 2;
 		gc.gridwidth =1;
 		gc.gridheight = 1;
@@ -634,12 +601,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.insets = new Insets(0, 0, 0, 0);
 		team2Panel.setPreferredSize(new Dimension(350,400));
 		add(team2Panel, gc);
-
 		//////// Reset Panel ////////
-
 		gc.weightx = .5;
 		gc.weighty = .5;
-		
 		gc.gridx = 3;
 		gc.gridwidth =1;
 		gc.gridheight = 1;
@@ -648,12 +612,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.insets = new Insets(0, 0, 0, 0);
 		resetPanel.setPreferredSize(new Dimension(200,400));
 		add(resetPanel, gc);
-		
 		////////// Team 1 Panel ///////////
-		
 		gc.weightx = .5;
 		gc.weighty = .5;
-		
 		gc.gridx = 4;
 		gc.gridwidth =1;
 		gc.gridheight = 1;
@@ -662,11 +623,8 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.insets = new Insets(0, 0, 0, 0);
 		team3Panel.setPreferredSize(new Dimension(350,400));
 		add(team3Panel, gc);
-
 	}
-	
 	////// Listeners //////
-	
 	public void addTimerWindowListener(ActionListener listenForChkBoxTimerWindow) {
 		viewTimerWindow.addActionListener(listenForChkBoxTimerWindow);
 	}

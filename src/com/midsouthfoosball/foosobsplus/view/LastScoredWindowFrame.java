@@ -31,7 +31,7 @@ public class LastScoredWindowFrame extends JFrame {
 	private LastScoredWindowPanel lastScoredWindowPanel;
 	private static final String programName = AppConfig.PROGRAM_NAME;
 	public LastScoredWindowFrame(MainFrame mainFrame, int teamNbr) {
-		super(programName + " " + Messages.getString("LastScoredWindowFrame.Team" + teamNbr + "LastScoredTimerWindow")); //$NON-NLS-1$ //$NON-NLS-2$
+		super(programName + " " + Messages.getString("LastScoredWindowFrame.Team") + teamNbr + Messages.getString("LastScoredWindowFrame.LastScoredTimerWindow")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		lastScoredWindowPanel = new LastScoredWindowPanel("0",Color.CYAN); //$NON-NLS-1$
 		lastScoredWindowPanel.setPreferredSize(new Dimension(256, 70));

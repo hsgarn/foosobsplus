@@ -82,8 +82,8 @@ public class OBSConnectPanel extends JPanel {
 	private JScrollPane scrMessageHistory;
 	private JComboBox<String> monitorComboBox;
 	private JComboBox<String> sceneComboBox;
-	private static final String ON = "1";
-	private static final String OFF = "0";
+	private static final String ON = "1"; //$NON-NLS-1$
+	private static final String OFF = "0"; //$NON-NLS-1$
 	private static Logger logger = LoggerFactory.getLogger(OBSConnectPanel.class);
 	private static final int COLUMN0 = 0;
 	private static final int COLUMN1 = 1;
@@ -97,105 +97,105 @@ public class OBSConnectPanel extends JPanel {
 		sceneComboBox = new JComboBox<>();
 		mdlMessageHistory = new DefaultListModel<String>();
 		lstMessageHistory = new JList<String>(mdlMessageHistory);
-		setLayout(new MigLayout("", "[grow][grow][][]", "[][][][][][][][][][][][grow]"));
-		JLabel lblPanelTitle = new JLabel(Messages.getString("OBSConnectPanel.Title"));
-		add(lblPanelTitle, "cell " + COLUMN1 + " " + row);
+		setLayout(new MigLayout("", "[grow][grow][][]", "[][][][][][][][][][][][grow]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		JLabel lblPanelTitle = new JLabel(Messages.getString("OBSConnectPanel.Title")); //$NON-NLS-1$
+		add(lblPanelTitle, "cell " + COLUMN1 + " " + row); //$NON-NLS-1$ //$NON-NLS-2$
 		row += 1;
-		JLabel lblHost = new JLabel(Messages.getString("OBSConnectPanel.Host"));
-		add(lblHost, "cell " + COLUMN0 + " " + row + ",alignx trailing");
+		JLabel lblHost = new JLabel(Messages.getString("OBSConnectPanel.Host")); //$NON-NLS-1$
+		add(lblHost, "cell " + COLUMN0 + " " + row + ",alignx trailing"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		txtHost = new JTextField();
-		txtHost.setText(Settings.getOBSParameter("OBSHost"));
+		txtHost.setText(Settings.getOBSParameter("OBSHost")); //$NON-NLS-1$
 		txtHost.setColumns(10);
-		add(txtHost, "cell " + COLUMN1 + " " + row + " 2,growx");
+		add(txtHost, "cell " + COLUMN1 + " " + row + " 2,growx");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		row += 1;
-		JLabel lblPort = new JLabel(Messages.getString("OBSConnectPanel.Port"));
-		add(lblPort, "cell " + COLUMN0 + " " + row + ",alignx trailing");
+		JLabel lblPort = new JLabel(Messages.getString("OBSConnectPanel.Port")); //$NON-NLS-1$
+		add(lblPort, "cell " + COLUMN0 + " " + row + ",alignx trailing"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		txtPort = new JTextField();
-		txtPort.setText(Settings.getOBSParameter("OBSPort"));
+		txtPort.setText(Settings.getOBSParameter("OBSPort")); //$NON-NLS-1$
 		txtPort.setColumns(10);
-		add(txtPort, "cell " + COLUMN1 + " " + row + " 2,growx");
+		add(txtPort, "cell " + COLUMN1 + " " + row + " 2,growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		row += 1;
-		JLabel lblPassword = new JLabel(Messages.getString("OBSConnectPanel.Password"));
-		add(lblPassword, "cell " + COLUMN0 + " " + row + ",alignx trailing");
+		JLabel lblPassword = new JLabel(Messages.getString("OBSConnectPanel.Password")); //$NON-NLS-1$
+		add(lblPassword, "cell " + COLUMN0 + " " + row + ",alignx trailing"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		txtPassword = new JTextField();
-		txtPassword.setText(Settings.getOBSParameter("OBSPassword"));
+		txtPassword.setText(Settings.getOBSParameter("OBSPassword")); //$NON-NLS-1$
 		txtPassword.setColumns(10);
-		add(txtPassword, "cell " + COLUMN1 + " " + row + " 2,growx");
+		add(txtPassword, "cell " + COLUMN1 + " " + row + " 2,growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		row += 1;
-		JLabel lblMainScene = new JLabel(Messages.getString("OBSConnectPanel.MainScene"));
-		add(lblMainScene, "cell " + COLUMN0 + " " + row + ", alignx trailing");
+		JLabel lblMainScene = new JLabel(Messages.getString("OBSConnectPanel.MainScene")); //$NON-NLS-1$
+		add(lblMainScene, "cell " + COLUMN0 + " " + row + ", alignx trailing"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		txtMainScene = new JTextField();
-		txtMainScene.setText(Settings.getOBSParameter("OBSMainScene"));
+		txtMainScene.setText(Settings.getOBSParameter("OBSMainScene")); //$NON-NLS-1$
 		txtMainScene.setColumns(10);
-		add(txtMainScene, "cell " + COLUMN1 + " " + row + " 2,growx");
-		btnSetMainScene = new JButton(Messages.getString("OBSConnectPanel.SetMainScene"));
-		add(btnSetMainScene, "cell " + COLUMN3 + " " + row + ",growx");
+		add(txtMainScene, "cell " + COLUMN1 + " " + row + " 2,growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		btnSetMainScene = new JButton(Messages.getString("OBSConnectPanel.SetMainScene")); //$NON-NLS-1$
+		add(btnSetMainScene, "cell " + COLUMN3 + " " + row + ",growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		row += 1;
-		JLabel lblMonitor = new JLabel(Messages.getString("OBSConnectPanel.Monitor"));
-		add(lblMonitor, "cell " + COLUMN0 + " " + row + ", alignx trailing");
-		add(monitorComboBox, "cell " + COLUMN1 + " " + row + " 2,growx");
-		btnFetchMonitors = new JButton(Messages.getString("OBSConnectPanel.FetchMonitors"));
-		add(btnFetchMonitors, "cell " + COLUMN3 + " " + row + ",growx");
-		btnProject = new JButton(Messages.getString("OBSConnectPanel.Project"));
-		add(btnProject, "cell " + COLUMN4 + " " + row + ",growx");
+		JLabel lblMonitor = new JLabel(Messages.getString("OBSConnectPanel.Monitor")); //$NON-NLS-1$
+		add(lblMonitor, "cell " + COLUMN0 + " " + row + ", alignx trailing"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		add(monitorComboBox, "cell " + COLUMN1 + " " + row + " 2,growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		btnFetchMonitors = new JButton(Messages.getString("OBSConnectPanel.FetchMonitors")); //$NON-NLS-1$
+		add(btnFetchMonitors, "cell " + COLUMN3 + " " + row + ",growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		btnProject = new JButton(Messages.getString("OBSConnectPanel.Project")); //$NON-NLS-1$
+		add(btnProject, "cell " + COLUMN4 + " " + row + ",growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		row += 1;
-		JLabel lblScene = new JLabel(Messages.getString("OBSConnectPanel.Scene"));
-		add(lblScene, "cell " + COLUMN0 + " " + row + ", alignx trailing");
-		add(sceneComboBox, "cell " + COLUMN1 + " " + row + " 2,growx");
-		btnFetchScenes = new JButton(Messages.getString("OBSConnectPanel.FetchScenes"));
-		add(btnFetchScenes, "cell " + COLUMN3 + " " + row + ",growx");
-		btnActivateScene = new JButton(Messages.getString("OBSConnectPanel.ActivateScene"));
-		add(btnActivateScene, "cell " + COLUMN4 + " " + row + ",growx");
+		JLabel lblScene = new JLabel(Messages.getString("OBSConnectPanel.Scene")); //$NON-NLS-1$
+		add(lblScene, "cell " + COLUMN0 + " " + row + ", alignx trailing"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		add(sceneComboBox, "cell " + COLUMN1 + " " + row + " 2,growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		btnFetchScenes = new JButton(Messages.getString("OBSConnectPanel.FetchScenes")); //$NON-NLS-1$
+		add(btnFetchScenes, "cell " + COLUMN3 + " " + row + ",growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		btnActivateScene = new JButton(Messages.getString("OBSConnectPanel.ActivateScene")); //$NON-NLS-1$
+		add(btnActivateScene, "cell " + COLUMN4 + " " + row + ",growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		row += 1;
-		chckbxSavePassword = new JCheckBox(Messages.getString("OBSConnectPanel.SavePassword"));
+		chckbxSavePassword = new JCheckBox(Messages.getString("OBSConnectPanel.SavePassword")); //$NON-NLS-1$
 		if (Settings.getOBSParameter("OBSSavePassword").equals(ON)) { //$NON-NLS-1$
 			chckbxSavePassword.setSelected(true);
 		} else {
 			chckbxSavePassword.setSelected(false);
 		}
-		add(chckbxSavePassword, "cell " + COLUMN1 + " " + row);
-		chckbxCloseOnConnect = new JCheckBox(Messages.getString("OBSConnectPanel.CloseOnConnect"));
+		add(chckbxSavePassword, "cell " + COLUMN1 + " " + row); //$NON-NLS-1$ //$NON-NLS-2$
+		chckbxCloseOnConnect = new JCheckBox(Messages.getString("OBSConnectPanel.CloseOnConnect")); //$NON-NLS-1$
 		if (Settings.getOBSParameter("OBSCloseOnConnect").equals(ON)) { //$NON-NLS-1$
 			chckbxCloseOnConnect.setSelected(true);
 		} else {
 			chckbxCloseOnConnect.setSelected(false);
 		}
-		add(chckbxCloseOnConnect, "cell " + COLUMN2 + " " + row + ",alignx left");
+		add(chckbxCloseOnConnect, "cell " + COLUMN2 + " " + row + ",alignx left"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		row += 1;
-		chckbxAutoLogin = new JCheckBox(Messages.getString("OBSConnectPanel.AutoLoginOnStart"));
+		chckbxAutoLogin = new JCheckBox(Messages.getString("OBSConnectPanel.AutoLoginOnStart")); //$NON-NLS-1$
 		if (Settings.getOBSParameter("OBSAutoLogin").equals(ON)) { //$NON-NLS-1$
 			chckbxAutoLogin.setSelected(true);
 		} else {
 			chckbxAutoLogin.setSelected(false);
 		}
-		add(chckbxAutoLogin, "cell " + COLUMN1 + " " + row);
-		chckbxUpdateOnConnect = new JCheckBox(Messages.getString("OBSConnectPanel.UpdateOnConnect"));
-		if (Settings.getOBSParameter("OBSUpdateOnConnect").equals(ON)) {
+		add(chckbxAutoLogin, "cell " + COLUMN1 + " " + row); //$NON-NLS-1$ //$NON-NLS-2$
+		chckbxUpdateOnConnect = new JCheckBox(Messages.getString("OBSConnectPanel.UpdateOnConnect")); //$NON-NLS-1$
+		if (Settings.getOBSParameter("OBSUpdateOnConnect").equals(ON)) { //$NON-NLS-1$
 			chckbxUpdateOnConnect.setSelected(true);
 		} else {
 			chckbxUpdateOnConnect.setSelected(false);
 		}
-		add(chckbxUpdateOnConnect, "cell " + COLUMN2 + " " + row + ",alignx left");
+		add(chckbxUpdateOnConnect, "cell " + COLUMN2 + " " + row + ",alignx left"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		row += 1;
-		btnConnect = new JButton(Messages.getString("OBSConnectPanel.Connect"));
-		add(btnConnect, "flowx,cell " + COLUMN1 + " " + row);
-		btnDisconnect = new JButton(Messages.getString("OBSConnectPanel.Disconnect"));
-		add(btnDisconnect, "cell " + COLUMN2 + " " + row + ",alignx left");
+		btnConnect = new JButton(Messages.getString("OBSConnectPanel.Connect")); //$NON-NLS-1$
+		add(btnConnect, "flowx,cell " + COLUMN1 + " " + row); //$NON-NLS-1$ //$NON-NLS-2$
+		btnDisconnect = new JButton(Messages.getString("OBSConnectPanel.Disconnect")); //$NON-NLS-1$
+		add(btnDisconnect, "cell " + COLUMN2 + " " + row + ",alignx left"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		row += 1;
-		JLabel lblMessage = new JLabel(Messages.getString("OBSConnectPanel.Message"));
-		add(lblMessage, "cell " + COLUMN0 + " " + row + ", alignx trailing");
+		JLabel lblMessage = new JLabel(Messages.getString("OBSConnectPanel.Message")); //$NON-NLS-1$
+		add(lblMessage, "cell " + COLUMN0 + " " + row + ", alignx trailing"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		row += 1;
 		scrMessageHistory = new JScrollPane();
 		scrMessageHistory.setViewportView(lstMessageHistory);
 		lstMessageHistory.setLayoutOrientation(JList.VERTICAL);
 		lstMessageHistory.setCellRenderer(new AttributiveCellRenderer());
-		add(scrMessageHistory, "cell " + COLUMN1 + " " + row + " 4 1,grow");
+		add(scrMessageHistory, "cell " + COLUMN1 + " " + row + " 4 1,grow"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		row += 1;
-		btnApply = new JButton(Messages.getString("Global.Apply"));
-		add(btnApply, "cell " + COLUMN1 + " " + row + ",growx");
-		btnSave = new JButton(Messages.getString("Global.Save"));
-		add(btnSave, "cell " + COLUMN1 + " " + row + ",alignx left");
-		btnCancel = new JButton(Messages.getString("Global.Cancel"));
+		btnApply = new JButton(Messages.getString("Global.Apply")); //$NON-NLS-1$
+		add(btnApply, "cell " + COLUMN1 + " " + row + ",growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
+		add(btnSave, "cell " + COLUMN1 + " " + row + ",alignx left"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		btnCancel = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				revertChanges();
@@ -204,16 +204,14 @@ public class OBSConnectPanel extends JPanel {
 				win.dispose();
 			}
 		});
-		add(btnCancel, "cell " + COLUMN3 + " " + row + ",growx");
-		btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults"));
+		add(btnCancel, "cell " + COLUMN3 + " " + row + ",growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
 		btnRestoreDefaults.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				restoreDefaults();
 			}
 		});
-		add(btnRestoreDefaults, "cell " + COLUMN4+ " " + row + ",alignx left");
-
-
+		add(btnRestoreDefaults, "cell " + COLUMN4+ " " + row + ",alignx left"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	public void disableConnect() {
 		btnConnect.setEnabled(false);
@@ -229,50 +227,50 @@ public class OBSConnectPanel extends JPanel {
 	}
 	public boolean isConnectionChanged() {
 		boolean changed = false;
-		if (!txtHost.getText().equals(Settings.getOBSParameter("OBSHost")) ||
-			!txtPort.getText().equals(Settings.getOBSParameter("OBSPort"))  ||
-			!txtPassword.getText().equals(Settings.getOBSParameter("OBSPassword"))) {
+		if (!txtHost.getText().equals(Settings.getOBSParameter("OBSHost")) || //$NON-NLS-1$
+			!txtPort.getText().equals(Settings.getOBSParameter("OBSPort"))  || //$NON-NLS-1$
+			!txtPassword.getText().equals(Settings.getOBSParameter("OBSPassword"))) { //$NON-NLS-1$
 			changed = true;
 		}
 		return changed;
 	}
 	public void restoreDefaults() {
-		txtHost.setText(Settings.getDefaultOBSParameter("OBSHost"));
-		txtPort.setText(Settings.getDefaultOBSParameter("OBSPort"));
-		txtPassword.setText(Settings.getDefaultOBSParameter("OBSPassword"));
-		txtMainScene.setText(Settings.getDefaultOBSParameter("OBSMainScene"));
-		chckbxSavePassword.setSelected(Settings.getDefaultOBSParameter("OBSSavePassword")==ON);
-		chckbxAutoLogin.setSelected(Settings.getDefaultOBSParameter("OBSAutoLogin")==ON);
-		chckbxCloseOnConnect.setSelected(Settings.getDefaultOBSParameter("OBSCloseOnConnect")==ON);
-		chckbxUpdateOnConnect.setSelected(Settings.getDefaultOBSParameter("OBSUpdateOnConnect")==ON);
+		txtHost.setText(Settings.getDefaultOBSParameter("OBSHost")); //$NON-NLS-1$
+		txtPort.setText(Settings.getDefaultOBSParameter("OBSPort")); //$NON-NLS-1$
+		txtPassword.setText(Settings.getDefaultOBSParameter("OBSPassword")); //$NON-NLS-1$
+		txtMainScene.setText(Settings.getDefaultOBSParameter("OBSMainScene")); //$NON-NLS-1$
+		chckbxSavePassword.setSelected(Settings.getDefaultOBSParameter("OBSSavePassword")==ON); //$NON-NLS-1$
+		chckbxAutoLogin.setSelected(Settings.getDefaultOBSParameter("OBSAutoLogin")==ON); //$NON-NLS-1$
+		chckbxCloseOnConnect.setSelected(Settings.getDefaultOBSParameter("OBSCloseOnConnect")==ON); //$NON-NLS-1$
+		chckbxUpdateOnConnect.setSelected(Settings.getDefaultOBSParameter("OBSUpdateOnConnect")==ON); //$NON-NLS-1$
 	}
 	public void revertChanges() {
-		txtHost.setText(Settings.getOBSParameter("OBSHost"));
-		txtPort.setText(Settings.getOBSParameter("OBSPort"));
-		txtPassword.setText(Settings.getOBSParameter("OBSPassword"));
-		txtMainScene.setText(Settings.getOBSParameter("OBSMainScene"));
-		chckbxSavePassword.setSelected(Settings.getOBSParameter("OBSSavePassword")==ON);
-		chckbxAutoLogin.setSelected(Settings.getOBSParameter("OBSAutoLogin")==ON);
-		chckbxCloseOnConnect.setSelected(Settings.getOBSParameter("OBSCloseOnConnect")==ON);
-		chckbxUpdateOnConnect.setSelected(Settings.getOBSParameter("OBSUpdateOnConnect")==ON);
+		txtHost.setText(Settings.getOBSParameter("OBSHost")); //$NON-NLS-1$
+		txtPort.setText(Settings.getOBSParameter("OBSPort")); //$NON-NLS-1$
+		txtPassword.setText(Settings.getOBSParameter("OBSPassword")); //$NON-NLS-1$
+		txtMainScene.setText(Settings.getOBSParameter("OBSMainScene")); //$NON-NLS-1$
+		chckbxSavePassword.setSelected(Settings.getOBSParameter("OBSSavePassword")==ON); //$NON-NLS-1$
+		chckbxAutoLogin.setSelected(Settings.getOBSParameter("OBSAutoLogin")==ON); //$NON-NLS-1$
+		chckbxCloseOnConnect.setSelected(Settings.getOBSParameter("OBSCloseOnConnect")==ON); //$NON-NLS-1$
+		chckbxUpdateOnConnect.setSelected(Settings.getOBSParameter("OBSUpdateOnConnect")==ON); //$NON-NLS-1$
 	}
 	public void saveSettings() {
 		updateOBS();
-		Settings.setOBS("OBSHost",txtHost.getText());
-		Settings.setOBS("OBSPort",txtPort.getText());
-		Settings.setOBS("OBSMainScene",txtMainScene.getText());
-		Settings.setOBS("OBSAutoLogin", chckbxAutoLogin.isSelected() ? ON : OFF);
-		Settings.setOBS("OBSUpdateOnConnect", chckbxUpdateOnConnect.isSelected() ? ON : OFF);
-		Settings.setOBS("OBSCloseOnConnect", chckbxCloseOnConnect.isSelected() ? ON : OFF);
-		Settings.setOBS("OBSSavePassword",chckbxSavePassword.isSelected() ? ON : OFF);
-		Settings.setOBS("OBSPassword",chckbxSavePassword.isSelected() ? txtPassword.getText() : "");
+		Settings.setOBS("OBSHost",txtHost.getText()); //$NON-NLS-1$
+		Settings.setOBS("OBSPort",txtPort.getText()); //$NON-NLS-1$
+		Settings.setOBS("OBSMainScene",txtMainScene.getText()); //$NON-NLS-1$
+		Settings.setOBS("OBSAutoLogin", chckbxAutoLogin.isSelected() ? ON : OFF); //$NON-NLS-1$
+		Settings.setOBS("OBSUpdateOnConnect", chckbxUpdateOnConnect.isSelected() ? ON : OFF); //$NON-NLS-1$
+		Settings.setOBS("OBSCloseOnConnect", chckbxCloseOnConnect.isSelected() ? ON : OFF); //$NON-NLS-1$
+		Settings.setOBS("OBSSavePassword",chckbxSavePassword.isSelected() ? ON : OFF); //$NON-NLS-1$
+		Settings.setOBS("OBSPassword",chckbxSavePassword.isSelected() ? txtPassword.getText() : ""); //$NON-NLS-1$ //$NON-NLS-2$
 		OBS.setMainScene(txtMainScene.getText());
-		if (Settings.getOBSParameter("OBSAutoLogin").equals(ON)) {
-			if (Settings.getOBSParameter("OBSHost").isEmpty() || Settings.getOBSParameter("OBSPassword").isEmpty() || Settings.getOBSParameter("OBSPort").isEmpty() || Settings.getOBSParameter("OBSSavePassword").equals(OFF)) {
-				Settings.setOBS("OBSAutoLogin",OFF);
+		if (Settings.getOBSParameter("OBSAutoLogin").equals(ON)) { //$NON-NLS-1$
+			if (Settings.getOBSParameter("OBSHost").isEmpty() || Settings.getOBSParameter("OBSPassword").isEmpty() || Settings.getOBSParameter("OBSPort").isEmpty() || Settings.getOBSParameter("OBSSavePassword").equals(OFF)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				Settings.setOBS("OBSAutoLogin",OFF); //$NON-NLS-1$
 				chckbxAutoLogin.setSelected(false);
-				String msg = Messages.getString("Errors.OBSConnectPanel.AutoLogin");
-				String ttl = Messages.getString("Errors.OBSConnectPanel.AutoLogin.Title");
+				String msg = Messages.getString("Errors.OBSConnectPanel.AutoLogin"); //$NON-NLS-1$
+				String ttl = Messages.getString("Errors.OBSConnectPanel.AutoLogin.Title"); //$NON-NLS-1$
 				logger.error(msg);
 				JOptionPane.showMessageDialog(null, msg, ttl,1);
 			}
@@ -280,9 +278,9 @@ public class OBSConnectPanel extends JPanel {
 		try {
 			Settings.saveOBSConfig();
 		} catch (IOException ex) {
-			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile"));
+			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile")); //$NON-NLS-1$
 			logger.error(ex.toString());
-			JOptionPane.showMessageDialog(null, ex.getMessage(), Messages.getString("Errors.ErrorSavingPropertiesFile"),1);
+			JOptionPane.showMessageDialog(null, ex.getMessage(), Messages.getString("Errors.ErrorSavingPropertiesFile"),1); //$NON-NLS-1$
 		}
 	}
 	public void updateOBS() {
@@ -305,10 +303,10 @@ public class OBSConnectPanel extends JPanel {
 			tmp = (String) value;
 			setBackground(UIManager.getColor("List.background")); //$NON-NLS-1$
 			setForeground(UIManager.getColor("List.foreground")); //$NON-NLS-1$
-			if (tmp.indexOf("Disconnect") != -1 || tmp.indexOf("Unable") != -1 || tmp.indexOf("ERROR!") != -1) { //$NON-NLS-1$
+			if (tmp.indexOf("Disconnect") != -1 || tmp.indexOf("Unable") != -1 || tmp.indexOf("ERROR!") != -1) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				setForeground(Color.RED);
 			} 
-			if (tmp.indexOf("Connected!") != -1) {
+			if (tmp.indexOf("Connected!") != -1) { //$NON-NLS-1$
 				setForeground(Color.BLUE);
 			}
 		    setText(tmp);
@@ -320,7 +318,7 @@ public class OBSConnectPanel extends JPanel {
     	for (HashMap.Entry<Integer, String> entry : monitorMap.entrySet()) {
     		int index = entry.getKey();
     		String monitor = entry.getValue();
-    		monitorComboBox.addItem(index + ": " + monitor);
+    		monitorComboBox.addItem(index + ": " + monitor); //$NON-NLS-1$
     	}
     	monitorComboBox.repaint();
     }
@@ -361,7 +359,7 @@ public class OBSConnectPanel extends JPanel {
 //    		scene = ((String) sceneComboBox.getSelectedItem()).split(": ")[1];
     		scene = ((String) sceneComboBox.getSelectedItem());
     	} else {
-    		scene = "";
+    		scene = ""; //$NON-NLS-1$
     	}
     	return scene;
     }

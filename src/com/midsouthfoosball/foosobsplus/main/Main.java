@@ -185,15 +185,16 @@ import io.obswebsocket.community.client.model.Scene;
  */
 public final class Main implements MatchObserver {
 	private static final Logger 					logger 					= LoggerFactory.getLogger(Main.class);
-	private static final String 					ON 						= "1";
+	private static final String 					ON 						= "1"; //$NON-NLS-1$
+	private static final String						OFF						= "0"; //$NON-NLS-1$
 	////// Settings and OBSInterface setup \\\\\\
 	private static final OBSInterface 				obsInterface 			= new OBSInterface();
-	private static String							matchId					= "";
-	private static final DateTimeFormatter 			dtf 					= DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+	private static String							matchId					= ""; //$NON-NLS-1$
+	private static final DateTimeFormatter 			dtf 					= DateTimeFormatter.ofPattern(Messages.getString("Main.DateTimePattern")); //$NON-NLS-1$
 	private static boolean 							autoScoreConnected		= false;
 	private static Socket 							autoScoreSocket;
 	private static PrintWriter 						autoScoreSocketWriter;
-	private static StreamIndexer 					streamIndexer      		= new StreamIndexer(Settings.getControlParameter("datapath"));
+	private static StreamIndexer 					streamIndexer      		= new StreamIndexer(Settings.getControlParameter("datapath")); //$NON-NLS-1$
 	private static Boolean 							allowAutoScoreReconnect	= true;
 	private static Boolean 							blockAutoScoreReconnect	= false;
     private static Map<String, String>				teamGameShowSourcesMap	= new HashMap<>();
@@ -212,9 +213,9 @@ public final class Main implements MatchObserver {
 	private static CommandSwitch 					mySwitch;
 	////// Generate the Data Models (Mvc) \\\\\\
 	private static Tournament						tournament				= new Tournament(obsInterface);
-	private static Team 							team1 					= new Team(obsInterface, 1, Settings.getControlParameter("Side1Color"));
-	private static Team 							team2 					= new Team(obsInterface, 2, Settings.getControlParameter("Side2Color"));
-	private static Team         					team3              		= new Team(obsInterface, 3, "None");
+	private static Team 							team1 					= new Team(obsInterface, 1, Settings.getControlParameter("Side1Color")); //$NON-NLS-1$
+	private static Team 							team2 					= new Team(obsInterface, 2, Settings.getControlParameter("Side2Color")); //$NON-NLS-1$
+	private static Team         					team3              		= new Team(obsInterface, 3, Messages.getString("Main.None")); //$NON-NLS-1$
 	private static Match 							match					= new Match(obsInterface, team1, team2, team3);
 	private static Stats 							stats 					= new Stats(team1, team2);
 	////// Create a TimeClock to be the Timer \\\\\\
@@ -229,9 +230,9 @@ public final class Main implements MatchObserver {
 	private static OBSPanel							obsPanel				= new OBSPanel();
 	private static AutoScoreMainPanel				autoScoreMainPanel  	= new AutoScoreMainPanel();
 	private static MatchPanel						matchPanel				= new MatchPanel();
-	private static TeamPanel 						teamPanel1 				= new TeamPanel(1, Settings.getControlParameter("Side1Color"));
-	private static TeamPanel 						teamPanel2 				= new TeamPanel(2, Settings.getControlParameter("Side2Color"));
-	private static TeamPanel						teamPanel3				= new TeamPanel(3, "None");
+	private static TeamPanel 						teamPanel1 				= new TeamPanel(1, Settings.getControlParameter("Side1Color")); //$NON-NLS-1$
+	private static TeamPanel 						teamPanel2 				= new TeamPanel(2, Settings.getControlParameter("Side2Color")); //$NON-NLS-1$
+	private static TeamPanel						teamPanel3				= new TeamPanel(3, Messages.getString("Main.None")); //$NON-NLS-1$
 	private static StatsEntryPanel 					statsEntryPanel 		= new StatsEntryPanel();
 	private static SwitchPanel 						switchPanel 			= new SwitchPanel();
 	private static ResetPanel 						resetPanel 				= new ResetPanel();
@@ -278,15 +279,15 @@ public final class Main implements MatchObserver {
 	public Main() throws IOException {
 		buildTeamGameShowSourcesMap();
 		loadWindowsAndControllers();
-		OBS.setHost(Settings.getOBSParameter("OBSHost"));
-		OBS.setPort(Settings.getOBSParameter("OBSPort"));
-		OBS.setPassword(Settings.getOBSParameter("OBSPassword"));
-		setMainScene(Settings.getOBSParameter("OBSMainScene"));
+		OBS.setHost(Settings.getOBSParameter("OBSHost")); //$NON-NLS-1$
+		OBS.setPort(Settings.getOBSParameter("OBSPort")); //$NON-NLS-1$
+		OBS.setPassword(Settings.getOBSParameter("OBSPassword")); //$NON-NLS-1$
+		setMainScene(Settings.getOBSParameter("OBSMainScene")); //$NON-NLS-1$
 		updateOBSDisconnected();
-		if (Settings.getOBSParameter("OBSAutoLogin").equals(ON)) {
+		if (Settings.getOBSParameter("OBSAutoLogin").equals(ON)) { //$NON-NLS-1$
 			if (OBS.getPassword().isEmpty() || OBS.getHost().isEmpty() || OBS.getPort().isEmpty()) {
-				String msg = Messages.getString("Errors.Main.AutoLogin");
-				String ttl = Messages.getString("Errors.Main.AutoLogin.Title");
+				String msg = Messages.getString("Errors.Main.AutoLogin"); //$NON-NLS-1$
+				String ttl = Messages.getString("Errors.Main.AutoLogin.Title"); //$NON-NLS-1$
 				logger.warn(msg);
 				JOptionPane.showMessageDialog(null, msg, ttl, 1);
 			} else {
@@ -297,7 +298,7 @@ public final class Main implements MatchObserver {
 		loadCommands();
 		match.addObserver(this);
 		createAutoScoreWorker();
-		if (Settings.getAutoScoreParameter("AutoScoreSettingsAutoConnect").equals(ON)) {
+		if (Settings.getAutoScoreParameter("AutoScoreSettingsAutoConnect").equals(ON)) { //$NON-NLS-1$
 			connectAutoScore();
 		}
 		createFileWatchWorker();
@@ -356,11 +357,11 @@ public final class Main implements MatchObserver {
 		if (sceneName != null && !sceneName.isEmpty()) {
 			OBS.setCurrentScene(sceneName);
 			if(showParsed) {
-				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS Scene changed to " + sceneName + ".");
+				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSceneChangedTo") + sceneName + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} else {
 			if(showParsed) {
-				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS checkCurrentProgramSceneChange failed: sceneName was null or empty.");
+				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSCheckCurrentProgramSceneChangeFailed")); //$NON-NLS-1$
 			}
 	   }
 	}
@@ -369,46 +370,46 @@ public final class Main implements MatchObserver {
 		String sceneName = sceneItemEnableStateChanged.getSceneName();
 		Number itemId = sceneItemEnableStateChanged.getSceneItemId();
 		boolean show = sceneItemEnableStateChanged.getSceneItemEnabled();
-		checkItemEnableStageChangeHelper(sceneName, show, Settings.getSourceParameter("ShowScores"), itemId, showParsed);
-		checkItemEnableStageChangeHelper(sceneName, show, Settings.getSourceParameter("ShowCutthroat"), itemId, showParsed);
+		checkItemEnableStageChangeHelper(sceneName, show, Settings.getSourceParameter("ShowScores"), itemId, showParsed); //$NON-NLS-1$
+		checkItemEnableStageChangeHelper(sceneName, show, Settings.getSourceParameter("ShowCutthroat"), itemId, showParsed); //$NON-NLS-1$
 	}
 	private static void checkItemEnableStageChangeHelper(String sceneName, boolean show, String sourceToCheck, Number itemId, boolean showParsed) {
 		OBS.getController().getSceneItemId(sceneName, sourceToCheck, null, getSceneItemIdResponse -> {
         	if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
 	           	if (getSceneItemIdResponse.getSceneItemId().toString().equals(itemId.toString())) {
-	           		if (sourceToCheck.equals(Settings.getSourceParameter("ShowScores"))) {
+	           		if (sourceToCheck.equals(Settings.getSourceParameter("ShowScores"))) { //$NON-NLS-1$
 	           			obsPanel.setShowScores(show);
-	           		} else if (sourceToCheck.equals(Settings.getSourceParameter("ShowCutthroat"))) {
+	           		} else if (sourceToCheck.equals(Settings.getSourceParameter("ShowCutthroat"))) { //$NON-NLS-1$
 	           			obsPanel.setShowCutthroat(show);
 	           		}
 					if(showParsed) {
-						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS " + sourceToCheck + " enable state change received and is now: " + show + ".");
+						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS " + sourceToCheck + Messages.getString("Main.EnableStateChangeReceived") + show + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 	           	}
 	        } else {
 				if(showParsed) {
-					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS checkItemEnableStateChange failed: getSceneItemIdResponse was null or unsuccessful.");
+					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSEnableStateChangeFailed")); //$NON-NLS-1$
 				}
 	        }
 	    });
 	}
 	private static void checkActiveStateChange(InputActiveStateChangedEvent inputActiveStateChangedEvent) {
 		String name = inputActiveStateChangedEvent.getInputName();
-		if (!Settings.getSourceParameter("ShowTimer").isEmpty() && name.equals(Settings.getSourceParameter("ShowTimer"))) {
+		if (!Settings.getSourceParameter("ShowTimer").isEmpty() && name.equals(Settings.getSourceParameter("ShowTimer"))) { //$NON-NLS-1$ //$NON-NLS-2$
 			boolean show = inputActiveStateChangedEvent.getVideoActive();
 			obsPanel.setShowTimer(show);
 			mainController.showTimerWindow(show);
-		} else if (!Settings.getSourceParameter("ShowScores").isEmpty() && name.equals(Settings.getSourceParameter("ShowScores"))) {
+		} else if (!Settings.getSourceParameter("ShowScores").isEmpty() && name.equals(Settings.getSourceParameter("ShowScores"))) { //$NON-NLS-1$ //$NON-NLS-2$
 			boolean show = inputActiveStateChangedEvent.getVideoActive();
 			obsPanel.setShowScores(show);
-		} else if (!Settings.getSourceParameter("ShowCutthroat").isEmpty() && name.equals(Settings.getSourceParameter("ShowCutthroat"))) {
+		} else if (!Settings.getSourceParameter("ShowCutthroat").isEmpty() && name.equals(Settings.getSourceParameter("ShowCutthroat"))) { //$NON-NLS-1$ //$NON-NLS-2$
 			boolean show = inputActiveStateChangedEvent.getVideoActive();
 			obsPanel.setShowCutthroat(show);
 		}
 		setFocusOnCode();
 	}
 	public static void connectToOBS() {
-		logger.info("Trying to connect to OBS...");
+		logger.info("Trying to connect to OBS..."); //$NON-NLS-1$
 		buildOBSController();
 		OBS.getController().connect();
 	}
@@ -417,7 +418,7 @@ public final class Main implements MatchObserver {
 		obsConnectPanel.disableConnect();
 		mainFrame.enableConnect(false);
 		mainFrame.setOBSIconConnected(true);
-		if(Settings.getOBSParameter("OBSUpdateOnConnect").equals("1")) {
+		if(Settings.getOBSParameter("OBSUpdateOnConnect").equals(ON)) { //$NON-NLS-1$
 			tournamentController.writeAll();
 			teamController.writeAll();
 			statsController.displayAllStats();
@@ -431,37 +432,37 @@ public final class Main implements MatchObserver {
 	}
 	private static void onReady() {
 		updateOBSConnected();
-		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS Ready. ");
-		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS Controller Connected. ");
+		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSReady")); //$NON-NLS-1$
+		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSControllerConnected")); //$NON-NLS-1$
 		OBS.getController().getVersion(versionInfo -> {
 			if(versionInfo != null && versionInfo.isSuccessful()) {
-				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " OBS Version: " + versionInfo.getObsVersion());
-				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " WebSocket Version: " + versionInfo.getObsWebSocketVersion());
+				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSVersion") + versionInfo.getObsVersion()); //$NON-NLS-1$
+				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.WebsocketVersion") + versionInfo.getObsWebSocketVersion()); //$NON-NLS-1$
 			}
 		});
-		String sceneName = Settings.getOBSParameter("OBSMainScene");
+		String sceneName = Settings.getOBSParameter("OBSMainScene"); //$NON-NLS-1$
 		OBS.getController().setCurrentProgramScene(sceneName, response -> { 
 			if(response != null && response.isSuccessful()) {
 				OBS.setCurrentScene(sceneName);
 				if(Settings.getShowParsed()) {
-					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Scene set to: " + sceneName);
+					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.SceneSetTo") + sceneName); //$NON-NLS-1$
 				}
 			} else {
-				String msg = dtf.format(LocalDateTime.now()) + ": Unable to set scene to: " + sceneName;
+				String msg = dtf.format(LocalDateTime.now()) + Messages.getString("Main.UnableToSetSceneTo") + sceneName; //$NON-NLS-1$
 				logger.warn(msg);
 				if(Settings.getShowParsed()) {
 					obsConnectPanel.addMessage(msg);
 				}
 			}
 		});
-		OBS.getController().getSourceActive(Settings.getSourceParameter("ShowTimer"), response -> 
+		OBS.getController().getSourceActive(Settings.getSourceParameter("ShowTimer"), response ->  //$NON-NLS-1$
 			{boolean show = response.getVideoActive();
 				obsPanel.setShowTimer(show);
 				mainController.showTimerWindow(show);		
 			});
-		OBS.getController().getSourceActive(Settings.getSourceParameter("ShowScores"), response -> obsPanel.setShowScores(response.getVideoActive()));
-		OBS.getController().getSourceActive(Settings.getSourceParameter("ShowCutthroat"), response -> obsPanel.setShowCutthroat(response.getVideoActive()));
-		if(Settings.getOBSParameter("OBSCloseOnConnect").equals(ON)) { 
+		OBS.getController().getSourceActive(Settings.getSourceParameter("ShowScores"), response -> obsPanel.setShowScores(response.getVideoActive())); //$NON-NLS-1$
+		OBS.getController().getSourceActive(Settings.getSourceParameter("ShowCutthroat"), response -> obsPanel.setShowCutthroat(response.getVideoActive())); //$NON-NLS-1$
+		if(Settings.getOBSParameter("OBSCloseOnConnect").equals(ON)) {  //$NON-NLS-1$
 			obsConnectFrame.setVisible(false);
 		}
 		fetchMonitorList();
@@ -476,8 +477,8 @@ public final class Main implements MatchObserver {
 				OBS.getController().openSourceProjector(sceneName, monitorIndex, null, response -> 
 				{
 					if (!response.isSuccessful()) {
-						String msg = Messages.getString("Errors.Main.ProjectError");
-						String ttl = Messages.getString("Errors.Main.Project.Title");
+						String msg = Messages.getString("Errors.Main.ProjectError"); //$NON-NLS-1$
+						String ttl = Messages.getString("Errors.Main.Project.Title"); //$NON-NLS-1$
 						logger.warn(msg);
 						JOptionPane.showMessageDialog(null, msg, ttl, 1);
 					}
@@ -489,7 +490,7 @@ public final class Main implements MatchObserver {
 		if (OBS.getConnected()) {
 			OBS.getController().getMonitorList(response -> {
 				if(Settings.getShowParsed()) {
-					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Fetching Monitors.");
+					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.FetchingMonitors")); //$NON-NLS-1$
 				}
 				List<Monitor> monitors = null;
 				if(response != null && response.isSuccessful()) {
@@ -500,11 +501,11 @@ public final class Main implements MatchObserver {
 					}
 					obsConnectPanel.updateMonitorList(monitorMap);
 					if(Settings.getShowParsed()) {
-						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Monitors Fetched.");
+						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.MonitorsFetched")); //$NON-NLS-1$
 					}
 				} else {
-					String msg = Messages.getString("Errors.Main.FetchMonitorError");
-					String ttl = Messages.getString("Errors.Main.FetchMonitor.Title");
+					String msg = Messages.getString("Errors.Main.FetchMonitorError"); //$NON-NLS-1$
+					String ttl = Messages.getString("Errors.Main.FetchMonitor.Title"); //$NON-NLS-1$
 					logger.warn(msg);
 					JOptionPane.showMessageDialog(null, msg, ttl, 1);
 				}
@@ -523,8 +524,8 @@ public final class Main implements MatchObserver {
 					}
 					obsConnectPanel.updateSceneList(sceneMap);
 				} else {
-					String msg = Messages.getString("Errors.Main.FetchSourceError");
-					String ttl = Messages.getString("Errors.Main.FetchSource.Title");
+					String msg = Messages.getString("Errors.Main.FetchSourceError"); //$NON-NLS-1$
+					String ttl = Messages.getString("Errors.Main.FetchSource.Title"); //$NON-NLS-1$
 					logger.warn(msg);
 					JOptionPane.showMessageDialog(null, msg, ttl, 1);
 				}
@@ -533,17 +534,17 @@ public final class Main implements MatchObserver {
 	}
 	private static void onClose(WebSocketCloseCode webSocketCloseCode) {
 		updateOBSDisconnected();
-		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS Controller Closed. " + webSocketCloseCode.getCode());
+		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSControllerClosed") + webSocketCloseCode.getCode()); //$NON-NLS-1$
 	}
 	private static void onDisconnect() {
 		updateOBSDisconnected();
-		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS Controller Disconnected. ");
+		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSControllerDisconnected")); //$NON-NLS-1$
 	}
 	private static void onControllerError(ReasonThrowable reason) {
-		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " Controller Error: " + reason.getReason());
+		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.ControllerError") + reason.getReason()); //$NON-NLS-1$
 	}
 	private static void onCommunicationError(ReasonThrowable reason) {
-		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " Commucnication Error: " + reason.getReason());
+		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.CommunicationError") + reason.getReason()); //$NON-NLS-1$
 	}
 	private static void createAutoScoreWorker() {
 		autoScoreWorker = new SwingWorker<Boolean, Integer>() {
@@ -551,20 +552,20 @@ public final class Main implements MatchObserver {
 			@Override
 			protected Boolean doInBackground() throws Exception {
 		    	boolean isConnected = false;
-		    	String address = Settings.getAutoScoreParameter("AutoScoreSettingsServerAddress");
-		    	int port = Settings.getAutoScoreParameter("AutoScoreSettingsServerPort",Integer::parseInt);
+		    	String address = Settings.getAutoScoreParameter("AutoScoreSettingsServerAddress"); //$NON-NLS-1$
+		    	int port = Settings.getAutoScoreParameter("AutoScoreSettingsServerPort",Integer::parseInt); //$NON-NLS-1$
 		    	try {
 		            autoScoreSocket = new Socket(address, port);
-		            autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Connected to " + address + ": " + port);
-		            logger.info("Auto Score connected to " + address + ": " + port);
+		            autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.ConnectedTo") + address + ": " + port); //$NON-NLS-1$ //$NON-NLS-2$
+		            logger.info("Auto Score connected to " + address + ": " + port); //$NON-NLS-1$ //$NON-NLS-2$
 		        	dataIn = new BufferedReader(new InputStreamReader(autoScoreSocket.getInputStream()));
 					try {
 						autoScoreSocketWriter = new PrintWriter(autoScoreSocket.getOutputStream());
 						if (autoScoreSocketWriter.checkError()) {
-							logger.error("createAutoScoreWork doInBackground new PrintWriter error:");
+							logger.error("createAutoScoreWork doInBackground new PrintWriter error:"); //$NON-NLS-1$
 						}
 					} catch(IOException ex) {
-						logger.error("createAutoScoreWork doInBackground PrintWriter exception:");
+						logger.error("createAutoScoreWork doInBackground PrintWriter exception:"); //$NON-NLS-1$
 						logger.error(ex.toString());
 					}
 		        	isConnected = true;
@@ -572,59 +573,59 @@ public final class Main implements MatchObserver {
 		    		autoScoreConnected = true;
 		        }
 		        catch(UnknownHostException uh) {
-		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Auto Score UnknownHostException");
-		        	logger.error("Auto Score new Socket UnknownHostException");
+		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.AutoScoreUnknownHostException")); //$NON-NLS-1$
+		        	logger.error("Auto Score new Socket UnknownHostException"); //$NON-NLS-1$
 		        	logger.error(uh.toString());
 		        }
 		        catch(IOException io) {
-		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Auto Score IOException");
-		        	logger.error("Auto Score new Socket IOException");
+		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.AutoScoreIOException")); //$NON-NLS-1$
+		        	logger.error("Auto Score new Socket IOException"); //$NON-NLS-1$
 		        	logger.error(io.toString());
 		        }
-		    	String raw = "";
+		    	String raw = ""; //$NON-NLS-1$
 		        String str[];
 		        String cmd[];
 		        while (isConnected) {
             		try {
            				raw = dataIn.readLine();
 		            } catch(IOException io) {
-		            	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString());
+		            	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString()); //$NON-NLS-1$
 			        	logger.error(io.toString());
 			        	isConnected = false;
 		            }
             		if (raw != null && !raw.isEmpty()) {
-                		logger.info("Received raw data: [" + raw + "]");
-		        		cmd = raw.split(":");
-		        		logger.info("Parse command: " + cmd[0]);
-	                	if (Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals("1")) {
-	                		autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Received " + raw);
+                		logger.info("Received raw data: [" + raw + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+		        		cmd = raw.split(":"); //$NON-NLS-1$
+		        		logger.info("Parse command: " + cmd[0]); //$NON-NLS-1$
+	                	if (Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals(ON)) { //$NON-NLS-1$
+	                		autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Received") + raw); //$NON-NLS-1$
 	                	}
-	                	if (cmd[0].equals("Team")) {
-	    	                str = cmd[1].split("[,]",0);
-			                if (str[0].equals("1")) {
+	                	if (cmd[0].equals("Team")) { //$NON-NLS-1$
+	    	                str = cmd[1].split("[,]",0); //$NON-NLS-1$
+			                if (str[0].equals("1")) { //$NON-NLS-1$
 			                	publish(1);
 			                } else {
-				                if (str[0].equals("2")) {
+				                if (str[0].equals("2")) { //$NON-NLS-1$
 				                	publish(2);
 				                }
 			                }
 	                	} else {
-	                		if (cmd[0].equals("TO")) {
-	                			str = cmd[1].split("[,]",0);
-				                if (str[0].equals("1")) {
+	                		if (cmd[0].equals("TO")) { //$NON-NLS-1$
+	                			str = cmd[1].split("[,]",0); //$NON-NLS-1$
+				                if (str[0].equals("1")) { //$NON-NLS-1$
 				                	publish(3);
 				                } else {
-					                if (str[0].equals("2")) {
+					                if (str[0].equals("2")) { //$NON-NLS-1$
 					                	publish(4);
 					                }
 				                }
 	                		}
 	                	}
-	                	if (cmd[0].equals("Read")) {
+	                	if (cmd[0].equals("Read")) { //$NON-NLS-1$
 	                		autoScoreConfigPanel.clearConfigTextArea();
 	                	}
-	                	if (cmd[0].equals("Line")) {
-	                		String line = cmd[1] + "\n";
+	                	if (cmd[0].equals("Line")) { //$NON-NLS-1$
+	                		String line = cmd[1] + "\n"; //$NON-NLS-1$
 	                		autoScoreConfigPanel.appendConfigTextArea(line);
 	                	}
             		}
@@ -632,14 +633,14 @@ public final class Main implements MatchObserver {
 	                	break;
 	                }
 		        }
-		        autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Connection Terminated!!");
-		        logger.info("Auto Score Connection Terminated!!");
+		        autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.ConnectionTerminated")); //$NON-NLS-1$
+		        logger.info("Auto Score Connection Terminated!!"); //$NON-NLS-1$
 		        try {
 		            dataIn.close();
 		            autoScoreSocket.close();
 		            isConnected = false;
 		        } catch(IOException io) {
-		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString());
+		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString()); //$NON-NLS-1$
 		        	logger.error(io.toString());
 		        }
 		    	return isConnected;
@@ -650,12 +651,12 @@ public final class Main implements MatchObserver {
 				if (isCancelled()) return;
 			    try {
 					status = get();
-					autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Worker completed with isConnected: " + status);
+					autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.WorkerCompletedWithIsConnected") + status); //$NON-NLS-1$
 			    } catch (InterruptedException e) {
-			    	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString());
+			    	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString()); //$NON-NLS-1$
 		        	logger.error(e.toString());
 			    } catch (ExecutionException e) {
-			    	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString());
+			    	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString()); //$NON-NLS-1$
 		        	logger.error(e.toString());
 			    }
 	    		mainFrame.setAutoScoreIconConnected(false);
@@ -666,33 +667,33 @@ public final class Main implements MatchObserver {
 				if (isCancelled()) return;
 				int mostRecentValue = chunks.get(chunks.size()-1);
 				boolean ignoreSensors = autoScoreMainPanel.isIgnored();
-            	if (Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals("1")) {
+            	if (Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals(ON)) { //$NON-NLS-1$
             		if (ignoreSensors) {
             			if (mostRecentValue == 1 || mostRecentValue == 2) {
-            				autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team "+mostRecentValue+ " scored! but ignored!");
+            				autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team")+mostRecentValue+ Messages.getString("Main.ScoredButIgnored")); //$NON-NLS-1$ //$NON-NLS-2$
             			} else {
-            				autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team "+(mostRecentValue-2)+ " called Time Out.");
+            				autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team")+(mostRecentValue-2)+ Messages.getString("Main.CalledTimeOut")); //$NON-NLS-1$ //$NON-NLS-2$
             			}
             		} else {
             			if (mostRecentValue == 1 || mostRecentValue == 2) {
-            				autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team "+mostRecentValue+ " scored!");
+            				autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team")+mostRecentValue+ Messages.getString("Main.Scored")); //$NON-NLS-1$ //$NON-NLS-2$
             			} else {
-            				autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Team "+(mostRecentValue-2)+ " called Time Out.");
+            				autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team")+(mostRecentValue-2)+ Messages.getString("Main.CalledTimeOut")); //$NON-NLS-1$ //$NON-NLS-2$
             			}
             		}
             	}
 				if (!ignoreSensors && (mostRecentValue == 1)) {
-					processCode("XIST1", false);
+					processCode("XIST1", false); //$NON-NLS-1$
 				} else {
 					if (!ignoreSensors && (mostRecentValue == 2)) {
-						processCode("XIST2", false);
+						processCode("XIST2", false); //$NON-NLS-1$
 					}
 				}
 				if (mostRecentValue == 3) {
-					processCode("XUTT1", false);
+					processCode("XUTT1", false); //$NON-NLS-1$
 				} else {
 					if (mostRecentValue == 4) {
-						processCode("XUTT2", false);
+						processCode("XUTT2", false); //$NON-NLS-1$
 					}
 				}
 			}
@@ -700,15 +701,15 @@ public final class Main implements MatchObserver {
 		autoScoreWorker.addPropertyChangeListener(new AutoScoreWorkerStateChangeListener());
 	}
 	private static void checkFilters(String code) {
-		String filter = "";
+		String filter = ""; //$NON-NLS-1$
 		Integer teamNbr = 0;
-		if (code.equals("XIST1") || code.equals("XIST2")) {
-			if (code.equals("XIST1")) {
+		if (code.equals("XIST1") || code.equals("XIST2")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (code.equals("XIST1")) { //$NON-NLS-1$
 				teamNbr = 1;
 			} else {
 				teamNbr = 2;
 			}
-			filter = "Team" + teamNbr + "Score";
+			filter = "Team" + teamNbr + "Score"; //$NON-NLS-1$ //$NON-NLS-2$
 			activateFilter(filter);
 			int winState = match.getWinState();
 			if (winState == 1) {
@@ -719,11 +720,11 @@ public final class Main implements MatchObserver {
 				}
 			}
 		} else {
-			if (code.equals("XUTT1") || code.equals("XUTT2")) {
-				if (code.equals("XUTT1")) {
-					activateFilter("Team1TimeOut");
+			if (code.equals("XUTT1") || code.equals("XUTT2")) { //$NON-NLS-1$ //$NON-NLS-2$
+				if (code.equals("XUTT1")) { //$NON-NLS-1$
+					activateFilter("Team1TimeOut"); //$NON-NLS-1$
 				} else {
-					activateFilter("Team2TimeOut");
+					activateFilter("Team2TimeOut"); //$NON-NLS-1$
 				}
 			}	
 		}
@@ -735,7 +736,7 @@ public final class Main implements MatchObserver {
 		String filter;
 		String gameDuration;
 		String type;
-		boolean cutThroatMode = Settings.getControlParameter("CutThroatMode").equals(ON);
+		boolean cutThroatMode = Settings.getControlParameter("CutThroatMode").equals(ON); //$NON-NLS-1$
 		boolean isStreamTimerRunning = gameClock.isStreamTimerRunning();
 		if(winState==1) {
 			int gn = match.getCurrentGameNumber();
@@ -748,42 +749,42 @@ public final class Main implements MatchObserver {
 				b = 0;
 				c = 0;
 			}
-			filter = "Team" + teamNbr + "WinGame";
+			filter = "Team" + teamNbr + "WinGame"; //$NON-NLS-1$ //$NON-NLS-2$
 			gameDuration = gameClock.getLastGameTime();
-			type = "Game";
+			type = "Game"; //$NON-NLS-1$
 		} else {
 			a = team1.getScore();
 			b = team2.getScore();
 			c = team3.getScore();
-			filter = "Team" + teamNbr + "WinMatch";
+			filter = "Team" + teamNbr + "WinMatch"; //$NON-NLS-1$ //$NON-NLS-2$
 			gameDuration = match.getTimes()[match.getCurrentGameNumber()-1];
-			type = "Match";
+			type = "Match"; //$NON-NLS-1$
 		}
 		if (a == 0 || b == 0 || (cutThroatMode && c == 0)) {
-			if(Settings.getControlParameter("ShowSkunk").equals(ON)) {
-				filter = "Team" + teamNbr + "Skunk";
+			if(Settings.getControlParameter("ShowSkunk").equals(ON)) { //$NON-NLS-1$
+				filter = "Team" + teamNbr + "Skunk"; //$NON-NLS-1$ //$NON-NLS-2$
 				activateFilter(filter);
 			}
 		}
 		activateFilter(filter);
 		String result;
 		String gameEndTime = gameClock.getStreamTime();
-		LocalTime endTime = LocalTime.parse(gameEndTime, DateTimeFormatter.ofPattern("HH:mm:ss"));
+		LocalTime endTime = LocalTime.parse(gameEndTime, DateTimeFormatter.ofPattern("HH:mm:ss")); //$NON-NLS-1$
 		Duration gameLength = Duration.ofHours(Long.parseLong(gameDuration.substring(0,2)))
 				.plus(Duration.ofMinutes(Long.parseLong(gameDuration.substring(3,5))))
 				.plus(Duration.ofSeconds(Long.parseLong(gameDuration.substring(6,8))));
 		LocalTime startTime = endTime.minus(gameLength);
 		if(cutThroatMode) {
-			result = a + " " + team1.getForwardName() + " vs " + b + " " + team2.getForwardName() + "/" + team3.getForwardName() + " " + c + " (" + gameDuration + ")";
+			result = a + " " + team1.getForwardName() + " vs " + b + " " + team2.getForwardName() + "/" + team3.getForwardName() + " " + c + " (" + gameDuration + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 		} else {
-			result = a + " " + combinePlayerNames(1) + " vs " + combinePlayerNames(2) + " " + b + " (" + gameDuration + ")";
+			result = a + " " + combinePlayerNames(1) + " vs " + combinePlayerNames(2) + " " + b + " (" + gameDuration + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		}
-		gameResultsWindowFrame.addLine("[" + ((isStreamTimerRunning) ? startTime : "00:00:00") + "] " + result);
+		gameResultsWindowFrame.addLine("[" + ((isStreamTimerRunning) ? startTime : "00:00:00") + "] " + result); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		StringBuilder results = new StringBuilder();
 		results = gameResultsWindowFrame.buildGameResults();
 		matchController.updateGameResults(results);
 		if(isStreamTimerRunning) {
-			streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameEndTime + ": " + type + " end: " + result + "\r\n");
+			streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameEndTime + ": " + type + " end: " + result + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		}
 		
 	}
@@ -949,7 +950,7 @@ public final class Main implements MatchObserver {
 		team3.addPropertyChangeListener(new TeamPropertyListener());
 	}
 	public void onMeatball() {
-		activateFilter("Meatball");
+		activateFilter("Meatball"); //$NON-NLS-1$
 	}
 	public static void cutthroatRotate(int rotate) {
 		if (rotate ==1) {
@@ -977,32 +978,32 @@ public final class Main implements MatchObserver {
 	}
 	public static void startEvent() {
 		if(gameClock.isStreamTimerRunning()) {
-			streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartEvent", Settings.getGameType()) + " Pressed: " + tournament.getTournamentName() + ": " + tournament.getEventName() + "\r\n");
+			streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartEvent") + Messages.getString("Main.Pressed") + tournament.getTournamentName() + ": " + tournament.getEventName() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 		}
 	}
 	public static void startMatch() {
 		matchId = createMatchId();
 		matchController.startMatch(matchId);
 		if(gameClock.isStreamTimerRunning()) {
-			if(Settings.getControlParameter("CutThroatMode").equals(ON)) {
-				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch", Settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + "\r\n");
+			if(Settings.getControlParameter("CutThroatMode").equals(ON)) { //$NON-NLS-1$
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch") + Messages.getString("Main.Pressed") + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
 			} else {
-				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch", Settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n");
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch") + Messages.getString("Main.Pressed") + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 			}
 		}
 	}
 	public static void endMatch() {
 		matchController.endMatch();
 		if(gameClock.isStreamTimerRunning()) {
-			streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.EndMatch", Settings.getGameType()) + " Pressed.\r\n");
+			streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.EndMatch") + " Pressed.\r\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		}
 	}
 	public static void startGame() {
 		if(gameClock.isStreamTimerRunning()) {
-			if(Settings.getControlParameter("CutThroatMode").equals(ON)) {
-				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame", Settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + "\r\n");
+			if(Settings.getControlParameter("CutThroatMode").equals(ON)) { //$NON-NLS-1$
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame") + Messages.getString("Main.Pressed") + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
 			} else {
-				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame", Settings.getGameType()) + " Pressed: " + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n");
+				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame") + Messages.getString("Main.Pressed") + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 			}
 		}
 		matchController.startGame();
@@ -1018,7 +1019,7 @@ public final class Main implements MatchObserver {
 		teamController.switchSides();
 	}
 	public static void setShowParsed(boolean showParsed) {
-		Settings.setControlParameter("ShowParsed",showParsed);
+		Settings.setControlParameter("ShowParsed",showParsed); //$NON-NLS-1$
 		try {
 			Settings.saveControlConfig();
 		} catch (IOException e) {
@@ -1036,7 +1037,7 @@ public final class Main implements MatchObserver {
 		}
 		stats.setCode(code);
 		stats.addCodeToHistory(code);
-		statsEntryPanel.updateCode("");
+		statsEntryPanel.updateCode(""); //$NON-NLS-1$
 		statsEntryPanel.updateCodeHistory(code);
 		if (stats.getIsCommand()) {
 			if (!isRedo) { 
@@ -1050,7 +1051,7 @@ public final class Main implements MatchObserver {
 			}
 		} else {
 			if (!isRedo) { 
-				commandStatus = commandStack.push(mySwitch.execute("code"));
+				commandStatus = commandStack.push(mySwitch.execute("code")); //$NON-NLS-1$
 				if (commandStatus == null) {
 					statsEntryPanel.errorCodeHistory();;
 				}
@@ -1130,7 +1131,7 @@ public final class Main implements MatchObserver {
 		    	command.execute();
 			    statsEntryPanel.updateCodeHistory(tempCode);
 		    } else {
-		    	statsEntryPanel.updateCodeHistory(tempCode + "<Unknown");
+		    	statsEntryPanel.updateCodeHistory(tempCode + "<Unknown"); //$NON-NLS-1$
 	    	}
 	    } else {
 	    	processCode(tempCode,isRedo);
@@ -1222,81 +1223,81 @@ public final class Main implements MatchObserver {
 		Command ptca = new PTCACommand(statsController, tournamentController);
 		Command codeCommand = new CodeCommand(statsController);
 		mySwitch = new CommandSwitch();
-		mySwitch.register("PSE", pse);
-		mySwitch.register("PSM", psm);
-		mySwitch.register("PEM", pem);
-		mySwitch.register("PPM", ppm);
-		mySwitch.register("PSG", psg);
-		mySwitch.register("SST", sst);
-		mySwitch.register("SPT", spt);
-		mySwitch.register("SGT", sgt);
-		mySwitch.register("STT", stt);
-		mySwitch.register("SRT", srt);
-		mySwitch.register("PRT", prt);
-		mySwitch.register("IST1", ist1);
-		mySwitch.register("IST2", ist2);
-		mySwitch.register("IST3", ist3);
-		mySwitch.register("DST1", dst1);
-		mySwitch.register("DST2", dst2);
-		mySwitch.register("DST3", dst3);
-		mySwitch.register("IGT1", igt1);
-		mySwitch.register("IGT2", igt2);
-		mySwitch.register("IGT3", igt3);
-		mySwitch.register("IMT1", imt1);
-		mySwitch.register("IMT2", imt2);
-		mySwitch.register("IMT3", imt3);
-		mySwitch.register("DGT1", dgt1);
-		mySwitch.register("DGT2", dgt2);
-		mySwitch.register("DGT3", dgt3);
-		mySwitch.register("DMT1", dmt1);
-		mySwitch.register("DMT2", dmt2);
-		mySwitch.register("DMT3", dmt3);
-		mySwitch.register("UTT1", utt1);
-		mySwitch.register("UTT2", utt2);
-		mySwitch.register("UTT3", utt3);
-		mySwitch.register("RTT1", rtt1);
-		mySwitch.register("RTT2", rtt2);
-		mySwitch.register("RTT3", rtt3);
-		mySwitch.register("PRT1", prt1);
-		mySwitch.register("PRT2", prt2);
-		mySwitch.register("PRT3", prt3);
-		mySwitch.register("PWT1", pwt1);
-		mySwitch.register("PWT2", pwt2);
-		mySwitch.register("PWT3", pwt3);
-		mySwitch.register("PKT1", pkt1);
-		mySwitch.register("PKT2", pkt2);
-		mySwitch.register("PKT3", pkt3);
-		mySwitch.register("PSS", pss);
-		mySwitch.register("XPT1", xpt1);
-		mySwitch.register("XPT2", xpt2);
-		mySwitch.register("XPT3", xpt3);
-		mySwitch.register("PST", pst);
-		mySwitch.register("XP1", xp1);
-		mySwitch.register("XP2", xp2);
-		mySwitch.register("PSSC", pssc);
-		mySwitch.register("PSGC", psgc);
-		mySwitch.register("PSMC", psmc);
-		mySwitch.register("PSTO", psto);
-		mySwitch.register("PSR", psr);
-		mySwitch.register("PCA", pca);
-		mySwitch.register("PRN", prn);
-		mySwitch.register("PRS", prs);
-		mySwitch.register("PRG", prg);
-		mySwitch.register("PRM", prm);
-		mySwitch.register("PRTO", prto);
-		mySwitch.register("PRR", prr);
-		mySwitch.register("PRA", pra);
-		mySwitch.register("PTCA", ptca);
-		mySwitch.register("code", codeCommand);
+		mySwitch.register("PSE", pse); //$NON-NLS-1$
+		mySwitch.register("PSM", psm); //$NON-NLS-1$
+		mySwitch.register("PEM", pem); //$NON-NLS-1$
+		mySwitch.register("PPM", ppm); //$NON-NLS-1$
+		mySwitch.register("PSG", psg); //$NON-NLS-1$
+		mySwitch.register("SST", sst); //$NON-NLS-1$
+		mySwitch.register("SPT", spt); //$NON-NLS-1$
+		mySwitch.register("SGT", sgt); //$NON-NLS-1$
+		mySwitch.register("STT", stt); //$NON-NLS-1$
+		mySwitch.register("SRT", srt); //$NON-NLS-1$
+		mySwitch.register("PRT", prt); //$NON-NLS-1$
+		mySwitch.register("IST1", ist1); //$NON-NLS-1$
+		mySwitch.register("IST2", ist2); //$NON-NLS-1$
+		mySwitch.register("IST3", ist3); //$NON-NLS-1$
+		mySwitch.register("DST1", dst1); //$NON-NLS-1$
+		mySwitch.register("DST2", dst2); //$NON-NLS-1$
+		mySwitch.register("DST3", dst3); //$NON-NLS-1$
+		mySwitch.register("IGT1", igt1); //$NON-NLS-1$
+		mySwitch.register("IGT2", igt2); //$NON-NLS-1$
+		mySwitch.register("IGT3", igt3); //$NON-NLS-1$
+		mySwitch.register("IMT1", imt1); //$NON-NLS-1$
+		mySwitch.register("IMT2", imt2); //$NON-NLS-1$
+		mySwitch.register("IMT3", imt3); //$NON-NLS-1$
+		mySwitch.register("DGT1", dgt1); //$NON-NLS-1$
+		mySwitch.register("DGT2", dgt2); //$NON-NLS-1$
+		mySwitch.register("DGT3", dgt3); //$NON-NLS-1$
+		mySwitch.register("DMT1", dmt1); //$NON-NLS-1$
+		mySwitch.register("DMT2", dmt2); //$NON-NLS-1$
+		mySwitch.register("DMT3", dmt3); //$NON-NLS-1$
+		mySwitch.register("UTT1", utt1); //$NON-NLS-1$
+		mySwitch.register("UTT2", utt2); //$NON-NLS-1$
+		mySwitch.register("UTT3", utt3); //$NON-NLS-1$
+		mySwitch.register("RTT1", rtt1); //$NON-NLS-1$
+		mySwitch.register("RTT2", rtt2); //$NON-NLS-1$
+		mySwitch.register("RTT3", rtt3); //$NON-NLS-1$
+		mySwitch.register("PRT1", prt1); //$NON-NLS-1$
+		mySwitch.register("PRT2", prt2); //$NON-NLS-1$
+		mySwitch.register("PRT3", prt3); //$NON-NLS-1$
+		mySwitch.register("PWT1", pwt1); //$NON-NLS-1$
+		mySwitch.register("PWT2", pwt2); //$NON-NLS-1$
+		mySwitch.register("PWT3", pwt3); //$NON-NLS-1$
+		mySwitch.register("PKT1", pkt1); //$NON-NLS-1$
+		mySwitch.register("PKT2", pkt2); //$NON-NLS-1$
+		mySwitch.register("PKT3", pkt3); //$NON-NLS-1$
+		mySwitch.register("PSS", pss); //$NON-NLS-1$
+		mySwitch.register("XPT1", xpt1); //$NON-NLS-1$
+		mySwitch.register("XPT2", xpt2); //$NON-NLS-1$
+		mySwitch.register("XPT3", xpt3); //$NON-NLS-1$
+		mySwitch.register("PST", pst); //$NON-NLS-1$
+		mySwitch.register("XP1", xp1); //$NON-NLS-1$
+		mySwitch.register("XP2", xp2); //$NON-NLS-1$
+		mySwitch.register("PSSC", pssc); //$NON-NLS-1$
+		mySwitch.register("PSGC", psgc); //$NON-NLS-1$
+		mySwitch.register("PSMC", psmc); //$NON-NLS-1$
+		mySwitch.register("PSTO", psto); //$NON-NLS-1$
+		mySwitch.register("PSR", psr); //$NON-NLS-1$
+		mySwitch.register("PCA", pca); //$NON-NLS-1$
+		mySwitch.register("PRN", prn); //$NON-NLS-1$
+		mySwitch.register("PRS", prs); //$NON-NLS-1$
+		mySwitch.register("PRG", prg); //$NON-NLS-1$
+		mySwitch.register("PRM", prm); //$NON-NLS-1$
+		mySwitch.register("PRTO", prto); //$NON-NLS-1$
+		mySwitch.register("PRR", prr); //$NON-NLS-1$
+		mySwitch.register("PRA", pra); //$NON-NLS-1$
+		mySwitch.register("PTCA", ptca); //$NON-NLS-1$
+		mySwitch.register("code", codeCommand); //$NON-NLS-1$
 	}
 	public static void showScores(boolean show) {
 		obsPanel.setShowScores(show);
-		showSource(Settings.getSourceParameter("ShowScores"), show);
+		showSource(Settings.getSourceParameter("ShowScores"), show); //$NON-NLS-1$
 		setFocusOnCode();
 	}
 	public static void showTimer(boolean show) {
 		mainController.showTimerWindow(show);
-		showSource(Settings.getSourceParameter("ShowTimer"), show);
+		showSource(Settings.getSourceParameter("ShowTimer"), show); //$NON-NLS-1$
 		setFocusOnCode();
 	}
 	public static void setFocusOnCode() {
@@ -1304,32 +1305,32 @@ public final class Main implements MatchObserver {
 	}
 	public static void showCutthroat(boolean show) {
 		obsPanel.setShowCutthroat(show);
-		showSource(Settings.getSourceParameter("ShowCutthroat"), show);
+		showSource(Settings.getSourceParameter("ShowCutthroat"), show); //$NON-NLS-1$
 		setFocusOnCode();
 	}
 	public static void showSource(String source, boolean show) {
 		String sceneName;
 		String sourceItem;
 		if (source == null || source.isEmpty()) return;
-		if (source.contains(",")) {
-			String[] parts = source.split(",");
+		if (source.contains(",")) { //$NON-NLS-1$
+			String[] parts = source.split(","); //$NON-NLS-1$
 			sceneName = parts[0];
 			sourceItem = parts[1];
 			if (OBS.getConnected()) {
 				boolean showParsed = Settings.getShowParsed();
-				if (showParsed) obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled called: " + sceneName + ", " + sourceItem + ", " + show);
+				if (showParsed) obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSceneItemEnabledCalled") + sceneName + ", " + sourceItem + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				OBS.getController().getSceneItemId(sceneName, sourceItem, null,	getSceneItemIdResponse -> { 
 					if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
 						if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
 							OBS.getController().setSceneItemEnabled(sceneName,getSceneItemIdResponse.getSceneItemId(),show,setSceneItemEnabledResponse -> {
 								if(showParsed) {
-									obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled response obtained: " + sceneName + ", " + sourceItem + ", " + show);
+									obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSceneItemEnabledResponseObtained") + sceneName + ", " + sourceItem + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	            				}
 				             });
 						}
 					} else {
 						if(showParsed) {
-							obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled failed: " + sceneName + ", " + sourceItem + ", " + show);
+							obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSceneItemEnabledFailed") + sceneName + ", " + sourceItem + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						}
 					}
 				});
@@ -1338,13 +1339,13 @@ public final class Main implements MatchObserver {
 			sourceItem = source;
 			if (OBS.getConnected()) {
 				boolean showParsed = Settings.getShowParsed();
-				if (showParsed) obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled called: " + sourceItem + ", " + show);
+				if (showParsed) obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSceneItemEnabledCalled") + sourceItem + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$
 				sceneName = OBS.getCurrentScene();
 				OBS.getController().getSceneItemId(sceneName, sourceItem, null, getSceneItemIdResponse -> { 
 		            if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
 		                OBS.getController().setSceneItemEnabled(sceneName,getSceneItemIdResponse.getSceneItemId(),show,setSceneItemEnabledResponse -> {
 		                	if(showParsed) {
-								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled response obtained: " + sceneName + ", "+ sourceItem + ", " + show);
+								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSceneItemEnabledResponseObtained") + sceneName + ", "+ sourceItem + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		                	}
 		                });
 		            }
@@ -1356,53 +1357,53 @@ public final class Main implements MatchObserver {
 		if(source == null || filter == null) return;
 		if (OBS.getConnected()) {
 			boolean showParsed = Settings.getShowParsed();
-			if (showParsed) obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceFilterEnabled called: " + source + ", " + filter + ", " + show);
+			if (showParsed) obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSourceFilterEnabledCalled") + source + ", " + filter + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			OBS.getController().setSourceFilterEnabled(source, filter, show, response -> {
 				if(response != null && response.isSuccessful()) {
 					if(showParsed) {
-						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceFilterEnabled response obtained: " + source + ", " + filter + ", " + show);
+						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSourceFilterEnabledResponseObtained") + source + ", " + filter + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 				} else {
 					if(showParsed) {
-						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSourceFilterEnabled failed: " + source + ", " + filter + ", " + show);
+						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSourceFilterEnabledFailed") + source + ", " + filter + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 				}
 			});
 		}
 	}
 	private static void connectAutoScore() {
-		autoScoreSettingsPanel.addMessage("Trying to connect to AutoScore...");
-		logger.info("Trying to connect to AutoScore...");
+		autoScoreSettingsPanel.addMessage(Messages.getString("Main.TryingToConnectToAutoScore")); //$NON-NLS-1$
+		logger.info("Trying to connect to AutoScore..."); //$NON-NLS-1$
 		createAutoScoreWorker();
 		autoScoreWorker.execute();
 	}
 	private static void disconnectAutoScore() {
-		autoScoreSettingsPanel.addMessage("Disconnecting...");
-		logger.info("Trying to disconnect from AutoScore...");
+		autoScoreSettingsPanel.addMessage(Messages.getString("Main.Disconnecting")); //$NON-NLS-1$
+		logger.info("Trying to disconnect from AutoScore..."); //$NON-NLS-1$
 		autoScoreWorker.cancel(true);
 		mainFrame.setAutoScoreIconConnected(false);
 		autoScoreConnected = false;
 	}
 	private static void readAutoScoreConfig() {
 		if(autoScoreConnected) {
-			autoScoreSocketWriter.println("read:");
+			autoScoreSocketWriter.println("read:"); //$NON-NLS-1$
 			if (autoScoreSocketWriter.checkError()) {
-				logger.error("readAutoScoreConfig println error sending read:");
+				logger.error("readAutoScoreConfig println error sending read:"); //$NON-NLS-1$
 			}
 		}
 	}
 	private static boolean validateAutoScoreConfig() {
 		boolean validated = true;
-		String configErrors = "";
-		String[] paramNames = {"PORT","SENSOR1","SENSOR2","SENSOR3","LED1","LED2","DELAY_SENSOR","DELAY_PB","PB1","PB2"};
-		String[] paramTests = {"PORT","PIN","PIN","PIN","PIN","PIN","TIME","TIME","PIN","PIN"};
+		String configErrors = ""; //$NON-NLS-1$
+		String[] paramNames = {"PORT","SENSOR1","SENSOR2","SENSOR3","LED1","LED2","DELAY_SENSOR","DELAY_PB","PB1","PB2"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
+		String[] paramTests = {"PORT","PIN","PIN","PIN","PIN","PIN","TIME","TIME","PIN","PIN"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
 		List<String> copyNames = new ArrayList<>(Arrays.asList(paramNames));
 		List<String> copyTests = new ArrayList<>(Arrays.asList(paramTests));
 		String config = autoScoreConfigPanel.getConfigTextArea();
-		String[] lines = config.split("\n");
+		String[] lines = config.split("\n"); //$NON-NLS-1$
 		for(String line:lines) {
-			if(line.contains("=")) {
-				String[] pair = line.split("=");
+			if(line.contains("=")) { //$NON-NLS-1$
+				String[] pair = line.split("="); //$NON-NLS-1$
 				String name = pair[0].trim();
 				String testValue = pair[1].trim();
 				if(copyNames.contains(name)) {
@@ -1419,52 +1420,52 @@ public final class Main implements MatchObserver {
 						String test = copyTests.get(pos);
 						copyNames.remove(pos);
 						copyTests.remove(pos);
-						if (test.equals("PORT")) {
+						if (test.equals("PORT")) { //$NON-NLS-1$
 							try {
 								int value = Integer.parseInt(testValue);
 								if (!((value > 0) && (value < 65535)) ) {
-									String msg = "Validation failed on " + name + ". Invalid port [" + testValue + "].  Must be between 0 and 65535.";
-									configErrors = configErrors + msg + "\r\n";
+									String msg = "Validation failed on " + name + ". Invalid port [" + testValue + "].  Must be between 0 and 65535."; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+									configErrors = configErrors + msg + "\r\n"; //$NON-NLS-1$
 									logger.info(msg);
 									validated = false;
 								}
 							} catch (NumberFormatException e) {
-								String msg = "Validation failed on " + name + ". Invalid port [" + testValue + "]. Must be between 0 and 65535.";
-								configErrors = configErrors + msg + "\r\n";
+								String msg = "Validation failed on " + name + ". Invalid port [" + testValue + "]. Must be between 0 and 65535."; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								configErrors = configErrors + msg + "\r\n"; //$NON-NLS-1$
 								logger.error(msg);
 								logger.error(e.toString());
 								validated = false;
 							}
 						} else {
-							if (test.equals("PIN")) {
+							if (test.equals("PIN")) { //$NON-NLS-1$
 								try {
 									int value = Integer.parseInt(testValue);
 									if (!(((value > -1) && (value < 23)) || ((value > 25) && (value < 29)))) {
-										String msg = "Validation failed on " + name + ". Invalid pin [" + testValue + "].  Must be 0-23,26,27,28."; 
-										configErrors = configErrors + msg + "\r\n";
+										String msg = "Validation failed on " + name + ". Invalid pin [" + testValue + "].  Must be 0-23,26,27,28.";  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+										configErrors = configErrors + msg + "\r\n"; //$NON-NLS-1$
 										logger.info(msg);
 										validated = false;
 									}
 								} catch (NumberFormatException e) {
-									String msg = "Validation failed on " + name + ". Invalid pin [" + testValue + "].  Must be 0-23,26,27,28.";
-									configErrors = configErrors + msg + "\r\n";
+									String msg = "Validation failed on " + name + ". Invalid pin [" + testValue + "].  Must be 0-23,26,27,28."; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+									configErrors = configErrors + msg + "\r\n"; //$NON-NLS-1$
 									logger.error(msg);
 									logger.error(e.toString());
 									validated = false;
 								}
 							} else {
-								if (test.equals("TIME")) {
+								if (test.equals("TIME")) { //$NON-NLS-1$
 									try {
 										int value = Integer.parseInt(testValue);
 										if (!((value > 0) && (value < 60000)) ) {
-											String msg = "Validation failed on " + name + ". Invalid time [" + testValue + "].  Must be between 0 and 60000."; 
-											configErrors = configErrors + msg + "\r\n";
+											String msg = "Validation failed on " + name + ". Invalid time [" + testValue + "].  Must be between 0 and 60000.";  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+											configErrors = configErrors + msg + "\r\n"; //$NON-NLS-1$
 											logger.info(msg);
 											validated = false;
 										}
 									} catch (NumberFormatException e) {
-										String msg = "Validation failed on " + name + ". Invalid time [" + testValue + "]. Must be between 0 and 60000.";
-										configErrors = configErrors + msg + "\r\n";
+										String msg = "Validation failed on " + name + ". Invalid time [" + testValue + "]. Must be between 0 and 60000."; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+										configErrors = configErrors + msg + "\r\n"; //$NON-NLS-1$
 										logger.error(msg);
 										logger.error(e.toString());
 										validated = false;
@@ -1477,26 +1478,26 @@ public final class Main implements MatchObserver {
 			}
 		}
 		if (!copyNames.isEmpty()) {
-			String msg = "Validation Failed. Missing parameters:\r\n"; 
+			String msg = "Validation Failed. Missing parameters:\r\n";  //$NON-NLS-1$
 			for(String missing:copyNames) {
-				msg = msg + missing + "\r\n";
+				msg = msg + missing + "\r\n"; //$NON-NLS-1$
 			}
-			configErrors = configErrors + msg + "\r\n";
+			configErrors = configErrors + msg + "\r\n"; //$NON-NLS-1$
 			logger.info(msg);
 			validated = false;
 		}
 		if (validated) {
-			logger.info("Validation passed.");
+			logger.info("Validation passed."); //$NON-NLS-1$
 		} else {
-			JOptionPane.showMessageDialog(null, "Invalid Configuration: " + configErrors, "Validation Results", 1);
+			JOptionPane.showMessageDialog(null, Messages.getString("Main.InvalidConfiguration") + configErrors, Messages.getString("Main.ValidationResults"), 1); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return validated;
 	}
 	private static void resetAutoScoreConfig() {
 		if(autoScoreConnected) {
-			autoScoreSocketWriter.println("reset:");
+			autoScoreSocketWriter.println("reset:"); //$NON-NLS-1$
 			if (autoScoreSocketWriter.checkError()) {
-				logger.error("readAutoScoreConfig println error sending reset:");
+				logger.error("readAutoScoreConfig println error sending reset:"); //$NON-NLS-1$
 			}
 			disconnectAutoScore();
 		}
@@ -1508,22 +1509,22 @@ public final class Main implements MatchObserver {
 		if(validateAutoScoreConfig()) {
 			if(autoScoreConnected) {
 				String config = autoScoreConfigPanel.getConfigTextArea();
-				String dateStamp = dtf.format(LocalDateTime.now()) + "\r\n";
-				dateStamp = dateStamp.replace(":","");
-				dateStamp = dateStamp.replace("/","");
-				dateStamp = dateStamp.replace(" ", "");
-				dateStamp = "date = " + dateStamp;
-				autoScoreSocketWriter.println("save:" + dateStamp + config + "End");
+				String dateStamp = dtf.format(LocalDateTime.now()) + "\r\n"; //$NON-NLS-1$
+				dateStamp = dateStamp.replace(":",""); //$NON-NLS-1$ //$NON-NLS-2$
+				dateStamp = dateStamp.replace("/",""); //$NON-NLS-1$ //$NON-NLS-2$
+				dateStamp = dateStamp.replace(" ", ""); //$NON-NLS-1$ //$NON-NLS-2$
+				dateStamp = "date = " + dateStamp; //$NON-NLS-1$
+				autoScoreSocketWriter.println("save:" + dateStamp + config + "End"); //$NON-NLS-1$ //$NON-NLS-2$
 				if (autoScoreSocketWriter.checkError()) {
-					logger.error("saveAutoScoreConfig println error sending save:" + dateStamp + config + "End");
+					logger.error("saveAutoScoreConfig println error sending save:" + dateStamp + config + "End"); //$NON-NLS-1$ //$NON-NLS-2$
 				} else {
-					logger.info("write autoscore config:" + dateStamp + config + "End");
+					logger.info("write autoscore config:" + dateStamp + config + "End"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}
 	}
 	private static String ripTeamNumber(String name) {
-		return name.replaceAll("[^0-9]", "");
+		return name.replaceAll("[^0-9]", ""); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	////// Listeners \\\\\\
 	private static class CodeListener implements ActionListener {
@@ -1531,10 +1532,10 @@ public final class Main implements MatchObserver {
 			Boolean isRedo = false;
 			JTextField txt = (JTextField) e.getSource();
 			String code = txt.getText().toUpperCase();
-			if(code.equals("XU")) {
+			if(code.equals("XU")) { //$NON-NLS-1$
 				undo();
 			} else {
-				if(code.equals("XR")) {
+				if(code.equals("XR")) { //$NON-NLS-1$
 					redo();
 					statsEntryPanel.updateCode(null);
 				} else {
@@ -1640,7 +1641,7 @@ public final class Main implements MatchObserver {
 	}
 	private static class AutoScoreSettingsDisconnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			logger.info("AutoScore Settings Window Disconnect Button Pressed.");
+			logger.info("AutoScore Settings Window Disconnect Button Pressed."); //$NON-NLS-1$
 			blockAutoScoreReconnect = true;
 			disconnectAutoScore();
 		}
@@ -1658,14 +1659,14 @@ public final class Main implements MatchObserver {
 	private static class AutoScoreConfigValidateListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (validateAutoScoreConfig()) {
-				logger.info("Validation passed.");
-				JOptionPane.showMessageDialog(null, "Validation passed.", "Validation Results", 1);
+				logger.info("Validation passed."); //$NON-NLS-1$
+				JOptionPane.showMessageDialog(null, Messages.getString("Main.ValidationPassed"), Messages.getString("Main.ValidationResults"), 1); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}
 	private static class AutoScoreConfigResetListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			logger.info("AutoScore Configuration Reset Pico Button Pressed.");
+			logger.info("AutoScore Configuration Reset Pico Button Pressed."); //$NON-NLS-1$
 			resetAutoScoreConfig();
 		}
 	}
@@ -1713,7 +1714,7 @@ public final class Main implements MatchObserver {
 	}
 	private static class OBSDisconnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Requesting disconnect.");
+			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.RequestingDisconnect")); //$NON-NLS-1$
 			OBS.getController().disconnect();
 			setFocusOnCode();
 		}
@@ -1727,7 +1728,7 @@ public final class Main implements MatchObserver {
 	}
 	private static class OBSDisconnectItemListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Requesting disconnect.");
+			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.RequestingDisconnect")); //$NON-NLS-1$
 			OBS.getController().disconnect();
 			obsConnectPanel.updateOBS();
 			setFocusOnCode();
@@ -1801,9 +1802,9 @@ public final class Main implements MatchObserver {
 			obsPanel.setEnableSkunk(showSkunkFlag);
 			parametersPanel.setEnableShowSkunk(showSkunkFlag);
 			if (showSkunkFlag) {
-				Settings.setControlParameter("ShowSkunk","1");
+				Settings.setControlParameter("ShowSkunk",ON); //$NON-NLS-1$
 			} else {
-				Settings.setControlParameter("ShowSkunk","0");
+				Settings.setControlParameter("ShowSkunk",OFF); //$NON-NLS-1$
 			}
 			setFocusOnCode();
 		}
@@ -1841,11 +1842,11 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static void saveParameterSettings() {
-		int oldGamesToWin = Integer.parseInt(Settings.getControlParameter("GamesToWin"));
-		int oldCutthroatMode = Integer.parseInt(Settings.getControlParameter("CutThroatMode"));
+		int oldGamesToWin = Integer.parseInt(Settings.getControlParameter("GamesToWin")); //$NON-NLS-1$
+		int oldCutthroatMode = Integer.parseInt(Settings.getControlParameter("CutThroatMode")); //$NON-NLS-1$
 		parametersPanel.saveSettings(Settings.getInstance());
-		int newGamesToWin = Integer.parseInt(Settings.getControlParameter("GamesToWin"));
-		int newCutthroatMode = Integer.parseInt(Settings.getControlParameter("CutThroatMode"));
+		int newGamesToWin = Integer.parseInt(Settings.getControlParameter("GamesToWin")); //$NON-NLS-1$
+		int newCutthroatMode = Integer.parseInt(Settings.getControlParameter("CutThroatMode")); //$NON-NLS-1$
 		if (oldGamesToWin != newGamesToWin || oldCutthroatMode != newCutthroatMode) {
 			matchPanel.resizeGameTable();
 			gameTableWindowPanel.resizeGameTable();
@@ -1859,7 +1860,7 @@ public final class Main implements MatchObserver {
 	private static class AutoScoreMainPanelConnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			blockAutoScoreReconnect = false;
-			logger.info("AutoScore Main Panel Connect Button Pressed.");
+			logger.info("AutoScore Main Panel Connect Button Pressed."); //$NON-NLS-1$
 			connectAutoScore();
 			setFocusOnCode();
 		}
@@ -1867,7 +1868,7 @@ public final class Main implements MatchObserver {
 	private static class AutoScoreMainPanelDisconnectListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			blockAutoScoreReconnect = true;
-			logger.info("AutoScore Main Panel Disconnect Button Pressed.");
+			logger.info("AutoScore Main Panel Disconnect Button Pressed."); //$NON-NLS-1$
 			disconnectAutoScore();
 			setFocusOnCode();
 		}
@@ -1880,7 +1881,7 @@ public final class Main implements MatchObserver {
 	private static class ScoreIncreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String code = "XIST" + ripTeamNumber(btn.getName());//XIST1
+			String code = "XIST" + ripTeamNumber(btn.getName());//XIST1 //$NON-NLS-1$
 			processCode(code,false);
 			setFocusOnCode();
 		}
@@ -1888,7 +1889,7 @@ public final class Main implements MatchObserver {
 	private static class ScoreDecreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String code = "XDST" + ripTeamNumber(btn.getName());//XDST1
+			String code = "XDST" + ripTeamNumber(btn.getName());//XDST1 //$NON-NLS-1$
 			processCode(code,false);
 			setFocusOnCode();
 		}
@@ -1896,7 +1897,7 @@ public final class Main implements MatchObserver {
 	private static class GameCountIncreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String code = "XIGT" + ripTeamNumber(btn.getName());//XIGT1
+			String code = "XIGT" + ripTeamNumber(btn.getName());//XIGT1 //$NON-NLS-1$
 			processCode(code,false);
 			setFocusOnCode();
 		}
@@ -1904,7 +1905,7 @@ public final class Main implements MatchObserver {
 	private static class GameCountDecreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String code = "XDGT" + ripTeamNumber(btn.getName());//XDGT1
+			String code = "XDGT" + ripTeamNumber(btn.getName());//XDGT1 //$NON-NLS-1$
 			processCode(code,false);
 			setFocusOnCode();
 		}
@@ -1912,7 +1913,7 @@ public final class Main implements MatchObserver {
 	private static class MatchCountIncreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String code = "XIMT" + ripTeamNumber(btn.getName());//XIMT1
+			String code = "XIMT" + ripTeamNumber(btn.getName());//XIMT1 //$NON-NLS-1$
 			processCode(code,false);
 			setFocusOnCode();
 		}
@@ -1920,7 +1921,7 @@ public final class Main implements MatchObserver {
 	private static class MatchCountDecreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String code = "XDMT" + ripTeamNumber(btn.getName());//XDMT1
+			String code = "XDMT" + ripTeamNumber(btn.getName());//XDMT1 //$NON-NLS-1$
 			processCode(code,false);
 			setFocusOnCode();
 		}
@@ -1928,7 +1929,7 @@ public final class Main implements MatchObserver {
 	private static class TimeOutCountIncreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String code = "XUTT" + ripTeamNumber(btn.getName());//XUTT1
+			String code = "XUTT" + ripTeamNumber(btn.getName());//XUTT1 //$NON-NLS-1$
 			processCode(code,false);
 			setFocusOnCode();
 		}
@@ -1936,7 +1937,7 @@ public final class Main implements MatchObserver {
 	private static class TimeOutCountDecreaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String code = "XRTT" + ripTeamNumber(btn.getName());//XRTT1
+			String code = "XRTT" + ripTeamNumber(btn.getName());//XRTT1 //$NON-NLS-1$
 			processCode(code,false);
 			setFocusOnCode();
 		}
@@ -1945,8 +1946,8 @@ public final class Main implements MatchObserver {
 		public void actionPerformed(ActionEvent e) {
 			JToggleButton btn = (JToggleButton) e.getSource();
 			String teamNumber = ripTeamNumber(btn.getName());
-			String code = "XPRT" + teamNumber;//XPRT1
-			String filter = "Team" + teamNumber + "Reset";//Team1Reset
+			String code = "XPRT" + teamNumber;//XPRT1 //$NON-NLS-1$
+			String filter = "Team" + teamNumber + "Reset";//Team1Reset //$NON-NLS-1$ //$NON-NLS-2$
 			processCode(code,false);
 			if (btn.isSelected()) activateFilter(filter);
 			setFocusOnCode();
@@ -1956,8 +1957,8 @@ public final class Main implements MatchObserver {
 		public void actionPerformed(ActionEvent e) {
 			JToggleButton btn = (JToggleButton) e.getSource();
 			String teamNumber = ripTeamNumber(btn.getName());
-			String code = "XPWT" + teamNumber;//XPWT1
-			String filter = "Team" + teamNumber + "Warn";//Team1Warn
+			String code = "XPWT" + teamNumber;//XPWT1 //$NON-NLS-1$
+			String filter = "Team" + teamNumber + "Warn";//Team1Warn //$NON-NLS-1$ //$NON-NLS-2$
 			processCode(code,false);
 			if (btn.isSelected()) activateFilter(filter);
 			setFocusOnCode();
@@ -1967,8 +1968,8 @@ public final class Main implements MatchObserver {
 		public void actionPerformed(ActionEvent e) {
 			JCheckBox ckbx = (JCheckBox) e.getSource();
 			String teamNumber = ripTeamNumber(ckbx.getName());
-			String code = "XPKT" + teamNumber;//XPKT1
-			String filter = "Team" + teamNumber + "KingSeat";//Team1KingSeat
+			String code = "XPKT" + teamNumber;//XPKT1 //$NON-NLS-1$
+			String filter = "Team" + teamNumber + "KingSeat";//Team1KingSeat //$NON-NLS-1$ //$NON-NLS-2$
 			processCode(code,false);
 			if (ckbx.isSelected()) activateFilter(filter);
 			setFocusOnCode();
@@ -1978,8 +1979,8 @@ public final class Main implements MatchObserver {
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String teamNumber = ripTeamNumber(btn.getName());
-			String code = "XXPT" + teamNumber;//XXPT1
-			String filter = "Team" + teamNumber + "SwitchPositions";//Team1SwitchPositions
+			String code = "XXPT" + teamNumber;//XXPT1 //$NON-NLS-1$
+			String filter = "Team" + teamNumber + "SwitchPositions";//Team1SwitchPositions //$NON-NLS-1$ //$NON-NLS-2$
 			processCode(code,false);
 			activateFilter(filter);
 			setFocusOnCode();
@@ -1987,179 +1988,179 @@ public final class Main implements MatchObserver {
 	}
 	private static class SwitchSidesListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPSS",false);
-			activateFilter("SwitchSides");
+			processCode("XPSS",false); //$NON-NLS-1$
+			activateFilter("SwitchSides"); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ShotTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XSST",false);
+			processCode("XSST",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class PassTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XSPT",false);
+			processCode("XSPT",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class TimeOutTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XSTT",false);
+			processCode("XSTT",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class GameTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XSGT",false);
+			processCode("XSGT",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class RecallTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XSRT",false);
+			processCode("XSRT",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ResetTimerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPRT",false);
+			processCode("XPRT",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class StartEventListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPSE",false);
+			processCode("XPSE",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class StartMatchListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPSM",false);
-			activateFilter("StartMatch");
+			processCode("XPSM",false); //$NON-NLS-1$
+			activateFilter("StartMatch"); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class PauseMatchListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPPM",false);
+			processCode("XPPM",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class EndMatchListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPEM",false);
+			processCode("XPEM",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class StartGameListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPSG",false);
-			activateFilter("StartGame");
+			processCode("XPSG",false); //$NON-NLS-1$
+			activateFilter("StartGame"); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class SwitchTeamsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPST",false);
+			processCode("XPST",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class SwitchPlayer1Listener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XXP1",false);
+			processCode("XXP1",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class SwitchPlayer2Listener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XXP2",false);
+			processCode("XXP2",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class SwitchScoresListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPSSC",false);
+			processCode("XPSSC",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class SwitchGameCountsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPSGC",false);
+			processCode("XPSGC",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class SwitchMatchCountsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPSMC",false);
+			processCode("XPSMC",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class SwitchTimeOutsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPSTO",false);
+			processCode("XPSTO",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class SwitchResetWarnsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPSR",false);
+			processCode("XPSR",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ClearAllListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPCA",false);
+			processCode("XPCA",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ResetNamesListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPRN",false);
+			processCode("XPRN",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ResetScoresListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPRS",false);
+			processCode("XPRS",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ResetGameCountsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPRG",false);
+			processCode("XPRG",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ResetMatchCountsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPRM",false);
+			processCode("XPRM",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ResetTimeOutsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPRTO",false);
+			processCode("XPRTO",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ResetResetWarnsListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPRR",false);
+			processCode("XPRR",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ResetAllListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPRA",false);
+			processCode("XPRA",false); //$NON-NLS-1$
 			statsController.displayAllStats();
 			setFocusOnCode();
 		}
 	}
 	private static class TableClearAllListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			processCode("XPTCA",false);
+			processCode("XPTCA",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
@@ -2176,12 +2177,12 @@ public final class Main implements MatchObserver {
 				state = autoScoreWorker.getState();
 			}
 			if (state == null) {
-				logger.info("AutoScoreWorker state is null so probably no AutoScore instance to connect to.");
+				logger.info("AutoScoreWorker state is null so probably no AutoScore instance to connect to."); //$NON-NLS-1$
 			} else {
-				logger.info("AutoScoreWorker state changed to: " + state.toString());
+				logger.info("AutoScoreWorker state changed to: " + state.toString()); //$NON-NLS-1$
 				if (state == SwingWorker.StateValue.DONE) {
 					if (allowAutoScoreReconnect && !blockAutoScoreReconnect) {
-						logger.info("Attempt reconnect to AutoScore...");
+						logger.info("Attempt reconnect to AutoScore..."); //$NON-NLS-1$
 						connectAutoScore();
 					}
 				}
@@ -2190,139 +2191,139 @@ public final class Main implements MatchObserver {
 	}
 	private static class Team1ScoreFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team1Score");
+			activateFilter("Team1Score"); //$NON-NLS-1$
 		}
 	}
 	private static class Team2ScoreFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team2Score");
+			activateFilter("Team2Score"); //$NON-NLS-1$
 		}
 	}
 	private static class Team1WinGameFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team1WinGame");
+			activateFilter("Team1WinGame"); //$NON-NLS-1$
 		}
 	}
 	private static class Team2WinGameFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team2WinGame");
+			activateFilter("Team2WinGame"); //$NON-NLS-1$
 		}
 	}
 	private static class Team1WinMatchFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team1WinMatch");
+			activateFilter("Team1WinMatch"); //$NON-NLS-1$
 		}
 	}
 	private static class Team2WinMatchFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team2WinMatch");
+			activateFilter("Team2WinMatch"); //$NON-NLS-1$
 		}
 	}
 	private static class Team1TimeOutFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team1TimeOut");
+			activateFilter("Team1TimeOut"); //$NON-NLS-1$
 		}
 	}
 	private static class Team2TimeOutFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team2TimeOut");
+			activateFilter("Team2TimeOut"); //$NON-NLS-1$
 		}
 	}
 	private static class Team1ResetFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team1Reset");
+			activateFilter("Team1Reset"); //$NON-NLS-1$
 		}
 	}
 	private static class Team2ResetFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team2Reset");
+			activateFilter("Team2Reset"); //$NON-NLS-1$
 		}
 	}
 	private static class Team1WarnFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team1Warn");
+			activateFilter("Team1Warn"); //$NON-NLS-1$
 		}
 	}
 	private static class Team2WarnFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team2Warn");
+			activateFilter("Team2Warn"); //$NON-NLS-1$
 		}
 	}
 	private static class Team1SwitchPositionsFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team1SwitchPositions");
+			activateFilter("Team1SwitchPositions"); //$NON-NLS-1$
 		}
 	}
 	private static class Team2SwitchPositionsFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team2SwitchPositions");
+			activateFilter("Team2SwitchPositions"); //$NON-NLS-1$
 		}
 	}
 	private static class Team1SkunkFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team1Skunk");
+			activateFilter("Team1Skunk"); //$NON-NLS-1$
 		}
 	}
 	private static class Team2SkunkFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team2Skunk");
+			activateFilter("Team2Skunk"); //$NON-NLS-1$
 		}
 	}
 	private static class StartMatchFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("StartMatch");
+			activateFilter("StartMatch"); //$NON-NLS-1$
 		}
 	}
 	private static class StartGameFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("StartGame");
+			activateFilter("StartGame"); //$NON-NLS-1$
 		}
 	}
 	private static class SwitchSidesFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("SwitchSides");
+			activateFilter("SwitchSides"); //$NON-NLS-1$
 		}
 	}
 	private static class MeatballFilterListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Meatball");
+			activateFilter("Meatball"); //$NON-NLS-1$
 		}
 	}
 	private static class TeamPropertyListener implements PropertyChangeListener{
 		@Override
 		public void propertyChange(PropertyChangeEvent e) {
 			String name = e.getPropertyName();
-			if (name.equals("Team1Score")) {
+			if (name.equals("Team1Score")) { //$NON-NLS-1$
 //				System.out.println("Team1 new Score: " + e.getNewValue().toString());
 //				System.out.println("Team1 old Score: " + e.getOldValue().toString());
-			} else if (name.equals("Team2Score")) {
+			} else if (name.equals("Team2Score")) { //$NON-NLS-1$
 //				System.out.println("Team2 new Score: " + e.getNewValue().toString());
 //				System.out.println("Team2 old Score: " + e.getOldValue().toString());
-			} else if (name.equals("Team3Score")) {
+			} else if (name.equals("Team3Score")) { //$NON-NLS-1$
 //				System.out.println("Team3 new Score: " + e.getNewValue().toString());
 //				System.out.println("Team3 old Score: " + e.getOldValue().toString());
-			} else if (name.equals("Team1Game")) {
+			} else if (name.equals("Team1Game")) { //$NON-NLS-1$
 				setTeamGameCountVisible(name, e.getNewValue().toString());
-			} else if (name.equals("Team2Game")) {
+			} else if (name.equals("Team2Game")) { //$NON-NLS-1$
 				setTeamGameCountVisible(name, e.getNewValue().toString());
-			} else if (name.equals("Team3Game")) {
+			} else if (name.equals("Team3Game")) { //$NON-NLS-1$
 				setTeamGameCountVisible(name, e.getNewValue().toString());
-			} else if (name.equals("Team1Match")) {
+			} else if (name.equals("Team1Match")) { //$NON-NLS-1$
 //				System.out.println("Team1 new Match: " + e.getNewValue().toString());
 //				System.out.println("Team1 old Match: " + e.getOldValue().toString());
-			} else if (name.equals("Team2Match")) {
+			} else if (name.equals("Team2Match")) { //$NON-NLS-1$
 //				System.out.println("Team2 new Match: " + e.getNewValue().toString());
 //				System.out.println("Team2 old Match: " + e.getOldValue().toString());
-			} else if (name.equals("Team3Match")) {
+			} else if (name.equals("Team3Match")) { //$NON-NLS-1$
 //				System.out.println("Team3 new Match: " + e.getNewValue().toString());
 //				System.out.println("Team3 old Match: " + e.getOldValue().toString());
-			} else if (name.equals("Team1TimeOut")) {
+			} else if (name.equals("Team1TimeOut")) { //$NON-NLS-1$
 //				System.out.println("Team1 new TimeOut: " + e.getNewValue().toString());
 //				System.out.println("Team1 old TimeOut: " + e.getOldValue().toString());
-			} else if (name.equals("Team2TimeOut")) {
+			} else if (name.equals("Team2TimeOut")) { //$NON-NLS-1$
 //				System.out.println("Team2 new TimeOut: " + e.getNewValue().toString());
 //				System.out.println("Team2 old TimeOut: " + e.getOldValue().toString());
-			} else if (name.equals("Team3TimeOut")) {
+			} else if (name.equals("Team3TimeOut")) { //$NON-NLS-1$
 //				System.out.println("Team3 new TimeOut: " + e.getNewValue().toString());
 //				System.out.println("Team3 old TimeOut: " + e.getOldValue().toString());
 			}
@@ -2331,10 +2332,10 @@ public final class Main implements MatchObserver {
 	public static String combinePlayerNames(int teamNumber) {
 		String forwardName = teamController.getForwardName(teamNumber);
 		String goalieName = teamController.getGoalieName(teamNumber);
-		String name = (forwardName.isEmpty() && goalieName.isEmpty()) ? "?" : ( 
-				((forwardName.isEmpty()) ? "" : forwardName) +
-				((!forwardName.isEmpty() && !goalieName.isEmpty()) ? "/" : "") +
-				((goalieName.isEmpty()) ? "" : goalieName));
+		String name = (forwardName.isEmpty() && goalieName.isEmpty()) ? "?" : (  //$NON-NLS-1$
+				((forwardName.isEmpty()) ? "" : forwardName) + //$NON-NLS-1$
+				((!forwardName.isEmpty() && !goalieName.isEmpty()) ? "/" : "") + //$NON-NLS-1$ //$NON-NLS-2$
+				((goalieName.isEmpty()) ? "" : goalieName)); //$NON-NLS-1$
 		return name;
 	}
 	public static void setTeamGameCountVisible(String name, String value) {
@@ -2366,21 +2367,21 @@ public final class Main implements MatchObserver {
 	}
 	private static void activateOBSScene(String scene) {
 		if(OBS.getController() == null ) {
-			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " ERROR! Must connect before activating Scene");
+			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.ErrorMustConnectBeforeActivatingScene")); //$NON-NLS-1$
 		} else {
 			if (scene != null && !scene.isEmpty()) {
 				if (OBS.getConnected()) {
 					OBS.getController().setCurrentProgramScene(scene, response -> { 
 						if(Settings.getShowParsed()) {
 							if (response != null && response.isSuccessful()) {
-								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Scene " + scene + " activated.");
+								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Scene") + scene + Messages.getString("Main.Activated")); //$NON-NLS-1$ //$NON-NLS-2$
 							} else {
-								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": Unable to activate scene: " + scene);
+								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.UnableToActivateScene") + scene); //$NON-NLS-1$
 							}
 						} 
 					});
 				}else {
-					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " ERROR! Must connect before activating scene");
+					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.ErrorMustConnectBeforeActivatingScene")); //$NON-NLS-1$
 				}
 			}
 		}
@@ -2389,12 +2390,12 @@ public final class Main implements MatchObserver {
 		fileWatchWorker = new SwingWorker<Boolean, String>() {
 			@Override
 			protected Boolean doInBackground() throws Exception {
-				String partnerProgramDir = Settings.getPartnerProgramParameter("PartnerProgramPath");
-				final String clearString = "XXX_ALREADY_READ_XXX";//= Settings.getPartnerProgramClearString();
-				String partnerProgramPlayer1FileName = Settings.getPartnerProgramParameter("Player1FileName");
-				String partnerProgramPlayer2FileName = Settings.getPartnerProgramParameter("Player2FileName");
-				String partnerProgramPlayer3FileName = Settings.getPartnerProgramParameter("Player3FileName");
-				String partnerProgramPlayer4FileName = Settings.getPartnerProgramParameter("Player4FileName");
+				String partnerProgramDir = Settings.getPartnerProgramParameter("PartnerProgramPath"); //$NON-NLS-1$
+				final String clearString = "XXX_ALREADY_READ_XXX";//= Settings.getPartnerProgramClearString(); //$NON-NLS-1$
+				String partnerProgramPlayer1FileName = Settings.getPartnerProgramParameter("Player1FileName"); //$NON-NLS-1$
+				String partnerProgramPlayer2FileName = Settings.getPartnerProgramParameter("Player2FileName"); //$NON-NLS-1$
+				String partnerProgramPlayer3FileName = Settings.getPartnerProgramParameter("Player3FileName"); //$NON-NLS-1$
+				String partnerProgramPlayer4FileName = Settings.getPartnerProgramParameter("Player4FileName"); //$NON-NLS-1$
 				Path partnerPath = Paths.get(partnerProgramDir);
 				watchService = FileSystems.getDefault().newWatchService(); 
 				partnerPath.getFileSystem().newWatchService();
@@ -2407,7 +2408,7 @@ public final class Main implements MatchObserver {
 		        		for (WatchEvent<?> watchEvent : watchKey.pollEvents()) {
 		        			final Kind<?> kind = watchEvent.kind();
 		        			if (kind==StandardWatchEventKinds.OVERFLOW) {
-		    		        	logger.error("Overflow in createFileWatchWorker doInBackground.");
+		    		        	logger.error("Overflow in createFileWatchWorker doInBackground."); //$NON-NLS-1$
 		        				continue;
 		        			}
 		        			if (kind == StandardWatchEventKinds.ENTRY_CREATE || kind == StandardWatchEventKinds.ENTRY_MODIFY) {
@@ -2417,7 +2418,7 @@ public final class Main implements MatchObserver {
 			        			String fileName = filePath.toString();
 			        			if (fileName.equals(partnerProgramPlayer1FileName) || fileName.equals(partnerProgramPlayer2FileName) || fileName.equals(partnerProgramPlayer3FileName) || fileName.equals(partnerProgramPlayer4FileName)) {
 				        			try {
-				        				File file = new File(partnerProgramDir + "\\" + fileName);
+				        				File file = new File(partnerProgramDir + "\\" + fileName); //$NON-NLS-1$
 				        				Scanner fileReader = new Scanner(file);
 				        				if (fileReader.hasNextLine()) {
 				        					String data = fileReader.nextLine();
@@ -2425,7 +2426,7 @@ public final class Main implements MatchObserver {
 				        						FileWriter fileWriter = new FileWriter(file);
 				        						fileWriter.write(clearString);
 				        						fileWriter.close();
-				        						publish(fileName + "=" + data);
+				        						publish(fileName + "=" + data); //$NON-NLS-1$
 				        					}
 				        				}
 				        				fileReader.close();
@@ -2439,7 +2440,7 @@ public final class Main implements MatchObserver {
 		        		}
 			        	boolean valid = watchKey.reset();
 			        	if (!valid) {
-			        		logger.error("watchKey wasn\'t valid so made a break for it in Main.doInBackground().");
+			        		logger.error("watchKey wasn\'t valid so made a break for it in Main.doInBackground()."); //$NON-NLS-1$
 			        		break;
 			        	}
 	        		}
@@ -2453,7 +2454,7 @@ public final class Main implements MatchObserver {
 				if (isCancelled()) return;
 			    try {
 			     status = get();
-			     logger.info("Worker completed with isConnected: " + status);
+			     logger.info("Worker completed with isConnected: " + status); //$NON-NLS-1$
 			    } catch (InterruptedException e) {
 		        	logger.error(e.toString());
 			    } catch (ExecutionException e) {
@@ -2464,14 +2465,14 @@ public final class Main implements MatchObserver {
 			protected void process(List<String> chunks) {
 				if (isCancelled()) return;
 				for (String value : chunks) {
-					String partnerProgramPlayer1FileName = Settings.getPartnerProgramParameter("Player1FileName");
-					String partnerProgramPlayer2FileName = Settings.getPartnerProgramParameter("Player2FileName");
-					String partnerProgramPlayer3FileName = Settings.getPartnerProgramParameter("Player3FileName");
-					String partnerProgramPlayer4FileName = Settings.getPartnerProgramParameter("Player4FileName");
+					String partnerProgramPlayer1FileName = Settings.getPartnerProgramParameter("Player1FileName"); //$NON-NLS-1$
+					String partnerProgramPlayer2FileName = Settings.getPartnerProgramParameter("Player2FileName"); //$NON-NLS-1$
+					String partnerProgramPlayer3FileName = Settings.getPartnerProgramParameter("Player3FileName"); //$NON-NLS-1$
+					String partnerProgramPlayer4FileName = Settings.getPartnerProgramParameter("Player4FileName"); //$NON-NLS-1$
 					String newName;
-					String[] pieces = value.split("=");
+					String[] pieces = value.split("="); //$NON-NLS-1$
 					if (pieces.length == 1) {
-						newName = "";
+						newName = ""; //$NON-NLS-1$
 					}
 					else {
 						newName = pieces[1];
@@ -2497,7 +2498,7 @@ public final class Main implements MatchObserver {
 						teamController.resetGameCounts();
 						teamController.resetMatchCounts();
 						matchController.startMatch(createMatchId());
-						streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match from Name Change: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + "\r\n");
+						streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + Messages.getString("Main.AutoStartMatchFromNameChange") + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 					}
 				}
 			}

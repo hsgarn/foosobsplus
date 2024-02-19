@@ -54,13 +54,13 @@ public final class TournamentPanel extends JPanel {
 		dim.height = 225;
 		setPreferredSize(dim);
 		setName(buildTitle());
-		lblTournamentName = new JLabel(Messages.getString("TournamentPanel.TournamentName", Settings.getGameType())); //$NON-NLS-1$
-		lblEventName = new JLabel(Messages.getString("TournamentPanel.EventName", Settings.getGameType())); //$NON-NLS-1$
-		lblTableName = new JLabel(Messages.getString("TournamentPanel.TableName", Settings.getGameType())); //$NON-NLS-1$
+		lblTournamentName = new JLabel(Messages.getString("TournamentPanel.TournamentName")); //$NON-NLS-1$
+		lblEventName = new JLabel(Messages.getString("TournamentPanel.EventName")); //$NON-NLS-1$
+		lblTableName = new JLabel(Messages.getString("TournamentPanel.TableName")); //$NON-NLS-1$
 		txtTournamentName = new JTextField(50);
 		txtEventName = new JTextField(50);
 		txtTableName = new JTextField(50);
-		btnClear = new JButton(Messages.getString("TournamentPanel.Clear", Settings.getGameType())); //$NON-NLS-1$
+		btnClear = new JButton(Messages.getString("TournamentPanel.Clear")); //$NON-NLS-1$
 		innerBorder = BorderFactory.createTitledBorder(buildTitle());
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
 		Border outerBorder = BorderFactory.createEmptyBorder(Settings.getBorderTop(),Settings.getBorderLeft(),Settings.getBorderBottom(),Settings.getBorderRight());
@@ -69,10 +69,8 @@ public final class TournamentPanel extends JPanel {
 	}
 	private final void layoutComponents() {
 		setLayout(new GridBagLayout());
-		
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = 0;
-
 		////////  Tournament Name ////////
 		gc.gridy++;
 		gc.weightx = 0;
@@ -83,7 +81,6 @@ public final class TournamentPanel extends JPanel {
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 5, 5, 5);
 		add(lblTournamentName, gc);
-		
 		gc.weightx = .5;
 		gc.gridx = 1;
 		gc.gridwidth = 2;
@@ -91,7 +88,6 @@ public final class TournamentPanel extends JPanel {
 		gc.anchor = GridBagConstraints.LINE_START;
 		gc.insets = new Insets(5, 5, 5, 5);
 		add(txtTournamentName, gc);
-
 		////////  Event Name ////////
 		gc.gridy++;
 		gc.weightx = 0;
@@ -102,7 +98,6 @@ public final class TournamentPanel extends JPanel {
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 5, 5, 5);
 		add(lblEventName, gc);
-		
 		gc.weightx = .5;
 		gc.gridx = 1;
 		gc.gridwidth = 2;
@@ -110,7 +105,6 @@ public final class TournamentPanel extends JPanel {
 		gc.anchor = GridBagConstraints.LINE_START;
 		gc.insets = new Insets(5, 5, 5, 5);
 		add(txtEventName, gc);
-				
 		////////  Tournament Name ////////
 		gc.gridy++;
 		gc.weightx = 0;
@@ -121,7 +115,6 @@ public final class TournamentPanel extends JPanel {
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 5, 5, 5);
 		add(lblTableName, gc);
-		
 		gc.weightx = .5;
 		gc.gridx = 1;
 		gc.gridwidth = 2;
@@ -129,7 +122,6 @@ public final class TournamentPanel extends JPanel {
 		gc.anchor = GridBagConstraints.LINE_START;
 		gc.insets = new Insets(5, 5, 5, 5);
 		add(txtTableName, gc);
-		
 		/////// Clear button ////////
 		gc.gridy++;
 		gc.weightx = .5;
@@ -141,7 +133,6 @@ public final class TournamentPanel extends JPanel {
 		gc.insets = new Insets(5, 5, 5, 5);
 		add(btnClear, gc);
 	}		
-
 	////// Listeners  //////
 	public void addTournamentNameListener(ActionListener listenForTxtTournamentName) {
 		txtTournamentName.addActionListener(listenForTxtTournamentName);
@@ -173,9 +164,7 @@ public final class TournamentPanel extends JPanel {
 	public void addClearListener(ActionListener listenForBtnClear) {
 		btnClear.addActionListener(listenForBtnClear);
 	}
-
 	////// Utility Methods //////
-	
 	public void updateTournamentName(String tournamentName) {
 		txtTournamentName.setText(tournamentName);
 	}
@@ -206,7 +195,7 @@ public final class TournamentPanel extends JPanel {
 		this.setBorder(border);
 	}
 	private String buildTitle() {
-		return Messages.getString("TournamentPanel.TournamentInformation", Settings.getGameType()); //$NON-NLS-1$
+		return Messages.getString("TournamentPanel.TournamentInformation"); //$NON-NLS-1$
 	}
 
 }

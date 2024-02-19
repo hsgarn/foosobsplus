@@ -71,15 +71,14 @@ public class StatsEntryPanel extends JPanel {
 		dim.height = 550;
 		setPreferredSize(dim);
 		setName(buildTitle());
-		
 		lblCode = new JLabel(buildTitle());
-		lblCodeHistory = new JLabel(Messages.getString("StatsEntryPanel.History", Settings.getGameType())); //$NON-NLS-1$
+		lblCodeHistory = new JLabel(Messages.getString("StatsEntryPanel.History")); //$NON-NLS-1$
 		txtCode = new JTextField();
 		mdlCodeHistory = new DefaultListModel<String>();
 		lstCodeHistory = new JList<String>(mdlCodeHistory);
-		btnUndo = new JButton(Messages.getString("StatsEntryPanel.Undo", Settings.getGameType())); //$NON-NLS-1$
-		btnRedo = new JButton(Messages.getString("StatsEntryPanel.Redo", Settings.getGameType())); //$NON-NLS-1$
-		btnClear = new JButton(Messages.getString("StatsEntryPanel.Clear", Settings.getGameType())); //$NON-NLS-1$
+		btnUndo = new JButton(Messages.getString("StatsEntryPanel.Undo")); //$NON-NLS-1$
+		btnRedo = new JButton(Messages.getString("StatsEntryPanel.Redo")); //$NON-NLS-1$
+		btnClear = new JButton(Messages.getString("StatsEntryPanel.Clear")); //$NON-NLS-1$
 		scrCodeHistory = new JScrollPane();
 		scrCodeHistory.setViewportView(lstCodeHistory);
 		lstCodeHistory.setLayoutOrientation(JList.VERTICAL);
@@ -108,19 +107,16 @@ public class StatsEntryPanel extends JPanel {
 					int[] selectedIndices = lstCodeHistory.getSelectedIndices();
 					StringBuilder selectedItems = new StringBuilder();
 					for (int index : selectedIndices) {
-						selectedItems.append(lstCodeHistory.getModel().getElementAt(index)).append("\n");
+						selectedItems.append(lstCodeHistory.getModel().getElementAt(index)).append("\n"); //$NON-NLS-1$
 					}
 				}
 			}
 		});
-
 		setMnemonics();
-		
-		innerBorder = BorderFactory.createTitledBorder(Messages.getString("StatsEntryPanel.StatisticsEntryPanel", Settings.getGameType())); //$NON-NLS-1$
+		innerBorder = BorderFactory.createTitledBorder(Messages.getString("StatsEntryPanel.StatisticsEntryPanel")); //$NON-NLS-1$
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
 		Border outerBorder = BorderFactory.createEmptyBorder(Settings.getBorderTop(),Settings.getBorderLeft(),Settings.getBorderBottom(),Settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
-		
 		layoutComponents();
 	}
     private static void copySelectedItemsToClipboard(JList<String> jList) {
@@ -128,7 +124,7 @@ public class StatsEntryPanel extends JPanel {
         if (selectedIndices.length > 0) {
             StringBuilder selectedItems = new StringBuilder();
             for (int index : selectedIndices) {
-                selectedItems.append(jList.getModel().getElementAt(index)).append("\n");
+                selectedItems.append(jList.getModel().getElementAt(index)).append("\n"); //$NON-NLS-1$
             }
             StringSelection selection = new StringSelection(selectedItems.toString());
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -148,7 +144,6 @@ public class StatsEntryPanel extends JPanel {
 		gc.anchor = GridBagConstraints.NORTH;
 		gc.insets = new Insets(0, 0, 0, 3);
 		add(lblCode, gc);
-		
 		gc.weightx = 1;
 		gc.weighty = .1;
 		gc.gridx = 1;
@@ -157,7 +152,6 @@ public class StatsEntryPanel extends JPanel {
 		gc.anchor = GridBagConstraints.NORTH;
 		gc.insets = new Insets(0, 0, 0, 3);
 		add(lblCodeHistory, gc);
-		
 		//////// Statistics Window ////////
 		gc.gridy++;
 		gc.weightx = 1;
@@ -168,7 +162,6 @@ public class StatsEntryPanel extends JPanel {
 		gc.anchor = GridBagConstraints.NORTH;
 		gc.insets = new Insets(0, 0, 0, 3);
 		add(txtCode, gc);
-
 		gc.weightx = 1;
 		gc.weighty = .9;
 		gc.gridx = 1;
@@ -177,7 +170,6 @@ public class StatsEntryPanel extends JPanel {
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(0, 0, 0, 3);
 		add(scrCodeHistory, gc);
-		
 		gc.weightx = 1;
 		gc.weighty = .9;
 		gc.gridx = 2;
@@ -186,7 +178,6 @@ public class StatsEntryPanel extends JPanel {
 		gc.anchor = GridBagConstraints.NORTH;
 		gc.insets = new Insets(0, 0, 0, 3);
 		add(btnUndo, gc);
-
 		gc.gridy++;
 		gc.weightx = 1;
 		gc.weighty = .9;
@@ -196,7 +187,6 @@ public class StatsEntryPanel extends JPanel {
 		gc.anchor = GridBagConstraints.NORTH;
 		gc.insets = new Insets(0, 0, 0, 3);
 		add(btnClear, gc);
-
 		gc.weightx = 1;
 		gc.weighty = .9;
 		gc.gridx = 2;
@@ -207,15 +197,15 @@ public class StatsEntryPanel extends JPanel {
 		add(btnRedo, gc);
 	}
 	private void setMnemonics() {
-		if(Settings.getHotKeyParameter("Undo").isEmpty()) {
+		if(Settings.getHotKeyParameter("Undo").isEmpty()) { //$NON-NLS-1$
 			btnUndo.setMnemonic(-1);
 		} else {
-			btnUndo.setMnemonic(Settings.getHotKeyParameter("Undo").charAt(0));
+			btnUndo.setMnemonic(Settings.getHotKeyParameter("Undo").charAt(0)); //$NON-NLS-1$
 		};
-		if(Settings.getHotKeyParameter("Redo").isEmpty()) {
+		if(Settings.getHotKeyParameter("Redo").isEmpty()) { //$NON-NLS-1$
 			btnRedo.setMnemonic(-1);
 		} else {
-			btnRedo.setMnemonic(Settings.getHotKeyParameter("Redo").charAt(0));
+			btnRedo.setMnemonic(Settings.getHotKeyParameter("Redo").charAt(0)); //$NON-NLS-1$
 		};
 	}
 	////// Listeners  //////
@@ -242,7 +232,7 @@ public class StatsEntryPanel extends JPanel {
 		mdlCodeHistory.insertElementAt(code, 0);
 	}
 	public void errorCodeHistory() {
-		mdlCodeHistory.set(0, mdlCodeHistory.firstElement() + Messages.getString("StatsEntryPanel.Invalid", Settings.getGameType())); //$NON-NLS-1$
+		mdlCodeHistory.set(0, mdlCodeHistory.firstElement() + Messages.getString("StatsEntryPanel.Invalid")); //$NON-NLS-1$
 	}
 	public void removeCodeHistory() {
 		if (mdlCodeHistory.getSize() > 0) {
@@ -288,6 +278,6 @@ public class StatsEntryPanel extends JPanel {
 		this.setBorder(border);
 	}
 	private String buildTitle() {
-		return Messages.getString("StatsEntryPanel.Code", Settings.getGameType()); //$NON-NLS-1$
+		return Messages.getString("StatsEntryPanel.Code"); //$NON-NLS-1$
 	}
 }

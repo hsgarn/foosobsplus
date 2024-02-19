@@ -43,18 +43,18 @@ public class AutoScoreConfigPanel extends JPanel {
 		txtConfig = new JTextArea(20,50);
 		add(txtConfig, "cell 0 1 2 1, growx, growy"); //$NON-NLS-1$
 		btnReadConfig = new JButton(Messages.getString("AutoScoreConfigPanel.Read")); //$NON-NLS-1$
-		add(btnReadConfig, "cell 0 2 1 1");
+		add(btnReadConfig, "cell 0 2 1 1"); //$NON-NLS-1$
 		btnClearConfig = new JButton(Messages.getString("AutoScoreConfigPanel.Clear")); //$NON-NLS-1$
-		add(btnClearConfig, "cell 1 2 1 1");
+		add(btnClearConfig, "cell 1 2 1 1"); //$NON-NLS-1$
 		btnValidateConfig = new JButton(Messages.getString("AutoScoreConfigPanel.Validate")); //$NON-NLS-1$
-		add(btnValidateConfig, "cell 0 3 2 1, growx");
+		add(btnValidateConfig, "cell 0 3 2 1, growx"); //$NON-NLS-1$
 		btnWriteConfig = new JButton(Messages.getString("AutoScoreConfigPanel.Write")); //$NON-NLS-1$
 		add(btnWriteConfig, "cell 0 4 1 1"); //$NON-NLS-1$
 		btnResetConfig = new JButton(Messages.getString("AutoScoreConfigPanel.Reset")); //$NON-NLS-1$
 		add(btnResetConfig, "cell 1 4 1 1, growx"); //$NON-NLS-1$
 	}
 	public void clearConfigTextArea() {
-		txtConfig.setText("");
+		txtConfig.setText(""); //$NON-NLS-1$
 	}
 	public void appendConfigTextArea(String line) {
 		txtConfig.append(line);

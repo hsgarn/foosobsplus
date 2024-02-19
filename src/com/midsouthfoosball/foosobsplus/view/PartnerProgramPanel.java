@@ -60,22 +60,22 @@ public class PartnerProgramPanel extends JPanel {
 		setLayout();
 	}
 	private void restoreDefaults() {
-		txtPlayer1FileName.setText(Settings.getDefaultPartnerProgram("Player1FileName"));
-		txtPlayer2FileName.setText(Settings.getDefaultPartnerProgram("Player2FileName"));
-		txtPlayer3FileName.setText(Settings.getDefaultPartnerProgram("Player3FileName"));
-		txtPlayer4FileName.setText(Settings.getDefaultPartnerProgram("Player4FileName"));
+		txtPlayer1FileName.setText(Settings.getDefaultPartnerProgram("Player1FileName")); //$NON-NLS-1$
+		txtPlayer2FileName.setText(Settings.getDefaultPartnerProgram("Player2FileName")); //$NON-NLS-1$
+		txtPlayer3FileName.setText(Settings.getDefaultPartnerProgram("Player3FileName")); //$NON-NLS-1$
+		txtPlayer4FileName.setText(Settings.getDefaultPartnerProgram("Player4FileName")); //$NON-NLS-1$
 	}
 	private void revertChanges() {
-		txtPlayer1FileName.setText(Settings.getPartnerProgramParameter("Player1FileName"));
-		txtPlayer2FileName.setText(Settings.getPartnerProgramParameter("Player2FileName"));
-		txtPlayer3FileName.setText(Settings.getPartnerProgramParameter("Player3FileName"));
-		txtPlayer4FileName.setText(Settings.getPartnerProgramParameter("Player4FileName"));
+		txtPlayer1FileName.setText(Settings.getPartnerProgramParameter("Player1FileName")); //$NON-NLS-1$
+		txtPlayer2FileName.setText(Settings.getPartnerProgramParameter("Player2FileName")); //$NON-NLS-1$
+		txtPlayer3FileName.setText(Settings.getPartnerProgramParameter("Player3FileName")); //$NON-NLS-1$
+		txtPlayer4FileName.setText(Settings.getPartnerProgramParameter("Player4FileName")); //$NON-NLS-1$
 	}
 	private void saveSettings() {
-		Settings.setPartnerProgram("Player1FileName",txtPlayer1FileName.getText());
-		Settings.setPartnerProgram("Player2FileName",txtPlayer2FileName.getText());
-		Settings.setPartnerProgram("Player3FileName",txtPlayer3FileName.getText());
-		Settings.setPartnerProgram("Player4FileName",txtPlayer4FileName.getText());
+		Settings.setPartnerProgram("Player1FileName",txtPlayer1FileName.getText()); //$NON-NLS-1$
+		Settings.setPartnerProgram("Player2FileName",txtPlayer2FileName.getText()); //$NON-NLS-1$
+		Settings.setPartnerProgram("Player3FileName",txtPlayer3FileName.getText()); //$NON-NLS-1$
+		Settings.setPartnerProgram("Player4FileName",txtPlayer4FileName.getText()); //$NON-NLS-1$
 		try {
 			Settings.savePartnerProgramConfig();
 		} catch (IOException ex) {
@@ -121,14 +121,14 @@ public class PartnerProgramPanel extends JPanel {
 		});
 		add(btnSelectPath, "cell 1 0"); //$NON-NLS-1$
 		formattedTxtPath = new JFormattedTextField();
-		formattedTxtPath.setText(Settings.getPartnerProgramParameter("PartnerProgramPath"));
+		formattedTxtPath.setText(Settings.getPartnerProgramParameter("PartnerProgramPath")); //$NON-NLS-1$
 		formattedTxtPath.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent arg0) {
 		    	try {
 					Settings.setPartnerProgramPath(formattedTxtPath.getText());
 					Settings.savePartnerProgramConfig();
 		    	} catch (IOException ex) {
-		    		logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile"));		 //$NON-NLS-1$
+		    		logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile")); //$NON-NLS-1$
 		    		logger.error(ex.toString());
 		    	}
 			}
@@ -141,7 +141,7 @@ public class PartnerProgramPanel extends JPanel {
 						Settings.setPartnerProgramPath(formattedTxtPath.getText());
 						Settings.savePartnerProgramConfig();
 			    	} catch (IOException ex) {
-			    		logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile"));		 //$NON-NLS-1$
+			    		logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile")); //$NON-NLS-1$
 			    		logger.error(ex.toString());
 			    	}
 			    }
@@ -160,19 +160,19 @@ public class PartnerProgramPanel extends JPanel {
 		JLabel lblPlayer4FileName = new JLabel(Messages.getString("PartnerProgramPanel.Player4")); //$NON-NLS-1$
 		add(lblPlayer4FileName, "cell 1 5,alignx right"); //$NON-NLS-1$
 		txtPlayer1FileName = new JTextField();
-		txtPlayer1FileName.setText(Settings.getPartnerProgramParameter("Player1FileName"));
+		txtPlayer1FileName.setText(Settings.getPartnerProgramParameter("Player1FileName")); //$NON-NLS-1$
 		txtPlayer1FileName.setColumns(10);
 		add(txtPlayer1FileName, "cell 2 2,alignx left"); //$NON-NLS-1$
 		txtPlayer2FileName = new JTextField();
-		txtPlayer2FileName.setText(Settings.getPartnerProgramParameter("Player2FileName"));
+		txtPlayer2FileName.setText(Settings.getPartnerProgramParameter("Player2FileName")); //$NON-NLS-1$
 		txtPlayer2FileName.setColumns(10);
 		add(txtPlayer2FileName, "cell 2 3,alignx left"); //$NON-NLS-1$
 		txtPlayer3FileName = new JTextField();
-		txtPlayer3FileName.setText(Settings.getPartnerProgramParameter("Player3FileName"));
+		txtPlayer3FileName.setText(Settings.getPartnerProgramParameter("Player3FileName")); //$NON-NLS-1$
 		txtPlayer3FileName.setColumns(10);
 		add(txtPlayer3FileName, "cell 2 4,alignx left"); //$NON-NLS-1$
 		txtPlayer4FileName = new JTextField();
-		txtPlayer4FileName.setText(Settings.getPartnerProgramParameter("Player4FileName"));
+		txtPlayer4FileName.setText(Settings.getPartnerProgramParameter("Player4FileName")); //$NON-NLS-1$
 		txtPlayer4FileName.setColumns(10);
 		add(txtPlayer4FileName, "cell 2 5,alignx left"); //$NON-NLS-1$
 		JButton btnApplyPartnerProgram = new JButton(Messages.getString("Global.Apply")); //$NON-NLS-1$

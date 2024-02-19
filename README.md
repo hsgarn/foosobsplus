@@ -1020,6 +1020,11 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.050 02/18/2024</br>
+Removed gameType option from Messages getString method and all the calls to it.</br>
+Went through and updated all the View classes with Externalized Strings.</br>
+Removed unnecessary whitespace from controller classes.</br>
+</br>
 v2.049 02/17/2024</br>
 Add AutoScoreSettingsPanel strings to message.properties.</br>
 Increase size of Message box in OBSConnectPanel.</br>

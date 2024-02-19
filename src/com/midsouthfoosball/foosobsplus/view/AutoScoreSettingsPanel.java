@@ -65,53 +65,53 @@ public class AutoScoreSettingsPanel extends JPanel {
 	private JList<String> lstMessageHistory;
 	private DefaultListModel<String> mdlMessageHistory;
 	private JScrollPane scrMessageHistory;
-	private static final String ON = "1";
-	private static final String OFF = "0";
+	private static final String ON = "1"; //$NON-NLS-1$
+	private static final String OFF = "0"; //$NON-NLS-1$
 	private static Logger logger = LoggerFactory.getLogger(AutoScoreSettingsPanel.class);
 	public AutoScoreSettingsPanel() throws IOException {
 		mdlMessageHistory = new DefaultListModel<String>();
 		lstMessageHistory = new JList<String>(mdlMessageHistory);
 		setLayout(new MigLayout("", "[][grow]", "[][][][][][][][][][][][][][][][][][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		JLabel lblServerAddress = new JLabel(Messages.getString("AutoScoreSettingsPanel.ServerAddress", Settings.getGameType())); //$NON-NLS-1$
+		JLabel lblServerAddress = new JLabel(Messages.getString("AutoScoreSettingsPanel.ServerAddress")); //$NON-NLS-1$
 		add(lblServerAddress, "cell 0 2,alignx trailing"); //$NON-NLS-1$
 		txtServerAddress = new JTextField();
 		txtServerAddress.setHorizontalAlignment(SwingConstants.CENTER);
 		txtServerAddress.setInputVerifier(new IPAddrInputVerifier());
-		txtServerAddress.setText(Settings.getAutoScoreParameter("AutoScoreSettingsServerAddress"));
+		txtServerAddress.setText(Settings.getAutoScoreParameter("AutoScoreSettingsServerAddress")); //$NON-NLS-1$
 		txtServerAddress.setColumns(10);
 		add(txtServerAddress, "cell 1 2,alignx left"); //$NON-NLS-1$
-		chckbxAutoConnect = new JCheckBox(Messages.getString("AutoScoreSettingsPanel.AutoConnectOnStartUp", Settings.getGameType())); //$NON-NLS-1$
-		if (Settings.getAutoScoreParameter("AutoScoreSettingsAutoConnect").equals("1")) {
+		chckbxAutoConnect = new JCheckBox(Messages.getString("AutoScoreSettingsPanel.AutoConnectOnStartUp")); //$NON-NLS-1$
+		if (Settings.getAutoScoreParameter("AutoScoreSettingsAutoConnect").equals(ON)) { //$NON-NLS-1$
 			chckbxAutoConnect.setSelected(true);
 		} else {
 			chckbxAutoConnect.setSelected(false);
 		}
 		add(chckbxAutoConnect, "cell 2 2, alignx left"); //$NON-NLS-1$
-		JLabel lblServerPort = new JLabel(Messages.getString("AutoScoreSettingsPanel.ServerPort", Settings.getGameType())); //$NON-NLS-1$
+		JLabel lblServerPort = new JLabel(Messages.getString("AutoScoreSettingsPanel.ServerPort")); //$NON-NLS-1$
 		add(lblServerPort, "cell 0 3,alignx trailing"); //$NON-NLS-1$
 		txtServerPort = new JTextField();
 		txtServerPort.setHorizontalAlignment(SwingConstants.CENTER);
-		txtServerPort.setText(Settings.getAutoScoreParameter("AutoScoreSettingsServerPort("));
+		txtServerPort.setText(Settings.getAutoScoreParameter("AutoScoreSettingsServerPort(")); //$NON-NLS-1$
 		txtServerPort.setColumns(10);
 		add(txtServerPort, "cell 1 3,alignx left,aligny top"); //$NON-NLS-1$
-		chckbxDetailLog = new JCheckBox(Messages.getString("AutoScoreSettingsPanel.DetailLog", Settings.getGameType())); //$NON-NLS-1$
-		if (Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals("1")) {
+		chckbxDetailLog = new JCheckBox(Messages.getString("AutoScoreSettingsPanel.DetailLog")); //$NON-NLS-1$
+		if (Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals(ON)) { //$NON-NLS-1$
 			chckbxDetailLog.setSelected(true);
 		} else {
 			chckbxDetailLog.setSelected(false);
 		}
 		add(chckbxDetailLog, "cell 2 3, alignx left"); //$NON-NLS-1$
-		btnConnect = new JButton(Messages.getString("AutoScoreSettingsPanel.Connect", Settings.getGameType())); //$NON-NLS-1$
-		add(btnConnect, "flowx,cell 1 4,alignx left");
-		btnDisconnect = new JButton(Messages.getString("AutoScoreSettingsPanel.Disconnect", Settings.getGameType())); //$NON-NLS-1$
-		add(btnDisconnect, "cell 2 4,growx");
-		JLabel lblMessage = new JLabel(Messages.getString("AutoScoreSettingsPanel.Message", Settings.getGameType())); //$NON-NLS-1$
-		add(lblMessage, "cell 0 8");
+		btnConnect = new JButton(Messages.getString("AutoScoreSettingsPanel.Connect")); //$NON-NLS-1$
+		add(btnConnect, "flowx,cell 1 4,alignx left"); //$NON-NLS-1$
+		btnDisconnect = new JButton(Messages.getString("AutoScoreSettingsPanel.Disconnect")); //$NON-NLS-1$
+		add(btnDisconnect, "cell 2 4,growx"); //$NON-NLS-1$
+		JLabel lblMessage = new JLabel(Messages.getString("AutoScoreSettingsPanel.Message")); //$NON-NLS-1$
+		add(lblMessage, "cell 0 8"); //$NON-NLS-1$
 		scrMessageHistory = new JScrollPane();
 		scrMessageHistory.setViewportView(lstMessageHistory);
 		lstMessageHistory.setLayoutOrientation(JList.VERTICAL);
 		lstMessageHistory.setCellRenderer(new AttributiveCellRenderer());
-		add(scrMessageHistory, "cell 0 9 3,grow");
+		add(scrMessageHistory, "cell 0 9 3,grow"); //$NON-NLS-1$
 		btnApply = new JButton(Messages.getString("Global.Apply")); //$NON-NLS-1$
 		add(btnApply, "flowx,cell 0 18, alignx center"); //$NON-NLS-1$
 		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
@@ -144,10 +144,10 @@ public class AutoScoreSettingsPanel extends JPanel {
 		  tmp = (String) value;
 		  setBackground(UIManager.getColor("List.background")); //$NON-NLS-1$
 		  setForeground(UIManager.getColor("List.foreground")); //$NON-NLS-1$
-		  if (tmp.indexOf("Disconnect") != -1 || tmp.indexOf("Unable") != -1 || tmp.indexOf("ERROR!") != -1) { //$NON-NLS-1$
+		  if (tmp.indexOf("Disconnect") != -1 || tmp.indexOf("Unable") != -1 || tmp.indexOf("ERROR!") != -1) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			  setForeground(Color.RED);
 		  } 
-		  if (tmp.indexOf("Connected!") != -1) {
+		  if (tmp.indexOf("Connected!") != -1) { //$NON-NLS-1$
 			  setForeground(Color.BLUE);
 		  }
           setText(tmp);
@@ -169,18 +169,18 @@ public class AutoScoreSettingsPanel extends JPanel {
 		mdlMessageHistory.insertElementAt(message, 0);
 	}
 	private void restoreDefaults() {
-		txtServerAddress.setText(Settings.getDefaultAutoScoreSettings("AutoScoreSettingsServerAddress"));
-		txtServerPort.setText(Settings.getDefaultAutoScoreSettings("AutoScoreSettingsServerPort"));
+		txtServerAddress.setText(Settings.getDefaultAutoScoreSettings("AutoScoreSettingsServerAddress")); //$NON-NLS-1$
+		txtServerPort.setText(Settings.getDefaultAutoScoreSettings("AutoScoreSettingsServerPort")); //$NON-NLS-1$
 	}
 	public void saveSettings() {
-		Settings.setAutoScore("AutoScoreSettingsServerAddress",txtServerAddress.getText());
-		Settings.setAutoScore("AutoScoreSettingsServerPort",txtServerPort.getText());
-		Settings.setAutoScore("AutoScoreSettingsAutoConnect",chckbxAutoConnect.isSelected() ? ON : OFF);
-		Settings.setAutoScore("AutoScoreSettingsDetailLog",chckbxDetailLog.isSelected() ? ON : OFF);
+		Settings.setAutoScore("AutoScoreSettingsServerAddress",txtServerAddress.getText()); //$NON-NLS-1$
+		Settings.setAutoScore("AutoScoreSettingsServerPort",txtServerPort.getText()); //$NON-NLS-1$
+		Settings.setAutoScore("AutoScoreSettingsAutoConnect",chckbxAutoConnect.isSelected() ? ON : OFF); //$NON-NLS-1$
+		Settings.setAutoScore("AutoScoreSettingsDetailLog",chckbxDetailLog.isSelected() ? ON : OFF); //$NON-NLS-1$
 		try {
 			Settings.saveAutoScoreSettingsConfig();
 		} catch (IOException ex) {
-			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());		 //$NON-NLS-1$
+			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());	//$NON-NLS-1$
 			logger.error(ex.toString());
 		}
 	}
@@ -192,13 +192,13 @@ public class AutoScoreSettingsPanel extends JPanel {
 				if (InetAddresses.isInetAddress(text)) {
 					return true;
 				} else {
-					logger.warn("Invalid input: [" + text + "]. Must be valid IP Address: ###.###.###.###");
-					JOptionPane.showMessageDialog(null, "Must be valid IP Address: ###.###.###.###", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+					logger.warn("Invalid input: [" + text + "]. Must be valid IP Address: ###.###.###.###"); //$NON-NLS-1$ //$NON-NLS-2$
+					JOptionPane.showMessageDialog(null, Messages.getString("AutoScoreSettingsPanel.MustBeValidIPAddress") + ": ###.###.###.###", Messages.getString("AutoScoreSettingsPanel.InvalidInput"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					return false;
 				}
 			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(null, "Must be valid IP Address: ###.###.###.###", "Invalid Input", JOptionPane.WARNING_MESSAGE);
-				logger.error("Invalid input: [" + text + "]. Must be valid IP Address: ###.###.###.###");
+				JOptionPane.showMessageDialog(null, Messages.getString("AutoScoreSettingsPanel.MustBeValidIPAddress") + ": ###.###.###.###", Messages.getString("AutoScoreSettingsPanel.InvalidInput"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				logger.error("Invalid input: [" + text + "]. Must be valid IP Address: ###.###.###.###"); //$NON-NLS-1$ //$NON-NLS-2$
 				logger.error(e.toString());
 				return false;
 			}

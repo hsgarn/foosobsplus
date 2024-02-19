@@ -85,8 +85,8 @@ public class GameResultsWindowFrame extends JFrame {
         });
         gameResultsScrollPane = new JScrollPane(gameResultsList);
         gameResultsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        updateButton = new JButton(Messages.getString("GameResultsWindowFrame.Update"));
-        clearButton = new JButton(Messages.getString("GameResultsWindowFrame.Clear"));
+        updateButton = new JButton(Messages.getString("GameResultsWindowFrame.Update")); //$NON-NLS-1$
+        clearButton = new JButton(Messages.getString("GameResultsWindowFrame.Clear")); //$NON-NLS-1$
         clearButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

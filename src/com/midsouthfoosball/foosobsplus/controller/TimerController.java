@@ -47,7 +47,6 @@ public class TimerController {
 	private int displayWidth = 9;
 	private int prefixWidth;
 	private int suffixWidth = 3;
-	
 	public TimerController(OBSInterface obsInterface, TimerPanel timerPanel, TimerWindowFrame timerWindowFrame, TimeClock timeClock, LastScoredWindowFrame lastScored1WindowFrame, LastScoredClock lastScored1Clock, LastScoredWindowFrame lastScored2WindowFrame, LastScoredClock lastScored2Clock, LastScoredWindowFrame lastScored3WindowFrame, LastScoredClock lastScored3Clock) {
 		this.obsInterface = obsInterface;
 		this.timerPanel = timerPanel;
@@ -59,15 +58,12 @@ public class TimerController {
 		this.lastScored2Clock = lastScored2Clock;
 		this.lastScored3WindowFrame = lastScored3WindowFrame;
 		this.lastScored3Clock = lastScored3Clock;
-		
 		////// Timer Listener Methods //////
-	
 		this.timeClock.addTimeClockTimerListener(timeClockListener);
 		this.lastScored1Clock.addLastScoredClockTimerListener(lastScored1ClockListener);
 		this.lastScored2Clock.addLastScoredClockTimerListener(lastScored2ClockListener);
 		this.lastScored3Clock.addLastScoredClockTimerListener(lastScored3ClockListener);
 	}
-	
 	ActionListener timeClockListener = new ActionListener() {
 		public void actionPerformed(ActionEvent event) {
 			updateTimerDisplay();
@@ -88,9 +84,7 @@ public class TimerController {
 			updateLastScored3Display();
 		}
 	};
-	
 	////// Utility Methods //////
-	
 	public void startShotTimer() {
 		int count = Integer.parseInt(Settings.getControlParameter("ShotTime")) * 10;
 		timeClock.setTimerInUse("Shot Timer");
@@ -156,7 +150,6 @@ public class TimerController {
 		if(Float.compare(tr, 60f) > 0) {
 			nbrOfMinutes = (int) (tr / 60);
 			displaySeconds = (timeRemaining - (nbrOfMinutes * 600))/10;
-
 			String timeLeft = new String(nbrOfMinutes + ":" + String.format("%02d", displaySeconds));
 			prefixWidth = displayWidth - timeLeft.length() - suffixWidth;
 			char[] c1 = new char[prefixWidth];
