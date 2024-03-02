@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 public class Messages {
 	private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
-	private static Logger logger = LoggerFactory.getLogger(Messages.class);
+	private static final Logger logger = LoggerFactory.getLogger(Messages.class);
 	private Messages() {}
 //	public static String getString(String key, String gameType) {
 //		return getString(gameType + "." + key); //$NON-NLS-1$

@@ -246,7 +246,7 @@ public final class Main implements MatchObserver {
 	private static SourcesPanel						sourcesPanel			= sourcesFrame.getSourcesPanel();
 	private static StatSourcesFrame					statSourcesFrame		= new StatSourcesFrame();
 	private static StatSourcesPanel					statSourcesPanel		= statSourcesFrame.getStatSourcesPanel();
-	private static FiltersFrame        				filtersFrame        	= new FiltersFrame(obsInterface);
+	private static FiltersFrame        				filtersFrame        	= new FiltersFrame();
 	private static FiltersPanel        				filtersPanel        	= filtersFrame.getFiltersPanel();
 	private static PartnerProgramFrame 				partnerProgramFrame 	= new PartnerProgramFrame();
 	private static OBSConnectFrame					obsConnectFrame			= new OBSConnectFrame();

@@ -26,10 +26,10 @@ import com.midsouthfoosball.foosobsplus.model.AppConfig;
 
 @SuppressWarnings("serial")
 public class AutoScoreConfigFrame extends JFrame {
-	private AutoScoreConfigPanel autoScoreConfigPanel;
-	private static final String programName = AppConfig.PROGRAM_NAME;
+	private final AutoScoreConfigPanel autoScoreConfigPanel;
+	private static final String PROGRAMNAME = AppConfig.PROGRAM_NAME;
 	public AutoScoreConfigFrame() {
-		super(programName + " " + Messages.getString("AutoScoreConfigFrame.Title")); //$NON-NLS-1$ //$NON-NLS-2$
+		super(PROGRAMNAME + " " + Messages.getString("AutoScoreConfigFrame.Title")); //$NON-NLS-1$ //$NON-NLS-2$
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
 		autoScoreConfigPanel = new AutoScoreConfigPanel();

@@ -36,7 +36,6 @@ import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 import net.miginfocom.swing.MigLayout;
@@ -83,11 +82,9 @@ public class FiltersPanel extends JPanel {
 	private JButton btnStartGameFilter;
 	private JButton btnSwitchSidesFilter;
 	private JButton btnMeatballFilter;
-	private static Logger logger = LoggerFactory.getLogger(FiltersPanel.class);
-	OBSInterface obsInterface;
+	private static final Logger logger = LoggerFactory.getLogger(FiltersPanel.class);
 	// Create the Panel
-	public FiltersPanel(OBSInterface obsInterface) throws IOException {
-		this.obsInterface = obsInterface;
+	public FiltersPanel() throws IOException {
 		setLayout();
 	}
 	private void restoreDefaults() {
@@ -162,7 +159,7 @@ public class FiltersPanel extends JPanel {
 			logger.error(ex.toString());
 		}
 	}
-	public void setLayout() {
+	public final void setLayout() {
 		setBounds(100, 100, 900, 489);
 		setLayout(new MigLayout("", "[][][174.00,grow][27.00][91.00][grow][][][grow][14.00][][grow]", "[][][][][][][][][][][][][][][][][][][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		JLabel lblFilter = new JLabel(Messages.getString("FiltersPanel.Filter")); //$NON-NLS-1$
@@ -333,6 +330,7 @@ public class FiltersPanel extends JPanel {
 		add(btnMeatballFilter, "cell 6 5, alignx left"); //$NON-NLS-1$
 		JButton btnApplyFilters = new JButton(Messages.getString("Global.Apply")); //$NON-NLS-1$
 		btnApplyFilters.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				saveSettings();
 			}
@@ -340,6 +338,7 @@ public class FiltersPanel extends JPanel {
 		add(btnApplyFilters, "cell 1 19,alignx center"); //$NON-NLS-1$
 		JButton btnSaveFilters = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		btnSaveFilters.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				saveSettings();
 				JComponent comp = (JComponent) e.getSource();
@@ -350,6 +349,7 @@ public class FiltersPanel extends JPanel {
 		add(btnSaveFilters, "cell 2 19,alignx center"); //$NON-NLS-1$
 		JButton btnCancelFilters = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
 		btnCancelFilters.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				revertChanges();
 				JComponent comp = (JComponent) e.getSource();
@@ -360,6 +360,7 @@ public class FiltersPanel extends JPanel {
 		add(btnCancelFilters, "cell 4 19,alignx center"); //$NON-NLS-1$
 		JButton btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
 		btnRestoreDefaults.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				restoreDefaults();
 			}

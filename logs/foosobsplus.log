@@ -1,0 +1,84 @@
+2024-03-02 14:46:45.807 INFO [AWT-EventQueue-0] [com.midsouthfoosball.foosobsplus.main.Main.connectToOBS(Main.java:412)] - Trying to connect to OBS...
+2024-03-02 14:46:45.933 INFO [AWT-EventQueue-0] [org.eclipse.jetty.util.log.Log.initialized(Log.java:192)] - Logging initialized @2631ms to org.eclipse.jetty.util.log.Slf4jLog
+2024-03-02 14:46:49.803 ERROR [AWT-EventQueue-0] [io.obswebsocket.community.client.listener.lifecycle.controller.LoggingControllerLifecycleListener.onError(LoggingControllerLifecycleListener.java:11)] - Could not contact OBS on: ws://localhost:4455, verify OBS is running, the plugin is installed, and it can be reached over the network
+java.util.concurrent.TimeoutException: null
+	at java.util.concurrent.CompletableFuture.timedGet(CompletableFuture.java:1784) ~[?:1.8.0_261]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:1928) ~[?:1.8.0_261]
+	at io.obswebsocket.community.client.OBSRemoteController.connect(OBSRemoteController.java:99) ~[client-2.0.0.jar:?]
+	at com.midsouthfoosball.foosobsplus.main.Main.connectToOBS(Main.java:414) ~[classes/:?]
+	at com.midsouthfoosball.foosobsplus.main.Main.<init>(Main.java:294) ~[classes/:?]
+	at com.midsouthfoosball.foosobsplus.main.FoosOBSPlusApp.lambda$main$0(FoosOBSPlusApp.java:43) ~[classes/:?]
+	at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:311) ~[?:1.8.0_261]
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:758) ~[?:1.8.0_261]
+	at java.awt.EventQueue.access$500(EventQueue.java:97) ~[?:1.8.0_261]
+	at java.awt.EventQueue$3.run(EventQueue.java:709) ~[?:1.8.0_261]
+	at java.awt.EventQueue$3.run(EventQueue.java:703) ~[?:1.8.0_261]
+	at java.security.AccessController.doPrivileged(Native Method) ~[?:1.8.0_261]
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:74) ~[?:1.8.0_261]
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:728) ~[?:1.8.0_261]
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:205) ~[?:1.8.0_261]
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116) ~[?:1.8.0_261]
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105) ~[?:1.8.0_261]
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101) ~[?:1.8.0_261]
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93) ~[?:1.8.0_261]
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82) ~[?:1.8.0_261]
+2024-03-02 14:46:49.854 INFO [AWT-EventQueue-0] [com.midsouthfoosball.foosobsplus.main.Main.connectAutoScore(Main.java:1376)] - Trying to connect to AutoScore...
+2024-03-02 14:46:50.187 INFO [AWT-EventQueue-0] [com.midsouthfoosball.foosobsplus.main.Main$AutoScoreWorkerStateChangeListener.propertyChange(Main.java:2182)] - AutoScoreWorker state changed to: STARTED
+2024-03-02 14:46:50.187 ERROR [AWT-EventQueue-0] [com.midsouthfoosball.foosobsplus.main.Main$2.done(Main.java:2461)] - java.util.concurrent.ExecutionException: java.nio.file.NoSuchFileException: C:\FoosTourneyXXX
+2024-03-02 14:46:50.838 ERROR [WebSocketClient@1639560595-25] [io.obswebsocket.community.client.listener.lifecycle.communicator.LoggingCommunicatorLifecycleListener.onError(LoggingCommunicatorLifecycleListener.java:50)] - onError: Websocket error occurred with session null
+java.net.ConnectException: Connection refused: no further information
+	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method) ~[?:1.8.0_261]
+	at sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:715) ~[?:1.8.0_261]
+	at org.eclipse.jetty.io.SelectorManager.doFinishConnect(SelectorManager.java:353) ~[jetty-io-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.io.ManagedSelector.processConnect(ManagedSelector.java:157) ~[jetty-io-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.io.ManagedSelector.access$1400(ManagedSelector.java:60) ~[jetty-io-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.io.ManagedSelector$SelectorProducer.processSelected(ManagedSelector.java:427) ~[jetty-io-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.io.ManagedSelector$SelectorProducer.produce(ManagedSelector.java:294) ~[jetty-io-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:179) ~[jetty-util-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.produce(EatWhatYouKill.java:140) ~[jetty-util-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:708) ~[jetty-util-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:626) ~[jetty-util-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at java.lang.Thread.run(Thread.java:748) ~[?:1.8.0_261]
+2024-03-02 14:46:50.839 ERROR [WebSocketClient@1639560595-25] [io.obswebsocket.community.client.listener.lifecycle.communicator.LoggingCommunicatorLifecycleListener.onError(LoggingCommunicatorLifecycleListener.java:50)] - onError: Websocket error occurred with session null
+org.eclipse.jetty.websocket.api.UpgradeException: 0 null
+	at org.eclipse.jetty.websocket.client.WebSocketUpgradeRequest.onComplete(WebSocketUpgradeRequest.java:520) ~[websocket-client-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.client.ResponseNotifier.notifyComplete(ResponseNotifier.java:193) ~[jetty-client-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.client.ResponseNotifier.notifyComplete(ResponseNotifier.java:185) ~[jetty-client-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.client.HttpExchange.notifyFailureComplete(HttpExchange.java:269) ~[jetty-client-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.client.HttpExchange.abort(HttpExchange.java:240) ~[jetty-client-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.client.HttpConversation.abort(HttpConversation.java:141) ~[jetty-client-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.client.HttpRequest.abort(HttpRequest.java:748) ~[jetty-client-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.client.HttpDestination.abort(HttpDestination.java:447) ~[jetty-client-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.client.HttpDestination.failed(HttpDestination.java:227) ~[jetty-client-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.client.AbstractConnectionPool$1.failed(AbstractConnectionPool.java:124) ~[jetty-client-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.util.Promise$Wrapper.failed(Promise.java:136) ~[jetty-util-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.client.HttpClient$1$1.failed(HttpClient.java:601) ~[jetty-client-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.client.AbstractConnectorHttpClientTransport.connectFailed(AbstractConnectorHttpClientTransport.java:135) ~[jetty-client-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.client.AbstractConnectorHttpClientTransport$ClientSelectorManager.connectionFailed(AbstractConnectorHttpClientTransport.java:180) ~[jetty-client-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.io.ManagedSelector$Connect.failed(ManagedSelector.java:706) ~[jetty-io-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.io.ManagedSelector$Connect.access$500(ManagedSelector.java:673) ~[jetty-io-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.io.ManagedSelector.processConnect(ManagedSelector.java:187) ~[jetty-io-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.io.ManagedSelector.access$1400(ManagedSelector.java:60) ~[jetty-io-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.io.ManagedSelector$SelectorProducer.processSelected(ManagedSelector.java:427) ~[jetty-io-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.io.ManagedSelector$SelectorProducer.produce(ManagedSelector.java:294) ~[jetty-io-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:179) ~[jetty-util-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.produce(EatWhatYouKill.java:140) ~[jetty-util-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:708) ~[jetty-util-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:626) ~[jetty-util-9.4.8.v20171121.jar:9.4.8.v20171121]
+	at java.lang.Thread.run(Thread.java:748) ~[?:1.8.0_261]
+2024-03-02 14:47:10.909 ERROR [SwingWorker-pool-2-thread-1] [com.midsouthfoosball.foosobsplus.main.Main$1.doInBackground(Main.java:582)] - Auto Score new Socket IOException
+2024-03-02 14:47:10.909 ERROR [SwingWorker-pool-2-thread-1] [com.midsouthfoosball.foosobsplus.main.Main$1.doInBackground(Main.java:583)] - java.net.ConnectException: Connection timed out: connect
+2024-03-02 14:47:10.909 INFO [SwingWorker-pool-2-thread-1] [com.midsouthfoosball.foosobsplus.main.Main$1.doInBackground(Main.java:637)] - Auto Score Connection Terminated!!
+2024-03-02 14:47:10.956 ERROR [AWT-EventQueue-0] [com.midsouthfoosball.foosobsplus.main.Main$1.done(Main.java:660)] - java.util.concurrent.ExecutionException: java.lang.NullPointerException
+2024-03-02 14:47:10.956 INFO [AWT-EventQueue-0] [com.midsouthfoosball.foosobsplus.main.Main$AutoScoreWorkerStateChangeListener.propertyChange(Main.java:2182)] - AutoScoreWorker state changed to: DONE
+2024-03-02 14:47:10.956 INFO [AWT-EventQueue-0] [com.midsouthfoosball.foosobsplus.main.Main$AutoScoreWorkerStateChangeListener.propertyChange(Main.java:2185)] - Attempt reconnect to AutoScore...
+2024-03-02 14:47:10.956 INFO [AWT-EventQueue-0] [com.midsouthfoosball.foosobsplus.main.Main.connectAutoScore(Main.java:1376)] - Trying to connect to AutoScore...
+2024-03-02 14:47:11.001 INFO [AWT-EventQueue-0] [com.midsouthfoosball.foosobsplus.main.Main$AutoScoreWorkerStateChangeListener.propertyChange(Main.java:2182)] - AutoScoreWorker state changed to: STARTED
+2024-03-02 14:47:32.008 ERROR [SwingWorker-pool-2-thread-3] [com.midsouthfoosball.foosobsplus.main.Main$1.doInBackground(Main.java:582)] - Auto Score new Socket IOException
+2024-03-02 14:47:32.008 ERROR [SwingWorker-pool-2-thread-3] [com.midsouthfoosball.foosobsplus.main.Main$1.doInBackground(Main.java:583)] - java.net.ConnectException: Connection timed out: connect
+2024-03-02 14:47:32.008 INFO [SwingWorker-pool-2-thread-3] [com.midsouthfoosball.foosobsplus.main.Main$1.doInBackground(Main.java:637)] - Auto Score Connection Terminated!!
+2024-03-02 14:47:32.054 ERROR [AWT-EventQueue-0] [com.midsouthfoosball.foosobsplus.main.Main$1.done(Main.java:660)] - java.util.concurrent.ExecutionException: java.lang.NullPointerException
+2024-03-02 14:47:32.054 INFO [AWT-EventQueue-0] [com.midsouthfoosball.foosobsplus.main.Main$AutoScoreWorkerStateChangeListener.propertyChange(Main.java:2182)] - AutoScoreWorker state changed to: DONE
+2024-03-02 14:47:32.054 INFO [AWT-EventQueue-0] [com.midsouthfoosball.foosobsplus.main.Main$AutoScoreWorkerStateChangeListener.propertyChange(Main.java:2185)] - Attempt reconnect to AutoScore...
+2024-03-02 14:47:32.054 INFO [AWT-EventQueue-0] [com.midsouthfoosball.foosobsplus.main.Main.connectAutoScore(Main.java:1376)] - Trying to connect to AutoScore...
+2024-03-02 14:47:32.099 INFO [AWT-EventQueue-0] [com.midsouthfoosball.foosobsplus.main.Main$AutoScoreWorkerStateChangeListener.propertyChange(Main.java:2182)] - AutoScoreWorker state changed to: STARTED

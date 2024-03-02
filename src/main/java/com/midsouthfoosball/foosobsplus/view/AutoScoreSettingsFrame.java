@@ -33,10 +33,10 @@ import com.midsouthfoosball.foosobsplus.model.AppConfig;
 @SuppressWarnings("serial")
 public class AutoScoreSettingsFrame extends JFrame {
 	private AutoScoreSettingsPanel autoScoreSettingsPanel;
-	private static final String programName = AppConfig.PROGRAM_NAME;
-	private static Logger logger = LoggerFactory.getLogger(AutoScoreSettingsFrame.class);
+	private static final String PROGRAMNAME = AppConfig.PROGRAM_NAME;
+	private static final Logger logger = LoggerFactory.getLogger(AutoScoreSettingsFrame.class);
 	public AutoScoreSettingsFrame() {
-		super(programName + " " + Messages.getString("AutoScoreSettingsFrame.Title")); //$NON-NLS-1$ //$NON-NLS-2$
+		super(PROGRAMNAME + " " + Messages.getString("AutoScoreSettingsFrame.Title")); //$NON-NLS-1$ //$NON-NLS-2$
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
 		try {

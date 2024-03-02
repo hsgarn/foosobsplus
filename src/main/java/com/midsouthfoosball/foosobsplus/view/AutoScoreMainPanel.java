@@ -37,11 +37,11 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
 public class AutoScoreMainPanel extends JPanel {
-	private JButton btnConnect;
-	private JButton btnDisconnect;
-	private JButton btnSettings;
-	private JCheckBox chkbxIgnore;
-	private Border innerBorder;
+	private final JButton btnConnect;
+	private final JButton btnDisconnect;
+	private final JButton btnSettings;
+	private final JCheckBox chkbxIgnore;
+	private final Border innerBorder;
 	public AutoScoreMainPanel() {
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
@@ -59,7 +59,7 @@ public class AutoScoreMainPanel extends JPanel {
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		layoutComponents();
 	}
-	public void layoutComponents() {
+	public final void layoutComponents() {
 		setLayout(new GridBagLayout());
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = 0;
@@ -104,17 +104,17 @@ public class AutoScoreMainPanel extends JPanel {
 			btnConnect.setMnemonic(-1);
 		} else {
 			btnConnect.setMnemonic(Settings.getHotKeyParameter("AutoScoreMainConnect").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("AutoScoreMainDisconnect").isEmpty()) { //$NON-NLS-1$
 			btnDisconnect.setMnemonic(-1);
 		} else {
 			btnDisconnect.setMnemonic(Settings.getHotKeyParameter("AutoScoreMainDisconnect").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("AutoScoreMainSettings").isEmpty()) { //$NON-NLS-1$
 			btnSettings.setMnemonic(-1);
 		} else {
 			btnSettings.setMnemonic(Settings.getHotKeyParameter("AutoScoreMainSettings").charAt(0)); //$NON-NLS-1$
-		};
+		}
 	}
 	////// Listeners  //////
 	public void addConnectListener(ActionListener listenForBtnConnect) {

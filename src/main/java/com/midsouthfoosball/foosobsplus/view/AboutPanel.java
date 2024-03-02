@@ -34,10 +34,10 @@ import net.miginfocom.swing.MigLayout;
 public class AboutPanel extends JPanel {
 
 	private static final long serialVersionUID 	= 1L;
-	private static final String versionNumber 	= "2.050"; //$NON-NLS-1$
-	private static final String releaseDate 	= "02/18/2024"; //$NON-NLS-1$
-	private static final String author 			= "Hugh Garner"; //$NON-NLS-1$
-	private static final String copyright 		= "2020-2024 Hugh Garner"; //$NON-NLS-1$
+	private static final String VERSIONNUMBER 	= "2.051"; //$NON-NLS-1$
+	private static final String RELEASEDATE 	= "03/02/2024"; //$NON-NLS-1$
+	private static final String AUTHOR 			= "Hugh Garner"; //$NON-NLS-1$
+	private static final String COPYRIGHT 		= "2020-2024 Hugh Garner"; //$NON-NLS-1$
 
 	public AboutPanel(JFrame aboutFrame) {
 		setLayout(new MigLayout("", "[127.00][50.00:87.00,grow,left]", "[][][][][grow][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -51,25 +51,25 @@ public class AboutPanel extends JPanel {
 		JLabel lblVersion = new JLabel(Messages.getString("AboutPanel.Version")); //$NON-NLS-1$
 		add(lblVersion, "cell 0 1,alignx right"); //$NON-NLS-1$
 		
-		JLabel lblVersionValue = new JLabel(versionNumber);
+		JLabel lblVersionValue = new JLabel(VERSIONNUMBER);
 		add(lblVersionValue, "cell 1 1"); //$NON-NLS-1$
 		
 		JLabel lblReleaseDate = new JLabel(Messages.getString("AboutPanel.ReleaseDate")); //$NON-NLS-1$
 		add(lblReleaseDate, "cell 0 2,alignx right"); //$NON-NLS-1$
 		
-		JLabel lblReleaseDateValue = new JLabel(releaseDate);
+		JLabel lblReleaseDateValue = new JLabel(RELEASEDATE);
 		add(lblReleaseDateValue, "cell 1 2"); //$NON-NLS-1$
 		
 		JLabel lblAuthor = new JLabel(Messages.getString("AboutPanel.Author")); //$NON-NLS-1$
 		add(lblAuthor, "cell 0 3,alignx right"); //$NON-NLS-1$
 		
-		JLabel lblAuthorValue = new JLabel(author); //$NON-NLS-1$
+		JLabel lblAuthorValue = new JLabel(AUTHOR); //$NON-NLS-1$
 		add(lblAuthorValue, "cell 1 3"); //$NON-NLS-1$
 		
 		JLabel lblCopyright = new JLabel(Messages.getString("AboutPanel.Copyright")); //$NON-NLS-1$
 		add(lblCopyright, "cell 0 4,alignx right"); //$NON-NLS-1$
 		
-		JLabel lblCopyrightValue = new JLabel(copyright); //$NON-NLS-1$
+		JLabel lblCopyrightValue = new JLabel(COPYRIGHT); //$NON-NLS-1$
 		add(lblCopyrightValue, "cell 1 4"); //$NON-NLS-1$
 		
 		JLabel lblLicense = new JLabel(Messages.getString("AboutPanel.License")); //$NON-NLS-1$

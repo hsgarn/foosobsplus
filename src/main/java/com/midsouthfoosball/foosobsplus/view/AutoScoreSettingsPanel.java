@@ -54,23 +54,23 @@ import net.miginfocom.swing.MigLayout;
 public class AutoScoreSettingsPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private JTextField txtServerAddress;
-	private JTextField txtServerPort;
-	private JCheckBox chckbxAutoConnect;
-	private JCheckBox chckbxDetailLog;
-	private JButton btnApply;
-	private JButton btnSave;
-	private JButton btnConnect;
-	private JButton btnDisconnect;
-	private JList<String> lstMessageHistory;
-	private DefaultListModel<String> mdlMessageHistory;
-	private JScrollPane scrMessageHistory;
+	private final JTextField txtServerAddress;
+	private final JTextField txtServerPort;
+	private final JCheckBox chckbxAutoConnect;
+	private final JCheckBox chckbxDetailLog;
+	private final JButton btnApply;
+	private final JButton btnSave;
+	private final JButton btnConnect;
+	private final JButton btnDisconnect;
+	private final JList<String> lstMessageHistory;
+	private final DefaultListModel<String> mdlMessageHistory;
+	private final JScrollPane scrMessageHistory;
 	private static final String ON = "1"; //$NON-NLS-1$
 	private static final String OFF = "0"; //$NON-NLS-1$
-	private static Logger logger = LoggerFactory.getLogger(AutoScoreSettingsPanel.class);
+	private static final Logger logger = LoggerFactory.getLogger(AutoScoreSettingsPanel.class);
 	public AutoScoreSettingsPanel() throws IOException {
-		mdlMessageHistory = new DefaultListModel<String>();
-		lstMessageHistory = new JList<String>(mdlMessageHistory);
+		mdlMessageHistory = new DefaultListModel<>();
+		lstMessageHistory = new JList<>(mdlMessageHistory);
 		setLayout(new MigLayout("", "[][grow]", "[][][][][][][][][][][][][][][][][][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		JLabel lblServerAddress = new JLabel(Messages.getString("AutoScoreSettingsPanel.ServerAddress")); //$NON-NLS-1$
 		add(lblServerAddress, "cell 0 2,alignx trailing"); //$NON-NLS-1$
@@ -118,18 +118,20 @@ public class AutoScoreSettingsPanel extends JPanel {
 		add(btnSave, "flowx,cell 1 18,alignx center"); //$NON-NLS-1$
 		JButton btnCancel = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
 		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JComponent comp = (JComponent) e.getSource();
-				Window win = SwingUtilities.getWindowAncestor(comp);
-				win.dispose();
-			}
-		});
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        JComponent comp = (JComponent) e.getSource();
+                        Window win = SwingUtilities.getWindowAncestor(comp);
+                        win.dispose();
+                    }
+                });
 		add(btnCancel, "cell 1 18,alignx center"); //$NON-NLS-1$
 		JButton btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
 		btnRestoreDefaults.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				restoreDefaults();
-			}
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                            restoreDefaults();
+                    }
 		});
 		add(btnRestoreDefaults, "cell 2 18,alignx center"); //$NON-NLS-1$
 	}
@@ -138,16 +140,17 @@ public class AutoScoreSettingsPanel extends JPanel {
 	  public AttributiveCellRenderer() {
 	    setOpaque(true);
 	  }
+          @Override
 	  public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) 
 	  {
-		  String tmp = ""; //$NON-NLS-1$
+		  String tmp;
 		  tmp = (String) value;
 		  setBackground(UIManager.getColor("List.background")); //$NON-NLS-1$
 		  setForeground(UIManager.getColor("List.foreground")); //$NON-NLS-1$
-		  if (tmp.indexOf("Disconnect") != -1 || tmp.indexOf("Unable") != -1 || tmp.indexOf("ERROR!") != -1) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		  if (tmp.contains("Disconnect") || tmp.contains("Unable") || tmp.contains("ERROR!")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			  setForeground(Color.RED);
 		  } 
-		  if (tmp.indexOf("Connected!") != -1) { //$NON-NLS-1$
+		  if (tmp.contains("Connected!")) { //$NON-NLS-1$
 			  setForeground(Color.BLUE);
 		  }
           setText(tmp);

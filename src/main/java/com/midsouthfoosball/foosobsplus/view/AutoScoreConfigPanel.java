@@ -29,13 +29,13 @@ import net.miginfocom.swing.MigLayout;
 
 public class AutoScoreConfigPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
-	private JLabel lblConfig;
-	private JTextArea txtConfig;
-	private JButton btnValidateConfig;
-	private JButton btnWriteConfig;
-	private JButton btnReadConfig;
-	private JButton btnResetConfig;
-	private JButton btnClearConfig;
+	private final JLabel lblConfig;
+	private final JTextArea txtConfig;
+	private final JButton btnValidateConfig;
+	private final JButton btnWriteConfig;
+	private final JButton btnReadConfig;
+	private final JButton btnResetConfig;
+	private final JButton btnClearConfig;
 	public AutoScoreConfigPanel() {
 		setLayout(new MigLayout());
 		lblConfig = new JLabel(Messages.getString("AutoScoreConfigPanel.Config")); //$NON-NLS-1$

@@ -13,6 +13,28 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-shade-plugin</artifactId>
+			    <version>3.5.2</version>
+			    <executions>
+			        <execution>
+			        <phase>package</phase>
+			            <goals>
+			                <goal>shade</goal>
+			            </goals>
+			            <configuration>
+			                <shadedArtifactAttached>true</shadedArtifactAttached>
+			                <transformers>
+			                    <transformer implementation=
+			                      "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+			                        <mainClass>com.midsouthfoosball.foosobsplus.main.FoosOBSPlusApp</mainClass>
+			                </transformer>
+			            </transformers>
+			        </configuration>
+			        </execution>
+			    </executions>
+			</plugin>
         </plugins>
     </build>
     <dependencies>
@@ -61,6 +83,12 @@
             <artifactId>miglayout-swing</artifactId>
             <version>4.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.6.0</version>
+            <scope>test</scope>
+        </dependency>
         <!--
        <dependency>
        <groupId>org.slf4j</groupId>
@@ -68,6 +96,18 @@
        <version>1.7.36</version>
        </dependency>
         -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.6.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.6.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <name>FoosOBSPlus</name>
     <url>https://github.com/hsgarn/foosobsplus</url>
