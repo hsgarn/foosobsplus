@@ -34,7 +34,7 @@ import net.miginfocom.swing.MigLayout;
 public class AboutPanel extends JPanel {
 
 	private static final long serialVersionUID 	= 1L;
-	private static final String VERSIONNUMBER 	= "2.053"; //$NON-NLS-1$
+	private static final String VERSIONNUMBER 	= "2.054"; //$NON-NLS-1$
 	private static final String RELEASEDATE 	= "03/03/2024"; //$NON-NLS-1$
 	private static final String AUTHOR 			= "Hugh Garner"; //$NON-NLS-1$
 	private static final String COPYRIGHT 		= "2020-2024 Hugh Garner"; //$NON-NLS-1$

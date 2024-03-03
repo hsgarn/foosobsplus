@@ -44,13 +44,13 @@ public final class Settings {
 	private final static String ON = "1";
 	private final static String OFF = "0";
 	// Parameter settings
-	private final static String separator 			= FileSystems.getDefault().getSeparator();
-	private final static String gameType			= "Foosball";
+	private final static String SEPARATOR 			= FileSystems.getDefault().getSeparator();
+	private final static String GAMETYPE			= "Foosball";
 	private final static String[] lastScoredStrings = new String[4];
-	private final static int borderTop				= 2;
-	private final static int borderBottom 			= 0;
-	private final static int borderLeft				= 0;
-	private final static int borderRight 			= 0;
+	private final static int BORDERTOP				= 2;
+	private final static int BORDERBOTTOM 			= 0;
+	private final static int BORDERLEFT				= 0;
+	private final static int BORDERRIGHT 			= 0;
 	// Property Settings
 	private final static Properties defaultControlProps 			= new Properties();
 	private final static Properties defaultSourceProps 				= new Properties();
@@ -68,20 +68,20 @@ public final class Settings {
 	public static Properties configHotKeyProps;
 	public static Properties configOBSProps;
 	public static Properties configAutoScoreSettingsProps;
-	private final static String configControlFileName			= "control.properties";
-	private final static String configSourceFileName 			= "source.properties";
-	private final static String configStatsSourceFileName 		= "statssource.properties";
-	private final static String configFilterFileName            = "filter.properties";
-	private final static String configPartnerProgramFileName    = "partnerprogram.properties";
-	private final static String configHotKeyFileName 			= "hotkey.properties";
-	private final static String configOBSFileName        		= "obs.properties";
-	private final static String configAutoScoreSettingsFileName	= "autoscoresettings.properties";
+	private final static String CONFIGCONTROLFILENAME			= "control.properties";
+	private final static String CONFIGSOURCEFILENAME 			= "source.properties";
+	private final static String CONFIGSTATSSOURCEFILENAME 		= "statssource.properties";
+	private final static String CONFIGFILTERFILENAME            = "filter.properties";
+	private final static String CONFIGPARTNERMPROGRAMFILENAME    = "partnerprogram.properties";
+	private final static String CONFIGHOTKEYFILENAME 			= "hotkey.properties";
+	private final static String CONFIGOBSFILENAME        		= "obs.properties";
+	private final static String CONFIGAUTOSCORESETTINGSFILENAME	= "autoscoresettings.properties";
 	private final static Logger logger = LoggerFactory.getLogger(Settings.class);
 	static {
 		// Parameter settings
 		defaultControlProps.setProperty("ShowParsed", "true");
 		defaultControlProps.setProperty("TableName", "");
-		defaultControlProps.setProperty("datapath", "c:" + separator + "temp");
+		defaultControlProps.setProperty("datapath", "c:" + SEPARATOR + "temp");
 		defaultControlProps.setProperty("PointsToWin", "5");
 		defaultControlProps.setProperty("MaxWin", "8");
 		defaultControlProps.setProperty("WinBy", "1");
@@ -393,10 +393,10 @@ public final class Settings {
 	public static Settings getInstance() {
 		return instance;
 	}
-	public static int getBorderTop() {return borderTop;};
-	public static int getBorderBottom() {return borderBottom;};
-	public static int getBorderLeft() {return borderLeft;};
-	public static int getBorderRight() {return borderRight;};
+	public static int getBorderTop() {return BORDERTOP;};
+	public static int getBorderBottom() {return BORDERBOTTOM;};
+	public static int getBorderLeft() {return BORDERLEFT;};
+	public static int getBorderRight() {return BORDERRIGHT;};
 	public static String[] getLastScoredStrings() {
 		lastScoredStrings[0] = getControlParameter("ClearLastScored");
 		lastScoredStrings[1] = getControlParameter("Team1LastScored");
@@ -404,7 +404,7 @@ public final class Settings {
 		lastScoredStrings[3] = getControlParameter("Team3LastScored");
 		return lastScoredStrings;
 	}
-	public static String getGameType() {return gameType;}
+	public static String getGameType() {return GAMETYPE;}
 	//Getters
 	//Control Parameters
 //	public static <T> T getControlParameter(String parameter, Function<String, T> parser) {return parser.apply(configControlProps.getProperty(parameter));}
@@ -500,147 +500,147 @@ public final class Settings {
 	public static String getDefaultAutoScoreSettings(String property) {return defaultAutoScoreSettingsProps.getProperty(property);}
 	//Load Configs
 	public static void loadFromControlConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(configControlFileName))) {
+		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGCONTROLFILENAME))) {
 			configControlProps.load(inputStream);
 		} catch (NoSuchFileException e) {
-			logger.info(Paths.get(configControlFileName) + " not found. Writing defaults.");
-			Files.createFile(Paths.get(configControlFileName));
+			logger.info(Paths.get(CONFIGCONTROLFILENAME) + " not found. Writing defaults.");
+			Files.createFile(Paths.get(CONFIGCONTROLFILENAME));
 			configControlProps = defaultControlProps;
 			saveControlConfig();
 		}
 	}
 	public static void loadFromOBSConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(configOBSFileName))) {
+		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGOBSFILENAME))) {
 			configOBSProps.load(inputStream);
 		} catch (NoSuchFileException e) {
-			logger.info(Paths.get(configOBSFileName) + " not found. Writing defaults.");
-			Files.createFile(Paths.get(configOBSFileName));
+			logger.info(Paths.get(CONFIGOBSFILENAME) + " not found. Writing defaults.");
+			Files.createFile(Paths.get(CONFIGOBSFILENAME));
 			configOBSProps = defaultOBSProps;
 			saveOBSConfig();
 		}
 	}
 	public static void loadFromSourceConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(configSourceFileName))) {
+		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGSOURCEFILENAME))) {
 			configSourceProps.load(inputStream);
 		} catch (NoSuchFileException e) {
-			logger.info(Paths.get(configSourceFileName) + " not found. Writing defaults.");
-			Files.createFile(Paths.get(configSourceFileName));
+			logger.info(Paths.get(CONFIGSOURCEFILENAME) + " not found. Writing defaults.");
+			Files.createFile(Paths.get(CONFIGSOURCEFILENAME));
 			configSourceProps = defaultSourceProps;
 			saveSourceConfig();
 		}
 	}
 	public static void loadFromStatsSourceConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(configStatsSourceFileName))) {
+		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGSTATSSOURCEFILENAME))) {
 			configStatsSourceProps.load(inputStream);
 		} catch (NoSuchFileException e) {
-			logger.info(Paths.get(configStatsSourceFileName) + " not found. Writing defaults.");
-			Files.createFile(Paths.get(configStatsSourceFileName));
+			logger.info(Paths.get(CONFIGSTATSSOURCEFILENAME) + " not found. Writing defaults.");
+			Files.createFile(Paths.get(CONFIGSTATSSOURCEFILENAME));
 			configStatsSourceProps = defaultStatsSourceProps;
 			saveStatsSourceConfig();
 		}
 	}
 	public static void loadFromFilterConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(configFilterFileName))) {
+		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGFILTERFILENAME))) {
 			configFilterProps.load(inputStream);
 		} catch (NoSuchFileException e) {
-			logger.info(Paths.get(configFilterFileName) + " not found. Writing defaults.");
-			Files.createFile(Paths.get(configFilterFileName));
+			logger.info(Paths.get(CONFIGFILTERFILENAME) + " not found. Writing defaults.");
+			Files.createFile(Paths.get(CONFIGFILTERFILENAME));
 			configFilterProps = defaultFilterProps;
 			saveFilterConfig();
 		}
 	}
 	public static void loadFromPartnerProgramConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(configPartnerProgramFileName))) {
+		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGPARTNERMPROGRAMFILENAME))) {
 			configPartnerProgramProps.load(inputStream);
 		} catch (NoSuchFileException e) {
-			logger.info(Paths.get(configPartnerProgramFileName) + " not found. Writing defaults.");
-			Files.createFile(Paths.get(configPartnerProgramFileName));
+			logger.info(Paths.get(CONFIGPARTNERMPROGRAMFILENAME) + " not found. Writing defaults.");
+			Files.createFile(Paths.get(CONFIGPARTNERMPROGRAMFILENAME));
 			configPartnerProgramProps = defaultPartnerProgramProps;
 			savePartnerProgramConfig();
 		}
 	}
 	public static void loadFromHotKeyConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(configHotKeyFileName))) {
+		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGHOTKEYFILENAME))) {
 			configHotKeyProps.load(inputStream);
 		} catch (NoSuchFileException e) {
-			logger.info(Paths.get(configHotKeyFileName) + " not found. Writing defaults.");
-			Files.createFile(Paths.get(configHotKeyFileName));
+			logger.info(Paths.get(CONFIGHOTKEYFILENAME) + " not found. Writing defaults.");
+			Files.createFile(Paths.get(CONFIGHOTKEYFILENAME));
 			configHotKeyProps = defaultHotKeyProps;
 			saveHotKeyConfig();
 		}
 	}
 	public static void loadFromAutoScoreSettingsConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(configAutoScoreSettingsFileName))) {
+		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGAUTOSCORESETTINGSFILENAME))) {
 			configAutoScoreSettingsProps.load(inputStream);
 		} catch (NoSuchFileException e) {
-			logger.info(Paths.get(configAutoScoreSettingsFileName) + " not found. Writing defaults.");
-			Files.createFile(Paths.get(configAutoScoreSettingsFileName));
+			logger.info(Paths.get(CONFIGAUTOSCORESETTINGSFILENAME) + " not found. Writing defaults.");
+			Files.createFile(Paths.get(CONFIGAUTOSCORESETTINGSFILENAME));
 			configAutoScoreSettingsProps = defaultAutoScoreSettingsProps;
 			saveAutoScoreSettingsConfig();
 		}
 	}
 	public static void saveControlConfig() throws IOException {
 		//Control Parameters
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configControlFileName))) {
+		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGCONTROLFILENAME))) {
 			configControlProps.store(outputStream, "FoosOBSPlus Control settings");
 		} catch (Exception e) {
-			logger.error("Could not write to " + Paths.get(configControlFileName));
+			logger.error("Could not write to " + Paths.get(CONFIGCONTROLFILENAME));
 		}
 	}
 	public static void saveOBSConfig() throws IOException {
 		//OBS
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configOBSFileName))) {
+		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGOBSFILENAME))) {
 			configOBSProps.store(outputStream, "FoosOBSPlus OBS Settings");
 		} catch (Exception e) {
-			logger.error("Could not write to " + Paths.get(configOBSFileName));
+			logger.error("Could not write to " + Paths.get(CONFIGOBSFILENAME));
 		}
 	}
 	public static void saveSourceConfig() throws IOException {
 		//Source
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configSourceFileName))) {
+		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGSOURCEFILENAME))) {
 			configSourceProps.store(outputStream, "FoosOBSPlus Source Settings");
 		} catch (Exception e) {
-			logger.error("Could not write to " + Paths.get(configSourceFileName));
+			logger.error("Could not write to " + Paths.get(CONFIGSOURCEFILENAME));
 		}
 	}
 	public static void saveStatsSourceConfig() throws IOException {
 		//Stats Source
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configStatsSourceFileName))) {
+		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGSTATSSOURCEFILENAME))) {
 			configStatsSourceProps.store(outputStream, "FoosOBSPlus Stats Source Settings");
 		} catch (Exception e) {
-			logger.error("Could not write to " + Paths.get(configStatsSourceFileName));
+			logger.error("Could not write to " + Paths.get(CONFIGSTATSSOURCEFILENAME));
 		}
 	}
 	public static void saveFilterConfig() throws IOException {
 		//Filter
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configFilterFileName))) {
+		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGFILTERFILENAME))) {
 			configFilterProps.store(outputStream, "FoosOBSPlus Filter Settings");
 		} catch (Exception e) {
-			logger.error("Could not write to " + Paths.get(configFilterFileName));
+			logger.error("Could not write to " + Paths.get(CONFIGFILTERFILENAME));
 		}
 	}
 	public static void savePartnerProgramConfig() throws IOException {
 		//PartnerProgram
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configPartnerProgramFileName))) {
+		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGPARTNERMPROGRAMFILENAME))) {
 			configPartnerProgramProps.store(outputStream, "FoosOBSPlus Partner Program Settings");
 		} catch (Exception e) {
-			logger.error("Could not write to " + Paths.get(configPartnerProgramFileName));
+			logger.error("Could not write to " + Paths.get(CONFIGPARTNERMPROGRAMFILENAME));
 		}
 	}
 	public static void saveHotKeyConfig() throws IOException {
 		//HotKeys
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configHotKeyFileName))) {
+		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGHOTKEYFILENAME))) {
 			configHotKeyProps.store(outputStream, "FoosOBSPlus Hot Key Settings");
 		} catch (Exception e) {
-			logger.error("Could not write to " + Paths.get(configHotKeyFileName));
+			logger.error("Could not write to " + Paths.get(CONFIGHOTKEYFILENAME));
 		}
 	}
 	public static void saveAutoScoreSettingsConfig() throws IOException {
 		//AutoScore Settings
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(configAutoScoreSettingsFileName))) {
+		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGAUTOSCORESETTINGSFILENAME))) {
 			configAutoScoreSettingsProps.store(outputStream, "FoosOBSPlus AutoScore Settings");
 		} catch (Exception e) {
-			logger.error("Could not write to " + Paths.get(configAutoScoreSettingsFileName));
+			logger.error("Could not write to " + Paths.get(CONFIGAUTOSCORESETTINGSFILENAME));
 		}
 	}
 	public static void generateHotKeyScripts() {
@@ -684,11 +684,11 @@ public final class Settings {
 		try {
 			File scriptFile = new File(getHotKeyParameter("HotKeyScriptPath") + File.separator + keyFunction + ".ahk");
 			scriptFile.createNewFile();
-			FileWriter fileWriter = new FileWriter(scriptFile);
-			for (String ln: baseScript) {
-				fileWriter.write(ln.replace("~function~", keyFunction).replace("~hotkey~", hotKey).replace("~basepath~", basePath) + "\r\n");
-			}
-			fileWriter.close();
+                        try (FileWriter fileWriter = new FileWriter(scriptFile)) {
+                            for (String ln: baseScript) {
+                                fileWriter.write(ln.replace("~function~", keyFunction).replace("~hotkey~", hotKey).replace("~basepath~", basePath) + "\r\n");
+                            }
+                        }
 		} catch (IOException ex) {
 			logger.error("Could not write to " + getHotKeyParameter("HotKeyScriptPath") + File.separator + keyFunction + ".ahk");
 			logger.error(ex.toString());

@@ -29,7 +29,7 @@ public class Tournament {
 	private String tableName = "";
 	private String side1Color;
 	private String side2Color;
-	private OBSInterface obsInterface;
+	private final OBSInterface obsInterface;
 	public Tournament(OBSInterface obsInterface) {
 		this.obsInterface = obsInterface;
 	}

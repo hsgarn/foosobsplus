@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
+import java.io.IOException;
 /**
  * Game Clock - Clock for Game, Match and Stream times.
  * @author Hugh Garner
@@ -59,40 +60,38 @@ public class GameClock implements Serializable {
 	private int streamHours;
 	private String lastGameTime;
 	private boolean streamTimerRunning;
-	private transient OBSInterface obsInterface;
-	private transient DecimalFormat df = new DecimalFormat("00");
-	private static transient Logger logger = LoggerFactory.getLogger(GameClock.class);
+	private final transient OBSInterface obsInterface;
+	private final transient DecimalFormat df = new DecimalFormat("00");
+	private final static transient Logger logger = LoggerFactory.getLogger(GameClock.class);
 	public GameClock(OBSInterface obsInterface) {
 		this.obsInterface = obsInterface;
-		ActionListener action = new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				currentTime = System.currentTimeMillis();
-				if(gameTimerRunning) {
-					long checkTimeDiff = (currentTime - gameStartTime);
-					int checkTimeDiffSeconds = (int) (checkTimeDiff / 1000);
-					gameHours = checkTimeDiffSeconds / 3600;
-					gameMinutes = checkTimeDiffSeconds % 3600 / 60;
-					gameSeconds = checkTimeDiffSeconds % 3600 % 60;
-					writeGameTime();
-				}
-				if(matchTimerRunning) {
-					long checkTimeDiff = (currentTime - matchStartTime);
-					int checkTimeDiffSeconds = (int) (checkTimeDiff / 1000);
-					matchHours = checkTimeDiffSeconds / 3600;
-					matchMinutes = checkTimeDiffSeconds % 3600 / 60;
-					matchSeconds = checkTimeDiffSeconds % 3600 % 60;
-					writeMatchTime();
-				}
-				if(streamTimerRunning) {
-					long checkTimeDiff = (currentTime - streamStartTime);
-					int checkTimeDiffSeconds = (int) (checkTimeDiff / 1000);
-					streamHours = checkTimeDiffSeconds / 3600;
-					streamMinutes = checkTimeDiffSeconds % 3600 / 60;
-					streamSeconds = checkTimeDiffSeconds % 3600 % 60;
-					writeStreamTime();
-				}
-			}
-		};
+		ActionListener action = (ActionEvent event) -> {
+                    currentTime = System.currentTimeMillis();
+                    if(gameTimerRunning) {
+                        long checkTimeDiff = (currentTime - gameStartTime);
+                        int checkTimeDiffSeconds = (int) (checkTimeDiff / 1000);
+                        gameHours = checkTimeDiffSeconds / 3600;
+                        gameMinutes = checkTimeDiffSeconds % 3600 / 60;
+                        gameSeconds = checkTimeDiffSeconds % 3600 % 60;
+                        writeGameTime();
+                    }
+                    if(matchTimerRunning) {
+                        long checkTimeDiff = (currentTime - matchStartTime);
+                        int checkTimeDiffSeconds = (int) (checkTimeDiff / 1000);
+                        matchHours = checkTimeDiffSeconds / 3600;
+                        matchMinutes = checkTimeDiffSeconds % 3600 / 60;
+                        matchSeconds = checkTimeDiffSeconds % 3600 % 60;
+                        writeMatchTime();
+                    }
+                    if(streamTimerRunning) {
+                        long checkTimeDiff = (currentTime - streamStartTime);
+                        int checkTimeDiffSeconds = (int) (checkTimeDiff / 1000);
+                        streamHours = checkTimeDiffSeconds / 3600;
+                        streamMinutes = checkTimeDiffSeconds % 3600 / 60;
+                        streamSeconds = checkTimeDiffSeconds % 3600 % 60;
+                        writeStreamTime();
+                    }
+                };
 		timer = new Timer(1000, action);
 		timer.setInitialDelay(1000);
 		timer.start();
@@ -227,11 +226,7 @@ public class GameClock implements Serializable {
 		matchTimerRunning=false;
 	}
 	public void pauseMatchTimer(boolean pause) {
-		if (pause) {
-			matchTimerRunning=false;
-		} else {
-			matchTimerRunning=true;
-		}
+            matchTimerRunning = !pause;
 	}
 	public void startStreamTimer() {
 		streamStartTime = System.currentTimeMillis();
@@ -265,7 +260,7 @@ public class GameClock implements Serializable {
 			ByteArrayInputStream bi = new ByteArrayInputStream(b);
 			ObjectInputStream si = new ObjectInputStream(bi);
 			tempGameClock = (GameClock) si.readObject();
-		} catch (Exception e) {
+		} catch (IOException | ClassNotFoundException e) {
 			logger.error(e.toString());
 		}
 		this.setGameSeconds(tempGameClock.getGameSeconds());

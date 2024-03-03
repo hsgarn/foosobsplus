@@ -29,30 +29,28 @@ import javax.swing.Timer;
 
 public class LastScoredClock {
 
-	private Timer timer;
+	private final Timer timer;
 	private int lastScoredSeconds;
 	private int lastScoredMinutes;
 	private int lastScoredHours;
 	private boolean  lastScoredTimerRunning;
-	private DecimalFormat df = new DecimalFormat("00");
+	private final DecimalFormat df = new DecimalFormat("00");
 	
 	public LastScoredClock() {
 		
-		ActionListener action = new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				if(lastScoredTimerRunning) {
-					lastScoredSeconds++;
-					if (lastScoredSeconds>=60) {
-						lastScoredMinutes++;
-						lastScoredSeconds=0;
-					}
-					if (lastScoredMinutes>=60) {
-						lastScoredHours++;
-						lastScoredMinutes=0;
-					}
-				}
-			}
-		};
+		ActionListener action = (ActionEvent event) -> {
+                    if(lastScoredTimerRunning) {
+                        lastScoredSeconds++;
+                        if (lastScoredSeconds>=60) {
+                            lastScoredMinutes++;
+                            lastScoredSeconds=0;
+                        }
+                        if (lastScoredMinutes>=60) {
+                            lastScoredHours++;
+                            lastScoredMinutes=0;
+                        }
+                    }
+                };
 
 		timer = new Timer(1000, action);
 		timer.setInitialDelay(1000);
@@ -98,11 +96,7 @@ public class LastScoredClock {
 		lastScoredTimerRunning=false;
 	}
 	public void pauseLastScoredTimer(boolean pause) {
-		if(pause) {
-			lastScoredTimerRunning=false;
-		} else {
-			lastScoredTimerRunning=true;
-		}
+            lastScoredTimerRunning = !pause;
 	}
 	public void addLastScoredClockTimerListener(ActionListener alAction) {
 		timer.addActionListener(alAction);

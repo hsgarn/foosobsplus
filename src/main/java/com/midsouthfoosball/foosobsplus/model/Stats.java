@@ -21,6 +21,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.model;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -67,8 +68,8 @@ public class Stats implements Serializable {
 	private transient boolean isForwardDirection;
 	private transient boolean isTeam1;
 	private transient boolean isTeam2;
-	private transient boolean[] teamScored = {false, false, false};
-	private transient boolean[] teamTimeOut = {false, false, false};
+	private final transient boolean[] teamScored = {false, false, false};
+	private final transient boolean[] teamTimeOut = {false, false, false};
 	private transient boolean isCommand;
 	private transient boolean isPassComplete;
 	private transient boolean isClearComplete;
@@ -76,42 +77,42 @@ public class Stats implements Serializable {
 	private transient boolean isShotOnGoal;
 	private transient boolean isError = false;
 	private transient String errorMsg = "";
-	private static final transient char BREAKCHAR 			= new Character('B');
-	private static final transient char STUFFCHAR 			= new Character('F');
-	private static final transient char GOALCHAR 			= new Character('G');
-	private static final transient char PENALTYCHAR 		= new Character('X');
-	private static final transient char PASSCHAR			= new Character('P');
-	private static final transient char SHOTCHAR 			= new Character('S');
-	private static final transient char CLEARCHAR 			= new Character('C');
-	private static final transient char TIMEOUTCHAR 		= new Character('T');
-	private static final transient char FIVERODCHAR 		= new Character('5');
-	private static final transient char TWORODCHAR 			= new Character('2');
-	private static final transient char THREERODCHAR 		= new Character('3');
-	private static final transient char OFFTABLECHAR 		= new Character('O');
-	private static final transient char DEADBALLCHAR 		= new Character('D');
-	private static final transient char TEAM1CHAR 			= new Character('Y');
-	private static final transient char TEAM2CHAR 			= new Character('B');
-	private static final transient char COMMANDCHAR 		= new Character('X');
-	private static final transient char DROPCHAR 			= new Character('D');
-	private static final transient char RESETCHAR 			= new Character('R');
-	private static final transient char WARNCHAR 			= new Character('W');
-	private static final transient char BALLCHAR 			= new Character('Y');
-	private static final transient char ERRORCHAR 			= new Character('E');
-	private static final transient char ACECHAR 			= new Character('A');
-	private static final transient char WALLSCHAR 			= new Character('W');
-	private static final transient char SPINCHAR 			= new Character('S');
-	private static final transient char JARCHAR 			= new Character('J');
-	private static final transient char DISTRACTIONCHAR		= new Character('D');
-	private static final transient char TIMEOUTSOUTCHAR 	= new Character('T');
-	private static final transient char ILLEGALPASSCHAR 	= new Character('P');
-	private static final transient char TECHNICALCHAR 		= new Character('X');
-	private static final transient char PROTOCOLCHAR 		= new Character('R');
-	private static final transient char OTHERCHAR 			= new Character('O');
-	private transient Team team1;
-	private transient Team team2;
-	private transient Logger logger = LoggerFactory.getLogger(Stats.class);
+	private static final transient char BREAKCHAR 			= 'B';
+	private static final transient char STUFFCHAR 			= 'F';
+	private static final transient char GOALCHAR 			= 'G';
+	private static final transient char PENALTYCHAR 		= 'X';
+	private static final transient char PASSCHAR			= 'P';
+	private static final transient char SHOTCHAR 			= 'S';
+	private static final transient char CLEARCHAR 			= 'C';
+	private static final transient char TIMEOUTCHAR 		= 'T';
+	private static final transient char FIVERODCHAR 		= '5';
+	private static final transient char TWORODCHAR 			= '2';
+	private static final transient char THREERODCHAR 		= '3';
+	private static final transient char OFFTABLECHAR 		= 'O';
+	private static final transient char DEADBALLCHAR 		= 'D';
+	private static final transient char TEAM1CHAR 			= 'Y';
+	private static final transient char TEAM2CHAR 			= 'B';
+	private static final transient char COMMANDCHAR 		= 'X';
+	private static final transient char DROPCHAR 			= 'D';
+	private static final transient char RESETCHAR 			= 'R';
+	private static final transient char WARNCHAR 			= 'W';
+	private static final transient char BALLCHAR 			= 'Y';
+	private static final transient char ERRORCHAR 			= 'E';
+	private static final transient char ACECHAR 			= 'A';
+	private static final transient char WALLSCHAR 			= 'W';
+	private static final transient char SPINCHAR 			= 'S';
+	private static final transient char JARCHAR 			= 'J';
+	private static final transient char DISTRACTIONCHAR		= 'D';
+	private static final transient char TIMEOUTSOUTCHAR             = 'T';
+	private static final transient char ILLEGALPASSCHAR             = 'P';
+	private static final transient char TECHNICALCHAR 		= 'X';
+	private static final transient char PROTOCOLCHAR 		= 'R';
+	private static final transient char OTHERCHAR 			= 'O';
+	private final transient Team team1;
+	private final transient Team team2;
+	private final transient Logger logger = LoggerFactory.getLogger(Stats.class);
 	public Stats(Team team1, Team team2) {
-		codeHistory = new DefaultListModel<String>();
+		codeHistory = new DefaultListModel<>();
 		this.team1 = team1;
 		this.team2 = team2;
 	}
@@ -135,9 +136,9 @@ public class Stats implements Serializable {
 		return "";
 	}
 	public List<String> getCodeHistoryAsList() {
-		List<String> codes = new ArrayList<String>();
+		List<String> codes = new ArrayList<>();
 		for (int i = 0; i < codeHistory.size(); i++) {
-			codes.add(codeHistory.getElementAt(i).toString());
+			codes.add(codeHistory.getElementAt(i));
 		}
 		return codes;
 	}
@@ -156,11 +157,9 @@ public class Stats implements Serializable {
 	public boolean getIsFiveRod() {
 		return isFiveRod;
 	}
-
 	public boolean getIsTwoRod() {
 		return isTwoRod;
 	}
-
 	public boolean getIsThreeRod() {
 		return isThreeRod;
 	}
@@ -173,7 +172,6 @@ public class Stats implements Serializable {
 	public DefaultListModel<String> getCodeHistory() {
 		return codeHistory;
 	}
-
 	public String getPreviousCode() {
 		return previousCode;
 	}
@@ -251,7 +249,7 @@ public class Stats implements Serializable {
 		validateCode();
 		if (isError) {
 			return;
-		};
+		}
 		isSameTeam = previousTeam==currentTeam;
 		isTeamScored = currentPosition==GOALCHAR;
 		isSameRod = isSameTeam && currentPosition==previousPosition;
@@ -403,8 +401,8 @@ public class Stats implements Serializable {
 		}
 	}
 	private void clearLogic() {
-		int attempts = 0;
-		int completes = 0;
+		int attempts;
+		int completes;
 		if(isClearComplete) {
 			if(isSameTeam) {
 				if(isTeam1) {
@@ -742,7 +740,7 @@ public class Stats implements Serializable {
 			ByteArrayInputStream bi = new ByteArrayInputStream(b);
 			ObjectInputStream si = new ObjectInputStream(bi);
 			tempStats = (Stats) si.readObject();
-		} catch (Exception e) {
+		} catch (IOException | ClassNotFoundException e) {
 			logger.error(e.toString());
 		}
 		this.setCodeHistory(tempStats.getCodeHistory());

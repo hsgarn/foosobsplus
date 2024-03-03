@@ -26,7 +26,6 @@ import javax.swing.table.AbstractTableModel;
 public class GameTableModel extends AbstractTableModel {
 	private static final String OFF = "0";
 	static int defaultMaxGameCount = 5;
-	static int maxGamesToShow = 12;
 	static String defaultCutthroatMode = OFF;
 	private String[] columnNames;
 	private Object[][] data;
@@ -62,33 +61,36 @@ public class GameTableModel extends AbstractTableModel {
 			}
 		}
 	}
+        @Override
     public int getColumnCount() {
         return columnNames.length;
     }
 
+        @Override
     public int getRowCount() {
         return data.length;
     }
 
+        @Override
     public String getColumnName(int col) {
         return columnNames[col];
     }
 
+        @Override
     public Object getValueAt(int row, int col) {
         return data[row][col];
     }
 
+        @Override
     public Class<? extends Object> getColumnClass(int c) {
          return getValueAt(0, c).getClass();
     }
 
+        @Override
     public boolean isCellEditable(int row, int col) {
-         if (col > 0) {
-            return false;
-        } else {
-            return true;
-        }
+            return col <= 0;
     }
+        @Override
     public void setValueAt(Object value, int row, int col) {
         data[row][col] = value;
         fireTableCellUpdated(row, col);

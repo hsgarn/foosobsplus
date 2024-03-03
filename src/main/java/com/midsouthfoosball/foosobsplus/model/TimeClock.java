@@ -34,23 +34,20 @@ public class TimeClock {
 	private transient long startTime;
 	private Timer timer;
 	private String timerInUse;
-	private OBSInterface obsInterface;
+	private final OBSInterface obsInterface;
 	public TimeClock(OBSInterface obsInterface) {
 		this.obsInterface = obsInterface;
-		ActionListener action = new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				currentTime = System.currentTimeMillis();
-				long checkTimeDiff = (currentTime - startTime);
-				int checkTimeDiffTenthSeconds = (int) (checkTimeDiff / 100);
-				timeRemaining = nbrOfSeconds - checkTimeDiffTenthSeconds;
- 				if(timeRemaining < 0) {
- 					timer.stop();
- 				} else if(timeRemaining < 1 ) {
-					timeRemaining = 0;
-				}
-			}
-		};
-
+		ActionListener action = (ActionEvent event) -> {
+                    currentTime = System.currentTimeMillis();
+                    long checkTimeDiff = (currentTime - startTime);
+                    int checkTimeDiffTenthSeconds = (int) (checkTimeDiff / 100);
+                    timeRemaining = nbrOfSeconds - checkTimeDiffTenthSeconds;
+                    if(timeRemaining < 0) {
+                        timer.stop();
+                    } else if(timeRemaining < 1 ) {
+                        timeRemaining = 0;
+                    }
+                };
 		timer = new Timer(100, action);
 		timer.setInitialDelay(0);
 	}

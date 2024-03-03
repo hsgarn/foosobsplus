@@ -34,17 +34,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
+import java.io.IOException;
 
 public class Match implements Serializable {
-	
 	private static final long serialVersionUID = -3958726389588837391L;
 	private int winState = 0;
 	private transient Team team1;
 	private transient Team team2;
 	private transient Team team3;
-	private transient OBSInterface obsInterface;
+	private final transient OBSInterface obsInterface;
 	private transient String startTime;
-    private transient Map<Integer, Team> teamsMap = new HashMap<>();
+        private final transient Map<Integer, Team> teamsMap = new HashMap<>();
 	private int lastScored; // team number of the last team to score in this match
 	private boolean isMatchPaused;
 	private boolean isGamePaused;
@@ -54,15 +54,15 @@ public class Match implements Serializable {
 	private int maxGameCount = 5;
 	private String matchId = "";
 	private boolean isMatchStarted = false;
-	private int maxGamesToShow = 12;
+	private final int maxGamesToShow = 12;
 	private int gameWinners[];
 	private String[] scoresTeam1;
 	private String[] scoresTeam2;
 	private String[] scoresTeam3;
 	private String[] times;
-	private static transient Logger logger = LoggerFactory.getLogger(Match.class);
-	private StringBuilder gameResults = new StringBuilder();
-	private List<MatchObserver> observers = new ArrayList<>();
+	private static final transient Logger logger = LoggerFactory.getLogger(Match.class);
+	private final StringBuilder gameResults = new StringBuilder();
+	private final List<MatchObserver> observers = new ArrayList<>();
 	private static final String ON = "1";
 	public Match(OBSInterface obsInterface, Team team1, Team team2, Team team3) {
 		this.team1 = team1;
@@ -160,7 +160,6 @@ public class Match implements Serializable {
 		clearGameWinners();
 		clearMatchWinner();
 		clearMeatball();
-		
 	}
 	public void increaseCurrentGameNumber() {
 		if(/*!matchWon &&*/ (currentGameNumber==0 || checkForGameWinOnly())) {
@@ -343,13 +342,17 @@ public class Match implements Serializable {
 		clearMeatball();
 	}
 	public void setCurrentScoreForTeam(int teamNbr, int score) {
-		if(teamNbr==1) {
-			setCurrentScoreTeam1(score);
-		} else if(teamNbr==2) {
-			setCurrentScoreTeam2(score);
-		} else {
-			setCurrentScoreTeam3(score);
-		}
+            switch (teamNbr) {
+                case 1:
+                    setCurrentScoreTeam1(score);
+                    break;
+                case 2:
+                    setCurrentScoreTeam2(score);
+                    break;
+                default:
+                    setCurrentScoreTeam3(score);
+                    break;
+            }
 	}
 	public void setCurrentScoreTeam1 (int score) {
 		scoresTeam1[currentGameNumber-1] = Integer.toString(score);
@@ -389,66 +392,75 @@ public class Match implements Serializable {
 			resetScores();
 			resetTimeOuts();
 			resetResetWarn();
-			int maxGameCount = Settings.getMaxGameNumber();
-			if (currentGameNumber > maxGameCount) currentGameNumber = maxGameCount;
+			int maximumGameCount = Settings.getMaxGameNumber();
+			if (currentGameNumber > maximumGameCount) currentGameNumber = maximumGameCount;
 			winState = 0;
 		}
-		if(teamNbr==1) {
-			team1.incrementScore();
-			setLastScored(1);
-			setCurrentScoreTeam1(team1.getScore());
-			int whoWon = checkForGameWin(team1.getScore(), team2.getScore(), team3.getScore());
-			if(whoWon == 1 || whoWon == 3) {
-				gameWinners[currentGameNumber-1]=1;
-				matchWon = incrementGameCount(team1);
-				if(matchWon) matchWinner=1;
-				winState = 1;
-			} else {
-				if(whoWon == 2) {
-					gameWinners[currentGameNumber-1]=2;
-					matchWon = incrementGameCount(team2);
-					if(matchWon) matchWinner=2;
-					winState = 1;
-				}
-			}
-		} else if(teamNbr==2) {
-			team2.incrementScore();
-			setLastScored(2);
-			setCurrentScoreTeam2(team2.getScore());
-			int whoWon = checkForGameWin(team2.getScore(), team1.getScore(), team3.getScore());
-			if (whoWon == 1 || whoWon == 3) {
-				gameWinners[currentGameNumber-1]=2;
-				matchWon = incrementGameCount(team2);
-				if(matchWon) matchWinner=2;
-				winState = 1;
-			} else {
-				if(whoWon == 2) {
-					gameWinners[currentGameNumber-1]=1;
-					matchWon = incrementGameCount(team1);
-					if(matchWon) matchWinner=1;
-					winState = 1;
-				}
-			}
-		} else {
-			team3.incrementScore();
-			setLastScored(0);
-			setCurrentScoreTeam3(team3.getScore());
-			int whoWon = checkForGameWin(team3.getScore(), team1.getScore(), team2.getScore());
-			if(whoWon == 1 || whoWon == 3) {
-				gameWinners[currentGameNumber-1]=1;
-				matchWon = incrementGameCount(team3);
-				if(matchWon) matchWinner=3;
-				winState = 1;
-			} else {
-				if(whoWon == 2) {
-					gameWinners[currentGameNumber-1]=2;
-					matchWon = incrementGameCount(team1);
-					if(matchWon) matchWinner=1;
-					winState = 1;
-				}
-			}
-			
-		}
+            switch (teamNbr) {
+                case 1:
+                    {
+                        team1.incrementScore();
+                        setLastScored(1);
+                        setCurrentScoreTeam1(team1.getScore());
+                        int whoWon = checkForGameWin(team1.getScore(), team2.getScore(), team3.getScore());
+                        if(whoWon == 1 || whoWon == 3) {
+                            gameWinners[currentGameNumber-1]=1;
+                            matchWon = incrementGameCount(team1);
+                            if(matchWon) matchWinner=1;
+                            winState = 1;
+                        } else {
+                            if(whoWon == 2) {
+                                gameWinners[currentGameNumber-1]=2;
+                                matchWon = incrementGameCount(team2);
+                                if(matchWon) matchWinner=2;
+                                winState = 1;
+                            }
+                        }
+                        break;
+                    }
+                case 2:
+                    {
+                        team2.incrementScore();
+                        setLastScored(2);
+                        setCurrentScoreTeam2(team2.getScore());
+                        int whoWon = checkForGameWin(team2.getScore(), team1.getScore(), team3.getScore());
+                        if (whoWon == 1 || whoWon == 3) {
+                            gameWinners[currentGameNumber-1]=2;
+                            matchWon = incrementGameCount(team2);
+                            if(matchWon) matchWinner=2;
+                            winState = 1;
+                        } else {
+                            if(whoWon == 2) {
+                                gameWinners[currentGameNumber-1]=1;
+                                matchWon = incrementGameCount(team1);
+                                if(matchWon) matchWinner=1;
+                                winState = 1;
+                            }
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        team3.incrementScore();
+                        setLastScored(0);
+                        setCurrentScoreTeam3(team3.getScore());
+                        int whoWon = checkForGameWin(team3.getScore(), team1.getScore(), team2.getScore());
+                        if(whoWon == 1 || whoWon == 3) {
+                            gameWinners[currentGameNumber-1]=1;
+                            matchWon = incrementGameCount(team3);
+                            if(matchWon) matchWinner=3;
+                            winState = 1;
+                        } else {
+                            if(whoWon == 2) {
+                                gameWinners[currentGameNumber-1]=2;
+                                matchWon = incrementGameCount(team1);
+                                if(matchWon) matchWinner=1;
+                                winState = 1;
+                            }
+                        }
+                        break;
+                    }
+            }
 		if (winState>0) {
 //			String result = "[" + getCurrentTime() + "] " + team1.getForwardName() + "/" + team1.getGoalieName() + " " + team1.getScore() + " vs " + team2.getForwardName()
 //				+ "/" + team2.getGoalieName() + " " + team2.getScore() + " (" + getTimes()[currentGameNumber-1] + ")"; 
@@ -459,7 +471,7 @@ public class Match implements Serializable {
 			winState = 2;
 		} else {
 			clearMatchWinner();
-		};
+		}
 		checkMeatball();
 		return winState;
 	}
@@ -505,7 +517,7 @@ public class Match implements Serializable {
 	}
 	public boolean incrementGameCount(Team team) {
 		team.incrementGameCount();
-		boolean matchWon = checkForMatchWin(team);
+		this.matchWon = checkForMatchWin(team);
 		String name = null;
 		if(matchWon) {
 			clearMeatball();
@@ -622,7 +634,7 @@ public class Match implements Serializable {
 		return isGameWon;
 	}
 	private boolean checkForMatchWin(Team team) {
-		boolean matchWon = false;
+		this.matchWon = false;
 		if(team.getGameCount()==Integer.parseInt(Settings.getControlParameter("GamesToWin"))) {
 			matchWon=true;
 		}
@@ -678,7 +690,7 @@ public class Match implements Serializable {
 			ByteArrayInputStream bi = new ByteArrayInputStream(b);
 			ObjectInputStream si = new ObjectInputStream(bi);
 			tempMatch = (Match) si.readObject();
-		} catch (Exception e) {
+		} catch (IOException | ClassNotFoundException e) {
 			logger.error(e.toString());
 		}
 		this.setLastScored(tempMatch.getLastScored());
