@@ -33,10 +33,10 @@ import com.midsouthfoosball.foosobsplus.model.AppConfig;
 @SuppressWarnings("serial")
 public class HotKeysFrame extends JFrame {
 	private HotKeysPanel hotKeysPanel;
-	private static final String programName = AppConfig.PROGRAM_NAME;
-	private static Logger logger = LoggerFactory.getLogger(HotKeysFrame.class);
+	private static final String PROGRAMNAME = AppConfig.PROGRAM_NAME;
+	private static final Logger logger = LoggerFactory.getLogger(HotKeysFrame.class);
 	public HotKeysFrame() {
-		super(programName + " " + Messages.getString("HotKeysFrame.HotKeySettings")); //$NON-NLS-1$ //$NON-NLS-2$
+		super(PROGRAMNAME + " " + Messages.getString("HotKeysFrame.HotKeySettings")); //$NON-NLS-1$ //$NON-NLS-2$
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
 		try {

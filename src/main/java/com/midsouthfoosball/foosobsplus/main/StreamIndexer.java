@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 public class StreamIndexer {
 	private String dataPath;
 	private String separator = FileSystems.getDefault().getSeparator();
-	private static Logger logger =LoggerFactory.getLogger(StreamIndexer.class);
+	private static final Logger logger =LoggerFactory.getLogger(StreamIndexer.class);
 	
 	public StreamIndexer(String dataPath) {
 		this.dataPath = dataPath;

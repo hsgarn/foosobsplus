@@ -133,8 +133,8 @@ public class HotKeysPanel extends JPanel {
 	private JButton btnSave;
 	private JButton btnGenerateHotKeyScripts;
 	private String hotKeyBaseScriptText;
-	private static Logger logger = LoggerFactory.getLogger(HotKeysPanel.class);
-	private Map<String, JTextField> sourcesMap = new HashMap<>();
+	private static final Logger logger = LoggerFactory.getLogger(HotKeysPanel.class);
+	private final Map<String, JTextField> sourcesMap = new HashMap<>();
 	private static final String VALIDKEYS = "abcdefghijklmnopqrstuvwxyz0123456789.,-;[]/\\"; //$NON-NLS-1$
 	private static final String TEAM1 = "1"; //$NON-NLS-1$
 	private static final String TEAM2 = "2"; //$NON-NLS-1$
@@ -146,16 +146,16 @@ public class HotKeysPanel extends JPanel {
 		lblAvailableKeys.setText(getAvailableKeys());
 	}
 	private void loadAvailableListeners() {
-		sourcesMap.forEach((sourceName, textField) -> {
-			textField.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					lblAvailableKeys.setText(getAvailableKeys());
-				}
-			});
+		sourcesMap.forEach((String sourceName, JTextField textField) -> {
+			textField.addActionListener((ActionEvent e) -> {
+                            lblAvailableKeys.setText(getAvailableKeys());
+                        });
 			textField.addFocusListener(new FocusListener() {
+                                @Override
 				public void focusLost(FocusEvent e) {
 					lblAvailableKeys.setText(getAvailableKeys());
 				}
+                                @Override
 				public void focusGained(FocusEvent e) {
 				}
 			});
@@ -267,7 +267,7 @@ public class HotKeysPanel extends JPanel {
 	}
 	private boolean checkForUniqueHotKeys() {
 		boolean allClear = true;
-		HashSet<String> checkUnique = new HashSet<String>();
+		HashSet<String> checkUnique = new HashSet<>();
 		Component[] componentArray = this.getComponents();
 		for(int i=0; i<componentArray.length; i++) {
 			if(componentArray[i] instanceof JTextField) {
@@ -289,43 +289,42 @@ public class HotKeysPanel extends JPanel {
 		if (hotKeyBaseScriptText.isEmpty()) hotKeyBaseScriptText = Settings.getDefaultHotKey("HotKeyBaseScript"); //$NON-NLS-1$
 		setLayout(new MigLayout("", "[][][][][][][][][][][]", "[][][][][][][][][][][][][][][][][][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		JButton btnSelectPath = new JButton(Messages.getString("HotKeysPanel.SelectPath")); //$NON-NLS-1$
-		btnSelectPath.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				final JFileChooser chooser = new JFileChooser();
-				chooser.setCurrentDirectory(new java.io.File(formattedTxtPath.getText()));
-				chooser.setDialogTitle(Messages.getString("HotKeysPanel.SelectDirectoryForPath")); //$NON-NLS-1$
-				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				chooser.setAcceptAllFileFilterUsed(false);
-				int returnVal = chooser.showOpenDialog(HotKeysPanel.this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					if (chooser.getSelectedFile().exists()) {
-						formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
-					} else {
-						String directoryName = chooser.getSelectedFile().getAbsolutePath();
-						if(!Files.exists(Paths.get(directoryName))) {
-							try {
-								Files.createDirectory(Paths.get(directoryName));
-							} catch (IOException e1) {
-								logger.error(e1.toString());
-								JOptionPane.showMessageDialog(null, Messages.getString("Errors.ErrorCreatingDirectory") + e1.getMessage(), Messages.getString("HotKeysPanel.HotKeysError"), 1); //$NON-NLS-1$ //$NON-NLS-2$
-							}
-						}
-						formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
-					}
-					try {
-						Settings.setHotKeyScriptPath(formattedTxtPath.getText());
-						Settings.saveHotKeyConfig();;
-					} catch (IOException ex) {
-						logger.error(ex.toString());
-						JOptionPane.showMessageDialog(null, Messages.getString("HotKeysPanel.ErrorSavingPropertiesFile") + ex.getMessage(), Messages.getString("HotKeysPanel.HotKeysError"), 1); //$NON-NLS-1$ //$NON-NLS-2$
-					}
-				}
-			}
-		});
+		btnSelectPath.addActionListener((ActionEvent e) -> {
+                    final JFileChooser chooser = new JFileChooser();
+                    chooser.setCurrentDirectory(new java.io.File(formattedTxtPath.getText()));
+                    chooser.setDialogTitle(Messages.getString("HotKeysPanel.SelectDirectoryForPath")); //$NON-NLS-1$
+                    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                    chooser.setAcceptAllFileFilterUsed(false);
+                    int returnVal = chooser.showOpenDialog(HotKeysPanel.this);
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        if (chooser.getSelectedFile().exists()) {
+                            formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
+                        } else {
+                            String directoryName = chooser.getSelectedFile().getAbsolutePath();
+                            if(!Files.exists(Paths.get(directoryName))) {
+                                try {
+                                    Files.createDirectory(Paths.get(directoryName));
+                                } catch (IOException e1) {
+                                    logger.error(e1.toString());
+                                    JOptionPane.showMessageDialog(null, Messages.getString("Errors.ErrorCreatingDirectory") + e1.getMessage(), Messages.getString("HotKeysPanel.HotKeysError"), 1); //$NON-NLS-1$ //$NON-NLS-2$
+                                }
+                            }
+                            formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
+                        }
+                        try {
+                            Settings.setHotKeyScriptPath(formattedTxtPath.getText());
+                            Settings.saveHotKeyConfig();
+                        } catch (IOException ex) {
+                            logger.error(ex.toString());
+                            JOptionPane.showMessageDialog(null, Messages.getString("HotKeysPanel.ErrorSavingPropertiesFile") + ex.getMessage(), Messages.getString("HotKeysPanel.HotKeysError"), 1); //$NON-NLS-1$ //$NON-NLS-2$
+                        }
+                    }
+                });
 		add(btnSelectPath, "cell 1 0"); //$NON-NLS-1$
 		formattedTxtPath = new JFormattedTextField();
 		formattedTxtPath.setText(Settings.getHotKeyParameter("HotKeyScriptPath")); //$NON-NLS-1$
 		formattedTxtPath.addFocusListener(new FocusAdapter() {
+                        @Override
 			public void focusLost(FocusEvent arg0) {
 		    	try {
 					Settings.setHotKeyScriptPath(formattedTxtPath.getText());
@@ -337,6 +336,7 @@ public class HotKeysPanel extends JPanel {
 			}
 		});
 		formattedTxtPath.addKeyListener(new KeyAdapter() {
+                        @Override
 			public void keyPressed(KeyEvent evt) {
 				int key = evt.getKeyCode();
 			    if (key == KeyEvent.VK_ENTER) {
@@ -810,32 +810,26 @@ public class HotKeysPanel extends JPanel {
 		add(lblAvailableHotKeys, "cell 1 17,alignx right"); //$NON-NLS-1$
 		lblAvailableKeys = new JLabel(getAvailableKeys());
 		add(lblAvailableKeys, "cell 2 17,alignx left"); //$NON-NLS-1$
-		btnGenerateHotKeyScripts.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Settings.generateHotKeyScripts();
-			}
-		});
+		btnGenerateHotKeyScripts.addActionListener((ActionEvent e) -> {
+                    Settings.generateHotKeyScripts();
+                });
 		add(btnGenerateHotKeyScripts, "cell 1 20, spanx 2, alignx center"); //$NON-NLS-1$
 		btnApply = new JButton(Messages.getString("Global.Apply")); //$NON-NLS-1$
 		add(btnApply, "cell 3 20,alignx center"); //$NON-NLS-1$
 		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		add(btnSave, "cell 4 20,alignx center"); //$NON-NLS-1$
 		JButton btnCancel = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
-		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				revertChanges();
-				JComponent comp = (JComponent) e.getSource();
-				Window win = SwingUtilities.getWindowAncestor(comp);
-				win.dispose();
-			}
-		});
+		btnCancel.addActionListener((ActionEvent e) -> {
+                    revertChanges();
+                    JComponent comp = (JComponent) e.getSource();
+                    Window win = SwingUtilities.getWindowAncestor(comp);
+                    win.dispose();
+                });
 		add(btnCancel, "cell 6 20,alignx center"); //$NON-NLS-1$
 		JButton btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
-		btnRestoreDefaults.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				restoreDefaults();
-			}
-		});
+		btnRestoreDefaults.addActionListener((ActionEvent e) -> {
+                    restoreDefaults();
+                });
 		add(btnRestoreDefaults, "cell 8 20, spanx 2, alignx right"); //$NON-NLS-1$
 	}
 	private String getAvailableKeys() {
@@ -843,19 +837,19 @@ public class HotKeysPanel extends JPanel {
 		for (char ch : VALIDKEYS.toCharArray()) {
 			remainingKeys.add(ch);
 		}
-		String keys = ""; //$NON-NLS-1$
+		String keys;
 		Component[] componentArray = this.getComponents();
-		for(int i=0; i<componentArray.length; i++) {
-			if(componentArray[i] instanceof JTextField) {
-				String text = ((JTextField)componentArray[i]).getText();
-				if (!text.isEmpty() && text.length()==1) {
-					char hk = text.charAt(0);
-					if (remainingKeys.contains(hk)) {
-						remainingKeys.remove((Character) hk);
-					}
-				}
-			}
-		}
+                for (Component componentArray1 : componentArray) {
+                    if (componentArray1 instanceof JTextField) {
+                        String text = ((JTextField) componentArray1).getText();
+                        if (!text.isEmpty() && text.length()==1) {
+                            char hk = text.charAt(0);
+                            if (remainingKeys.contains(hk)) {
+                                remainingKeys.remove((Character) hk);
+                            }
+                        }
+                    }
+                }
 		if (remainingKeys.toString().length() <3 ) {
 			keys = ""; //$NON-NLS-1$
 		} else {

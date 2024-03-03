@@ -28,10 +28,10 @@ import com.midsouthfoosball.foosobsplus.model.AppConfig;
 
 @SuppressWarnings("serial")
 public class StatSourcesFrame extends JFrame {
-	private StatSourcesPanel statSourcesPanel;
-	private static final String programName = AppConfig.PROGRAM_NAME;
+	private final StatSourcesPanel statSourcesPanel;
+	private static final String PROGRAMNAME = AppConfig.PROGRAM_NAME;
 	public StatSourcesFrame() {
-		super(programName + " " + Messages.getString("StatSourcesFrame.StatSourcesSettings")); //$NON-NLS-1$ //$NON-NLS-2$
+		super(PROGRAMNAME + " " + Messages.getString("StatSourcesFrame.StatSourcesSettings")); //$NON-NLS-1$ //$NON-NLS-2$
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
 		statSourcesPanel = new StatSourcesPanel();

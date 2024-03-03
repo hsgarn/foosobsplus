@@ -49,22 +49,21 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
 public class StatsEntryPanel extends JPanel {
-	private JLabel lblCode;
-	private JTextField txtCode;
-	private JLabel lblCodeHistory;
+	private final JLabel lblCode;
+	private final JTextField txtCode;
+	private final JLabel lblCodeHistory;
 	private JList<String> lstCodeHistory;
-	private DefaultListModel<String> mdlCodeHistory;
-	private JButton btnUndo;
-	private JButton btnRedo;
-	private JButton btnClear;
-	private JScrollPane scrCodeHistory;
-	private Border innerBorder;
+	private final DefaultListModel<String> mdlCodeHistory;
+	private final JButton btnUndo;
+	private final JButton btnRedo;
+	private final JButton btnClear;
+	private final JScrollPane scrCodeHistory;
+	private final Border innerBorder;
 	public StatsEntryPanel() {
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
@@ -74,8 +73,8 @@ public class StatsEntryPanel extends JPanel {
 		lblCode = new JLabel(buildTitle());
 		lblCodeHistory = new JLabel(Messages.getString("StatsEntryPanel.History")); //$NON-NLS-1$
 		txtCode = new JTextField();
-		mdlCodeHistory = new DefaultListModel<String>();
-		lstCodeHistory = new JList<String>(mdlCodeHistory);
+		mdlCodeHistory = new DefaultListModel<>();
+		lstCodeHistory = new JList<>(mdlCodeHistory);
 		btnUndo = new JButton(Messages.getString("StatsEntryPanel.Undo")); //$NON-NLS-1$
 		btnRedo = new JButton(Messages.getString("StatsEntryPanel.Redo")); //$NON-NLS-1$
 		btnClear = new JButton(Messages.getString("StatsEntryPanel.Clear")); //$NON-NLS-1$
@@ -100,18 +99,15 @@ public class StatsEntryPanel extends JPanel {
 				}
 			}
 		});
-		lstCodeHistory.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (!e.getValueIsAdjusting()) {
-					int[] selectedIndices = lstCodeHistory.getSelectedIndices();
-					StringBuilder selectedItems = new StringBuilder();
-					for (int index : selectedIndices) {
-						selectedItems.append(lstCodeHistory.getModel().getElementAt(index)).append("\n"); //$NON-NLS-1$
-					}
-				}
-			}
-		});
+		lstCodeHistory.addListSelectionListener((ListSelectionEvent e) -> {
+                    if (!e.getValueIsAdjusting()) {
+                        int[] selectedIndices = lstCodeHistory.getSelectedIndices();
+                        StringBuilder selectedItems = new StringBuilder();
+                        for (int index : selectedIndices) {
+                            selectedItems.append(lstCodeHistory.getModel().getElementAt(index)).append("\n"); //$NON-NLS-1$
+                        }
+                    }
+                });
 		setMnemonics();
 		innerBorder = BorderFactory.createTitledBorder(Messages.getString("StatsEntryPanel.StatisticsEntryPanel")); //$NON-NLS-1$
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
@@ -201,12 +197,12 @@ public class StatsEntryPanel extends JPanel {
 			btnUndo.setMnemonic(-1);
 		} else {
 			btnUndo.setMnemonic(Settings.getHotKeyParameter("Undo").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("Redo").isEmpty()) { //$NON-NLS-1$
 			btnRedo.setMnemonic(-1);
 		} else {
 			btnRedo.setMnemonic(Settings.getHotKeyParameter("Redo").charAt(0)); //$NON-NLS-1$
-		};
+		}
 	}
 	////// Listeners  //////
 	public void addCodeListener(ActionListener listenForTxtCode) {
@@ -254,13 +250,14 @@ public class StatsEntryPanel extends JPanel {
 	  public AttributiveCellRenderer() {
 	    setOpaque(true);
 	  }
+          @Override
 	  public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) 
 	  {
-		  String tmp = ""; //$NON-NLS-1$
+		  String tmp;
 		  tmp = (String) value;
 		  setBackground(UIManager.getColor("List.background")); //$NON-NLS-1$
 		  setForeground(UIManager.getColor("List.foreground")); //$NON-NLS-1$
-		  if (tmp.indexOf("<") != -1) { //$NON-NLS-1$
+		  if (tmp.contains("<")) { //$NON-NLS-1$
 			  setForeground(Color.RED);
 		  }
           setText(tmp);

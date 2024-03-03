@@ -38,7 +38,7 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
 public class GameTableWindowPanel extends JPanel {
-	private JTable gameTable;
+	private final JTable gameTable;
 	private int matchWinner = 0;
 	private int currentGameNumber = 1;
 	private int gameWinners[] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -125,11 +125,12 @@ public class GameTableWindowPanel extends JPanel {
 	  public GameTableCellRenderer() {
 	    setOpaque(true);
 	  }
+          @Override
 	  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
 	  {
-		  Boolean isCutthroatMode = Settings.getControlParameter("CutThroatMode").equals(ON); //$NON-NLS-1$
-		  String tmp = ""; //$NON-NLS-1$
-		  tmp = (String) value;
+                  Boolean isCutthroatMode = Settings.getControlParameter("CutThroatMode").equals(ON); //$NON-NLS-1$
+		  String tmp;
+                  tmp = (String) value;
 		  setHorizontalAlignment(SwingConstants.RIGHT);
 		  setBackground(UIManager.getColor("Tournament.background")); //$NON-NLS-1$
 		  ////// Center game number columns and highlight current game number column \\\\\\

@@ -39,17 +39,17 @@ import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class OBSPanel extends JPanel {
-	private JButton btnConnect;
-	private JButton btnDisconnect;
-	private JButton btnPull;
-	private JButton btnPush;
-	private JCheckBox ckbxShowScores;
-	private JCheckBox ckbxShowTimer;
-	private JCheckBox ckbxEnableSkunk;
-	private JToggleButton tglbtnStartStream;
-	private JCheckBox ckbxShowCutthroat;
-	private JLabel lblStreamTime;
-	private Border innerBorder;
+	private final JButton btnConnect;
+	private final JButton btnDisconnect;
+	private final JButton btnPull;
+	private final JButton btnPush;
+	private final JCheckBox ckbxShowScores;
+	private final JCheckBox ckbxShowTimer;
+	private final JCheckBox ckbxEnableSkunk;
+	private final JToggleButton tglbtnStartStream;
+	private final JCheckBox ckbxShowCutthroat;
+	private final JLabel lblStreamTime;
+	private final Border innerBorder;
 	private static final String ON = "1"; //$NON-NLS-1$
 	public OBSPanel() {
 		Dimension dim = getPreferredSize();
@@ -81,7 +81,7 @@ public class OBSPanel extends JPanel {
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		layoutComponents();
 	}
-	public void layoutComponents() {
+	private void layoutComponents() {
 		setLayout(new MigLayout("fillx")); //$NON-NLS-1$
 		add(btnConnect,""); //$NON-NLS-1$
 		add(btnDisconnect, "wrap"); //$NON-NLS-1$
@@ -99,47 +99,47 @@ public class OBSPanel extends JPanel {
 			btnConnect.setMnemonic(-1);
 		} else {
 			btnConnect.setMnemonic(Settings.getHotKeyParameter("Connect").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("Disconnect").isEmpty()) { //$NON-NLS-1$
 			btnDisconnect.setMnemonic(-1);
 		} else {
 			btnDisconnect.setMnemonic(Settings.getHotKeyParameter("Disconnect").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("Push").isEmpty()) { //$NON-NLS-1$
 			btnPush.setMnemonic(-1);
 		} else {
 			btnPush.setMnemonic(Settings.getHotKeyParameter("Push").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("Pull").isEmpty()) { //$NON-NLS-1$
 			btnPull.setMnemonic(-1);
 		} else {
 			btnPull.setMnemonic(Settings.getHotKeyParameter("Pull").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("ShowScores").isEmpty()) { //$NON-NLS-1$
 			ckbxShowScores.setMnemonic(-1);
 		} else {
 			ckbxShowScores.setMnemonic(Settings.getHotKeyParameter("ShowScores").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("ShowTimer").isEmpty()) { //$NON-NLS-1$
 			ckbxShowTimer.setMnemonic(-1);
 		} else {
 			ckbxShowTimer.setMnemonic(Settings.getHotKeyParameter("ShowTimer").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("ShowSkunk").isEmpty()) { //$NON-NLS-1$
 			ckbxEnableSkunk.setMnemonic(-1);
 		} else {
 			ckbxEnableSkunk.setMnemonic(Settings.getHotKeyParameter("ShowSkunk").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("StartStream").isEmpty()) { //$NON-NLS-1$
 			tglbtnStartStream.setMnemonic(-1);
 		} else {
 			tglbtnStartStream.setMnemonic(Settings.getHotKeyParameter("StartStream").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("ShowCutthroat").isEmpty()) { //$NON-NLS-1$
 			ckbxShowCutthroat.setMnemonic(-1);
 		} else {
 			ckbxShowCutthroat.setMnemonic(Settings.getHotKeyParameter("ShowCutthroat").charAt(0)); //$NON-NLS-1$
-		};
+		}
 	}
 	////// Listeners  //////
 	public void addConnectListener(ActionListener listenForBtnConnect) {

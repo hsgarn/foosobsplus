@@ -28,21 +28,25 @@ import com.midsouthfoosball.foosobsplus.model.AppConfig;
 
 @SuppressWarnings("serial")
 public class LastScoredWindowFrame extends JFrame {
-	private LastScoredWindowPanel lastScoredWindowPanel;
-	private static final String programName = AppConfig.PROGRAM_NAME;
+	private final LastScoredWindowPanel lastScoredWindowPanel;
+	private static final String PROGRAMNAME = AppConfig.PROGRAM_NAME;
 	public LastScoredWindowFrame(MainFrame mainFrame, int teamNbr) {
-		super(programName + " " + Messages.getString("LastScoredWindowFrame.Team") + teamNbr + Messages.getString("LastScoredWindowFrame.LastScoredTimerWindow")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		super(PROGRAMNAME + " " + Messages.getString("LastScoredWindowFrame.Team") + teamNbr + Messages.getString("LastScoredWindowFrame.LastScoredTimerWindow")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		lastScoredWindowPanel = new LastScoredWindowPanel("0",Color.CYAN); //$NON-NLS-1$
 		lastScoredWindowPanel.setPreferredSize(new Dimension(256, 70));
 		getContentPane().add(lastScoredWindowPanel);
-		if (teamNbr == 1) {
-			setLocation(257,0);
-		} else if (teamNbr == 2) {
-			setLocation(954,0);
-		} else {
-			setLocation(1211,0);
-		}
+            switch (teamNbr) {
+                case 1:
+                    setLocation(257,0);
+                    break;
+                case 2:
+                    setLocation(954,0);
+                    break;
+                default:
+                    setLocation(1211,0);
+                    break;
+            }
 		pack();
 	}
 	public void setTimerDisplay(String timeToDisplay) {

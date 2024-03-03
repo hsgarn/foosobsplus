@@ -230,9 +230,9 @@ public final class Main implements MatchObserver {
 	private static OBSPanel							obsPanel				= new OBSPanel();
 	private static AutoScoreMainPanel				autoScoreMainPanel  	= new AutoScoreMainPanel();
 	private static MatchPanel						matchPanel				= new MatchPanel();
-	private static TeamPanel 						teamPanel1 				= new TeamPanel(1, Settings.getControlParameter("Side1Color")); //$NON-NLS-1$
-	private static TeamPanel 						teamPanel2 				= new TeamPanel(2, Settings.getControlParameter("Side2Color")); //$NON-NLS-1$
-	private static TeamPanel						teamPanel3				= new TeamPanel(3, Messages.getString("Main.None")); //$NON-NLS-1$
+	private static TeamPanel 						teamPanel1 				= new TeamPanel(1);
+	private static TeamPanel 						teamPanel2 				= new TeamPanel(2);
+	private static TeamPanel						teamPanel3				= new TeamPanel(3);
 	private static StatsEntryPanel 					statsEntryPanel 		= new StatsEntryPanel();
 	private static SwitchPanel 						switchPanel 			= new SwitchPanel();
 	private static ResetPanel 						resetPanel 				= new ResetPanel();

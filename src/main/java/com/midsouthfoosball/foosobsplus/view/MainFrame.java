@@ -59,36 +59,36 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
 public final class MainFrame extends JFrame implements WindowListener {
-	private TournamentPanel tournamentPanel;
-	private TeamPanel team1Panel;
-	private TeamPanel team2Panel;
-	private TeamPanel team3Panel;
-	private SwitchPanel switchPanel;
-	private ResetPanel resetPanel;
-	private TimerPanel timerPanel;
-	private OBSPanel obsPanel;
-	private AutoScoreMainPanel autoScoreMainPanel;
-	private StatsEntryPanel statsEntryPanel;
-	private StatsDisplayPanel statsDisplayPanel;
-	private MatchPanel matchPanel;
-	private ParametersFrame parametersFrame;
-	private HotKeysFrame hotKeysFrame;
-	private SourcesFrame sourcesFrame;
-	private StatSourcesFrame statSourcesFrame;
-	private FiltersFrame filtersFrame;
-	private PartnerProgramFrame partnerProgramFrame;
-	private OBSConnectFrame obsConnectFrame;
-	private AutoScoreSettingsFrame autoScoreSettingsFrame;
-	private AutoScoreConfigFrame autoScoreConfigFrame;
-	private JCheckBoxMenuItem viewTimerWindow;
-	private JCheckBoxMenuItem viewAlwaysOnTop;
-	private JCheckBoxMenuItem viewLastScored1Window;
-	private JCheckBoxMenuItem viewLastScored2Window;
-	private JCheckBoxMenuItem viewLastScored3Window;
-	private JCheckBoxMenuItem viewGameTableWindow;
-	private JCheckBoxMenuItem viewGameResultsWindow;
-	private JCheckBoxMenuItem viewAllWindows;
-	private JCheckBoxMenuItem helpShowParsed;
+	private final TournamentPanel tournamentPanel;
+	private final TeamPanel team1Panel;
+	private final TeamPanel team2Panel;
+	private final TeamPanel team3Panel;
+	private final SwitchPanel switchPanel;
+	private final ResetPanel resetPanel;
+	private final TimerPanel timerPanel;
+	private final OBSPanel obsPanel;
+	private final AutoScoreMainPanel autoScoreMainPanel;
+	private final StatsEntryPanel statsEntryPanel;
+	private final StatsDisplayPanel statsDisplayPanel;
+	private final MatchPanel matchPanel;
+	private final ParametersFrame parametersFrame;
+	private final HotKeysFrame hotKeysFrame;
+	private final SourcesFrame sourcesFrame;
+	private final StatSourcesFrame statSourcesFrame;
+	private final FiltersFrame filtersFrame;
+	private final PartnerProgramFrame partnerProgramFrame;
+	private final OBSConnectFrame obsConnectFrame;
+	private final AutoScoreSettingsFrame autoScoreSettingsFrame;
+	private final AutoScoreConfigFrame autoScoreConfigFrame;
+	private final JCheckBoxMenuItem viewTimerWindow;
+	private final JCheckBoxMenuItem viewAlwaysOnTop;
+	private final JCheckBoxMenuItem viewLastScored1Window;
+	private final JCheckBoxMenuItem viewLastScored2Window;
+	private final JCheckBoxMenuItem viewLastScored3Window;
+	private final JCheckBoxMenuItem viewGameTableWindow;
+	private final JCheckBoxMenuItem viewGameResultsWindow;
+	private final JCheckBoxMenuItem viewAllWindows;
+	private final JCheckBoxMenuItem helpShowParsed;
 	private JMenuItem obsConnectItem;
 	private JMenuItem obsDisconnectItem;
 	private JMenu obsMenu;
@@ -103,14 +103,14 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private ImageIcon imgAutoScoreDisconnected;
 	private Icon imgIconAutoScoreConnected;
 	private Icon imgIconAutoScoreDisconnected;	
-	private static final String programName = AppConfig.PROGRAM_NAME;
-	private static Logger logger = LoggerFactory.getLogger(MainFrame.class);
+	private static final String PROGRAMNAME = AppConfig.PROGRAM_NAME;
+	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 	public MainFrame(Settings settings, TournamentPanel tournamentPanel, TimerPanel timerPanel, OBSPanel obsPanel, AutoScoreMainPanel autoScoreMainPanel,
 			TeamPanel team1Panel, TeamPanel team2Panel, TeamPanel team3Panel, StatsEntryPanel statsEntryPanel, SwitchPanel switchPanel, ResetPanel resetPanel, 
 			StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,	SourcesFrame sourcesFrame, 
 			StatSourcesFrame statSourcesFrame, FiltersFrame filtersFrame, PartnerProgramFrame partnerProgramFrame, OBSConnectFrame obsConnectFrame, 
 			AutoScoreSettingsFrame autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame) {
-		super(programName + ": Foosball"); //$NON-NLS-1$
+		super(PROGRAMNAME + ": Foosball"); //$NON-NLS-1$
 		this.tournamentPanel 		= tournamentPanel;
 		this.timerPanel 			= timerPanel;
 		this.obsPanel           	= obsPanel;
@@ -146,6 +146,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		setJMenuBar(createMenuBar());
 		layoutFoosballComponents();
 		addWindowListener(new WindowAdapter() {
+                        @Override
 			public void windowClosing(WindowEvent arg0) {
 				dispose();
 				System.gc();
@@ -227,7 +228,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewMenu.add(viewGameResultsWindow);
 		viewMenu.add(viewAllWindows);
 		JMenu helpMenu 		= new JMenu(Messages.getString("MainFrame.Help")); //$NON-NLS-1$
-		JMenuItem helpPage 	= new JMenuItem(programName + " " + Messages.getString("MainFrame.Help")); //$NON-NLS-1$ //$NON-NLS-2$
+		JMenuItem helpPage 	= new JMenuItem(PROGRAMNAME + " " + Messages.getString("MainFrame.Help")); //$NON-NLS-1$ //$NON-NLS-2$
 		JMenuItem helpRules = new JMenuItem(Messages.getString("MainFrame.Rules")); //$NON-NLS-1$
 		JMenuItem helpAbout = new JMenuItem(Messages.getString("MainFrame.About")); //$NON-NLS-1$
 		helpMenu.add(helpPage);
@@ -244,157 +245,120 @@ public final class MainFrame extends JFrame implements WindowListener {
 		menuBar.add(helpMenu);
 		obsMenu.setIcon(imgIconOBSDisconnected);
 		autoScoreMenu.setIcon(imgIconAutoScoreDisconnected);
-		viewAlwaysOnTop.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				setAlwaysOnTop(viewAlwaysOnTop.isSelected());
- 				}
-		});
-		settingsParamItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				parametersFrame.setVisible(true);
-			}
-			});
-		settingsHotKeyItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				hotKeysFrame.setVisible(true);
-			}
-		});
-		autoScoreSettingsItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				autoScoreSettingsFrame.setVisible(true);
-			}
-		});
-		autoScoreConfigItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				autoScoreConfigFrame.setVisible(true);
-			}
-		});
-		settingsSourceItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				sourcesFrame.setVisible(true);
-			}
-		});
-		settingsStatsSourceItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				statSourcesFrame.setVisible(true);
-			}
-		});
-		settingsFilterItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				filtersFrame.setVisible(true);
-			}
-		});
-		settingsPartnerProgramItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				partnerProgramFrame.setVisible(true);
-			}
-		});
-		obsConnectItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				obsConnectFrame.setVisible(true);
-			}
-		});
-		helpPage.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				try {
-					URI helpURI = new URI(Messages.getString("MainFrame.HelpURL")); //$NON-NLS-1$
-					try {
-						java.awt.Desktop.getDesktop().browse(helpURI);
-					} catch (IOException ex) {
-						logger.error(Messages.getString("Errors.URICallingError"));	//$NON-NLS-1$
-						logger.error(ex.toString());
-					}
-		    	} catch (URISyntaxException ex) {
-					logger.error(Messages.getString("Errors.URISyntaxError")); //$NON-NLS-1$
-					logger.error(ex.toString());
-				}
-			}
-		});
-		helpRules.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				try {
-					URI rulesURI = new URI(Messages.getString("MainFrame.RulesURL")); //$NON-NLS-1$
-					try {
-						java.awt.Desktop.getDesktop().browse(rulesURI);
-					} catch (IOException ex) {
-						logger.error(Messages.getString("Errors.URICallingError")); //$NON-NLS-1$
-						logger.error(ex.toString());
-					}
-		    	} catch (URISyntaxException ex) {
-					logger.error(Messages.getString("Errors.URISyntaxError")); //$NON-NLS-1$
-					logger.error(ex.toString());
-				}
-			}
-		});
-		helpAbout.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				JFrame aboutFrame = new JFrame(programName + " " + Messages.getString("MainFrame.About")); //$NON-NLS-1$ //$NON-NLS-2$
-				aboutFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				
-				AboutPanel ap;
-				aboutFrame.setAlwaysOnTop(true);
-				ap = new AboutPanel(aboutFrame);
-				ap.setPreferredSize(new Dimension(700, 500));
-
-				aboutFrame.getContentPane().add(ap);
-				aboutFrame.pack();
-				aboutFrame.setVisible(true);
-			}
-		});
-		helpShowParsed.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				Main.setShowParsed(helpShowParsed.isSelected());
- 			}
-		});
-		exitItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-
-				int action = JOptionPane.showConfirmDialog(MainFrame.this,
-						Messages.getString("MainFrame.QuestionExit"), Messages.getString("MainFrame.ConfirmExit"), JOptionPane.OK_CANCEL_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
-				
-				if(action == JOptionPane.OK_OPTION) {
-					WindowListener[] listeners = getWindowListeners();
-					
-					for(WindowListener listener: listeners) {
-						listener.windowClosing(new WindowEvent(MainFrame.this, 0));
-					}
-				}
-			}
-		});
-		importItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				final JFileChooser chooser = new JFileChooser();
-				chooser.setDialogTitle(Messages.getString("MainFrame.SelectImportFile")); //$NON-NLS-1$
-				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				chooser.setAcceptAllFileFilterUsed(true);
-
-				int returnVal = chooser.showOpenDialog(MainFrame.this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					String fileNameAndPath = chooser.getSelectedFile().toString();
-					importStatsFile(fileNameAndPath);
-				} else {
-					logger.info(Messages.getString("MainFrame.CancelledByUser")); //$NON-NLS-1$
-				}
-
-			}
-		});
-		exportItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				final JFileChooser chooser = new JFileChooser();
-				chooser.setDialogTitle(Messages.getString("MainFrame.SelectExportFile")); //$NON-NLS-1$
-				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				chooser.setAcceptAllFileFilterUsed(true);
-
-				int returnVal = chooser.showOpenDialog(MainFrame.this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					String fileNameAndPath = chooser.getSelectedFile().toString();
-					exportStatsFile(fileNameAndPath);
-				} else {
-					logger.info(Messages.getString("MainFrame.CancelledByUser")); //$NON-NLS-1$
-				}
-
-			}
-		});
+		viewAlwaysOnTop.addActionListener((ActionEvent ae) -> {
+                    setAlwaysOnTop(viewAlwaysOnTop.isSelected());
+                });
+		settingsParamItem.addActionListener((ActionEvent ae) -> {
+                    parametersFrame.setVisible(true);
+                });
+		settingsHotKeyItem.addActionListener((ActionEvent ae) -> {
+                    hotKeysFrame.setVisible(true);
+                });
+		autoScoreSettingsItem.addActionListener((ActionEvent ae) -> {
+                    autoScoreSettingsFrame.setVisible(true);
+                });
+		autoScoreConfigItem.addActionListener((ActionEvent ae) -> {
+                    autoScoreConfigFrame.setVisible(true);
+                });
+		settingsSourceItem.addActionListener((ActionEvent ae) -> {
+                    sourcesFrame.setVisible(true);
+                });
+		settingsStatsSourceItem.addActionListener((ActionEvent ae) -> {
+                    statSourcesFrame.setVisible(true);
+                });
+		settingsFilterItem.addActionListener((ActionEvent ae) -> {
+                    filtersFrame.setVisible(true);
+                });
+		settingsPartnerProgramItem.addActionListener((ActionEvent ae) -> {
+                    partnerProgramFrame.setVisible(true);
+                });
+		obsConnectItem.addActionListener((ActionEvent ae) -> {
+                    obsConnectFrame.setVisible(true);
+                });
+		helpPage.addActionListener((ActionEvent ae) -> {
+                    try {
+                        URI helpURI = new URI(Messages.getString("MainFrame.HelpURL")); //$NON-NLS-1$
+                        try {
+                            java.awt.Desktop.getDesktop().browse(helpURI);
+                        } catch (IOException ex) {
+                            logger.error(Messages.getString("Errors.URICallingError"));	//$NON-NLS-1$
+                            logger.error(ex.toString());
+                        }
+                    } catch (URISyntaxException ex) {
+                        logger.error(Messages.getString("Errors.URISyntaxError")); //$NON-NLS-1$
+                        logger.error(ex.toString());
+                    }
+                });
+		helpRules.addActionListener((ActionEvent ae) -> {
+                    try {
+                        URI rulesURI = new URI(Messages.getString("MainFrame.RulesURL")); //$NON-NLS-1$
+                        try {
+                            java.awt.Desktop.getDesktop().browse(rulesURI);
+                        } catch (IOException ex) {
+                            logger.error(Messages.getString("Errors.URICallingError")); //$NON-NLS-1$
+                            logger.error(ex.toString());
+                        }
+                    } catch (URISyntaxException ex) {
+                        logger.error(Messages.getString("Errors.URISyntaxError")); //$NON-NLS-1$
+                        logger.error(ex.toString());
+                    }
+                });
+		helpAbout.addActionListener((ActionEvent ae) -> {
+                    JFrame aboutFrame = new JFrame(PROGRAMNAME + " " + Messages.getString("MainFrame.About")); //$NON-NLS-1$ //$NON-NLS-2$
+                    aboutFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    
+                    AboutPanel ap;
+                    aboutFrame.setAlwaysOnTop(true);
+                    ap = new AboutPanel(aboutFrame);
+                    ap.setPreferredSize(new Dimension(700, 500));
+                    
+                    aboutFrame.getContentPane().add(ap);
+                    aboutFrame.pack();
+                    aboutFrame.setVisible(true);
+                });
+		helpShowParsed.addActionListener((ActionEvent ae) -> {
+                    Main.setShowParsed(helpShowParsed.isSelected());
+                });
+		exitItem.addActionListener((ActionEvent ae) -> {
+                    int action = JOptionPane.showConfirmDialog(MainFrame.this,
+                            Messages.getString("MainFrame.QuestionExit"), Messages.getString("MainFrame.ConfirmExit"), JOptionPane.OK_CANCEL_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
+                    
+                    if(action == JOptionPane.OK_OPTION) {
+                        WindowListener[] listeners = getWindowListeners();
+                        
+                        for(WindowListener listener: listeners) {
+                            listener.windowClosing(new WindowEvent(MainFrame.this, 0));
+                        }
+                    }
+                });
+		importItem.addActionListener((ActionEvent ae) -> {
+                    final JFileChooser chooser = new JFileChooser();
+                    chooser.setDialogTitle(Messages.getString("MainFrame.SelectImportFile")); //$NON-NLS-1$
+                    chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                    chooser.setAcceptAllFileFilterUsed(true);
+                    
+                    int returnVal = chooser.showOpenDialog(MainFrame.this);
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        String fileNameAndPath = chooser.getSelectedFile().toString();
+                        importStatsFile(fileNameAndPath);
+                    } else {
+                        logger.info(Messages.getString("MainFrame.CancelledByUser")); //$NON-NLS-1$
+                    }
+                });
+		exportItem.addActionListener((ActionEvent ae) -> {
+                    final JFileChooser chooser = new JFileChooser();
+                    chooser.setDialogTitle(Messages.getString("MainFrame.SelectExportFile")); //$NON-NLS-1$
+                    chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                    chooser.setAcceptAllFileFilterUsed(true);
+                    
+                    int returnVal = chooser.showOpenDialog(MainFrame.this);
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        String fileNameAndPath = chooser.getSelectedFile().toString();
+                        exportStatsFile(fileNameAndPath);
+                    } else {
+                        logger.info(Messages.getString("MainFrame.CancelledByUser")); //$NON-NLS-1$
+                    }
+                });
 		return menuBar;
 	}
 	public void setOBSIconConnected(Boolean connected) {

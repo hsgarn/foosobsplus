@@ -22,7 +22,6 @@ package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
@@ -54,7 +53,7 @@ public class PartnerProgramPanel extends JPanel {
 	private JTextField txtPlayer2FileName;
 	private JTextField txtPlayer3FileName;
 	private JTextField txtPlayer4FileName;
-	private static Logger logger = LoggerFactory.getLogger(PartnerProgramPanel.class);
+	private static final Logger logger = LoggerFactory.getLogger(PartnerProgramPanel.class);
 	// Create the Panel.
 	public PartnerProgramPanel() throws IOException {
 		setLayout();
@@ -83,46 +82,45 @@ public class PartnerProgramPanel extends JPanel {
 			logger.error(ex.toString());
 		}
 	}
-	public void setLayout() {	
+	public final void setLayout() {	
 		setLayout(new MigLayout());
 		JButton btnSelectPath = new JButton(Messages.getString("PartnerProgramPanel.SelectPath")); //$NON-NLS-1$
-		btnSelectPath.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				final JFileChooser chooser = new JFileChooser();
-				chooser.setCurrentDirectory(new java.io.File(formattedTxtPath.getText()));
-				chooser.setDialogTitle(Messages.getString("PartnerProgramPanel.SelectDirectoryForPath")); //$NON-NLS-1$
-				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				chooser.setAcceptAllFileFilterUsed(false);
-				int returnVal = chooser.showOpenDialog(PartnerProgramPanel.this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					if (chooser.getSelectedFile().exists()) {
-						formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
-					} else {
-						String directoryName = chooser.getSelectedFile().getAbsolutePath();
-						if(!Files.exists(Paths.get(directoryName))) {
-							try {
-								Files.createDirectory(Paths.get(directoryName));
-							} catch (IOException e1) {
-								logger.error(Messages.getString("Errors.ErrorCreatingDirectory")); //$NON-NLS-1$
-								logger.error(e1.toString());
-							}
-						}
-						formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
-					}
-					try {
-						Settings.setPartnerProgramPath(formattedTxtPath.getText());
-						Settings.savePartnerProgramConfig();;
-					} catch (IOException ex) {
-						logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile")); //$NON-NLS-1$
-						logger.error(ex.toString());
-					}
-				}
-			}
-		});
+		btnSelectPath.addActionListener((ActionEvent e) -> {
+                    final JFileChooser chooser = new JFileChooser();
+                    chooser.setCurrentDirectory(new java.io.File(formattedTxtPath.getText()));
+                    chooser.setDialogTitle(Messages.getString("PartnerProgramPanel.SelectDirectoryForPath")); //$NON-NLS-1$
+                    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                    chooser.setAcceptAllFileFilterUsed(false);
+                    int returnVal = chooser.showOpenDialog(PartnerProgramPanel.this);
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        if (chooser.getSelectedFile().exists()) {
+                            formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
+                        } else {
+                            String directoryName = chooser.getSelectedFile().getAbsolutePath();
+                            if(!Files.exists(Paths.get(directoryName))) {
+                                try {
+                                    Files.createDirectory(Paths.get(directoryName));
+                                } catch (IOException e1) {
+                                    logger.error(Messages.getString("Errors.ErrorCreatingDirectory")); //$NON-NLS-1$
+                                    logger.error(e1.toString());
+                                }
+                            }
+                            formattedTxtPath.setText(chooser.getSelectedFile().getAbsolutePath());
+                        }
+                        try {
+                            Settings.setPartnerProgramPath(formattedTxtPath.getText());
+                            Settings.savePartnerProgramConfig();
+                        } catch (IOException ex) {
+                            logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile")); //$NON-NLS-1$
+                            logger.error(ex.toString());
+                        }
+                    }
+                });
 		add(btnSelectPath, "cell 1 0"); //$NON-NLS-1$
 		formattedTxtPath = new JFormattedTextField();
 		formattedTxtPath.setText(Settings.getPartnerProgramParameter("PartnerProgramPath")); //$NON-NLS-1$
 		formattedTxtPath.addFocusListener(new FocusAdapter() {
+                        @Override
 			public void focusLost(FocusEvent arg0) {
 		    	try {
 					Settings.setPartnerProgramPath(formattedTxtPath.getText());
@@ -134,6 +132,7 @@ public class PartnerProgramPanel extends JPanel {
 			}
 		});
 		formattedTxtPath.addKeyListener(new KeyAdapter() {
+                        @Override
 			public void keyPressed(KeyEvent evt) {
 				int key = evt.getKeyCode();
 			    if (key == KeyEvent.VK_ENTER) {
@@ -176,38 +175,30 @@ public class PartnerProgramPanel extends JPanel {
 		txtPlayer4FileName.setColumns(10);
 		add(txtPlayer4FileName, "cell 2 5,alignx left"); //$NON-NLS-1$
 		JButton btnApplyPartnerProgram = new JButton(Messages.getString("Global.Apply")); //$NON-NLS-1$
-		btnApplyPartnerProgram.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveSettings();
-			}
-		});
+		btnApplyPartnerProgram.addActionListener((ActionEvent e) -> {
+                    saveSettings();
+                });
 		add(btnApplyPartnerProgram, "cell 1 19,alignx center"); //$NON-NLS-1$
 		JButton btnSavePartnerProgram = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
-		btnSavePartnerProgram.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveSettings();
-				JComponent comp = (JComponent) e.getSource();
-				Window win = SwingUtilities.getWindowAncestor(comp);
-				win.dispose();
-			}
-		});
+		btnSavePartnerProgram.addActionListener((ActionEvent e) -> {
+                    saveSettings();
+                    JComponent comp = (JComponent) e.getSource();
+                    Window win = SwingUtilities.getWindowAncestor(comp);
+                    win.dispose();
+                });
 		add(btnSavePartnerProgram, "cell 2 19,alignx center"); //$NON-NLS-1$
 		JButton btnCancelPartnerProgram = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
-		btnCancelPartnerProgram.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				revertChanges();
-				JComponent comp = (JComponent) e.getSource();
-				Window win = SwingUtilities.getWindowAncestor(comp);
-				win.dispose();
-			}
-		});
+		btnCancelPartnerProgram.addActionListener((ActionEvent e) -> {
+                    revertChanges();
+                    JComponent comp = (JComponent) e.getSource();
+                    Window win = SwingUtilities.getWindowAncestor(comp);
+                    win.dispose();
+                });
 		add(btnCancelPartnerProgram, "cell 4 19,alignx center"); //$NON-NLS-1$
 		JButton btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
-		btnRestoreDefaults.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				restoreDefaults();
-			}
-		});
+		btnRestoreDefaults.addActionListener((ActionEvent e) -> {
+                    restoreDefaults();
+                });
 		add(btnRestoreDefaults, "cell 5 19,alignx center"); //$NON-NLS-1$
 	}
 }

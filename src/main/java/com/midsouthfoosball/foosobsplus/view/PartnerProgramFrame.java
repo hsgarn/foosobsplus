@@ -33,10 +33,10 @@ import com.midsouthfoosball.foosobsplus.model.AppConfig;
 @SuppressWarnings("serial")
 public class PartnerProgramFrame extends JFrame {
 	private PartnerProgramPanel partnerProgramPanel;
-	private static final String programName = AppConfig.PROGRAM_NAME;
-	private static Logger logger = LoggerFactory.getLogger(PartnerProgramFrame.class);
+	private static final String PROGRAMNAME = AppConfig.PROGRAM_NAME;
+	private static final Logger logger = LoggerFactory.getLogger(PartnerProgramFrame.class);
 	public PartnerProgramFrame() {
-		super(programName + " " + Messages.getString("PartnerProgramFrame.PartnerProgramSettings")); //$NON-NLS-1$ //$NON-NLS-2$
+		super(PROGRAMNAME + " " + Messages.getString("PartnerProgramFrame.PartnerProgramSettings")); //$NON-NLS-1$ //$NON-NLS-2$
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
 		try {

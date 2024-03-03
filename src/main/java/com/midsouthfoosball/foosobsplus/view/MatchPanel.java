@@ -45,24 +45,24 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 @SuppressWarnings("serial")
 public class MatchPanel extends JPanel {
 	
-	private JButton btnStartEvent;
-	private JButton btnStartMatch;
-	private JButton btnPauseMatch;
-	private JButton btnEndMatch;
-	private JButton btnStartGame;
-	private JLabel lblStartTimeLabel;
-	private JLabel lblElapsedTimeLabel;
-	private JLabel lblStartTime;
-	private JLabel lblElapsedTime;
-	private JLabel lblGameTimeLabel;
-	private JLabel lblGameTime;
-	private JTable gameTable;
+	private final JButton btnStartEvent;
+	private final JButton btnStartMatch;
+	private final JButton btnPauseMatch;
+	private final JButton btnEndMatch;
+	private final JButton btnStartGame;
+	private final JLabel lblStartTimeLabel;
+	private final JLabel lblElapsedTimeLabel;
+	private final JLabel lblStartTime;
+	private final JLabel lblElapsedTime;
+	private final JLabel lblGameTimeLabel;
+	private final JLabel lblGameTime;
+	private final JTable gameTable;
 	private int matchWinner = 0;
 	private int currentGameNumber = 1;
 	private int gameWinners[] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
 	private int maxGameCount;
 	private static final String ON = "1"; //$NON-NLS-1$
-	private Border innerBorder;
+	private final Border innerBorder;
 	
 	public MatchPanel() {
 		this.maxGameCount = Settings.getMaxGameNumber(); 
@@ -105,9 +105,8 @@ public class MatchPanel extends JPanel {
 		maxGameCount = Settings.getMaxGameNumber();
 		GameTableModel tableModel = new GameTableModel(maxGameCount,Settings.getControlParameter("CutThroatMode")); //$NON-NLS-1$
 		gameTable.setModel(tableModel);
-		return;
 	}
-	public void layoutComponents() {
+	private void layoutComponents() {
 		setLayout(new GridBagLayout());
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = 0;
@@ -255,22 +254,22 @@ public class MatchPanel extends JPanel {
 			btnStartMatch.setMnemonic(-1);
 		} else {
 			btnStartMatch.setMnemonic(Settings.getHotKeyParameter("StartMatch").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("PauseMatch").isEmpty()) { //$NON-NLS-1$
 			btnPauseMatch.setMnemonic(-1);
 		} else {
 			btnPauseMatch.setMnemonic(Settings.getHotKeyParameter("PauseMatch").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("EndMatch").isEmpty()) { //$NON-NLS-1$
 			btnEndMatch.setMnemonic(-1);
 		} else {
 			btnEndMatch.setMnemonic(Settings.getHotKeyParameter("EndMatch").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("StartGame").isEmpty()) { //$NON-NLS-1$
 			btnStartGame.setMnemonic(-1);
 		} else {
 			btnStartGame.setMnemonic(Settings.getHotKeyParameter("StartGame").charAt(0)); //$NON-NLS-1$
-		};
+		}
 	}
 	public void updateMnemonics() {
 		setMnemonics();
@@ -319,6 +318,18 @@ public class MatchPanel extends JPanel {
 	  public GameTableCellRenderer() {
 	    setOpaque(true);
 	  }
+
+            /**
+             *
+             * @param table
+             * @param value
+             * @param isSelected
+             * @param hasFocus
+             * @param row
+             * @param column
+             * @return
+             */
+            @Override
 	  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
 	  {
 		  Boolean isCutthroatMode = Settings.getControlParameter("CutThroatMode").equals(ON); //$NON-NLS-1$

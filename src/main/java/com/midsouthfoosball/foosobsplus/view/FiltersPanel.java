@@ -329,42 +329,30 @@ public class FiltersPanel extends JPanel {
 		btnMeatballFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
 		add(btnMeatballFilter, "cell 6 5, alignx left"); //$NON-NLS-1$
 		JButton btnApplyFilters = new JButton(Messages.getString("Global.Apply")); //$NON-NLS-1$
-		btnApplyFilters.addActionListener(new ActionListener() {
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				saveSettings();
-			}
-		});
+		btnApplyFilters.addActionListener((ActionEvent e) -> {
+                    saveSettings();
+                });
 		add(btnApplyFilters, "cell 1 19,alignx center"); //$NON-NLS-1$
 		JButton btnSaveFilters = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
-		btnSaveFilters.addActionListener(new ActionListener() {
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				saveSettings();
-				JComponent comp = (JComponent) e.getSource();
-				Window win = SwingUtilities.getWindowAncestor(comp);
-				win.dispose();
-			}
-		});
+		btnSaveFilters.addActionListener((ActionEvent e) -> {
+                    saveSettings();
+                    JComponent comp = (JComponent) e.getSource();
+                    Window win = SwingUtilities.getWindowAncestor(comp);
+                    win.dispose();
+                });
 		add(btnSaveFilters, "cell 2 19,alignx center"); //$NON-NLS-1$
 		JButton btnCancelFilters = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
-		btnCancelFilters.addActionListener(new ActionListener() {
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				revertChanges();
-				JComponent comp = (JComponent) e.getSource();
-				Window win = SwingUtilities.getWindowAncestor(comp);
-				win.dispose();
-			}
-		});
+		btnCancelFilters.addActionListener((ActionEvent e) -> {
+                    revertChanges();
+                    JComponent comp = (JComponent) e.getSource();
+                    Window win = SwingUtilities.getWindowAncestor(comp);
+                    win.dispose();
+                });
 		add(btnCancelFilters, "cell 4 19,alignx center"); //$NON-NLS-1$
 		JButton btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
-		btnRestoreDefaults.addActionListener(new ActionListener() {
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				restoreDefaults();
-			}
-		});
+		btnRestoreDefaults.addActionListener((ActionEvent e) -> {
+                    restoreDefaults();
+                });
 		add(btnRestoreDefaults, "cell 5 19,alignx center"); //$NON-NLS-1$
 	}
 	////// Listeners  //////

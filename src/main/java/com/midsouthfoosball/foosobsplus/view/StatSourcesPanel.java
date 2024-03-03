@@ -109,8 +109,8 @@ public class StatSourcesPanel extends JPanel {
 	private static final String TEAM1 = "1"; //$NON-NLS-1$
 	private static final String TEAM2 = "2"; //$NON-NLS-1$
 	private static final String TEAM3 = "3"; //$NON-NLS-1$
-    private Map<String, JTextField>	sourcesMap	= new HashMap<>();
-	private static transient Logger logger = LoggerFactory.getLogger(StatSourcesPanel.class);
+        private final Map<String, JTextField> sourcesMap = new HashMap<>();
+	private static final transient Logger logger = LoggerFactory.getLogger(StatSourcesPanel.class);
 	// Create the Panel.
 	public StatSourcesPanel() {
 		setLayout();
@@ -526,21 +526,17 @@ public class StatSourcesPanel extends JPanel {
 		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		add(btnSave, "cell 3 15,alignx center"); //$NON-NLS-1$
 		JButton btnCancel = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
-		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				revertChanges();
-				JComponent comp = (JComponent) e.getSource();
-				Window win = SwingUtilities.getWindowAncestor(comp);
-				win.dispose();
-			}
-		});
+		btnCancel.addActionListener((ActionEvent e) -> {
+                    revertChanges();
+                    JComponent comp = (JComponent) e.getSource();
+                    Window win = SwingUtilities.getWindowAncestor(comp);
+                    win.dispose();
+                });
 		add(btnCancel, "cell 4 15,alignx left"); //$NON-NLS-1$
 		JButton btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
-		btnRestoreDefaults.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				restoreDefaults();
-			}
-		});
+		btnRestoreDefaults.addActionListener((ActionEvent e) -> {
+                    restoreDefaults();
+                });
 		add(btnRestoreDefaults, "cell 6 15,alignx left"); //$NON-NLS-1$
 	}
 	/////// Listeners \\\\\\\

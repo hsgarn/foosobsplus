@@ -59,7 +59,7 @@ public class AutoScoreMainPanel extends JPanel {
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		layoutComponents();
 	}
-	public final void layoutComponents() {
+	private void layoutComponents() {
 		setLayout(new GridBagLayout());
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = 0;

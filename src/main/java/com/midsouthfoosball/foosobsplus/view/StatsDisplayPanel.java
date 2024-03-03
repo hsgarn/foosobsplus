@@ -42,72 +42,72 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
 public class StatsDisplayPanel extends JPanel {
-	private JLabel lblTeamName1;
-	private JLabel lblTeamName2;
-	private JLabel lblPlayerNames1;
-	private JLabel lblPlayerNames2;
-	private JLabel lblCompleted1;
-	private JLabel lblAttempted1;
-	private JLabel lblPercentage1;
-	private JLabel lblCompleted2;
-	private JLabel lblAttempted2;
-	private JLabel lblPercentage2;
-	private JLabel lblPassing;
-	private JLabel lblShooting;
-	private JLabel lblClearing;
-	private JLabel lblTwoBarPassing;
-	private JLabel lblCount1;
-	private JLabel lblCount2;
-	private JLabel lblShotsOnGoal;
-	private JLabel lblScoring;
-	private JLabel lblThreeBarScoring;
-	private JLabel lblFiveBarScoring;
-	private JLabel lblTwoBarScoring;
-	private JLabel lblBreaks;
-	private JLabel lblStuffs;
-	private JLabel lblAces;
-	private JLabel lblTeam1PassAttempts;
-	private JLabel lblTeam1PassCompletes;
-	private JLabel lblTeam1Passing;
-	private JLabel lblTeam1ShotAttempts;
-	private JLabel lblTeam1ShotCompletes;
-	private JLabel lblTeam1Shooting;
-	private JLabel lblTeam1ClearAttempts;
-	private JLabel lblTeam1ClearCompletes;
-	private JLabel lblTeam1Clearing;
-	private JLabel lblTeam1TwoBarPassAttempts;
-	private JLabel lblTeam1TwoBarPassCompletes;
-	private JLabel lblTeam1TwoBarPassing;
-	private JLabel lblTeam1ShotsOnGoal;
-	private JLabel lblTeam1Scoring;
-	private JLabel lblTeam1ThreeBarScoring;
-	private JLabel lblTeam1FiveBarScoring;
-	private JLabel lblTeam1TwoBarScoring;
-	private JLabel lblTeam1Breaks;
-	private JLabel lblTeam1Aces;
-	private JLabel lblTeam1Stuffs;
-	private JLabel lblTeam2PassAttempts;
-	private JLabel lblTeam2PassCompletes;
-	private JLabel lblTeam2Passing;
-	private JLabel lblTeam2ShotAttempts;
-	private JLabel lblTeam2ShotCompletes;
-	private JLabel lblTeam2Shooting;
-	private JLabel lblTeam2ClearAttempts;
-	private JLabel lblTeam2ClearCompletes;
-	private JLabel lblTeam2Clearing;
-	private JLabel lblTeam2TwoBarPassAttempts;
-	private JLabel lblTeam2TwoBarPassCompletes;
-	private JLabel lblTeam2TwoBarPassing;
-	private JLabel lblTeam2ShotsOnGoal;
-	private JLabel lblTeam2Scoring;
-	private JLabel lblTeam2ThreeBarScoring;
-	private JLabel lblTeam2FiveBarScoring;
-	private JLabel lblTeam2TwoBarScoring;
-	private JLabel lblTeam2Breaks;
-	private JLabel lblTeam2Aces;
-	private JLabel lblTeam2Stuffs;
-	private DecimalFormat df = new DecimalFormat("###.#"); //$NON-NLS-1$
-	private Border innerBorder;
+	private final JLabel lblTeamName1;
+	private final JLabel lblTeamName2;
+	private final JLabel lblPlayerNames1;
+	private final JLabel lblPlayerNames2;
+	private final JLabel lblCompleted1;
+	private final JLabel lblAttempted1;
+	private final JLabel lblPercentage1;
+	private final JLabel lblCompleted2;
+	private final JLabel lblAttempted2;
+	private final JLabel lblPercentage2;
+	private final JLabel lblPassing;
+	private final JLabel lblShooting;
+	private final JLabel lblClearing;
+	private final JLabel lblTwoBarPassing;
+	private final JLabel lblCount1;
+	private final JLabel lblCount2;
+	private final JLabel lblShotsOnGoal;
+	private final JLabel lblScoring;
+	private final JLabel lblThreeBarScoring;
+	private final JLabel lblFiveBarScoring;
+	private final JLabel lblTwoBarScoring;
+	private final JLabel lblBreaks;
+	private final JLabel lblStuffs;
+	private final JLabel lblAces;
+	private final JLabel lblTeam1PassAttempts;
+	private final JLabel lblTeam1PassCompletes;
+	private final JLabel lblTeam1Passing;
+	private final JLabel lblTeam1ShotAttempts;
+	private final JLabel lblTeam1ShotCompletes;
+	private final JLabel lblTeam1Shooting;
+	private final JLabel lblTeam1ClearAttempts;
+	private final JLabel lblTeam1ClearCompletes;
+	private final JLabel lblTeam1Clearing;
+	private final JLabel lblTeam1TwoBarPassAttempts;
+	private final JLabel lblTeam1TwoBarPassCompletes;
+	private final JLabel lblTeam1TwoBarPassing;
+	private final JLabel lblTeam1ShotsOnGoal;
+	private final JLabel lblTeam1Scoring;
+	private final JLabel lblTeam1ThreeBarScoring;
+	private final JLabel lblTeam1FiveBarScoring;
+	private final JLabel lblTeam1TwoBarScoring;
+	private final JLabel lblTeam1Breaks;
+	private final JLabel lblTeam1Aces;
+	private final JLabel lblTeam1Stuffs;
+	private final JLabel lblTeam2PassAttempts;
+	private final JLabel lblTeam2PassCompletes;
+	private final JLabel lblTeam2Passing;
+	private final JLabel lblTeam2ShotAttempts;
+	private final JLabel lblTeam2ShotCompletes;
+	private final JLabel lblTeam2Shooting;
+	private final JLabel lblTeam2ClearAttempts;
+	private final JLabel lblTeam2ClearCompletes;
+	private final JLabel lblTeam2Clearing;
+	private final JLabel lblTeam2TwoBarPassAttempts;
+	private final JLabel lblTeam2TwoBarPassCompletes;
+	private final JLabel lblTeam2TwoBarPassing;
+	private final JLabel lblTeam2ShotsOnGoal;
+	private final JLabel lblTeam2Scoring;
+	private final JLabel lblTeam2ThreeBarScoring;
+	private final JLabel lblTeam2FiveBarScoring;
+	private final JLabel lblTeam2TwoBarScoring;
+	private final JLabel lblTeam2Breaks;
+	private final JLabel lblTeam2Aces;
+	private final JLabel lblTeam2Stuffs;
+	private final DecimalFormat df = new DecimalFormat("###.#"); //$NON-NLS-1$
+	private final Border innerBorder;
 	public StatsDisplayPanel() {
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
@@ -229,7 +229,7 @@ public class StatsDisplayPanel extends JPanel {
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		layoutComponents();
 	}
-	public void layoutComponents() {
+	private void layoutComponents() {
 		setLayout(new GridBagLayout());
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = -1;
@@ -851,7 +851,7 @@ public class StatsDisplayPanel extends JPanel {
 				JLabel label = (JLabel) component;
 				String name = label.getName();
 				String value = label.getText();
-				if (name != null && !value.isEmpty()) lines.append(name + ": " + value).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				if (name != null && !value.isEmpty()) lines.append(name).append(": ").append(value).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		StringSelection selection = new StringSelection(lines.toString());

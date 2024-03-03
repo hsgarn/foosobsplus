@@ -30,12 +30,14 @@ import java.util.Arrays;
 
 public class LastScoredWindowPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
-	private JLabel lblTimerDisplay;
-	private int displayWidth = 9;
+	private final JLabel lblTimerDisplay;
+	private final int displayWidth = 9;
 	private int prefixWidth;
-	private int suffixWidth = 3;
+	private final int suffixWidth = 3;
 	/**
 	 * Create the panel.
+     * @param timeToDisplay
+     * @param backgroundColor
 	 */
 	public LastScoredWindowPanel(String timeToDisplay, Color backgroundColor) {
 		setLayout(new MigLayout("", "[280.00]", "[67.00]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

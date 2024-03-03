@@ -58,33 +58,33 @@ import net.miginfocom.swing.MigLayout;
 public class OBSConnectPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private JTextField txtHost;
-	private JTextField txtPort;
-	private JButton btnConnect;
-	private JTextField txtPassword;
-	private JTextField txtMainScene;
-	private JButton btnSetMainScene;
-	private JCheckBox chckbxSavePassword;
-	private JCheckBox chckbxAutoLogin;
-	private JCheckBox chckbxCloseOnConnect;
-	private JCheckBox chckbxUpdateOnConnect;
-	private JButton btnDisconnect;
-	private JButton btnFetchMonitors;
-	private JButton btnFetchScenes;
-	private JButton btnProject;
-	private JButton btnActivateScene;
-	private JButton btnApply;
-	private JButton btnSave;
-	private JButton btnCancel;
-	private JButton btnRestoreDefaults;
-	private JList<String> lstMessageHistory;
-	private DefaultListModel<String> mdlMessageHistory;
-	private JScrollPane scrMessageHistory;
-	private JComboBox<String> monitorComboBox;
-	private JComboBox<String> sceneComboBox;
+	private final JTextField txtHost;
+	private final JTextField txtPort;
+	private final JButton btnConnect;
+	private final JTextField txtPassword;
+	private final JTextField txtMainScene;
+	private final JButton btnSetMainScene;
+	private final JCheckBox chckbxSavePassword;
+	private final JCheckBox chckbxAutoLogin;
+	private final JCheckBox chckbxCloseOnConnect;
+	private final JCheckBox chckbxUpdateOnConnect;
+	private final JButton btnDisconnect;
+	private final JButton btnFetchMonitors;
+	private final JButton btnFetchScenes;
+	private final JButton btnProject;
+	private final JButton btnActivateScene;
+	private final JButton btnApply;
+	private final JButton btnSave;
+	private final JButton btnCancel;
+	private final JButton btnRestoreDefaults;
+	private final JList<String> lstMessageHistory;
+	private final DefaultListModel<String> mdlMessageHistory;
+	private final JScrollPane scrMessageHistory;
+	private final JComboBox<String> monitorComboBox;
+	private final JComboBox<String> sceneComboBox;
 	private static final String ON = "1"; //$NON-NLS-1$
 	private static final String OFF = "0"; //$NON-NLS-1$
-	private static Logger logger = LoggerFactory.getLogger(OBSConnectPanel.class);
+	private static final Logger logger = LoggerFactory.getLogger(OBSConnectPanel.class);
 	private static final int COLUMN0 = 0;
 	private static final int COLUMN1 = 1;
 	private static final int COLUMN2 = 2;
@@ -95,8 +95,8 @@ public class OBSConnectPanel extends JPanel {
 		int row = 0;
 		monitorComboBox = new JComboBox<>();
 		sceneComboBox = new JComboBox<>();
-		mdlMessageHistory = new DefaultListModel<String>();
-		lstMessageHistory = new JList<String>(mdlMessageHistory);
+		mdlMessageHistory = new DefaultListModel<>();
+		lstMessageHistory = new JList<>(mdlMessageHistory);
 		setLayout(new MigLayout("", "[grow][grow][][]", "[][][][][][][][][][][][grow]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		JLabel lblPanelTitle = new JLabel(Messages.getString("OBSConnectPanel.Title")); //$NON-NLS-1$
 		add(lblPanelTitle, "cell " + COLUMN1 + " " + row); //$NON-NLS-1$ //$NON-NLS-2$
@@ -196,21 +196,17 @@ public class OBSConnectPanel extends JPanel {
 		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		add(btnSave, "cell " + COLUMN1 + " " + row + ",alignx left"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		btnCancel = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
-		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				revertChanges();
-				JComponent comp = (JComponent) e.getSource();
-				Window win = SwingUtilities.getWindowAncestor(comp);
-				win.dispose();
-			}
-		});
+		btnCancel.addActionListener((ActionEvent e) -> {
+                    revertChanges();
+                    JComponent comp = (JComponent) e.getSource();
+                    Window win = SwingUtilities.getWindowAncestor(comp);
+                    win.dispose();
+                });
 		add(btnCancel, "cell " + COLUMN3 + " " + row + ",growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
-		btnRestoreDefaults.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				restoreDefaults();
-			}
-		});
+		btnRestoreDefaults.addActionListener((ActionEvent arg0) -> {
+                    restoreDefaults();
+                });
 		add(btnRestoreDefaults, "cell " + COLUMN4+ " " + row + ",alignx left"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	public void disableConnect() {
@@ -239,20 +235,20 @@ public class OBSConnectPanel extends JPanel {
 		txtPort.setText(Settings.getDefaultOBSParameter("OBSPort")); //$NON-NLS-1$
 		txtPassword.setText(Settings.getDefaultOBSParameter("OBSPassword")); //$NON-NLS-1$
 		txtMainScene.setText(Settings.getDefaultOBSParameter("OBSMainScene")); //$NON-NLS-1$
-		chckbxSavePassword.setSelected(Settings.getDefaultOBSParameter("OBSSavePassword")==ON); //$NON-NLS-1$
-		chckbxAutoLogin.setSelected(Settings.getDefaultOBSParameter("OBSAutoLogin")==ON); //$NON-NLS-1$
-		chckbxCloseOnConnect.setSelected(Settings.getDefaultOBSParameter("OBSCloseOnConnect")==ON); //$NON-NLS-1$
-		chckbxUpdateOnConnect.setSelected(Settings.getDefaultOBSParameter("OBSUpdateOnConnect")==ON); //$NON-NLS-1$
+		chckbxSavePassword.setSelected(Settings.getDefaultOBSParameter("OBSSavePassword").equals(ON)); //$NON-NLS-1$
+		chckbxAutoLogin.setSelected(Settings.getDefaultOBSParameter("OBSAutoLogin").equals(ON)); //$NON-NLS-1$
+		chckbxCloseOnConnect.setSelected(Settings.getDefaultOBSParameter("OBSCloseOnConnect").equals(ON)); //$NON-NLS-1$
+		chckbxUpdateOnConnect.setSelected(Settings.getDefaultOBSParameter("OBSUpdateOnConnect").equals(ON)); //$NON-NLS-1$
 	}
 	public void revertChanges() {
 		txtHost.setText(Settings.getOBSParameter("OBSHost")); //$NON-NLS-1$
 		txtPort.setText(Settings.getOBSParameter("OBSPort")); //$NON-NLS-1$
 		txtPassword.setText(Settings.getOBSParameter("OBSPassword")); //$NON-NLS-1$
 		txtMainScene.setText(Settings.getOBSParameter("OBSMainScene")); //$NON-NLS-1$
-		chckbxSavePassword.setSelected(Settings.getOBSParameter("OBSSavePassword")==ON); //$NON-NLS-1$
-		chckbxAutoLogin.setSelected(Settings.getOBSParameter("OBSAutoLogin")==ON); //$NON-NLS-1$
-		chckbxCloseOnConnect.setSelected(Settings.getOBSParameter("OBSCloseOnConnect")==ON); //$NON-NLS-1$
-		chckbxUpdateOnConnect.setSelected(Settings.getOBSParameter("OBSUpdateOnConnect")==ON); //$NON-NLS-1$
+		chckbxSavePassword.setSelected(Settings.getOBSParameter("OBSSavePassword").equals(ON)); //$NON-NLS-1$
+		chckbxAutoLogin.setSelected(Settings.getOBSParameter("OBSAutoLogin").equals(ON)); //$NON-NLS-1$
+		chckbxCloseOnConnect.setSelected(Settings.getOBSParameter("OBSCloseOnConnect").equals(ON)); //$NON-NLS-1$
+		chckbxUpdateOnConnect.setSelected(Settings.getOBSParameter("OBSUpdateOnConnect").equals(ON)); //$NON-NLS-1$
 	}
 	public void saveSettings() {
 		updateOBS();
@@ -298,15 +294,16 @@ public class OBSConnectPanel extends JPanel {
 		public AttributiveCellRenderer() {
 			setOpaque(true);
 		}
+                @Override
 		public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-			String tmp = ""; //$NON-NLS-1$
+			String tmp;
 			tmp = (String) value;
 			setBackground(UIManager.getColor("List.background")); //$NON-NLS-1$
 			setForeground(UIManager.getColor("List.foreground")); //$NON-NLS-1$
-			if (tmp.indexOf("Disconnect") != -1 || tmp.indexOf("Unable") != -1 || tmp.indexOf("ERROR!") != -1) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			if (tmp.contains("Disconnect") || tmp.contains("Unable") || tmp.contains("ERROR!")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				setForeground(Color.RED);
 			} 
-			if (tmp.indexOf("Connected!") != -1) { //$NON-NLS-1$
+			if (tmp.contains("Connected!")) { //$NON-NLS-1$
 				setForeground(Color.BLUE);
 			}
 		    setText(tmp);

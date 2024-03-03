@@ -28,10 +28,10 @@ import com.midsouthfoosball.foosobsplus.model.AppConfig;
 
 @SuppressWarnings("serial")
 public class TimerWindowFrame extends JFrame {
-	private TimerWindowPanel timerWindowPanel;
-	private static final String programName = AppConfig.PROGRAM_NAME;
+	private final TimerWindowPanel timerWindowPanel;
+	private static final String PROGRAMNAME = AppConfig.PROGRAM_NAME;
 	public TimerWindowFrame(MainFrame mainFrame) {
-		super(programName + " " + Messages.getString("TimerWindowFrame.TimerWindow")); //$NON-NLS-1$ //$NON-NLS-2$
+		super(PROGRAMNAME + " " + Messages.getString("TimerWindowFrame.TimerWindow")); //$NON-NLS-1$ //$NON-NLS-2$
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		timerWindowPanel = new TimerWindowPanel("0",Color.GREEN); //$NON-NLS-1$
 		timerWindowPanel.setPreferredSize(new Dimension(256, 70));

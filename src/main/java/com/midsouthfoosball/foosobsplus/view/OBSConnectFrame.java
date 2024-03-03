@@ -33,10 +33,10 @@ import com.midsouthfoosball.foosobsplus.model.AppConfig;
 @SuppressWarnings("serial")
 public class OBSConnectFrame extends JFrame {
 	private OBSConnectPanel obsConnectPanel;
-	private static final String programName = AppConfig.PROGRAM_NAME;
-	private static Logger logger = LoggerFactory.getLogger(OBSConnectFrame.class);
+	private static final String PROGRAMNAME = AppConfig.PROGRAM_NAME;
+	private static final Logger logger = LoggerFactory.getLogger(OBSConnectFrame.class);
 	public OBSConnectFrame() {
-		super(programName + " " + Messages.getString("OBSConnectFrame.WindowTitle")); //$NON-NLS-1$ //$NON-NLS-2$
+		super(PROGRAMNAME + " " + Messages.getString("OBSConnectFrame.WindowTitle")); //$NON-NLS-1$ //$NON-NLS-2$
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setAlwaysOnTop(true);
 		try {

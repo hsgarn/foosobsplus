@@ -28,10 +28,10 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
 public class GameTableWindowFrame extends JFrame {
-	private static final String programName = AppConfig.PROGRAM_NAME;
+	private static final String PROGRAMNAME = AppConfig.PROGRAM_NAME;
 	private static final String ON = "1"; //$NON-NLS-1$
 	public GameTableWindowFrame(GameTableWindowPanel gameTableWindowPanel, MainFrame mainFrame) {
-		super(programName + " " + Messages.getString("GameTableWindowFrame.GameTableWindow")); //$NON-NLS-1$ //$NON-NLS-2$
+		super(PROGRAMNAME + " " + Messages.getString("GameTableWindowFrame.GameTableWindow")); //$NON-NLS-1$ //$NON-NLS-2$
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		if (Settings.getControlParameter("CutThroatMode").equals(ON)) {
 			gameTableWindowPanel.setPreferredSize(new Dimension(440, 100));

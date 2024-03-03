@@ -36,14 +36,14 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
 public class ResetPanel extends JPanel {
-	private JButton btnResetNames;
-	private JButton btnResetScores;
-	private JButton btnResetGameCounts;
-	private JButton btnResetMatchCounts;
-	private JButton btnResetTimeOuts;
-	private JButton btnResetResetWarns;
-	private JButton btnResetAll;
-	private Border innerBorder;
+	private final JButton btnResetNames;
+	private final JButton btnResetScores;
+	private final JButton btnResetGameCounts;
+	private final JButton btnResetMatchCounts;
+	private final JButton btnResetTimeOuts;
+	private final JButton btnResetResetWarns;
+	private final JButton btnResetAll;
+	private final Border innerBorder;
 	public ResetPanel() {
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
@@ -64,7 +64,7 @@ public class ResetPanel extends JPanel {
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		layoutComponents();
 	}
-	public void layoutComponents() {
+	private void layoutComponents() {
 		setLayout(new GridBagLayout());
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = 0;
@@ -137,37 +137,37 @@ public class ResetPanel extends JPanel {
 			btnResetNames.setMnemonic(-1);
 		} else {
 			btnResetNames.setMnemonic(Settings.getHotKeyParameter("ResetNames").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("ResetScores").isEmpty()) { //$NON-NLS-1$
 			btnResetScores.setMnemonic(-1);
 		} else {
 			btnResetScores.setMnemonic(Settings.getHotKeyParameter("ResetScores").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("ResetGameCounts").isEmpty()) { //$NON-NLS-1$
 			btnResetGameCounts.setMnemonic(-1);
 		} else {
 			btnResetGameCounts.setMnemonic(Settings.getHotKeyParameter("ResetGameCounts").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("ResetMatchCounts").isEmpty()) { //$NON-NLS-1$
 			btnResetMatchCounts.setMnemonic(-1);
 		} else {
 			btnResetMatchCounts.setMnemonic(Settings.getHotKeyParameter("ResetMatchCounts").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("ResetTimeOuts").isEmpty()) { //$NON-NLS-1$
 			btnResetTimeOuts.setMnemonic(-1);
 		} else {
 			btnResetTimeOuts.setMnemonic(Settings.getHotKeyParameter("ResetTimeOuts").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("ResetResetWarn").isEmpty()) { //$NON-NLS-1$
 			btnResetResetWarns.setMnemonic(-1);
 		} else {
 			btnResetResetWarns.setMnemonic(Settings.getHotKeyParameter("ResetResetWarn").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getHotKeyParameter("ResetAll").isEmpty()) { //$NON-NLS-1$
 			btnResetAll.setMnemonic(-1);
 		} else {
 			btnResetAll.setMnemonic(Settings.getHotKeyParameter("ResetAll").charAt(0)); //$NON-NLS-1$
-		};
+		}
 	}
 	public void updateMnemonics() {
 		setMnemonics();

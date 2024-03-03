@@ -48,24 +48,24 @@ import com.midsouthfoosball.foosobsplus.model.AppConfig;
 
 @SuppressWarnings("serial")
 public class GameResultsWindowFrame extends JFrame {
-	private static final String programName = AppConfig.PROGRAM_NAME;
-	private DefaultListModel<JPanel> listModel;
+    private static final String PROGRAMNAME = AppConfig.PROGRAM_NAME;
+    private DefaultListModel<JPanel> listModel;
     private JList<JPanel> gameResultsList;
     private JButton clearButton;
     private JButton updateButton;
     private JScrollPane gameResultsScrollPane;
-	public GameResultsWindowFrame() {
-		super(programName + " " + Messages.getString("GameResultsWindowFrame.GameResultsWindowTitle")); //$NON-NLS-1$ //$NON-NLS-2$
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		initComponents();
+    public GameResultsWindowFrame() {
+        super(PROGRAMNAME + " " + Messages.getString("GameResultsWindowFrame.GameResultsWindowTitle")); //$NON-NLS-1$ //$NON-NLS-2$
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        initComponents();
         Container container = getContentPane();
         container.setLayout(new BorderLayout());
         container.add(gameResultsScrollPane, BorderLayout.CENTER);
         container.add(clearButton, BorderLayout.NORTH);
         container.add(updateButton, BorderLayout.SOUTH);
         container.setPreferredSize(new Dimension(450,300));
-		setLocation(0,100);
-		pack();
+        setLocation(0,100);
+        pack();
 	}
     private void initComponents() {
         listModel = new DefaultListModel<>();
@@ -87,11 +87,8 @@ public class GameResultsWindowFrame extends JFrame {
         gameResultsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         updateButton = new JButton(Messages.getString("GameResultsWindowFrame.Update")); //$NON-NLS-1$
         clearButton = new JButton(Messages.getString("GameResultsWindowFrame.Clear")); //$NON-NLS-1$
-        clearButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                clearGameResultsLines();
-            }
+        clearButton.addActionListener((ActionEvent e) -> {
+            clearGameResultsLines();
         });
     }
     public void addLine(String line) {
@@ -149,6 +146,7 @@ public class GameResultsWindowFrame extends JFrame {
 		updateButton.addActionListener(listenForBtnUpdate);
 	}
 	private class ListenForCkbxUpdate implements ChangeListener {
+                @Override
 		public void stateChanged(ChangeEvent e) {
 			buildGameResults();
 			updateButton.doClick();

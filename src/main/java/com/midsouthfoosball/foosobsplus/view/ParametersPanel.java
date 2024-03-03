@@ -45,42 +45,42 @@ import net.miginfocom.swing.MigLayout;
 
 public class ParametersPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
-	private JTextField txtPointsToWin;
-	private JTextField txtMaxWin;
-	private JTextField txtGamesToWin;
-	private JTextField txtWinBy;
-	private JCheckBox chckbxAutoIncrementGame;
-	private JCheckBox chckbxAnnounceWinner;
-	private JCheckBox chckbxAnnounceMeatball;
-	private JTextField txtMaxTimeOuts;
-	private JTextField txtWinnerPrefix;
-	private JTextField txtWinnerSuffix;
-	private JTextField txtShotTime;
-	private JTextField txtPassTime;
-	private JTextField txtTimeOutTime;
-	private JTextField txtGameTime;
-	private JTextField txtRecallTime;
-	private JTextField txtMeatball;
-	private JCheckBox chckbxShowTimeOutsUsed;
-	private JCheckBox chckbxAutoCapNames;
-	private JCheckBox chckbxWinByFinalOnly;
-	private JCheckBox chckbxEnableShowSkunk;
-	private JCheckBox chckbxCutThroatMode;
-	private JCheckBox chckbxRackMode;
-	private JTextField txtTeam1LastScored;
-	private JTextField txtTeam2LastScored;
-	private JTextField txtClearLastScored;
-	private JTextField txtSide1Color;
-	private JTextField txtSide2Color;
-	private JTextField txtBallsInRack;
-	private JButton btnApply;
-	private JButton btnSave;
-	private JButton btnCancel;
-	private JButton btnRestoreDefaults;
+	private final JTextField txtPointsToWin;
+	private final JTextField txtMaxWin;
+	private final JTextField txtGamesToWin;
+	private final JTextField txtWinBy;
+	private final JCheckBox chckbxAutoIncrementGame;
+	private final JCheckBox chckbxAnnounceWinner;
+	private final JCheckBox chckbxAnnounceMeatball;
+	private final JTextField txtMaxTimeOuts;
+	private final JTextField txtWinnerPrefix;
+	private final JTextField txtWinnerSuffix;
+	private final JTextField txtShotTime;
+	private final JTextField txtPassTime;
+	private final JTextField txtTimeOutTime;
+	private final JTextField txtGameTime;
+	private final JTextField txtRecallTime;
+	private final JTextField txtMeatball;
+	private final JCheckBox chckbxShowTimeOutsUsed;
+	private final JCheckBox chckbxAutoCapNames;
+	private final JCheckBox chckbxWinByFinalOnly;
+	private final JCheckBox chckbxEnableShowSkunk;
+	private final JCheckBox chckbxCutThroatMode;
+	private final JCheckBox chckbxRackMode;
+	private final JTextField txtTeam1LastScored;
+	private final JTextField txtTeam2LastScored;
+	private final JTextField txtClearLastScored;
+	private final JTextField txtSide1Color;
+	private final JTextField txtSide2Color;
+	private final JTextField txtBallsInRack;
+	private final JButton btnApply;
+	private final JButton btnSave;
+	private final JButton btnCancel;
+	private final JButton btnRestoreDefaults;
 	private final Integer maxGamesToWin = 6;
 	private static final String ON = "1"; //$NON-NLS-1$
 	private static final String OFF = "0"; //$NON-NLS-1$
-	private static Logger logger = LoggerFactory.getLogger(ParametersPanel.class);
+	private static final Logger logger = LoggerFactory.getLogger(ParametersPanel.class);
 	public ParametersPanel() throws IOException {
 		setLayout(new MigLayout("", "[119.00][50.00:87.00,grow,left][78.00,grow][grow][]", "[][][][][][][][][][][][][][][][][][][][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		JLabel lblParameter = new JLabel(Messages.getString("ParametersPanel.Parameter")); //$NON-NLS-1$
@@ -259,21 +259,17 @@ public class ParametersPanel extends JPanel {
 		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		add(btnSave, "cell 1 21,alignx center"); //$NON-NLS-1$
 		btnCancel = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
-		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				revertChanges();
-				JComponent comp = (JComponent) e.getSource();
-				Window win = SwingUtilities.getWindowAncestor(comp);
-				win.dispose();
-			}
-		});
+		btnCancel.addActionListener((ActionEvent e) -> {
+                    revertChanges();
+                    JComponent comp = (JComponent) e.getSource();
+                    Window win = SwingUtilities.getWindowAncestor(comp);
+                    win.dispose();
+                });
 		add(btnCancel, "cell 2 21,alignx center"); //$NON-NLS-1$
 		btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
-		btnRestoreDefaults.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				restoreDefaults();
-			}
-		});
+		btnRestoreDefaults.addActionListener((ActionEvent arg0) -> {
+                    restoreDefaults();
+                });
 		btnRestoreDefaults.setHorizontalAlignment(SwingConstants.RIGHT);
 		add(btnRestoreDefaults, "cell 3 21,alignx center"); //$NON-NLS-1$
 	}
@@ -282,7 +278,7 @@ public class ParametersPanel extends JPanel {
 		txtShotTime.setText(Settings.getDefaultParameter("ShotTime")); //$NON-NLS-1$
 		txtMaxWin.setText(Settings.getDefaultParameter("MaxWin")); //$NON-NLS-1$
 		txtPassTime.setText(Settings.getDefaultParameter("PassTime")); //$NON-NLS-1$
-		txtWinBy.setText(Settings.getDefaultParameter("WinBy"));; //$NON-NLS-1$
+		txtWinBy.setText(Settings.getDefaultParameter("WinBy")); //$NON-NLS-1$
 		txtTimeOutTime.setText(Settings.getDefaultParameter("TimeOutTime")); //$NON-NLS-1$
 		int checkValue = Integer.parseInt(Settings.getDefaultParameter("GamesToWin")); //$NON-NLS-1$
 		if (checkValue > maxGamesToWin) checkValue = maxGamesToWin;
@@ -314,7 +310,7 @@ public class ParametersPanel extends JPanel {
 		txtShotTime.setText(Settings.getControlParameter("ShotTime")); //$NON-NLS-1$
 		txtMaxWin.setText(Settings.getControlParameter("MaxWin")); //$NON-NLS-1$
 		txtPassTime.setText(Settings.getControlParameter("PassTime")); //$NON-NLS-1$
-		txtWinBy.setText(Settings.getControlParameter("WinBy"));; //$NON-NLS-1$
+		txtWinBy.setText(Settings.getControlParameter("WinBy")); //$NON-NLS-1$
 		txtTimeOutTime.setText(Settings.getControlParameter("TimeOutTime")); //$NON-NLS-1$
 		int checkValue = Integer.parseInt(Settings.getControlParameter("GamesToWin")); //$NON-NLS-1$
 		if (checkValue > maxGamesToWin) checkValue = maxGamesToWin;
@@ -366,7 +362,7 @@ public class ParametersPanel extends JPanel {
 		saveMaxWin("MaxWin", txtMaxWin.getText(), Settings.getControlParameter("PointsToWin")); //$NON-NLS-1$ //$NON-NLS-2$
 		saveIntegerSetting("WinBy",txtWinBy.getText()); //$NON-NLS-1$
     	if (isValidInteger(txtGamesToWin.getText())) {
-    		Integer checkValue = Integer.parseInt(txtGamesToWin.getText());
+    		Integer checkValue = Integer.valueOf(txtGamesToWin.getText());
     		if (checkValue > maxGamesToWin) {
     			checkValue = maxGamesToWin;
     			JOptionPane.showMessageDialog(null,Messages.getString("ParametersPanel.GamesToWinExceedError") + maxGamesToWin + Messages.getString("ParametersPanel.SettingTo") + maxGamesToWin + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -408,7 +404,7 @@ public class ParametersPanel extends JPanel {
 	}
 	private boolean isValidInteger(String checkString) {
     	try {
-    		Integer.parseInt(checkString);
+    		Integer.valueOf(checkString);
     		return true;
     	} catch (NumberFormatException e) {
     		logger.error(e.toString());

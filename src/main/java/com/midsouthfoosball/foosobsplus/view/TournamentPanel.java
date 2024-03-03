@@ -40,14 +40,14 @@ import com.midsouthfoosball.foosobsplus.model.Settings;
 
 @SuppressWarnings("serial")
 public final class TournamentPanel extends JPanel {
-	private JLabel lblTournamentName;
-	private JLabel lblEventName;
-	private JLabel lblTableName;
-	private JTextField txtTournamentName;
-	private JTextField txtEventName;
-	private JTextField txtTableName;
-	private JButton btnClear;
-	private Border innerBorder;
+	private final JLabel lblTournamentName;
+	private final JLabel lblEventName;
+	private final JLabel lblTableName;
+	private final JTextField txtTournamentName;
+	private final JTextField txtEventName;
+	private final JTextField txtTableName;
+	private final JButton btnClear;
+	private final Border innerBorder;
 	public TournamentPanel() {
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
@@ -67,7 +67,7 @@ public final class TournamentPanel extends JPanel {
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		layoutComponents();
 	}
-	private final void layoutComponents() {
+	private void layoutComponents() {
 		setLayout(new GridBagLayout());
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = 0;

@@ -77,12 +77,12 @@ public class TeamPanel extends JPanel {
 	private int teamNbr;
 	private Border innerBorder;
 	private static CustomFocusTraversalPolicy customTraversalPolicy;
-	public TeamPanel(int teamNbr, String teamColor) {
+	public TeamPanel(int teamNbr) {
 		this.teamNbr = teamNbr;
-		initializeTeamPanel(teamNbr, teamColor);
+		initializeTeamPanel(teamNbr);
 		layoutComponents();
 	}
-	private void initializeTeamPanel(int teamNbr, String teamColor) {
+	private void initializeTeamPanel(int teamNbr) {
 		this.teamNbr = teamNbr;
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
@@ -147,29 +147,29 @@ public class TeamPanel extends JPanel {
 		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
 		Border outerBorder = BorderFactory.createEmptyBorder(Settings.getBorderTop(),Settings.getBorderLeft(),Settings.getBorderBottom(),Settings.getBorderRight());
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
-        Vector<Component> order = new Vector<Component>(16);
-        order.add(txtTeamName);
-        order.add(txtForwardName);
-        order.add(txtGoalieName);
-        order.add(txtScore);
-        order.add(txtGameCount);
-        order.add(txtMatchCount);
-        order.add(txtTimeOutCount);
-        order.add(btnSwitchPositions);
-        order.add(btnScoreDecrease);
-        order.add(btnScoreIncrease);
-        order.add(btnGameCountDecrease);
-        order.add(btnGameCountIncrease);
-        order.add(btnMatchCountDecrease);
-        order.add(btnMatchCountIncrease);
-        order.add(btnTimeOutCountDecrease);
-        order.add(btnTimeOutCountIncrease);
-        order.add(btnReset);
-        order.add(btnWarn);
-        order.add(ckbxKingSeat);
-        customTraversalPolicy = new CustomFocusTraversalPolicy(order);
-        this.setFocusTraversalPolicy(customTraversalPolicy);
-        this.setFocusCycleRoot(true);
+                Vector<Component> order = new Vector<>(16);
+                order.add(txtTeamName);
+                order.add(txtForwardName);
+                order.add(txtGoalieName);
+                order.add(txtScore);
+                order.add(txtGameCount);
+                order.add(txtMatchCount);
+                order.add(txtTimeOutCount);
+                order.add(btnSwitchPositions);
+                order.add(btnScoreDecrease);
+                order.add(btnScoreIncrease);
+                order.add(btnGameCountDecrease);
+                order.add(btnGameCountIncrease);
+                order.add(btnMatchCountDecrease);
+                order.add(btnMatchCountIncrease);
+                order.add(btnTimeOutCountDecrease);
+                order.add(btnTimeOutCountIncrease);
+                order.add(btnReset);
+                order.add(btnWarn);
+                order.add(ckbxKingSeat);
+                customTraversalPolicy = new CustomFocusTraversalPolicy(order);
+                this.setFocusTraversalPolicy(customTraversalPolicy);
+                this.setFocusCycleRoot(true);
 	}
 	private void setMnemonics(int teamNbr) {
 		String teamNumber = Integer.toString(teamNbr);
@@ -177,62 +177,62 @@ public class TeamPanel extends JPanel {
 			btnSwitchPositions.setMnemonic(-1);
 		} else {
 			btnSwitchPositions.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"SwitchPositions").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getTeamHotKeyParameter(teamNumber,"ScorePlus").isEmpty()) { //$NON-NLS-1$
 			btnScoreIncrease.setMnemonic(-1);
 		} else {
 			btnScoreIncrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"ScorePlus").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getTeamHotKeyParameter(teamNumber,"ScoreMinus").isEmpty()) { //$NON-NLS-1$
 			btnScoreDecrease.setMnemonic(-1);
 		} else {
 			btnScoreDecrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"ScoreMinus").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getTeamHotKeyParameter(teamNumber,"GameCountPlus").isEmpty()) { //$NON-NLS-1$
 			btnGameCountIncrease.setMnemonic(-1);
 		} else {
 			btnGameCountIncrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"GameCountPlus").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getTeamHotKeyParameter(teamNumber,"GameCountMinus").isEmpty()) { //$NON-NLS-1$
 			btnGameCountDecrease.setMnemonic(-1);
 		} else {
 			btnGameCountDecrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"GameCountMinus").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getTeamHotKeyParameter(teamNumber,"MatchCountPlus").isEmpty()) { //$NON-NLS-1$
 			btnMatchCountIncrease.setMnemonic(-1);
 		} else {
 			btnMatchCountIncrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"MatchCountPlus").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getTeamHotKeyParameter(teamNumber,"MatchCountMinus").isEmpty()) { //$NON-NLS-1$
 			btnMatchCountDecrease.setMnemonic(-1);
 		} else {
 			btnMatchCountDecrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"MatchCountMinus").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getTeamHotKeyParameter(teamNumber,"TimeOutPlus").isEmpty()) { //$NON-NLS-1$
 			btnTimeOutCountIncrease.setMnemonic(-1);
 		} else {
 			btnTimeOutCountIncrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"TimeOutPlus").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getTeamHotKeyParameter(teamNumber,"TimeOutMinus").isEmpty()) { //$NON-NLS-1$
 			btnTimeOutCountDecrease.setMnemonic(-1);
 		} else {
 			btnTimeOutCountDecrease.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"TimeOutMinus").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getTeamHotKeyParameter(teamNumber,"Reset").isEmpty()) { //$NON-NLS-1$
 			btnReset.setMnemonic(-1);
 		} else {
 			btnReset.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"Reset").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getTeamHotKeyParameter(teamNumber,"Warn").isEmpty()) { //$NON-NLS-1$
 			btnWarn.setMnemonic(-1);
 		} else {
 			btnWarn.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"Warn").charAt(0)); //$NON-NLS-1$
-		};
+		}
 		if(Settings.getTeamHotKeyParameter(teamNumber,"KingSeat").isEmpty()) { //$NON-NLS-1$
 			ckbxKingSeat.setMnemonic(-1);
 		} else {
 			ckbxKingSeat.setMnemonic(Settings.getTeamHotKeyParameter(teamNumber,"KingSeat").charAt(0)); //$NON-NLS-1$
-		};
+		}
 	}
 	private void layoutComponents() {
 		setLayout(new GridBagLayout());
@@ -603,13 +603,17 @@ public class TeamPanel extends JPanel {
 	}
 	private String buildTitle() {
 		String theColor;
-		if (teamNbr==1) {
-			theColor = Settings.getControlParameter("Side1Color"); //$NON-NLS-1$
-		} else if (teamNbr==2) {
-			theColor = Settings.getControlParameter("Side2Color"); //$NON-NLS-1$
-		} else {
-			theColor = Settings.getControlParameter("Side2Color"); //$NON-NLS-1$
-		}
+            switch (teamNbr) {
+                case 1:
+                    theColor = Settings.getControlParameter("Side1Color"); //$NON-NLS-1$
+                    break;
+                case 2:
+                    theColor = Settings.getControlParameter("Side2Color"); //$NON-NLS-1$
+                    break;
+                default:
+                    theColor = Settings.getControlParameter("Side2Color"); //$NON-NLS-1$
+                    break;
+            }
 		return Messages.getString("TeamPanel.Team") + teamNbr + Messages.getString("TeamPanel.Information") + theColor + Messages.getString("TeamPanel.Side"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
     public static class CustomFocusTraversalPolicy extends FocusTraversalPolicy {
@@ -618,10 +622,12 @@ public class TeamPanel extends JPanel {
 			this.order = new Vector<Component>(order.size());
 			this.order.addAll(order);
 		}
+            @Override
 		public Component getComponentAfter(Container focusCycleRoot, Component aComponent)	{
 			int idx = (order.indexOf(aComponent) + 1) % order.size();
 			return order.get(idx);
 		}
+            @Override
 		public Component getComponentBefore(Container focusCycleRoot, Component aComponent) {
 			int idx = order.indexOf(aComponent) - 1;
 			if (idx < 0) {
@@ -629,12 +635,15 @@ public class TeamPanel extends JPanel {
 			}
 			return order.get(idx);
 		}
+            @Override
 		public Component getDefaultComponent(Container focusCycleRoot) {
 			return order.get(0);
 		}
+            @Override
 		public Component getLastComponent(Container focusCycleRoot) {
 			return order.lastElement();
 		}
+            @Override
 		public Component getFirstComponent(Container focusCycleRoot) {
 			return order.get(0);
 		}
