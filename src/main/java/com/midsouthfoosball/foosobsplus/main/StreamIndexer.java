@@ -28,15 +28,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class StreamIndexer {
-	private String dataPath;
-	private String separator = FileSystems.getDefault().getSeparator();
-	private static final Logger logger =LoggerFactory.getLogger(StreamIndexer.class);
+	private final String dataPath;
+	private final static String SEPARATOR = FileSystems.getDefault().getSeparator();
+	private final static Logger logger =LoggerFactory.getLogger(StreamIndexer.class);
 	
 	public StreamIndexer(String dataPath) {
 		this.dataPath = dataPath;
 	}
 	public void appendStreamIndexer(String text) {
-		String filePath = dataPath + separator + "streamindex.txt";
+		String filePath = dataPath + SEPARATOR + "streamindex.txt";
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
 			bw.write(text);
 		} catch (IOException e) {

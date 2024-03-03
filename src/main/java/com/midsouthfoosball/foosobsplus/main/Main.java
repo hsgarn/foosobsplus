@@ -176,6 +176,9 @@ import io.obswebsocket.community.client.message.event.sceneitems.SceneItemEnable
 import io.obswebsocket.community.client.message.event.sceneitems.SceneItemListReindexedEvent;
 import io.obswebsocket.community.client.message.event.sceneitems.SceneItemRemovedEvent;
 import io.obswebsocket.community.client.message.event.scenes.CurrentProgramSceneChangedEvent;
+import io.obswebsocket.community.client.message.response.sceneitems.GetSceneItemIdResponse;
+import io.obswebsocket.community.client.message.response.scenes.GetSceneListResponse;
+import io.obswebsocket.community.client.message.response.ui.GetMonitorListResponse;
 import io.obswebsocket.community.client.model.Monitor;
 import io.obswebsocket.community.client.model.Scene;
 /**
@@ -194,67 +197,66 @@ public final class Main implements MatchObserver {
 	private static boolean 							autoScoreConnected		= false;
 	private static Socket 							autoScoreSocket;
 	private static PrintWriter 						autoScoreSocketWriter;
-	private static StreamIndexer 					streamIndexer      		= new StreamIndexer(Settings.getControlParameter("datapath")); //$NON-NLS-1$
-	private static Boolean 							allowAutoScoreReconnect	= true;
+	private static final StreamIndexer 					streamIndexer      		= new StreamIndexer(Settings.getControlParameter("datapath")); //$NON-NLS-1$
 	private static Boolean 							blockAutoScoreReconnect	= false;
-    private static Map<String, String>				teamGameShowSourcesMap	= new HashMap<>();
+    private static final Map<String, String>				teamGameShowSourcesMap	= new HashMap<>();
 	////// Watch Service for File changes \\\\\\
 	private static WatchService 					watchService;
 	////// CommandStack and UndoRedo setup \\\\\\
 	private static int 								undoRedoPointer			= -1;
-	private static Stack<Command> 					commandStack 			= new Stack<>();
-	private static Stack<Memento> 					mementoStackTeam1 		= new Stack<>();
-	private static Stack<Memento> 					mementoStackTeam2		= new Stack<>();
-	private static Stack<Memento> 					mementoStackTeam3       = new Stack<>();
-	private static Stack<Memento> 					mementoStackStats 		= new Stack<>();
-	private static Stack<Memento> 					mementoStackMatch		= new Stack<>();
-	private static Stack<Memento> 					mementoStackGameClock	= new Stack<>();
-	private static Stack<String>					codeStack 				= new Stack<>();
+	private static final Stack<Command> 					commandStack 			= new Stack<>();
+	private static final Stack<Memento> 					mementoStackTeam1 		= new Stack<>();
+	private static final Stack<Memento> 					mementoStackTeam2		= new Stack<>();
+	private static final Stack<Memento> 					mementoStackTeam3       = new Stack<>();
+	private static final Stack<Memento> 					mementoStackStats 		= new Stack<>();
+	private static final Stack<Memento> 					mementoStackMatch		= new Stack<>();
+	private static final Stack<Memento> 					mementoStackGameClock	= new Stack<>();
+	private static final Stack<String>					codeStack 				= new Stack<>();
 	private static CommandSwitch 					mySwitch;
 	////// Generate the Data Models (Mvc) \\\\\\
-	private static Tournament						tournament				= new Tournament(obsInterface);
-	private static Team 							team1 					= new Team(obsInterface, 1, Settings.getControlParameter("Side1Color")); //$NON-NLS-1$
-	private static Team 							team2 					= new Team(obsInterface, 2, Settings.getControlParameter("Side2Color")); //$NON-NLS-1$
-	private static Team         					team3              		= new Team(obsInterface, 3, Messages.getString("Main.None")); //$NON-NLS-1$
-	private static Match 							match					= new Match(obsInterface, team1, team2, team3);
-	private static Stats 							stats 					= new Stats(team1, team2);
+	private static final Tournament						tournament				= new Tournament(obsInterface);
+	private static final Team 							team1 					= new Team(obsInterface, 1, Settings.getControlParameter("Side1Color")); //$NON-NLS-1$
+	private static final Team 							team2 					= new Team(obsInterface, 2, Settings.getControlParameter("Side2Color")); //$NON-NLS-1$
+	private static final Team         					team3              		= new Team(obsInterface, 3, Messages.getString("Main.None")); //$NON-NLS-1$
+	private static final Match 							match					= new Match(obsInterface, team1, team2, team3);
+	private static final Stats 							stats 					= new Stats(team1, team2);
 	////// Create a TimeClock to be the Timer \\\\\\
-	private static TimeClock 						timeClock 				= new TimeClock(obsInterface);
-	private static GameClock       					gameClock           	= new GameClock(obsInterface);
-	private static LastScoredClock 					lastScored1Clock   		= new LastScoredClock();
-	private static LastScoredClock					lastScored2Clock    	= new LastScoredClock();
-	private static LastScoredClock 					lastScored3Clock		= new LastScoredClock();
+	private static final TimeClock 						timeClock 				= new TimeClock(obsInterface);
+	private static final GameClock       					gameClock           	= new GameClock(obsInterface);
+	private static final LastScoredClock 					lastScored1Clock   		= new LastScoredClock();
+	private static final LastScoredClock					lastScored2Clock    	= new LastScoredClock();
+	private static final LastScoredClock 					lastScored3Clock		= new LastScoredClock();
 	////// Create the View Panels to Display (mVc) \\\\\\
-	private static TournamentPanel					tournamentPanel 		= new TournamentPanel();
-	private static TimerPanel 						timerPanel 				= new TimerPanel();
-	private static OBSPanel							obsPanel				= new OBSPanel();
-	private static AutoScoreMainPanel				autoScoreMainPanel  	= new AutoScoreMainPanel();
-	private static MatchPanel						matchPanel				= new MatchPanel();
-	private static TeamPanel 						teamPanel1 				= new TeamPanel(1);
-	private static TeamPanel 						teamPanel2 				= new TeamPanel(2);
-	private static TeamPanel						teamPanel3				= new TeamPanel(3);
-	private static StatsEntryPanel 					statsEntryPanel 		= new StatsEntryPanel();
-	private static SwitchPanel 						switchPanel 			= new SwitchPanel();
-	private static ResetPanel 						resetPanel 				= new ResetPanel();
-	private static StatsDisplayPanel 				statsDisplayPanel 		= new StatsDisplayPanel();
+	private static final TournamentPanel					tournamentPanel 		= new TournamentPanel();
+	private static final TimerPanel 						timerPanel 				= new TimerPanel();
+	private static final OBSPanel							obsPanel				= new OBSPanel();
+	private static final AutoScoreMainPanel				autoScoreMainPanel  	= new AutoScoreMainPanel();
+	private static final MatchPanel						matchPanel				= new MatchPanel();
+	private static final TeamPanel 						teamPanel1 				= new TeamPanel(1);
+	private static final TeamPanel 						teamPanel2 				= new TeamPanel(2);
+	private static final TeamPanel						teamPanel3				= new TeamPanel(3);
+	private static final StatsEntryPanel 					statsEntryPanel 		= new StatsEntryPanel();
+	private static final SwitchPanel 						switchPanel 			= new SwitchPanel();
+	private static final ResetPanel 						resetPanel 				= new ResetPanel();
+	private static final StatsDisplayPanel 				statsDisplayPanel 		= new StatsDisplayPanel();
 	////// Set up Timer and Settings Windows \\\\\\
-	private static ParametersFrame 					parametersFrame 		= new ParametersFrame();
-	private static ParametersPanel					parametersPanel			= parametersFrame.getSettingsPanel();
-	private static HotKeysFrame 					hotKeysFrame 			= new HotKeysFrame();
-	private static HotKeysPanel 					hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
-	private static SourcesFrame						sourcesFrame			= new SourcesFrame();
-	private static SourcesPanel						sourcesPanel			= sourcesFrame.getSourcesPanel();
-	private static StatSourcesFrame					statSourcesFrame		= new StatSourcesFrame();
-	private static StatSourcesPanel					statSourcesPanel		= statSourcesFrame.getStatSourcesPanel();
-	private static FiltersFrame        				filtersFrame        	= new FiltersFrame();
-	private static FiltersPanel        				filtersPanel        	= filtersFrame.getFiltersPanel();
-	private static PartnerProgramFrame 				partnerProgramFrame 	= new PartnerProgramFrame();
-	private static OBSConnectFrame					obsConnectFrame			= new OBSConnectFrame();
-	private static OBSConnectPanel					obsConnectPanel			= obsConnectFrame.getOBSConnectPanel();
-	private static AutoScoreSettingsFrame			autoScoreSettingsFrame	= new AutoScoreSettingsFrame();
-	private static AutoScoreSettingsPanel			autoScoreSettingsPanel	= autoScoreSettingsFrame.getAutoScoreSettingsPanel();
-	private static AutoScoreConfigFrame				autoScoreConfigFrame	= new AutoScoreConfigFrame();
-	private static AutoScoreConfigPanel				autoScoreConfigPanel	= autoScoreConfigFrame.getAutoScoreConfigPanel();
+	private static final ParametersFrame 					parametersFrame 		= new ParametersFrame();
+	private static final ParametersPanel					parametersPanel			= parametersFrame.getSettingsPanel();
+	private static final HotKeysFrame 					hotKeysFrame 			= new HotKeysFrame();
+	private static final HotKeysPanel 					hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
+	private static final SourcesFrame						sourcesFrame			= new SourcesFrame();
+	private static final SourcesPanel						sourcesPanel			= sourcesFrame.getSourcesPanel();
+	private static final StatSourcesFrame					statSourcesFrame		= new StatSourcesFrame();
+	private static final StatSourcesPanel					statSourcesPanel		= statSourcesFrame.getStatSourcesPanel();
+	private static final FiltersFrame        				filtersFrame        	= new FiltersFrame();
+	private static final FiltersPanel        				filtersPanel        	= filtersFrame.getFiltersPanel();
+	private static final PartnerProgramFrame 				partnerProgramFrame 	= new PartnerProgramFrame();
+	private static final OBSConnectFrame					obsConnectFrame			= new OBSConnectFrame();
+	private static final OBSConnectPanel					obsConnectPanel			= obsConnectFrame.getOBSConnectPanel();
+	private static final AutoScoreSettingsFrame			autoScoreSettingsFrame	= new AutoScoreSettingsFrame();
+	private static final AutoScoreSettingsPanel			autoScoreSettingsPanel	= autoScoreSettingsFrame.getAutoScoreSettingsPanel();
+	private static final AutoScoreConfigFrame				autoScoreConfigFrame	= new AutoScoreConfigFrame();
+	private static final AutoScoreConfigPanel				autoScoreConfigPanel	= autoScoreConfigFrame.getAutoScoreConfigPanel();
 	////// Set up The Main Window JFrame \\\\\\
 	private static MainFrame 						mainFrame;
 	////// Set up independent Windows \\\\\\
@@ -274,8 +276,9 @@ public final class Main implements MatchObserver {
 	private static StatsController 					statsController;
 	private static SwingWorker<Boolean, Integer> 	autoScoreWorker;
 	private static SwingWorker<Boolean, String> 	fileWatchWorker;
-	public static enum FoosCodes {
-	}
+    {
+        match.addObserver(this);
+    }
 	public Main() throws IOException {
 		buildTeamGameShowSourcesMap();
 		loadWindowsAndControllers();
@@ -296,7 +299,6 @@ public final class Main implements MatchObserver {
 		}
 		loadListeners();
 		loadCommands();
-		match.addObserver(this);
 		createAutoScoreWorker();
 		if (Settings.getAutoScoreParameter("AutoScoreSettingsAutoConnect").equals(ON)) { //$NON-NLS-1$
 			connectAutoScore();
@@ -349,7 +351,6 @@ public final class Main implements MatchObserver {
 		loadSceneItemMap();
 	}
 	private static void loadSceneItemMap() {
-		
 	}
 	private static void checkCurrentProgramSceneChange(CurrentProgramSceneChangedEvent currentProgramSceneChanged) {
     	boolean showParsed = Settings.getShowParsed();
@@ -488,11 +489,11 @@ public final class Main implements MatchObserver {
 	}
 	private static void fetchMonitorList() {
 		if (OBS.getConnected()) {
-			OBS.getController().getMonitorList(response -> {
+			OBS.getController().getMonitorList((GetMonitorListResponse response) -> {
 				if(Settings.getShowParsed()) {
 					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.FetchingMonitors")); //$NON-NLS-1$
 				}
-				List<Monitor> monitors = null;
+				List<Monitor> monitors;
 				if(response != null && response.isSuccessful()) {
 					monitors = response.getMonitors();
 					HashMap<Integer, String> monitorMap = new HashMap<>();
@@ -514,8 +515,8 @@ public final class Main implements MatchObserver {
 	}
 	private static void fetchSceneList() {
 		if (OBS.getConnected()) {
-			OBS.getController().getSceneList(response -> {
-				List<Scene> scenes = null;
+			OBS.getController().getSceneList((GetSceneListResponse response) -> {
+				List<Scene> scenes;
 				if(response != null && response.isSuccessful()) {
 					scenes = response.getScenes();
 					HashMap<Integer, String> sceneMap = new HashMap<>();
@@ -652,13 +653,11 @@ public final class Main implements MatchObserver {
 			    try {
 					status = get();
 					autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.WorkerCompletedWithIsConnected") + status); //$NON-NLS-1$
-			    } catch (InterruptedException e) {
-			    	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString()); //$NON-NLS-1$
-		        	logger.error(e.toString());
-			    } catch (ExecutionException e) {
+			    } catch (InterruptedException | ExecutionException e) {
 			    	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString()); //$NON-NLS-1$
 		        	logger.error(e.toString());
 			    }
+                //$NON-NLS-1$
 	    		mainFrame.setAutoScoreIconConnected(false);
 	    		autoScoreConnected = false;			    	
 			}
@@ -701,8 +700,8 @@ public final class Main implements MatchObserver {
 		autoScoreWorker.addPropertyChangeListener(new AutoScoreWorkerStateChangeListener());
 	}
 	private static void checkFilters(String code) {
-		String filter = ""; //$NON-NLS-1$
-		Integer teamNbr = 0;
+		String filter;
+		Integer teamNbr;
 		if (code.equals("XIST1") || code.equals("XIST2")) { //$NON-NLS-1$ //$NON-NLS-2$
 			if (code.equals("XIST1")) { //$NON-NLS-1$
 				teamNbr = 1;
@@ -780,7 +779,7 @@ public final class Main implements MatchObserver {
 			result = a + " " + combinePlayerNames(1) + " vs " + combinePlayerNames(2) + " " + b + " (" + gameDuration + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		}
 		gameResultsWindowFrame.addLine("[" + ((isStreamTimerRunning) ? startTime : "00:00:00") + "] " + result); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		StringBuilder results = new StringBuilder();
+		StringBuilder results;
 		results = gameResultsWindowFrame.buildGameResults();
 		matchController.updateGameResults(results);
 		if(isStreamTimerRunning) {
@@ -949,6 +948,11 @@ public final class Main implements MatchObserver {
 		team2.addPropertyChangeListener(new TeamPropertyListener());
 		team3.addPropertyChangeListener(new TeamPropertyListener());
 	}
+
+    /**
+     * Called when Match detects meatball condition
+     */
+    @Override
 	public void onMeatball() {
 		activateFilter("Meatball"); //$NON-NLS-1$
 	}
@@ -1043,7 +1047,7 @@ public final class Main implements MatchObserver {
 			if (!isRedo) { 
 				commandStatus = commandStack.push(mySwitch.execute(stats.getCommand()));
 				if (commandStatus == null) {
-					statsEntryPanel.errorCodeHistory();;
+					statsEntryPanel.errorCodeHistory();
 				} else {
 					checkFilters(code);
 				}
@@ -1053,7 +1057,7 @@ public final class Main implements MatchObserver {
 			if (!isRedo) { 
 				commandStatus = commandStack.push(mySwitch.execute("code")); //$NON-NLS-1$
 				if (commandStatus == null) {
-					statsEntryPanel.errorCodeHistory();;
+					statsEntryPanel.errorCodeHistory();
 				}
 				undoRedoPointer++;
 			}
@@ -1117,10 +1121,10 @@ public final class Main implements MatchObserver {
 		matchController.updateGameTables();
 	}
  	public static void redo() 	{
- 		char commandChar = new Character('X');
+ 		char commandChar = 'X';
  		Boolean isRedo = true;
  		String tempCode;
- 		Boolean isCommand = false;
+ 		Boolean isCommand;
 	    if(undoRedoPointer == commandStack.size() - 1)  return;
 	    undoRedoPointer++;
 	    tempCode = codeStack.get(undoRedoPointer);
@@ -1319,15 +1323,13 @@ public final class Main implements MatchObserver {
 			if (OBS.getConnected()) {
 				boolean showParsed = Settings.getShowParsed();
 				if (showParsed) obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSceneItemEnabledCalled") + sceneName + ", " + sourceItem + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				OBS.getController().getSceneItemId(sceneName, sourceItem, null,	getSceneItemIdResponse -> { 
-					if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
-						if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
-							OBS.getController().setSceneItemEnabled(sceneName,getSceneItemIdResponse.getSceneItemId(),show,setSceneItemEnabledResponse -> {
-								if(showParsed) {
-									obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSceneItemEnabledResponseObtained") + sceneName + ", " + sourceItem + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	            				}
-				             });
-						}
+				OBS.getController().getSceneItemId(sceneName, sourceItem, null,	(GetSceneItemIdResponse response) -> { 
+					if (response != null && response.isSuccessful()) {
+                        OBS.getController().setSceneItemEnabled(sceneName,response.getSceneItemId(),show,setSceneItemEnabledResponse -> {
+                            if(showParsed) {
+                                obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSceneItemEnabledResponseObtained") + sceneName + ", " + sourceItem + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                            }
+                         });
 					} else {
 						if(showParsed) {
 							obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSceneItemEnabledFailed") + sceneName + ", " + sourceItem + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -1528,6 +1530,7 @@ public final class Main implements MatchObserver {
 	}
 	////// Listeners \\\\\\
 	private static class CodeListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			Boolean isRedo = false;
 			JTextField txt = (JTextField) e.getSource();
@@ -1545,17 +1548,20 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class StatsEntryUndoListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			undo();
 		}
 	}
 	private static class StatsEntryRedoListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			redo();
 			setFocusOnCode();	
 		}
 	}
 	private static class StatsClearListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			stats.clearAll();
 			statsEntryPanel.clearAll();
@@ -1577,11 +1583,13 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class HotKeysApplyListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			hotKeysSaveSettings();
 		}
 	}
 	private static class HotKeysSaveListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			hotKeysSaveSettings();
 			JComponent comp = (JComponent) e.getSource();
@@ -1590,6 +1598,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class SourcesApplyListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			if (sourcesPanel.saveSettings()) {
 				buildTeamGameShowSourcesMap();
@@ -1597,6 +1606,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class SourcesSaveListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			if (sourcesPanel.saveSettings()) {
 				buildTeamGameShowSourcesMap();
@@ -1607,11 +1617,13 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class StatSourcesApplyListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			statSourcesPanel.saveSettings();
 		}
 	}
 	private static class StatSourcesSaveListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			if (statSourcesPanel.saveSettings()) {
 				JComponent comp = (JComponent) e.getSource();
@@ -1621,11 +1633,13 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class AutoScoreSettingsApplyListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			autoScoreSettingsPanel.saveSettings();
 		}
 	}
 	private static class AutoScoreSettingsSaveListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			autoScoreSettingsPanel.saveSettings();
 			JComponent comp = (JComponent) e.getSource();
@@ -1634,12 +1648,14 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class AutoScoreSettingsConnectListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			blockAutoScoreReconnect = false;
 			connectAutoScore();
 		}
 	}
 	private static class AutoScoreSettingsDisconnectListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			logger.info("AutoScore Settings Window Disconnect Button Pressed."); //$NON-NLS-1$
 			blockAutoScoreReconnect = true;
@@ -1647,16 +1663,19 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class AutoScoreConfigReadListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			readAutoScoreConfig();
 		}
 	}
 	private static class AutoScoreConfigWriteListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			writeAutoScoreConfig();
 		}
 	}
 	private static class AutoScoreConfigValidateListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			if (validateAutoScoreConfig()) {
 				logger.info("Validation passed."); //$NON-NLS-1$
@@ -1665,23 +1684,27 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class AutoScoreConfigResetListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			logger.info("AutoScore Configuration Reset Pico Button Pressed."); //$NON-NLS-1$
 			resetAutoScoreConfig();
 		}
 	}
 	private static class AutoScoreConfigClearListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			clearAutoScoreConfig();
 		}
 	}
 	private static class OBSMainSceneListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			setMainScene(txt.getText());
 		}
 	}
 	private static class OBSSetMainSceneListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			String scene = obsConnectPanel.getSelectedSceneName();
 			if (scene != null && !scene.isEmpty()) {
@@ -1691,28 +1714,33 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class OBSFetchMonitorsListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			fetchMonitorList();
 		}
 	}
 	private static class OBSProjectListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			projectSource();
 		}
 	}
 	private static class OBSActivateSceneListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			String scene = obsConnectPanel.getSelectedSceneName();
 			activateOBSScene(scene);
 		}
 	}
 	private static class OBSMainSceneFocusListener extends FocusAdapter {
+        @Override
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			setMainScene(txt.getText());
 		}
 	}
 	private static class OBSDisconnectListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.RequestingDisconnect")); //$NON-NLS-1$
 			OBS.getController().disconnect();
@@ -1720,6 +1748,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class OBSConnectListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.updateOBS();
 			connectToOBS();
@@ -1727,6 +1756,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class OBSDisconnectItemListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.RequestingDisconnect")); //$NON-NLS-1$
 			OBS.getController().disconnect();
@@ -1735,11 +1765,13 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class OBSApplyListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.saveSettings();
 			setFocusOnCode();
 		}
 	}	private static class OBSSaveListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			obsConnectPanel.saveSettings();
 			JComponent comp = (JComponent) e.getSource();
@@ -1749,6 +1781,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class OBSPushListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			if (OBS.getConnected()) {
 				tournamentController.writeAll();
@@ -1759,6 +1792,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class OBSPullListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			if (OBS.getConnected()) {
 				teamController.fetchAll();
@@ -1769,6 +1803,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class OBSShowScoresListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			if (OBS.getConnected()) {
 				AbstractButton abstractButton = (AbstractButton) e.getSource();
@@ -1778,6 +1813,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class OBSShowTimerListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			if (OBS.getConnected()) {
 				AbstractButton abstractButton = (AbstractButton) e.getSource();
@@ -1787,6 +1823,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class OBSShowCutthroatListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			if (OBS.getConnected()) {
 				AbstractButton abstractButton = (AbstractButton) e.getSource();
@@ -1796,6 +1833,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class OBSEnableSkunkListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			AbstractButton abstractButton = (AbstractButton) e.getSource();
 			boolean showSkunkFlag = abstractButton.getModel().isSelected();
@@ -1810,6 +1848,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class OBSStartStreamListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			AbstractButton abstractButton = (AbstractButton) e.getSource();
 			boolean startStreamFlag = abstractButton.getModel().isSelected();
@@ -1823,16 +1862,19 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class GameClockTimerListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			obsPanel.updateTimerDisplay(gameClock.getStreamTime());
 		}
 	}
 	private static class ParametersApplyListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			saveParameterSettings();
 		}
 	}
 	private static class ParametersSaveListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			saveParameterSettings();
 			JComponent comp = (JComponent) e.getSource();
@@ -1858,6 +1900,7 @@ public final class Main implements MatchObserver {
 		teamController.displayAll();
 	}
 	private static class AutoScoreMainPanelConnectListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			blockAutoScoreReconnect = false;
 			logger.info("AutoScore Main Panel Connect Button Pressed."); //$NON-NLS-1$
@@ -1866,6 +1909,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class AutoScoreMainPanelDisconnectListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			blockAutoScoreReconnect = true;
 			logger.info("AutoScore Main Panel Disconnect Button Pressed."); //$NON-NLS-1$
@@ -1874,11 +1918,13 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class AutoScoreMainPanelSettingsListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			mainController.showAutoScore();
 		}
 	}
 	private static class ScoreIncreaseListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String code = "XIST" + ripTeamNumber(btn.getName());//XIST1 //$NON-NLS-1$
@@ -1887,6 +1933,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class ScoreDecreaseListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String code = "XDST" + ripTeamNumber(btn.getName());//XDST1 //$NON-NLS-1$
@@ -1895,6 +1942,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class GameCountIncreaseListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String code = "XIGT" + ripTeamNumber(btn.getName());//XIGT1 //$NON-NLS-1$
@@ -1903,6 +1951,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class GameCountDecreaseListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String code = "XDGT" + ripTeamNumber(btn.getName());//XDGT1 //$NON-NLS-1$
@@ -1911,6 +1960,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class MatchCountIncreaseListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String code = "XIMT" + ripTeamNumber(btn.getName());//XIMT1 //$NON-NLS-1$
@@ -1919,6 +1969,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class MatchCountDecreaseListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String code = "XDMT" + ripTeamNumber(btn.getName());//XDMT1 //$NON-NLS-1$
@@ -1927,6 +1978,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class TimeOutCountIncreaseListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String code = "XUTT" + ripTeamNumber(btn.getName());//XUTT1 //$NON-NLS-1$
@@ -1935,6 +1987,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class TimeOutCountDecreaseListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String code = "XRTT" + ripTeamNumber(btn.getName());//XRTT1 //$NON-NLS-1$
@@ -1943,6 +1996,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class ResetListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			JToggleButton btn = (JToggleButton) e.getSource();
 			String teamNumber = ripTeamNumber(btn.getName());
@@ -1954,6 +2008,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class WarnListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			JToggleButton btn = (JToggleButton) e.getSource();
 			String teamNumber = ripTeamNumber(btn.getName());
@@ -1965,6 +2020,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class KingSeatListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			JCheckBox ckbx = (JCheckBox) e.getSource();
 			String teamNumber = ripTeamNumber(ckbx.getName());
@@ -1976,6 +2032,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class SwitchPositionsListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String teamNumber = ripTeamNumber(btn.getName());
@@ -1987,6 +2044,7 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class SwitchSidesListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSS",false); //$NON-NLS-1$
 			activateFilter("SwitchSides"); //$NON-NLS-1$
@@ -1994,48 +2052,56 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class ShotTimerListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSST",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class PassTimerListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSPT",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class TimeOutTimerListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSTT",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class GameTimerListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSGT",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class RecallTimerListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XSRT",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ResetTimerListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRT",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class StartEventListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSE",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class StartMatchListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSM",false); //$NON-NLS-1$
 			activateFilter("StartMatch"); //$NON-NLS-1$
@@ -2043,18 +2109,21 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class PauseMatchListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPPM",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class EndMatchListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPEM",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class StartGameListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSG",false); //$NON-NLS-1$
 			activateFilter("StartGame"); //$NON-NLS-1$
@@ -2062,96 +2131,112 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class SwitchTeamsListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPST",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class SwitchPlayer1Listener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XXP1",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class SwitchPlayer2Listener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XXP2",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class SwitchScoresListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSSC",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class SwitchGameCountsListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSGC",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class SwitchMatchCountsListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSMC",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class SwitchTimeOutsListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSTO",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class SwitchResetWarnsListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPSR",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ClearAllListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPCA",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ResetNamesListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRN",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ResetScoresListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRS",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ResetGameCountsListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRG",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ResetMatchCountsListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRM",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ResetTimeOutsListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRTO",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ResetResetWarnsListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRR",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class ResetAllListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPRA",false); //$NON-NLS-1$
 			statsController.displayAllStats();
@@ -2159,17 +2244,20 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class TableClearAllListener implements ActionListener {
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			processCode("XPTCA",false); //$NON-NLS-1$
 			setFocusOnCode();
 		}
 	}
 	private static class TimerWindowCloseListener extends WindowAdapter {
+        @Override
 		public void windowClosed(WindowEvent we) {
 			showTimer(false);
 		}
 	}
 	private static class AutoScoreWorkerStateChangeListener implements PropertyChangeListener {
+        @Override
 		public void propertyChange(PropertyChangeEvent e) {
 			SwingWorker.StateValue state = null;
 			Object source = e.getSource();
@@ -2181,7 +2269,7 @@ public final class Main implements MatchObserver {
 			} else {
 				logger.info("AutoScoreWorker state changed to: " + state.toString()); //$NON-NLS-1$
 				if (state == SwingWorker.StateValue.DONE) {
-					if (allowAutoScoreReconnect && !blockAutoScoreReconnect) {
+					if (!blockAutoScoreReconnect) {
 						logger.info("Attempt reconnect to AutoScore..."); //$NON-NLS-1$
 						connectAutoScore();
 					}
@@ -2190,101 +2278,121 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static class Team1ScoreFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team1Score"); //$NON-NLS-1$
 		}
 	}
 	private static class Team2ScoreFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team2Score"); //$NON-NLS-1$
 		}
 	}
 	private static class Team1WinGameFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team1WinGame"); //$NON-NLS-1$
 		}
 	}
 	private static class Team2WinGameFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team2WinGame"); //$NON-NLS-1$
 		}
 	}
 	private static class Team1WinMatchFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team1WinMatch"); //$NON-NLS-1$
 		}
 	}
 	private static class Team2WinMatchFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team2WinMatch"); //$NON-NLS-1$
 		}
 	}
 	private static class Team1TimeOutFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team1TimeOut"); //$NON-NLS-1$
 		}
 	}
 	private static class Team2TimeOutFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team2TimeOut"); //$NON-NLS-1$
 		}
 	}
 	private static class Team1ResetFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team1Reset"); //$NON-NLS-1$
 		}
 	}
 	private static class Team2ResetFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team2Reset"); //$NON-NLS-1$
 		}
 	}
 	private static class Team1WarnFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team1Warn"); //$NON-NLS-1$
 		}
 	}
 	private static class Team2WarnFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team2Warn"); //$NON-NLS-1$
 		}
 	}
 	private static class Team1SwitchPositionsFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team1SwitchPositions"); //$NON-NLS-1$
 		}
 	}
 	private static class Team2SwitchPositionsFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team2SwitchPositions"); //$NON-NLS-1$
 		}
 	}
 	private static class Team1SkunkFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team1Skunk"); //$NON-NLS-1$
 		}
 	}
 	private static class Team2SkunkFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Team2Skunk"); //$NON-NLS-1$
 		}
 	}
 	private static class StartMatchFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("StartMatch"); //$NON-NLS-1$
 		}
 	}
 	private static class StartGameFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("StartGame"); //$NON-NLS-1$
 		}
 	}
 	private static class SwitchSidesFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("SwitchSides"); //$NON-NLS-1$
 		}
 	}
 	private static class MeatballFilterListener implements ActionListener{
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			activateFilter("Meatball"); //$NON-NLS-1$
 		}
@@ -2341,10 +2449,10 @@ public final class Main implements MatchObserver {
 	public static void setTeamGameCountVisible(String name, String value) {
 		String teamNumber = ripTeamNumber(name);
 		if (value != null) {
-			boolean show = false;
-			int gameCount = Integer.valueOf(value);
+			boolean show;
+			int gameCount = Integer.parseInt(value);
 			for (Integer x = 1; x < 4; x++) {
-				show = (x <= gameCount) ? true : false;
+				show = (x <= gameCount);
 				showSource(teamGameShowSourcesMap.get(teamNumber+x.toString()), show);
 			}
 		}
@@ -2419,21 +2527,21 @@ public final class Main implements MatchObserver {
 			        			if (fileName.equals(partnerProgramPlayer1FileName) || fileName.equals(partnerProgramPlayer2FileName) || fileName.equals(partnerProgramPlayer3FileName) || fileName.equals(partnerProgramPlayer4FileName)) {
 				        			try {
 				        				File file = new File(partnerProgramDir + "\\" + fileName); //$NON-NLS-1$
-				        				Scanner fileReader = new Scanner(file);
-				        				if (fileReader.hasNextLine()) {
-				        					String data = fileReader.nextLine();
-				        					if (!data.equals(clearString)) {
-				        						FileWriter fileWriter = new FileWriter(file);
-				        						fileWriter.write(clearString);
-				        						fileWriter.close();
-				        						publish(fileName + "=" + data); //$NON-NLS-1$
-				        					}
-				        				}
-				        				fileReader.close();
+                                        try (Scanner fileReader = new Scanner(file)) {
+                                            if (fileReader.hasNextLine()) {
+                                                String data = fileReader.nextLine();
+                                                if (!data.equals(clearString)) {
+                                                    try (FileWriter fileWriter = new FileWriter(file)) {
+                                                        fileWriter.write(clearString);
+                                                    }
+                                                    publish(fileName + "=" + data); //$NON-NLS-1$
+                                                }
+                                            }
+                                        }
 				        			} catch (FileNotFoundException e) {
 				    		        	logger.error(e.toString());
-				        			} catch (Exception ee) {
-				    		        	logger.error(ee.toString());
+				        			} catch (IOException e) {
+				    		        	logger.error(e.toString());
 				        			}
 			        			}
 		        			}
@@ -2455,9 +2563,7 @@ public final class Main implements MatchObserver {
 			    try {
 			     status = get();
 			     logger.info("Worker completed with isConnected: " + status); //$NON-NLS-1$
-			    } catch (InterruptedException e) {
-		        	logger.error(e.toString());
-			    } catch (ExecutionException e) {
+			    } catch (InterruptedException | ExecutionException e) {
 		        	logger.error(e.toString());
 			    }
 			}

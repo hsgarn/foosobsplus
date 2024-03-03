@@ -35,7 +35,7 @@ public class FoosOBSPlusApp {
 		SwingUtilities.invokeLater(() -> {
 			try {
 				setNimbusLookAndFeel();
-			} catch (Exception e) {
+			} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
 				logger.error(e.toString());
 				setCrossPlatformLookAndFeel();
 			}
@@ -58,7 +58,7 @@ public class FoosOBSPlusApp {
 	private static void setCrossPlatformLookAndFeel() {
 		try {
 		    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-		} catch (Exception e1) {
+		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e1) {
 		    logger.info("Can't set look and feel.");
 		    logger.error(e1.toString());
 		}
