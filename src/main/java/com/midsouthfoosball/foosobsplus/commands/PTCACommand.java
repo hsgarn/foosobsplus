@@ -33,9 +33,11 @@ public class PTCACommand implements Command {
 		this.statsController = statsController;
 		this.tournamentController = tournamentController;
 	}
+        @Override
 	public void execute() {
 		tournamentController.clearAll();
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

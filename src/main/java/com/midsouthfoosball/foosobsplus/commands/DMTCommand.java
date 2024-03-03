@@ -37,9 +37,11 @@ public class DMTCommand implements Command {
 		this.teamController = teamController;
 		this.teamNumber = teamNumber;
 	}
+        @Override
 	public void execute() {
 		teamController.decrementMatchCount(teamNumber);
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

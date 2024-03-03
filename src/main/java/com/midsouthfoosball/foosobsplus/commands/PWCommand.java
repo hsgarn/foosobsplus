@@ -37,9 +37,11 @@ public class PWCommand implements Command {
 		this.teamController = teamController;
 		this.teamNumber = teamNumber;
 	}
+        @Override
 	public void execute() {
 		teamController.toggleWarn(teamNumber);
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

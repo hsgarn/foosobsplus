@@ -35,9 +35,11 @@ public class PRNCommand implements Command {
 		this.statsController = statsController;
 		this.teamController = teamController;
 	}
+        @Override
 	public void execute() {
 		teamController.resetNames();
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

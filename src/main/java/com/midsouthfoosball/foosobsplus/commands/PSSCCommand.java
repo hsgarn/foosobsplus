@@ -35,9 +35,11 @@ public class PSSCCommand implements Command {
 		this.statsController = statsController;
 		this.teamController = teamController;
 	}
+        @Override
 	public void execute() {
 		teamController.switchScores();
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

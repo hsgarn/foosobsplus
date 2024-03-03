@@ -37,9 +37,11 @@ public class PRCommand implements Command {
 		this.teamController = teamController;
 		this.teamNumber = teamNumber;
 	}
+        @Override
 	public void execute() {
 		teamController.toggleReset(teamNumber);
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

@@ -36,13 +36,13 @@ import com.midsouthfoosball.foosobsplus.view.MainFrame;
 import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
 
 public class MainController {
-	private MainFrame mainFrame;
-	private TimerWindowFrame timerWindowFrame;
-	private LastScoredWindowFrame lastScored1WindowFrame;
-	private LastScoredWindowFrame lastScored2WindowFrame;
-	private LastScoredWindowFrame lastScored3WindowFrame;
-	private GameTableWindowFrame gameTableWindowFrame;
-	private GameResultsWindowFrame gameResultsWindowFrame;
+	private final MainFrame mainFrame;
+	private final TimerWindowFrame timerWindowFrame;
+	private final LastScoredWindowFrame lastScored1WindowFrame;
+	private final LastScoredWindowFrame lastScored2WindowFrame;
+	private final LastScoredWindowFrame lastScored3WindowFrame;
+	private final GameTableWindowFrame gameTableWindowFrame;
+	private final GameResultsWindowFrame gameResultsWindowFrame;
 	
 	public MainController(MainFrame mainFrame, TimerWindowFrame timerWindowFrame, LastScoredWindowFrame lastScored1WindowFrame, LastScoredWindowFrame lastScored2WindowFrame, LastScoredWindowFrame lastScored3WindowFrame, GameTableWindowFrame gameTableWindowFrame, GameResultsWindowFrame gameResultsWindowFrame) {
 		this.mainFrame = mainFrame;
@@ -134,36 +134,43 @@ public class MainController {
 		}
 	}
 	private class TimerWindowViewItemListener implements ItemListener {
+                @Override
 		public void itemStateChanged(ItemEvent e) {
 			checkForAllOff();
 		}
 	}
 	private class LastScored1ViewItemListener implements ItemListener {
+                @Override
 		public void itemStateChanged(ItemEvent e) {
 			checkForAllOff();
 		}
 	}
 	private class LastScored2ViewItemListener implements ItemListener {
+                @Override
 		public void itemStateChanged(ItemEvent e) {
 			checkForAllOff();
 		}
 	}
 	private class LastScored3ViewItemListener implements ItemListener {
+                @Override
 		public void itemStateChanged(ItemEvent e) {
 			checkForAllOff();
 		}
 	}
 	private class GameTableViewItemListener implements ItemListener {
+                @Override
 		public void itemStateChanged(ItemEvent e) {
 			checkForAllOff();
 		}
 	}
 	private class GameResultsViewItemListener implements ItemListener {
+                @Override
 		public void itemStateChanged(ItemEvent e) {
 			checkForAllOff();
 		}
 	}
 	private class TimerWindowListener implements ActionListener{
+                @Override
 		public void actionPerformed(ActionEvent ae) {
 			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
 			timerWindowFrame.setVisible(box.isSelected());
@@ -171,6 +178,7 @@ public class MainController {
 		}
 	}
 	private class LastScored1WindowListener implements ActionListener {
+                @Override
 		public void actionPerformed(ActionEvent ae) {
 			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
 			lastScored1WindowFrame.setVisible(box.isSelected());
@@ -178,6 +186,7 @@ public class MainController {
 		}
 	}
 	private class LastScored2WindowListener implements ActionListener {
+                @Override
 		public void actionPerformed(ActionEvent ae) {
 			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
 			lastScored2WindowFrame.setVisible(box.isSelected());
@@ -185,6 +194,7 @@ public class MainController {
 		}
 	}
 	private class LastScored3WindowListener implements ActionListener {
+                @Override
 		public void actionPerformed(ActionEvent ae) {
 			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
 			lastScored3WindowFrame.setVisible(box.isSelected());
@@ -192,6 +202,7 @@ public class MainController {
 		}
 	}
 	private class GameTableWindowListener implements ActionListener {
+                @Override
 		public void actionPerformed(ActionEvent ae) {
 			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
 			gameTableWindowFrame.setVisible(box.isSelected());
@@ -199,6 +210,7 @@ public class MainController {
 		}
 	}
 	private class GameResultsWindowListener implements ActionListener {
+                @Override
 		public void actionPerformed(ActionEvent ae) {
 			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
 			gameResultsWindowFrame.setVisible(box.isSelected());
@@ -206,6 +218,7 @@ public class MainController {
 		}
 	}
 	private class ViewAllWindowsListener implements ActionListener {
+                @Override
 		public void actionPerformed(ActionEvent ae) {
 			JCheckBoxMenuItem box = (JCheckBoxMenuItem) ae.getSource();
 			boolean state = box.isSelected();

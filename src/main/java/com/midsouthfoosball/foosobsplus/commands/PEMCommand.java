@@ -33,9 +33,11 @@ public class PEMCommand implements Command {
 	public PEMCommand(StatsController statsController) {
 		this.statsController = statsController;
 	}
+        @Override
 	public void execute() {
 		Main.endMatch();
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

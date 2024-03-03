@@ -33,9 +33,11 @@ public class PSGCommand implements Command {
 	public PSGCommand(StatsController statsController) {
 		this.statsController = statsController;
 	}
+        @Override
 	public void execute() {
 		Main.startGame();
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

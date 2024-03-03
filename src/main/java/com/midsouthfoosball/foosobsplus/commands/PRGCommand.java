@@ -35,9 +35,11 @@ public class PRGCommand implements Command {
 		this.statsController = statsController;
 		this.teamController = teamController;
 	}
+        @Override
 	public void execute() {
 		teamController.resetGameCounts();
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

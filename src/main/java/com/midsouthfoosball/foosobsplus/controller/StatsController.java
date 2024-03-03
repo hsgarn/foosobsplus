@@ -25,9 +25,9 @@ import com.midsouthfoosball.foosobsplus.model.Stats;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 
 public class StatsController {
-	private Stats stats;
-	private StatsDisplayPanel statsDisplayPanel;
-	private TeamController teamController;
+	private final Stats stats;
+	private final StatsDisplayPanel statsDisplayPanel;
+	private final TeamController teamController;
 	public StatsController(Stats stats, StatsDisplayPanel statsDisplayPanel, TeamController teamController) {
 		this.stats = stats;
 		this.statsDisplayPanel = statsDisplayPanel;

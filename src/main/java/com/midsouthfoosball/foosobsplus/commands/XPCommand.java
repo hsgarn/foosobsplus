@@ -37,9 +37,11 @@ public class XPCommand implements Command {
 		this.teamController = teamController;
 		this.playerNumber = playerNumber;
 	}
+        @Override
 	public void execute() {
 		teamController.switchPlayer(playerNumber);
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

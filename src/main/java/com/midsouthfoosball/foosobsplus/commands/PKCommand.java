@@ -37,9 +37,11 @@ public class PKCommand implements Command {
 		this.teamController = teamController;
 		this.teamNumber = teamNumber;
 	}
+        @Override
 	public void execute() {
 		teamController.toggleKingSeat(teamNumber);
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

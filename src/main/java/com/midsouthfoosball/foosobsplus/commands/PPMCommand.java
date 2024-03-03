@@ -35,9 +35,11 @@ public class PPMCommand implements Command {
 		this.statsController = statsController;
 		this.matchController = matchController;
 	}
+        @Override
 	public void execute() {
 		matchController.pauseMatch();
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

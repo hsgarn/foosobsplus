@@ -35,9 +35,11 @@ public class SPTCommand implements Command {
 		this.statsController = statsController;
 		this.teamController = teamController;
 	}
+        @Override
 	public void execute() {
 		teamController.startPassTimer();
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

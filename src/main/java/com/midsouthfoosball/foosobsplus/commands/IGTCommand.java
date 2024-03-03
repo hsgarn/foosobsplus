@@ -37,9 +37,11 @@ public class IGTCommand implements Command {
 		this.teamController = teamController;
 		this.teamNumber = teamNumber;
 	}
+        @Override
 	public void execute() {
 		teamController.incrementGameCount(teamNumber);
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

@@ -34,19 +34,19 @@ import com.midsouthfoosball.foosobsplus.view.TimerPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
 
 public class TimerController {
-	private OBSInterface obsInterface;
-	private TimerPanel timerPanel;
-	private TimerWindowFrame timerWindowFrame;
-	private TimeClock timeClock;
-	private LastScoredWindowFrame lastScored1WindowFrame;
-	private LastScoredClock lastScored1Clock;
-	private LastScoredWindowFrame lastScored2WindowFrame;
-	private LastScoredClock lastScored2Clock;
-	private LastScoredWindowFrame lastScored3WindowFrame;
-	private LastScoredClock lastScored3Clock;
-	private int displayWidth = 9;
+	private final OBSInterface obsInterface;
+	private final TimerPanel timerPanel;
+	private final TimerWindowFrame timerWindowFrame;
+	private final TimeClock timeClock;
+	private final LastScoredWindowFrame lastScored1WindowFrame;
+	private final LastScoredClock lastScored1Clock;
+	private final LastScoredWindowFrame lastScored2WindowFrame;
+	private final LastScoredClock lastScored2Clock;
+	private final LastScoredWindowFrame lastScored3WindowFrame;
+	private final LastScoredClock lastScored3Clock;
+	private final static int DISPLAYWIDTH = 9;
 	private int prefixWidth;
-	private int suffixWidth = 3;
+	private final static int SUFFIXWIDTH = 3;
 	public TimerController(OBSInterface obsInterface, TimerPanel timerPanel, TimerWindowFrame timerWindowFrame, TimeClock timeClock, LastScoredWindowFrame lastScored1WindowFrame, LastScoredClock lastScored1Clock, LastScoredWindowFrame lastScored2WindowFrame, LastScoredClock lastScored2Clock, LastScoredWindowFrame lastScored3WindowFrame, LastScoredClock lastScored3Clock) {
 		this.obsInterface = obsInterface;
 		this.timerPanel = timerPanel;
@@ -64,26 +64,18 @@ public class TimerController {
 		this.lastScored2Clock.addLastScoredClockTimerListener(lastScored2ClockListener);
 		this.lastScored3Clock.addLastScoredClockTimerListener(lastScored3ClockListener);
 	}
-	ActionListener timeClockListener = new ActionListener() {
-		public void actionPerformed(ActionEvent event) {
-			updateTimerDisplay();
-		}
-	};
-	ActionListener lastScored1ClockListener = new ActionListener() {
-		public void actionPerformed(ActionEvent event) {
-			updateLastScored1Display();
-		}
-	};
-	ActionListener lastScored2ClockListener = new ActionListener() {
-		public void actionPerformed(ActionEvent event) {
-			updateLastScored2Display();
-		}
-	};
-	ActionListener lastScored3ClockListener = new ActionListener() {
-		public void actionPerformed(ActionEvent event) {
-			updateLastScored3Display();
-		}
-	};
+	ActionListener timeClockListener = (ActionEvent event) -> {
+            updateTimerDisplay();
+        };
+	ActionListener lastScored1ClockListener = (ActionEvent event) -> {
+            updateLastScored1Display();
+        };
+	ActionListener lastScored2ClockListener = (ActionEvent event) -> {
+            updateLastScored2Display();
+        };
+	ActionListener lastScored3ClockListener = (ActionEvent event) -> {
+            updateLastScored3Display();
+        };
 	////// Utility Methods //////
 	public void startShotTimer() {
 		int count = Integer.parseInt(Settings.getControlParameter("ShotTime")) * 10;
@@ -140,8 +132,8 @@ public class TimerController {
 	private void updateTimerDisplay() {
 		int timeRemaining = timeClock.getTimeRemaining();
 		int nbrOfSeconds = timeClock.getNbrOfSeconds();
-		int nbrOfMinutes = 0;
-		int displaySeconds = 0;
+		int nbrOfMinutes;
+		int displaySeconds;
 		if(timeRemaining <= 0 && nbrOfSeconds != 0) {
 			timerPanel.setTimerDisplayColor(Color.RED);
 			timerWindowFrame.setTimerDisplayColor(Color.RED);
@@ -150,22 +142,22 @@ public class TimerController {
 		if(Float.compare(tr, 60f) > 0) {
 			nbrOfMinutes = (int) (tr / 60);
 			displaySeconds = (timeRemaining - (nbrOfMinutes * 600))/10;
-			String timeLeft = new String(nbrOfMinutes + ":" + String.format("%02d", displaySeconds));
-			prefixWidth = displayWidth - timeLeft.length() - suffixWidth;
+			String timeLeft = nbrOfMinutes + ":" + String.format("%02d", displaySeconds);
+			prefixWidth = DISPLAYWIDTH - timeLeft.length() - SUFFIXWIDTH;
 			char[] c1 = new char[prefixWidth];
 		    Arrays.fill(c1, ' ');
-		    char[] c2 = new char[suffixWidth];
+		    char[] c2 = new char[SUFFIXWIDTH];
 		    Arrays.fill(c2, ' ');
 			timerPanel.updateTimerDisplay(String.valueOf(c1) + timeLeft + String.valueOf(c2));
 			timerWindowFrame.setTimerDisplay(String.valueOf(c1) + timeLeft + String.valueOf(c2));
 			
 		} else {
 
-			String timeLeft = new String(Float.toString(tr));
-			prefixWidth = displayWidth - timeLeft.length() - suffixWidth;
+			String timeLeft = Float.toString(tr);
+			prefixWidth = DISPLAYWIDTH - timeLeft.length() - SUFFIXWIDTH;
 			char[] c1 = new char[prefixWidth];
 		    Arrays.fill(c1, ' ');
-		    char[] c2 = new char[suffixWidth];
+		    char[] c2 = new char[SUFFIXWIDTH];
 		    Arrays.fill(c2, ' ');
 		    timerPanel.updateTimerDisplay(String.valueOf(c1) + timeLeft + String.valueOf(c2));
 		    timerWindowFrame.setTimerDisplay(String.valueOf(c1) + timeLeft + String.valueOf(c2));

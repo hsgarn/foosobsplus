@@ -35,9 +35,11 @@ public class PRRCommand implements Command {
 		this.statsController = statsController;
 		this.teamController = teamController;
 	}
+        @Override
 	public void execute() {
 		teamController.resetResetWarns();
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

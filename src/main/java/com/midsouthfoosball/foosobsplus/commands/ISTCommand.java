@@ -38,11 +38,13 @@ public class ISTCommand implements Command {
 		this.matchController = matchController;
 		this.teamNumber = teamNumber;
 	}
+        @Override
 	public void execute() {
-		int rotate = 0;
+		int rotate;
 		rotate = matchController.incrementScore(teamNumber);
 		if (rotate > 0) Main.cutthroatRotate(rotate); 
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

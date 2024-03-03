@@ -36,9 +36,9 @@ import com.midsouthfoosball.foosobsplus.model.Tournament;
 import com.midsouthfoosball.foosobsplus.view.TournamentPanel;
 
 public class TournamentController {
-	private OBSInterface obsInterface;
-	private Tournament tournament;
-	private TournamentPanel tournamentPanel;
+	private final OBSInterface obsInterface;
+	private final Tournament tournament;
+	private final TournamentPanel tournamentPanel;
 	public TournamentController(OBSInterface obsInterface, Tournament tournament, Match match, TournamentPanel tournamentPanel) {
 		this.obsInterface = obsInterface;
 		this.tournament = tournament;
@@ -57,6 +57,7 @@ public class TournamentController {
 	}
 	////// Tournament Panel Listener Objects //////
 	private class TournamentNameListener implements ActionListener{
+                @Override
 		public void actionPerformed(ActionEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			String tournamentName = txt.getText();
@@ -65,6 +66,7 @@ public class TournamentController {
 		}
 	}
 	private class TournamentNameFocusListener extends FocusAdapter{
+                @Override
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			String tournamentName = txt.getText();
@@ -73,11 +75,13 @@ public class TournamentController {
 		}
 	}
 	private class TournamentNameMouseListener extends MouseAdapter{
+                @Override
 		public void mouseClicked(MouseEvent e) {
 			tournamentPanel.selectTournamentName();
 		}
 	}
 	private class EventNameListener implements ActionListener{
+                @Override
 		public void actionPerformed(ActionEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			String eventName = txt.getText();
@@ -86,6 +90,7 @@ public class TournamentController {
 		}
 	}
 	private class EventNameFocusListener extends FocusAdapter{
+                @Override
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			String eventName = txt.getText();
@@ -94,11 +99,13 @@ public class TournamentController {
 		}
 	}
 	private class EventNameMouseListener extends MouseAdapter{
+                @Override
 		public void mouseClicked(MouseEvent e) {
 			tournamentPanel.selectEventName();
 		}
 	}
 	private class TableNameListener implements ActionListener{
+                @Override
 		public void actionPerformed(ActionEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			String tableName = txt.getText();
@@ -107,6 +114,7 @@ public class TournamentController {
 		}
 	}
 	private class TableNameFocusListener extends FocusAdapter{
+                @Override
 		public void focusLost(FocusEvent e) {
 			JTextField txt = (JTextField) e.getSource();
 			String tableName = txt.getText();
@@ -115,11 +123,13 @@ public class TournamentController {
 		}
 	}
 	private class TableNameMouseListener extends MouseAdapter{
+                @Override
 		public void mouseClicked(MouseEvent e) {
 			tournamentPanel.selectTableName();
 		}
 	}
 	private class ClearListener implements ActionListener{
+                @Override
 		public void actionPerformed(ActionEvent e) {
 			clearAll();
 //			tournament.clearAll();

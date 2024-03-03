@@ -37,9 +37,11 @@ public class DSTCommand implements Command {
 		this.matchController = matchController;
 		this.teamNumber = teamNumber;
 	}
+        @Override
 	public void execute() {
 		matchController.decrementScore(teamNumber);
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

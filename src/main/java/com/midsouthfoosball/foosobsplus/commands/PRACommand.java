@@ -39,6 +39,7 @@ public class PRACommand implements Command {
 		this.teamController = teamController;
 		this.matchController = matchController;
 	}
+        @Override
 	public void execute() {
 		teamController.resetAll();
 		matchController.resetMatch();
@@ -47,6 +48,7 @@ public class PRACommand implements Command {
 		Main.setTeamGameCountVisible("2", "0");
 		Main.setTeamGameCountVisible("3", "0");
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

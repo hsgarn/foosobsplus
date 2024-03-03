@@ -35,9 +35,11 @@ public class PSTOCommand implements Command {
 		this.statsController = statsController;
 		this.teamController = teamController;
 	}
+        @Override
 	public void execute() {
 		teamController.switchTimeOuts();
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

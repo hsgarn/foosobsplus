@@ -32,9 +32,11 @@ public class PSECommand implements Command {
 	public PSECommand(StatsController statsController) {
 		this.statsController = statsController;
 	}
+        @Override
 	public void execute() {
 		Main.startEvent();
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

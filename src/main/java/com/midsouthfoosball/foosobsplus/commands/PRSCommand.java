@@ -35,9 +35,11 @@ public class PRSCommand implements Command {
 		this.statsController = statsController;
 		this.teamController = teamController;
 	}
+        @Override
 	public void execute() {
 		teamController.resetScoresFromButton();
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

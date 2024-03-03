@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 public class CommandSwitch {
 	public final HashMap<String, Command> commandMap = new HashMap<>();
 	private static final Logger logger = LoggerFactory.getLogger(CommandSwitch.class);
-	
 	public void register(String commandName, Command command) {
 		Objects.requireNonNull(commandName, "Command name cannot be null");
 		Objects.requireNonNull(command, "Command cannot be null");
@@ -44,5 +43,4 @@ public class CommandSwitch {
 		}
 		return command;
 	}
-
 }

@@ -33,9 +33,11 @@ public class PSMCommand implements Command {
 	public PSMCommand(StatsController statsController) {
 		this.statsController = statsController;
 	}
+        @Override
 	public void execute() {
 		Main.startMatch();
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

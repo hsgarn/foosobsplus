@@ -33,9 +33,11 @@ public class PSSCommand implements Command {
 	public PSSCommand(StatsController statsController) {
 		this.statsController = statsController;
 	}
+        @Override
 	public void execute() {
 		Main.switchSides();
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

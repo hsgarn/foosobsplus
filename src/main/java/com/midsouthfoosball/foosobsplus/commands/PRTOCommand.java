@@ -35,9 +35,11 @@ public class PRTOCommand implements Command {
 		this.statsController = statsController;
 		this.teamController = teamController;
 	}
+        @Override
 	public void execute() {
 		teamController.resetTimeOuts();
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}

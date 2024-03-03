@@ -30,9 +30,11 @@ public class CodeCommand implements Command {
 	public CodeCommand(StatsController statsController) {
 		this.statsController = statsController;
 	}
+        @Override
 	public void execute() {
 		theCode = Objects.requireNonNull(statsController.getLastCode(), "Code cannot be null");
 	}
+        @Override
 	public String getCode() {
 		return theCode;
 	}

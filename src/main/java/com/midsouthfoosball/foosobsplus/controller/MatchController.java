@@ -39,19 +39,19 @@ import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
 
 public class MatchController {
-	private Match match;
-	private Stats stats;
-	private GameClock gameClock;
-	private LastScoredClock lastScored1Clock;
-	private LastScoredClock lastScored2Clock;
-	private MatchPanel matchPanel;
-	private StatsEntryPanel statsEntryPanel;
-	private StatsDisplayPanel statsDisplayPanel;
-	private SwitchPanel switchPanel;
-	private GameTableWindowPanel gameTableWindowPanel;
-	private TeamController teamController;
-	private StreamIndexer streamIndexer;
-	private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+	private final Match match;
+	private final Stats stats;
+	private final GameClock gameClock;
+	private final LastScoredClock lastScored1Clock;
+	private final LastScoredClock lastScored2Clock;
+	private final MatchPanel matchPanel;
+	private final StatsEntryPanel statsEntryPanel;
+	private final StatsDisplayPanel statsDisplayPanel;
+	private final SwitchPanel switchPanel;
+	private final GameTableWindowPanel gameTableWindowPanel;
+	private final TeamController teamController;
+	private final StreamIndexer streamIndexer;
+	private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 	private static final String ON = "1";
 	public MatchController(Match match, Stats stats, GameClock gameClock, LastScoredClock lastScored1Clock, LastScoredClock lastScored2Clock, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, SwitchPanel switchPanel, GameTableWindowPanel gameTableWindowPanel, TeamController teamController, StreamIndexer streamIndexer) {
 		this.match = match;
@@ -71,6 +71,7 @@ public class MatchController {
 	}
 	////// Match Panel Listener Objects \\\\\\
 	private class GameClockTimerListener implements ActionListener {
+                @Override
 		public void actionPerformed(ActionEvent e) {
 			matchPanel.updateElapsedTime(gameClock.getMatchTime());
 			String time = gameClock.getGameTime();
@@ -130,7 +131,7 @@ public class MatchController {
 		switchPanel.setLastScored(Settings.getLastScoredStrings()[match.getLastScored()]);
 		updateGameTables();
 	}
-	public void updateGameTables() {
+	public final void updateGameTables() {
 		statsDisplayPanel.updateTeams(1,Main.combinePlayerNames(1),teamController.getTeamName(1));
 		statsDisplayPanel.updateTeams(2,Main.combinePlayerNames(2),teamController.getTeamName(2));
 		matchPanel.setGameWinners(match.getGameWinners());

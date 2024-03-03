@@ -37,9 +37,11 @@ public class XPTCommand implements Command {
 		this.teamController = teamController;
 		this.teamNumber = teamNumber;
 	}
+        @Override
 	public void execute() {
 		teamController.switchPositions("Team " + Integer.toString(teamNumber));
 	}
+        @Override
 	public String getCode() {
 		return statsController.getLastCode();
 	}
