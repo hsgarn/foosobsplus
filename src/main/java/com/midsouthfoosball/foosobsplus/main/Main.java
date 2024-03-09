@@ -1787,6 +1787,9 @@ public final class Main implements MatchObserver {
 				tournamentController.writeAll();
 				teamController.writeAll();
 				statsController.displayAllStats();
+                setTeamGameCountVisible("Team1", team1.getGameCount());
+                setTeamGameCountVisible("Team2", team2.getGameCount());
+                setTeamGameCountVisible("Team3", team3.getGameCount());
 			}
 			setFocusOnCode();
 		}
@@ -1798,6 +1801,9 @@ public final class Main implements MatchObserver {
 				teamController.fetchAll();
 				teamController.displayAll();
 				tournamentController.fetchAll();
+                setTeamGameCountVisible("Team1", team1.getGameCount());
+                setTeamGameCountVisible("Team2", team2.getGameCount());
+                setTeamGameCountVisible("Team3", team3.getGameCount());
 			}
 			setFocusOnCode();
 		}
@@ -2453,6 +2459,16 @@ public final class Main implements MatchObserver {
 			int gameCount = Integer.parseInt(value);
 			for (Integer x = 1; x < 4; x++) {
 				show = (x <= gameCount);
+				showSource(teamGameShowSourcesMap.get(teamNumber+x.toString()), show);
+			}
+		}
+	}
+	public static void setTeamGameCountVisible(String name, int value) {
+		String teamNumber = ripTeamNumber(name);
+		if (value >= 0) {
+			boolean show;
+			for (Integer x = 1; x < 4; x++) {
+				show = (x <= value);
 				showSource(teamGameShowSourcesMap.get(teamNumber+x.toString()), show);
 			}
 		}
