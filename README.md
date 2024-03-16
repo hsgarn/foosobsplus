@@ -1020,6 +1020,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.057 03/16/2024</br>
+Add Midsouth Foosball logo to About window.</br>
+</br>
 v2.056 03/09/2024</br>
 Update team game sources when pulling/pushing OBS from OBS Panel.</br>
 </br>

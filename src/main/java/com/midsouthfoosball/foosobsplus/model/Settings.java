@@ -41,8 +41,11 @@ import com.midsouthfoosball.foosobsplus.view.Messages;
 
 public final class Settings {
 	private final static Settings instance 			= new Settings();
-	private final static String ON = "1";
-	private final static String OFF = "0";
+	private final static String ON                  = "1";
+	private final static String OFF                 = "0";
+    private final static String DEFAULTLOGOLINK     = "https://www.facebook.com/midsouthfoosball";
+    private final static String defaultIconImgPath  = "/FoosBallTableAnimation.gif";
+    private final static String defaultLogoImgPath  = "/MidsouthFoosballLogo4.png";
 	// Parameter settings
 	private final static String SEPARATOR 			= FileSystems.getDefault().getSeparator();
 	private final static String GAMETYPE			= "Foosball";
@@ -79,6 +82,9 @@ public final class Settings {
 	private final static Logger logger = LoggerFactory.getLogger(Settings.class);
 	static {
 		// Parameter settings
+        defaultControlProps.setProperty("LogoLink", DEFAULTLOGOLINK);
+        defaultControlProps.setProperty("IconImgPath", defaultIconImgPath);
+        defaultControlProps.setProperty("LogoImgPath", defaultLogoImgPath);
 		defaultControlProps.setProperty("ShowParsed", "true");
 		defaultControlProps.setProperty("TableName", "");
 		defaultControlProps.setProperty("datapath", "c:" + SEPARATOR + "temp");
