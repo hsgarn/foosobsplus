@@ -23,6 +23,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileSystems;
+import javax.swing.JOptionPane;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,4 +44,13 @@ public class StreamIndexer {
 			logger.error("Error writing to file: {}", e.toString());
 		}
 	}
+    public void appendScoreIndexer(String text) {
+		String filePath = dataPath + SEPARATOR + "scoreindex.txt";
+        JOptionPane.showMessageDialog(null, filePath, "filePath", 1);
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+			bw.write(text);
+		} catch (IOException e) {
+			logger.error("Error writing to file: {}", e.toString());
+		}
+    }
 }

@@ -124,6 +124,7 @@ public class MatchController {
 			switchPanel.setLastScored(Settings.getLastScoredStrings()[match.getLastScored()]);
 			updateGameTables();
 		}
+		streamIndexer.appendScoreIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Score: " + teamController.getForwardName(teamNumber) + "/" + teamController.getGoalieName(teamNumber) + "\r\n");
 		return rotate;
 	}
 	public void decrementScore(int teamNumber) {

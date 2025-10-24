@@ -1020,6 +1020,10 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.059 10/23/2025</br>
+Add appendScoreIndexer method to StreamIndexer to record time and scoring team.</br>
+Add call to appendScoreIndexer when score increases.</br>
+</br>
 v2.058 04/06/2025</br>
 Update copyright year in all files.</br>
 </br>
