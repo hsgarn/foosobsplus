@@ -1,5 +1,5 @@
 /**
-Copyright © 2022-2025 Hugh Garner
+Copyright © 2022-2026 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -62,6 +62,7 @@ public class AutoScoreSettingsPanel extends JPanel {
 	private final JButton btnSave;
 	private final JButton btnConnect;
 	private final JButton btnDisconnect;
+    private final JButton btnSearch;
 	private final JList<String> lstMessageHistory;
 	private final DefaultListModel<String> mdlMessageHistory;
 	private final JScrollPane scrMessageHistory;
@@ -101,6 +102,8 @@ public class AutoScoreSettingsPanel extends JPanel {
 			chckbxDetailLog.setSelected(false);
 		}
 		add(chckbxDetailLog, "cell 2 3, alignx left"); //$NON-NLS-1$
+        btnSearch = new JButton(Messages.getString("AutoScoreSettingsPanel.Search")); //$NON-NLS-1$
+        add(btnSearch, "flowx,cell 0 4,alignx left"); //$NON-NLS-1$
 		btnConnect = new JButton(Messages.getString("AutoScoreSettingsPanel.Connect")); //$NON-NLS-1$
 		add(btnConnect, "flowx,cell 1 4,alignx left"); //$NON-NLS-1$
 		btnDisconnect = new JButton(Messages.getString("AutoScoreSettingsPanel.Disconnect")); //$NON-NLS-1$
@@ -220,4 +223,7 @@ public class AutoScoreSettingsPanel extends JPanel {
 	public void addApplyListener(ActionListener listenForBtnApply) {
 		btnApply.addActionListener(listenForBtnApply);
 	}
+    public void addSearchListener(ActionListener listenForBtnSearch) {
+        btnSearch.addActionListener(listenForBtnSearch);
+    }
 }

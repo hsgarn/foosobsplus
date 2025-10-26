@@ -1,5 +1,5 @@
 /**
-Copyright © 2020-2025 Hugh Garner
+Copyright © 2020-2026 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -44,7 +44,7 @@ public class Match implements Serializable {
 	private transient Team team3;
 	private final transient OBSInterface obsInterface;
 	private transient String startTime;
-        private final transient Map<Integer, Team> teamsMap = new HashMap<>();
+    private final transient Map<Integer, Team> teamsMap = new HashMap<>();
 	private int lastScored; // team number of the last team to score in this match
 	private boolean isMatchPaused;
 	private boolean isGamePaused;
@@ -62,7 +62,7 @@ public class Match implements Serializable {
 	private String[] times;
 	private static final transient Logger logger = LoggerFactory.getLogger(Match.class);
 	private final StringBuilder gameResults = new StringBuilder();
-	private final List<MatchObserver> observers = new ArrayList<>();
+	private final transient List<MatchObserver> observers = new ArrayList<>();
 	private static final String ON = "1";
 	public Match(OBSInterface obsInterface, Team team1, Team team2, Team team3) {
 		this.team1 = team1;

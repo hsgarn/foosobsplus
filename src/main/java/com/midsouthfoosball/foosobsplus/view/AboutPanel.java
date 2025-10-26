@@ -1,5 +1,5 @@
 /**
-Copyright © 2020-2025 Hugh Garner
+Copyright © 2020-2026 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -42,10 +42,10 @@ import net.miginfocom.swing.MigLayout;
 
 public class AboutPanel extends JPanel {
 	private static final long serialVersionUID 	= 1L;
-	private static final String VERSIONNUMBER 	= "2.059"; //$NON-NLS-1$
-	private static final String RELEASEDATE 	= "10/23/2025"; //$NON-NLS-1$
+	private static final String VERSIONNUMBER 	= "2.060"; //$NON-NLS-1$
+	private static final String RELEASEDATE 	= "10/25/2025"; //$NON-NLS-1$
 	private static final String AUTHOR          = "Hugh Garner"; //$NON-NLS-1$
-	private static final String COPYRIGHT 		= "2020-2025 Hugh Garner"; //$NON-NLS-1$
+	private static final String COPYRIGHT 		= "2020-2026 Hugh Garner"; //$NON-NLS-1$
 	public AboutPanel(JFrame aboutFrame) {
 		setLayout(new MigLayout("", "[127.00][50.00:87.00,grow,left]", "[][][][][grow][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		JLabel lblProgram = new JLabel(Messages.getString("AboutPanel.Program")); //$NON-NLS-1$

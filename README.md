@@ -563,6 +563,8 @@ This is the port number that the FoosScore AutoScore server is listening to.
 When checked, FoosOBSPlus will attempt to automatically connect to the FoosScore AutoScore system when FoosOBSPlus if first started.  The Server Address and Server Port fields should be populated for Auto Connect to work. If unchecked, you must manually connect using the Connect button.
 ### Detail Log
 When checked, details sent from the FoosScore AutoScore system can be seen in the Message window.
+### Search
+When pressed, will send a broadcast message on port 5051 to any FoosScore instances listening and will return the IP address of any FoosScore instances that responded.  The returned IP address will be displayed in the Message window and can be used in the Server Address box to connect to that FoosScore instance.
 ### Connect
 This button will connect to the FoosScore AutoScore system at the given Server Address and Server Port.
 ### Disconnect
@@ -1020,6 +1022,12 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.060 10/25/2025</br>
+Add search button and logic to search for FoosScore Pico and receive IP address from the Pico.</br>
+Fix Memento serialization bug in the Match model.</br>
+Improve AutoScore disconnect logic.</br>
+Handle more OBS exceptions and reduce code duplication in onReady in Main.</br>
+</br>
 v2.059 10/23/2025</br>
 Add appendScoreIndexer method to StreamIndexer to record time and scoring team.</br>
 Add call to appendScoreIndexer when score increases.</br>

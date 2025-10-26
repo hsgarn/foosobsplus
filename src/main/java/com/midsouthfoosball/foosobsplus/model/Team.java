@@ -1,5 +1,5 @@
 /**
-Copyright © 2020-2025 Hugh Garner
+Copyright © 2020-2026 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -37,7 +37,7 @@ import java.io.IOException;
 public class Team implements Serializable {
 
 	private static final long serialVersionUID = 6807215509861474745L;
-	protected PropertyChangeSupport propertyChangeSupport;
+	protected transient PropertyChangeSupport propertyChangeSupport;
 	private String teamName = "";
 	private String forwardName = "";
 	private String goalieName = "";
@@ -75,7 +75,7 @@ public class Team implements Serializable {
 	private int shotsOnGoal = 0;
 	private static final String ON = "1";
 	private final DecimalFormat df = new DecimalFormat("###.#");
-	private static final Logger logger = LoggerFactory.getLogger(Team.class);
+	private static final transient Logger logger = LoggerFactory.getLogger(Team.class);
 	
 	public Team(OBSInterface obsInterface, Integer teamNbr, String teamColor) {
 		this.obsInterface = obsInterface;

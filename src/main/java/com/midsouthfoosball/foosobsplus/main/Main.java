@@ -1,5 +1,5 @@
 /**
-Copyright © 2020-2025 Hugh Garner
+Copyright © 2020-2026 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -181,6 +181,7 @@ import io.obswebsocket.community.client.message.response.scenes.GetSceneListResp
 import io.obswebsocket.community.client.message.response.ui.GetMonitorListResponse;
 import io.obswebsocket.community.client.model.Monitor;
 import io.obswebsocket.community.client.model.Scene;
+import java.util.function.Consumer;
 /**
  * Main FoosOBS Object
  * @author Hugh Garner
@@ -456,19 +457,55 @@ public final class Main implements MatchObserver {
 				}
 			}
 		});
-		OBS.getController().getSourceActive(Settings.getSourceParameter("ShowTimer"), response ->  //$NON-NLS-1$
-			{boolean show = response.getVideoActive();
-				obsPanel.setShowTimer(show);
-				mainController.showTimerWindow(show);		
-			});
-		OBS.getController().getSourceActive(Settings.getSourceParameter("ShowScores"), response -> obsPanel.setShowScores(response.getVideoActive())); //$NON-NLS-1$
-		OBS.getController().getSourceActive(Settings.getSourceParameter("ShowCutthroat"), response -> obsPanel.setShowCutthroat(response.getVideoActive())); //$NON-NLS-1$
-		if(Settings.getOBSParameter("OBSCloseOnConnect").equals(ON)) {  //$NON-NLS-1$
+        checkAndSetSourceActive("ShowTimer", obsPanel::setShowTimer, mainController::showTimerWindow);
+        checkAndSetSourceActive("ShowScores", obsPanel::setShowScores, null);
+        checkAndSetSourceActive("ShowCutthroat", obsPanel::setShowCutthroat, null);
+        if(Settings.getOBSParameter("OBSCloseOnConnect").equals(ON)) {  //$NON-NLS-1$
 			obsConnectFrame.setVisible(false);
 		}
 		fetchMonitorList();
 		fetchSceneList();
 	}
+    private static void checkAndSetSourceActive(String settingKey, Consumer<Boolean> setter, Consumer<Boolean> additionalAction) {
+        String sourceName = Settings.getSourceParameter(settingKey);
+        if (sourceName == null || sourceName.isEmpty()) {
+            String msg = "Source [" + settingKey + "] not defined in Settings.";
+            logger.warn(msg);
+            obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " " + msg);
+            setter.accept(false);
+            if (additionalAction != null) {
+                additionalAction.accept(false);
+            }
+            return;
+        }
+        OBS.getController().getSourceActive(sourceName, response -> {
+            try {
+                if (response != null && response.isSuccessful()) {
+                    boolean isActive = response.getVideoActive();
+                    setter.accept(isActive);
+                    if (additionalAction != null) {
+                        additionalAction.accept(isActive);
+                    }
+                } else {
+                    String msg = "Source [" + sourceName + "] not found in OBS";
+                    logger.warn(msg);
+                    obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " " + msg);
+                    setter.accept(false);
+                    if (additionalAction != null) {
+                        additionalAction.accept(false);
+                    }
+                }
+            } catch (Exception e) {
+                String msg = "Exception for Source [" + sourceName + "]: " + e.toString();
+                logger.warn(msg);
+                obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " " + msg);
+                setter.accept(false);
+                if (additionalAction != null) {
+                    additionalAction.accept(false);
+                }
+            }
+        });
+    }
 	private static void projectSource() {
 		if (OBS.getConnected()) {
 			Number monitorIndex = obsConnectPanel.getSelectedMonitor();
@@ -547,7 +584,7 @@ public final class Main implements MatchObserver {
 	private static void onCommunicationError(ReasonThrowable reason) {
 		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.CommunicationError") + reason.getReason()); //$NON-NLS-1$
 	}
-	private static void createAutoScoreWorker() {
+    private static void createAutoScoreWorker() {
 		autoScoreWorker = new SwingWorker<Boolean, Integer>() {
 			BufferedReader dataIn;
 			@Override
@@ -557,6 +594,8 @@ public final class Main implements MatchObserver {
 		    	int port = Settings.getAutoScoreParameter("AutoScoreSettingsServerPort",Integer::parseInt); //$NON-NLS-1$
 		    	try {
 		            autoScoreSocket = new Socket(address, port);
+                    autoScoreSocket.setSoLinger(true, 0);
+//                    autoScoreSocket.setSoTimeout(1000); // may need to increase
 		            autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.ConnectedTo") + address + ": " + port); //$NON-NLS-1$ //$NON-NLS-2$
 		            logger.info("Auto Score connected to " + address + ": " + port); //$NON-NLS-1$ //$NON-NLS-2$
 		        	dataIn = new BufferedReader(new InputStreamReader(autoScoreSocket.getInputStream()));
@@ -583,63 +622,70 @@ public final class Main implements MatchObserver {
 		        	logger.error("Auto Score new Socket IOException"); //$NON-NLS-1$
 		        	logger.error(io.toString());
 		        }
-		    	String raw = ""; //$NON-NLS-1$
+		    	String raw;
 		        String str[];
 		        String cmd[];
-		        while (isConnected) {
+		        while (!isCancelled() && isConnected) {
+                    raw = ""; //$NON-NLS-1$
             		try {
-           				raw = dataIn.readLine();
+                        if (dataIn.ready()) {
+                            raw = dataIn.readLine();
+                            if (raw == null) {
+                                break;
+                            }
+                        }
 		            } catch(IOException io) {
 		            	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString()); //$NON-NLS-1$
 			        	logger.error(io.toString());
 			        	isConnected = false;
 		            }
-            		if (raw != null && !raw.isEmpty()) {
-                		logger.info("Received raw data: [" + raw + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-		        		cmd = raw.split(":"); //$NON-NLS-1$
-		        		logger.info("Parse command: " + cmd[0]); //$NON-NLS-1$
-	                	if (Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals(ON)) { //$NON-NLS-1$
-	                		autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Received") + raw); //$NON-NLS-1$
-	                	}
-	                	if (cmd[0].equals("Team")) { //$NON-NLS-1$
-	    	                str = cmd[1].split("[,]",0); //$NON-NLS-1$
-			                if (str[0].equals("1")) { //$NON-NLS-1$
-			                	publish(1);
-			                } else {
-				                if (str[0].equals("2")) { //$NON-NLS-1$
-				                	publish(2);
-				                }
-			                }
-	                	} else {
-	                		if (cmd[0].equals("TO")) { //$NON-NLS-1$
-	                			str = cmd[1].split("[,]",0); //$NON-NLS-1$
-				                if (str[0].equals("1")) { //$NON-NLS-1$
-				                	publish(3);
-				                } else {
-					                if (str[0].equals("2")) { //$NON-NLS-1$
-					                	publish(4);
-					                }
-				                }
-	                		}
-	                	}
-	                	if (cmd[0].equals("Read")) { //$NON-NLS-1$
-	                		autoScoreConfigPanel.clearConfigTextArea();
-	                	}
-	                	if (cmd[0].equals("Line")) { //$NON-NLS-1$
-	                		String line = cmd[1] + "\n"; //$NON-NLS-1$
-	                		autoScoreConfigPanel.appendConfigTextArea(line);
-	                	}
-            		}
-	                if (isCancelled()) {
-	                	break;
-	                }
+            		if (!raw.isEmpty()) {
+                        logger.info("Received raw data: [" + raw + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+                        cmd = raw.split(":"); //$NON-NLS-1$
+                        logger.info("Parse command: " + cmd[0]); //$NON-NLS-1$
+                        if (Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals(ON)) { //$NON-NLS-1$
+                            autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Received") + raw); //$NON-NLS-1$
+                        }
+                        if (cmd[0].equals("Team")) { //$NON-NLS-1$
+                            str = cmd[1].split("[,]",0); //$NON-NLS-1$
+                            if (str[0].equals("1")) { //$NON-NLS-1$
+                                publish(1);
+                            } else {
+                                if (str[0].equals("2")) { //$NON-NLS-1$
+                                    publish(2);
+                                }
+                            }
+                        } else {
+                            if (cmd[0].equals("TO")) { //$NON-NLS-1$
+                                str = cmd[1].split("[,]",0); //$NON-NLS-1$
+                                if (str[0].equals("1")) { //$NON-NLS-1$
+                                    publish(3);
+                                } else {
+                                    if (str[0].equals("2")) { //$NON-NLS-1$
+                                        publish(4);
+                                    }
+                                }
+                            }
+                        }
+                        if (cmd[0].equals("Read")) { //$NON-NLS-1$
+                            autoScoreConfigPanel.clearConfigTextArea();
+                        }
+                        if (cmd[0].equals("Line")) { //$NON-NLS-1$
+                            String line = cmd[1] + "\n"; //$NON-NLS-1$
+                            autoScoreConfigPanel.appendConfigTextArea(line);
+                        }
+                    }
 		        }
 		        autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.ConnectionTerminated")); //$NON-NLS-1$
 		        logger.info("Auto Score Connection Terminated!!"); //$NON-NLS-1$
 		        try {
-		            dataIn.close();
-		            autoScoreSocket.close();
-		            isConnected = false;
+		            if (dataIn != null) {
+                        dataIn.close();
+                    }
+                    if (autoScoreSocket != null && !autoScoreSocket.isClosed()) {
+                        autoScoreSocket.close();
+                    }
+                    isConnected = false;
 		        } catch(IOException io) {
 		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString()); //$NON-NLS-1$
 		        	logger.error(io.toString());
@@ -649,14 +695,15 @@ public final class Main implements MatchObserver {
 			@Override
 			protected void done() {
 				boolean status;
-				if (isCancelled()) return;
-			    try {
-					status = get();
-					autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.WorkerCompletedWithIsConnected") + status); //$NON-NLS-1$
-			    } catch (InterruptedException | ExecutionException e) {
-			    	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString()); //$NON-NLS-1$
-		        	logger.error(e.toString());
-			    }
+				if (!isCancelled()){ 
+                    try {
+                        status = get();
+                        autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.WorkerCompletedWithIsConnected") + status); //$NON-NLS-1$
+                    } catch (InterruptedException | ExecutionException e) {
+                        autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString()); //$NON-NLS-1$
+                        logger.error(e.toString());
+                    }
+                }
                 //$NON-NLS-1$
 	    		mainFrame.setAutoScoreIconConnected(false);
 	    		autoScoreConnected = false;			    	
@@ -823,6 +870,7 @@ public final class Main implements MatchObserver {
 		autoScoreSettingsPanel.addSaveListener(new AutoScoreSettingsSaveListener());
 		autoScoreSettingsPanel.addConnectListener(new AutoScoreSettingsConnectListener());
 		autoScoreSettingsPanel.addDisconnectListener(new AutoScoreSettingsDisconnectListener());
+        autoScoreSettingsPanel.addSearchListener(new AutoScoreSettingsSearchListener());
 		autoScoreConfigPanel.addReadConfigListener(new AutoScoreConfigReadListener());
 		autoScoreConfigPanel.addWriteConfigListener(new AutoScoreConfigWriteListener());
 		autoScoreConfigPanel.addValidateConfigListener(new AutoScoreConfigValidateListener());
@@ -1036,8 +1084,8 @@ public final class Main implements MatchObserver {
 	public static void processCode(String code, Boolean isRedo) {
 		Command commandStatus;
 		if (!isRedo) { 
-			makeMementos();
-			codeStack.push(code);
+  			makeMementos();
+            codeStack.push(code);
 		}
 		stats.setCode(code);
 		stats.addCodeToHistory(code);
@@ -1086,12 +1134,12 @@ public final class Main implements MatchObserver {
 	}
 	private static void makeMementos() {
 		deleteElementsAfterPointer(undoRedoPointer);
-		mementoStackTeam1.push(saveState(team1));
+        mementoStackTeam1.push(saveState(team1));
 		mementoStackTeam2.push(saveState(team2));
 		mementoStackTeam3.push(saveState(team3));
-		mementoStackStats.push(saveState(stats));
-		mementoStackMatch.push(saveState(match));
-		mementoStackGameClock.push(saveState(gameClock));
+   		mementoStackStats.push(saveState(stats));
+   		mementoStackMatch.push(saveState(match));
+   		mementoStackGameClock.push(saveState(gameClock));
 	}
 	private static Memento saveState(Object object) {
 		return new Memento(object);
@@ -1386,7 +1434,18 @@ public final class Main implements MatchObserver {
 		mainFrame.setAutoScoreIconConnected(false);
 		autoScoreConnected = false;
 	}
-	private static void readAutoScoreConfig() {
+    private static void searchAutoScore() {
+        try {
+            String picoIP = PicoDiscovery.listenForPico(5051, 300);
+            if (picoIP != null) {
+                System.out.println("Discovered Pico at: " + picoIP);
+                autoScoreSettingsPanel.addMessage("Found: " + picoIP);
+            }
+        } catch (Exception e) {
+            logger.error("searchAutoScore call to PicoDiscovery Exception: " + e);
+        }
+    }
+    private static void readAutoScoreConfig() {
 		if(autoScoreConnected) {
 			autoScoreSocketWriter.println("read:"); //$NON-NLS-1$
 			if (autoScoreSocketWriter.checkError()) {
@@ -1662,6 +1721,13 @@ public final class Main implements MatchObserver {
 			disconnectAutoScore();
 		}
 	}
+    private static class AutoScoreSettingsSearchListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			logger.info("AutoScore Settings Window Search Button Pressed."); //$NON-NLS-1$
+			searchAutoScore();
+		}
+    }
 	private static class AutoScoreConfigReadListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
