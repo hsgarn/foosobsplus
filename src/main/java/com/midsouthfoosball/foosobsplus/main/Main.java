@@ -181,6 +181,8 @@ import io.obswebsocket.community.client.message.response.scenes.GetSceneListResp
 import io.obswebsocket.community.client.message.response.ui.GetMonitorListResponse;
 import io.obswebsocket.community.client.model.Monitor;
 import io.obswebsocket.community.client.model.Scene;
+import java.nio.file.Files;
+import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 /**
  * Main FoosOBS Object
@@ -188,95 +190,95 @@ import java.util.function.Consumer;
  *
  */
 public final class Main implements MatchObserver {
-	private static final Logger 					logger 					= LoggerFactory.getLogger(Main.class);
-	private static final String 					ON 						= "1"; //$NON-NLS-1$
-	private static final String						OFF						= "0"; //$NON-NLS-1$
+	private static final Logger 				logger 					= LoggerFactory.getLogger(Main.class);
+	private static final String 				ON 						= "1"; //$NON-NLS-1$
+	private static final String					OFF						= "0"; //$NON-NLS-1$
 	////// Settings and OBSInterface setup \\\\\\
-	private static final OBSInterface 				obsInterface 			= new OBSInterface();
-	private static String							matchId					= ""; //$NON-NLS-1$
-	private static final DateTimeFormatter 			dtf 					= DateTimeFormatter.ofPattern(Messages.getString("Main.DateTimePattern")); //$NON-NLS-1$
-	private static boolean 							autoScoreConnected		= false;
-	private static Socket 							autoScoreSocket;
-	private static PrintWriter 						autoScoreSocketWriter;
-	private static final StreamIndexer 					streamIndexer      		= new StreamIndexer(Settings.getControlParameter("datapath")); //$NON-NLS-1$
-	private static Boolean 							blockAutoScoreReconnect	= false;
-    private static final Map<String, String>				teamGameShowSourcesMap	= new HashMap<>();
+	private static final OBSInterface 			obsInterface 			= new OBSInterface();
+	private static String						matchId					= ""; //$NON-NLS-1$
+	private static final DateTimeFormatter 		dtf 					= DateTimeFormatter.ofPattern(Messages.getString("Main.DateTimePattern")); //$NON-NLS-1$
+	private static boolean 						autoScoreConnected		= false;
+	private static Socket 						autoScoreSocket;
+	private static PrintWriter 					autoScoreSocketWriter;
+	private static final StreamIndexer 			streamIndexer      		= new StreamIndexer(Settings.getControlParameter("datapath")); //$NON-NLS-1$
+	private static Boolean 						blockAutoScoreReconnect	= false;
+    private static final Map<String, String>	teamGameShowSourcesMap	= new HashMap<>();
 	////// Watch Service for File changes \\\\\\
-	private static WatchService 					watchService;
+	private static WatchService 				watchService;
 	////// CommandStack and UndoRedo setup \\\\\\
-	private static int 								undoRedoPointer			= -1;
-	private static final Stack<Command> 					commandStack 			= new Stack<>();
-	private static final Stack<Memento> 					mementoStackTeam1 		= new Stack<>();
-	private static final Stack<Memento> 					mementoStackTeam2		= new Stack<>();
-	private static final Stack<Memento> 					mementoStackTeam3       = new Stack<>();
-	private static final Stack<Memento> 					mementoStackStats 		= new Stack<>();
-	private static final Stack<Memento> 					mementoStackMatch		= new Stack<>();
-	private static final Stack<Memento> 					mementoStackGameClock	= new Stack<>();
-	private static final Stack<String>					codeStack 				= new Stack<>();
-	private static CommandSwitch 					mySwitch;
+	private static int 							undoRedoPointer			= -1;
+	private static final Stack<Command> 		commandStack 			= new Stack<>();
+	private static final Stack<Memento> 		mementoStackTeam1 		= new Stack<>();
+	private static final Stack<Memento> 		mementoStackTeam2		= new Stack<>();
+	private static final Stack<Memento> 		mementoStackTeam3       = new Stack<>();
+	private static final Stack<Memento> 		mementoStackStats 		= new Stack<>();
+	private static final Stack<Memento> 		mementoStackMatch		= new Stack<>();
+	private static final Stack<Memento> 		mementoStackGameClock	= new Stack<>();
+	private static final Stack<String>			codeStack 				= new Stack<>();
+	private static CommandSwitch 				mySwitch;
 	////// Generate the Data Models (Mvc) \\\\\\
-	private static final Tournament						tournament				= new Tournament(obsInterface);
-	private static final Team 							team1 					= new Team(obsInterface, 1, Settings.getControlParameter("Side1Color")); //$NON-NLS-1$
-	private static final Team 							team2 					= new Team(obsInterface, 2, Settings.getControlParameter("Side2Color")); //$NON-NLS-1$
-	private static final Team         					team3              		= new Team(obsInterface, 3, Messages.getString("Main.None")); //$NON-NLS-1$
-	private static final Match 							match					= new Match(obsInterface, team1, team2, team3);
-	private static final Stats 							stats 					= new Stats(team1, team2);
+	private static final Tournament				tournament				= new Tournament(obsInterface);
+	private static final Team 					team1 					= new Team(obsInterface, 1, Settings.getControlParameter("Side1Color")); //$NON-NLS-1$
+	private static final Team 					team2 					= new Team(obsInterface, 2, Settings.getControlParameter("Side2Color")); //$NON-NLS-1$
+	private static final Team         			team3              		= new Team(obsInterface, 3, Messages.getString("Main.None")); //$NON-NLS-1$
+	private static final Match 					match					= new Match(obsInterface, team1, team2, team3);
+	private static final Stats 					stats 					= new Stats(team1, team2);
 	////// Create a TimeClock to be the Timer \\\\\\
-	private static final TimeClock 						timeClock 				= new TimeClock(obsInterface);
-	private static final GameClock       					gameClock           	= new GameClock(obsInterface);
-	private static final LastScoredClock 					lastScored1Clock   		= new LastScoredClock();
-	private static final LastScoredClock					lastScored2Clock    	= new LastScoredClock();
-	private static final LastScoredClock 					lastScored3Clock		= new LastScoredClock();
+	private static final TimeClock 				timeClock 				= new TimeClock(obsInterface);
+	private static final GameClock       		gameClock           	= new GameClock(obsInterface);
+	private static final LastScoredClock 		lastScored1Clock   		= new LastScoredClock();
+	private static final LastScoredClock		lastScored2Clock    	= new LastScoredClock();
+	private static final LastScoredClock 		lastScored3Clock		= new LastScoredClock();
 	////// Create the View Panels to Display (mVc) \\\\\\
-	private static final TournamentPanel					tournamentPanel 		= new TournamentPanel();
-	private static final TimerPanel 						timerPanel 				= new TimerPanel();
-	private static final OBSPanel							obsPanel				= new OBSPanel();
-	private static final AutoScoreMainPanel				autoScoreMainPanel  	= new AutoScoreMainPanel();
-	private static final MatchPanel						matchPanel				= new MatchPanel();
-	private static final TeamPanel 						teamPanel1 				= new TeamPanel(1);
-	private static final TeamPanel 						teamPanel2 				= new TeamPanel(2);
-	private static final TeamPanel						teamPanel3				= new TeamPanel(3);
-	private static final StatsEntryPanel 					statsEntryPanel 		= new StatsEntryPanel();
-	private static final SwitchPanel 						switchPanel 			= new SwitchPanel();
-	private static final ResetPanel 						resetPanel 				= new ResetPanel();
-	private static final StatsDisplayPanel 				statsDisplayPanel 		= new StatsDisplayPanel();
+	private static final TournamentPanel		tournamentPanel 		= new TournamentPanel();
+	private static final TimerPanel 			timerPanel 				= new TimerPanel();
+	private static final OBSPanel				obsPanel				= new OBSPanel();
+	private static final AutoScoreMainPanel		autoScoreMainPanel  	= new AutoScoreMainPanel();
+	private static final MatchPanel				matchPanel				= new MatchPanel();
+	private static final TeamPanel 				teamPanel1 				= new TeamPanel(1);
+	private static final TeamPanel 				teamPanel2 				= new TeamPanel(2);
+	private static final TeamPanel				teamPanel3				= new TeamPanel(3);
+	private static final StatsEntryPanel 		statsEntryPanel 		= new StatsEntryPanel();
+	private static final SwitchPanel 			switchPanel 			= new SwitchPanel();
+	private static final ResetPanel 			resetPanel 				= new ResetPanel();
+	private static final StatsDisplayPanel 		statsDisplayPanel 		= new StatsDisplayPanel();
 	////// Set up Timer and Settings Windows \\\\\\
-	private static final ParametersFrame 					parametersFrame 		= new ParametersFrame();
-	private static final ParametersPanel					parametersPanel			= parametersFrame.getSettingsPanel();
-	private static final HotKeysFrame 					hotKeysFrame 			= new HotKeysFrame();
-	private static final HotKeysPanel 					hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
-	private static final SourcesFrame						sourcesFrame			= new SourcesFrame();
-	private static final SourcesPanel						sourcesPanel			= sourcesFrame.getSourcesPanel();
-	private static final StatSourcesFrame					statSourcesFrame		= new StatSourcesFrame();
-	private static final StatSourcesPanel					statSourcesPanel		= statSourcesFrame.getStatSourcesPanel();
-	private static final FiltersFrame        				filtersFrame        	= new FiltersFrame();
-	private static final FiltersPanel        				filtersPanel        	= filtersFrame.getFiltersPanel();
-	private static final PartnerProgramFrame 				partnerProgramFrame 	= new PartnerProgramFrame();
-	private static final OBSConnectFrame					obsConnectFrame			= new OBSConnectFrame();
-	private static final OBSConnectPanel					obsConnectPanel			= obsConnectFrame.getOBSConnectPanel();
-	private static final AutoScoreSettingsFrame			autoScoreSettingsFrame	= new AutoScoreSettingsFrame();
-	private static final AutoScoreSettingsPanel			autoScoreSettingsPanel	= autoScoreSettingsFrame.getAutoScoreSettingsPanel();
-	private static final AutoScoreConfigFrame				autoScoreConfigFrame	= new AutoScoreConfigFrame();
-	private static final AutoScoreConfigPanel				autoScoreConfigPanel	= autoScoreConfigFrame.getAutoScoreConfigPanel();
+	private static final ParametersFrame 		parametersFrame 		= new ParametersFrame();
+	private static final ParametersPanel		parametersPanel			= parametersFrame.getSettingsPanel();
+	private static final HotKeysFrame 			hotKeysFrame 			= new HotKeysFrame();
+	private static final HotKeysPanel 			hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
+	private static final SourcesFrame			sourcesFrame			= new SourcesFrame();
+	private static final SourcesPanel			sourcesPanel			= sourcesFrame.getSourcesPanel();
+	private static final StatSourcesFrame		statSourcesFrame		= new StatSourcesFrame();
+	private static final StatSourcesPanel		statSourcesPanel		= statSourcesFrame.getStatSourcesPanel();
+	private static final FiltersFrame        	filtersFrame        	= new FiltersFrame();
+	private static final FiltersPanel        	filtersPanel        	= filtersFrame.getFiltersPanel();
+	private static final PartnerProgramFrame 	partnerProgramFrame 	= new PartnerProgramFrame();
+	private static final OBSConnectFrame		obsConnectFrame			= new OBSConnectFrame();
+	private static final OBSConnectPanel		obsConnectPanel			= obsConnectFrame.getOBSConnectPanel();
+	private static final AutoScoreSettingsFrame	autoScoreSettingsFrame	= new AutoScoreSettingsFrame();
+	private static final AutoScoreSettingsPanel	autoScoreSettingsPanel	= autoScoreSettingsFrame.getAutoScoreSettingsPanel();
+	private static final AutoScoreConfigFrame	autoScoreConfigFrame	= new AutoScoreConfigFrame();
+	private static final AutoScoreConfigPanel	autoScoreConfigPanel	= autoScoreConfigFrame.getAutoScoreConfigPanel();
 	////// Set up The Main Window JFrame \\\\\\
-	private static MainFrame 						mainFrame;
+	private static MainFrame 					mainFrame;
 	////// Set up independent Windows \\\\\\
-	private static GameTableWindowPanel				gameTableWindowPanel;
-	private static GameTableWindowFrame				gameTableWindowFrame;
-	private static GameResultsWindowFrame			gameResultsWindowFrame;
-	private static TimerWindowFrame 				timerWindowFrame;
-	private static LastScoredWindowFrame 			lastScored1WindowFrame;
-	private static LastScoredWindowFrame 			lastScored2WindowFrame;
-	private static LastScoredWindowFrame			lastScored3WindowFrame;
+	private static GameTableWindowPanel			gameTableWindowPanel;
+	private static GameTableWindowFrame			gameTableWindowFrame;
+	private static GameResultsWindowFrame		gameResultsWindowFrame;
+	private static TimerWindowFrame 			timerWindowFrame;
+	private static LastScoredWindowFrame 		lastScored1WindowFrame;
+	private static LastScoredWindowFrame 		lastScored2WindowFrame;
+	private static LastScoredWindowFrame		lastScored3WindowFrame;
 	////// Build and Start the Controllers (mvC) \\\\\\
-	private static MainController 					mainController;
-	private static TimerController 					timerController;
-	private static TeamController 					teamController;
-	private static TournamentController 			tournamentController;
-	private static MatchController 					matchController;
-	private static StatsController 					statsController;
-	private static SwingWorker<Boolean, Integer> 	autoScoreWorker;
-	private static SwingWorker<Boolean, String> 	fileWatchWorker;
+	private static MainController 				mainController;
+	private static TimerController 				timerController;
+	private static TeamController 				teamController;
+	private static TournamentController 		tournamentController;
+	private static MatchController 				matchController;
+	private static StatsController 				statsController;
+	private static SwingWorker<Boolean,Integer> autoScoreWorker;
+	private static SwingWorker<Boolean,String>  fileWatchWorker;
     {
         match.addObserver(this);
     }
@@ -870,7 +872,7 @@ public final class Main implements MatchObserver {
 		autoScoreSettingsPanel.addSaveListener(new AutoScoreSettingsSaveListener());
 		autoScoreSettingsPanel.addConnectListener(new AutoScoreSettingsConnectListener());
 		autoScoreSettingsPanel.addDisconnectListener(new AutoScoreSettingsDisconnectListener());
-        autoScoreSettingsPanel.addSearchListener(new AutoScoreSettingsSearchListener());
+        autoScoreSettingsPanel.addSearchListener(new AutoScoreSettingsSearchListener(autoScoreSettingsPanel));
 		autoScoreConfigPanel.addReadConfigListener(new AutoScoreConfigReadListener());
 		autoScoreConfigPanel.addWriteConfigListener(new AutoScoreConfigWriteListener());
 		autoScoreConfigPanel.addValidateConfigListener(new AutoScoreConfigValidateListener());
@@ -1434,16 +1436,43 @@ public final class Main implements MatchObserver {
 		mainFrame.setAutoScoreIconConnected(false);
 		autoScoreConnected = false;
 	}
-    private static void searchAutoScore() {
+    private static void searchAutoScore(AutoScoreSettingsPanel panel) {
         try {
             String picoIP = PicoDiscovery.listenForPico(5051, 300);
             if (picoIP != null) {
                 System.out.println("Discovered Pico at: " + picoIP);
                 autoScoreSettingsPanel.addMessage("Found: " + picoIP);
+                String[] parts = picoIP.split(":");
+                if (parts.length == 3) {
+                    String label = parts[0];
+                    String ipAddress = parts[1];
+                    String port = parts[2];
+                    String message = String.format(
+                        "Discovered Device:\n\n%s\nIP Address: %s\nPort: %s\n\nWould you like to update the IP and Port?",
+                        label, ipAddress, port
+                    );
+                    int result = JOptionPane.showConfirmDialog(
+                        panel,
+                        message,
+                        "Update Auto Score Settings",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                    );
+                    if (result == JOptionPane.YES_OPTION) {
+                        updateAutoScoreHostPort(panel, ipAddress, port);
+                    }
+                } else {
+                    logger.warn("Invalid picoIP format: " + picoIP);
+                }
             }
         } catch (Exception e) {
             logger.error("searchAutoScore call to PicoDiscovery Exception: " + e);
         }
+    }
+    private static void updateAutoScoreHostPort(AutoScoreSettingsPanel panel, String host, String port) {
+        panel.setServerAddress(host);
+        panel.setServerPort(port);
+        panel.saveSettings();
     }
     private static void readAutoScoreConfig() {
 		if(autoScoreConnected) {
@@ -1722,10 +1751,15 @@ public final class Main implements MatchObserver {
 		}
 	}
     private static class AutoScoreSettingsSearchListener implements ActionListener {
+        private final AutoScoreSettingsPanel panel;
+
+        public AutoScoreSettingsSearchListener(AutoScoreSettingsPanel panel) {
+            this.panel = panel;
+        }
         @Override
 		public void actionPerformed(ActionEvent e) {
 			logger.info("AutoScore Settings Window Search Button Pressed."); //$NON-NLS-1$
-			searchAutoScore();
+			searchAutoScore(panel);
 		}
     }
 	private static class AutoScoreConfigReadListener implements ActionListener {
@@ -2587,7 +2621,57 @@ public final class Main implements MatchObserver {
 				String partnerProgramPlayer3FileName = Settings.getPartnerProgramParameter("Player3FileName"); //$NON-NLS-1$
 				String partnerProgramPlayer4FileName = Settings.getPartnerProgramParameter("Player4FileName"); //$NON-NLS-1$
 				Path partnerPath = Paths.get(partnerProgramDir);
-				watchService = FileSystems.getDefault().newWatchService(); 
+
+                // Check if directory exists
+                if (!Files.exists(partnerPath)) {
+                    // Use a flag to track user's decision
+                    final boolean[] shouldCreate = new boolean[1];
+                    final CountDownLatch latch = new CountDownLatch(1);
+
+                    SwingUtilities.invokeLater(() -> {
+                        String message = String.format(
+                            "The Partner Program interface directory does not exist: %s\n\nWithout this directory, the Partner Program will not be able to update FoosOBSPlus.\n\nWould you like to create it?",
+                            partnerProgramDir
+                        );
+
+                        int result = JOptionPane.showConfirmDialog(
+                            null,
+                            message,
+                            "Create Directory",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE
+                        );
+
+                        shouldCreate[0] = (result == JOptionPane.YES_OPTION);
+                        latch.countDown();
+                    });
+
+                    // Wait for user response
+                    latch.await();
+
+                    if (shouldCreate[0]) {
+                        try {
+                            Files.createDirectories(partnerPath);
+                            logger.info("Created directory: " + partnerProgramDir);
+                        } catch (IOException e) {
+                            logger.error("Failed to create directory: " + e);
+                            SwingUtilities.invokeLater(() -> {
+                                JOptionPane.showMessageDialog(
+                                    null,
+                                    "Failed to create directory:\n" + e.getMessage(),
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE
+                                );
+                            });
+                            return false;
+                        }
+                    } else {
+                        logger.info("User declined to create directory");
+                        return false;
+                    }
+                }
+
+                watchService = FileSystems.getDefault().newWatchService(); 
 				partnerPath.getFileSystem().newWatchService();
 				partnerPath.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
 		        WatchKey watchKey;

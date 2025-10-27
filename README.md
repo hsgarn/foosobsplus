@@ -1022,6 +1022,12 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.061 10/26/2025</br>
+Fix port display bug in AutoScoreSettingsPanel.</br>
+Add popup window for AutoScore Search button to save discovered IP and Port.</br>
+Check for partner program directory and prompt to create if does not exist on start up.</br>
+Don't clear code history window on Start Match (XPSM).</br>
+</br>
 v2.060 10/25/2025</br>
 Add search button and logic to search for FoosScore Pico and receive IP address from the Pico.</br>
 Fix Memento serialization bug in the Match model.</br>

@@ -92,7 +92,7 @@ public class AutoScoreSettingsPanel extends JPanel {
 		add(lblServerPort, "cell 0 3,alignx trailing"); //$NON-NLS-1$
 		txtServerPort = new JTextField();
 		txtServerPort.setHorizontalAlignment(SwingConstants.CENTER);
-		txtServerPort.setText(Settings.getAutoScoreParameter("AutoScoreSettingsServerPort(")); //$NON-NLS-1$
+		txtServerPort.setText(Settings.getAutoScoreParameter("AutoScoreSettingsServerPort")); //$NON-NLS-1$
 		txtServerPort.setColumns(10);
 		add(txtServerPort, "cell 1 3,alignx left,aligny top"); //$NON-NLS-1$
 		chckbxDetailLog = new JCheckBox(Messages.getString("AutoScoreSettingsPanel.DetailLog")); //$NON-NLS-1$
@@ -162,6 +162,9 @@ public class AutoScoreSettingsPanel extends JPanel {
     }
     public void setServerAddress(String serverAddress) {
     	txtServerAddress.setText(serverAddress);
+    }
+    public void setServerPort(String serverPort) {
+        txtServerPort.setText(serverPort);
     }
 	public void disableConnect() {
 		btnConnect.setEnabled(false);

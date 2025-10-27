@@ -40,12 +40,12 @@ import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
 
 public class MatchController {
 	private final Match match;
-	private final Stats stats;
+//	private final Stats stats;
 	private final GameClock gameClock;
 	private final LastScoredClock lastScored1Clock;
 	private final LastScoredClock lastScored2Clock;
 	private final MatchPanel matchPanel;
-	private final StatsEntryPanel statsEntryPanel;
+//	private final StatsEntryPanel statsEntryPanel;
 	private final StatsDisplayPanel statsDisplayPanel;
 	private final SwitchPanel switchPanel;
 	private final GameTableWindowPanel gameTableWindowPanel;
@@ -55,12 +55,12 @@ public class MatchController {
 	private static final String ON = "1";
 	public MatchController(Match match, Stats stats, GameClock gameClock, LastScoredClock lastScored1Clock, LastScoredClock lastScored2Clock, MatchPanel matchPanel, StatsEntryPanel statsEntryPanel, StatsDisplayPanel statsDisplayPanel, SwitchPanel switchPanel, GameTableWindowPanel gameTableWindowPanel, TeamController teamController, StreamIndexer streamIndexer) {
 		this.match = match;
-		this.stats = stats;
+	//	this.stats = stats;
 		this.gameClock = gameClock;
 		this.lastScored1Clock = lastScored1Clock;
 		this.lastScored2Clock = lastScored2Clock;
 		this.matchPanel = matchPanel;
-		this.statsEntryPanel = statsEntryPanel;
+	//	this.statsEntryPanel = statsEntryPanel;
 		this.statsDisplayPanel = statsDisplayPanel;
 		this.switchPanel = switchPanel;
 		this.gameTableWindowPanel = gameTableWindowPanel;
@@ -157,12 +157,12 @@ public class MatchController {
 		matchPanel.setPauseLabel("Pause Match");
 		matchPanel.updateStartTime(match.getStartTime());
 		startGame();
-		String tmpCode  = stats.getLastCode();
-		stats.clearAll();
-		statsEntryPanel.clearAll();
-		stats.setIsCommand(true);
-		stats.addCodeToHistory(tmpCode);
-		statsEntryPanel.updateCodeHistory(tmpCode);
+//		String tmpCode  = stats.getLastCode();
+//		stats.clearAll();
+//		statsEntryPanel.clearAll();
+//		stats.setIsCommand(true);
+//		stats.addCodeToHistory(tmpCode);
+//		statsEntryPanel.updateCodeHistory(tmpCode);
 	}
 	public void startGame() {
 		if(match.isMatchPaused()==true) {
