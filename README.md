@@ -1022,6 +1022,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.062 11/29/2025</br>
+Add Ball Panel and supporting logic.</br>
+</br>
 v2.061 10/26/2025</br>
 Fix port display bug in AutoScoreSettingsPanel.</br>
 Add popup window for AutoScore Search button to save discovered IP and Port.</br>

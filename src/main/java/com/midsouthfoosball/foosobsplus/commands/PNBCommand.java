@@ -1,5 +1,5 @@
 /**
-Copyright © 2021-2026 Hugh Garner
+Copyright © 2022-2026 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction, including without limitation the rights 
@@ -18,28 +18,27 @@ OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
 OTHER DEALINGS IN THE SOFTWARE.  
 **/
-package com.midsouthfoosball.foosobsplus.view;
 
-import java.awt.Dimension;
+package com.midsouthfoosball.foosobsplus.commands;
 
-import javax.swing.JFrame;
+import com.midsouthfoosball.foosobsplus.controller.StatsController;
+import com.midsouthfoosball.foosobsplus.main.Main;
 
-import com.midsouthfoosball.foosobsplus.model.AppConfig;
-
-@SuppressWarnings("serial")
-public class SourcesFrame extends JFrame {
-	private final SourcesPanel sourcesPanel;
-	private static final String PROGRAMNAME = AppConfig.PROGRAM_NAME;
-	public SourcesFrame() {
-		super(PROGRAMNAME + " " + Messages.getString("SourcesFrame.SourcesSettings")); //$NON-NLS-1$ //$NON-NLS-2$
-		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		setAlwaysOnTop(true);
-		sourcesPanel = new SourcesPanel();
-		sourcesPanel.setPreferredSize(new Dimension(950, 625));
-		getContentPane().add(sourcesPanel);
-		pack();
+public class PNBCommand implements Command {
+	private final StatsController statsController;
+	
+	public PNBCommand(StatsController statsController) {
+		this.statsController = statsController;
 	}
-	public SourcesPanel getSourcesPanel() {
-		return sourcesPanel;
+	
+    @Override
+	public void execute() {
+		Main.resetNineBall();
 	}
+
+    @Override
+	public String getCode() {
+		return statsController.getLastCode();
+	}
+
 }

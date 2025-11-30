@@ -189,7 +189,23 @@ public final class Settings {
 		defaultSourceProps.setProperty("ShowScores", "ScoresAndLabels");
 		defaultSourceProps.setProperty("ShowTimer", "Foos OBS+ Timer");
 		defaultSourceProps.setProperty("ShowCutthroat", "Cutthroat");
-		//Stat Sources
+        defaultSourceProps.setProperty("CueBall", "CueBall");
+        defaultSourceProps.setProperty("OneBall", "OneBall");
+        defaultSourceProps.setProperty("TwoBall", "TwoBall");
+        defaultSourceProps.setProperty("ThreeBall", "ThreeBall");
+        defaultSourceProps.setProperty("FourBall", "FourBall");
+        defaultSourceProps.setProperty("FiveBall", "FiveBall");
+        defaultSourceProps.setProperty("SixBall", "SixBall");
+        defaultSourceProps.setProperty("SevenBall", "SevenBall");
+        defaultSourceProps.setProperty("EightBall", "EigthBall");
+        defaultSourceProps.setProperty("NineBall", "NineBall");
+        defaultSourceProps.setProperty("TenBall", "TenBall");
+        defaultSourceProps.setProperty("ElevenBall", "ElevenBall");
+        defaultSourceProps.setProperty("TwelveBall", "TwelveBall");
+        defaultSourceProps.setProperty("ThirteenBall", "ThirteenBall");
+        defaultSourceProps.setProperty("FourteenBall", "FourteenBall");
+        defaultSourceProps.setProperty("FifteenBall", "FifteenBall");
+        //Stat Sources
 		defaultStatsSourceProps.setProperty("Team1PassAttempts", "team1passattempts");
 		defaultStatsSourceProps.setProperty("Team2PassAttempts", "team2passattempts");
 		defaultStatsSourceProps.setProperty("Team3PassAttempts", "team3passattempts");

@@ -116,6 +116,9 @@ import com.midsouthfoosball.foosobsplus.commands.STTCommand;
 import com.midsouthfoosball.foosobsplus.commands.UTTCommand;
 import com.midsouthfoosball.foosobsplus.commands.XPCommand;
 import com.midsouthfoosball.foosobsplus.commands.XPTCommand;
+import com.midsouthfoosball.foosobsplus.commands.PHACommand;
+import com.midsouthfoosball.foosobsplus.commands.PSACommand;
+import com.midsouthfoosball.foosobsplus.commands.PNBCommand;
 import com.midsouthfoosball.foosobsplus.controller.MainController;
 import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
@@ -137,6 +140,7 @@ import com.midsouthfoosball.foosobsplus.view.AutoScoreConfigPanel;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreMainPanel;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsFrame;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsPanel;
+import com.midsouthfoosball.foosobsplus.view.BallPanel;
 import com.midsouthfoosball.foosobsplus.view.FiltersFrame;
 import com.midsouthfoosball.foosobsplus.view.FiltersPanel;
 import com.midsouthfoosball.foosobsplus.view.GameResultsWindowFrame;
@@ -178,6 +182,7 @@ import io.obswebsocket.community.client.message.event.sceneitems.SceneItemRemove
 import io.obswebsocket.community.client.message.event.scenes.CurrentProgramSceneChangedEvent;
 import io.obswebsocket.community.client.message.response.sceneitems.GetSceneItemIdResponse;
 import io.obswebsocket.community.client.message.response.scenes.GetSceneListResponse;
+import io.obswebsocket.community.client.message.response.sources.GetSourceActiveResponse;
 import io.obswebsocket.community.client.message.response.ui.GetMonitorListResponse;
 import io.obswebsocket.community.client.model.Monitor;
 import io.obswebsocket.community.client.model.Scene;
@@ -203,6 +208,8 @@ public final class Main implements MatchObserver {
 	private static final StreamIndexer 			streamIndexer      		= new StreamIndexer(Settings.getControlParameter("datapath")); //$NON-NLS-1$
 	private static Boolean 						blockAutoScoreReconnect	= false;
     private static final Map<String, String>	teamGameShowSourcesMap	= new HashMap<>();
+   	private static HashMap<String, Boolean> allBallsMap 	= new HashMap<>();
+	private static HashMap<String, Boolean> nineBallsMap 	= new HashMap<>();
 	////// Watch Service for File changes \\\\\\
 	private static WatchService 				watchService;
 	////// CommandStack and UndoRedo setup \\\\\\
@@ -242,6 +249,7 @@ public final class Main implements MatchObserver {
 	private static final SwitchPanel 			switchPanel 			= new SwitchPanel();
 	private static final ResetPanel 			resetPanel 				= new ResetPanel();
 	private static final StatsDisplayPanel 		statsDisplayPanel 		= new StatsDisplayPanel();
+    private static final BallPanel              ballPanel               = new BallPanel();
 	////// Set up Timer and Settings Windows \\\\\\
 	private static final ParametersFrame 		parametersFrame 		= new ParametersFrame();
 	private static final ParametersPanel		parametersPanel			= parametersFrame.getSettingsPanel();
@@ -300,6 +308,7 @@ public final class Main implements MatchObserver {
 				connectToOBS();
 			}
 		}
+        loadBallMaps();
 		loadListeners();
 		loadCommands();
 		createAutoScoreWorker();
@@ -586,6 +595,64 @@ public final class Main implements MatchObserver {
 	private static void onCommunicationError(ReasonThrowable reason) {
 		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.CommunicationError") + reason.getReason()); //$NON-NLS-1$
 	}
+	private static void obsSetBallVisible(String sourceName, boolean show) {
+		if (OBS.getConnected()) {
+            OBS.getController().getSourceActive(sourceName, (GetSourceActiveResponse response)-> {
+                if (response != null && response.isSuccessful()) {
+//                    boolean isActive = response.getVideoActive();
+                    showSource(sourceName, show);
+                } else {
+                    String msg = "Source [" + sourceName + "] not found in OBS";
+                    logger.warn(msg);
+                    obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " " + msg);
+                }
+           });
+
+//			String sceneName;
+//			GetCurrentProgramSceneResponse getCurrentProgramSceneResponse = OBS.getController().getCurrentProgramScene(1000);
+//			if (getCurrentProgramSceneResponse != null && getCurrentProgramSceneResponse.isSuccessful()) {
+//				sceneName = getCurrentProgramSceneResponse.getCurrentProgramSceneName();
+//				OBS.getController().getSceneItemId(sceneName, source, null,
+//						getSceneItemIdResponse -> {
+//							if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
+//								OBS.getController().setSceneItemEnabled(sceneName,getSceneItemIdResponse.getSceneItemId(),show,
+//										setSceneItemEnabledResponse -> {
+//											if(Settings.getShowParsed()) {
+//												obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled called: " + source + ", " + show);
+//											}
+//										}
+//								);
+//							}
+//				});
+//			}
+		}
+	}
+	public static void obsSyncBalls() {
+		if (OBS.getConnected()) {
+			allBallsMap.forEach((ball,show) -> {
+				obsSetBallVisible(ball+"Ball", !ballPanel.getBallSelectedState(ball));
+			});
+		}
+	}
+	public static void resetNineBall() {
+		nineBallsMap.forEach((ball, show) -> {
+			if (OBS.getConnected()) obsSetBallVisible(ball+"Ball", show);
+			ballPanel.setBallSelected(ball, !show);
+		});
+	}
+	public static void showAllBalls() {
+		allBallsMap.forEach((ball, show) -> {
+			if (OBS.getConnected()) obsSetBallVisible(ball+"Ball", show);
+			ballPanel.setBallSelected(ball, !show);
+		});
+	}
+	public static void hideAllBalls() {
+		allBallsMap.forEach((ball, show) -> {
+			if (OBS.getConnected()) obsSetBallVisible(ball+"Ball", !show);
+			ballPanel.setBallSelected(ball, show);
+		});
+	}
+
     private static void createAutoScoreWorker() {
 		autoScoreWorker = new SwingWorker<Boolean, Integer>() {
 			BufferedReader dataIn;
@@ -842,7 +909,7 @@ public final class Main implements MatchObserver {
 	public static void loadWindowsAndControllers() {
 		mainFrame = new MainFrame(Settings.getInstance(), tournamentPanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, teamPanel3, statsEntryPanel, 
 				switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, sourcesFrame, statSourcesFrame, filtersFrame, 
-				partnerProgramFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame);
+				partnerProgramFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, ballPanel);
 		////// Set up independent Windows \\\\\\
 		mainFrame.windowActivated(null);
 		gameTableWindowPanel		= new GameTableWindowPanel();
@@ -861,7 +928,27 @@ public final class Main implements MatchObserver {
 		statsController 		= new StatsController(stats, statsDisplayPanel, teamController);
 		gameClock.addGameClockTimerListener(new GameClockTimerListener());
 	}
-	public static void loadListeners() {
+	public void loadListeners() {
+		ballPanel.addBtnCueBallListener(new BtnCueBallListener());
+		ballPanel.addBtnOneBallListener(new BtnOneBallListener());
+		ballPanel.addBtnTwoBallListener(new BtnTwoBallListener());
+		ballPanel.addBtnThreeBallListener(new BtnThreeBallListener());
+		ballPanel.addBtnFourBallListener(new BtnFourBallListener());
+		ballPanel.addBtnFiveBallListener(new BtnFiveBallListener());
+		ballPanel.addBtnSixBallListener(new BtnSixBallListener());
+		ballPanel.addBtnSevenBallListener(new BtnSevenBallListener());
+		ballPanel.addBtnEightBallListener(new BtnEightBallListener());
+		ballPanel.addBtnNineBallListener(new BtnNineBallListener());
+		ballPanel.addBtnTenBallListener(new BtnTenBallListener());
+		ballPanel.addBtnElevenBallListener(new BtnElevenBallListener());
+		ballPanel.addBtnTwelveBallListener(new BtnTwelveBallListener());
+		ballPanel.addBtnThirteenBallListener(new BtnThirteenBallListener());
+		ballPanel.addBtnFourteenBallListener(new BtnFourteenBallListener());
+		ballPanel.addBtnFifteenBallListener(new BtnFifteenBallListener());
+		ballPanel.addBtnSyncOBSListener(new BtnSyncOBSListener());
+		ballPanel.addBtnResetNineBallListener(new BtnResetNineBallListener());
+		ballPanel.addBtnShowAllBallsListener(new BtnShowAllBallsListener());
+		ballPanel.addBtnHideAllBallsListener(new BtnHideAllBallsListener());
 		hotKeysPanel.addApplyListener(new HotKeysApplyListener());
 		hotKeysPanel.addSaveListener(new HotKeysSaveListener());
 		sourcesPanel.addApplyListener(new SourcesApplyListener());
@@ -997,6 +1084,40 @@ public final class Main implements MatchObserver {
 		team1.addPropertyChangeListener(new TeamPropertyListener());
 		team2.addPropertyChangeListener(new TeamPropertyListener());
 		team3.addPropertyChangeListener(new TeamPropertyListener());
+	}
+	public void loadBallMaps() {
+		allBallsMap.put("Cue", true);
+		allBallsMap.put("One", true);
+		allBallsMap.put("Two", true);
+		allBallsMap.put("Three", true);
+		allBallsMap.put("Four", true);
+		allBallsMap.put("Five", true);
+		allBallsMap.put("Six", true);
+		allBallsMap.put("Seven", true);
+		allBallsMap.put("Eight", true);
+		allBallsMap.put("Nine", true);
+		allBallsMap.put("Ten", true);
+		allBallsMap.put("Eleven", true);
+		allBallsMap.put("Twelve", true);
+		allBallsMap.put("Thirteen", true);
+		allBallsMap.put("Fourteen", true);
+		allBallsMap.put("Fifteen", true);
+		nineBallsMap.put("Cue", true);
+		nineBallsMap.put("One", true);
+		nineBallsMap.put("Two", true);
+		nineBallsMap.put("Three", true);
+		nineBallsMap.put("Four", true);
+		nineBallsMap.put("Five", true);
+		nineBallsMap.put("Six", true);
+		nineBallsMap.put("Seven", true);
+		nineBallsMap.put("Eight", true);
+		nineBallsMap.put("Nine", true);
+		nineBallsMap.put("Ten", false);
+		nineBallsMap.put("Eleven", false);
+		nineBallsMap.put("Twelve", false);
+		nineBallsMap.put("Thirteen", false);
+		nineBallsMap.put("Fourteen", false);
+		nineBallsMap.put("Fifteen", false);
 	}
 
     /**
@@ -1275,6 +1396,9 @@ public final class Main implements MatchObserver {
 		Command prr = new PRRCommand(statsController, teamController);
 		Command pra = new PRACommand(statsController, teamController, matchController);
 		Command ptca = new PTCACommand(statsController, tournamentController);
+        Command pnb = new PNBCommand(statsController);
+        Command psa = new PSACommand(statsController);
+        Command pha = new PHACommand(statsController);
 		Command codeCommand = new CodeCommand(statsController);
 		mySwitch = new CommandSwitch();
 		mySwitch.register("PSE", pse); //$NON-NLS-1$
@@ -1342,6 +1466,9 @@ public final class Main implements MatchObserver {
 		mySwitch.register("PRR", prr); //$NON-NLS-1$
 		mySwitch.register("PRA", pra); //$NON-NLS-1$
 		mySwitch.register("PTCA", ptca); //$NON-NLS-1$
+        mySwitch.register("PNB", pnb); //$NON-NLS-1$
+        mySwitch.register("PSA", psa); //$NON-NLS-1$
+        mySwitch.register("PHA", pha); //$NON-NLS-1$
 		mySwitch.register("code", codeCommand); //$NON-NLS-1$
 	}
 	public static void showScores(boolean show) {
@@ -1617,7 +1744,127 @@ public final class Main implements MatchObserver {
 		return name.replaceAll("[^0-9]", ""); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	////// Listeners \\\\\\
-	private static class CodeListener implements ActionListener {
+	private static class BtnCueBallListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("CueBall", !ballPanel.getCueBallSelectedState());
+		}
+	}
+	private static class BtnOneBallListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("OneBall", !ballPanel.getOneBallSelectedState());
+		}
+	}
+	private static class BtnTwoBallListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("TwoBall", !ballPanel.getTwoBallSelectedState());
+		}
+	}
+	private static class BtnThreeBallListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("ThreeBall", !ballPanel.getThreeBallSelectedState());
+		}
+	}
+	private static class BtnFourBallListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("FourBall", !ballPanel.getFourBallSelectedState());
+		}
+	}
+	private static class BtnFiveBallListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("FiveBall", !ballPanel.getFiveBallSelectedState());
+		}
+	}
+	private static class BtnSixBallListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("SixBall", !ballPanel.getSixBallSelectedState());
+		}
+	}
+	private static class BtnSevenBallListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("SevenBall", !ballPanel.getSevenBallSelectedState());
+		}
+	}
+	private class BtnEightBallListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("EightBall", !ballPanel.getEightBallSelectedState());
+		}
+	}
+	private static class BtnNineBallListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("NineBall", !ballPanel.getNineBallSelectedState());
+		}
+	}
+	private static class BtnTenBallListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("TenBall", !ballPanel.getTenBallSelectedState());
+		}
+	}
+	private static class BtnElevenBallListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("ElevenBall", !ballPanel.getElevenBallSelectedState());
+		}
+	}
+	private static class BtnTwelveBallListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("TwelveBall", !ballPanel.getTwelveBallSelectedState());
+		}
+	}
+	private static class BtnThirteenBallListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("ThirteenBall", !ballPanel.getThirteenBallSelectedState());
+		}
+	}
+	private static class BtnFourteenBallListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("FourteenBall", !ballPanel.getFourteenBallSelectedState());
+		}
+	}
+	private static class BtnFifteenBallListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			obsSetBallVisible("FifteenBall", !ballPanel.getFifteenBallSelectedState());
+		}
+	}
+	private static class BtnSyncOBSListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			obsSyncBalls();
+		}
+	}
+	private static class BtnResetNineBallListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			resetNineBall();
+		}
+	}
+	private static class BtnShowAllBallsListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			showAllBalls();
+		}
+	}
+	private static class BtnHideAllBallsListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			hideAllBalls();
+		}
+	}
+    private static class CodeListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
 			Boolean isRedo = false;
@@ -2033,7 +2280,7 @@ public final class Main implements MatchObserver {
         @Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String code = "XIST" + ripTeamNumber(btn.getName());//XIST1 //$NON-NLS-1$
+			String code = "XIST" + ripTeamNumber(btn.getName()); //$NON-NLS-1$
 			processCode(code,false);
 			setFocusOnCode();
 		}
@@ -2042,7 +2289,7 @@ public final class Main implements MatchObserver {
         @Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String code = "XDST" + ripTeamNumber(btn.getName());//XDST1 //$NON-NLS-1$
+			String code = "XDST" + ripTeamNumber(btn.getName()); //$NON-NLS-1$
 			processCode(code,false);
 			setFocusOnCode();
 		}
@@ -2051,7 +2298,7 @@ public final class Main implements MatchObserver {
         @Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String code = "XIGT" + ripTeamNumber(btn.getName());//XIGT1 //$NON-NLS-1$
+			String code = "XIGT" + ripTeamNumber(btn.getName()); //$NON-NLS-1$
 			processCode(code,false);
 			setFocusOnCode();
 		}
@@ -2060,7 +2307,7 @@ public final class Main implements MatchObserver {
         @Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String code = "XDGT" + ripTeamNumber(btn.getName());//XDGT1 //$NON-NLS-1$
+			String code = "XDGT" + ripTeamNumber(btn.getName()); //$NON-NLS-1$
 			processCode(code,false);
 			setFocusOnCode();
 		}
@@ -2069,7 +2316,7 @@ public final class Main implements MatchObserver {
         @Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String code = "XIMT" + ripTeamNumber(btn.getName());//XIMT1 //$NON-NLS-1$
+			String code = "XIMT" + ripTeamNumber(btn.getName()); //$NON-NLS-1$
 			processCode(code,false);
 			setFocusOnCode();
 		}
@@ -2078,7 +2325,7 @@ public final class Main implements MatchObserver {
         @Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String code = "XDMT" + ripTeamNumber(btn.getName());//XDMT1 //$NON-NLS-1$
+			String code = "XDMT" + ripTeamNumber(btn.getName()); //$NON-NLS-1$
 			processCode(code,false);
 			setFocusOnCode();
 		}
@@ -2087,7 +2334,7 @@ public final class Main implements MatchObserver {
         @Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String code = "XUTT" + ripTeamNumber(btn.getName());//XUTT1 //$NON-NLS-1$
+			String code = "XUTT" + ripTeamNumber(btn.getName()); //$NON-NLS-1$
 			processCode(code,false);
 			setFocusOnCode();
 		}
@@ -2096,7 +2343,7 @@ public final class Main implements MatchObserver {
         @Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
-			String code = "XRTT" + ripTeamNumber(btn.getName());//XRTT1 //$NON-NLS-1$
+			String code = "XRTT" + ripTeamNumber(btn.getName()); //$NON-NLS-1$
 			processCode(code,false);
 			setFocusOnCode();
 		}
@@ -2106,8 +2353,8 @@ public final class Main implements MatchObserver {
 		public void actionPerformed(ActionEvent e) {
 			JToggleButton btn = (JToggleButton) e.getSource();
 			String teamNumber = ripTeamNumber(btn.getName());
-			String code = "XPRT" + teamNumber;//XPRT1 //$NON-NLS-1$
-			String filter = "Team" + teamNumber + "Reset";//Team1Reset //$NON-NLS-1$ //$NON-NLS-2$
+			String code = "XPRT" + teamNumber; //$NON-NLS-1$
+			String filter = "Team" + teamNumber + "Reset"; //$NON-NLS-1$ //$NON-NLS-2$
 			processCode(code,false);
 			if (btn.isSelected()) activateFilter(filter);
 			setFocusOnCode();
@@ -2118,8 +2365,8 @@ public final class Main implements MatchObserver {
 		public void actionPerformed(ActionEvent e) {
 			JToggleButton btn = (JToggleButton) e.getSource();
 			String teamNumber = ripTeamNumber(btn.getName());
-			String code = "XPWT" + teamNumber;//XPWT1 //$NON-NLS-1$
-			String filter = "Team" + teamNumber + "Warn";//Team1Warn //$NON-NLS-1$ //$NON-NLS-2$
+			String code = "XPWT" + teamNumber; //$NON-NLS-1$
+			String filter = "Team" + teamNumber + "Warn"; //$NON-NLS-1$ //$NON-NLS-2$
 			processCode(code,false);
 			if (btn.isSelected()) activateFilter(filter);
 			setFocusOnCode();
@@ -2130,8 +2377,8 @@ public final class Main implements MatchObserver {
 		public void actionPerformed(ActionEvent e) {
 			JCheckBox ckbx = (JCheckBox) e.getSource();
 			String teamNumber = ripTeamNumber(ckbx.getName());
-			String code = "XPKT" + teamNumber;//XPKT1 //$NON-NLS-1$
-			String filter = "Team" + teamNumber + "KingSeat";//Team1KingSeat //$NON-NLS-1$ //$NON-NLS-2$
+			String code = "XPKT" + teamNumber; //$NON-NLS-1$
+			String filter = "Team" + teamNumber + "KingSeat"; //$NON-NLS-1$ //$NON-NLS-2$
 			processCode(code,false);
 			if (ckbx.isSelected()) activateFilter(filter);
 			setFocusOnCode();
@@ -2142,8 +2389,8 @@ public final class Main implements MatchObserver {
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			String teamNumber = ripTeamNumber(btn.getName());
-			String code = "XXPT" + teamNumber;//XXPT1 //$NON-NLS-1$
-			String filter = "Team" + teamNumber + "SwitchPositions";//Team1SwitchPositions //$NON-NLS-1$ //$NON-NLS-2$
+			String code = "XXPT" + teamNumber; //$NON-NLS-1$
+			String filter = "Team" + teamNumber + "SwitchPositions"; //$NON-NLS-1$ //$NON-NLS-2$
 			processCode(code,false);
 			activateFilter(filter);
 			setFocusOnCode();

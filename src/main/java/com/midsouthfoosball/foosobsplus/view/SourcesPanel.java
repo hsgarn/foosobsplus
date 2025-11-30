@@ -98,6 +98,22 @@ public class SourcesPanel extends JPanel {
 	private JTextField txtShowScores;
 	private JTextField txtShowTimer;
 	private JTextField txtShowCutthroat;
+    private JTextField txtCueBall;
+    private JTextField txtOneBall;
+    private JTextField txtTwoBall;
+    private JTextField txtThreeBall;
+    private JTextField txtFourBall;
+    private JTextField txtFiveBall;
+    private JTextField txtSixBall;
+    private JTextField txtSevenBall;
+    private JTextField txtEightBall;
+    private JTextField txtNineBall;
+    private JTextField txtTenBall;
+    private JTextField txtElevenBall;
+    private JTextField txtTwelveBall;
+    private JTextField txtThirteenBall;
+    private JTextField txtFourteenBall;
+    private JTextField txtFifteenBall;
 	private JButton btnApply;
 	private JButton btnSave;
     private final Map<String, JTextField> sourcesMap = new HashMap<>();
@@ -165,6 +181,22 @@ public class SourcesPanel extends JPanel {
 		sourcesMap.put("ShowScores",txtShowScores); //$NON-NLS-1$
 		sourcesMap.put("ShowTimer",txtShowTimer); //$NON-NLS-1$
 		sourcesMap.put("ShowCutthroat",txtShowCutthroat); //$NON-NLS-1$
+        sourcesMap.put("CueBall",txtCueBall); //$NON-NLS-1$
+        sourcesMap.put("OneBall",txtOneBall); //$NON-NLS-1$
+        sourcesMap.put("TwoBall",txtTwoBall); //$NON-NLS-1$
+        sourcesMap.put("ThreeBall",txtThreeBall); //$NON-NLS-1$
+        sourcesMap.put("FourBall",txtFourBall); //$NON-NLS-1$
+        sourcesMap.put("FiveBall",txtFiveBall); //$NON-NLS-1$
+        sourcesMap.put("SixBall",txtSixBall); //$NON-NLS-1$
+        sourcesMap.put("SevenBall",txtSevenBall); //$NON-NLS-1$
+        sourcesMap.put("EightBall",txtEightBall); //$NON-NLS-1$
+        sourcesMap.put("NineBall",txtNineBall); //$NON-NLS-1$
+        sourcesMap.put("TenBall",txtTenBall); //$NON-NLS-1$
+        sourcesMap.put("ElevenBall",txtElevenBall); //$NON-NLS-1$
+        sourcesMap.put("TwelveBall",txtTwelveBall); //$NON-NLS-1$
+        sourcesMap.put("ThirteenBall",txtThirteenBall); //$NON-NLS-1$
+        sourcesMap.put("FourteenBall",txtFourteenBall); //$NON-NLS-1$
+        sourcesMap.put("FifteenBall",txtFifteenBall); //$NON-NLS-1$
 	}
 	private void restoreDefaults() {
 		sourcesMap.forEach((sourceName, textField) -> {
@@ -215,6 +247,9 @@ public class SourcesPanel extends JPanel {
 		JLabel lblSourceCol4 = new JLabel(Messages.getString("SourcesPanel.Source")); //$NON-NLS-1$
 		lblSourceCol4.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 		add(lblSourceCol4, "cell 6 2,alignx left"); //$NON-NLS-1$
+        JLabel lblSourceCol5 = new JLabel(Messages.getString("SourcesPanel.Source")); //$NON-NLS-1$
+        lblSourceCol5.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
+        add(lblSourceCol5, "cell 8 2,alignx left"); //$NON-NLS-1$
 		//Team Name
 		JLabel lblName = new JLabel(Messages.getString("SourcesPanel.Name")); //$NON-NLS-1$
 		add(lblName, "cell 1 3,alignx right"); //$NON-NLS-1$
@@ -515,6 +550,119 @@ public class SourcesPanel extends JPanel {
 		txtShowCutthroat.setText(Settings.getSourceParameter("ShowCutthroatSource")); //$NON-NLS-1$
 		txtShowCutthroat.setColumns(10);
 		add(txtShowCutthroat, "cell 6 17,alignx left"); //$NON-NLS-1$
+		//CueBall
+		JLabel lblCueBall = new JLabel(Messages.getString("SourcesPanel.CueBall")); //$NON-NLS-1$
+		add(lblCueBall, "cell 7 3,alignx right"); //$NON-NLS-1$
+		txtCueBall = new JTextField();
+		txtCueBall.setText(Settings.getSourceParameter("CueBall")); //$NON-NLS-1$
+		txtCueBall.setColumns(10);
+		add(txtCueBall, "cell 8 3,alignx left"); //$NON-NLS-1$
+		//OneBall
+		JLabel lblOneBall = new JLabel(Messages.getString("SourcesPanel.OneBall")); //$NON-NLS-1$
+		add(lblOneBall, "cell 7 4,alignx right"); //$NON-NLS-1$
+		txtOneBall = new JTextField();
+		txtOneBall.setText(Settings.getSourceParameter("OneBall")); //$NON-NLS-1$
+		txtOneBall.setColumns(10);
+		add(txtOneBall, "cell 8 4,alignx left"); //$NON-NLS-1$
+		//TwoBall
+		JLabel lblTwoBall = new JLabel(Messages.getString("SourcesPanel.TwoBall")); //$NON-NLS-1$
+		add(lblTwoBall, "cell 7 5,alignx right"); //$NON-NLS-1$
+		txtTwoBall = new JTextField();
+		txtTwoBall.setText(Settings.getSourceParameter("TwoBall")); //$NON-NLS-1$
+		txtTwoBall.setColumns(10);
+		add(txtTwoBall, "cell 8 5,alignx left"); //$NON-NLS-1$
+		//ThreeBall
+		JLabel lblThreeBall = new JLabel(Messages.getString("SourcesPanel.ThreeBall")); //$NON-NLS-1$
+		add(lblThreeBall, "cell 7 6,alignx right"); //$NON-NLS-1$
+		txtThreeBall = new JTextField();
+		txtThreeBall.setText(Settings.getSourceParameter("ThreeBall")); //$NON-NLS-1$
+		txtThreeBall.setColumns(10);
+		add(txtThreeBall, "cell 8 6,alignx left"); //$NON-NLS-1$
+		//FourBall
+		JLabel lblFourBall = new JLabel(Messages.getString("SourcesPanel.FourBall")); //$NON-NLS-1$
+		add(lblFourBall, "cell 7 7,alignx right"); //$NON-NLS-1$
+		txtFourBall = new JTextField();
+		txtFourBall.setText(Settings.getSourceParameter("FourBall")); //$NON-NLS-1$
+		txtFourBall.setColumns(10);
+		add(txtFourBall, "cell 8 7,alignx left"); //$NON-NLS-1$
+		//FiveBall
+		JLabel lblFiveBall = new JLabel(Messages.getString("SourcesPanel.FiveBall")); //$NON-NLS-1$
+		add(lblFiveBall, "cell 7 8,alignx right"); //$NON-NLS-1$
+		txtFiveBall = new JTextField();
+		txtFiveBall.setText(Settings.getSourceParameter("FiveBall")); //$NON-NLS-1$
+		txtFiveBall.setColumns(10);
+		add(txtFiveBall, "cell 8 8,alignx left"); //$NON-NLS-1$
+		//SixBall
+		JLabel lblSixBall = new JLabel(Messages.getString("SourcesPanel.SixBall")); //$NON-NLS-1$
+		add(lblSixBall, "cell 7 9,alignx right"); //$NON-NLS-1$
+		txtSixBall = new JTextField();
+		txtSixBall.setText(Settings.getSourceParameter("SixBall")); //$NON-NLS-1$
+		txtSixBall.setColumns(10);
+		add(txtSixBall, "cell 8 9,alignx left"); //$NON-NLS-1$
+		//SevenBall
+		JLabel lblSevenBall = new JLabel(Messages.getString("SourcesPanel.SevenBall")); //$NON-NLS-1$
+		add(lblSevenBall, "cell 7 10,alignx right"); //$NON-NLS-1$
+		txtSevenBall = new JTextField();
+		txtSevenBall.setText(Settings.getSourceParameter("SevenBall")); //$NON-NLS-1$
+		txtSevenBall.setColumns(10);
+		add(txtSevenBall, "cell 8 10,alignx left"); //$NON-NLS-1$
+		//EightBall
+		JLabel lblEightBall = new JLabel(Messages.getString("SourcesPanel.EightBall")); //$NON-NLS-1$
+		add(lblEightBall, "cell 7 11,alignx right"); //$NON-NLS-1$
+		txtEightBall = new JTextField();
+		txtEightBall.setText(Settings.getSourceParameter("EightBall")); //$NON-NLS-1$
+		txtEightBall.setColumns(10);
+		add(txtEightBall, "cell 8 11,alignx left"); //$NON-NLS-1$
+		//NineBall
+		JLabel lblNineBall = new JLabel(Messages.getString("SourcesPanel.NineBall")); //$NON-NLS-1$
+		add(lblNineBall, "cell 7 12,alignx right"); //$NON-NLS-1$
+		txtNineBall = new JTextField();
+		txtNineBall.setText(Settings.getSourceParameter("NineBall")); //$NON-NLS-1$
+		txtNineBall.setColumns(10);
+		add(txtNineBall, "cell 8 12,alignx left"); //$NON-NLS-1$
+		//TenBall
+		JLabel lblTenBall = new JLabel(Messages.getString("SourcesPanel.TenBall")); //$NON-NLS-1$
+		add(lblTenBall, "cell 7 13,alignx right"); //$NON-NLS-1$
+		txtTenBall = new JTextField();
+		txtTenBall.setText(Settings.getSourceParameter("TenBall")); //$NON-NLS-1$
+		txtTenBall.setColumns(10);
+		add(txtTenBall, "cell 8 13,alignx left"); //$NON-NLS-1$
+		//ElevenBall
+		JLabel lblElevenBall = new JLabel(Messages.getString("SourcesPanel.ElevenBall")); //$NON-NLS-1$
+		add(lblElevenBall, "cell 7 14,alignx right"); //$NON-NLS-1$
+		txtElevenBall = new JTextField();
+		txtElevenBall.setText(Settings.getSourceParameter("ElevenBall")); //$NON-NLS-1$
+		txtElevenBall.setColumns(10);
+		add(txtElevenBall, "cell 8 14,alignx left"); //$NON-NLS-1$
+		//TwelveBall
+		JLabel lblTwelveBall = new JLabel(Messages.getString("SourcesPanel.TwelveBall")); //$NON-NLS-1$
+		add(lblTwelveBall, "cell 7 15,alignx right"); //$NON-NLS-1$
+		txtTwelveBall = new JTextField();
+		txtTwelveBall.setText(Settings.getSourceParameter("TwelveBall")); //$NON-NLS-1$
+		txtTwelveBall.setColumns(10);
+		add(txtTwelveBall, "cell 8 15,alignx left"); //$NON-NLS-1$
+		//ThirteenBall
+		JLabel lblThirteenBall = new JLabel(Messages.getString("SourcesPanel.ThirteenBall")); //$NON-NLS-1$
+		add(lblThirteenBall, "cell 7 16,alignx right"); //$NON-NLS-1$
+		txtThirteenBall = new JTextField();
+		txtThirteenBall.setText(Settings.getSourceParameter("ThirteenBall")); //$NON-NLS-1$
+		txtThirteenBall.setColumns(10);
+		add(txtThirteenBall, "cell 8 16,alignx left"); //$NON-NLS-1$
+		//FourteenBall
+		JLabel lblFourteenBall = new JLabel(Messages.getString("SourcesPanel.FourteenBall")); //$NON-NLS-1$
+		add(lblFourteenBall, "cell 7 17,alignx right"); //$NON-NLS-1$
+		txtFourteenBall = new JTextField();
+		txtFourteenBall.setText(Settings.getSourceParameter("FourteenBall")); //$NON-NLS-1$
+		txtFourteenBall.setColumns(10);
+		add(txtFourteenBall, "cell 8 17,alignx left"); //$NON-NLS-1$
+		//FifteenBall
+		JLabel lblFifteenBall = new JLabel(Messages.getString("SourcesPanel.FifteenBall")); //$NON-NLS-1$
+		add(lblFifteenBall, "cell 7 18,alignx right"); //$NON-NLS-1$
+		txtFifteenBall = new JTextField();
+		txtFifteenBall.setText(Settings.getSourceParameter("FifteenBall")); //$NON-NLS-1$
+		txtFifteenBall.setColumns(10);
+		add(txtFifteenBall, "cell 8 18,alignx left"); //$NON-NLS-1$
+        //Apply
 		btnApply = new JButton(Messages.getString("Global.Apply")); //$NON-NLS-1$
 		add(btnApply, "cell 2 20,alignx left"); //$NON-NLS-1$
 		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$

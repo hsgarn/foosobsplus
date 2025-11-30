@@ -56,6 +56,7 @@ import org.slf4j.LoggerFactory;
 import com.midsouthfoosball.foosobsplus.model.AppConfig;
 import com.midsouthfoosball.foosobsplus.main.Main;
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import java.awt.Container;
 
 @SuppressWarnings("serial")
 public final class MainFrame extends JFrame implements WindowListener {
@@ -71,6 +72,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private final StatsEntryPanel statsEntryPanel;
 	private final StatsDisplayPanel statsDisplayPanel;
 	private final MatchPanel matchPanel;
+    private final BallPanel ballPanel;
 	private final ParametersFrame parametersFrame;
 	private final HotKeysFrame hotKeysFrame;
 	private final SourcesFrame sourcesFrame;
@@ -89,6 +91,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private final JCheckBoxMenuItem viewGameResultsWindow;
 	private final JCheckBoxMenuItem viewAllWindows;
 	private final JCheckBoxMenuItem helpShowParsed;
+    private final JCheckBoxMenuItem viewBallPanel;
 	private JMenuItem obsConnectItem;
 	private JMenuItem obsDisconnectItem;
 	private JMenu obsMenu;
@@ -105,11 +108,11 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private Icon imgIconAutoScoreDisconnected;	
 	private static final String PROGRAMNAME = AppConfig.PROGRAM_NAME;
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
-	public MainFrame(Settings settings, TournamentPanel tournamentPanel, TimerPanel timerPanel, OBSPanel obsPanel, AutoScoreMainPanel autoScoreMainPanel,
-			TeamPanel team1Panel, TeamPanel team2Panel, TeamPanel team3Panel, StatsEntryPanel statsEntryPanel, SwitchPanel switchPanel, ResetPanel resetPanel, 
-			StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame,	SourcesFrame sourcesFrame, 
-			StatSourcesFrame statSourcesFrame, FiltersFrame filtersFrame, PartnerProgramFrame partnerProgramFrame, OBSConnectFrame obsConnectFrame, 
-			AutoScoreSettingsFrame autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame) {
+	public MainFrame(Settings settings, TournamentPanel tournamentPanel, TimerPanel timerPanel, OBSPanel obsPanel, AutoScoreMainPanel autoScoreMainPanel, 
+            TeamPanel team1Panel, TeamPanel team2Panel, TeamPanel team3Panel, StatsEntryPanel statsEntryPanel, SwitchPanel switchPanel, ResetPanel resetPanel, 
+            StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame, SourcesFrame sourcesFrame, 
+            StatSourcesFrame statSourcesFrame, FiltersFrame filtersFrame, PartnerProgramFrame partnerProgramFrame, OBSConnectFrame obsConnectFrame, AutoScoreSettingsFrame 
+                    autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame, BallPanel ballPanel) {
 		super(PROGRAMNAME + ": Foosball"); //$NON-NLS-1$
 		this.tournamentPanel 		= tournamentPanel;
 		this.timerPanel 			= timerPanel;
@@ -132,6 +135,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		this.obsConnectFrame 		= obsConnectFrame;
 		this.autoScoreSettingsFrame = autoScoreSettingsFrame;
 		this.autoScoreConfigFrame 	= autoScoreConfigFrame;
+        this.ballPanel              = ballPanel;
 		viewLastScored1Window 	= new JCheckBoxMenuItem(Messages.getString("MainFrame.Team1LastScoredWindow")); //$NON-NLS-1$
 		viewLastScored2Window 	= new JCheckBoxMenuItem(Messages.getString("MainFrame.Team2LastScoredWindow")); //$NON-NLS-1$
 		viewLastScored3Window   = new JCheckBoxMenuItem(Messages.getString("MainFrame.Team3LastScoredWindow")); //$NON-NLS-1$
@@ -140,13 +144,14 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewGameResultsWindow 	= new JCheckBoxMenuItem(Messages.getString("MainFrame.GameResultsWindow")); //$NON-NLS-1$
 		viewAllWindows 			= new JCheckBoxMenuItem(Messages.getString("MainFrame.ShowAllWindows")); //$NON-NLS-1$
 		viewAlwaysOnTop 		= new JCheckBoxMenuItem(Messages.getString("MainFrame.AlwaysOnTop")); //$NON-NLS-1$
+        viewBallPanel           = new JCheckBoxMenuItem(Messages.getString("MainFrame.ShowBallPanel")); //$NON-NLS-1$
 		helpShowParsed 			= new JCheckBoxMenuItem(Messages.getString("MainFrame.ShowParsed")); //$NON-NLS-1$
 		helpShowParsed.setSelected(Settings.getShowParsed());
 		setLayout(new GridBagLayout());
 		setJMenuBar(createMenuBar());
 		layoutFoosballComponents();
 		addWindowListener(new WindowAdapter() {
-                        @Override
+            @Override
 			public void windowClosing(WindowEvent arg0) {
 				dispose();
 				System.gc();
@@ -168,7 +173,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	            }
 	        }
 		}
-	}
+ 	}
 	private JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu fileMenu 			= new JMenu(Messages.getString("MainFrame.File")); //$NON-NLS-1$
@@ -197,10 +202,10 @@ public final class MainFrame extends JFrame implements WindowListener {
 		obsMenu 			= new JMenu(Messages.getString("MainFrame.OBS")); //$NON-NLS-1$
 		obsConnectItem 		= new JMenuItem(Messages.getString("MainFrame.OBSConnect")); //$NON-NLS-1$
 		obsDisconnectItem 	= new JMenuItem(Messages.getString("MainFrame.OBSDisconnect")); //$NON-NLS-1$
-		imgOBSConnected = new ImageIcon(this.getClass().getResource("/Connected.png"));; //$NON-NLS-1$
+		imgOBSConnected = new ImageIcon(this.getClass().getResource("/Connected.png")); //$NON-NLS-1$
 		imgOBSConnected.setImage(imgOBSConnected.getImage().getScaledInstance(12, 12,  Image.SCALE_DEFAULT));
 		imgIconOBSConnected = imgOBSConnected;
-		imgOBSDisconnected = new ImageIcon(this.getClass().getResource("/Disconnected.png"));; //$NON-NLS-1$
+		imgOBSDisconnected = new ImageIcon(this.getClass().getResource("/Disconnected.png")); //$NON-NLS-1$
 		imgOBSDisconnected.setImage(imgOBSDisconnected.getImage().getScaledInstance(12, 12,  Image.SCALE_DEFAULT));
 		imgIconOBSDisconnected = imgOBSDisconnected;
 		obsMenu.add(obsConnectItem);
@@ -209,10 +214,10 @@ public final class MainFrame extends JFrame implements WindowListener {
 		autoScoreMenu  = new JMenu(Messages.getString("MainFrame.AutoScore")); //$NON-NLS-1$
 		autoScoreSettingsItem  = new JMenuItem(Messages.getString("MainFrame.AutoScoreSettings")); //$NON-NLS-1$
 		autoScoreConfigItem  = new JMenuItem(Messages.getString("MainFrame.AutoScoreConfig")); //$NON-NLS-1$
-		imgAutoScoreConnected = new ImageIcon(this.getClass().getResource("/Connected.png"));; //$NON-NLS-1$
+		imgAutoScoreConnected = new ImageIcon(this.getClass().getResource("/Connected.png")); //$NON-NLS-1$
 		imgAutoScoreConnected.setImage(imgAutoScoreConnected.getImage().getScaledInstance(12, 12, Image.SCALE_DEFAULT));
 		imgIconAutoScoreConnected = imgAutoScoreConnected;
-		imgAutoScoreDisconnected = new ImageIcon(this.getClass().getResource("/Disconnected.png"));; //$NON-NLS-1$
+		imgAutoScoreDisconnected = new ImageIcon(this.getClass().getResource("/Disconnected.png")); //$NON-NLS-1$
 		imgAutoScoreDisconnected.setImage(imgOBSDisconnected.getImage().getScaledInstance(12, 12,  Image.SCALE_DEFAULT));
 		imgIconAutoScoreDisconnected = imgOBSDisconnected;
 		autoScoreMenu.add(autoScoreSettingsItem);
@@ -227,6 +232,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewMenu.add(viewGameTableWindow);
 		viewMenu.add(viewGameResultsWindow);
 		viewMenu.add(viewAllWindows);
+        viewMenu.add(viewBallPanel);
 		JMenu helpMenu 		= new JMenu(Messages.getString("MainFrame.Help")); //$NON-NLS-1$
 		JMenuItem helpPage 	= new JMenuItem(PROGRAMNAME + " " + Messages.getString("MainFrame.Help")); //$NON-NLS-1$ //$NON-NLS-2$
 		JMenuItem helpRules = new JMenuItem(Messages.getString("MainFrame.Rules")); //$NON-NLS-1$
@@ -245,6 +251,14 @@ public final class MainFrame extends JFrame implements WindowListener {
 		menuBar.add(helpMenu);
 		obsMenu.setIcon(imgIconOBSDisconnected);
 		autoScoreMenu.setIcon(imgIconAutoScoreDisconnected);
+        viewBallPanel.addActionListener((ActionEvent ae) -> {
+           //isViewBallPanel = !isViewBallPanel;
+           Container content = this.getContentPane();
+           content.removeAll();
+           layoutFoosballComponents();
+           this.revalidate();
+           this.repaint();
+        });
 		viewAlwaysOnTop.addActionListener((ActionEvent ae) -> {
                     setAlwaysOnTop(viewAlwaysOnTop.isSelected());
                 });
@@ -473,17 +487,22 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.insets = new Insets(0, 0, 0, 0);
 		timerPanel.setPreferredSize(new Dimension(270,200));
 		add(timerPanel, gc);
-		//////// Stats Entry Panel ////////
-		gc.weightx = .5;
-		gc.weighty = 1;
-		gc.gridx = 2;
-		gc.gridwidth =1;
-		gc.gridheight = 4;
-		gc.fill = GridBagConstraints.BOTH;
-		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0, 0, 0, 0);
-		statsEntryPanel.setPreferredSize(new Dimension(350,450));
-		add(statsEntryPanel, gc);
+        //////// Stats Entry Panel ////////
+        gc.weightx = .5;
+        gc.weighty = 1;
+        gc.gridx = 2;
+        gc.gridwidth =1;
+        gc.fill = GridBagConstraints.BOTH;
+        gc.anchor = GridBagConstraints.CENTER;
+        gc.insets = new Insets(0, 0, 0, 0);
+        if (!viewBallPanel.isSelected()) {
+            gc.gridheight = 4;
+            statsEntryPanel.setPreferredSize(new Dimension(350,450));
+        } else {
+            gc.gridheight = 2;
+            statsEntryPanel.setPreferredSize(new Dimension(350,200));
+        }
+        add(statsEntryPanel, gc);
 		//////// Stats Display Panel ////////
 		gc.weightx = .5;
 		gc.weighty = .5;
@@ -519,6 +538,19 @@ public final class MainFrame extends JFrame implements WindowListener {
 		gc.insets = new Insets(0, 0, 0, 0);
 		obsPanel.setPreferredSize(new Dimension(270,175));
 		add(obsPanel, gc);
+        ////////// Ball Panel  ////////////
+        if (viewBallPanel.isSelected()) {
+            gc.weightx = .5;
+            gc.weighty = 1;
+            gc.gridx = 2;
+            gc.gridwidth = 1;
+            gc.gridheight = 2;
+            gc.fill = GridBagConstraints.BOTH;
+            gc.anchor = GridBagConstraints.CENTER;
+            gc.insets = new Insets(0, 0, 0, 0);
+            ballPanel.setPreferredSize(new Dimension(350,300));
+            add(ballPanel,gc);
+        }
 		////////// AutoScore Main Panel  ///////////
 		gc.gridy++;
 		gc.weightx = .5;
