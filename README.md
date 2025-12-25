@@ -887,6 +887,146 @@ This is the number of breaks.
 This is the number of stuffs.
 #### Aces
 This is the number of aces.
+## REST API
+FoosOBSPlus includes a REST API that allows external applications (such as mobile apps) to update player names remotely over the network. The API uses JSON for data exchange and includes security features to prevent unauthorized access.
+### API Configuration
+The REST API can be configured through the `api.properties` file located in the same directory as the FoosOBSPlus executable. The following settings are available:
+#### APIEnabled
+Set to 1 to enable the REST API server, or 0 to disable it. Default is 1.
+#### APIPort
+The network port the API server will listen on. Default is 9051. Change this if the port conflicts with another application.
+#### APIKey
+The authentication key required to access protected API endpoints. Default is "123thisismykey456". **Important:** Change this to a strong, unique key before deploying in production to prevent unauthorized access.
+#### APIAllowLocalOnly
+Set to 1 to only allow connections from the local machine (127.0.0.1), or 0 to allow connections from any IP address on the network. Default is 0 to support mobile apps on the same network.
+### API Endpoints
+#### GET /api/health
+Health check endpoint that returns the server status. No authentication required.
+
+Request:
+
+    GET http://localhost:9051/api/health
+
+Response:
+
+    {
+      "success": true,
+      "message": "API server is running"
+    }
+
+#### GET /api/test
+Authentication test endpoint. Requires valid API key.
+
+Request:
+
+    GET http://localhost:9051/api/test
+    Headers:
+      X-API-Key: your-api-key-here
+
+Response (Success):
+
+    {
+      "success": true,
+      "message": "Authentication successful"
+    }
+
+Response (Failed Authentication) - HTTP Status 401 Unauthorized:
+
+    {
+      "success": false,
+      "message": "Invalid or missing API key"
+    }
+
+#### POST /api/players
+Updates player names for both teams. Requires valid API key. Names are immediately synced to OBS Studio.
+
+Request:
+
+    POST http://localhost:9051/api/players
+    Headers:
+      X-API-Key: your-api-key-here
+      Content-Type: application/json
+
+    Body:
+    {
+      "tableNumber": 1,
+      "team1": {
+        "forward": "Player A",
+        "goalie": "Player B"
+      },
+      "team2": {
+        "forward": "Player C",
+        "goalie": "Player D"
+      }
+    }
+
+Response (Success):
+
+    {
+      "success": true,
+      "message": "Player names updated successfully"
+    }
+
+Response (Validation Error) - HTTP Status 400 Bad Request:
+
+    {
+      "success": false,
+      "message": "Team 1 Forward exceeds maximum length of 100 characters"
+    }
+
+Response (Table Number Mismatch) - HTTP Status 400 Bad Request:
+
+    {
+      "success": false,
+      "message": "Table number mismatch. Expected table 1, got 2"
+    }
+
+### Security Features
+The REST API includes several security measures to protect against abuse:
+
+#### API Key Authentication
+All endpoints except `/api/health` require a valid API key passed in the `X-API-Key` header. Configure your API key in the `api.properties` file and ensure it is kept secret.
+
+#### Rate Limiting
+Each IP address is limited to 30 requests per minute across all API endpoints. Exceeding this limit returns HTTP Status 429 Too Many Requests:
+
+    {
+      "success": false,
+      "message": "Rate limit exceeded. Maximum 30 requests per minute."
+    }
+
+#### Request Size Limits
+Maximum request payload size is 10KB. Larger requests are automatically rejected.
+
+#### Input Validation
+- Player names are limited to 100 characters
+- Control characters (except tab, newline, carriage return) are blocked
+- Table number must be a positive integer matching the current table configuration
+
+### Using the API with Mobile Apps
+To connect a mobile app on the same network:
+
+1. Find the IP address of the computer running FoosOBSPlus (e.g., 192.168.1.100)
+2. Configure your mobile app to use: `http://192.168.1.100:9051/api/players`
+3. Set the `X-API-Key` header to match the key configured in `api.properties`
+4. Send POST requests with player name updates in JSON format
+
+**Note:** The API uses HTTP (not HTTPS), so it should only be used on trusted local networks.
+
+### Troubleshooting
+
+#### Connection Refused
+- Verify APIEnabled is set to 1 in `api.properties`
+- Check that the port (default 9051) is not blocked by firewall
+- Ensure FoosOBSPlus is running
+
+#### Authentication Failed
+- Verify the `X-API-Key` header matches the APIKey in `api.properties`
+- Check that the header name is exactly `X-API-Key` (case-sensitive)
+
+#### Table Number Mismatch
+- Ensure the `tableNumber` in your request matches the table name configured in FoosOBSPlus
+- If the table name field is empty, use `tableNumber: 1`
 
 ## Codes and Commands
 The following code scheme will allow you to record every possession in a game by just learning what each position in the code designates and learning only a handful of codes.  Using these codes, the score and timers can be automatically maintained throughout the match.  Each position in the code has from 2 to 10 possible mostly intuitive values. Below is the breakdown of the code.
@@ -1022,6 +1162,12 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.065 12/25/2025</br>
+Update version number in About and update Readme.md</br>
+</br>
+v2.064 12/25/2025</br>
+Add REST API for player name updates</br>
+</br>
 v2.063 12/24/2025</br>
 Add Maven Wrapper</br>
 </br>

@@ -150,16 +150,17 @@ public final class MainFrame extends JFrame implements WindowListener {
 		setLayout(new GridBagLayout());
 		setJMenuBar(createMenuBar());
 		layoutFoosballComponents();
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
             @Override
 			public void windowClosing(WindowEvent arg0) {
 				com.midsouthfoosball.foosobsplus.main.Main.shutdownAPIServer();
 				dispose();
 				System.gc();
+				System.exit(0);
 			}
 		});
 		setSize(1480,860);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
 		if(Settings.getShowParsed()) {
