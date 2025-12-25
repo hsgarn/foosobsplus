@@ -205,6 +205,7 @@ public final class Main implements MatchObserver {
 	private static boolean 						autoScoreConnected		= false;
 	private static Socket 						autoScoreSocket;
 	private static PrintWriter 					autoScoreSocketWriter;
+	private static com.midsouthfoosball.foosobsplus.api.APIServer apiServer;
 	private static final StreamIndexer 			streamIndexer      		= new StreamIndexer(Settings.getControlParameter("datapath")); //$NON-NLS-1$
 	private static Boolean 						blockAutoScoreReconnect	= false;
     private static final Map<String, String>	teamGameShowSourcesMap	= new HashMap<>();
@@ -317,6 +318,22 @@ public final class Main implements MatchObserver {
 		}
 		createFileWatchWorker();
 		fileWatchWorker.execute();
+		// Initialize and start REST API server if enabled
+		try {
+			String apiEnabled = Settings.getAPIParameter("APIEnabled");
+			logger.info("API Enabled setting: " + apiEnabled);
+			if (apiEnabled != null && apiEnabled.equals(ON)) {
+				logger.info("Starting REST API server...");
+				com.midsouthfoosball.foosobsplus.api.TeamService teamService = new com.midsouthfoosball.foosobsplus.api.TeamService(teamController, tournament);
+				apiServer = new com.midsouthfoosball.foosobsplus.api.APIServer(teamService);
+				apiServer.start();
+				logger.info("REST API server started successfully");
+			} else {
+				logger.info("REST API server is disabled (APIEnabled=" + apiEnabled + ")");
+			}
+		} catch (Exception e) {
+			logger.error("Failed to start REST API server", e);
+		}
 	}
 	private static void buildTeamGameShowSourcesMap() {
 		teamGameShowSourcesMap.clear();
@@ -442,6 +459,12 @@ public final class Main implements MatchObserver {
 		obsConnectPanel.enableConnect();
 		mainFrame.enableConnect(true);
 		mainFrame.setOBSIconConnected(false);
+	}
+	public static void shutdownAPIServer() {
+		if (apiServer != null && apiServer.isRunning()) {
+			apiServer.stop();
+			logger.info("REST API server stopped during shutdown");
+		}
 	}
 	private static void onReady() {
 		updateOBSConnected();

@@ -153,6 +153,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		addWindowListener(new WindowAdapter() {
             @Override
 			public void windowClosing(WindowEvent arg0) {
+				com.midsouthfoosball.foosobsplus.main.Main.shutdownAPIServer();
 				dispose();
 				System.gc();
 			}

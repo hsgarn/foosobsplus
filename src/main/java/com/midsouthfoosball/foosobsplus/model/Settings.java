@@ -63,6 +63,7 @@ public final class Settings {
 	private final static Properties defaultHotKeyProps 				= new Properties();
 	private final static Properties defaultOBSProps 				= new Properties();
 	private final static Properties defaultAutoScoreSettingsProps 	= new Properties();
+	private final static Properties defaultAPIProps 				= new Properties();
 	public static Properties configControlProps;
 	public static Properties configSourceProps;
 	public static Properties configStatsSourceProps;
@@ -71,6 +72,7 @@ public final class Settings {
 	public static Properties configHotKeyProps;
 	public static Properties configOBSProps;
 	public static Properties configAutoScoreSettingsProps;
+	public static Properties configAPIProps;
 	private final static String CONFIGCONTROLFILENAME			= "control.properties";
 	private final static String CONFIGSOURCEFILENAME 			= "source.properties";
 	private final static String CONFIGSTATSSOURCEFILENAME 		= "statssource.properties";
@@ -79,6 +81,7 @@ public final class Settings {
 	private final static String CONFIGHOTKEYFILENAME 			= "hotkey.properties";
 	private final static String CONFIGOBSFILENAME        		= "obs.properties";
 	private final static String CONFIGAUTOSCORESETTINGSFILENAME	= "autoscoresettings.properties";
+	private final static String CONFIGAPIFILENAME				= "api.properties";
 	private final static Logger logger = LoggerFactory.getLogger(Settings.class);
 	static {
 		// Parameter settings
@@ -388,6 +391,11 @@ public final class Settings {
 		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsServerPort", "5051");
 		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsAutoConnect", OFF);
 		defaultAutoScoreSettingsProps.setProperty("AutoScoreSettingsDetailLog", OFF);
+		// API Settings
+		defaultAPIProps.setProperty("APIEnabled", ON);
+		defaultAPIProps.setProperty("APIPort", "9051");
+		defaultAPIProps.setProperty("APIKey", "123thisismykey456");
+		defaultAPIProps.setProperty("APIAllowLocalOnly", OFF);
 		//Config Properties
 		configControlProps 				= new Properties(defaultControlProps);
 		configSourceProps 				= new Properties(defaultSourceProps);
@@ -397,6 +405,7 @@ public final class Settings {
 		configHotKeyProps 				= new Properties(defaultHotKeyProps);
 		configOBSProps      			= new Properties(defaultOBSProps);
 		configAutoScoreSettingsProps	= new Properties(defaultAutoScoreSettingsProps);
+		configAPIProps					= new Properties(defaultAPIProps);
 		try {
 			loadFromControlConfig();
 			loadFromOBSConfig();
@@ -406,6 +415,7 @@ public final class Settings {
 			loadFromPartnerProgramConfig();
 			loadFromHotKeyConfig();
 			loadFromAutoScoreSettingsConfig();
+			loadFromAPIConfig();
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, Messages.getString("Errors.ErrorLoadingConfig") + " " + e.getLocalizedMessage());
 		}
@@ -457,6 +467,7 @@ public final class Settings {
 	//AutoScore Settings
 	public static <T> T getAutoScoreParameter(String parameter, Function<String, T> parser) {return parser.apply(configAutoScoreSettingsProps.getProperty(parameter));}
 	public static String getAutoScoreParameter(String parameter) {return configAutoScoreSettingsProps.getProperty(parameter);}
+	public static String getAPIParameter(String parameter) {return configAPIProps.getProperty(parameter);}
 	//Setters
 	//Control Parameters
 	public static void setControlParameter(String parameter, String value) {
@@ -601,6 +612,16 @@ public final class Settings {
 			saveAutoScoreSettingsConfig();
 		}
 	}
+	public static void loadFromAPIConfig() throws IOException {
+		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGAPIFILENAME))) {
+			configAPIProps.load(inputStream);
+		} catch (NoSuchFileException e) {
+			logger.info(Paths.get(CONFIGAPIFILENAME) + " not found. Writing defaults.");
+			Files.createFile(Paths.get(CONFIGAPIFILENAME));
+			configAPIProps = defaultAPIProps;
+			saveAPIConfig();
+		}
+	}
 	public static void saveControlConfig() throws IOException {
 		//Control Parameters
 		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGCONTROLFILENAME))) {
@@ -663,6 +684,14 @@ public final class Settings {
 			configAutoScoreSettingsProps.store(outputStream, "FoosOBSPlus AutoScore Settings");
 		} catch (Exception e) {
 			logger.error("Could not write to " + Paths.get(CONFIGAUTOSCORESETTINGSFILENAME));
+		}
+	}
+	public static void saveAPIConfig() throws IOException {
+		//API Settings
+		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGAPIFILENAME))) {
+			configAPIProps.store(outputStream, "FoosOBSPlus API settings");
+		} catch (Exception e) {
+			logger.error("Could not write to " + Paths.get(CONFIGAPIFILENAME));
 		}
 	}
 	public static void generateHotKeyScripts() {
