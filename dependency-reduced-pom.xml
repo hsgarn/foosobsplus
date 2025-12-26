@@ -33,6 +33,15 @@
             <configuration>
               <shadedArtifactAttached>true</shadedArtifactAttached>
               <filename>FoosOBSPlusHello</filename>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>module-info.class</exclude>
+                    <exclude>META-INF/versions/*/module-info.class</exclude>
+                  </excludes>
+                </filter>
+              </filters>
               <transformers>
                 <transformer>
                   <mainClass>com.midsouthfoosball.foosobsplus.main.FoosOBSPlusApp</mainClass>
@@ -94,4 +103,7 @@
       </exclusions>
     </dependency>
   </dependencies>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 </project>

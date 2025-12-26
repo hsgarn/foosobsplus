@@ -4,6 +4,9 @@
     <artifactId>FoosOBSPlus</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
     <build>
         <plugins>
             <plugin>
@@ -27,6 +30,15 @@
                             <configuration>
                                 <shadedArtifactAttached>true</shadedArtifactAttached>
                                 <filename>FoosOBSPlusHello</filename>
+                                <filters>
+                                    <filter>
+                                        <artifact>*:*</artifact>
+                                        <excludes>
+                                            <exclude>module-info.class</exclude>
+                                            <exclude>META-INF/versions/*/module-info.class</exclude>
+                                        </excludes>
+                                    </filter>
+                                </filters>
                                 <transformers>
                                     <transformer implementation=
                                       "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
@@ -44,6 +56,12 @@
             <groupId>io.obs-websocket.community</groupId>
             <artifactId>client</artifactId>
             <version>2.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
@@ -133,12 +151,7 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.13.5</version>
         </dependency>
-        <!-- Javalin 4.x requires SLF4J Simple for standalone use -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.36</version>
-        </dependency>
+        <!-- Note: log4j-slf4j-impl is used instead of slf4j-simple for file logging -->
     </dependencies>
     <name>FoosOBSPlus</name>
     <url>https://github.com/hsgarn/foosobsplus</url>

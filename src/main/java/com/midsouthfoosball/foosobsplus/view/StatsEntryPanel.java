@@ -94,7 +94,7 @@ public class StatsEntryPanel extends JPanel {
 		lstCodeHistory.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if ((e.getKeyCode() == KeyEvent.VK_C) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+				if ((e.getKeyCode() == KeyEvent.VK_C) && ((e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0)) {
 					copySelectedItemsToClipboard(lstCodeHistory);
 				}
 			}

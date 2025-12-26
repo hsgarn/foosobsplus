@@ -895,7 +895,7 @@ The REST API allows external applications (such as mobile apps) to interact with
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings13.png">
 
 REST API Settings Page:</br>
-<img width="500" height="200" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings14.png">
+<img width="480" height="300" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings14.png">
 
 Below are the settings that can be configured:
 
@@ -1217,6 +1217,10 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.069 12/26/2025</br>
+Fix Maven build warnings and improve logging configuration.</br>
+Replace depracted dependancies in StatusEntryPanel</br>
+</br>
 v2.068 12/25/2025</br>
 Standardize and fix behavior of dialog buttons in REST API settings screen.</BR>
 Remove Allow Local Only parameter.</BR>
