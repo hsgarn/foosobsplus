@@ -469,6 +469,10 @@ public final class Settings {
 	public static String getAutoScoreParameter(String parameter) {return configAutoScoreSettingsProps.getProperty(parameter);}
 	public static String getAPIParameter(String parameter) {return configAPIProps.getProperty(parameter);}
 	//Setters
+	//API Parameters
+	public static void setAPIParameter(String parameter, String value) {
+		configAPIProps.setProperty(parameter, value);
+	}
 	//Control Parameters
 	public static void setControlParameter(String parameter, String value) {
 		configControlProps.setProperty(parameter, value);

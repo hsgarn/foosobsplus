@@ -889,16 +889,33 @@ This is the number of stuffs.
 This is the number of aces.
 ## REST API
 FoosOBSPlus includes a REST API that allows external applications (such as mobile apps) to update player names remotely over the network. The API uses JSON for data exchange and includes security features to prevent unauthorized access.
-### API Configuration
-The REST API can be configured through the `api.properties` file located in the same directory as the FoosOBSPlus executable. The following settings are available:
-#### APIEnabled
-Set to 1 to enable the REST API server, or 0 to disable it. Default is 1.
-#### APIPort
-The network port the API server will listen on. Default is 9051. Change this if the port conflicts with another application.
-#### APIKey
-The authentication key required to access protected API endpoints. Default is "123thisismykey456". **Important:** Change this to a strong, unique key before deploying in production to prevent unauthorized access.
-#### APIAllowLocalOnly
-Set to 1 to only allow connections from the local machine (127.0.0.1), or 0 to allow connections from any IP address on the network. Default is 0 to support mobile apps on the same network.
+### REST API Settings
+The REST API allows external applications (such as mobile apps) to interact with FoosOBSPlus remotely over the network. To get to the REST API Settings configuration, click on Edit, then Settings, then REST API:
+
+<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings13.png">
+
+REST API Settings Page:</br>
+<img width="500" height="200" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings14.png">
+
+Below are the settings that can be configured:
+
+#### Machine IP Address
+This displays the IP address of the computer running FoosOBSPlus. This is a read-only field that helps you identify the address to use when connecting from external applications.
+#### API Enabled
+Check this box to enable the REST API server. Uncheck to disable the REST API server and prevent any remote connections.
+#### API Port
+The network port the API server will listen on. Default is 9051. Change this if the port conflicts with another application. Valid range is 1024-65535.
+#### API Key
+The authentication key required to access protected API endpoints. Default is "123thisismykey456". **Important:** Change this to a strong, unique key before deploying to prevent unauthorized access.
+#### Apply
+Click the Apply button to apply any REST API settings changes made.
+#### Apply and Close
+Click the Apply and Close button to apply any REST API settings changes made and close the window.
+#### Cancel
+Click the Cancel button to discard any REST API settings changes made and close the window.
+#### Restore Defaults
+Click the Restore Defaults button to restore the default REST API settings.
+
 ### API Endpoints
 #### GET /api/health
 Health check endpoint that returns the server status. No authentication required.
@@ -1200,6 +1217,13 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.068 12/25/2025</br>
+Standardize and fix behavior of dialog buttons in REST API settings screen.</BR>
+Remove Allow Local Only parameter.</BR>
+</BR>
+v2.067 12/25/2025</br>
+Add REST API settings dialog under Edit > Settings menu</br>
+</br>
 v2.066 12/25/2025</br>
 Add REST API endpoints for timer control operations</br>
 </br>

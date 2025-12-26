@@ -79,6 +79,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private final StatSourcesFrame statSourcesFrame;
 	private final FiltersFrame filtersFrame;
 	private final PartnerProgramFrame partnerProgramFrame;
+	private final APISettingsFrame apiSettingsFrame;
 	private final OBSConnectFrame obsConnectFrame;
 	private final AutoScoreSettingsFrame autoScoreSettingsFrame;
 	private final AutoScoreConfigFrame autoScoreConfigFrame;
@@ -110,8 +111,8 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 	public MainFrame(Settings settings, TournamentPanel tournamentPanel, TimerPanel timerPanel, OBSPanel obsPanel, AutoScoreMainPanel autoScoreMainPanel, 
             TeamPanel team1Panel, TeamPanel team2Panel, TeamPanel team3Panel, StatsEntryPanel statsEntryPanel, SwitchPanel switchPanel, ResetPanel resetPanel, 
-            StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame, SourcesFrame sourcesFrame, 
-            StatSourcesFrame statSourcesFrame, FiltersFrame filtersFrame, PartnerProgramFrame partnerProgramFrame, OBSConnectFrame obsConnectFrame, AutoScoreSettingsFrame 
+            StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame, SourcesFrame sourcesFrame,
+            StatSourcesFrame statSourcesFrame, FiltersFrame filtersFrame, PartnerProgramFrame partnerProgramFrame, APISettingsFrame apiSettingsFrame, OBSConnectFrame obsConnectFrame, AutoScoreSettingsFrame
                     autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame, BallPanel ballPanel) {
 		super(PROGRAMNAME + ": Foosball"); //$NON-NLS-1$
 		this.tournamentPanel 		= tournamentPanel;
@@ -132,6 +133,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		this.statSourcesFrame       = statSourcesFrame;
 		this.filtersFrame           = filtersFrame;
 		this.partnerProgramFrame    = partnerProgramFrame;
+		this.apiSettingsFrame       = apiSettingsFrame;
 		this.obsConnectFrame 		= obsConnectFrame;
 		this.autoScoreSettingsFrame = autoScoreSettingsFrame;
 		this.autoScoreConfigFrame 	= autoScoreConfigFrame;
@@ -193,12 +195,14 @@ public final class MainFrame extends JFrame implements WindowListener {
 		JMenuItem settingsSourceItem			= new JMenuItem(Messages.getString("MainFrame.Sources")); //$NON-NLS-1$
 		JMenuItem settingsStatsSourceItem 		= new JMenuItem(Messages.getString("MainFrame.StatSources")); //$NON-NLS-1$
 		JMenuItem settingsFilterItem    		= new JMenuItem(Messages.getString("MainFrame.Filters")); //$NON-NLS-1$
+		JMenuItem settingsAPIItem 				= new JMenuItem("REST API"); //$NON-NLS-1$
 		JMenuItem settingsPartnerProgramItem 	= new JMenuItem(Messages.getString("MainFrame.PartnerProgram")); //$NON-NLS-1$
 		settingsMenu.add(settingsParamItem);
 		settingsMenu.add(settingsHotKeyItem);
 		settingsMenu.add(settingsSourceItem);
 		settingsMenu.add(settingsStatsSourceItem);
 		settingsMenu.add(settingsFilterItem);
+		settingsMenu.add(settingsAPIItem);
 		settingsMenu.add(settingsPartnerProgramItem);
 		editMenu.add(settingsMenu);
 		obsMenu 			= new JMenu(Messages.getString("MainFrame.OBS")); //$NON-NLS-1$
@@ -284,6 +288,9 @@ public final class MainFrame extends JFrame implements WindowListener {
                 });
 		settingsFilterItem.addActionListener((ActionEvent ae) -> {
                     filtersFrame.setVisible(true);
+                });
+		settingsAPIItem.addActionListener((ActionEvent ae) -> {
+                    apiSettingsFrame.setVisible(true);
                 });
 		settingsPartnerProgramItem.addActionListener((ActionEvent ae) -> {
                     partnerProgramFrame.setVisible(true);

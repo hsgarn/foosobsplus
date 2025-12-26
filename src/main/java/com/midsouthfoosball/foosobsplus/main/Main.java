@@ -139,6 +139,8 @@ import com.midsouthfoosball.foosobsplus.view.AutoScoreConfigFrame;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreConfigPanel;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreMainPanel;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsFrame;
+import com.midsouthfoosball.foosobsplus.view.APISettingsFrame;
+import com.midsouthfoosball.foosobsplus.view.APISettingsPanel;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsPanel;
 import com.midsouthfoosball.foosobsplus.view.BallPanel;
 import com.midsouthfoosball.foosobsplus.view.FiltersFrame;
@@ -206,6 +208,7 @@ public final class Main implements MatchObserver {
 	private static Socket 						autoScoreSocket;
 	private static PrintWriter 					autoScoreSocketWriter;
 	private static com.midsouthfoosball.foosobsplus.api.APIServer apiServer;
+	private static com.midsouthfoosball.foosobsplus.api.TeamService teamService;
 	private static final StreamIndexer 			streamIndexer      		= new StreamIndexer(Settings.getControlParameter("datapath")); //$NON-NLS-1$
 	private static Boolean 						blockAutoScoreReconnect	= false;
     private static final Map<String, String>	teamGameShowSourcesMap	= new HashMap<>();
@@ -262,6 +265,8 @@ public final class Main implements MatchObserver {
 	private static final StatSourcesPanel		statSourcesPanel		= statSourcesFrame.getStatSourcesPanel();
 	private static final FiltersFrame        	filtersFrame        	= new FiltersFrame();
 	private static final FiltersPanel        	filtersPanel        	= filtersFrame.getFiltersPanel();
+	private static final APISettingsFrame		apiSettingsFrame		= new APISettingsFrame();
+	private static final APISettingsPanel		apiSettingsPanel		= apiSettingsFrame.getSettingsPanel();
 	private static final PartnerProgramFrame 	partnerProgramFrame 	= new PartnerProgramFrame();
 	private static final OBSConnectFrame		obsConnectFrame			= new OBSConnectFrame();
 	private static final OBSConnectPanel		obsConnectPanel			= obsConnectFrame.getOBSConnectPanel();
@@ -324,7 +329,7 @@ public final class Main implements MatchObserver {
 			logger.info("API Enabled setting: " + apiEnabled);
 			if (apiEnabled != null && apiEnabled.equals(ON)) {
 				logger.info("Starting REST API server...");
-				com.midsouthfoosball.foosobsplus.api.TeamService teamService = new com.midsouthfoosball.foosobsplus.api.TeamService(teamController, tournament);
+				teamService = new com.midsouthfoosball.foosobsplus.api.TeamService(teamController, tournament);
 				apiServer = new com.midsouthfoosball.foosobsplus.api.APIServer(teamService);
 				apiServer.start();
 				logger.info("REST API server started successfully");
@@ -464,6 +469,30 @@ public final class Main implements MatchObserver {
 		if (apiServer != null && apiServer.isRunning()) {
 			apiServer.stop();
 			logger.info("REST API server stopped during shutdown");
+		}
+	}
+
+	public static void restartAPIServer() {
+		try {
+			String apiEnabled = Settings.getAPIParameter("APIEnabled");
+
+			if (apiServer != null && apiServer.isRunning()) {
+				apiServer.stop();
+				logger.info("REST API server stopped");
+			}
+
+			// Check if API should be enabled
+			if (apiEnabled != null && apiEnabled.equals(ON)) {
+				// Create new instance to pick up new settings
+				apiServer = new com.midsouthfoosball.foosobsplus.api.APIServer(teamService);
+				apiServer.start();
+				logger.info("REST API server restarted with new settings");
+			} else {
+				logger.info("REST API server is disabled (APIEnabled=" + apiEnabled + ")");
+				apiServer = null;
+			}
+		} catch (Exception e) {
+			logger.error("Error restarting REST API server", e);
 		}
 	}
 	private static void onReady() {
@@ -930,9 +959,9 @@ public final class Main implements MatchObserver {
 		setSourceFilterVisibility(OBS.getMainScene(), Settings.getFiltersFilter(filter), true);
 	}
 	public static void loadWindowsAndControllers() {
-		mainFrame = new MainFrame(Settings.getInstance(), tournamentPanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, teamPanel3, statsEntryPanel, 
-				switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, sourcesFrame, statSourcesFrame, filtersFrame, 
-				partnerProgramFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, ballPanel);
+		mainFrame = new MainFrame(Settings.getInstance(), tournamentPanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, teamPanel3, statsEntryPanel,
+				switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, sourcesFrame, statSourcesFrame, filtersFrame,
+				partnerProgramFrame, apiSettingsFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, ballPanel);
 		////// Set up independent Windows \\\\\\
 		mainFrame.windowActivated(null);
 		gameTableWindowPanel		= new GameTableWindowPanel();
@@ -988,6 +1017,17 @@ public final class Main implements MatchObserver {
 		autoScoreConfigPanel.addValidateConfigListener(new AutoScoreConfigValidateListener());
 		autoScoreConfigPanel.addResetConfigListener(new AutoScoreConfigResetListener());
 		autoScoreConfigPanel.addClearConfigListener(new AutoScoreConfigClearListener());
+		apiSettingsPanel.addApplyListener((ActionEvent ae) -> {
+			apiSettingsPanel.applySettings();
+		});
+		apiSettingsPanel.addApplyCloseListener((ActionEvent ae) -> {
+			apiSettingsPanel.saveSettings();
+			apiSettingsFrame.setVisible(false);
+		});
+		apiSettingsPanel.addCancelListener((ActionEvent ae) -> {
+			apiSettingsPanel.reloadSettings();
+			apiSettingsFrame.setVisible(false);
+		});
 		parametersPanel.addApplyListener(new ParametersApplyListener());
 		parametersPanel.addSaveListener(new ParametersSaveListener());
 		parametersPanel.addEnableShowSkunkListener(new OBSEnableSkunkListener());
