@@ -1,5 +1,5 @@
 /**
-Copyright © 2020-2026 Hugh Garner
+Copyright © 2025-2026 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -36,12 +36,14 @@ public class APIServer {
 	private final int port;
 	private final String apiKey;
 	private final PlayerNamesController playerNamesController;
+	private final TimerControllerAPI timerControllerAPI;
 	private final RateLimiter rateLimiter;
 
 	public APIServer(TeamService teamService) {
 		this.port = Integer.parseInt(Settings.getAPIParameter("APIPort"));
 		this.apiKey = Settings.getAPIParameter("APIKey");
 		this.playerNamesController = new PlayerNamesController(teamService);
+		this.timerControllerAPI = new TimerControllerAPI(teamService.getTeamController());
 		this.rateLimiter = new RateLimiter(MAX_REQUESTS_PER_MINUTE);
 	}
 
@@ -96,6 +98,7 @@ public class APIServer {
 
 		// Routes
 		app.post("/api/players", playerNamesController::updatePlayerNames);
+		app.post("/api/timer", timerControllerAPI::controlTimer);
 
 		// Start server
 		try {

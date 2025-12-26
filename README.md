@@ -981,6 +981,44 @@ Response (Table Number Mismatch) - HTTP Status 400 Bad Request:
       "message": "Table number mismatch. Expected table 1, got 2"
     }
 
+#### POST /api/timer
+Controls timer operations (start shot timer, pass timer, timeout timer, game timer, recall timer, or reset). Requires valid API key.
+
+Request:
+
+    POST http://localhost:9051/api/timer
+    Headers:
+      X-API-Key: your-api-key-here
+      Content-Type: application/json
+
+    Body:
+    {
+      "timerType": "shot",
+      "tableNumber": 1
+    }
+
+Valid timer types:
+- `shot` - Start shot timer (reads ShotTime configuration)
+- `pass` - Start pass timer (reads PassTime configuration)
+- `timeout` - Start timeout timer (reads TimeOutTime configuration)
+- `game` - Start game timer (reads GameTime configuration)
+- `recall` - Start recall timer (reads RecallTime configuration)
+- `reset` - Reset all timers to 0
+
+Response (Success):
+
+    {
+      "success": true,
+      "message": "Shot timer started"
+    }
+
+Response (Validation Error) - HTTP Status 400 Bad Request:
+
+    {
+      "success": false,
+      "message": "Invalid timer type. Must be: shot, pass, timeout, game, recall, or reset"
+    }
+
 ### Security Features
 The REST API includes several security measures to protect against abuse:
 
@@ -1162,6 +1200,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.066 12/25/2025</br>
+Add REST API endpoints for timer control operations</br>
+</br>
 v2.065 12/25/2025</br>
 Update version number in About and update Readme.md</br>
 </br>
