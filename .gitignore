@@ -3,6 +3,7 @@
 .classpath
 .project
 .settings/
+.vscode/
 config.properties
 /Chime.wav
 /nbproject/

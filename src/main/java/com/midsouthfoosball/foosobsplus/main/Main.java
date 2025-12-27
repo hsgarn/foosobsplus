@@ -383,7 +383,7 @@ public final class Main implements MatchObserver {
 			}
 		});
 		obsManager.setBallPanel(ballPanel);
-		obsManager.setTimerWindowCallback(mainController::showTimerWindow);
+		obsManager.setTimerWindowCallback(show -> mainController.showTimerWindow(show != null && show));
 		obsManager.setUpdateOnConnectCallback(() -> {
 			tournamentController.writeAll();
 			teamController.writeAll();
@@ -1172,145 +1172,75 @@ public final class Main implements MatchObserver {
 	    }
     }
 	private static void loadCommands() {
-		Command pse = new PSECommand(statsController);
-		Command psm = new PSMCommand(statsController);
-		Command pem = new PEMCommand(statsController);
-		Command ppm = new PPMCommand(statsController, matchController);
-		Command psg = new PSGCommand(statsController);
-		Command sst = new SSTCommand(statsController, teamController);
-		Command spt = new SPTCommand(statsController, teamController);
-		Command sgt = new SGTCommand(statsController, teamController);
-		Command stt = new STTCommand(statsController, teamController);
-		Command srt = new SRTCommand(statsController, teamController);
-		Command prt = new PRTCommand(statsController, teamController);
-		Command ist1 = new ISTCommand(statsController, matchController, 1);
-		Command ist2 = new ISTCommand(statsController, matchController, 2);
-		Command ist3 = new ISTCommand(statsController, matchController, 3);
-		Command dst1 = new DSTCommand(statsController, matchController, 1);
-		Command dst2 = new DSTCommand(statsController, matchController, 2);
-		Command dst3 = new DSTCommand(statsController, matchController, 3);
-		Command igt1 = new IGTCommand(statsController, teamController, 1);
-		Command igt2 = new IGTCommand(statsController, teamController, 2);
-		Command igt3 = new IGTCommand(statsController, teamController, 3);
-		Command imt1 = new IMTCommand(statsController, teamController, 1);
-		Command imt2 = new IMTCommand(statsController, teamController, 2);
-		Command imt3 = new IMTCommand(statsController, teamController, 3);
-		Command dgt1 = new DGTCommand(statsController, teamController, 1);
-		Command dgt2 = new DGTCommand(statsController, teamController, 2);
-		Command dgt3 = new DGTCommand(statsController, teamController, 3);
-		Command dmt1 = new DMTCommand(statsController, teamController, 1);
-		Command dmt2 = new DMTCommand(statsController, teamController, 2);
-		Command dmt3 = new DMTCommand(statsController, teamController, 3);
-		Command utt1 = new UTTCommand(statsController, teamController, 1);
-		Command utt2 = new UTTCommand(statsController, teamController, 2);
-		Command utt3 = new UTTCommand(statsController, teamController, 3);
-		Command rtt1 = new RTTCommand(statsController, teamController, 1);
-		Command rtt2 = new RTTCommand(statsController, teamController, 2);
-		Command rtt3 = new RTTCommand(statsController, teamController, 3);
-		Command prt1 = new PRCommand(statsController, teamController, 1);
-		Command prt2 = new PRCommand(statsController, teamController, 2);
-		Command prt3 = new PRCommand(statsController, teamController, 3);
-		Command pwt1 = new PWCommand(statsController, teamController, 1);
-		Command pwt2 = new PWCommand(statsController, teamController, 2);
-		Command pwt3 = new PWCommand(statsController, teamController, 3);
-		Command pkt1 = new PKCommand(statsController, teamController, 1);
-		Command pkt2 = new PKCommand(statsController, teamController, 2);
-		Command pkt3 = new PKCommand(statsController, teamController, 3);
-		Command pss = new PSSCommand(statsController);
-		Command xpt1 = new XPTCommand(statsController, teamController, 1);
-		Command xpt2 = new XPTCommand(statsController, teamController, 2);
-		Command xpt3 = new XPTCommand(statsController, teamController, 3);
-		Command pst = new PSTCommand(statsController, teamController);
-		Command xp1 = new XPCommand(statsController, teamController, 1);
-		Command xp2 = new XPCommand(statsController, teamController, 2);
-		Command pssc = new PSSCCommand(statsController, teamController);
-		Command psgc = new PSGCCommand(statsController, teamController);
-		Command psmc = new PSMCCommand(statsController, teamController);
-		Command psto = new PSTOCommand(statsController, teamController);
-		Command psr = new PSRCommand(statsController, teamController);
-		Command pca = new PCACommand(statsController, teamController, matchController);
-		Command prn= new PRNCommand(statsController, teamController);
-		Command prs = new PRSCommand(statsController, teamController);
-		Command prg = new PRGCommand(statsController, teamController);
-		Command prm = new PRMCommand(statsController, teamController);
-		Command prto = new PRTOCommand(statsController, teamController);
-		Command prr = new PRRCommand(statsController, teamController);
-		Command pra = new PRACommand(statsController, teamController, matchController);
-		Command ptca = new PTCACommand(statsController, tournamentController);
-        Command pnb = new PNBCommand(statsController);
-        Command psa = new PSACommand(statsController);
-        Command pha = new PHACommand(statsController);
-		Command codeCommand = new CodeCommand(statsController);
 		mySwitch = new CommandSwitch();
-		mySwitch.register("PSE", pse); //$NON-NLS-1$
-		mySwitch.register("PSM", psm); //$NON-NLS-1$
-		mySwitch.register("PEM", pem); //$NON-NLS-1$
-		mySwitch.register("PPM", ppm); //$NON-NLS-1$
-		mySwitch.register("PSG", psg); //$NON-NLS-1$
-		mySwitch.register("SST", sst); //$NON-NLS-1$
-		mySwitch.register("SPT", spt); //$NON-NLS-1$
-		mySwitch.register("SGT", sgt); //$NON-NLS-1$
-		mySwitch.register("STT", stt); //$NON-NLS-1$
-		mySwitch.register("SRT", srt); //$NON-NLS-1$
-		mySwitch.register("PRT", prt); //$NON-NLS-1$
-		mySwitch.register("IST1", ist1); //$NON-NLS-1$
-		mySwitch.register("IST2", ist2); //$NON-NLS-1$
-		mySwitch.register("IST3", ist3); //$NON-NLS-1$
-		mySwitch.register("DST1", dst1); //$NON-NLS-1$
-		mySwitch.register("DST2", dst2); //$NON-NLS-1$
-		mySwitch.register("DST3", dst3); //$NON-NLS-1$
-		mySwitch.register("IGT1", igt1); //$NON-NLS-1$
-		mySwitch.register("IGT2", igt2); //$NON-NLS-1$
-		mySwitch.register("IGT3", igt3); //$NON-NLS-1$
-		mySwitch.register("IMT1", imt1); //$NON-NLS-1$
-		mySwitch.register("IMT2", imt2); //$NON-NLS-1$
-		mySwitch.register("IMT3", imt3); //$NON-NLS-1$
-		mySwitch.register("DGT1", dgt1); //$NON-NLS-1$
-		mySwitch.register("DGT2", dgt2); //$NON-NLS-1$
-		mySwitch.register("DGT3", dgt3); //$NON-NLS-1$
-		mySwitch.register("DMT1", dmt1); //$NON-NLS-1$
-		mySwitch.register("DMT2", dmt2); //$NON-NLS-1$
-		mySwitch.register("DMT3", dmt3); //$NON-NLS-1$
-		mySwitch.register("UTT1", utt1); //$NON-NLS-1$
-		mySwitch.register("UTT2", utt2); //$NON-NLS-1$
-		mySwitch.register("UTT3", utt3); //$NON-NLS-1$
-		mySwitch.register("RTT1", rtt1); //$NON-NLS-1$
-		mySwitch.register("RTT2", rtt2); //$NON-NLS-1$
-		mySwitch.register("RTT3", rtt3); //$NON-NLS-1$
-		mySwitch.register("PRT1", prt1); //$NON-NLS-1$
-		mySwitch.register("PRT2", prt2); //$NON-NLS-1$
-		mySwitch.register("PRT3", prt3); //$NON-NLS-1$
-		mySwitch.register("PWT1", pwt1); //$NON-NLS-1$
-		mySwitch.register("PWT2", pwt2); //$NON-NLS-1$
-		mySwitch.register("PWT3", pwt3); //$NON-NLS-1$
-		mySwitch.register("PKT1", pkt1); //$NON-NLS-1$
-		mySwitch.register("PKT2", pkt2); //$NON-NLS-1$
-		mySwitch.register("PKT3", pkt3); //$NON-NLS-1$
-		mySwitch.register("PSS", pss); //$NON-NLS-1$
-		mySwitch.register("XPT1", xpt1); //$NON-NLS-1$
-		mySwitch.register("XPT2", xpt2); //$NON-NLS-1$
-		mySwitch.register("XPT3", xpt3); //$NON-NLS-1$
-		mySwitch.register("PST", pst); //$NON-NLS-1$
-		mySwitch.register("XP1", xp1); //$NON-NLS-1$
-		mySwitch.register("XP2", xp2); //$NON-NLS-1$
-		mySwitch.register("PSSC", pssc); //$NON-NLS-1$
-		mySwitch.register("PSGC", psgc); //$NON-NLS-1$
-		mySwitch.register("PSMC", psmc); //$NON-NLS-1$
-		mySwitch.register("PSTO", psto); //$NON-NLS-1$
-		mySwitch.register("PSR", psr); //$NON-NLS-1$
-		mySwitch.register("PCA", pca); //$NON-NLS-1$
-		mySwitch.register("PRN", prn); //$NON-NLS-1$
-		mySwitch.register("PRS", prs); //$NON-NLS-1$
-		mySwitch.register("PRG", prg); //$NON-NLS-1$
-		mySwitch.register("PRM", prm); //$NON-NLS-1$
-		mySwitch.register("PRTO", prto); //$NON-NLS-1$
-		mySwitch.register("PRR", prr); //$NON-NLS-1$
-		mySwitch.register("PRA", pra); //$NON-NLS-1$
-		mySwitch.register("PTCA", ptca); //$NON-NLS-1$
-        mySwitch.register("PNB", pnb); //$NON-NLS-1$
-        mySwitch.register("PSA", psa); //$NON-NLS-1$
-        mySwitch.register("PHA", pha); //$NON-NLS-1$
-		mySwitch.register("code", codeCommand); //$NON-NLS-1$
+
+		// Stats-only commands
+		mySwitch.register("PSE", new PSECommand(statsController)); //$NON-NLS-1$
+		mySwitch.register("PSM", new PSMCommand(statsController)); //$NON-NLS-1$
+		mySwitch.register("PEM", new PEMCommand(statsController)); //$NON-NLS-1$
+		mySwitch.register("PSG", new PSGCommand(statsController)); //$NON-NLS-1$
+		mySwitch.register("PSS", new PSSCommand(statsController)); //$NON-NLS-1$
+		mySwitch.register("PNB", new PNBCommand(statsController)); //$NON-NLS-1$
+		mySwitch.register("PSA", new PSACommand(statsController)); //$NON-NLS-1$
+		mySwitch.register("PHA", new PHACommand(statsController)); //$NON-NLS-1$
+
+		// Stats + match commands
+		mySwitch.register("PPM", new PPMCommand(statsController, matchController)); //$NON-NLS-1$
+
+		// Stats + team commands
+		mySwitch.register("SST", new SSTCommand(statsController, teamController)); //$NON-NLS-1$
+		mySwitch.register("SPT", new SPTCommand(statsController, teamController)); //$NON-NLS-1$
+		mySwitch.register("SGT", new SGTCommand(statsController, teamController)); //$NON-NLS-1$
+		mySwitch.register("STT", new STTCommand(statsController, teamController)); //$NON-NLS-1$
+		mySwitch.register("SRT", new SRTCommand(statsController, teamController)); //$NON-NLS-1$
+		mySwitch.register("PRT", new PRTCommand(statsController, teamController)); //$NON-NLS-1$
+		mySwitch.register("PST", new PSTCommand(statsController, teamController)); //$NON-NLS-1$
+		mySwitch.register("PSSC", new PSSCCommand(statsController, teamController)); //$NON-NLS-1$
+		mySwitch.register("PSGC", new PSGCCommand(statsController, teamController)); //$NON-NLS-1$
+		mySwitch.register("PSMC", new PSMCCommand(statsController, teamController)); //$NON-NLS-1$
+		mySwitch.register("PSTO", new PSTOCommand(statsController, teamController)); //$NON-NLS-1$
+		mySwitch.register("PSR", new PSRCommand(statsController, teamController)); //$NON-NLS-1$
+		mySwitch.register("PRN", new PRNCommand(statsController, teamController)); //$NON-NLS-1$
+		mySwitch.register("PRS", new PRSCommand(statsController, teamController)); //$NON-NLS-1$
+		mySwitch.register("PRG", new PRGCommand(statsController, teamController)); //$NON-NLS-1$
+		mySwitch.register("PRM", new PRMCommand(statsController, teamController)); //$NON-NLS-1$
+		mySwitch.register("PRTO", new PRTOCommand(statsController, teamController)); //$NON-NLS-1$
+		mySwitch.register("PRR", new PRRCommand(statsController, teamController)); //$NON-NLS-1$
+
+		// Stats + team + match commands
+		mySwitch.register("PCA", new PCACommand(statsController, teamController, matchController)); //$NON-NLS-1$
+		mySwitch.register("PRA", new PRACommand(statsController, teamController, matchController)); //$NON-NLS-1$
+
+		// Stats + tournament commands
+		mySwitch.register("PTCA", new PTCACommand(statsController, tournamentController)); //$NON-NLS-1$
+
+		// Numbered commands (1-3) - stats + match
+		for (int i = 1; i <= 3; i++) {
+			mySwitch.register("IST" + i, new ISTCommand(statsController, matchController, i)); //$NON-NLS-1$
+			mySwitch.register("DST" + i, new DSTCommand(statsController, matchController, i)); //$NON-NLS-1$
+		}
+
+		// Numbered commands (1-3) - stats + team
+		for (int i = 1; i <= 3; i++) {
+			mySwitch.register("IGT" + i, new IGTCommand(statsController, teamController, i)); //$NON-NLS-1$
+			mySwitch.register("IMT" + i, new IMTCommand(statsController, teamController, i)); //$NON-NLS-1$
+			mySwitch.register("DGT" + i, new DGTCommand(statsController, teamController, i)); //$NON-NLS-1$
+			mySwitch.register("DMT" + i, new DMTCommand(statsController, teamController, i)); //$NON-NLS-1$
+			mySwitch.register("UTT" + i, new UTTCommand(statsController, teamController, i)); //$NON-NLS-1$
+			mySwitch.register("RTT" + i, new RTTCommand(statsController, teamController, i)); //$NON-NLS-1$
+			mySwitch.register("PRT" + i, new PRCommand(statsController, teamController, i)); //$NON-NLS-1$
+			mySwitch.register("PWT" + i, new PWCommand(statsController, teamController, i)); //$NON-NLS-1$
+			mySwitch.register("PKT" + i, new PKCommand(statsController, teamController, i)); //$NON-NLS-1$
+			mySwitch.register("XPT" + i, new XPTCommand(statsController, teamController, i)); //$NON-NLS-1$
+		}
+
+		// Numbered commands (1-2 only) - stats + team
+		for (int i = 1; i <= 2; i++) {
+			mySwitch.register("XP" + i, new XPCommand(statsController, teamController, i)); //$NON-NLS-1$
+		}
+
+		// Code command
+		mySwitch.register("code", new CodeCommand(statsController)); //$NON-NLS-1$
 	}
 	public static void showScores(boolean show) {
 		obsPanel.setShowScores(show);

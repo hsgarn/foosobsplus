@@ -1252,6 +1252,10 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.072 12/27/2025</br>
+Refactor loadCommands() in Main.</br>
+Fix potential null pointer error in Main.</br>
+</br>
 v2.071 12/27/2025</br>
 Remove "Hello" from filename in pom.xml.</br>
 Extract OBS management from Main.java to dedicated OBSManager class.</br>
