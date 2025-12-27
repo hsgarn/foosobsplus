@@ -178,6 +178,9 @@ public class Stats implements Serializable {
 	public boolean getIsError() {
 		return isError;
 	}
+	public String getErrorMsg() {
+		return errorMsg;
+	}
 	public void setCodeHistory(DefaultListModel<String> codeHistory) {
 		this.codeHistory = codeHistory;
 	}

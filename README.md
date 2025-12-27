@@ -1036,6 +1036,40 @@ Response (Validation Error) - HTTP Status 400 Bad Request:
       "message": "Invalid timer type. Must be: shot, pass, timeout, game, recall, or reset"
     }
 
+#### POST /api/code
+Submits a foosball statistics code to the statistics entry panel. This allows external applications to enter codes programmatically. Requires valid API key.
+
+Request:
+
+    POST http://localhost:9051/api/code
+    Headers:
+      X-API-Key: your-api-key-here
+      Content-Type: application/json
+
+    Body:
+    {
+      "code": "BGS",
+      "tableNumber": 1
+    }
+
+- `code` - The foosball statistics code to submit (max 20 characters)
+- `tableNumber` - Must match the current table configuration
+
+Response (Success):
+
+    {
+      "success": true,
+      "message": "Code submitted successfully",
+      "data": "BGS"
+    }
+
+Response (Validation Error) - HTTP Status 400 Bad Request:
+
+    {
+      "success": false,
+      "message": "Code is required"
+    }
+
 ### Security Features
 The REST API includes several security measures to protect against abuse:
 
@@ -1055,6 +1089,7 @@ Maximum request payload size is 10KB. Larger requests are automatically rejected
 
 #### Input Validation
 - Player names are limited to 100 characters
+- Foosball codes are limited to 20 characters
 - Control characters (except tab, newline, carriage return) are blocked
 - Table number must be a positive integer matching the current table configuration
 
@@ -1063,7 +1098,7 @@ To connect a mobile app on the same network:
 
 1. Find the IP address of the computer running FoosOBSPlus (e.g., 192.168.1.100)
 2. Configure your mobile app to use: `http://192.168.1.100:9051/api/players`
-3. Set the `X-API-Key` header to match the key configured in `api.properties`
+3. Set the `X-API-Key` header to match the key configured in REST API Settings
 4. Send POST requests with player name updates in JSON format
 
 **Note:** The API uses HTTP (not HTTPS), so it should only be used on trusted local networks.
@@ -1217,6 +1252,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.070 12/27/2025</br>
+Add Code REST API endpoint.</BR>
+</br>
 v2.069 12/26/2025</br>
 Fix Maven build warnings and improve logging configuration.</br>
 Replace depracted dependancies in StatusEntryPanel</br>

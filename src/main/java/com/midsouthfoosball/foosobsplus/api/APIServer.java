@@ -37,6 +37,7 @@ public class APIServer {
 	private final String apiKey;
 	private final PlayerNamesController playerNamesController;
 	private final TimerControllerAPI timerControllerAPI;
+	private final FoosballCodeController foosballCodeController;
 	private final RateLimiter rateLimiter;
 
 	public APIServer(TeamService teamService) {
@@ -44,6 +45,7 @@ public class APIServer {
 		this.apiKey = Settings.getAPIParameter("APIKey");
 		this.playerNamesController = new PlayerNamesController(teamService);
 		this.timerControllerAPI = new TimerControllerAPI(teamService.getTeamController());
+		this.foosballCodeController = new FoosballCodeController(teamService);
 		this.rateLimiter = new RateLimiter(MAX_REQUESTS_PER_MINUTE);
 	}
 
@@ -99,6 +101,7 @@ public class APIServer {
 		// Routes
 		app.post("/api/players", playerNamesController::updatePlayerNames);
 		app.post("/api/timer", timerControllerAPI::controlTimer);
+		app.post("/api/code", foosballCodeController::submitCode);
 
 		// Start server
 		try {

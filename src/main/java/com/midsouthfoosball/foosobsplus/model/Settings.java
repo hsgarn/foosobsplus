@@ -395,7 +395,6 @@ public final class Settings {
 		defaultAPIProps.setProperty("APIEnabled", ON);
 		defaultAPIProps.setProperty("APIPort", "9051");
 		defaultAPIProps.setProperty("APIKey", "123thisismykey456");
-		defaultAPIProps.setProperty("APIAllowLocalOnly", OFF);
 		//Config Properties
 		configControlProps 				= new Properties(defaultControlProps);
 		configSourceProps 				= new Properties(defaultSourceProps);

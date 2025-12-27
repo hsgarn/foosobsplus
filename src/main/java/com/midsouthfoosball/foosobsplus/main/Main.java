@@ -1318,6 +1318,12 @@ public final class Main implements MatchObserver {
 		}
 		statsController.displayAllStats();
 	}
+	public static boolean getLastCodeError() {
+		return stats.getIsError();
+	}
+	public static String getLastCodeErrorMsg() {
+		return stats.getErrorMsg();
+	}
 	private static void makeMementos() {
 		deleteElementsAfterPointer(undoRedoPointer);
         mementoStackTeam1.push(saveState(team1));
