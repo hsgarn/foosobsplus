@@ -172,25 +172,11 @@ import com.midsouthfoosball.foosobsplus.view.TeamPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.TournamentPanel;
+import com.midsouthfoosball.foosobsplus.obs.OBSManager;
+import com.midsouthfoosball.foosobsplus.obs.OBSUICallback;
 
-import io.obswebsocket.community.client.OBSRemoteController;
-import io.obswebsocket.community.client.WebSocketCloseCode;
-import io.obswebsocket.community.client.listener.lifecycle.ReasonThrowable;
-import io.obswebsocket.community.client.message.event.inputs.InputActiveStateChangedEvent;
-import io.obswebsocket.community.client.message.event.sceneitems.SceneItemCreatedEvent;
-import io.obswebsocket.community.client.message.event.sceneitems.SceneItemEnableStateChangedEvent;
-import io.obswebsocket.community.client.message.event.sceneitems.SceneItemListReindexedEvent;
-import io.obswebsocket.community.client.message.event.sceneitems.SceneItemRemovedEvent;
-import io.obswebsocket.community.client.message.event.scenes.CurrentProgramSceneChangedEvent;
-import io.obswebsocket.community.client.message.response.sceneitems.GetSceneItemIdResponse;
-import io.obswebsocket.community.client.message.response.scenes.GetSceneListResponse;
-import io.obswebsocket.community.client.message.response.sources.GetSourceActiveResponse;
-import io.obswebsocket.community.client.message.response.ui.GetMonitorListResponse;
-import io.obswebsocket.community.client.model.Monitor;
-import io.obswebsocket.community.client.model.Scene;
 import java.nio.file.Files;
 import java.util.concurrent.CountDownLatch;
-import java.util.function.Consumer;
 /**
  * Main FoosOBS Object
  * @author Hugh Garner
@@ -214,6 +200,7 @@ public final class Main implements MatchObserver {
     private static final Map<String, String>	teamGameShowSourcesMap	= new HashMap<>();
    	private static HashMap<String, Boolean> allBallsMap 	= new HashMap<>();
 	private static HashMap<String, Boolean> nineBallsMap 	= new HashMap<>();
+	private static OBSManager obsManager;
 	////// Watch Service for File changes \\\\\\
 	private static WatchService 				watchService;
 	////// CommandStack and UndoRedo setup \\\\\\
@@ -299,6 +286,7 @@ public final class Main implements MatchObserver {
 	public Main() throws IOException {
 		buildTeamGameShowSourcesMap();
 		loadWindowsAndControllers();
+		initializeOBSManager();
 		OBS.setHost(Settings.getOBSParameter("OBSHost")); //$NON-NLS-1$
 		OBS.setPort(Settings.getOBSParameter("OBSPort")); //$NON-NLS-1$
 		OBS.setPassword(Settings.getOBSParameter("OBSPassword")); //$NON-NLS-1$
@@ -340,6 +328,69 @@ public final class Main implements MatchObserver {
 			logger.error("Failed to start REST API server", e);
 		}
 	}
+	/**
+	 * Initializes the OBSManager with callbacks to update UI components.
+	 */
+	private static void initializeOBSManager() {
+		obsManager = new OBSManager(new OBSUICallback() {
+			@Override
+			public void onConnectionStatusChanged(boolean connected) {
+				if (connected) {
+					updateOBSConnected();
+				} else {
+					updateOBSDisconnected();
+				}
+			}
+
+			@Override
+			public void onMessage(String message) {
+				obsConnectPanel.addMessage(message);
+			}
+
+			@Override
+			public void onMonitorListFetched(HashMap<Integer, String> monitorMap) {
+				obsConnectPanel.updateMonitorList(monitorMap);
+			}
+
+			@Override
+			public void onSceneListFetched(HashMap<Integer, String> sceneMap) {
+				obsConnectPanel.updateSceneList(sceneMap);
+			}
+
+			@Override
+			public void onShowTimerStateChanged(boolean visible) {
+				obsPanel.setShowTimer(visible);
+			}
+
+			@Override
+			public void onShowScoresStateChanged(boolean visible) {
+				obsPanel.setShowScores(visible);
+			}
+
+			@Override
+			public void onShowCutthroatStateChanged(boolean visible) {
+				obsPanel.setShowCutthroat(visible);
+			}
+
+			@Override
+			public void onCloseConnectWindow() {
+				obsConnectFrame.setVisible(false);
+			}
+
+			@Override
+			public void showErrorDialog(String title, String message) {
+				JOptionPane.showMessageDialog(null, message, title, JOptionPane.WARNING_MESSAGE);
+			}
+		});
+		obsManager.setBallPanel(ballPanel);
+		obsManager.setTimerWindowCallback(mainController::showTimerWindow);
+		obsManager.setUpdateOnConnectCallback(() -> {
+			tournamentController.writeAll();
+			teamController.writeAll();
+			statsController.displayAllStats();
+		});
+	}
+
 	private static void buildTeamGameShowSourcesMap() {
 		teamGameShowSourcesMap.clear();
 		for (int x = 1; x <= 3; x++) {
@@ -348,105 +399,8 @@ public final class Main implements MatchObserver {
 			}
 		}
 	}
-	private static void buildOBSController() {
-		if(OBS.getController() != null) {
-			OBS.getController().stop();
-			OBS.setController(null);
-		}
-		OBS.setController(OBSRemoteController.builder()
-			.autoConnect(false)
-			.host(OBS.getHost())
-			.port(Integer.parseInt(OBS.getPort()))
-			.password(OBS.getPassword())
-			.connectionTimeout(3)
-			.lifecycle()
-			.onReady(Main::onReady)
-			.onDisconnect(Main::onDisconnect)
-			.onClose(webSocketCloseCode -> Main.onClose(webSocketCloseCode))
-			.onControllerError(reason -> Main.onControllerError(reason))
-			.onCommunicatorError(reason -> Main.onCommunicationError(reason))
-			.and()
-			.registerEventListener(InputActiveStateChangedEvent.class, Main::checkActiveStateChange)
-			.registerEventListener(SceneItemEnableStateChangedEvent.class, Main::checkItemEnableStateChange)
-			.registerEventListener(CurrentProgramSceneChangedEvent.class, Main::checkCurrentProgramSceneChange)
-			.registerEventListener(SceneItemCreatedEvent.class, Main::checkSceneItemCreated)
-			.registerEventListener(SceneItemRemovedEvent.class, Main::checkSceneItemRemoved)
-			.registerEventListener(SceneItemListReindexedEvent.class, Main::checkSceneItemListReindexed)
-			.build()
-		);
-	}
-	private static void checkSceneItemCreated(SceneItemCreatedEvent sceneItemCreatedEvent) {
-		loadSceneItemMap();
-	}
-	private static void checkSceneItemRemoved(SceneItemRemovedEvent sceneItemRemovedEvent) {
-		loadSceneItemMap();
-	}
-	private static void checkSceneItemListReindexed(SceneItemListReindexedEvent sceneItemListReindexedEvent) {
-		loadSceneItemMap();
-	}
-	private static void loadSceneItemMap() {
-	}
-	private static void checkCurrentProgramSceneChange(CurrentProgramSceneChangedEvent currentProgramSceneChanged) {
-    	boolean showParsed = Settings.getShowParsed();
-		String sceneName = currentProgramSceneChanged.getSceneName();
-		if (sceneName != null && !sceneName.isEmpty()) {
-			OBS.setCurrentScene(sceneName);
-			if(showParsed) {
-				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSceneChangedTo") + sceneName + "."); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-		} else {
-			if(showParsed) {
-				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSCheckCurrentProgramSceneChangeFailed")); //$NON-NLS-1$
-			}
-	   }
-	}
-	private static void checkItemEnableStateChange(SceneItemEnableStateChangedEvent sceneItemEnableStateChanged) {
-    	boolean showParsed = Settings.getShowParsed();
-		String sceneName = sceneItemEnableStateChanged.getSceneName();
-		Number itemId = sceneItemEnableStateChanged.getSceneItemId();
-		boolean show = sceneItemEnableStateChanged.getSceneItemEnabled();
-		checkItemEnableStageChangeHelper(sceneName, show, Settings.getSourceParameter("ShowScores"), itemId, showParsed); //$NON-NLS-1$
-		checkItemEnableStageChangeHelper(sceneName, show, Settings.getSourceParameter("ShowCutthroat"), itemId, showParsed); //$NON-NLS-1$
-	}
-	private static void checkItemEnableStageChangeHelper(String sceneName, boolean show, String sourceToCheck, Number itemId, boolean showParsed) {
-		OBS.getController().getSceneItemId(sceneName, sourceToCheck, null, getSceneItemIdResponse -> {
-        	if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
-	           	if (getSceneItemIdResponse.getSceneItemId().toString().equals(itemId.toString())) {
-	           		if (sourceToCheck.equals(Settings.getSourceParameter("ShowScores"))) { //$NON-NLS-1$
-	           			obsPanel.setShowScores(show);
-	           		} else if (sourceToCheck.equals(Settings.getSourceParameter("ShowCutthroat"))) { //$NON-NLS-1$
-	           			obsPanel.setShowCutthroat(show);
-	           		}
-					if(showParsed) {
-						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS " + sourceToCheck + Messages.getString("Main.EnableStateChangeReceived") + show + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					}
-	           	}
-	        } else {
-				if(showParsed) {
-					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSEnableStateChangeFailed")); //$NON-NLS-1$
-				}
-	        }
-	    });
-	}
-	private static void checkActiveStateChange(InputActiveStateChangedEvent inputActiveStateChangedEvent) {
-		String name = inputActiveStateChangedEvent.getInputName();
-		if (!Settings.getSourceParameter("ShowTimer").isEmpty() && name.equals(Settings.getSourceParameter("ShowTimer"))) { //$NON-NLS-1$ //$NON-NLS-2$
-			boolean show = inputActiveStateChangedEvent.getVideoActive();
-			obsPanel.setShowTimer(show);
-			mainController.showTimerWindow(show);
-		} else if (!Settings.getSourceParameter("ShowScores").isEmpty() && name.equals(Settings.getSourceParameter("ShowScores"))) { //$NON-NLS-1$ //$NON-NLS-2$
-			boolean show = inputActiveStateChangedEvent.getVideoActive();
-			obsPanel.setShowScores(show);
-		} else if (!Settings.getSourceParameter("ShowCutthroat").isEmpty() && name.equals(Settings.getSourceParameter("ShowCutthroat"))) { //$NON-NLS-1$ //$NON-NLS-2$
-			boolean show = inputActiveStateChangedEvent.getVideoActive();
-			obsPanel.setShowCutthroat(show);
-		}
-		setFocusOnCode();
-	}
 	public static void connectToOBS() {
-		logger.info("Trying to connect to OBS..."); //$NON-NLS-1$
-		buildOBSController();
-		OBS.getController().connect();
+		obsManager.connect();
 	}
 	public static void updateOBSConnected() {
 		OBS.setConnected(true);
@@ -495,214 +449,25 @@ public final class Main implements MatchObserver {
 			logger.error("Error restarting REST API server", e);
 		}
 	}
-	private static void onReady() {
-		updateOBSConnected();
-		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSReady")); //$NON-NLS-1$
-		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSControllerConnected")); //$NON-NLS-1$
-		OBS.getController().getVersion(versionInfo -> {
-			if(versionInfo != null && versionInfo.isSuccessful()) {
-				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSVersion") + versionInfo.getObsVersion()); //$NON-NLS-1$
-				obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.WebsocketVersion") + versionInfo.getObsWebSocketVersion()); //$NON-NLS-1$
-			}
-		});
-		String sceneName = Settings.getOBSParameter("OBSMainScene"); //$NON-NLS-1$
-		OBS.getController().setCurrentProgramScene(sceneName, response -> { 
-			if(response != null && response.isSuccessful()) {
-				OBS.setCurrentScene(sceneName);
-				if(Settings.getShowParsed()) {
-					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.SceneSetTo") + sceneName); //$NON-NLS-1$
-				}
-			} else {
-				String msg = dtf.format(LocalDateTime.now()) + Messages.getString("Main.UnableToSetSceneTo") + sceneName; //$NON-NLS-1$
-				logger.warn(msg);
-				if(Settings.getShowParsed()) {
-					obsConnectPanel.addMessage(msg);
-				}
-			}
-		});
-        checkAndSetSourceActive("ShowTimer", obsPanel::setShowTimer, mainController::showTimerWindow);
-        checkAndSetSourceActive("ShowScores", obsPanel::setShowScores, null);
-        checkAndSetSourceActive("ShowCutthroat", obsPanel::setShowCutthroat, null);
-        if(Settings.getOBSParameter("OBSCloseOnConnect").equals(ON)) {  //$NON-NLS-1$
-			obsConnectFrame.setVisible(false);
-		}
-		fetchMonitorList();
-		fetchSceneList();
-	}
-    private static void checkAndSetSourceActive(String settingKey, Consumer<Boolean> setter, Consumer<Boolean> additionalAction) {
-        String sourceName = Settings.getSourceParameter(settingKey);
-        if (sourceName == null || sourceName.isEmpty()) {
-            String msg = "Source [" + settingKey + "] not defined in Settings.";
-            logger.warn(msg);
-            obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " " + msg);
-            setter.accept(false);
-            if (additionalAction != null) {
-                additionalAction.accept(false);
-            }
-            return;
-        }
-        OBS.getController().getSourceActive(sourceName, response -> {
-            try {
-                if (response != null && response.isSuccessful()) {
-                    boolean isActive = response.getVideoActive();
-                    setter.accept(isActive);
-                    if (additionalAction != null) {
-                        additionalAction.accept(isActive);
-                    }
-                } else {
-                    String msg = "Source [" + sourceName + "] not found in OBS";
-                    logger.warn(msg);
-                    obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " " + msg);
-                    setter.accept(false);
-                    if (additionalAction != null) {
-                        additionalAction.accept(false);
-                    }
-                }
-            } catch (Exception e) {
-                String msg = "Exception for Source [" + sourceName + "]: " + e.toString();
-                logger.warn(msg);
-                obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " " + msg);
-                setter.accept(false);
-                if (additionalAction != null) {
-                    additionalAction.accept(false);
-                }
-            }
-        });
-    }
-	private static void projectSource() {
-		if (OBS.getConnected()) {
-			Number monitorIndex = obsConnectPanel.getSelectedMonitor();
-			if (monitorIndex.intValue() != -1) {
-				String sceneName = obsConnectPanel.getSelectedSceneName();
-				if (sceneName.isEmpty()) sceneName = OBS.getMainScene();
-				OBS.getController().openSourceProjector(sceneName, monitorIndex, null, response -> 
-				{
-					if (!response.isSuccessful()) {
-						String msg = Messages.getString("Errors.Main.ProjectError"); //$NON-NLS-1$
-						String ttl = Messages.getString("Errors.Main.Project.Title"); //$NON-NLS-1$
-						logger.warn(msg);
-						JOptionPane.showMessageDialog(null, msg, ttl, 1);
-					}
-				});
-			}
-		}
-	}
-	private static void fetchMonitorList() {
-		if (OBS.getConnected()) {
-			OBS.getController().getMonitorList((GetMonitorListResponse response) -> {
-				if(Settings.getShowParsed()) {
-					obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.FetchingMonitors")); //$NON-NLS-1$
-				}
-				List<Monitor> monitors;
-				if(response != null && response.isSuccessful()) {
-					monitors = response.getMonitors();
-					HashMap<Integer, String> monitorMap = new HashMap<>();
-					for (Monitor monitor : monitors) {
-						monitorMap.put(monitor.getMonitorIndex(),  monitor.getMonitorName());
-					}
-					obsConnectPanel.updateMonitorList(monitorMap);
-					if(Settings.getShowParsed()) {
-						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.MonitorsFetched")); //$NON-NLS-1$
-					}
-				} else {
-					String msg = Messages.getString("Errors.Main.FetchMonitorError"); //$NON-NLS-1$
-					String ttl = Messages.getString("Errors.Main.FetchMonitor.Title"); //$NON-NLS-1$
-					logger.warn(msg);
-					JOptionPane.showMessageDialog(null, msg, ttl, 1);
-				}
-			});
-		}
-	}
-	private static void fetchSceneList() {
-		if (OBS.getConnected()) {
-			OBS.getController().getSceneList((GetSceneListResponse response) -> {
-				List<Scene> scenes;
-				if(response != null && response.isSuccessful()) {
-					scenes = response.getScenes();
-					HashMap<Integer, String> sceneMap = new HashMap<>();
-					for (Scene scene : scenes) {
-						sceneMap.put(scene.getSceneIndex(), scene.getSceneName());
-					}
-					obsConnectPanel.updateSceneList(sceneMap);
-				} else {
-					String msg = Messages.getString("Errors.Main.FetchSourceError"); //$NON-NLS-1$
-					String ttl = Messages.getString("Errors.Main.FetchSource.Title"); //$NON-NLS-1$
-					logger.warn(msg);
-					JOptionPane.showMessageDialog(null, msg, ttl, 1);
-				}
-			});
-		}
-	}
-	private static void onClose(WebSocketCloseCode webSocketCloseCode) {
-		updateOBSDisconnected();
-		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSControllerClosed") + webSocketCloseCode.getCode()); //$NON-NLS-1$
-	}
-	private static void onDisconnect() {
-		updateOBSDisconnected();
-		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSControllerDisconnected")); //$NON-NLS-1$
-	}
-	private static void onControllerError(ReasonThrowable reason) {
-		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.ControllerError") + reason.getReason()); //$NON-NLS-1$
-	}
-	private static void onCommunicationError(ReasonThrowable reason) {
-		obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.CommunicationError") + reason.getReason()); //$NON-NLS-1$
-	}
-	private static void obsSetBallVisible(String sourceName, boolean show) {
-		if (OBS.getConnected()) {
-            OBS.getController().getSourceActive(sourceName, (GetSourceActiveResponse response)-> {
-                if (response != null && response.isSuccessful()) {
-//                    boolean isActive = response.getVideoActive();
-                    showSource(sourceName, show);
-                } else {
-                    String msg = "Source [" + sourceName + "] not found in OBS";
-                    logger.warn(msg);
-                    obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + " " + msg);
-                }
-           });
-
-//			String sceneName;
-//			GetCurrentProgramSceneResponse getCurrentProgramSceneResponse = OBS.getController().getCurrentProgramScene(1000);
-//			if (getCurrentProgramSceneResponse != null && getCurrentProgramSceneResponse.isSuccessful()) {
-//				sceneName = getCurrentProgramSceneResponse.getCurrentProgramSceneName();
-//				OBS.getController().getSceneItemId(sceneName, source, null,
-//						getSceneItemIdResponse -> {
-//							if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
-//								OBS.getController().setSceneItemEnabled(sceneName,getSceneItemIdResponse.getSceneItemId(),show,
-//										setSceneItemEnabledResponse -> {
-//											if(Settings.getShowParsed()) {
-//												obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + ": OBS setSceneItemEnabled called: " + source + ", " + show);
-//											}
-//										}
-//								);
-//							}
-//				});
-//			}
-		}
-	}
 	public static void obsSyncBalls() {
-		if (OBS.getConnected()) {
-			allBallsMap.forEach((ball,show) -> {
-				obsSetBallVisible(ball+"Ball", !ballPanel.getBallSelectedState(ball));
-			});
+		if (obsManager != null) {
+			obsManager.syncBalls();
 		}
 	}
 	public static void resetNineBall() {
-		nineBallsMap.forEach((ball, show) -> {
-			if (OBS.getConnected()) obsSetBallVisible(ball+"Ball", show);
-			ballPanel.setBallSelected(ball, !show);
-		});
+		if (obsManager != null) {
+			obsManager.resetNineBall();
+		}
 	}
 	public static void showAllBalls() {
-		allBallsMap.forEach((ball, show) -> {
-			if (OBS.getConnected()) obsSetBallVisible(ball+"Ball", show);
-			ballPanel.setBallSelected(ball, !show);
-		});
+		if (obsManager != null) {
+			obsManager.showAllBalls();
+		}
 	}
 	public static void hideAllBalls() {
-		allBallsMap.forEach((ball, show) -> {
-			if (OBS.getConnected()) obsSetBallVisible(ball+"Ball", !show);
-			ballPanel.setBallSelected(ball, show);
-		});
+		if (obsManager != null) {
+			obsManager.hideAllBalls();
+		}
 	}
 
     private static void createAutoScoreWorker() {
@@ -1324,6 +1089,13 @@ public final class Main implements MatchObserver {
 	public static String getLastCodeErrorMsg() {
 		return stats.getErrorMsg();
 	}
+	/**
+	 * Gets the OBSManager instance for OBS operations.
+	 * @return the OBSManager instance
+	 */
+	public static OBSManager getOBSManager() {
+		return obsManager;
+	}
 	private static void makeMementos() {
 		deleteElementsAfterPointer(undoRedoPointer);
         mementoStackTeam1.push(saveState(team1));
@@ -1559,64 +1331,13 @@ public final class Main implements MatchObserver {
 		setFocusOnCode();
 	}
 	public static void showSource(String source, boolean show) {
-		String sceneName;
-		String sourceItem;
-		if (source == null || source.isEmpty()) return;
-		if (source.contains(",")) { //$NON-NLS-1$
-			String[] parts = source.split(","); //$NON-NLS-1$
-			sceneName = parts[0];
-			sourceItem = parts[1];
-			if (OBS.getConnected()) {
-				boolean showParsed = Settings.getShowParsed();
-				if (showParsed) obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSceneItemEnabledCalled") + sceneName + ", " + sourceItem + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				OBS.getController().getSceneItemId(sceneName, sourceItem, null,	(GetSceneItemIdResponse response) -> { 
-					if (response != null && response.isSuccessful()) {
-                        OBS.getController().setSceneItemEnabled(sceneName,response.getSceneItemId(),show,setSceneItemEnabledResponse -> {
-                            if(showParsed) {
-                                obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSceneItemEnabledResponseObtained") + sceneName + ", " + sourceItem + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                            }
-                         });
-					} else {
-						if(showParsed) {
-							obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSceneItemEnabledFailed") + sceneName + ", " + sourceItem + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						}
-					}
-				});
-			}
-		} else {
-			sourceItem = source;
-			if (OBS.getConnected()) {
-				boolean showParsed = Settings.getShowParsed();
-				if (showParsed) obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSceneItemEnabledCalled") + sourceItem + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$
-				sceneName = OBS.getCurrentScene();
-				OBS.getController().getSceneItemId(sceneName, sourceItem, null, getSceneItemIdResponse -> { 
-		            if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
-		                OBS.getController().setSceneItemEnabled(sceneName,getSceneItemIdResponse.getSceneItemId(),show,setSceneItemEnabledResponse -> {
-		                	if(showParsed) {
-								obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSceneItemEnabledResponseObtained") + sceneName + ", "+ sourceItem + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		                	}
-		                });
-		            }
-				});
-			}
+		if (obsManager != null) {
+			obsManager.showSource(source, show);
 		}
 	}
 	public static void setSourceFilterVisibility(String source, String filter, boolean show) {
-		if(source == null || filter == null) return;
-		if (OBS.getConnected()) {
-			boolean showParsed = Settings.getShowParsed();
-			if (showParsed) obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSourceFilterEnabledCalled") + source + ", " + filter + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			OBS.getController().setSourceFilterEnabled(source, filter, show, response -> {
-				if(response != null && response.isSuccessful()) {
-					if(showParsed) {
-						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSourceFilterEnabledResponseObtained") + source + ", " + filter + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					}
-				} else {
-					if(showParsed) {
-						obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.OBSSetSourceFilterEnabledFailed") + source + ", " + filter + ", " + show); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					}
-				}
-			});
+		if (obsManager != null) {
+			obsManager.setSourceFilterVisibility(source, filter, show);
 		}
 	}
 	private static void connectAutoScore() {
@@ -1816,97 +1537,97 @@ public final class Main implements MatchObserver {
 	private static class BtnCueBallListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("CueBall", !ballPanel.getCueBallSelectedState());
+			obsManager.toggleBall("Cue", !ballPanel.getCueBallSelectedState());
 		}
 	}
 	private static class BtnOneBallListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("OneBall", !ballPanel.getOneBallSelectedState());
+			obsManager.toggleBall("One", !ballPanel.getOneBallSelectedState());
 		}
 	}
 	private static class BtnTwoBallListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("TwoBall", !ballPanel.getTwoBallSelectedState());
+			obsManager.toggleBall("Two", !ballPanel.getTwoBallSelectedState());
 		}
 	}
 	private static class BtnThreeBallListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("ThreeBall", !ballPanel.getThreeBallSelectedState());
+			obsManager.toggleBall("Three", !ballPanel.getThreeBallSelectedState());
 		}
 	}
 	private static class BtnFourBallListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("FourBall", !ballPanel.getFourBallSelectedState());
+			obsManager.toggleBall("Four", !ballPanel.getFourBallSelectedState());
 		}
 	}
 	private static class BtnFiveBallListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("FiveBall", !ballPanel.getFiveBallSelectedState());
+			obsManager.toggleBall("Five", !ballPanel.getFiveBallSelectedState());
 		}
 	}
 	private static class BtnSixBallListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("SixBall", !ballPanel.getSixBallSelectedState());
+			obsManager.toggleBall("Six", !ballPanel.getSixBallSelectedState());
 		}
 	}
 	private static class BtnSevenBallListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("SevenBall", !ballPanel.getSevenBallSelectedState());
+			obsManager.toggleBall("Seven", !ballPanel.getSevenBallSelectedState());
 		}
 	}
-	private class BtnEightBallListener implements ActionListener {
+	private static class BtnEightBallListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("EightBall", !ballPanel.getEightBallSelectedState());
+			obsManager.toggleBall("Eight", !ballPanel.getEightBallSelectedState());
 		}
 	}
 	private static class BtnNineBallListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("NineBall", !ballPanel.getNineBallSelectedState());
+			obsManager.toggleBall("Nine", !ballPanel.getNineBallSelectedState());
 		}
 	}
 	private static class BtnTenBallListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("TenBall", !ballPanel.getTenBallSelectedState());
+			obsManager.toggleBall("Ten", !ballPanel.getTenBallSelectedState());
 		}
 	}
 	private static class BtnElevenBallListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("ElevenBall", !ballPanel.getElevenBallSelectedState());
+			obsManager.toggleBall("Eleven", !ballPanel.getElevenBallSelectedState());
 		}
 	}
 	private static class BtnTwelveBallListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("TwelveBall", !ballPanel.getTwelveBallSelectedState());
+			obsManager.toggleBall("Twelve", !ballPanel.getTwelveBallSelectedState());
 		}
 	}
 	private static class BtnThirteenBallListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("ThirteenBall", !ballPanel.getThirteenBallSelectedState());
+			obsManager.toggleBall("Thirteen", !ballPanel.getThirteenBallSelectedState());
 		}
 	}
 	private static class BtnFourteenBallListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("FourteenBall", !ballPanel.getFourteenBallSelectedState());
+			obsManager.toggleBall("Fourteen", !ballPanel.getFourteenBallSelectedState());
 		}
 	}
 	private static class BtnFifteenBallListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			obsSetBallVisible("FifteenBall", !ballPanel.getFifteenBallSelectedState());
+			obsManager.toggleBall("Fifteen", !ballPanel.getFifteenBallSelectedState());
 		}
 	}
 	private static class BtnSyncOBSListener implements ActionListener {
@@ -2132,13 +1853,15 @@ public final class Main implements MatchObserver {
 	private static class OBSFetchMonitorsListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			fetchMonitorList();
+			obsManager.fetchMonitorList();
 		}
 	}
 	private static class OBSProjectListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			projectSource();
+			String sceneName = obsConnectPanel.getSelectedSceneName();
+			Number monitorIndex = obsConnectPanel.getSelectedMonitor();
+			obsManager.projectSource(sceneName, monitorIndex);
 		}
 	}
 	private static class OBSActivateSceneListener implements ActionListener {
@@ -2158,8 +1881,7 @@ public final class Main implements MatchObserver {
 	private static class OBSDisconnectListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.RequestingDisconnect")); //$NON-NLS-1$
-			OBS.getController().disconnect();
+			obsManager.disconnect();
 			setFocusOnCode();
 		}
 	}
@@ -2174,8 +1896,7 @@ public final class Main implements MatchObserver {
 	private static class OBSDisconnectItemListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
-			obsConnectPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.RequestingDisconnect")); //$NON-NLS-1$
-			OBS.getController().disconnect();
+			obsManager.disconnect();
 			obsConnectPanel.updateOBS();
 			setFocusOnCode();
 		}

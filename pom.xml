@@ -29,7 +29,6 @@
                             </goals>
                             <configuration>
                                 <shadedArtifactAttached>true</shadedArtifactAttached>
-                                <filename>FoosOBSPlusHello</filename>
                                 <filters>
                                     <filter>
                                         <artifact>*:*</artifact>
