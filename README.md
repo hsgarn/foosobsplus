@@ -1252,6 +1252,10 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.073 01/14/2026</br>
+Wrap calls in doInBackground() with SwingUtilities.invokeLater().</br>
+Extract AutoScore funtions from Main and put into its own class.</br>
+</br>
 v2.072 12/27/2025</br>
 Refactor loadCommands() in Main.</br>
 Fix potential null pointer error in Main.</br>

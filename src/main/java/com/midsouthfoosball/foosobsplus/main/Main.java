@@ -29,15 +29,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -50,8 +45,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -119,6 +112,7 @@ import com.midsouthfoosball.foosobsplus.commands.XPTCommand;
 import com.midsouthfoosball.foosobsplus.commands.PHACommand;
 import com.midsouthfoosball.foosobsplus.commands.PSACommand;
 import com.midsouthfoosball.foosobsplus.commands.PNBCommand;
+import com.midsouthfoosball.foosobsplus.controller.AutoScoreManager;
 import com.midsouthfoosball.foosobsplus.controller.MainController;
 import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
@@ -190,13 +184,10 @@ public final class Main implements MatchObserver {
 	private static final OBSInterface 			obsInterface 			= new OBSInterface();
 	private static String						matchId					= ""; //$NON-NLS-1$
 	private static final DateTimeFormatter 		dtf 					= DateTimeFormatter.ofPattern(Messages.getString("Main.DateTimePattern")); //$NON-NLS-1$
-	private static boolean 						autoScoreConnected		= false;
-	private static Socket 						autoScoreSocket;
-	private static PrintWriter 					autoScoreSocketWriter;
 	private static com.midsouthfoosball.foosobsplus.api.APIServer apiServer;
 	private static com.midsouthfoosball.foosobsplus.api.TeamService teamService;
 	private static final StreamIndexer 			streamIndexer      		= new StreamIndexer(Settings.getControlParameter("datapath")); //$NON-NLS-1$
-	private static Boolean 						blockAutoScoreReconnect	= false;
+	private static AutoScoreManager 			autoScoreManager;
     private static final Map<String, String>	teamGameShowSourcesMap	= new HashMap<>();
    	private static HashMap<String, Boolean> allBallsMap 	= new HashMap<>();
 	private static HashMap<String, Boolean> nineBallsMap 	= new HashMap<>();
@@ -278,7 +269,6 @@ public final class Main implements MatchObserver {
 	private static TournamentController 		tournamentController;
 	private static MatchController 				matchController;
 	private static StatsController 				statsController;
-	private static SwingWorker<Boolean,Integer> autoScoreWorker;
 	private static SwingWorker<Boolean,String>  fileWatchWorker;
     {
         match.addObserver(this);
@@ -305,9 +295,9 @@ public final class Main implements MatchObserver {
         loadBallMaps();
 		loadListeners();
 		loadCommands();
-		createAutoScoreWorker();
+		initializeAutoScoreManager();
 		if (Settings.getAutoScoreParameter("AutoScoreSettingsAutoConnect").equals(ON)) { //$NON-NLS-1$
-			connectAutoScore();
+			autoScoreManager.connect();
 		}
 		createFileWatchWorker();
 		fileWatchWorker.execute();
@@ -470,167 +460,32 @@ public final class Main implements MatchObserver {
 		}
 	}
 
-    private static void createAutoScoreWorker() {
-		autoScoreWorker = new SwingWorker<Boolean, Integer>() {
-			BufferedReader dataIn;
-			@Override
-			protected Boolean doInBackground() throws Exception {
-		    	boolean isConnected = false;
-		    	String address = Settings.getAutoScoreParameter("AutoScoreSettingsServerAddress"); //$NON-NLS-1$
-		    	int port = Settings.getAutoScoreParameter("AutoScoreSettingsServerPort",Integer::parseInt); //$NON-NLS-1$
-		    	try {
-		            autoScoreSocket = new Socket(address, port);
-                    autoScoreSocket.setSoLinger(true, 0);
-//                    autoScoreSocket.setSoTimeout(1000); // may need to increase
-		            autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.ConnectedTo") + address + ": " + port); //$NON-NLS-1$ //$NON-NLS-2$
-		            logger.info("Auto Score connected to " + address + ": " + port); //$NON-NLS-1$ //$NON-NLS-2$
-		        	dataIn = new BufferedReader(new InputStreamReader(autoScoreSocket.getInputStream()));
-					try {
-						autoScoreSocketWriter = new PrintWriter(autoScoreSocket.getOutputStream());
-						if (autoScoreSocketWriter.checkError()) {
-							logger.error("createAutoScoreWork doInBackground new PrintWriter error:"); //$NON-NLS-1$
-						}
-					} catch(IOException ex) {
-						logger.error("createAutoScoreWork doInBackground PrintWriter exception:"); //$NON-NLS-1$
-						logger.error(ex.toString());
-					}
-		        	isConnected = true;
-		    		mainFrame.setAutoScoreIconConnected(true);
-		    		autoScoreConnected = true;
-		        }
-		        catch(UnknownHostException uh) {
-		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.AutoScoreUnknownHostException")); //$NON-NLS-1$
-		        	logger.error("Auto Score new Socket UnknownHostException"); //$NON-NLS-1$
-		        	logger.error(uh.toString());
-		        }
-		        catch(IOException io) {
-		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.AutoScoreIOException")); //$NON-NLS-1$
-		        	logger.error("Auto Score new Socket IOException"); //$NON-NLS-1$
-		        	logger.error(io.toString());
-		        }
-		    	String raw;
-		        String str[];
-		        String cmd[];
-		        while (!isCancelled() && isConnected) {
-                    raw = ""; //$NON-NLS-1$
-            		try {
-                        if (dataIn.ready()) {
-                            raw = dataIn.readLine();
-                            if (raw == null) {
-                                break;
-                            }
-                        }
-		            } catch(IOException io) {
-		            	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString()); //$NON-NLS-1$
-			        	logger.error(io.toString());
-			        	isConnected = false;
-		            }
-            		if (!raw.isEmpty()) {
-                        logger.info("Received raw data: [" + raw + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-                        cmd = raw.split(":"); //$NON-NLS-1$
-                        logger.info("Parse command: " + cmd[0]); //$NON-NLS-1$
-                        if (Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals(ON)) { //$NON-NLS-1$
-                            autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Received") + raw); //$NON-NLS-1$
-                        }
-                        if (cmd[0].equals("Team")) { //$NON-NLS-1$
-                            str = cmd[1].split("[,]",0); //$NON-NLS-1$
-                            if (str[0].equals("1")) { //$NON-NLS-1$
-                                publish(1);
-                            } else {
-                                if (str[0].equals("2")) { //$NON-NLS-1$
-                                    publish(2);
-                                }
-                            }
-                        } else {
-                            if (cmd[0].equals("TO")) { //$NON-NLS-1$
-                                str = cmd[1].split("[,]",0); //$NON-NLS-1$
-                                if (str[0].equals("1")) { //$NON-NLS-1$
-                                    publish(3);
-                                } else {
-                                    if (str[0].equals("2")) { //$NON-NLS-1$
-                                        publish(4);
-                                    }
-                                }
-                            }
-                        }
-                        if (cmd[0].equals("Read")) { //$NON-NLS-1$
-                            autoScoreConfigPanel.clearConfigTextArea();
-                        }
-                        if (cmd[0].equals("Line")) { //$NON-NLS-1$
-                            String line = cmd[1] + "\n"; //$NON-NLS-1$
-                            autoScoreConfigPanel.appendConfigTextArea(line);
-                        }
-                    }
-		        }
-		        autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.ConnectionTerminated")); //$NON-NLS-1$
-		        logger.info("Auto Score Connection Terminated!!"); //$NON-NLS-1$
-		        try {
-		            if (dataIn != null) {
-                        dataIn.close();
-                    }
-                    if (autoScoreSocket != null && !autoScoreSocket.isClosed()) {
-                        autoScoreSocket.close();
-                    }
-                    isConnected = false;
-		        } catch(IOException io) {
-		        	autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + io.toString()); //$NON-NLS-1$
-		        	logger.error(io.toString());
-		        }
-		    	return isConnected;
-			}
-			@Override
-			protected void done() {
-				boolean status;
-				if (!isCancelled()){ 
-                    try {
-                        status = get();
-                        autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.WorkerCompletedWithIsConnected") + status); //$NON-NLS-1$
-                    } catch (InterruptedException | ExecutionException e) {
-                        autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString()); //$NON-NLS-1$
-                        logger.error(e.toString());
-                    }
-                }
-                //$NON-NLS-1$
-	    		mainFrame.setAutoScoreIconConnected(false);
-	    		autoScoreConnected = false;			    	
-			}
-			@Override
-			protected void process(List<Integer> chunks) {
-				if (isCancelled()) return;
-				int mostRecentValue = chunks.get(chunks.size()-1);
-				boolean ignoreSensors = autoScoreMainPanel.isIgnored();
-            	if (Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals(ON)) { //$NON-NLS-1$
-            		if (ignoreSensors) {
-            			if (mostRecentValue == 1 || mostRecentValue == 2) {
-            				autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team")+mostRecentValue+ Messages.getString("Main.ScoredButIgnored")); //$NON-NLS-1$ //$NON-NLS-2$
-            			} else {
-            				autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team")+(mostRecentValue-2)+ Messages.getString("Main.CalledTimeOut")); //$NON-NLS-1$ //$NON-NLS-2$
-            			}
-            		} else {
-            			if (mostRecentValue == 1 || mostRecentValue == 2) {
-            				autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team")+mostRecentValue+ Messages.getString("Main.Scored")); //$NON-NLS-1$ //$NON-NLS-2$
-            			} else {
-            				autoScoreSettingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team")+(mostRecentValue-2)+ Messages.getString("Main.CalledTimeOut")); //$NON-NLS-1$ //$NON-NLS-2$
-            			}
-            		}
-            	}
-				if (!ignoreSensors && (mostRecentValue == 1)) {
-					processCode("XIST1", false); //$NON-NLS-1$
-				} else {
-					if (!ignoreSensors && (mostRecentValue == 2)) {
-						processCode("XIST2", false); //$NON-NLS-1$
-					}
-				}
-				if (mostRecentValue == 3) {
-					processCode("XUTT1", false); //$NON-NLS-1$
-				} else {
-					if (mostRecentValue == 4) {
-						processCode("XUTT2", false); //$NON-NLS-1$
-					}
-				}
-			}
-		};
-		autoScoreWorker.addPropertyChangeListener(new AutoScoreWorkerStateChangeListener());
+    private static void initializeAutoScoreManager() {
+		autoScoreManager = new AutoScoreManager(
+			autoScoreSettingsPanel,
+			autoScoreConfigPanel,
+			autoScoreMainPanel
+		);
+		autoScoreManager.setConnectionStateListener(
+			connected -> mainFrame.setAutoScoreIconConnected(connected)
+		);
+		autoScoreManager.setScoreEventListener(
+			code -> processCode(code, false)
+		);
+		// Register AutoScore listeners
+		autoScoreSettingsPanel.addApplyListener(autoScoreManager.createSettingsApplyListener());
+		autoScoreSettingsPanel.addSaveListener(autoScoreManager.createSettingsSaveListener());
+		autoScoreSettingsPanel.addConnectListener(autoScoreManager.createSettingsConnectListener());
+		autoScoreSettingsPanel.addDisconnectListener(autoScoreManager.createSettingsDisconnectListener());
+		autoScoreSettingsPanel.addSearchListener(autoScoreManager.createSettingsSearchListener());
+		autoScoreConfigPanel.addReadConfigListener(autoScoreManager.createConfigReadListener());
+		autoScoreConfigPanel.addWriteConfigListener(autoScoreManager.createConfigWriteListener());
+		autoScoreConfigPanel.addValidateConfigListener(autoScoreManager.createConfigValidateListener());
+		autoScoreConfigPanel.addResetConfigListener(autoScoreManager.createConfigResetListener());
+		autoScoreConfigPanel.addClearConfigListener(autoScoreManager.createConfigClearListener());
+		autoScoreMainPanel.addConnectListener(autoScoreManager.createMainPanelConnectListener());
+		autoScoreMainPanel.addDisconnectListener(autoScoreManager.createMainPanelDisconnectListener());
+		autoScoreMainPanel.addSettingsListener(e -> mainController.showAutoScore());
 	}
 	private static void checkFilters(String code) {
 		String filter;
@@ -772,16 +627,6 @@ public final class Main implements MatchObserver {
 		sourcesPanel.addSaveListener(new SourcesSaveListener());
 		statSourcesPanel.addApplyListener(new StatSourcesApplyListener());
 		statSourcesPanel.addSaveListener(new StatSourcesSaveListener());
-		autoScoreSettingsPanel.addApplyListener(new AutoScoreSettingsApplyListener());
-		autoScoreSettingsPanel.addSaveListener(new AutoScoreSettingsSaveListener());
-		autoScoreSettingsPanel.addConnectListener(new AutoScoreSettingsConnectListener());
-		autoScoreSettingsPanel.addDisconnectListener(new AutoScoreSettingsDisconnectListener());
-        autoScoreSettingsPanel.addSearchListener(new AutoScoreSettingsSearchListener(autoScoreSettingsPanel));
-		autoScoreConfigPanel.addReadConfigListener(new AutoScoreConfigReadListener());
-		autoScoreConfigPanel.addWriteConfigListener(new AutoScoreConfigWriteListener());
-		autoScoreConfigPanel.addValidateConfigListener(new AutoScoreConfigValidateListener());
-		autoScoreConfigPanel.addResetConfigListener(new AutoScoreConfigResetListener());
-		autoScoreConfigPanel.addClearConfigListener(new AutoScoreConfigClearListener());
 		apiSettingsPanel.addApplyListener((ActionEvent ae) -> {
 			apiSettingsPanel.applySettings();
 		});
@@ -815,9 +660,6 @@ public final class Main implements MatchObserver {
 		obsPanel.addEnableSkunkListener(new OBSEnableSkunkListener());
 		obsPanel.addStartStreamListener(new OBSStartStreamListener());
 		obsPanel.addShowCutthroatListener(new OBSShowCutthroatListener());
-		autoScoreMainPanel.addConnectListener(new AutoScoreMainPanelConnectListener());
-		autoScoreMainPanel.addDisconnectListener(new AutoScoreMainPanelDisconnectListener());
-		autoScoreMainPanel.addSettingsListener(new AutoScoreMainPanelSettingsListener());
 		statsEntryPanel.addUndoListener(new StatsEntryUndoListener());
 		statsEntryPanel.addRedoListener(new StatsEntryRedoListener());
 		statsEntryPanel.addCodeListener(new CodeListener());
@@ -1270,196 +1112,6 @@ public final class Main implements MatchObserver {
 			obsManager.setSourceFilterVisibility(source, filter, show);
 		}
 	}
-	private static void connectAutoScore() {
-		autoScoreSettingsPanel.addMessage(Messages.getString("Main.TryingToConnectToAutoScore")); //$NON-NLS-1$
-		logger.info("Trying to connect to AutoScore..."); //$NON-NLS-1$
-		createAutoScoreWorker();
-		autoScoreWorker.execute();
-	}
-	private static void disconnectAutoScore() {
-		autoScoreSettingsPanel.addMessage(Messages.getString("Main.Disconnecting")); //$NON-NLS-1$
-		logger.info("Trying to disconnect from AutoScore..."); //$NON-NLS-1$
-		autoScoreWorker.cancel(true);
-		mainFrame.setAutoScoreIconConnected(false);
-		autoScoreConnected = false;
-	}
-    private static void searchAutoScore(AutoScoreSettingsPanel panel) {
-        try {
-            String picoIP = PicoDiscovery.listenForPico(5051, 300);
-            if (picoIP != null) {
-                System.out.println("Discovered Pico at: " + picoIP);
-                autoScoreSettingsPanel.addMessage("Found: " + picoIP);
-                String[] parts = picoIP.split(":");
-                if (parts.length == 3) {
-                    String label = parts[0];
-                    String ipAddress = parts[1];
-                    String port = parts[2];
-                    String message = String.format(
-                        "Discovered Device:\n\n%s\nIP Address: %s\nPort: %s\n\nWould you like to update the IP and Port?",
-                        label, ipAddress, port
-                    );
-                    int result = JOptionPane.showConfirmDialog(
-                        panel,
-                        message,
-                        "Update Auto Score Settings",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE
-                    );
-                    if (result == JOptionPane.YES_OPTION) {
-                        updateAutoScoreHostPort(panel, ipAddress, port);
-                    }
-                } else {
-                    logger.warn("Invalid picoIP format: " + picoIP);
-                }
-            }
-        } catch (Exception e) {
-            logger.error("searchAutoScore call to PicoDiscovery Exception: " + e);
-        }
-    }
-    private static void updateAutoScoreHostPort(AutoScoreSettingsPanel panel, String host, String port) {
-        panel.setServerAddress(host);
-        panel.setServerPort(port);
-        panel.saveSettings();
-    }
-    private static void readAutoScoreConfig() {
-		if(autoScoreConnected) {
-			autoScoreSocketWriter.println("read:"); //$NON-NLS-1$
-			if (autoScoreSocketWriter.checkError()) {
-				logger.error("readAutoScoreConfig println error sending read:"); //$NON-NLS-1$
-			}
-		}
-	}
-	private static boolean validateAutoScoreConfig() {
-		boolean validated = true;
-		String configErrors = ""; //$NON-NLS-1$
-		String[] paramNames = {"PORT","SENSOR1","SENSOR2","SENSOR3","LED1","LED2","DELAY_SENSOR","DELAY_PB","PB1","PB2"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
-		String[] paramTests = {"PORT","PIN","PIN","PIN","PIN","PIN","TIME","TIME","PIN","PIN"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
-		List<String> copyNames = new ArrayList<>(Arrays.asList(paramNames));
-		List<String> copyTests = new ArrayList<>(Arrays.asList(paramTests));
-		String config = autoScoreConfigPanel.getConfigTextArea();
-		String[] lines = config.split("\n"); //$NON-NLS-1$
-		for(String line:lines) {
-			if(line.contains("=")) { //$NON-NLS-1$
-				String[] pair = line.split("="); //$NON-NLS-1$
-				String name = pair[0].trim();
-				String testValue = pair[1].trim();
-				if(copyNames.contains(name)) {
-					int pos = -1;
-					boolean found = false; 
-					for(String param:copyNames) {
-						pos += 1;
-						if(param.equals(name)) {
-							found = true;
-							break;
-						}
-					}
-					if(found) {
-						String test = copyTests.get(pos);
-						copyNames.remove(pos);
-						copyTests.remove(pos);
-						if (test.equals("PORT")) { //$NON-NLS-1$
-							try {
-								int value = Integer.parseInt(testValue);
-								if (!((value > 0) && (value < 65535)) ) {
-									String msg = "Validation failed on " + name + ". Invalid port [" + testValue + "].  Must be between 0 and 65535."; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-									configErrors = configErrors + msg + "\r\n"; //$NON-NLS-1$
-									logger.info(msg);
-									validated = false;
-								}
-							} catch (NumberFormatException e) {
-								String msg = "Validation failed on " + name + ". Invalid port [" + testValue + "]. Must be between 0 and 65535."; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								configErrors = configErrors + msg + "\r\n"; //$NON-NLS-1$
-								logger.error(msg);
-								logger.error(e.toString());
-								validated = false;
-							}
-						} else {
-							if (test.equals("PIN")) { //$NON-NLS-1$
-								try {
-									int value = Integer.parseInt(testValue);
-									if (!(((value > -1) && (value < 23)) || ((value > 25) && (value < 29)))) {
-										String msg = "Validation failed on " + name + ". Invalid pin [" + testValue + "].  Must be 0-23,26,27,28.";  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-										configErrors = configErrors + msg + "\r\n"; //$NON-NLS-1$
-										logger.info(msg);
-										validated = false;
-									}
-								} catch (NumberFormatException e) {
-									String msg = "Validation failed on " + name + ". Invalid pin [" + testValue + "].  Must be 0-23,26,27,28."; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-									configErrors = configErrors + msg + "\r\n"; //$NON-NLS-1$
-									logger.error(msg);
-									logger.error(e.toString());
-									validated = false;
-								}
-							} else {
-								if (test.equals("TIME")) { //$NON-NLS-1$
-									try {
-										int value = Integer.parseInt(testValue);
-										if (!((value > 0) && (value < 60000)) ) {
-											String msg = "Validation failed on " + name + ". Invalid time [" + testValue + "].  Must be between 0 and 60000.";  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-											configErrors = configErrors + msg + "\r\n"; //$NON-NLS-1$
-											logger.info(msg);
-											validated = false;
-										}
-									} catch (NumberFormatException e) {
-										String msg = "Validation failed on " + name + ". Invalid time [" + testValue + "]. Must be between 0 and 60000."; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-										configErrors = configErrors + msg + "\r\n"; //$NON-NLS-1$
-										logger.error(msg);
-										logger.error(e.toString());
-										validated = false;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		if (!copyNames.isEmpty()) {
-			String msg = "Validation Failed. Missing parameters:\r\n";  //$NON-NLS-1$
-			for(String missing:copyNames) {
-				msg = msg + missing + "\r\n"; //$NON-NLS-1$
-			}
-			configErrors = configErrors + msg + "\r\n"; //$NON-NLS-1$
-			logger.info(msg);
-			validated = false;
-		}
-		if (validated) {
-			logger.info("Validation passed."); //$NON-NLS-1$
-		} else {
-			JOptionPane.showMessageDialog(null, Messages.getString("Main.InvalidConfiguration") + configErrors, Messages.getString("Main.ValidationResults"), 1); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		return validated;
-	}
-	private static void resetAutoScoreConfig() {
-		if(autoScoreConnected) {
-			autoScoreSocketWriter.println("reset:"); //$NON-NLS-1$
-			if (autoScoreSocketWriter.checkError()) {
-				logger.error("readAutoScoreConfig println error sending reset:"); //$NON-NLS-1$
-			}
-			disconnectAutoScore();
-		}
-	}
-	private static void clearAutoScoreConfig() {
-		autoScoreConfigPanel.clearConfigTextArea();
-	}
-	private static void writeAutoScoreConfig() {
-		if(validateAutoScoreConfig()) {
-			if(autoScoreConnected) {
-				String config = autoScoreConfigPanel.getConfigTextArea();
-				String dateStamp = dtf.format(LocalDateTime.now()) + "\r\n"; //$NON-NLS-1$
-				dateStamp = dateStamp.replace(":",""); //$NON-NLS-1$ //$NON-NLS-2$
-				dateStamp = dateStamp.replace("/",""); //$NON-NLS-1$ //$NON-NLS-2$
-				dateStamp = dateStamp.replace(" ", ""); //$NON-NLS-1$ //$NON-NLS-2$
-				dateStamp = "date = " + dateStamp; //$NON-NLS-1$
-				autoScoreSocketWriter.println("save:" + dateStamp + config + "End"); //$NON-NLS-1$ //$NON-NLS-2$
-				if (autoScoreSocketWriter.checkError()) {
-					logger.error("saveAutoScoreConfig println error sending save:" + dateStamp + config + "End"); //$NON-NLS-1$ //$NON-NLS-2$
-				} else {
-					logger.info("write autoscore config:" + dateStamp + config + "End"); //$NON-NLS-1$ //$NON-NLS-2$
-				}
-			}
-		}
-	}
 	private static String ripTeamNumber(String name) {
 		return name.replaceAll("[^0-9]", ""); //$NON-NLS-1$ //$NON-NLS-2$
 	}
@@ -1687,82 +1339,6 @@ public final class Main implements MatchObserver {
 			}
 		}
 	}
-	private static class AutoScoreSettingsApplyListener implements ActionListener {
-        @Override
-		public void actionPerformed(ActionEvent e) {
-			autoScoreSettingsPanel.saveSettings();
-		}
-	}
-	private static class AutoScoreSettingsSaveListener implements ActionListener {
-        @Override
-		public void actionPerformed(ActionEvent e) {
-			autoScoreSettingsPanel.saveSettings();
-			JComponent comp = (JComponent) e.getSource();
-			Window win = SwingUtilities.getWindowAncestor(comp);
-			win.dispose();
-		}
-	}
-	private static class AutoScoreSettingsConnectListener implements ActionListener {
-        @Override
-		public void actionPerformed(ActionEvent e) {
-			blockAutoScoreReconnect = false;
-			connectAutoScore();
-		}
-	}
-	private static class AutoScoreSettingsDisconnectListener implements ActionListener {
-        @Override
-		public void actionPerformed(ActionEvent e) {
-			logger.info("AutoScore Settings Window Disconnect Button Pressed."); //$NON-NLS-1$
-			blockAutoScoreReconnect = true;
-			disconnectAutoScore();
-		}
-	}
-    private static class AutoScoreSettingsSearchListener implements ActionListener {
-        private final AutoScoreSettingsPanel panel;
-
-        public AutoScoreSettingsSearchListener(AutoScoreSettingsPanel panel) {
-            this.panel = panel;
-        }
-        @Override
-		public void actionPerformed(ActionEvent e) {
-			logger.info("AutoScore Settings Window Search Button Pressed."); //$NON-NLS-1$
-			searchAutoScore(panel);
-		}
-    }
-	private static class AutoScoreConfigReadListener implements ActionListener {
-        @Override
-		public void actionPerformed(ActionEvent e) {
-			readAutoScoreConfig();
-		}
-	}
-	private static class AutoScoreConfigWriteListener implements ActionListener {
-        @Override
-		public void actionPerformed(ActionEvent e) {
-			writeAutoScoreConfig();
-		}
-	}
-	private static class AutoScoreConfigValidateListener implements ActionListener {
-        @Override
-		public void actionPerformed(ActionEvent e) {
-			if (validateAutoScoreConfig()) {
-				logger.info("Validation passed."); //$NON-NLS-1$
-				JOptionPane.showMessageDialog(null, Messages.getString("Main.ValidationPassed"), Messages.getString("Main.ValidationResults"), 1); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-		}
-	}
-	private static class AutoScoreConfigResetListener implements ActionListener {
-        @Override
-		public void actionPerformed(ActionEvent e) {
-			logger.info("AutoScore Configuration Reset Pico Button Pressed."); //$NON-NLS-1$
-			resetAutoScoreConfig();
-		}
-	}
-	private static class AutoScoreConfigClearListener implements ActionListener {
-        @Override
-		public void actionPerformed(ActionEvent e) {
-			clearAutoScoreConfig();
-		}
-	}
 	private static class OBSMainSceneListener implements ActionListener {
         @Override
 		public void actionPerformed(ActionEvent e) {
@@ -1971,30 +1547,6 @@ public final class Main implements MatchObserver {
 		teamPanel2.setTitle();
 		teamPanel3.setTitle();
 		teamController.displayAll();
-	}
-	private static class AutoScoreMainPanelConnectListener implements ActionListener {
-        @Override
-		public void actionPerformed(ActionEvent e) {
-			blockAutoScoreReconnect = false;
-			logger.info("AutoScore Main Panel Connect Button Pressed."); //$NON-NLS-1$
-			connectAutoScore();
-			setFocusOnCode();
-		}
-	}
-	private static class AutoScoreMainPanelDisconnectListener implements ActionListener {
-        @Override
-		public void actionPerformed(ActionEvent e) {
-			blockAutoScoreReconnect = true;
-			logger.info("AutoScore Main Panel Disconnect Button Pressed."); //$NON-NLS-1$
-			disconnectAutoScore();
-			setFocusOnCode();
-		}
-	}
-	private static class AutoScoreMainPanelSettingsListener implements ActionListener {
-        @Override
-		public void actionPerformed(ActionEvent e) {
-			mainController.showAutoScore();
-		}
 	}
 	private static class ScoreIncreaseListener implements ActionListener{
         @Override
@@ -2327,27 +1879,6 @@ public final class Main implements MatchObserver {
         @Override
 		public void windowClosed(WindowEvent we) {
 			showTimer(false);
-		}
-	}
-	private static class AutoScoreWorkerStateChangeListener implements PropertyChangeListener {
-        @Override
-		public void propertyChange(PropertyChangeEvent e) {
-			SwingWorker.StateValue state = null;
-			Object source = e.getSource();
-			if (source == autoScoreWorker) {
-				state = autoScoreWorker.getState();
-			}
-			if (state == null) {
-				logger.info("AutoScoreWorker state is null so probably no AutoScore instance to connect to."); //$NON-NLS-1$
-			} else {
-				logger.info("AutoScoreWorker state changed to: " + state.toString()); //$NON-NLS-1$
-				if (state == SwingWorker.StateValue.DONE) {
-					if (!blockAutoScoreReconnect) {
-						logger.info("Attempt reconnect to AutoScore..."); //$NON-NLS-1$
-						connectAutoScore();
-					}
-				}
-			}
 		}
 	}
 	private static class Team1ScoreFilterListener implements ActionListener{
