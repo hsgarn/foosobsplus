@@ -304,6 +304,8 @@ public final class Settings {
 		defaultPartnerProgramProps.setProperty("Player2FileName", "Player2.txt");
 		defaultPartnerProgramProps.setProperty("Player3FileName", "Player3.txt");
 		defaultPartnerProgramProps.setProperty("Player4FileName", "Player4.txt");
+		defaultPartnerProgramProps.setProperty("EventFileName", "Event.txt");
+		defaultPartnerProgramProps.setProperty("TournamentFileName", "Tournament.txt");
 		//HotKeys
 		defaultHotKeyProps.setProperty("Team1SwitchPositions", "t");
 		defaultHotKeyProps.setProperty("Team2SwitchPositions", "m");

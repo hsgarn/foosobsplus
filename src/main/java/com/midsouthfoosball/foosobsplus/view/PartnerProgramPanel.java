@@ -53,6 +53,8 @@ public class PartnerProgramPanel extends JPanel {
 	private JTextField txtPlayer2FileName;
 	private JTextField txtPlayer3FileName;
 	private JTextField txtPlayer4FileName;
+	private JTextField txtEventFilename;
+	private JTextField txtTournamentFilename;
 	private static final Logger logger = LoggerFactory.getLogger(PartnerProgramPanel.class);
 	// Create the Panel.
 	public PartnerProgramPanel() throws IOException {
@@ -63,18 +65,24 @@ public class PartnerProgramPanel extends JPanel {
 		txtPlayer2FileName.setText(Settings.getDefaultPartnerProgram("Player2FileName")); //$NON-NLS-1$
 		txtPlayer3FileName.setText(Settings.getDefaultPartnerProgram("Player3FileName")); //$NON-NLS-1$
 		txtPlayer4FileName.setText(Settings.getDefaultPartnerProgram("Player4FileName")); //$NON-NLS-1$
+		txtEventFilename.setText(Settings.getDefaultPartnerProgram("EventFilename")); //$NON-NLS-1$
+		txtTournamentFilename.setText(Settings.getDefaultPartnerProgram("TournamentFilename")); //$NON-NLS-1$
 	}
 	private void revertChanges() {
 		txtPlayer1FileName.setText(Settings.getPartnerProgramParameter("Player1FileName")); //$NON-NLS-1$
 		txtPlayer2FileName.setText(Settings.getPartnerProgramParameter("Player2FileName")); //$NON-NLS-1$
 		txtPlayer3FileName.setText(Settings.getPartnerProgramParameter("Player3FileName")); //$NON-NLS-1$
 		txtPlayer4FileName.setText(Settings.getPartnerProgramParameter("Player4FileName")); //$NON-NLS-1$
+		txtEventFilename.setText(Settings.getPartnerProgramParameter("EventFilename")); //$NON-NLS-1$
+		txtTournamentFilename.setText(Settings.getPartnerProgramParameter("TournamentFilename")); //$NON-NLS-
 	}
 	private void saveSettings() {
 		Settings.setPartnerProgram("Player1FileName",txtPlayer1FileName.getText()); //$NON-NLS-1$
 		Settings.setPartnerProgram("Player2FileName",txtPlayer2FileName.getText()); //$NON-NLS-1$
 		Settings.setPartnerProgram("Player3FileName",txtPlayer3FileName.getText()); //$NON-NLS-1$
 		Settings.setPartnerProgram("Player4FileName",txtPlayer4FileName.getText()); //$NON-NLS-1$
+		Settings.setPartnerProgram("EventFilename",txtEventFilename.getText()); //$NON-NLS-1$
+		Settings.setPartnerProgram("TournamentFilename",txtTournamentFilename.getText()); //$NON-NLS
 		try {
 			Settings.savePartnerProgramConfig();
 		} catch (IOException ex) {
@@ -158,6 +166,10 @@ public class PartnerProgramPanel extends JPanel {
 		add(lblPlayer3FileName, "cell 1 4,alignx right"); //$NON-NLS-1$
 		JLabel lblPlayer4FileName = new JLabel(Messages.getString("PartnerProgramPanel.Player4")); //$NON-NLS-1$
 		add(lblPlayer4FileName, "cell 1 5,alignx right"); //$NON-NLS-1$
+		JLabel lblEventFileName = new JLabel(Messages.getString("PartnerProgramPanel.Event")); //$NON-NLS-1$
+		add(lblEventFileName, "cell 1 6,alignx right"); //$NON-NLS-1$
+		JLabel lblTournamentFileName = new JLabel(Messages.getString("PartnerProgramPanel.Tournament")); //$NON-NLS-1$
+		add(lblTournamentFileName, "cell 1 7,alignx right"); //$NON-NLS-1$
 		txtPlayer1FileName = new JTextField();
 		txtPlayer1FileName.setText(Settings.getPartnerProgramParameter("Player1FileName")); //$NON-NLS-1$
 		txtPlayer1FileName.setColumns(10);
@@ -174,6 +186,14 @@ public class PartnerProgramPanel extends JPanel {
 		txtPlayer4FileName.setText(Settings.getPartnerProgramParameter("Player4FileName")); //$NON-NLS-1$
 		txtPlayer4FileName.setColumns(10);
 		add(txtPlayer4FileName, "cell 2 5,alignx left"); //$NON-NLS-1$
+		txtEventFilename = new JTextField();
+		txtEventFilename.setText(Settings.getPartnerProgramParameter("EventFilename")); //$NON-NLS-1$
+		txtEventFilename.setColumns(10);
+		add(txtEventFilename, "cell 2 6,alignx left"); //$NON-NLS-1$
+		txtTournamentFilename = new JTextField();
+		txtTournamentFilename.setText(Settings.getPartnerProgramParameter("TournamentFilename")); //$NON-NLS-1$
+		txtTournamentFilename.setColumns(10);
+		add(txtTournamentFilename, "cell 2 7,alignx left"); //$NON-NLS-1$
 		JButton btnApplyPartnerProgram = new JButton(Messages.getString("Global.Apply")); //$NON-NLS-1$
 		btnApplyPartnerProgram.addActionListener((ActionEvent e) -> {
                     saveSettings();

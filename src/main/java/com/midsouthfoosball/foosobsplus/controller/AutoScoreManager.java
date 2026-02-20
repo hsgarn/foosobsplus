@@ -222,12 +222,14 @@ public class AutoScoreManager {
 			PrintWriter writer = socketWriter;
 			if (connected && writer != null) {
 				String config = configPanel.getConfigTextArea();
-				String dateStamp = dtf.format(LocalDateTime.now()) + "\r\n"; //$NON-NLS-1$
+				String dateStamp = dtf.format(LocalDateTime.now());
 				dateStamp = dateStamp.replace(":", ""); //$NON-NLS-1$ //$NON-NLS-2$
 				dateStamp = dateStamp.replace("/", ""); //$NON-NLS-1$ //$NON-NLS-2$
 				dateStamp = dateStamp.replace(" ", ""); //$NON-NLS-1$ //$NON-NLS-2$
-				dateStamp = "date = " + dateStamp; //$NON-NLS-1$
-				writer.println("save:" + dateStamp + config + "End"); //$NON-NLS-1$ //$NON-NLS-2$
+				dateStamp = "date = " + dateStamp + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
+				// Normalize config line endings to \n only for Pico compatibility
+				String normalizedConfig = config.replace("\r\n", "\n").replace("\r", "\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				writer.println("save:" + dateStamp + normalizedConfig + "End"); //$NON-NLS-1$ //$NON-NLS-2$
 				if (writer.checkError()) {
 					logger.error("saveAutoScoreConfig println error sending save:" + dateStamp + config + "End"); //$NON-NLS-1$ //$NON-NLS-2$
 				} else {
@@ -516,12 +518,11 @@ public class AutoScoreManager {
 				int port = Settings.getAutoScoreParameter("AutoScoreSettingsServerPort", Integer::parseInt); //$NON-NLS-1$
 				try {
 					socket = new Socket(address, port);
-					socket.setSoLinger(true, 0);
 					SwingUtilities.invokeLater(() -> settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.ConnectedTo") + address + ": " + port)); //$NON-NLS-1$ //$NON-NLS-2$
 					logger.info("Auto Score connected to " + address + ": " + port); //$NON-NLS-1$ //$NON-NLS-2$
 					dataIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					try {
-						socketWriter = new PrintWriter(socket.getOutputStream());
+						socketWriter = new PrintWriter(socket.getOutputStream(), true);
 						if (socketWriter.checkError()) {
 							logger.error("createAutoScoreWork doInBackground new PrintWriter error:"); //$NON-NLS-1$
 						}

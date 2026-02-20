@@ -136,6 +136,14 @@ public class TournamentController {
 //			tournamentPanel.clearAllFields();
 		}
 	}
+	public void setTournamentName(String tournamentName) {
+		tournament.setTournamentName(tournamentName);
+		tournamentPanel.updateTournamentName(tournament.getTournamentName());
+	}
+	public void setEventName(String eventName) {
+		tournament.setEventName(eventName);
+		tournamentPanel.updateEventName(tournament.getEventName());
+	}
 	public void fetchAll() {
 		tournament.setTournamentName(obsInterface.getContents(Settings.getSourceParameter("Tournament")));
 		tournamentPanel.updateTournamentName(tournament.getTournamentName());
