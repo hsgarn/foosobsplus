@@ -9,3 +9,4 @@ config.properties
 /nbproject/
 /logs/
 dependency-reduced-pom.xml
+/.claude/

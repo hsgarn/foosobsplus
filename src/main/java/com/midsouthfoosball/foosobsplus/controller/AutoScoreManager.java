@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -60,7 +61,7 @@ import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsPanel;
 public class AutoScoreManager {
 
 	private static final Logger logger = LoggerFactory.getLogger(AutoScoreManager.class);
-	private static final String ON = "On"; //$NON-NLS-1$
+	private static final String ON = "1"; //$NON-NLS-1$
 	private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern(Messages.getString("Main.DateTimePattern")); //$NON-NLS-1$
 
 	/**
@@ -153,8 +154,23 @@ public class AutoScoreManager {
 	public void disconnect() {
 		settingsPanel.addMessage(Messages.getString("Main.Disconnecting")); //$NON-NLS-1$
 		logger.info("Trying to disconnect from AutoScore..."); //$NON-NLS-1$
+		// Notify Pico FIRST, before cancelling the worker or closing the socket
+		PrintWriter writer = socketWriter;
+		if (connected && writer != null) {
+			logger.info("Sent bye command to AutoScore..."); //$NON-NLS-1$
+			writer.println("bye:");
+		} else {
+			logger.info("Could not send bye: connected=" + connected + " writer=" + (writer == null ? "null" : "not null")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
 		if (worker != null) {
 			worker.cancel(true);
+		}
+		try {
+			if (socket != null && !socket.isClosed()) {
+				socket.close();
+			}
+		} catch (IOException e) {
+			logger.error("Error closing socket on disconnect: " + e); //$NON-NLS-1$
 		}
 		notifyConnectionStateChanged(false);
 		connected = false;
@@ -165,9 +181,9 @@ public class AutoScoreManager {
 	 */
 	public void search() {
 		try {
-			String picoIP = PicoDiscovery.listenForPico(5051, 300);
+			String picoIP = PicoDiscovery.listenForPico(5051, 300, msg -> settingsPanel.addMessage(msg));
 			if (picoIP != null) {
-				System.out.println("Discovered Pico at: " + picoIP); //$NON-NLS-1$
+				logger.info("Discovered Pico at: " + picoIP); //$NON-NLS-1$
 				settingsPanel.addMessage("Found: " + picoIP); //$NON-NLS-1$
 				// Response format: "Table N:ipaddress:port" (e.g., "Table 1:192.168.68.74:5051")
 				String[] parts = picoIP.split(":"); //$NON-NLS-1$
@@ -193,7 +209,7 @@ public class AutoScoreManager {
 					logger.warn("Invalid picoIP format: " + picoIP); //$NON-NLS-1$
 				}
 			} else {
-				System.out.println("No Pico found."); //$NON-NLS-1$
+				logger.info("No Pico found."); //$NON-NLS-1$
 				settingsPanel.addMessage("No Pico found."); //$NON-NLS-1$
 			}
 		} catch (Exception e) {
@@ -518,6 +534,7 @@ public class AutoScoreManager {
 				int port = Settings.getAutoScoreParameter("AutoScoreSettingsServerPort", Integer::parseInt); //$NON-NLS-1$
 				try {
 					socket = new Socket(address, port);
+					socket.setSoTimeout(1000);
 					SwingUtilities.invokeLater(() -> settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.ConnectedTo") + address + ": " + port)); //$NON-NLS-1$ //$NON-NLS-2$
 					logger.info("Auto Score connected to " + address + ": " + port); //$NON-NLS-1$ //$NON-NLS-2$
 					dataIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -545,24 +562,47 @@ public class AutoScoreManager {
 				String raw;
 				String str[];
 				String cmd[];
+				long lastPingTime = System.currentTimeMillis();
 				while (!isCancelled() && isConnected) {
 					raw = ""; //$NON-NLS-1$
 					try {
-						if (dataIn.ready()) {
-							raw = dataIn.readLine();
-							if (raw == null) {
-								break;
+						raw = dataIn.readLine();
+						if (raw == null) {
+							logger.info("Auto Score connection closed by remote host."); //$NON-NLS-1$
+							isConnected = false;
+							break;
+						}
+						lastPingTime = System.currentTimeMillis();
+					} catch (SocketTimeoutException ste) {
+						if (System.currentTimeMillis() - lastPingTime >= 10000) {
+							lastPingTime = System.currentTimeMillis();
+							PrintWriter pingWriter = socketWriter;
+							if (pingWriter != null) {
+								pingWriter.println("ping:");
+								if (pingWriter.checkError()) {
+									logger.info("Ping failed - connection appears dead.");
+									SwingUtilities.invokeLater(() -> settingsPanel.addMessage(
+										dtf.format(LocalDateTime.now()) + Messages.getString("Main.ConnectionAppearedDead")));
+									isConnected = false;
+								}
 							}
 						}
+						if (isConnected) continue;
 					} catch (IOException io) {
-						final String errorMsg = io.toString();
-						SwingUtilities.invokeLater(() -> settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + errorMsg)); //$NON-NLS-1$
-						logger.error(errorMsg);
+						if (!isCancelled()) {
+							final String errorMsg = io.toString();
+							SwingUtilities.invokeLater(() -> settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + errorMsg)); //$NON-NLS-1$
+							logger.error(errorMsg);
+						}
 						isConnected = false;
 					}
 					if (!raw.isEmpty()) {
-						logger.info("Received raw data: [" + raw + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 						cmd = raw.split(":"); //$NON-NLS-1$
+						if (cmd[0].equals("pong")) { //$NON-NLS-1$
+							// Ignore pings in the log
+							continue;
+						}
+						logger.info("Received raw data: [" + raw + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 						logger.info("Parse command: " + cmd[0]); //$NON-NLS-1$
 						if (Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals(ON)) { //$NON-NLS-1$
 							final String receivedMsg = raw;

@@ -21,24 +21,37 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.main;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.time.format.DateTimeFormatter;
+import java.util.function.Consumer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.midsouthfoosball.foosobsplus.controller.AutoScoreManager;
+import com.midsouthfoosball.foosobsplus.view.Messages;
 
 public class PicoDiscovery {
-    public static String listenForPico(int port, int timeoutMs) throws Exception {
+	private static final Logger logger = LoggerFactory.getLogger(AutoScoreManager.class);
+	private static final String ON = "1"; //$NON-NLS-1$
+	private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern(Messages.getString("Main.DateTimePattern")); //$NON-NLS-1$
+    public static String listenForPico(int port, int timeoutMs, Consumer<String> statusCallback) throws Exception {
         DatagramSocket socket = new DatagramSocket();
         socket.setBroadcast(true);
         socket.setSoTimeout(timeoutMs);
-        
+
         try {
             byte[] sendData = "DISCOVER_PICO".getBytes(StandardCharsets.UTF_8);
             DatagramPacket sendPacket = new DatagramPacket(
-                sendData, 
+                sendData,
                 sendData.length,
-                InetAddress.getByName("255.255.255.255"), 
+                InetAddress.getByName("255.255.255.255"),
                 port
             );
-            
+
             for (int i = 0; i < 5; i++) {
-                System.out.println("Broadcasting discovery request (attempt " + (i+1) + ")...");
+                String attemptMsg = "Broadcasting discovery request (attempt " + (i+1) + ")..."; //$NON-NLS-1$ //$NON-NLS-2$
+                logger.info(attemptMsg);
+                if (statusCallback != null) statusCallback.accept(attemptMsg);
                 socket.send(sendPacket);
 
                 try {
@@ -47,19 +60,22 @@ public class PicoDiscovery {
                     socket.receive(receivePacket);
 
                     String msg = new String(receivePacket.getData(), 0, receivePacket.getLength(), StandardCharsets.UTF_8);
-                    System.out.println("Received: " + msg);
+                    logger.info("Received: " + msg); //$NON-NLS-1$
+                    if (statusCallback != null) statusCallback.accept("Received: " + msg); //$NON-NLS-1$
 
-                    if (msg.startsWith("Table")) {
+                    if (msg.startsWith("Table")) { //$NON-NLS-1$
                         return msg;
                     }
                 } catch (SocketTimeoutException e) {
-                    System.out.println("No response, retrying...");
+                    String retryMsg = "No response, retrying (attempt " + (i+1) + ")..."; //$NON-NLS-1$ //$NON-NLS-2$
+                    logger.info(retryMsg);
+                    if (statusCallback != null) statusCallback.accept(retryMsg);
                 }
             }
         } finally {
             socket.close();
         }
-        
+
         return null;
     }
 }

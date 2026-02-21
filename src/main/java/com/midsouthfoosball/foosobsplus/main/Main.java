@@ -2118,8 +2118,8 @@ public final class Main implements MatchObserver {
 				String partnerProgramPlayer2FileName = Settings.getPartnerProgramParameter("Player2FileName"); //$NON-NLS-1$
 				String partnerProgramPlayer3FileName = Settings.getPartnerProgramParameter("Player3FileName"); //$NON-NLS-1$
 				String partnerProgramPlayer4FileName = Settings.getPartnerProgramParameter("Player4FileName"); //$NON-NLS-1$
-				String partnerProgramEventFilename = Settings.getPartnerProgramParameter("EventFileName"); //$NON-NLS-1$
-				String partnerProgramTournamentFilename = Settings.getPartnerProgramParameter("TournamentFileName"); //$NON-NLS-1$
+				String partnerProgramEventFileName = Settings.getPartnerProgramParameter("EventFileName"); //$NON-NLS-1$
+				String partnerProgramTournamentFileName = Settings.getPartnerProgramParameter("TournamentFileName"); //$NON-NLS-1$
 				Path partnerPath = Paths.get(partnerProgramDir);
 
                 // Check if directory exists
@@ -2190,7 +2190,7 @@ public final class Main implements MatchObserver {
 								final WatchEvent<Path> watchEventPath = (WatchEvent<Path>) watchEvent;
 		        				final Path filePath = watchEventPath.context();
 			        			String fileName = filePath.toString();
-			        			if (fileName.equals(partnerProgramPlayer1FileName) || fileName.equals(partnerProgramPlayer2FileName) || fileName.equals(partnerProgramPlayer3FileName) || fileName.equals(partnerProgramPlayer4FileName) || fileName.equals(partnerProgramEventFilename) || fileName.equals(partnerProgramTournamentFilename)) {
+			        			if (fileName.equals(partnerProgramPlayer1FileName) || fileName.equals(partnerProgramPlayer2FileName) || fileName.equals(partnerProgramPlayer3FileName) || fileName.equals(partnerProgramPlayer4FileName) || fileName.equals(partnerProgramEventFileName) || fileName.equals(partnerProgramTournamentFileName)) {
 				        			try {
 				        				File file = new File(partnerProgramDir + "\\" + fileName); //$NON-NLS-1$
                                         try (Scanner fileReader = new Scanner(file)) {
@@ -2241,8 +2241,8 @@ public final class Main implements MatchObserver {
 					String partnerProgramPlayer2FileName = Settings.getPartnerProgramParameter("Player2FileName"); //$NON-NLS-1$
 					String partnerProgramPlayer3FileName = Settings.getPartnerProgramParameter("Player3FileName"); //$NON-NLS-1$
 					String partnerProgramPlayer4FileName = Settings.getPartnerProgramParameter("Player4FileName"); //$NON-NLS-1$
-					String partnerProgramEventFilename = Settings.getPartnerProgramParameter("EventFileName"); //$NON-NLS-1$
-					String partnerProgramTournamentFilename = Settings.getPartnerProgramParameter("TournamentFileName"); //$NON-NLS-1$
+					String partnerProgramEventFileName = Settings.getPartnerProgramParameter("EventFileName"); //$NON-NLS-1$
+					String partnerProgramTournamentFileName = Settings.getPartnerProgramParameter("TournamentFileName"); //$NON-NLS-1$
 					String newName;
 					String[] pieces = value.split("="); //$NON-NLS-1$
 					if (pieces.length == 1) {
@@ -2263,10 +2263,10 @@ public final class Main implements MatchObserver {
 								if (pieces[0].equals(partnerProgramPlayer4FileName)) {
 									teamController.setTeam2GoalieName(newName);
 								} else {
-									if (pieces[0].equals(partnerProgramEventFilename)) {
+									if (pieces[0].equals(partnerProgramEventFileName)) {
 										tournamentController.setEventName(newName);
 									} else {
-										if (pieces[0].equals(partnerProgramTournamentFilename)) {
+										if (pieces[0].equals(partnerProgramTournamentFileName)) {
 											tournamentController.setTournamentName(newName);
 										}
 									}

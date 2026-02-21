@@ -3,7 +3,11 @@
     "allow": [
       "Bash(mvn compile:*)",
       "Bash(mvn clean compile:*)",
-      "Bash(mvn clean package:*)"
+      "Bash(mvn clean package:*)",
+      "Bash(git -C /c/Users/regis/git/hsgarn/foosobsplus-vscode log --all --oneline)",
+      "Bash(git -C /c/Users/regis/git/hsgarn/foosobsplus-vscode show 93524e0 --stat)",
+      "Bash(git -C /c/Users/regis/git/hsgarn/foosobsplus-vscode show 93524e0 -- src/main/java/com/midsouthfoosball/foosobsplus/controller/AutoScoreManager.java)",
+      "Bash(git -C /c/Users/regis/git/hsgarn/foosobsplus-vscode show 93524e0 -- src/main/java/com/midsouthfoosball/foosobsplus/main/Main.java)"
     ]
   }
 }

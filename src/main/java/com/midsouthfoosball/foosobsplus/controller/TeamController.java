@@ -517,7 +517,7 @@ public class TeamController {
 	public void setTeam3GoalieName(String name) {
 		team3.setGoalieName(name);
 		teamPanel3.updateGoalieName(name);
-	}
+	}	
 	public void updateLastScoredTimes() {
 		teamPanel1.updateLastScoredTime(lastScored1Clock.getLastScoredTime());
 		teamPanel2.updateLastScoredTime(lastScored2Clock.getLastScoredTime());
