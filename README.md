@@ -1252,11 +1252,15 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
-v2.076 02/20/2026<br>
+v2.077 03/06/2026<br>
+Upgrade to Java 21.</br>
+Upgrade Gson 2.8.9 -> 2.10.1 to fix OBS websocket client issues upgrading to Java 21 caused.</br>
+</br>
+v2.076 02/20/2026</br>
 Improve Pico logging and connection detection.</br>
 Add Pico heartbeat ping/pong.</br>
-<br>
-v2.075 02/20/2026<br>
+</br>
+v2.075 02/20/2026</br>
 Fix bug in partner program event/tournament default setting logic.</br>
 </br>
 v2.074 02/20/2026</br>
