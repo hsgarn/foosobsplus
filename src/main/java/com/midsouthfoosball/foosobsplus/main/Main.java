@@ -415,6 +415,12 @@ public final class Main implements MatchObserver {
 			logger.info("REST API server stopped during shutdown");
 		}
 	}
+	public static void shutdownOBS() {
+		if (obsManager != null && obsManager.isConnected()) {
+			obsManager.disconnect();
+			logger.info("OBS disconnected during shutdown");
+		}
+	}
 
 	public static void restartAPIServer() {
 		try {
