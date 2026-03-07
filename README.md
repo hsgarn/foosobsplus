@@ -4,6 +4,16 @@ FoosOBSPlus is a tool to enhance your foosball streaming experience.  It is a fl
 ## Overview
 FoosOBSPlus sends your Foosball game data (Players, scores, game counts, time outs, etc.) to OBS Studio using OBS Studio's web sockets protocol.  Almost every field displayed in FoosOBSPlus can be sent to OBS Studio and displayed to your live stream. FoosOBSPlus can also connect to an auto scoring system using a Raspberry Pico W and some lasers (see <https://github.com/hsgarn/FoosScore for more information>).  Also a Stream Deck can be used in combination with Auto Hot Keys to control most functions in FoosOBSPlus.
 
+## Quick Start
+Here is the basic workflow to get up and running for a match:
+
+1. **Set up OBS Studio sources** — In OBS, create Text (GDI+) sources for the fields you want to display (player names, scores, game counts, etc.).  The default source names used by FoosOBSPlus are listed in the Sources Settings section below.  You can use the defaults or choose your own names and configure them in Sources Settings.
+2. **Configure FoosOBSPlus** — On first run, FoosOBSPlus creates default properties files in its working directory.  Review the settings under Edit → Settings (Parameters, Sources, Hot Keys, etc.) and adjust them to match your setup.
+3. **Connect to OBS** — Go to OBS → Connect, enter your OBS host, port, and password (found in OBS under Tools → WebSocket Server Settings → Show Connect Info), then click Connect.  Tick "Auto Login on Start" to connect automatically on future launches.
+4. **Enter player names** — Fill in the Team Name, Forward, and Goalie fields for Team 1 and Team 2 in the main screen.  The names are sent to OBS automatically as you type.
+5. **Start the match** — Click Start Match to reset all counters and start the match timer.  Use the Score +/- buttons (or assigned hot keys) to keep score during play.  FoosOBSPlus will automatically track game wins and announce a match winner when configured to do so.
+6. **Between matches** — Click Start Match again to reset everything for the next match, or use the individual Reset buttons in the Reset Panel for more granular control.
+
 FoosOBSPlus Main Screen:
 <img align="left" width="850" height="630" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusScreen1.png">
 
@@ -280,6 +290,8 @@ Click the Restore Defaults button to restore the default statistics sources.
 ### Hot Keys
 FoosOBSPlus uses buttons to do various functions such as increase or decrease scores, switch sides, reset game counts, start timers, etc.  Each button can have a Hot Key assigned to it.  Pressing ALT plus the assigned Hot Key for the button will function just like pressing the actual button.  Unfortunately, there are more buttons than available hot keys so you can not assign a hot key to every button. The hot keys can be used in Stream Deck commands to make operating FoosOBSPlus a simple push button affair.  TouchPortal is another program that can be used to activate the buttons in FoosOBSPlus.  These will require that AutoHotKey be installed. (See <https://www.autohotkey.com/docs/Tutorial.htm>).  FoosOBSPlus will generate the AutoHotKey scripts for any hot keys defined (see the Generate AutoHotKey Scripts button below).
 
+> **Note:** AutoHotKey script generation is a **Windows-only** feature.  The Hot Key assignments themselves work on any platform, but the generated `.ahk` script files and the Generate AutoHotKey Scripts button are only useful on Windows where AutoHotKey can be installed.
+
 <img  width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings4.png">
 
 Hot Key Settings Page:</br>
@@ -498,7 +510,7 @@ Click the cancel button to discard any filter changes made.
 Click the Restore Defaults button to restore the default filters.
 
 ### Partner Program
-FoosOBSPlus can read player names from files.  For example, we have an Access program called Partner Program and when a match is called in this program, it writes the players' names to 4 files. The directory and filenames can be set in the Partner Program Settings window.
+FoosOBSPlus can read player names, the event name, and the tournament name from files.  For example, we have a web based tournament management software called PartnerUpFoos (formerly an Access 2003 program called Partner Program) and when a match is called in this program, it writes the players' names to text files.  FoosOBSPlus **watches those files for changes automatically** — as soon as the external program writes a new name to a file, FoosOBSPlus picks it up and updates the corresponding field on the main screen (and sends it to OBS) without any button press required.  The directory and filenames can be set in the Partner Program Settings window.
 
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings7.png">
 
@@ -1181,6 +1193,8 @@ y - yellow team</br>
 b - black team</br>
 x - command trigger (see below for list of commands)</br>
 
+> **Note:** The letters `y` (yellow) and `b` (black) are fixed code labels that map to **Team 1** and **Team 2** respectively, regardless of the actual team colors configured in Parameters Settings.  If your Team 1 plays with black figures and Team 2 plays with yellow, still use `y` for Team 1 and `b` for Team 2 in your codes.</br>
+
 2nd position - rod: where is the ball:</br>
 2 - 2 bar or 3 bar goalie rod.  These rods are treated as one rod.</br>
 3 - 3 bar forward rod.</br>
@@ -1307,6 +1321,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.079 03/06/2026</br>
+Add Quick Start section and a few other tweaks to the README.md file.</br>
+</br>
 v2.078 03/06/2026</br>
 Fix JVM shutdown hang when closing app while connected to OBS.</br>
 Only require API key when API is enabled.</br>
