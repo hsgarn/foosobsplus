@@ -11,7 +11,41 @@ OBS Studio scene utilizing FoosOBSPlus to display various data:
 <img align="left" width="1920" height="1090" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusScreen2.png">
 
 ## Setup
-FoosOBSPlus is a java program.  You can download the executable jar file from the Releases section. You will need to have at least Java 1.8 loaded and windows set up to associate jar files with java. There are many resources on the web for how to load java and set windows up to run the jar file.  (see <https://www.howtogeek.com/812583/how-to-open-jar-files-windows/> for example.  The executable jar file will run in the directory you placed it. )
+FoosOBSPlus is a java program.  You can download the executable jar file from the Releases section. You will need to have Java 21 or higher loaded.
+
+### Running FoosOBSPlus
+There are two common ways to launch the program:
+
+**From the command line (recommended):**
+Open a command prompt, navigate to the folder containing the jar file, and run:
+```
+cd C:\path\to\foosobsplus
+java -jar foosobsplus.jar
+```
+
+**By double-clicking the jar file:**
+If your system is configured to associate `.jar` files with Java, you can double-click the jar to launch it directly.  There are many resources on the web for how to set Windows up to run jar files (see <https://www.howtogeek.com/812583/how-to-open-jar-files-windows/> for example).
+
+### File Locations
+FoosOBSPlus stores its settings and logs in the **working directory** — the folder the program is launched from.  In practice this means:
+
+- **When using `java -jar`:** Files are created in whichever directory your command prompt is in when you run the command. For the simplest setup, `cd` to the jar's folder first (as shown above) so that all files end up in the same place as the jar.
+- **When double-clicking the jar:** Files are created in the folder containing the jar file.
+
+The following files and folders will be created automatically on first run:
+
+| Item | Description |
+|------|-------------|
+| `control.properties` | General parameters (points to win, timeouts, etc.) |
+| `source.properties` | OBS source names |
+| `statssource.properties` | OBS statistics source names |
+| `filter.properties` | OBS filter names |
+| `hotkey.properties` | Hot key assignments |
+| `obs.properties` | OBS connection settings |
+| `partnerprogram.properties` | Partner Program file watcher settings |
+| `autoscoresettings.properties` | AutoScore connection settings |
+| `api.properties` | REST API settings |
+| `logs\` | Folder containing `foosobsplus.log` and compressed daily log archives. Log files older than 7 days are automatically deleted. |
 
 ## Toolbar Items
 ## File
@@ -140,7 +174,7 @@ This is the source that will be made visible when team X wins their third game. 
 This is the source that is controlled by the Show Score check box in the OBS Panel on the main screen.  This is intended to be a named group of sources within within OBS or a scene with OBS that contains all the scoring fields and their associated labels.  This group or scene can then be included in your main streaming scene.  When you want to keep score, check the Show Score check box on the main screen.  When no one is keeping the score, uncheck the Show Scores button which will turn the scene/group in the Show Scores: source box off.
 The following sources would typically be contained in this scene or group:
 Last Scored, Time Out (Teams 1 & 2), Match Count 1 (Teams 1 & 2), Game Count (Teams 1 & 2), Score (Teams 1 & 2), King Seat (Teams 1 & 2).
-Not team 3 sources are controlled by Show Cutthroat discussed later.
+Note: Team 3 sources are controlled by Show Cutthroat discussed later.
 Also include any labels that would look out of place without the above fields.
 #### Show Timer:
 This is the source that shows the time remaining.  This should be a Window Capture source in OBS. The window should be setup as follows:</br>
@@ -258,7 +292,7 @@ Assigns the hot key to Switch Team 1's forward and goalie names. Default hot key
 #### Team 2 Switch Positions
 Assigns the hot key to Switch Team 2's forward and goalie names. Default hot key is m.
 #### Team 3 Switch Positions
-Assigns the hot key to Switch Team 3's forward and goalie names. Default hot key is m.
+Assigns the hot key to Switch Team 3's forward and goalie names. Default hot key is unassigned.
 #### Team 1 Increment Score
 Assigns the hot key for the + (increment score) button for Team 1. Default hot key is 1.
 #### Team 2 Increment Score
@@ -286,7 +320,7 @@ Assigns the hot key for the - (decrement game count) button for Team 3's score. 
 #### Team 1 Increment Match
 Assigns the hot key for the + (increment match) button for Team 1. Default hot key is unassigned.
 #### Team 2 Increment Match
-Assigns the hot key for the + (increment match) button for Team 2. Default hot key is unassigned2.
+Assigns the hot key for the + (increment match) button for Team 2. Default hot key is unassigned.
 #### Team 3 Increment Match
 Assigns the hot key for the + (increment match) button for Team 3. Default hot key is unassigned.
 #### Team 1 Decrement Match
@@ -388,7 +422,7 @@ Assigns the hot key to clear the Reset and Warn flags for both Team 1 and Team 2
 #### Reset All
 Assigns the hot key to clear the game counts, scores, time outs, reset flags and warn flags for both Team 1 and Team 2.  Default hot key is a.
 #### Reset Match Counts
-Assigns the hot key to reset Team 1's, Team 2's and Team 3's match counts to 0.  Default hot key is 7.
+Assigns the hot key to reset Team 1's, Team 2's and Team 3's match counts to 0.  Default hot key is unassigned.
 #### AutoHotKey Script Path
 This is the path to where the AutoHotKey scripts will be generated.  The default is C:\FoosOBSPlusScripts\.
 #### Generate AutoHotKey Scripts
@@ -481,6 +515,10 @@ This is the name of the file containing the name of Team 1's goalie.  Default is
 This is the name of the file containing the name of Team 2's forward.  Default is Player3.txt.
 #### Player 4
 This is the name of the file containing the name of Team 2's goalie.  Default is Player4.txt.
+#### Event
+This is the name of the file containing the event name.  When the Partner Program writes an event name to this file, FoosOBSPlus will automatically pick it up and populate the Event Name field in the Tournament Information panel.  Default is Event.txt.
+#### Tournament
+This is the name of the file containing the tournament name.  When the Partner Program writes a tournament name to this file, FoosOBSPlus will automatically pick it up and populate the Tournament Name field in the Tournament Information panel.  Default is Tournament.txt.
 #### Apply
 Click the Apply button to save any changes made.
 #### Apply and Close
@@ -523,7 +561,7 @@ This button will make the current entry in the Scene drop down box display in OB
 #### Set Main Scene
 Press the Set Main Scene button to get OBS Studio to show the scene in the Scene box.
 #### Save Password
-Check this box if you want FoosOBSPlus to save the password when it exits.  Otherwise, you will have to enter each time you run FoosOBSPlus and wnat to connect to OBS Studio.
+Check this box if you want FoosOBSPlus to save the password when it exits.  Otherwise, you will have to enter each time you run FoosOBSPlus and want to connect to OBS Studio.
 #### Auto Login on Start
 If this box is checked, then when FoosOBSPlus first starts, it will try to connect to OBS Studio using the details saved in the OBS Connect window.
 #### Close on Connect
@@ -645,7 +683,7 @@ When checked, more detailed data is shown in some cases. This is mainly for debu
 Shows details about the current version of the program.
 
 ## FoosOBSPlus Main Screen
-The FoosOBSPlus Main Screen is divided into 11 panels.  Each panel has its own controls and purpose.  Below is a description of each panel.
+The FoosOBSPlus Main Screen is divided into 13 panels.  Each panel has its own controls and purpose.  Below is a description of each panel.
 
 ### Tournament Information
 This panel contains information pertaining to the particular tournament being played.  Tournament name, event name and table name can be displayed.
@@ -778,6 +816,8 @@ This button will disconnect OBS.
 This button will read the data in OBS and show it in FoosOBSPlus.
 #### Enable Skunk
 This checkbox will enable activating the Skunk filters identified in Team 1 Skunks and Team 2 Skunks in Filters Settings.  The Skunk filters will only be activated when the Enable Skunk checkbox is checked.
+#### Show Cutthroat
+This checkbox will send a command to OBS to show or hide the source identified in the Show Cutthroat field in Sources Settings depending on if the box is checked (show) or not (hide).  Use this when playing CutThroat mode to show Team 3's scoring information in OBS.
 #### Start Stream Timer/Stop Stream Timer
 This button will start a stream timer and create a file called streamindex.txt.  Markers can be dropped in this file to show the time stamps when certain events happen.  This can be useful for indexing the stream videos.
 Once the Start Stream Timer button is pressed, it will toggle to Stop Stream Timer button.  This will then stop the stream timer. The next press will reset the time and start it again.
@@ -887,6 +927,21 @@ This is the number of breaks.
 This is the number of stuffs.
 #### Aces
 This is the number of aces.
+### Ball Panel
+The Ball Panel provides a visual way to track which balls are in play, primarily useful for rack-based (coin-op) games.  Each ball can be toggled on or off to reflect its current state.
+
+#### Cue Ball
+Toggle button for the cue ball.  When pressed, the cue ball is marked as in play (visible in OBS).  Press again to mark it as out of play.
+#### Balls 1–15
+Toggle buttons for balls 1 through 15.  Each button can be pressed to mark that ball as in play or out of play.
+#### Sync OBS
+This button pushes the current ball visibility state to OBS, updating all ball sources to match the current toggle button states in the Ball Panel.
+#### Reset 9 Ball
+This button resets the Ball Panel to a standard 9-ball rack configuration, marking balls 1 through 9 as in play and all others as out of play.
+#### Show All
+This button marks all balls as in play and sends the updated state to OBS.
+#### Hide All
+This button marks all balls as out of play and sends the updated state to OBS.
 ## REST API
 FoosOBSPlus includes a REST API that allows external applications (such as mobile apps) to update player names remotely over the network. The API uses JSON for data exchange and includes security features to prevent unauthorized access.
 ### REST API Settings
@@ -1252,6 +1307,13 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.078 03/06/2026</br>
+Fix JVM shutdown hang when closing app while connected to OBS.</br>
+Only require API key when API is enabled.</br>
+Replace trim().isEmpty() with isBlank() (Java 11+ modernization).</br>
+Apply pattern matching for instanceof (Java 16+ modernization).</br>
+Correct README.md discrepancies vs code.</br>
+</br>
 v2.077 03/06/2026<br>
 Upgrade to Java 21.</br>
 Upgrade Gson 2.8.9 -> 2.10.1 to fix OBS websocket client issues upgrading to Java 21 caused.</br>

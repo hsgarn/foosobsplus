@@ -270,8 +270,8 @@ public class HotKeysPanel extends JPanel {
 		HashSet<String> checkUnique = new HashSet<>();
 		Component[] componentArray = this.getComponents();
 		for(int i=0; i<componentArray.length; i++) {
-			if(componentArray[i] instanceof JTextField) {
-				String text = ((JTextField)componentArray[i]).getText();
+			if(componentArray[i] instanceof JTextField tf) {
+				String text = tf.getText();
 				if (!text.equals("")) { //$NON-NLS-1$
 					if(!checkUnique.add(text)) {
 						allClear = false;
@@ -840,8 +840,8 @@ public class HotKeysPanel extends JPanel {
 		String keys;
 		Component[] componentArray = this.getComponents();
                 for (Component componentArray1 : componentArray) {
-                    if (componentArray1 instanceof JTextField) {
-                        String text = ((JTextField) componentArray1).getText();
+                    if (componentArray1 instanceof JTextField tf) {
+                        String text = tf.getText();
                         if (!text.isEmpty() && text.length()==1) {
                             char hk = text.charAt(0);
                             if (remainingKeys.contains(hk)) {

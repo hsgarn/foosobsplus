@@ -45,7 +45,7 @@ public class TimerControlRequest {
 	 * @throws ValidationException if validation fails
 	 */
 	public void validate() throws ValidationException {
-		if (timerType == null || timerType.trim().isEmpty()) {
+		if (timerType == null || timerType.isBlank()) {
 			throw new ValidationException("Timer type is required");
 		}
 

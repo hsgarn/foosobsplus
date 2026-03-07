@@ -92,7 +92,7 @@ public class GameResultsWindowFrame extends JFrame {
         });
     }
     public void addLine(String line) {
-        if (line != null && !line.trim().isEmpty()) {
+        if (line != null && !line.isBlank()) {
             JPanel panel = new JPanel(new BorderLayout());
             JCheckBox checkBox = new JCheckBox();
             checkBox.setSelected(true);

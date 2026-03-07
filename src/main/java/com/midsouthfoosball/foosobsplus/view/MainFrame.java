@@ -171,8 +171,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	        System.out.println("Current window size: " + windowSize.width + " x " + windowSize.height); //$NON-NLS-1$ //$NON-NLS-2$
 	        Component[] components = getContentPane().getComponents();
 	        for (Component component : components) {
-	            if (component instanceof JPanel) {
-	                JPanel panel = (JPanel) component;
+	            if (component instanceof JPanel panel) {
 	                Dimension panelSize = panel.getSize();
 	                System.out.println("Panel " + panel.getName() + ":  Panel size: " + panelSize.width + " x " + panelSize.height); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	            }

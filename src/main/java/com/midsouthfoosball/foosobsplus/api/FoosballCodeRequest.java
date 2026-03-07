@@ -47,7 +47,7 @@ public class FoosballCodeRequest {
 	 * @throws ValidationException if validation fails
 	 */
 	public void validate() throws ValidationException {
-		if (code == null || code.trim().isEmpty()) {
+		if (code == null || code.isBlank()) {
 			throw new ValidationException("Code is required");
 		}
 

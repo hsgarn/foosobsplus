@@ -847,8 +847,7 @@ public class StatsDisplayPanel extends JPanel {
 		Component[] components = getComponents();
 		StringBuilder lines = new StringBuilder();
 		for (Component component:components) {
-			if (component instanceof JLabel) {
-				JLabel label = (JLabel) component;
+			if (component instanceof JLabel label) {
 				String name = label.getName();
 				String value = label.getText();
 				if (name != null && !value.isEmpty()) lines.append(name).append(": ").append(value).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$

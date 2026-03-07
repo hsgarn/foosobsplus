@@ -82,7 +82,7 @@ public class TeamService {
 		int currentTable = 1; // Default to table 1
 
 		// Parse table number from tableName if present
-		if (tableName != null && !tableName.trim().isEmpty()) {
+		if (tableName != null && !tableName.isBlank()) {
 			try {
 				// Try to extract number from table name (handles "Table 1", "1", "T1", etc.)
 				String numericPart = tableName.replaceAll("[^0-9]", "");

@@ -144,7 +144,7 @@ public class APISettingsPanel extends JPanel {
 			}
 
 			// Validate API key is not empty
-			if (txtAPIKey.getText().trim().isEmpty()) {
+			if (chckbxAPIEnabled.isSelected() && txtAPIKey.getText().isBlank()) {
 				JOptionPane.showMessageDialog(null,
 					"API Key cannot be empty.",
 					"Invalid API Key", JOptionPane.ERROR_MESSAGE);
@@ -197,7 +197,7 @@ public class APISettingsPanel extends JPanel {
 				return;
 			}
 
-			if (txtAPIKey.getText().trim().isEmpty()) {
+			if (chckbxAPIEnabled.isSelected() && txtAPIKey.getText().isBlank()) {
 				JOptionPane.showMessageDialog(null,
 					"API Key cannot be empty.",
 					"Invalid API Key", JOptionPane.ERROR_MESSAGE);
