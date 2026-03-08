@@ -1327,6 +1327,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.081 03/07/2026</br>
+Fix filter dropdowns and test buttons.</br>
+</br>
 v2.080 03/07/2026</br>
 Standardize and improve settings behavior.</br>
 </br>
