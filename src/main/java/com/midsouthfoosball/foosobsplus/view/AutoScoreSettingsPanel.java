@@ -259,7 +259,7 @@ public class AutoScoreSettingsPanel extends JPanel {
 		public boolean verify(JComponent input) {
 			String text = ((JTextField) input).getText();
 			try {
-				if (InetAddresses.isInetAddress(text)) {
+				if (text != null && InetAddresses.isInetAddress(text)) {
 					return true;
 				} else {
 					logger.warn("Invalid input: [" + text + "]. Must be valid IP Address: ###.###.###.###"); //$NON-NLS-1$ //$NON-NLS-2$

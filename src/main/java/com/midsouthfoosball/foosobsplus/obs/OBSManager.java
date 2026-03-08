@@ -47,8 +47,6 @@ import io.obswebsocket.community.client.message.response.general.GetVersionRespo
 import io.obswebsocket.community.client.message.response.sources.GetSourceActiveResponse;
 import io.obswebsocket.community.client.message.response.sceneitems.GetSceneItemIdResponse;
 import io.obswebsocket.community.client.message.response.ui.GetMonitorListResponse;
-import io.obswebsocket.community.client.message.response.filters.GetSourceFilterListResponse;
-import io.obswebsocket.community.client.message.response.inputs.GetInputListResponse;
 import io.obswebsocket.community.client.model.Filter;
 import io.obswebsocket.community.client.model.Input;
 import io.obswebsocket.community.client.model.Monitor;
