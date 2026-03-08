@@ -1938,121 +1938,121 @@ public final class Main implements MatchObserver {
 	private static class Team1ScoreFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team1Score"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("Team1Score"), true); //$NON-NLS-1$
 		}
 	}
 	private static class Team2ScoreFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team2Score"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("Team2Score"), true); //$NON-NLS-1$
 		}
 	}
 	private static class Team1WinGameFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team1WinGame"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("Team1WinGame"), true); //$NON-NLS-1$
 		}
 	}
 	private static class Team2WinGameFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team2WinGame"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("Team2WinGame"), true); //$NON-NLS-1$
 		}
 	}
 	private static class Team1WinMatchFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team1WinMatch"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("Team1WinMatch"), true); //$NON-NLS-1$
 		}
 	}
 	private static class Team2WinMatchFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team2WinMatch"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("Team2WinMatch"), true); //$NON-NLS-1$
 		}
 	}
 	private static class Team1TimeOutFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team1TimeOut"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("Team1TimeOut"), true); //$NON-NLS-1$
 		}
 	}
 	private static class Team2TimeOutFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team2TimeOut"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("Team2TimeOut"), true); //$NON-NLS-1$
 		}
 	}
 	private static class Team1ResetFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team1Reset"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("Team1Reset"), true); //$NON-NLS-1$
 		}
 	}
 	private static class Team2ResetFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team2Reset"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("Team2Reset"), true); //$NON-NLS-1$
 		}
 	}
 	private static class Team1WarnFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team1Warn"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("Team1Warn"), true); //$NON-NLS-1$
 		}
 	}
 	private static class Team2WarnFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team2Warn"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("Team2Warn"), true); //$NON-NLS-1$
 		}
 	}
 	private static class Team1SwitchPositionsFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team1SwitchPositions"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("Team1SwitchPositions"), true); //$NON-NLS-1$
 		}
 	}
 	private static class Team2SwitchPositionsFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team2SwitchPositions"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("Team2SwitchPositions"), true); //$NON-NLS-1$
 		}
 	}
 	private static class Team1SkunkFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team1Skunk"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("Team1Skunk"), true); //$NON-NLS-1$
 		}
 	}
 	private static class Team2SkunkFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Team2Skunk"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("Team2Skunk"), true); //$NON-NLS-1$
 		}
 	}
 	private static class StartMatchFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("StartMatch"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("StartMatch"), true); //$NON-NLS-1$
 		}
 	}
 	private static class StartGameFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("StartGame"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("StartGame"), true); //$NON-NLS-1$
 		}
 	}
 	private static class SwitchSidesFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("SwitchSides"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("SwitchSides"), true); //$NON-NLS-1$
 		}
 	}
 	private static class MeatballFilterListener implements ActionListener{
         @Override
 		public void actionPerformed(ActionEvent e) {
-			activateFilter("Meatball"); //$NON-NLS-1$
+			setSourceFilterVisibility(OBS.getMainScene(), filtersPanel.getFilterText("Meatball"), true); //$NON-NLS-1$
 		}
 	}
 	private static class TeamPropertyListener implements PropertyChangeListener{

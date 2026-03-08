@@ -101,6 +101,7 @@ public class FiltersPanel extends JPanel {
 	private JButton btnSwitchSidesFilter;
 	private JButton btnMeatballFilter;
 	private final Map<Component, Object> snapshot = new HashMap<>();
+	private final Map<String, JComboBox<String>> filtersMap = new HashMap<>();
 	private BooleanSupplier saveCallback = () -> { saveSettings(); return true; };
 	private static final Logger logger = LoggerFactory.getLogger(FiltersPanel.class);
 	// Create the Panel
@@ -118,6 +119,26 @@ public class FiltersPanel extends JPanel {
 			txtStartMatchFilter, txtStartGameFilter,
 			txtSwitchSidesFilter, txtMeatballFilter
 		));
+		filtersMap.put("Team1Score", txtTeam1ScoreFilter);
+		filtersMap.put("Team2Score", txtTeam2ScoreFilter);
+		filtersMap.put("Team1WinGame", txtTeam1WinGameFilter);
+		filtersMap.put("Team2WinGame", txtTeam2WinGameFilter);
+		filtersMap.put("Team1WinMatch", txtTeam1WinMatchFilter);
+		filtersMap.put("Team2WinMatch", txtTeam2WinMatchFilter);
+		filtersMap.put("Team1TimeOut", txtTeam1TimeOutFilter);
+		filtersMap.put("Team2TimeOut", txtTeam2TimeOutFilter);
+		filtersMap.put("Team1Reset", txtTeam1ResetFilter);
+		filtersMap.put("Team2Reset", txtTeam2ResetFilter);
+		filtersMap.put("Team1Warn", txtTeam1WarnFilter);
+		filtersMap.put("Team2Warn", txtTeam2WarnFilter);
+		filtersMap.put("Team1SwitchPositions", txtTeam1SwitchPositionsFilter);
+		filtersMap.put("Team2SwitchPositions", txtTeam2SwitchPositionsFilter);
+		filtersMap.put("Team1Skunk", txtTeam1SkunkFilter);
+		filtersMap.put("Team2Skunk", txtTeam2SkunkFilter);
+		filtersMap.put("StartMatch", txtStartMatchFilter);
+		filtersMap.put("StartGame", txtStartGameFilter);
+		filtersMap.put("SwitchSides", txtSwitchSidesFilter);
+		filtersMap.put("Meatball", txtMeatballFilter);
 		for (JComboBox<String> combo : allFilterCombos) {
 			combo.setEditable(true);
 			setupComboFiltering(combo);
@@ -127,25 +148,38 @@ public class FiltersPanel extends JPanel {
 	private void setupComboFiltering(JComboBox<String> combo) {
 		JTextComponent editor = (JTextComponent) combo.getEditor().getEditorComponent();
 		editor.getDocument().addDocumentListener(new DocumentListener() {
+			private void filter() {
+				if (filterUpdating) return;
+				SwingUtilities.invokeLater(() -> {
+					if (filterUpdating) return;
+					filterUpdating = true;
+					try {
+						String text = editor.getText();
+						String lower = text.toLowerCase();
+						DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+						obsFiltersList.stream()
+							.filter(s -> s.toLowerCase().contains(lower))
+							.forEach(model::addElement);
+						combo.setModel(model);
+						editor.setText(text);
+						if (model.getSize() > 0 && !text.isEmpty()) {
+							combo.showPopup();
+						} else {
+							combo.hidePopup();
+						}
+					} finally {
+						filterUpdating = false;
+					}
+				});
+			}
 			@Override public void insertUpdate(DocumentEvent e) { filter(); }
 			@Override public void removeUpdate(DocumentEvent e) { filter(); }
 			@Override public void changedUpdate(DocumentEvent e) { filter(); }
-			private void filter() {
-				if (filterUpdating) return;
-				filterUpdating = true;
-				String text = editor.getText();
-				DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-				for (String item : obsFiltersList) {
-					if (item.toLowerCase().contains(text.toLowerCase())) {
-						model.addElement(item);
-					}
-				}
-				combo.setModel(model);
-				combo.setSelectedItem(text);
-				combo.showPopup();
-				filterUpdating = false;
-			}
 		});
+	}
+	public String getFilterText(String key) {
+		JComboBox<String> combo = filtersMap.get(key);
+		return combo != null ? getComboText(combo) : "";
 	}
 	private String getComboText(JComboBox<String> combo) {
 		Object item = combo.getEditor().getItem();
@@ -431,7 +465,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblTeam2SkunkFilter = new JLabel(Messages.getString("FiltersPanel.Team2Skunk")); //$NON-NLS-1$
 		add(lblTeam2SkunkFilter, "cell 1 17,alignx right"); //$NON-NLS-1$
 		txtTeam2SkunkFilter = new JComboBox<>();
-		txtTeam2SkunkFilter.setSelectedItem(Settings.getFiltersFilter("Team1Skunk")); //$NON-NLS-1$
+		txtTeam2SkunkFilter.setSelectedItem(Settings.getFiltersFilter("Team2Skunk")); //$NON-NLS-1$
 		txtTeam2SkunkFilter.setPrototypeDisplayValue("                    ");
 		add(txtTeam2SkunkFilter, "cell 2 17,alignx left"); //$NON-NLS-1$
 		btnTeam2SkunkFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
