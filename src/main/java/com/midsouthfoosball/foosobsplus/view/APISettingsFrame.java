@@ -21,6 +21,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 import javax.swing.JFrame;
@@ -38,7 +40,7 @@ public class APISettingsFrame extends JFrame {
 
 	public APISettingsFrame() {
 		super(PROGRAMNAME + " - REST API Settings"); //$NON-NLS-1$
-		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setAlwaysOnTop(true);
 		try {
 			apiSettingsPanel = new APISettingsPanel();
@@ -48,6 +50,12 @@ public class APISettingsFrame extends JFrame {
 		apiSettingsPanel.setPreferredSize(new Dimension(500, 200));
 		getContentPane().add(apiSettingsPanel);
 		pack();
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if (apiSettingsPanel != null) apiSettingsPanel.confirmClose(APISettingsFrame.this);
+			}
+		});
 	}
 
 	public APISettingsPanel getSettingsPanel() {

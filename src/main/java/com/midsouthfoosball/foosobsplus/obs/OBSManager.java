@@ -25,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import org.slf4j.Logger;
@@ -46,6 +47,10 @@ import io.obswebsocket.community.client.message.response.general.GetVersionRespo
 import io.obswebsocket.community.client.message.response.sources.GetSourceActiveResponse;
 import io.obswebsocket.community.client.message.response.sceneitems.GetSceneItemIdResponse;
 import io.obswebsocket.community.client.message.response.ui.GetMonitorListResponse;
+import io.obswebsocket.community.client.message.response.filters.GetSourceFilterListResponse;
+import io.obswebsocket.community.client.message.response.inputs.GetInputListResponse;
+import io.obswebsocket.community.client.model.Filter;
+import io.obswebsocket.community.client.model.Input;
 import io.obswebsocket.community.client.model.Monitor;
 import io.obswebsocket.community.client.model.Scene;
 import io.obswebsocket.community.client.WebSocketCloseCode;
@@ -498,6 +503,74 @@ public class OBSManager {
                 String ttl = Messages.getString("Errors.Main.FetchSource.Title"); //$NON-NLS-1$
                 logger.warn(msg);
                 uiCallback.showErrorDialog(ttl, msg);
+            }
+        });
+    }
+
+    /**
+     * Fetches the list of all inputs (sources) from OBS.
+     */
+    public void fetchInputList() {
+        if (!isConnected()) return;
+
+        OBS.getController().getInputList(null, response -> {
+            if (response != null && response.isSuccessful()) {
+                List<String> inputNames = response.getInputs().stream()
+                        .map(Input::getInputName)
+                        .sorted(String.CASE_INSENSITIVE_ORDER)
+                        .toList();
+                uiCallback.onInputListFetched(inputNames);
+            } else {
+                String msg = Messages.getString("Errors.Main.FetchSourceError"); //$NON-NLS-1$
+                String ttl = Messages.getString("Errors.Main.FetchSource.Title"); //$NON-NLS-1$
+                logger.warn(msg);
+                uiCallback.showErrorDialog(ttl, msg);
+            }
+        });
+    }
+
+    /**
+     * Fetches filter names from all scenes in OBS, merges and deduplicates them,
+     * then delivers the sorted list via the UI callback.
+     */
+    public void fetchSceneFilterList() {
+        if (!isConnected()) return;
+
+        OBS.getController().getSceneList(sceneResponse -> {
+            if (sceneResponse == null || !sceneResponse.isSuccessful()) {
+                String msg = Messages.getString("Errors.Main.FetchSourceError"); //$NON-NLS-1$
+                String ttl = Messages.getString("Errors.Main.FetchSource.Title"); //$NON-NLS-1$
+                logger.warn(msg);
+                uiCallback.showErrorDialog(ttl, msg);
+                return;
+            }
+            List<Scene> scenes = sceneResponse.getScenes();
+            if (scenes == null || scenes.isEmpty()) {
+                uiCallback.onSceneFilterListFetched(new ArrayList<>());
+                return;
+            }
+            List<String> collected = new ArrayList<>();
+            AtomicInteger remaining = new AtomicInteger(scenes.size());
+            for (Scene scene : scenes) {
+                OBS.getController().getSourceFilterList(scene.getSceneName(), filterResponse -> {
+                    if (filterResponse != null && filterResponse.isSuccessful() && filterResponse.getFilters() != null) {
+                        synchronized (collected) {
+                            for (Filter f : filterResponse.getFilters()) {
+                                String name = f.getFilterName();
+                                if (name != null && !name.isEmpty()) {
+                                    collected.add(name);
+                                }
+                            }
+                        }
+                    }
+                    if (remaining.decrementAndGet() == 0) {
+                        List<String> sorted = collected.stream()
+                                .distinct()
+                                .sorted(String.CASE_INSENSITIVE_ORDER)
+                                .toList();
+                        uiCallback.onSceneFilterListFetched(sorted);
+                    }
+                });
             }
         });
     }

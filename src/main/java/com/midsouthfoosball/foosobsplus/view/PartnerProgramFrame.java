@@ -21,6 +21,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 import javax.swing.JFrame;
@@ -37,7 +39,7 @@ public class PartnerProgramFrame extends JFrame {
 	private static final Logger logger = LoggerFactory.getLogger(PartnerProgramFrame.class);
 	public PartnerProgramFrame() {
 		super(PROGRAMNAME + " " + Messages.getString("PartnerProgramFrame.PartnerProgramSettings")); //$NON-NLS-1$ //$NON-NLS-2$
-		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setAlwaysOnTop(true);
 		try {
 			partnerProgramPanel = new PartnerProgramPanel();
@@ -48,5 +50,11 @@ public class PartnerProgramFrame extends JFrame {
 		partnerProgramPanel.setPreferredSize(new Dimension(600, 300));
 		getContentPane().add(partnerProgramPanel);
 		pack();
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if (partnerProgramPanel != null) partnerProgramPanel.confirmClose(PartnerProgramFrame.this);
+			}
+		});
 	}
 }

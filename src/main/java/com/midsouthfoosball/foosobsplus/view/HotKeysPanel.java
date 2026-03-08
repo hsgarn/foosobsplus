@@ -21,6 +21,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -38,6 +39,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -133,6 +135,8 @@ public class HotKeysPanel extends JPanel {
 	private JButton btnSave;
 	private JButton btnGenerateHotKeyScripts;
 	private String hotKeyBaseScriptText;
+	private final Map<Component, Object> snapshot = new HashMap<>();
+	private BooleanSupplier saveCallback = () -> saveSettings();
 	private static final Logger logger = LoggerFactory.getLogger(HotKeysPanel.class);
 	private final Map<String, JTextField> sourcesMap = new HashMap<>();
 	private static final String VALIDKEYS = "abcdefghijklmnopqrstuvwxyz0123456789.,-;[]/\\"; //$NON-NLS-1$
@@ -246,6 +250,7 @@ public class HotKeysPanel extends JPanel {
 			textField.setText(Settings.getHotKeyParameter(sourceName));
 		});
 		lblAvailableKeys.setText(getAvailableKeys());
+		takeSnapshot();
 	}
 	public boolean saveSettings() {
 		boolean okToCloseWindow = false;
@@ -258,6 +263,7 @@ public class HotKeysPanel extends JPanel {
 			try {
 				Settings.saveHotKeyConfig();
 				okToCloseWindow = true;
+				takeSnapshot();
 			} catch (IOException ex) {
 				logger.error(ex.toString());
 				JOptionPane.showMessageDialog(null, Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage(), Messages.getString("HotKeysPanel.SettingsError"), 1); //$NON-NLS-1$		 //$NON-NLS-1$ //$NON-NLS-2$
@@ -820,10 +826,9 @@ public class HotKeysPanel extends JPanel {
 		add(btnSave, "cell 4 20,alignx center"); //$NON-NLS-1$
 		JButton btnCancel = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
 		btnCancel.addActionListener((ActionEvent e) -> {
-                    revertChanges();
                     JComponent comp = (JComponent) e.getSource();
                     Window win = SwingUtilities.getWindowAncestor(comp);
-                    win.dispose();
+                    confirmClose(win);
                 });
 		add(btnCancel, "cell 6 20,alignx center"); //$NON-NLS-1$
 		JButton btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
@@ -831,6 +836,51 @@ public class HotKeysPanel extends JPanel {
                     restoreDefaults();
                 });
 		add(btnRestoreDefaults, "cell 8 20, spanx 2, alignx right"); //$NON-NLS-1$
+		takeSnapshot();
+	}
+	public void setSaveCallback(BooleanSupplier callback) { this.saveCallback = callback; }
+	private void takeSnapshot() { snapshot.clear(); snapshotOf(this); }
+	private void snapshotOf(Container container) {
+		for (Component c : container.getComponents()) {
+			if (c instanceof JTextField tf) {
+				snapshot.put(tf, tf.getText());
+			} else if (c instanceof Container sub) {
+				snapshotOf(sub);
+			}
+		}
+	}
+	public boolean hasChanges() { return checkChangesIn(this); }
+	private boolean checkChangesIn(Container container) {
+		for (Component c : container.getComponents()) {
+			if (c instanceof JTextField tf) {
+				Object saved = snapshot.get(tf);
+				if (saved != null && !tf.getText().equals(saved)) return true;
+			} else if (c instanceof Container sub) {
+				if (checkChangesIn(sub)) return true;
+			}
+		}
+		return false;
+	}
+	void confirmClose(Window win) {
+		if (!hasChanges()) {
+			revertChanges();
+			win.dispose();
+			return;
+		}
+		int result = JOptionPane.showConfirmDialog(
+			win,
+			Messages.getString("Global.UnsavedChangesMessage"), //$NON-NLS-1$
+			Messages.getString("Global.UnsavedChangesTitle"), //$NON-NLS-1$
+			JOptionPane.YES_NO_CANCEL_OPTION,
+			JOptionPane.WARNING_MESSAGE);
+		if (result == JOptionPane.YES_OPTION) {
+			if (saveCallback.getAsBoolean()) {
+				win.dispose();
+			}
+		} else if (result == JOptionPane.NO_OPTION) {
+			revertChanges();
+			win.dispose();
+		}
 	}
 	private String getAvailableKeys() {
 		List<Character> remainingKeys = new ArrayList<>();

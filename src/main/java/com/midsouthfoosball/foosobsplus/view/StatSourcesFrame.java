@@ -21,6 +21,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
@@ -32,12 +34,18 @@ public class StatSourcesFrame extends JFrame {
 	private static final String PROGRAMNAME = AppConfig.PROGRAM_NAME;
 	public StatSourcesFrame() {
 		super(PROGRAMNAME + " " + Messages.getString("StatSourcesFrame.StatSourcesSettings")); //$NON-NLS-1$ //$NON-NLS-2$
-		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setAlwaysOnTop(true);
 		statSourcesPanel = new StatSourcesPanel();
-		statSourcesPanel.setPreferredSize(new Dimension(1100, 490));
+		statSourcesPanel.setPreferredSize(new Dimension(1150, 490));
 		getContentPane().add(statSourcesPanel);
 		pack();
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				statSourcesPanel.confirmClose(StatSourcesFrame.this);
+			}
+		});
 	}
 	public StatSourcesPanel getStatSourcesPanel() {
 		return statSourcesPanel;

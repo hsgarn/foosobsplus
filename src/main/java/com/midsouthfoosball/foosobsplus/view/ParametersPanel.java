@@ -20,11 +20,16 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.view;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -80,6 +85,8 @@ public class ParametersPanel extends JPanel {
 	private final Integer maxGamesToWin = 6;
 	private static final String ON = "1"; //$NON-NLS-1$
 	private static final String OFF = "0"; //$NON-NLS-1$
+	private final Map<Component, Object> snapshot = new HashMap<>();
+	private BooleanSupplier saveCallback = () -> { saveSettings(null); return true; };
 	private static final Logger logger = LoggerFactory.getLogger(ParametersPanel.class);
 	public ParametersPanel() throws IOException {
 		setLayout(new MigLayout("", "[119.00][50.00:87.00,grow,left][78.00,grow][grow][]", "[][][][][][][][][][][][][][][][][][][][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -260,10 +267,9 @@ public class ParametersPanel extends JPanel {
 		add(btnSave, "cell 1 21,alignx center"); //$NON-NLS-1$
 		btnCancel = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
 		btnCancel.addActionListener((ActionEvent e) -> {
-                    revertChanges();
                     JComponent comp = (JComponent) e.getSource();
                     Window win = SwingUtilities.getWindowAncestor(comp);
-                    win.dispose();
+                    confirmClose(win);
                 });
 		add(btnCancel, "cell 2 21,alignx center"); //$NON-NLS-1$
 		btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
@@ -272,6 +278,7 @@ public class ParametersPanel extends JPanel {
                 });
 		btnRestoreDefaults.setHorizontalAlignment(SwingConstants.RIGHT);
 		add(btnRestoreDefaults, "cell 3 21,alignx center"); //$NON-NLS-1$
+		takeSnapshot();
 	}
 	private void restoreDefaults() {
 		txtPointsToWin.setText(Settings.getDefaultParameter("PointsToWin")); //$NON-NLS-1$
@@ -337,6 +344,7 @@ public class ParametersPanel extends JPanel {
 		txtSide2Color.setText(Settings.getControlParameter("Side2Color")); //$NON-NLS-1$
 		txtBallsInRack.setText(Settings.getControlParameter("BallsInRack")); //$NON-NLS-1$
 		setEnableShowSkunk(Settings.getControlParameter("ShowSkunk").equals(ON)); //$NON-NLS-1$
+		takeSnapshot();
 	}
 	private void saveIntegerSetting(String parameter, String value) {
 		if (isValidInteger(value)) {
@@ -401,6 +409,7 @@ public class ParametersPanel extends JPanel {
 			logger.error(ex.toString());
 			JOptionPane.showMessageDialog(null, ex.getMessage(), Messages.getString("Errors.ErrorSavingPropertiesFile"), 1);//$NON-NLS-1$
 		}
+		takeSnapshot();
 	}
 	private boolean isValidInteger(String checkString) {
     	try {
@@ -410,6 +419,55 @@ public class ParametersPanel extends JPanel {
     		logger.error(e.toString());
     		return false;
     	}
+	}
+	public void setSaveCallback(BooleanSupplier callback) { this.saveCallback = callback; }
+	private void takeSnapshot() { snapshot.clear(); snapshotOf(this); }
+	private void snapshotOf(Container container) {
+		for (Component c : container.getComponents()) {
+			if (c instanceof JCheckBox cb) {
+				snapshot.put(cb, cb.isSelected());
+			} else if (c instanceof JTextField tf) {
+				snapshot.put(tf, tf.getText());
+			} else if (c instanceof Container sub) {
+				snapshotOf(sub);
+			}
+		}
+	}
+	public boolean hasChanges() { return checkChangesIn(this); }
+	private boolean checkChangesIn(Container container) {
+		for (Component c : container.getComponents()) {
+			if (c instanceof JCheckBox cb) {
+				Object saved = snapshot.get(cb);
+				if (saved != null && !saved.equals(cb.isSelected())) return true;
+			} else if (c instanceof JTextField tf) {
+				Object saved = snapshot.get(tf);
+				if (saved != null && !tf.getText().equals(saved)) return true;
+			} else if (c instanceof Container sub) {
+				if (checkChangesIn(sub)) return true;
+			}
+		}
+		return false;
+	}
+	void confirmClose(Window win) {
+		if (!hasChanges()) {
+			revertChanges();
+			win.dispose();
+			return;
+		}
+		int result = JOptionPane.showConfirmDialog(
+			win,
+			Messages.getString("Global.UnsavedChangesMessage"), //$NON-NLS-1$
+			Messages.getString("Global.UnsavedChangesTitle"), //$NON-NLS-1$
+			JOptionPane.YES_NO_CANCEL_OPTION,
+			JOptionPane.WARNING_MESSAGE);
+		if (result == JOptionPane.YES_OPTION) {
+			if (saveCallback.getAsBoolean()) {
+				win.dispose();
+			}
+		} else if (result == JOptionPane.NO_OPTION) {
+			revertChanges();
+			win.dispose();
+		}
 	}
 	public void setEnableShowSkunk(boolean enableFlag) {
 		chckbxEnableShowSkunk.setSelected(enableFlag);

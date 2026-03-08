@@ -21,6 +21,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 import javax.swing.JFrame;
@@ -37,7 +39,7 @@ public class AutoScoreSettingsFrame extends JFrame {
 	private static final Logger logger = LoggerFactory.getLogger(AutoScoreSettingsFrame.class);
 	public AutoScoreSettingsFrame() {
 		super(PROGRAMNAME + " " + Messages.getString("AutoScoreSettingsFrame.Title")); //$NON-NLS-1$ //$NON-NLS-2$
-		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setAlwaysOnTop(true);
 		try {
 			autoScoreSettingsPanel = new AutoScoreSettingsPanel();
@@ -48,6 +50,12 @@ public class AutoScoreSettingsFrame extends JFrame {
 		autoScoreSettingsPanel.setPreferredSize(new Dimension(500, 400));
 		getContentPane().add(autoScoreSettingsPanel);
 		pack();
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if (autoScoreSettingsPanel != null) autoScoreSettingsPanel.confirmClose(AutoScoreSettingsFrame.this);
+			}
+		});
 	}
 	public AutoScoreSettingsPanel getAutoScoreSettingsPanel() {
 		return autoScoreSettingsPanel;

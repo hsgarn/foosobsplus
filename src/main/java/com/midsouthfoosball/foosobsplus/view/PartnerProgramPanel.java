@@ -20,6 +20,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.view;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
@@ -29,10 +31,14 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -55,10 +61,57 @@ public class PartnerProgramPanel extends JPanel {
 	private JTextField txtPlayer4FileName;
 	private JTextField txtEventFileName;
 	private JTextField txtTournamentFileName;
+	private final Map<Component, Object> snapshot = new HashMap<>();
+	private BooleanSupplier saveCallback = () -> { saveSettings(); return true; };
 	private static final Logger logger = LoggerFactory.getLogger(PartnerProgramPanel.class);
 	// Create the Panel.
 	public PartnerProgramPanel() throws IOException {
 		setLayout();
+		takeSnapshot();
+	}
+	public void setSaveCallback(BooleanSupplier callback) { this.saveCallback = callback; }
+	private void takeSnapshot() { snapshot.clear(); snapshotOf(this); }
+	private void snapshotOf(Container container) {
+		for (Component c : container.getComponents()) {
+			if (c instanceof JTextField tf) {
+				snapshot.put(tf, tf.getText());
+			} else if (c instanceof Container sub) {
+				snapshotOf(sub);
+			}
+		}
+	}
+	public boolean hasChanges() { return checkChangesIn(this); }
+	private boolean checkChangesIn(Container container) {
+		for (Component c : container.getComponents()) {
+			if (c instanceof JTextField tf) {
+				Object saved = snapshot.get(tf);
+				if (saved != null && !tf.getText().equals(saved)) return true;
+			} else if (c instanceof Container sub) {
+				if (checkChangesIn(sub)) return true;
+			}
+		}
+		return false;
+	}
+	void confirmClose(Window win) {
+		if (!hasChanges()) {
+			revertChanges();
+			win.dispose();
+			return;
+		}
+		int result = JOptionPane.showConfirmDialog(
+			win,
+			Messages.getString("Global.UnsavedChangesMessage"), //$NON-NLS-1$
+			Messages.getString("Global.UnsavedChangesTitle"), //$NON-NLS-1$
+			JOptionPane.YES_NO_CANCEL_OPTION,
+			JOptionPane.WARNING_MESSAGE);
+		if (result == JOptionPane.YES_OPTION) {
+			if (saveCallback.getAsBoolean()) {
+				win.dispose();
+			}
+		} else if (result == JOptionPane.NO_OPTION) {
+			revertChanges();
+			win.dispose();
+		}
 	}
 	private void restoreDefaults() {
 		txtPlayer1FileName.setText(Settings.getDefaultPartnerProgram("Player1FileName")); //$NON-NLS-1$
@@ -75,6 +128,7 @@ public class PartnerProgramPanel extends JPanel {
 		txtPlayer4FileName.setText(Settings.getPartnerProgramParameter("Player4FileName")); //$NON-NLS-1$
 		txtEventFileName.setText(Settings.getPartnerProgramParameter("EventFileName")); //$NON-NLS-1$
 		txtTournamentFileName.setText(Settings.getPartnerProgramParameter("TournamentFileName")); //$NON-NLS-1$
+		takeSnapshot();
 	}
 	private void saveSettings() {
 		Settings.setPartnerProgram("Player1FileName",txtPlayer1FileName.getText()); //$NON-NLS-1$
@@ -89,6 +143,7 @@ public class PartnerProgramPanel extends JPanel {
 			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile")); //$NON-NLS-1$
 			logger.error(ex.toString());
 		}
+		takeSnapshot();
 	}
 	public final void setLayout() {	
 		setLayout(new MigLayout());
@@ -209,10 +264,9 @@ public class PartnerProgramPanel extends JPanel {
 		add(btnSavePartnerProgram, "cell 2 19,alignx center"); //$NON-NLS-1$
 		JButton btnCancelPartnerProgram = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
 		btnCancelPartnerProgram.addActionListener((ActionEvent e) -> {
-                    revertChanges();
                     JComponent comp = (JComponent) e.getSource();
                     Window win = SwingUtilities.getWindowAncestor(comp);
-                    win.dispose();
+                    confirmClose(win);
                 });
 		add(btnCancelPartnerProgram, "cell 4 19,alignx center"); //$NON-NLS-1$
 		JButton btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$

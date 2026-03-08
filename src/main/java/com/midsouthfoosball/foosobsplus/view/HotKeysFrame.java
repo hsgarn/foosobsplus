@@ -21,6 +21,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 import javax.swing.JFrame;
@@ -37,7 +39,7 @@ public class HotKeysFrame extends JFrame {
 	private static final Logger logger = LoggerFactory.getLogger(HotKeysFrame.class);
 	public HotKeysFrame() {
 		super(PROGRAMNAME + " " + Messages.getString("HotKeysFrame.HotKeySettings")); //$NON-NLS-1$ //$NON-NLS-2$
-		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setAlwaysOnTop(true);
 		try {
 			hotKeysPanel = new HotKeysPanel();
@@ -48,6 +50,12 @@ public class HotKeysFrame extends JFrame {
 		hotKeysPanel.setPreferredSize(new Dimension(850, 630));
 		getContentPane().add(hotKeysPanel);
 		pack();
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if (hotKeysPanel != null) hotKeysPanel.confirmClose(HotKeysFrame.this);
+			}
+		});
 	}
 	public HotKeysPanel getHotKeysPanel() {
 		return hotKeysPanel;

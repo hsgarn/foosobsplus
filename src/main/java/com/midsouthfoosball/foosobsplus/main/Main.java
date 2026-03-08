@@ -192,6 +192,8 @@ public final class Main implements MatchObserver {
    	private static HashMap<String, Boolean> allBallsMap 	= new HashMap<>();
 	private static HashMap<String, Boolean> nineBallsMap 	= new HashMap<>();
 	private static OBSManager obsManager;
+	private static boolean obsSourcesFetched = false;
+	private static boolean obsFiltersFetched = false;
 	////// Watch Service for File changes \\\\\\
 	private static WatchService 				watchService;
 	////// CommandStack and UndoRedo setup \\\\\\
@@ -368,6 +370,19 @@ public final class Main implements MatchObserver {
 			}
 
 			@Override
+			public void onInputListFetched(java.util.List<String> inputNames) {
+				obsSourcesFetched = true;
+				sourcesPanel.populateObsSources(inputNames);
+				statSourcesPanel.populateObsSources(inputNames);
+			}
+
+			@Override
+			public void onSceneFilterListFetched(java.util.List<String> filterNames) {
+				obsFiltersFetched = true;
+				filtersPanel.populateObsFilters(filterNames);
+			}
+
+			@Override
 			public void showErrorDialog(String title, String message) {
 				JOptionPane.showMessageDialog(null, message, title, JOptionPane.WARNING_MESSAGE);
 			}
@@ -405,6 +420,8 @@ public final class Main implements MatchObserver {
 	}
 	public static void updateOBSDisconnected() {
 		OBS.setConnected(false);
+		obsSourcesFetched = false;
+		obsFiltersFetched = false;
 		obsConnectPanel.enableConnect();
 		mainFrame.enableConnect(true);
 		mainFrame.setOBSIconConnected(false);
@@ -629,10 +646,39 @@ public final class Main implements MatchObserver {
 		ballPanel.addBtnHideAllBallsListener(new BtnHideAllBallsListener());
 		hotKeysPanel.addApplyListener(new HotKeysApplyListener());
 		hotKeysPanel.addSaveListener(new HotKeysSaveListener());
+		hotKeysPanel.setSaveCallback(() -> hotKeysSaveSettings());
 		sourcesPanel.addApplyListener(new SourcesApplyListener());
 		sourcesPanel.addSaveListener(new SourcesSaveListener());
+		sourcesPanel.addFetchSourcesListener((ActionEvent ae) -> obsManager.fetchInputList());
+		sourcesPanel.setSaveCallback(() -> { boolean ok = sourcesPanel.saveSettings(); if (ok) buildTeamGameShowSourcesMap(); return ok; });
+		sourcesFrame.addWindowListener(new WindowAdapter() {
+			@Override public void windowOpened(WindowEvent e) {
+				if (obsManager.isConnected() && !obsSourcesFetched) obsManager.fetchInputList();
+			}
+			@Override public void windowActivated(WindowEvent e) {
+				if (obsManager.isConnected() && !obsSourcesFetched) obsManager.fetchInputList();
+			}
+		});
 		statSourcesPanel.addApplyListener(new StatSourcesApplyListener());
 		statSourcesPanel.addSaveListener(new StatSourcesSaveListener());
+		statSourcesPanel.addFetchSourcesListener((ActionEvent ae) -> obsManager.fetchInputList());
+		statSourcesFrame.addWindowListener(new WindowAdapter() {
+			@Override public void windowOpened(WindowEvent e) {
+				if (obsManager.isConnected() && !obsSourcesFetched) obsManager.fetchInputList();
+			}
+			@Override public void windowActivated(WindowEvent e) {
+				if (obsManager.isConnected() && !obsSourcesFetched) obsManager.fetchInputList();
+			}
+		});
+		filtersPanel.addFetchFiltersListener((ActionEvent ae) -> obsManager.fetchSceneFilterList());
+		filtersFrame.addWindowListener(new WindowAdapter() {
+			@Override public void windowOpened(WindowEvent e) {
+				if (obsManager.isConnected() && !obsFiltersFetched) obsManager.fetchSceneFilterList();
+			}
+			@Override public void windowActivated(WindowEvent e) {
+				if (obsManager.isConnected() && !obsFiltersFetched) obsManager.fetchSceneFilterList();
+			}
+		});
 		apiSettingsPanel.addApplyListener((ActionEvent ae) -> {
 			apiSettingsPanel.applySettings();
 		});
@@ -641,12 +687,12 @@ public final class Main implements MatchObserver {
 			apiSettingsFrame.setVisible(false);
 		});
 		apiSettingsPanel.addCancelListener((ActionEvent ae) -> {
-			apiSettingsPanel.reloadSettings();
-			apiSettingsFrame.setVisible(false);
+			apiSettingsPanel.confirmClose(apiSettingsFrame);
 		});
 		parametersPanel.addApplyListener(new ParametersApplyListener());
 		parametersPanel.addSaveListener(new ParametersSaveListener());
 		parametersPanel.addEnableShowSkunkListener(new OBSEnableSkunkListener());
+		parametersPanel.setSaveCallback(() -> { saveParameterSettings(); return true; });
 		obsConnectPanel.addSetMainSceneListener(new OBSSetMainSceneListener());
 		obsConnectPanel.addFetchMonitorsListener(new OBSFetchMonitorsListener());
 		obsConnectPanel.addProjectListener(new OBSProjectListener());
@@ -1282,7 +1328,7 @@ public final class Main implements MatchObserver {
 			setFocusOnCode();
 		}
 	}
-	private static void hotKeysSaveSettings() {
+	private static boolean hotKeysSaveSettings() {
 		if (hotKeysPanel.saveSettings()) {
 			matchPanel.updateMnemonics();
 			teamPanel1.updateMnemonics();
@@ -1293,7 +1339,9 @@ public final class Main implements MatchObserver {
 			resetPanel.updateMnemonics();
 			statsEntryPanel.updateMnemonics();
 			obsPanel.updateMnemonics();
+			return true;
 		}
+		return false;
 	}
 	private static class HotKeysApplyListener implements ActionListener {
         @Override

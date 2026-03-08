@@ -147,6 +147,9 @@ Click the Restore Defaults button to restore the default parameters.
 ### Sources
 FoosOBSPlus sends most of its data to sources in OBS Studio so it can be displayed in a live stream.  The names of these sources are configurable if the default names do not suit you. The vast majority of these sources should be Text (GDI+) sources with the Read from file checkbox unchecked.  Exceptions to this will be specifically noted below.  There are enough sources that they were split into two windows.  The sources window is described below and the statistics sources window will be described in the following section. To get to the sources configuration, click on Edit, then Settings, then Sources:
 
+#### OBS Source Selection
+Each source field is an editable drop-down.  You can type a source name directly, or select one from a list of available sources in OBS Studio.  When OBS is connected, the drop-downs are populated automatically when you open either settings window.  You can also click the **Fetch OBS Sources** button at any time to refresh the list.  As you type in a field, the drop-down filters in real time to show only sources whose names contain the text you have typed (case-insensitive), making it easy to find a source in a large OBS scene.
+
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings3.png">
 
 Sources Settings Page:</br>
@@ -457,6 +460,9 @@ FoosOBSPlus can trigger OBS Filters when certain events occur.  For instance, wh
 
 Filters Settings Page:</br>
 <img width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings10.png">
+
+#### OBS Filter Selection
+Each filter field is an editable drop-down.  You can type a filter name directly, or select one from a list of available scene filters in OBS Studio.  When OBS is connected, the drop-downs are populated automatically when you open the Filters settings window.  You can also click the **Fetch OBS Filters** button at any time to refresh the list.  As you type in a field, the drop-down filters in real time to show only filter names that contain the text you have typed (case-insensitive), making it easy to find a filter in a large OBS configuration.
 
 Below are the filters that can be configured:
 
@@ -1321,6 +1327,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.080 03/07/2026</br>
+Standardize and improve settings behavior.</br>
+</br>
 v2.079 03/06/2026</br>
 Add Quick Start section and a few other tweaks to the README.md file.</br>
 </br>

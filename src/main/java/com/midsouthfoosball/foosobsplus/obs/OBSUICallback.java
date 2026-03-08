@@ -21,6 +21,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.obs;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Callback interface for OBS Manager to communicate with the UI layer.
@@ -51,6 +52,18 @@ public interface OBSUICallback {
      * @param sceneMap map of scene index to scene name
      */
     void onSceneListFetched(HashMap<Integer, String> sceneMap);
+
+    /**
+     * Called when the input (source) list is fetched from OBS.
+     * @param inputNames sorted list of all input/source names in OBS
+     */
+    void onInputListFetched(List<String> inputNames);
+
+    /**
+     * Called when the scene filter list is fetched from OBS.
+     * @param filterNames sorted, deduplicated list of all filter names across all scenes
+     */
+    void onSceneFilterListFetched(List<String> filterNames);
 
     /**
      * Called when ShowTimer source state changes.

@@ -21,6 +21,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 import javax.swing.JFrame;
@@ -37,7 +39,7 @@ public class FiltersFrame extends JFrame {
 	private static final Logger logger = LoggerFactory.getLogger(FiltersFrame.class);
 	public FiltersFrame() {
 		super(PROGRAMNAME + " " + Messages.getString("FiltersFrame.FiltersSettings")); //$NON-NLS-1$ //$NON-NLS-2$
-		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setAlwaysOnTop(true);
 		try {
 			this.filtersPanel = new FiltersPanel();
@@ -48,6 +50,12 @@ public class FiltersFrame extends JFrame {
 		filtersPanel.setPreferredSize(new Dimension(750, 630));
 		getContentPane().add(filtersPanel);
 		pack();
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if (filtersPanel != null) filtersPanel.confirmClose(FiltersFrame.this);
+			}
+		});
 	}
 	public FiltersPanel getFiltersPanel() {
 		return filtersPanel;

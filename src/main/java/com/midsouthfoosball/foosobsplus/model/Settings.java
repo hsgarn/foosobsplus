@@ -543,7 +543,7 @@ public final class Settings {
 		} catch (NoSuchFileException e) {
 			logger.info(Paths.get(CONFIGCONTROLFILENAME) + " not found. Writing defaults.");
 			Files.createFile(Paths.get(CONFIGCONTROLFILENAME));
-			configControlProps = defaultControlProps;
+			configControlProps.putAll(defaultControlProps);
 			saveControlConfig();
 		}
 	}
@@ -553,7 +553,7 @@ public final class Settings {
 		} catch (NoSuchFileException e) {
 			logger.info(Paths.get(CONFIGOBSFILENAME) + " not found. Writing defaults.");
 			Files.createFile(Paths.get(CONFIGOBSFILENAME));
-			configOBSProps = defaultOBSProps;
+			configOBSProps.putAll(defaultOBSProps);
 			saveOBSConfig();
 		}
 	}
@@ -563,7 +563,7 @@ public final class Settings {
 		} catch (NoSuchFileException e) {
 			logger.info(Paths.get(CONFIGSOURCEFILENAME) + " not found. Writing defaults.");
 			Files.createFile(Paths.get(CONFIGSOURCEFILENAME));
-			configSourceProps = defaultSourceProps;
+			configSourceProps.putAll(defaultSourceProps);
 			saveSourceConfig();
 		}
 	}
@@ -573,7 +573,7 @@ public final class Settings {
 		} catch (NoSuchFileException e) {
 			logger.info(Paths.get(CONFIGSTATSSOURCEFILENAME) + " not found. Writing defaults.");
 			Files.createFile(Paths.get(CONFIGSTATSSOURCEFILENAME));
-			configStatsSourceProps = defaultStatsSourceProps;
+			configStatsSourceProps.putAll(defaultStatsSourceProps);
 			saveStatsSourceConfig();
 		}
 	}
@@ -583,7 +583,7 @@ public final class Settings {
 		} catch (NoSuchFileException e) {
 			logger.info(Paths.get(CONFIGFILTERFILENAME) + " not found. Writing defaults.");
 			Files.createFile(Paths.get(CONFIGFILTERFILENAME));
-			configFilterProps = defaultFilterProps;
+			configFilterProps.putAll(defaultFilterProps);
 			saveFilterConfig();
 		}
 	}
@@ -593,7 +593,7 @@ public final class Settings {
 		} catch (NoSuchFileException e) {
 			logger.info(Paths.get(CONFIGPARTNERMPROGRAMFILENAME) + " not found. Writing defaults.");
 			Files.createFile(Paths.get(CONFIGPARTNERMPROGRAMFILENAME));
-			configPartnerProgramProps = defaultPartnerProgramProps;
+			configPartnerProgramProps.putAll(defaultPartnerProgramProps);
 			savePartnerProgramConfig();
 		}
 	}
@@ -603,7 +603,7 @@ public final class Settings {
 		} catch (NoSuchFileException e) {
 			logger.info(Paths.get(CONFIGHOTKEYFILENAME) + " not found. Writing defaults.");
 			Files.createFile(Paths.get(CONFIGHOTKEYFILENAME));
-			configHotKeyProps = defaultHotKeyProps;
+			configHotKeyProps.putAll(defaultHotKeyProps);
 			saveHotKeyConfig();
 		}
 	}
@@ -613,7 +613,7 @@ public final class Settings {
 		} catch (NoSuchFileException e) {
 			logger.info(Paths.get(CONFIGAUTOSCORESETTINGSFILENAME) + " not found. Writing defaults.");
 			Files.createFile(Paths.get(CONFIGAUTOSCORESETTINGSFILENAME));
-			configAutoScoreSettingsProps = defaultAutoScoreSettingsProps;
+			configAutoScoreSettingsProps.putAll(defaultAutoScoreSettingsProps);
 			saveAutoScoreSettingsConfig();
 		}
 	}
@@ -623,7 +623,7 @@ public final class Settings {
 		} catch (NoSuchFileException e) {
 			logger.info(Paths.get(CONFIGAPIFILENAME) + " not found. Writing defaults.");
 			Files.createFile(Paths.get(CONFIGAPIFILENAME));
-			configAPIProps = defaultAPIProps;
+			configAPIProps.putAll(defaultAPIProps);
 			saveAPIConfig();
 		}
 	}

@@ -21,6 +21,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Font;
+import java.awt.Window;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
@@ -112,7 +113,6 @@ public class APISettingsPanel extends JPanel {
 		buttonPanel.add(btnApplyClose, "cell 1 0"); //$NON-NLS-1$
 
 		btnCancel = new JButton("Cancel"); //$NON-NLS-1$
-		btnCancel.addActionListener(e -> reloadSettings());
 		buttonPanel.add(btnCancel, "cell 2 0"); //$NON-NLS-1$
 
 		btnRestoreDefaults = new JButton("Restore Defaults"); //$NON-NLS-1$
@@ -301,6 +301,26 @@ public class APISettingsPanel extends JPanel {
 		logger.info("API Settings restored to defaults");
 	}
 
+	public void confirmClose(Window win) {
+		if (!hasSettingsChanged()) {
+			reloadSettings();
+			win.dispose();
+			return;
+		}
+		int result = JOptionPane.showConfirmDialog(
+			win,
+			Messages.getString("Global.UnsavedChangesMessage"), //$NON-NLS-1$
+			Messages.getString("Global.UnsavedChangesTitle"), //$NON-NLS-1$
+			JOptionPane.YES_NO_CANCEL_OPTION,
+			JOptionPane.WARNING_MESSAGE);
+		if (result == JOptionPane.YES_OPTION) {
+			saveSettings();
+			win.dispose();
+		} else if (result == JOptionPane.NO_OPTION) {
+			reloadSettings();
+			win.dispose();
+		}
+	}
 	// Listener methods
 	public void addApplyListener(ActionListener listener) {
 		btnApply.addActionListener(listener);

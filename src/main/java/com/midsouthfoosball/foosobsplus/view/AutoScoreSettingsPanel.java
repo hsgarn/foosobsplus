@@ -22,10 +22,14 @@ package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -68,6 +72,8 @@ public class AutoScoreSettingsPanel extends JPanel {
 	private final JScrollPane scrMessageHistory;
 	private static final String ON = "1"; //$NON-NLS-1$
 	private static final String OFF = "0"; //$NON-NLS-1$
+	private final Map<Component, Object> snapshot = new HashMap<>();
+	private BooleanSupplier saveCallback = () -> { saveSettings(); return true; };
 	private static final Logger logger = LoggerFactory.getLogger(AutoScoreSettingsPanel.class);
 	public AutoScoreSettingsPanel() throws IOException {
 		mdlMessageHistory = new DefaultListModel<>();
@@ -120,13 +126,10 @@ public class AutoScoreSettingsPanel extends JPanel {
 		btnSave = new JButton(Messages.getString("Global.Save")); //$NON-NLS-1$
 		add(btnSave, "flowx,cell 1 18,alignx center"); //$NON-NLS-1$
 		JButton btnCancel = new JButton(Messages.getString("Global.Cancel")); //$NON-NLS-1$
-		btnCancel.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        JComponent comp = (JComponent) e.getSource();
-                        Window win = SwingUtilities.getWindowAncestor(comp);
-                        win.dispose();
-                    }
+		btnCancel.addActionListener((ActionEvent e) -> {
+                    JComponent comp = (JComponent) e.getSource();
+                    Window win = SwingUtilities.getWindowAncestor(comp);
+                    confirmClose(win);
                 });
 		add(btnCancel, "cell 1 18,alignx center"); //$NON-NLS-1$
 		JButton btnRestoreDefaults = new JButton(Messages.getString("Global.RestoreDefaults")); //$NON-NLS-1$
@@ -137,6 +140,7 @@ public class AutoScoreSettingsPanel extends JPanel {
                     }
 		});
 		add(btnRestoreDefaults, "cell 2 18,alignx center"); //$NON-NLS-1$
+		takeSnapshot();
 	}
     public class AttributiveCellRenderer extends DefaultListCellRenderer {
 	  private static final long serialVersionUID = 1L;
@@ -181,6 +185,62 @@ public class AutoScoreSettingsPanel extends JPanel {
 		txtServerAddress.setText(Settings.getDefaultAutoScoreSettings("AutoScoreSettingsServerAddress")); //$NON-NLS-1$
 		txtServerPort.setText(Settings.getDefaultAutoScoreSettings("AutoScoreSettingsServerPort")); //$NON-NLS-1$
 	}
+	private void revertChanges() {
+		txtServerAddress.setText(Settings.getAutoScoreParameter("AutoScoreSettingsServerAddress")); //$NON-NLS-1$
+		txtServerPort.setText(Settings.getAutoScoreParameter("AutoScoreSettingsServerPort")); //$NON-NLS-1$
+		chckbxAutoConnect.setSelected(Settings.getAutoScoreParameter("AutoScoreSettingsAutoConnect").equals(ON)); //$NON-NLS-1$
+		chckbxDetailLog.setSelected(Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals(ON)); //$NON-NLS-1$
+		takeSnapshot();
+	}
+	public void setSaveCallback(BooleanSupplier callback) { this.saveCallback = callback; }
+	private void takeSnapshot() { snapshot.clear(); snapshotOf(this); }
+	private void snapshotOf(Container container) {
+		for (Component c : container.getComponents()) {
+			if (c instanceof JCheckBox cb) {
+				snapshot.put(cb, cb.isSelected());
+			} else if (c instanceof JTextField tf) {
+				snapshot.put(tf, tf.getText());
+			} else if (c instanceof Container sub) {
+				snapshotOf(sub);
+			}
+		}
+	}
+	public boolean hasChanges() { return checkChangesIn(this); }
+	private boolean checkChangesIn(Container container) {
+		for (Component c : container.getComponents()) {
+			if (c instanceof JCheckBox cb) {
+				Object saved = snapshot.get(cb);
+				if (saved != null && !saved.equals(cb.isSelected())) return true;
+			} else if (c instanceof JTextField tf) {
+				Object saved = snapshot.get(tf);
+				if (saved != null && !tf.getText().equals(saved)) return true;
+			} else if (c instanceof Container sub) {
+				if (checkChangesIn(sub)) return true;
+			}
+		}
+		return false;
+	}
+	void confirmClose(Window win) {
+		if (!hasChanges()) {
+			revertChanges();
+			win.dispose();
+			return;
+		}
+		int result = JOptionPane.showConfirmDialog(
+			win,
+			Messages.getString("Global.UnsavedChangesMessage"), //$NON-NLS-1$
+			Messages.getString("Global.UnsavedChangesTitle"), //$NON-NLS-1$
+			JOptionPane.YES_NO_CANCEL_OPTION,
+			JOptionPane.WARNING_MESSAGE);
+		if (result == JOptionPane.YES_OPTION) {
+			if (saveCallback.getAsBoolean()) {
+				win.dispose();
+			}
+		} else if (result == JOptionPane.NO_OPTION) {
+			revertChanges();
+			win.dispose();
+		}
+	}
 	public void saveSettings() {
 		Settings.setAutoScore("AutoScoreSettingsServerAddress",txtServerAddress.getText()); //$NON-NLS-1$
 		Settings.setAutoScore("AutoScoreSettingsServerPort",txtServerPort.getText()); //$NON-NLS-1$
@@ -188,6 +248,7 @@ public class AutoScoreSettingsPanel extends JPanel {
 		Settings.setAutoScore("AutoScoreSettingsDetailLog",chckbxDetailLog.isSelected() ? ON : OFF); //$NON-NLS-1$
 		try {
 			Settings.saveAutoScoreSettingsConfig();
+			takeSnapshot();
 		} catch (IOException ex) {
 			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());	//$NON-NLS-1$
 			logger.error(ex.toString());
