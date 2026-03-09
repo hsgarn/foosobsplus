@@ -22,12 +22,13 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.commands;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CommandSwitch {
-	public final HashMap<String, Command> commandMap = new HashMap<>();
+	private final Map<String, Command> commandMap = new HashMap<>();
 	private static final Logger logger = LoggerFactory.getLogger(CommandSwitch.class);
 	public void register(String commandName, Command command) {
 		Objects.requireNonNull(commandName, "Command name cannot be null");

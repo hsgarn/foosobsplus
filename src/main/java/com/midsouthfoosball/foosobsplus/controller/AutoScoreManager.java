@@ -49,6 +49,7 @@ import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.main.PicoDiscovery;
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 import com.midsouthfoosball.foosobsplus.view.Messages;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreConfigPanel;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreMainPanel;
@@ -530,8 +531,8 @@ public class AutoScoreManager {
 			@Override
 			protected Boolean doInBackground() throws Exception {
 				boolean isConnected = false;
-				String address = Settings.getAutoScoreParameter("AutoScoreSettingsServerAddress"); //$NON-NLS-1$
-				int port = Settings.getAutoScoreParameter("AutoScoreSettingsServerPort", Integer::parseInt); //$NON-NLS-1$
+				String address = Settings.getAutoScoreParameter(SettingsKeys.AS_SERVER_ADDRESS); //$NON-NLS-1$
+				int port = Settings.getAutoScoreParameter(SettingsKeys.AS_SERVER_PORT, Integer::parseInt); //$NON-NLS-1$
 				try {
 					socket = new Socket(address, port);
 					socket.setSoTimeout(1000);
@@ -604,7 +605,7 @@ public class AutoScoreManager {
 						}
 						logger.info("Received raw data: [" + raw + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 						logger.info("Parse command: " + cmd[0]); //$NON-NLS-1$
-						if (Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals(ON)) { //$NON-NLS-1$
+						if (Settings.getAutoScoreParameter(SettingsKeys.AS_DETAIL_LOG).equals(ON)) { //$NON-NLS-1$
 							final String receivedMsg = raw;
 							SwingUtilities.invokeLater(() -> settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Received") + receivedMsg)); //$NON-NLS-1$
 						}
@@ -671,7 +672,7 @@ public class AutoScoreManager {
 				if (isCancelled()) return;
 				int mostRecentValue = chunks.get(chunks.size() - 1);
 				boolean ignoreSensors = mainPanel.isIgnored();
-				if (Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals(ON)) { //$NON-NLS-1$
+				if (Settings.getAutoScoreParameter(SettingsKeys.AS_DETAIL_LOG).equals(ON)) { //$NON-NLS-1$
 					if (ignoreSensors) {
 						if (mostRecentValue == 1 || mostRecentValue == 2) {
 							settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team") + mostRecentValue + Messages.getString("Main.ScoredButIgnored")); //$NON-NLS-1$ //$NON-NLS-2$

@@ -464,7 +464,7 @@ public class Match implements Serializable {
 		if (winState>0) {
 //			String result = "[" + getCurrentTime() + "] " + team1.getForwardName() + "/" + team1.getGoalieName() + " " + team1.getScore() + " vs " + team2.getForwardName()
 //				+ "/" + team2.getGoalieName() + " " + team2.getScore() + " (" + getTimes()[currentGameNumber-1] + ")"; 
-//			writeData(Settings.getSourceParameter("GameResults"), addGameResults(result).toString());
+//			writeData(Settings.getSourceParameter(SettingsKeys.SRC_GAME_RESULTS), addGameResults(result).toString());
 			setCurrentTime(gameTime);
 		}
 		if(matchWon) {
@@ -476,20 +476,20 @@ public class Match implements Serializable {
 		return winState;
 	}
 	public void updateGameResults(StringBuilder results) {
-		writeData(Settings.getSourceParameter("GameResults"), results.toString());
+		writeData(Settings.getSourceParameter(SettingsKeys.SRC_GAME_RESULTS), results.toString());
 	}
 	public void updateGameResults() {
 		updateGameResults(getGameResults());
 	}
 	private int checkForGameWin(int score1, int score2, int score3) {
 		int whoWon = 0;// rack mode returns 0, 1 or 2 (1 if scoring team won or 2 if other team won). non rack mode returns 0, 3 (3=team who called checkForGameWin won)  .
-		int pointsToWin = Integer.parseInt(Settings.getControlParameter("PointsToWin"));
-		int maxWin = Integer.parseInt(Settings.getControlParameter("MaxWin"));
-		int winBy = Integer.parseInt(Settings.getControlParameter("WinBy"));
-		int winByFinalOnly = Integer.parseInt(Settings.getControlParameter("WinByFinalOnly"));
-		int ballsInRack = Integer.parseInt(Settings.getControlParameter("BallsInRack"));
-		boolean rackMode = Settings.getControlParameter("RackMode").equals(ON);
-		if (Settings.getControlParameter("AutoIncrementGame").equals(ON)) {
+		int pointsToWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_POINTS_TO_WIN));
+		int maxWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_MAX_WIN));
+		int winBy = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY));
+		int winByFinalOnly = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY_FINAL_ONLY));
+		int ballsInRack = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_BALLS_IN_RACK));
+		boolean rackMode = Settings.getControlParameter(SettingsKeys.CTRL_RACK_MODE).equals(ON);
+		if (Settings.getControlParameter(SettingsKeys.CTRL_AUTO_INCREMENT_GAME).equals(ON)) {
 			if (rackMode) {
 				if (score1 + score2 >= ballsInRack) {
 					if(score1 > score2) {
@@ -521,7 +521,7 @@ public class Match implements Serializable {
 		String name = null;
 		if(matchWon) {
 			clearMeatball();
-			if (Settings.getControlParameter("AnnounceWinner").equals("1")) {
+			if (Settings.getControlParameter(SettingsKeys.CTRL_ANNOUNCE_WINNER).equals("1")) {
 				boolean skipMatchWinnerDisplay = false;
 				if (team.getTeamName() == null || team.getTeamName().isEmpty()) {
 					if (team.getGoalieName() == null || team.getGoalieName().isEmpty()) {
@@ -541,7 +541,7 @@ public class Match implements Serializable {
 					name = team.getTeamName();
 				}
 				if (!skipMatchWinnerDisplay) {
-					writeMatchWinner(Settings.getControlParameter("WinnerPrefix") + name + Settings.getControlParameter("WinnerSuffix"));
+					writeMatchWinner(Settings.getControlParameter(SettingsKeys.CTRL_WINNER_PREFIX) + name + Settings.getControlParameter(SettingsKeys.CTRL_WINNER_SUFFIX));
 				}
 			}
 //			resetScores();
@@ -572,11 +572,11 @@ public class Match implements Serializable {
 		int gameCount1 = team1.getGameCount();
 		int gameCount2 = team2.getGameCount();
 		int gameCount3 = team3.getGameCount();
-		Boolean isCutthroat = Settings.getControlParameter("CutThroatMode").equals(ON);
-		int winBy = Integer.parseInt(Settings.getControlParameter("WinBy"));
-		int pointsToWin = Integer.parseInt(Settings.getControlParameter("PointsToWin"));
+		Boolean isCutthroat = Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON);
+		int winBy = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY));
+		int pointsToWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_POINTS_TO_WIN));
 		boolean isPotentialMeatball = false;
-		if (Settings.getControlParameter("AnnounceMeatball").equals(ON)) {
+		if (Settings.getControlParameter(SettingsKeys.CTRL_ANNOUNCE_MEATBALL).equals(ON)) {
 			if (isCutthroat) {
 				if (points1 == points2 && points1 == points3 && gameCount1 == gameCount2 && gameCount1 == gameCount3 && winBy < 2) {
 					isPotentialMeatball = true;
@@ -602,12 +602,12 @@ public class Match implements Serializable {
 	private boolean checkForGameWinOnly() {
 		boolean isGameWon = false;
 		if (currentGameNumber!=0) {
-			int pointsToWin = Integer.parseInt(Settings.getControlParameter("PointsToWin"));
-			int winBy = Integer.parseInt(Settings.getControlParameter("WinBy"));
-			int maxWin = Integer.parseInt(Settings.getControlParameter("MaxWin"));
-			int winByFinalOnly = Integer.parseInt(Settings.getControlParameter("WinByFinalOnly"));
-			int ballsInRack = Integer.parseInt(Settings.getControlParameter("BallsInRack"));
-			boolean rackMode = Settings.getControlParameter("RackMode").equals(ON);
+			int pointsToWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_POINTS_TO_WIN));
+			int winBy = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY));
+			int maxWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_MAX_WIN));
+			int winByFinalOnly = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY_FINAL_ONLY));
+			int ballsInRack = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_BALLS_IN_RACK));
+			boolean rackMode = Settings.getControlParameter(SettingsKeys.CTRL_RACK_MODE).equals(ON);
 			int score1 = Integer.parseInt(scoresTeam1[currentGameNumber-1]);
 			int score2 = Integer.parseInt(scoresTeam2[currentGameNumber-1]);
 			int score3 = Integer.parseInt(scoresTeam3[currentGameNumber-1]);
@@ -635,7 +635,7 @@ public class Match implements Serializable {
 	}
 	private boolean checkForMatchWin(Team team) {
 		this.matchWon = false;
-		if(team.getGameCount()==Integer.parseInt(Settings.getControlParameter("GamesToWin"))) {
+		if(team.getGameCount()==Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_GAMES_TO_WIN))) {
 			matchWon=true;
 		}
 		return matchWon;
@@ -665,19 +665,19 @@ public class Match implements Serializable {
 		this.startTime = startTime;
 	}
 	private void writeLastScored() {
-		writeData(Settings.getSourceParameter("LastScored"), Settings.getLastScoredStrings()[lastScored]);
+		writeData(Settings.getSourceParameter(SettingsKeys.SRC_LAST_SCORED), Settings.getLastScoredStrings()[lastScored]);
 	}
 	private void writeMatchWinner(String theContents) {
-		writeData(Settings.getSourceParameter("MatchWinner"), theContents);
+		writeData(Settings.getSourceParameter(SettingsKeys.SRC_MATCH_WINNER), theContents);
 	}
 	private void clearMatchWinner() {
-		writeData(Settings.getSourceParameter("MatchWinner"), "");
+		writeData(Settings.getSourceParameter(SettingsKeys.SRC_MATCH_WINNER), "");
 	}
 	private void writeMeatball() {
-		writeData(Settings.getSourceParameter("Meatball"), Settings.getControlParameter("Meatball"));
+		writeData(Settings.getSourceParameter(SettingsKeys.SRC_MEATBALL), Settings.getControlParameter(SettingsKeys.CTRL_MEATBALL));
 	}
 	private void clearMeatball() {
-		writeData(Settings.getSourceParameter("Meatball"), "");
+		writeData(Settings.getSourceParameter(SettingsKeys.SRC_MEATBALL), "");
 	}
     private void writeData(String source, String data) {
 		obsInterface.writeData(source, data, "Match", Settings.getShowParsed());

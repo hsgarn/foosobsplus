@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 import com.midsouthfoosball.foosobsplus.util.NetworkUtil;
 
 import net.miginfocom.swing.MigLayout;
@@ -79,7 +80,7 @@ public class APISettingsPanel extends JPanel {
 		JLabel lblAPIEnabled = new JLabel("API Enabled:"); //$NON-NLS-1$
 		add(lblAPIEnabled, "cell 0 2,alignx right"); //$NON-NLS-1$
 		chckbxAPIEnabled = new JCheckBox();
-		String apiEnabled = Settings.getAPIParameter("APIEnabled"); //$NON-NLS-1$
+		String apiEnabled = Settings.getAPIParameter(SettingsKeys.API_ENABLED); //$NON-NLS-1$
 		originalAPIEnabled = apiEnabled != null && apiEnabled.equals("1"); //$NON-NLS-1$
 		chckbxAPIEnabled.setSelected(originalAPIEnabled);
 		add(chckbxAPIEnabled, "cell 1 2"); //$NON-NLS-1$
@@ -88,7 +89,7 @@ public class APISettingsPanel extends JPanel {
 		JLabel lblAPIPort = new JLabel("API Port:"); //$NON-NLS-1$
 		add(lblAPIPort, "cell 0 3,alignx right"); //$NON-NLS-1$
 		txtAPIPort = new JTextField();
-		originalAPIPort = Settings.getAPIParameter("APIPort"); //$NON-NLS-1$
+		originalAPIPort = Settings.getAPIParameter(SettingsKeys.API_PORT); //$NON-NLS-1$
 		txtAPIPort.setText(originalAPIPort != null ? originalAPIPort : "9051"); //$NON-NLS-1$
 		txtAPIPort.setColumns(10);
 		add(txtAPIPort, "cell 1 3,growx"); //$NON-NLS-1$
@@ -97,7 +98,7 @@ public class APISettingsPanel extends JPanel {
 		JLabel lblAPIKey = new JLabel("API Key:"); //$NON-NLS-1$
 		add(lblAPIKey, "cell 0 4,alignx right"); //$NON-NLS-1$
 		txtAPIKey = new JTextField();
-		originalAPIKey = Settings.getAPIParameter("APIKey"); //$NON-NLS-1$
+		originalAPIKey = Settings.getAPIParameter(SettingsKeys.API_KEY); //$NON-NLS-1$
 		txtAPIKey.setText(originalAPIKey != null ? originalAPIKey : ""); //$NON-NLS-1$
 		txtAPIKey.setColumns(10);
 		add(txtAPIKey, "cell 1 4,growx"); //$NON-NLS-1$
@@ -155,9 +156,9 @@ public class APISettingsPanel extends JPanel {
 			boolean settingsChanged = hasSettingsChanged();
 
 			// Apply settings
-			Settings.setAPIParameter("APIEnabled", chckbxAPIEnabled.isSelected() ? ON : OFF); //$NON-NLS-1$
-			Settings.setAPIParameter("APIPort", txtAPIPort.getText()); //$NON-NLS-1$
-			Settings.setAPIParameter("APIKey", txtAPIKey.getText()); //$NON-NLS-1$
+			Settings.setAPIParameter(SettingsKeys.API_ENABLED, chckbxAPIEnabled.isSelected() ? ON : OFF); //$NON-NLS-1$
+			Settings.setAPIParameter(SettingsKeys.API_PORT, txtAPIPort.getText()); //$NON-NLS-1$
+			Settings.setAPIParameter(SettingsKeys.API_KEY, txtAPIKey.getText()); //$NON-NLS-1$
 
 			// Update original values to current values for next comparison
 			updateOriginalValues();
@@ -208,9 +209,9 @@ public class APISettingsPanel extends JPanel {
 			boolean settingsChanged = hasSettingsChanged();
 
 			// Save settings
-			Settings.setAPIParameter("APIEnabled", chckbxAPIEnabled.isSelected() ? ON : OFF); //$NON-NLS-1$
-			Settings.setAPIParameter("APIPort", txtAPIPort.getText()); //$NON-NLS-1$
-			Settings.setAPIParameter("APIKey", txtAPIKey.getText()); //$NON-NLS-1$
+			Settings.setAPIParameter(SettingsKeys.API_ENABLED, chckbxAPIEnabled.isSelected() ? ON : OFF); //$NON-NLS-1$
+			Settings.setAPIParameter(SettingsKeys.API_PORT, txtAPIPort.getText()); //$NON-NLS-1$
+			Settings.setAPIParameter(SettingsKeys.API_KEY, txtAPIKey.getText()); //$NON-NLS-1$
 
 			Settings.saveAPIConfig();
 
@@ -236,13 +237,13 @@ public class APISettingsPanel extends JPanel {
 	 */
 	public void reloadSettings() {
 		try {
-			String apiEnabled = Settings.getAPIParameter("APIEnabled"); //$NON-NLS-1$
+			String apiEnabled = Settings.getAPIParameter(SettingsKeys.API_ENABLED); //$NON-NLS-1$
 			chckbxAPIEnabled.setSelected(apiEnabled != null && apiEnabled.equals("1")); //$NON-NLS-1$
 
-			String port = Settings.getAPIParameter("APIPort"); //$NON-NLS-1$
+			String port = Settings.getAPIParameter(SettingsKeys.API_PORT); //$NON-NLS-1$
 			txtAPIPort.setText(port != null ? port : "9051"); //$NON-NLS-1$
 
-			String apiKey = Settings.getAPIParameter("APIKey"); //$NON-NLS-1$
+			String apiKey = Settings.getAPIParameter(SettingsKeys.API_KEY); //$NON-NLS-1$
 			txtAPIKey.setText(apiKey != null ? apiKey : ""); //$NON-NLS-1$
 
 			updateOriginalValues();

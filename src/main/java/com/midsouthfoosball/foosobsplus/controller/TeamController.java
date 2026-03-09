@@ -45,6 +45,7 @@ import com.midsouthfoosball.foosobsplus.model.LastScoredClock;
 import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.OBS;
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 import com.midsouthfoosball.foosobsplus.model.Team;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowPanel;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
@@ -423,7 +424,7 @@ public class TeamController {
 		String name = txt.getText();
 		if (name == null || name.isEmpty()) {
 			teamName = Messages.getString("TeamPanel.Team") + teamNumber; 
-		} else if(Settings.getControlParameter("AutoCapNames").equals(ON)) {
+		} else if(Settings.getControlParameter(SettingsKeys.CTRL_AUTO_CAP_NAMES).equals(ON)) {
 			teamName = capitalizeWords(name);
 		} else {
 			teamName = name;
@@ -452,7 +453,7 @@ public class TeamController {
 	}
 	private void forwardNameChange(JTextField txt) {
 		String forwardName;
-		if(Settings.getControlParameter("AutoCapNames").equals(ON)) {
+		if(Settings.getControlParameter(SettingsKeys.CTRL_AUTO_CAP_NAMES).equals(ON)) {
 			forwardName = capitalizeWords(txt.getText());
 		} else {
 			forwardName = txt.getText();
@@ -470,7 +471,7 @@ public class TeamController {
 	}
 	private void goalieNameChange(JTextField txt) {
 		String goalieName;
-		if(Settings.getControlParameter("AutoCapNames").equals(ON)) {
+		if(Settings.getControlParameter(SettingsKeys.CTRL_AUTO_CAP_NAMES).equals(ON)) {
 			goalieName = capitalizeWords(txt.getText());
 		} else {
 			goalieName = txt.getText();
@@ -1020,27 +1021,27 @@ public class TeamController {
 	public void fetchAll() {
 		Map<String, Entry<Team, String>> teamMethodMap = new HashMap<>();
 		//Map<String is Source Name:Score 1, Entry<Team is Team Class Instance:team1|team2, String is Method Name to call:setScore>
-		teamMethodMap.put(Settings.getSourceParameter("Team1Name"), new SimpleEntry<>(team1, "setTeamName"));
-		teamMethodMap.put(Settings.getSourceParameter("Team2Name"), new SimpleEntry<>(team2, "setTeamName"));
-		teamMethodMap.put(Settings.getSourceParameter("Team3Name"), new SimpleEntry<>(team3, "setTeamName"));
-		teamMethodMap.put(Settings.getSourceParameter("Team1Forward"), new SimpleEntry<>(team1, "setForwardName"));
-		teamMethodMap.put(Settings.getSourceParameter("Team2Forward"), new SimpleEntry<>(team2, "setForwardName"));
-		teamMethodMap.put(Settings.getSourceParameter("Team3Forward"), new SimpleEntry<>(team3, "setForwardName"));
-		teamMethodMap.put(Settings.getSourceParameter("Team1Goalie"), new SimpleEntry<>(team1, "setGoalieName"));
-		teamMethodMap.put(Settings.getSourceParameter("Team2Goalie"), new SimpleEntry<>(team2, "setGoalieName"));
-		teamMethodMap.put(Settings.getSourceParameter("Team3Goalie"), new SimpleEntry<>(team3, "setGoalieName"));
-		teamMethodMap.put(Settings.getSourceParameter("Team1Score"), new SimpleEntry<>(team1, "setScore"));
-		teamMethodMap.put(Settings.getSourceParameter("Team2Score"), new SimpleEntry<>(team2, "setScore"));
-		teamMethodMap.put(Settings.getSourceParameter("Team3Score"), new SimpleEntry<>(team3, "setScore"));
-		teamMethodMap.put(Settings.getSourceParameter("Team1GameCount"), new SimpleEntry<>(team1, "setGameCount"));
-        teamMethodMap.put(Settings.getSourceParameter("Team2GameCount"), new SimpleEntry<>(team2, "setGameCount"));
-		teamMethodMap.put(Settings.getSourceParameter("Team3GameCount"), new SimpleEntry<>(team3, "setGameCount"));
-		teamMethodMap.put(Settings.getSourceParameter("Team1MatchCount"), new SimpleEntry<>(team1, "setMatchCount"));
-        teamMethodMap.put(Settings.getSourceParameter("Team2MatchCount"), new SimpleEntry<>(team2, "setMatchCount"));
-		teamMethodMap.put(Settings.getSourceParameter("Team3MatchCount"), new SimpleEntry<>(team3, "setMatchCount"));
-		teamMethodMap.put(Settings.getSourceParameter("Team1TimeOut"), new SimpleEntry<>(team1, "setTimeOutCount"));
-		teamMethodMap.put(Settings.getSourceParameter("Team2TimeOut"), new SimpleEntry<>(team2, "setTimeOutCount"));
-		teamMethodMap.put(Settings.getSourceParameter("Team3TimeOut"), new SimpleEntry<>(team3, "setTimeOutCount"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM1_NAME), new SimpleEntry<>(team1, "setTeamName"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM2_NAME), new SimpleEntry<>(team2, "setTeamName"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM3_NAME), new SimpleEntry<>(team3, "setTeamName"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM1_FORWARD), new SimpleEntry<>(team1, "setForwardName"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM2_FORWARD), new SimpleEntry<>(team2, "setForwardName"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM3_FORWARD), new SimpleEntry<>(team3, "setForwardName"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM1_GOALIE), new SimpleEntry<>(team1, "setGoalieName"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM2_GOALIE), new SimpleEntry<>(team2, "setGoalieName"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM3_GOALIE), new SimpleEntry<>(team3, "setGoalieName"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM1_SCORE), new SimpleEntry<>(team1, "setScore"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM2_SCORE), new SimpleEntry<>(team2, "setScore"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM3_SCORE), new SimpleEntry<>(team3, "setScore"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM1_GAME_COUNT), new SimpleEntry<>(team1, "setGameCount"));
+        teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM2_GAME_COUNT), new SimpleEntry<>(team2, "setGameCount"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM3_GAME_COUNT), new SimpleEntry<>(team3, "setGameCount"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM1_MATCH_COUNT), new SimpleEntry<>(team1, "setMatchCount"));
+        teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM2_MATCH_COUNT), new SimpleEntry<>(team2, "setMatchCount"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM3_MATCH_COUNT), new SimpleEntry<>(team3, "setMatchCount"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM1_TIME_OUT), new SimpleEntry<>(team1, "setTimeOutCount"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM2_TIME_OUT), new SimpleEntry<>(team2, "setTimeOutCount"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM3_TIME_OUT), new SimpleEntry<>(team3, "setTimeOutCount"));
 		teamMethodMap.put(Settings.getTeamStatsSourceParameter("1","PassAttempts"), new SimpleEntry<>(team1, "setPassAttempts"));
 		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"PassAttempts"), new SimpleEntry<>(team2, "setPassAttempts"));
 		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"PassAttempts"), new SimpleEntry<>(team3, "setPassAttempts"));
@@ -1101,12 +1102,12 @@ public class TeamController {
 		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM1,"Aces"), new SimpleEntry<>(team1, "setAces"));
 		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM2,"Aces"), new SimpleEntry<>(team2, "setAces"));
 		teamMethodMap.put(Settings.getTeamStatsSourceParameter(TEAM3,"Aces"), new SimpleEntry<>(team3, "setAces"));
-		teamMethodMap.put(Settings.getSourceParameter("Team1Reset"), new SimpleEntry<>(team1, "setReset"));
-		teamMethodMap.put(Settings.getSourceParameter("Team2Reset"), new SimpleEntry<>(team2, "setReset"));
-		teamMethodMap.put(Settings.getSourceParameter("Team3Reset"), new SimpleEntry<>(team3, "setReset"));
-		teamMethodMap.put(Settings.getSourceParameter("Team1Warn"), new SimpleEntry<>(team1, "setWarn"));
-		teamMethodMap.put(Settings.getSourceParameter("Team2Warn"), new SimpleEntry<>(team2, "setWarn"));
-		teamMethodMap.put(Settings.getSourceParameter("Team3Warn"), new SimpleEntry<>(team3, "setWarn"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM1_RESET), new SimpleEntry<>(team1, "setReset"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM2_RESET), new SimpleEntry<>(team2, "setReset"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM3_RESET), new SimpleEntry<>(team3, "setReset"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM1_WARN), new SimpleEntry<>(team1, "setWarn"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM2_WARN), new SimpleEntry<>(team2, "setWarn"));
+		teamMethodMap.put(Settings.getSourceParameter(SettingsKeys.SRC_TEAM3_WARN), new SimpleEntry<>(team3, "setWarn"));
 		OBSRemoteController obsRemoteController = OBS.getController();
 		if (!(obsRemoteController==null) && OBS.getConnected())
 		{
@@ -1117,7 +1118,7 @@ public class TeamController {
 					}
 				});
 			}
-			match.setLastScored(obsInterface.getContents(Settings.getSourceParameter("LastScored")));
+			match.setLastScored(obsInterface.getContents(Settings.getSourceParameter(SettingsKeys.SRC_LAST_SCORED)));
 			teamPanel1.updateTeamName(team1.getTeamName());
 			teamPanel2.updateTeamName(team2.getTeamName());
 			teamPanel3.updateTeamName(team3.getTeamName());
@@ -1153,7 +1154,7 @@ public class TeamController {
 	}
 	private void setTextFromSource(String source, String text, Map<String, Entry<Team, String>> methodMap) {
 		Entry<Team, String> methodMapEntry = methodMap.get(source);
-		if(source.equals(Settings.getSourceParameter("Team1Reset")) || source.equals(Settings.getSourceParameter("Team2Reset")) || source.equals(Settings.getSourceParameter("Team1Warn")) || source.equals(Settings.getSourceParameter("Team2Warn")))
+		if(source.equals(Settings.getSourceParameter(SettingsKeys.SRC_TEAM1_RESET)) || source.equals(Settings.getSourceParameter(SettingsKeys.SRC_TEAM2_RESET)) || source.equals(Settings.getSourceParameter(SettingsKeys.SRC_TEAM1_WARN)) || source.equals(Settings.getSourceParameter(SettingsKeys.SRC_TEAM2_WARN)))
 		{
 			try {
 				Method method = methodMapEntry.getKey().getClass().getMethod(methodMapEntry.getValue(), boolean.class);

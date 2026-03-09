@@ -32,6 +32,7 @@ import javax.swing.JTextField;
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 import com.midsouthfoosball.foosobsplus.model.Tournament;
 import com.midsouthfoosball.foosobsplus.view.TournamentPanel;
 
@@ -145,11 +146,11 @@ public class TournamentController {
 		tournamentPanel.updateEventName(tournament.getEventName());
 	}
 	public void fetchAll() {
-		tournament.setTournamentName(obsInterface.getContents(Settings.getSourceParameter("Tournament")));
+		tournament.setTournamentName(obsInterface.getContents(Settings.getSourceParameter(SettingsKeys.SRC_TOURNAMENT)));
 		tournamentPanel.updateTournamentName(tournament.getTournamentName());
-		tournament.setEventName(obsInterface.getContents(Settings.getSourceParameter("Event")));
+		tournament.setEventName(obsInterface.getContents(Settings.getSourceParameter(SettingsKeys.SRC_EVENT)));
 		tournamentPanel.updateEventName(tournament.getEventName());
-		tournament.setTableName(obsInterface.getContents(Settings.getSourceParameter("TableName")));
+		tournament.setTableName(obsInterface.getContents(Settings.getSourceParameter(SettingsKeys.SRC_TABLE_NAME)));
 		tournamentPanel.updateTableName(tournament.getTableName());
 	}
 	public void writeAll() {

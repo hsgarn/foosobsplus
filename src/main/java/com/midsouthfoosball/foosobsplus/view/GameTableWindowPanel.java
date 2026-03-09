@@ -35,6 +35,7 @@ import javax.swing.table.TableColumnModel;
 
 import com.midsouthfoosball.foosobsplus.model.GameTableModel;
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 
 @SuppressWarnings("serial")
 public class GameTableWindowPanel extends JPanel {
@@ -51,7 +52,7 @@ public class GameTableWindowPanel extends JPanel {
 	public GameTableWindowPanel() {
 		this.maxGameCount = Settings.getMaxGameNumber();
 		gameWinners = new int[maxGameCount];
-		gameTable = new JTable(new GameTableModel(maxGameCount, Settings.getControlParameter("CutThroatMode"))); //$NON-NLS-1$
+		gameTable = new JTable(new GameTableModel(maxGameCount, Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE))); //$NON-NLS-1$
 		gameTable.setDefaultRenderer(Object.class, new GameTableCellRenderer());
 		updateGameTableColumnWidths();
 		setLayout(new GridBagLayout());
@@ -71,7 +72,7 @@ public class GameTableWindowPanel extends JPanel {
 	public void setTeams(String name1, String name2, String name3) {
 		gameTable.setValueAt(name1, 1, 0);
 		gameTable.setValueAt(name2, 2, 0);
-		if (Settings.getControlParameter("CutThroatMode").equals(ON)) { //$NON-NLS-1$
+		if (Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON)) { //$NON-NLS-1$
 			gameTable.setValueAt(name3, 3, 0);
 		}
 	}
@@ -85,13 +86,13 @@ public class GameTableWindowPanel extends JPanel {
 		int gameNumber = currentGameNumber;
 		int maxGameNumber = Settings.getMaxGameNumber();
 		if (gameNumber > maxGameNumber) gameNumber = maxGameNumber;
-		int row = Integer.parseInt(Settings.getControlParameter("CutThroatMode")) + 3; //$NON-NLS-1$
+		int row = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE)) + 3; //$NON-NLS-1$
 		gameTable.setValueAt(time, row, gameNumber);
 		gameTable.repaint();
 	}
 	public void updateGameTable(String[] scoresTeam1, String[] scoresTeam2, String[] scoresTeam3, String[] times, int currentGameNumber) {
 		this.currentGameNumber = currentGameNumber;
-		if (Settings.getControlParameter("CutThroatMode").equals(ON)) { //$NON-NLS-1$
+		if (Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON)) { //$NON-NLS-1$
 			for (int i = 1; i <= maxGameCount; ++i) {
 				gameTable.setValueAt(scoresTeam1[i-1], 1, i);
 				gameTable.setValueAt(scoresTeam2[i-1], 2, i);
@@ -109,7 +110,7 @@ public class GameTableWindowPanel extends JPanel {
 	}
 	public void resizeGameTable() {
 		this.maxGameCount = Settings.getMaxGameNumber();
-		GameTableModel tableModel = new GameTableModel(this.maxGameCount ,Settings.getControlParameter("CutThroatMode")); //$NON-NLS-1$
+		GameTableModel tableModel = new GameTableModel(this.maxGameCount ,Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE)); //$NON-NLS-1$
 		gameTable.setModel(tableModel);
 		updateGameTableColumnWidths();
 	}
@@ -128,7 +129,7 @@ public class GameTableWindowPanel extends JPanel {
           @Override
 	  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
 	  {
-                  Boolean isCutthroatMode = Settings.getControlParameter("CutThroatMode").equals(ON); //$NON-NLS-1$
+                  Boolean isCutthroatMode = Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON); //$NON-NLS-1$
 		  String tmp;
                   tmp = (String) value;
 		  setHorizontalAlignment(SwingConstants.RIGHT);

@@ -31,6 +31,7 @@ import com.midsouthfoosball.foosobsplus.model.GameClock;
 import com.midsouthfoosball.foosobsplus.model.LastScoredClock;
 import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 import com.midsouthfoosball.foosobsplus.model.Stats;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowPanel;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
@@ -91,13 +92,13 @@ public class MatchController {
 			teamController.resetScores();
 			teamController.resetGameCounts();
 			startMatch(createMatchId());
-			if (Settings.getControlParameter("CutThroatMode").equals(ON)) {
+			if (Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON)) {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + " vs " + teamController.getForwardName(3) + "/" + teamController.getGoalieName(3) + "\r\n");
 			} else {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + "\r\n");
 			}
 		}
-		if (Settings.getControlParameter("CutThroatMode").equals(ON)) {
+		if (Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON)) {
 			if (teamNumber == 1) {
 				//Single player scores
 				int won = teamController.incrementScore(teamNumber);

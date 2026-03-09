@@ -34,6 +34,7 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 
 @SuppressWarnings("serial")
 public class AutoScoreMainPanel extends JPanel {
@@ -100,20 +101,20 @@ public class AutoScoreMainPanel extends JPanel {
 		add(chkbxIgnore, gc);
 	}
 	private void setMnemonics() {
-		if(Settings.getHotKeyParameter("AutoScoreMainConnect").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_AUTO_SCORE_CONNECT).isEmpty()) { //$NON-NLS-1$
 			btnConnect.setMnemonic(-1);
 		} else {
-			btnConnect.setMnemonic(Settings.getHotKeyParameter("AutoScoreMainConnect").charAt(0)); //$NON-NLS-1$
+			btnConnect.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_AUTO_SCORE_CONNECT).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("AutoScoreMainDisconnect").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_AUTO_SCORE_DISCONNECT).isEmpty()) { //$NON-NLS-1$
 			btnDisconnect.setMnemonic(-1);
 		} else {
-			btnDisconnect.setMnemonic(Settings.getHotKeyParameter("AutoScoreMainDisconnect").charAt(0)); //$NON-NLS-1$
+			btnDisconnect.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_AUTO_SCORE_DISCONNECT).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("AutoScoreMainSettings").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_AUTO_SCORE_SETTINGS).isEmpty()) { //$NON-NLS-1$
 			btnSettings.setMnemonic(-1);
 		} else {
-			btnSettings.setMnemonic(Settings.getHotKeyParameter("AutoScoreMainSettings").charAt(0)); //$NON-NLS-1$
+			btnSettings.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_AUTO_SCORE_SETTINGS).charAt(0)); //$NON-NLS-1$
 		}
 	}
 	////// Listeners  //////

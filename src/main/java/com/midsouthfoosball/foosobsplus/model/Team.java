@@ -190,7 +190,7 @@ public class Team implements Serializable {
 		}
 	}
 	public int callTimeOut() {
-		if(Settings.getControlParameter("ShowTimeOutsUsed").equals(ON)) {
+		if(Settings.getControlParameter(SettingsKeys.CTRL_SHOW_TIME_OUTS_USED).equals(ON)) {
 			setTimeOutCount(getTimeOutCount()+1);
 		} else {
 			setTimeOutCount(getTimeOutCount()-1);
@@ -198,14 +198,14 @@ public class Team implements Serializable {
 		return getTimeOutCount();
 	}
 	public int restoreTimeOut() {
-		if(Settings.getControlParameter("ShowTimeOutsUsed").equals(ON)) {
+		if(Settings.getControlParameter(SettingsKeys.CTRL_SHOW_TIME_OUTS_USED).equals(ON)) {
 			setTimeOutCount(getTimeOutCount()-1);
 			if(getTimeOutCount()<0) {
 				setTimeOutCount(0);
 			}
 		} else {
 			setTimeOutCount(getTimeOutCount()+1);
-			int maxTimeOuts = Integer.parseInt(Settings.getControlParameter("MaxTimeOuts"));
+			int maxTimeOuts = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_MAX_TIME_OUTS));
 			if(getTimeOutCount()>maxTimeOuts) {
 				setTimeOutCount(maxTimeOuts);
 			}
@@ -339,10 +339,10 @@ public class Team implements Serializable {
 		writeAll();
 	}
 	public void resetTimeOuts() {
-		if(Settings.getControlParameter("ShowTimeOutsUsed").equals(ON)) {
+		if(Settings.getControlParameter(SettingsKeys.CTRL_SHOW_TIME_OUTS_USED).equals(ON)) {
 			setTimeOutCount(0);
 		} else {
-			setTimeOutCount(Integer.parseInt(Settings.getControlParameter("MaxTimeOuts")));
+			setTimeOutCount(Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_MAX_TIME_OUTS)));
 		}
 	}
 	public void resetResetWarns() {

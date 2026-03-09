@@ -46,10 +46,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Stack;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.AbstractButton;
@@ -125,6 +126,7 @@ import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.MatchObserver;
 import com.midsouthfoosball.foosobsplus.model.OBS;
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 import com.midsouthfoosball.foosobsplus.model.Stats;
 import com.midsouthfoosball.foosobsplus.model.Team;
 import com.midsouthfoosball.foosobsplus.model.TimeClock;
@@ -186,11 +188,11 @@ public final class Main implements MatchObserver {
 	private static final DateTimeFormatter 		dtf 					= DateTimeFormatter.ofPattern(Messages.getString("Main.DateTimePattern")); //$NON-NLS-1$
 	private static com.midsouthfoosball.foosobsplus.api.APIServer apiServer;
 	private static com.midsouthfoosball.foosobsplus.api.TeamService teamService;
-	private static final StreamIndexer 			streamIndexer      		= new StreamIndexer(Settings.getControlParameter("datapath")); //$NON-NLS-1$
+	private static final StreamIndexer 			streamIndexer      		= new StreamIndexer(Settings.getControlParameter(SettingsKeys.CTRL_DATAPATH)); //$NON-NLS-1$
 	private static AutoScoreManager 			autoScoreManager;
-    private static final Map<String, String>	teamGameShowSourcesMap	= new HashMap<>();
-   	private static HashMap<String, Boolean> allBallsMap 	= new HashMap<>();
-	private static HashMap<String, Boolean> nineBallsMap 	= new HashMap<>();
+    private static final Map<String, String>	teamGameShowSourcesMap	= new ConcurrentHashMap<>();
+   	private static Map<String, Boolean> allBallsMap 	= new ConcurrentHashMap<>();
+	private static Map<String, Boolean> nineBallsMap 	= new ConcurrentHashMap<>();
 	private static OBSManager obsManager;
 	private static boolean obsSourcesFetched = false;
 	private static boolean obsFiltersFetched = false;
@@ -198,19 +200,19 @@ public final class Main implements MatchObserver {
 	private static WatchService 				watchService;
 	////// CommandStack and UndoRedo setup \\\\\\
 	private static int 							undoRedoPointer			= -1;
-	private static final Stack<Command> 		commandStack 			= new Stack<>();
-	private static final Stack<Memento> 		mementoStackTeam1 		= new Stack<>();
-	private static final Stack<Memento> 		mementoStackTeam2		= new Stack<>();
-	private static final Stack<Memento> 		mementoStackTeam3       = new Stack<>();
-	private static final Stack<Memento> 		mementoStackStats 		= new Stack<>();
-	private static final Stack<Memento> 		mementoStackMatch		= new Stack<>();
-	private static final Stack<Memento> 		mementoStackGameClock	= new Stack<>();
-	private static final Stack<String>			codeStack 				= new Stack<>();
+	private static final ArrayList<Command> 	commandStack 			= new ArrayList<>();
+	private static final ArrayList<Memento> 	mementoStackTeam1 		= new ArrayList<>();
+	private static final ArrayList<Memento> 	mementoStackTeam2		= new ArrayList<>();
+	private static final ArrayList<Memento> 	mementoStackTeam3       = new ArrayList<>();
+	private static final ArrayList<Memento> 	mementoStackStats 		= new ArrayList<>();
+	private static final ArrayList<Memento> 	mementoStackMatch		= new ArrayList<>();
+	private static final ArrayList<Memento> 	mementoStackGameClock	= new ArrayList<>();
+	private static final ArrayList<String>		codeStack 				= new ArrayList<>();
 	private static CommandSwitch 				mySwitch;
 	////// Generate the Data Models (Mvc) \\\\\\
 	private static final Tournament				tournament				= new Tournament(obsInterface);
-	private static final Team 					team1 					= new Team(obsInterface, 1, Settings.getControlParameter("Side1Color")); //$NON-NLS-1$
-	private static final Team 					team2 					= new Team(obsInterface, 2, Settings.getControlParameter("Side2Color")); //$NON-NLS-1$
+	private static final Team 					team1 					= new Team(obsInterface, 1, Settings.getControlParameter(SettingsKeys.CTRL_SIDE1_COLOR)); //$NON-NLS-1$
+	private static final Team 					team2 					= new Team(obsInterface, 2, Settings.getControlParameter(SettingsKeys.CTRL_SIDE2_COLOR)); //$NON-NLS-1$
 	private static final Team         			team3              		= new Team(obsInterface, 3, Messages.getString("Main.None")); //$NON-NLS-1$
 	private static final Match 					match					= new Match(obsInterface, team1, team2, team3);
 	private static final Stats 					stats 					= new Stats(team1, team2);
@@ -279,12 +281,12 @@ public final class Main implements MatchObserver {
 		buildTeamGameShowSourcesMap();
 		loadWindowsAndControllers();
 		initializeOBSManager();
-		OBS.setHost(Settings.getOBSParameter("OBSHost")); //$NON-NLS-1$
-		OBS.setPort(Settings.getOBSParameter("OBSPort")); //$NON-NLS-1$
-		OBS.setPassword(Settings.getOBSParameter("OBSPassword")); //$NON-NLS-1$
-		setMainScene(Settings.getOBSParameter("OBSMainScene")); //$NON-NLS-1$
+		OBS.setHost(Settings.getOBSParameter(SettingsKeys.OBS_HOST)); //$NON-NLS-1$
+		OBS.setPort(Settings.getOBSParameter(SettingsKeys.OBS_PORT)); //$NON-NLS-1$
+		OBS.setPassword(Settings.getOBSParameter(SettingsKeys.OBS_PASSWORD)); //$NON-NLS-1$
+		setMainScene(Settings.getOBSParameter(SettingsKeys.OBS_MAIN_SCENE)); //$NON-NLS-1$
 		updateOBSDisconnected();
-		if (Settings.getOBSParameter("OBSAutoLogin").equals(ON)) { //$NON-NLS-1$
+		if (Settings.getOBSParameter(SettingsKeys.OBS_AUTO_LOGIN).equals(ON)) { //$NON-NLS-1$
 			if (OBS.getPassword().isEmpty() || OBS.getHost().isEmpty() || OBS.getPort().isEmpty()) {
 				String msg = Messages.getString("Errors.Main.AutoLogin"); //$NON-NLS-1$
 				String ttl = Messages.getString("Errors.Main.AutoLogin.Title"); //$NON-NLS-1$
@@ -298,14 +300,14 @@ public final class Main implements MatchObserver {
 		loadListeners();
 		loadCommands();
 		initializeAutoScoreManager();
-		if (Settings.getAutoScoreParameter("AutoScoreSettingsAutoConnect").equals(ON)) { //$NON-NLS-1$
+		if (Settings.getAutoScoreParameter(SettingsKeys.AS_AUTO_CONNECT).equals(ON)) { //$NON-NLS-1$
 			autoScoreManager.connect();
 		}
 		createFileWatchWorker();
 		fileWatchWorker.execute();
 		// Initialize and start REST API server if enabled
 		try {
-			String apiEnabled = Settings.getAPIParameter("APIEnabled");
+			String apiEnabled = Settings.getAPIParameter(SettingsKeys.API_ENABLED);
 			logger.info("API Enabled setting: " + apiEnabled);
 			if (apiEnabled != null && apiEnabled.equals(ON)) {
 				logger.info("Starting REST API server...");
@@ -412,7 +414,7 @@ public final class Main implements MatchObserver {
 		obsConnectPanel.disableConnect();
 		mainFrame.enableConnect(false);
 		mainFrame.setOBSIconConnected(true);
-		if(Settings.getOBSParameter("OBSUpdateOnConnect").equals(ON)) { //$NON-NLS-1$
+		if(Settings.getOBSParameter(SettingsKeys.OBS_UPDATE_ON_CONNECT).equals(ON)) { //$NON-NLS-1$
 			tournamentController.writeAll();
 			teamController.writeAll();
 			statsController.displayAllStats();
@@ -441,7 +443,7 @@ public final class Main implements MatchObserver {
 
 	public static void restartAPIServer() {
 		try {
-			String apiEnabled = Settings.getAPIParameter("APIEnabled");
+			String apiEnabled = Settings.getAPIParameter(SettingsKeys.API_ENABLED);
 
 			if (apiServer != null && apiServer.isRunning()) {
 				apiServer.stop();
@@ -546,7 +548,7 @@ public final class Main implements MatchObserver {
 		String filter;
 		String gameDuration;
 		String type;
-		boolean cutThroatMode = Settings.getControlParameter("CutThroatMode").equals(ON); //$NON-NLS-1$
+		boolean cutThroatMode = Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON); //$NON-NLS-1$
 		boolean isStreamTimerRunning = gameClock.isStreamTimerRunning();
 		if(winState==1) {
 			int gn = match.getCurrentGameNumber();
@@ -571,7 +573,7 @@ public final class Main implements MatchObserver {
 			type = "Match"; //$NON-NLS-1$
 		}
 		if (a == 0 || b == 0 || (cutThroatMode && c == 0)) {
-			if(Settings.getControlParameter("ShowSkunk").equals(ON)) { //$NON-NLS-1$
+			if(Settings.getControlParameter(SettingsKeys.CTRL_SHOW_SKUNK).equals(ON)) { //$NON-NLS-1$
 				filter = "Team" + teamNbr + "Skunk"; //$NON-NLS-1$ //$NON-NLS-2$
 				activateFilter(filter);
 			}
@@ -882,7 +884,7 @@ public final class Main implements MatchObserver {
 		matchId = createMatchId();
 		matchController.startMatch(matchId);
 		if(gameClock.isStreamTimerRunning()) {
-			if(Settings.getControlParameter("CutThroatMode").equals(ON)) { //$NON-NLS-1$
+			if(Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON)) { //$NON-NLS-1$
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch") + Messages.getString("Main.Pressed") + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
 			} else {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartMatch") + Messages.getString("Main.Pressed") + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
@@ -897,7 +899,7 @@ public final class Main implements MatchObserver {
 	}
 	public static void startGame() {
 		if(gameClock.isStreamTimerRunning()) {
-			if(Settings.getControlParameter("CutThroatMode").equals(ON)) { //$NON-NLS-1$
+			if(Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON)) { //$NON-NLS-1$
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame") + Messages.getString("Main.Pressed") + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + " vs " + team3.getForwardName() + "/" + team3.getGoalieName() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
 			} else {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": " + Messages.getString("MatchPanel.StartGame") + Messages.getString("Main.Pressed") + team1.getForwardName() + "/" + team1.getGoalieName() + " vs " + team2.getForwardName() + "/" + team2.getGoalieName() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
@@ -916,7 +918,7 @@ public final class Main implements MatchObserver {
 		teamController.switchSides();
 	}
 	public static void setShowParsed(boolean showParsed) {
-		Settings.setControlParameter("ShowParsed",showParsed); //$NON-NLS-1$
+		Settings.setControlParameter(SettingsKeys.CTRL_SHOW_PARSED,showParsed); //$NON-NLS-1$
 		try {
 			Settings.saveControlConfig();
 		} catch (IOException e) {
@@ -930,7 +932,7 @@ public final class Main implements MatchObserver {
 		Command commandStatus;
 		if (!isRedo) { 
   			makeMementos();
-            codeStack.push(code);
+            codeStack.add(code);
 		}
 		stats.setCode(code);
 		stats.addCodeToHistory(code);
@@ -938,7 +940,8 @@ public final class Main implements MatchObserver {
 		statsEntryPanel.updateCodeHistory(code);
 		if (stats.getIsCommand()) {
 			if (!isRedo) { 
-				commandStatus = commandStack.push(mySwitch.execute(stats.getCommand()));
+				commandStatus = mySwitch.execute(stats.getCommand());
+				commandStack.add(commandStatus);
 				if (commandStatus == null) {
 					statsEntryPanel.errorCodeHistory();
 				} else {
@@ -948,7 +951,8 @@ public final class Main implements MatchObserver {
 			}
 		} else {
 			if (!isRedo) { 
-				commandStatus = commandStack.push(mySwitch.execute("code")); //$NON-NLS-1$
+				commandStatus = mySwitch.execute("code"); //$NON-NLS-1$
+				commandStack.add(commandStatus);
 				if (commandStatus == null) {
 					statsEntryPanel.errorCodeHistory();
 				}
@@ -992,12 +996,12 @@ public final class Main implements MatchObserver {
 	}
 	private static void makeMementos() {
 		deleteElementsAfterPointer(undoRedoPointer);
-        mementoStackTeam1.push(saveState(team1));
-		mementoStackTeam2.push(saveState(team2));
-		mementoStackTeam3.push(saveState(team3));
-   		mementoStackStats.push(saveState(stats));
-   		mementoStackMatch.push(saveState(match));
-   		mementoStackGameClock.push(saveState(gameClock));
+        mementoStackTeam1.add(saveState(team1));
+		mementoStackTeam2.add(saveState(team2));
+		mementoStackTeam3.add(saveState(team3));
+   		mementoStackStats.add(saveState(stats));
+   		mementoStackMatch.add(saveState(match));
+   		mementoStackGameClock.add(saveState(gameClock));
 	}
 	private static Memento saveState(Object object) {
 		return new Memento(object);
@@ -1138,12 +1142,12 @@ public final class Main implements MatchObserver {
 	}
 	public static void showScores(boolean show) {
 		obsPanel.setShowScores(show);
-		showSource(Settings.getSourceParameter("ShowScores"), show); //$NON-NLS-1$
+		showSource(Settings.getSourceParameter(SettingsKeys.SRC_SHOW_SCORES), show); //$NON-NLS-1$
 		setFocusOnCode();
 	}
 	public static void showTimer(boolean show) {
 		mainController.showTimerWindow(show);
-		showSource(Settings.getSourceParameter("ShowTimer"), show); //$NON-NLS-1$
+		showSource(Settings.getSourceParameter(SettingsKeys.SRC_SHOW_TIMER), show); //$NON-NLS-1$
 		setFocusOnCode();
 	}
 	public static void setFocusOnCode() {
@@ -1151,7 +1155,7 @@ public final class Main implements MatchObserver {
 	}
 	public static void showCutthroat(boolean show) {
 		obsPanel.setShowCutthroat(show);
-		showSource(Settings.getSourceParameter("ShowCutthroat"), show); //$NON-NLS-1$
+		showSource(Settings.getSourceParameter(SettingsKeys.SRC_SHOW_CUTTHROAT), show); //$NON-NLS-1$
 		setFocusOnCode();
 	}
 	public static void showSource(String source, boolean show) {
@@ -1543,9 +1547,9 @@ public final class Main implements MatchObserver {
 			obsPanel.setEnableSkunk(showSkunkFlag);
 			parametersPanel.setEnableShowSkunk(showSkunkFlag);
 			if (showSkunkFlag) {
-				Settings.setControlParameter("ShowSkunk",ON); //$NON-NLS-1$
+				Settings.setControlParameter(SettingsKeys.CTRL_SHOW_SKUNK,ON); //$NON-NLS-1$
 			} else {
-				Settings.setControlParameter("ShowSkunk",OFF); //$NON-NLS-1$
+				Settings.setControlParameter(SettingsKeys.CTRL_SHOW_SKUNK,OFF); //$NON-NLS-1$
 			}
 			setFocusOnCode();
 		}
@@ -1587,11 +1591,11 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static void saveParameterSettings() {
-		int oldGamesToWin = Integer.parseInt(Settings.getControlParameter("GamesToWin")); //$NON-NLS-1$
-		int oldCutthroatMode = Integer.parseInt(Settings.getControlParameter("CutThroatMode")); //$NON-NLS-1$
+		int oldGamesToWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_GAMES_TO_WIN)); //$NON-NLS-1$
+		int oldCutthroatMode = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE)); //$NON-NLS-1$
 		parametersPanel.saveSettings(Settings.getInstance());
-		int newGamesToWin = Integer.parseInt(Settings.getControlParameter("GamesToWin")); //$NON-NLS-1$
-		int newCutthroatMode = Integer.parseInt(Settings.getControlParameter("CutThroatMode")); //$NON-NLS-1$
+		int newGamesToWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_GAMES_TO_WIN)); //$NON-NLS-1$
+		int newCutthroatMode = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE)); //$NON-NLS-1$
 		if (oldGamesToWin != newGamesToWin || oldCutthroatMode != newCutthroatMode) {
 			matchPanel.resizeGameTable();
 			gameTableWindowPanel.resizeGameTable();
@@ -2166,14 +2170,14 @@ public final class Main implements MatchObserver {
 		fileWatchWorker = new SwingWorker<Boolean, String>() {
 			@Override
 			protected Boolean doInBackground() throws Exception {
-				String partnerProgramDir = Settings.getPartnerProgramParameter("PartnerProgramPath"); //$NON-NLS-1$
+				String partnerProgramDir = Settings.getPartnerProgramParameter(SettingsKeys.PP_PATH); //$NON-NLS-1$
 				final String clearString = "XXX_ALREADY_READ_XXX";//= Settings.getPartnerProgramClearString(); //$NON-NLS-1$
-				String partnerProgramPlayer1FileName = Settings.getPartnerProgramParameter("Player1FileName"); //$NON-NLS-1$
-				String partnerProgramPlayer2FileName = Settings.getPartnerProgramParameter("Player2FileName"); //$NON-NLS-1$
-				String partnerProgramPlayer3FileName = Settings.getPartnerProgramParameter("Player3FileName"); //$NON-NLS-1$
-				String partnerProgramPlayer4FileName = Settings.getPartnerProgramParameter("Player4FileName"); //$NON-NLS-1$
-				String partnerProgramEventFileName = Settings.getPartnerProgramParameter("EventFileName"); //$NON-NLS-1$
-				String partnerProgramTournamentFileName = Settings.getPartnerProgramParameter("TournamentFileName"); //$NON-NLS-1$
+				String partnerProgramPlayer1FileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER1_FILE); //$NON-NLS-1$
+				String partnerProgramPlayer2FileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER2_FILE); //$NON-NLS-1$
+				String partnerProgramPlayer3FileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER3_FILE); //$NON-NLS-1$
+				String partnerProgramPlayer4FileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER4_FILE); //$NON-NLS-1$
+				String partnerProgramEventFileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_EVENT_FILE); //$NON-NLS-1$
+				String partnerProgramTournamentFileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_TOURNAMENT_FILE); //$NON-NLS-1$
 				Path partnerPath = Paths.get(partnerProgramDir);
 
                 // Check if directory exists
@@ -2291,12 +2295,12 @@ public final class Main implements MatchObserver {
 			protected void process(List<String> chunks) {
 				if (isCancelled()) return;
 				for (String value : chunks) {
-					String partnerProgramPlayer1FileName = Settings.getPartnerProgramParameter("Player1FileName"); //$NON-NLS-1$
-					String partnerProgramPlayer2FileName = Settings.getPartnerProgramParameter("Player2FileName"); //$NON-NLS-1$
-					String partnerProgramPlayer3FileName = Settings.getPartnerProgramParameter("Player3FileName"); //$NON-NLS-1$
-					String partnerProgramPlayer4FileName = Settings.getPartnerProgramParameter("Player4FileName"); //$NON-NLS-1$
-					String partnerProgramEventFileName = Settings.getPartnerProgramParameter("EventFileName"); //$NON-NLS-1$
-					String partnerProgramTournamentFileName = Settings.getPartnerProgramParameter("TournamentFileName"); //$NON-NLS-1$
+					String partnerProgramPlayer1FileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER1_FILE); //$NON-NLS-1$
+					String partnerProgramPlayer2FileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER2_FILE); //$NON-NLS-1$
+					String partnerProgramPlayer3FileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER3_FILE); //$NON-NLS-1$
+					String partnerProgramPlayer4FileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER4_FILE); //$NON-NLS-1$
+					String partnerProgramEventFileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_EVENT_FILE); //$NON-NLS-1$
+					String partnerProgramTournamentFileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_TOURNAMENT_FILE); //$NON-NLS-1$
 					String newName;
 					String[] pieces = value.split("="); //$NON-NLS-1$
 					if (pieces.length == 1) {

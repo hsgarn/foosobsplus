@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 
 import io.javalin.Javalin;
 
@@ -41,8 +42,8 @@ public class APIServer {
 	private final RateLimiter rateLimiter;
 
 	public APIServer(TeamService teamService) {
-		this.port = Integer.parseInt(Settings.getAPIParameter("APIPort"));
-		this.apiKey = Settings.getAPIParameter("APIKey");
+		this.port = Integer.parseInt(Settings.getAPIParameter(SettingsKeys.API_PORT));
+		this.apiKey = Settings.getAPIParameter(SettingsKeys.API_KEY);
 		this.playerNamesController = new PlayerNamesController(teamService);
 		this.timerControllerAPI = new TimerControllerAPI(teamService.getTeamController());
 		this.foosballCodeController = new FoosballCodeController(teamService);

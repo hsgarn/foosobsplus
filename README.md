@@ -1327,6 +1327,18 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.082 03/09/2026</br>
+Add SettingsKeys.java — constants class replacing all property key string literals across 30+ files (controllers, view panels, main, OBS layer); eliminates runtime typo risk and provides compile-time safety.</br>
+Fix bug in SourcesPanel: "ShowCutthroatSource" was using the wrong key — corrected to "ShowCutthroat" (consistent with Settings defaults and OBSManager).</br>
+Make Settings.java config Properties fields private; all access now goes through accessor methods.</br>
+Upgrade test dependencies: JUnit Jupiter 5.6.0 → 5.12.0; jackson-databind 2.13.5 → 2.18.3; Guava 32.0.1-jre → 33.4.0-jre.</br>
+Replace deprecated Stack<T> with ArrayDeque<T> for undo/redo stacks in Main.java.</br>
+Replace HashMap with ConcurrentHashMap for shared source maps in Main.java.</br>
+Add SettingsDefaultsTest — 13 unit tests verifying that setting a value never mutates its default.</br>
+Command interface: remove redundant public abstract modifiers.</br>
+CommandSwitch: make commandMap private; use Map<> interface type instead of HashMap<>.</br>
+Memento: make serializedObject private; remove meaningless transient from static field.</br>
+</br>
 v2.081 03/07/2026</br>
 Fix filter dropdowns and test buttons.</br>
 </br>

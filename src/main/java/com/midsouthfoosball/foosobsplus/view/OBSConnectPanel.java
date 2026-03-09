@@ -52,6 +52,7 @@ import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.model.OBS;
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -104,28 +105,28 @@ public class OBSConnectPanel extends JPanel {
 		JLabel lblHost = new JLabel(Messages.getString("OBSConnectPanel.Host")); //$NON-NLS-1$
 		add(lblHost, "cell " + COLUMN0 + " " + row + ",alignx trailing"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		txtHost = new JTextField();
-		txtHost.setText(Settings.getOBSParameter("OBSHost")); //$NON-NLS-1$
+		txtHost.setText(Settings.getOBSParameter(SettingsKeys.OBS_HOST));
 		txtHost.setColumns(10);
 		add(txtHost, "cell " + COLUMN1 + " " + row + " 2,growx");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		row += 1;
 		JLabel lblPort = new JLabel(Messages.getString("OBSConnectPanel.Port")); //$NON-NLS-1$
 		add(lblPort, "cell " + COLUMN0 + " " + row + ",alignx trailing"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		txtPort = new JTextField();
-		txtPort.setText(Settings.getOBSParameter("OBSPort")); //$NON-NLS-1$
+		txtPort.setText(Settings.getOBSParameter(SettingsKeys.OBS_PORT));
 		txtPort.setColumns(10);
 		add(txtPort, "cell " + COLUMN1 + " " + row + " 2,growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		row += 1;
 		JLabel lblPassword = new JLabel(Messages.getString("OBSConnectPanel.Password")); //$NON-NLS-1$
 		add(lblPassword, "cell " + COLUMN0 + " " + row + ",alignx trailing"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		txtPassword = new JTextField();
-		txtPassword.setText(Settings.getOBSParameter("OBSPassword")); //$NON-NLS-1$
+		txtPassword.setText(Settings.getOBSParameter(SettingsKeys.OBS_PASSWORD));
 		txtPassword.setColumns(10);
 		add(txtPassword, "cell " + COLUMN1 + " " + row + " 2,growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		row += 1;
 		JLabel lblMainScene = new JLabel(Messages.getString("OBSConnectPanel.MainScene")); //$NON-NLS-1$
 		add(lblMainScene, "cell " + COLUMN0 + " " + row + ", alignx trailing"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		txtMainScene = new JTextField();
-		txtMainScene.setText(Settings.getOBSParameter("OBSMainScene")); //$NON-NLS-1$
+		txtMainScene.setText(Settings.getOBSParameter(SettingsKeys.OBS_MAIN_SCENE));
 		txtMainScene.setColumns(10);
 		add(txtMainScene, "cell " + COLUMN1 + " " + row + " 2,growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		btnSetMainScene = new JButton(Messages.getString("OBSConnectPanel.SetMainScene")); //$NON-NLS-1$
@@ -148,14 +149,14 @@ public class OBSConnectPanel extends JPanel {
 		add(btnActivateScene, "cell " + COLUMN4 + " " + row + ",growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		row += 1;
 		chckbxSavePassword = new JCheckBox(Messages.getString("OBSConnectPanel.SavePassword")); //$NON-NLS-1$
-		if (Settings.getOBSParameter("OBSSavePassword").equals(ON)) { //$NON-NLS-1$
+		if (Settings.getOBSParameter(SettingsKeys.OBS_SAVE_PASSWORD).equals(ON)) {
 			chckbxSavePassword.setSelected(true);
 		} else {
 			chckbxSavePassword.setSelected(false);
 		}
 		add(chckbxSavePassword, "cell " + COLUMN1 + " " + row); //$NON-NLS-1$ //$NON-NLS-2$
 		chckbxCloseOnConnect = new JCheckBox(Messages.getString("OBSConnectPanel.CloseOnConnect")); //$NON-NLS-1$
-		if (Settings.getOBSParameter("OBSCloseOnConnect").equals(ON)) { //$NON-NLS-1$
+		if (Settings.getOBSParameter(SettingsKeys.OBS_CLOSE_ON_CONNECT).equals(ON)) {
 			chckbxCloseOnConnect.setSelected(true);
 		} else {
 			chckbxCloseOnConnect.setSelected(false);
@@ -163,14 +164,14 @@ public class OBSConnectPanel extends JPanel {
 		add(chckbxCloseOnConnect, "cell " + COLUMN2 + " " + row + ",alignx left"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		row += 1;
 		chckbxAutoLogin = new JCheckBox(Messages.getString("OBSConnectPanel.AutoLoginOnStart")); //$NON-NLS-1$
-		if (Settings.getOBSParameter("OBSAutoLogin").equals(ON)) { //$NON-NLS-1$
+		if (Settings.getOBSParameter(SettingsKeys.OBS_AUTO_LOGIN).equals(ON)) {
 			chckbxAutoLogin.setSelected(true);
 		} else {
 			chckbxAutoLogin.setSelected(false);
 		}
 		add(chckbxAutoLogin, "cell " + COLUMN1 + " " + row); //$NON-NLS-1$ //$NON-NLS-2$
 		chckbxUpdateOnConnect = new JCheckBox(Messages.getString("OBSConnectPanel.UpdateOnConnect")); //$NON-NLS-1$
-		if (Settings.getOBSParameter("OBSUpdateOnConnect").equals(ON)) { //$NON-NLS-1$
+		if (Settings.getOBSParameter(SettingsKeys.OBS_UPDATE_ON_CONNECT).equals(ON)) {
 			chckbxUpdateOnConnect.setSelected(true);
 		} else {
 			chckbxUpdateOnConnect.setSelected(false);
@@ -223,47 +224,47 @@ public class OBSConnectPanel extends JPanel {
 	}
 	public boolean isConnectionChanged() {
 		boolean changed = false;
-		if (!txtHost.getText().equals(Settings.getOBSParameter("OBSHost")) || //$NON-NLS-1$
-			!txtPort.getText().equals(Settings.getOBSParameter("OBSPort"))  || //$NON-NLS-1$
-			!txtPassword.getText().equals(Settings.getOBSParameter("OBSPassword"))) { //$NON-NLS-1$
+		if (!txtHost.getText().equals(Settings.getOBSParameter(SettingsKeys.OBS_HOST)) ||
+			!txtPort.getText().equals(Settings.getOBSParameter(SettingsKeys.OBS_PORT))  ||
+			!txtPassword.getText().equals(Settings.getOBSParameter(SettingsKeys.OBS_PASSWORD))) {
 			changed = true;
 		}
 		return changed;
 	}
 	public void restoreDefaults() {
-		txtHost.setText(Settings.getDefaultOBSParameter("OBSHost")); //$NON-NLS-1$
-		txtPort.setText(Settings.getDefaultOBSParameter("OBSPort")); //$NON-NLS-1$
-		txtPassword.setText(Settings.getDefaultOBSParameter("OBSPassword")); //$NON-NLS-1$
-		txtMainScene.setText(Settings.getDefaultOBSParameter("OBSMainScene")); //$NON-NLS-1$
-		chckbxSavePassword.setSelected(Settings.getDefaultOBSParameter("OBSSavePassword").equals(ON)); //$NON-NLS-1$
-		chckbxAutoLogin.setSelected(Settings.getDefaultOBSParameter("OBSAutoLogin").equals(ON)); //$NON-NLS-1$
-		chckbxCloseOnConnect.setSelected(Settings.getDefaultOBSParameter("OBSCloseOnConnect").equals(ON)); //$NON-NLS-1$
-		chckbxUpdateOnConnect.setSelected(Settings.getDefaultOBSParameter("OBSUpdateOnConnect").equals(ON)); //$NON-NLS-1$
+		txtHost.setText(Settings.getDefaultOBSParameter(SettingsKeys.OBS_HOST));
+		txtPort.setText(Settings.getDefaultOBSParameter(SettingsKeys.OBS_PORT));
+		txtPassword.setText(Settings.getDefaultOBSParameter(SettingsKeys.OBS_PASSWORD));
+		txtMainScene.setText(Settings.getDefaultOBSParameter(SettingsKeys.OBS_MAIN_SCENE));
+		chckbxSavePassword.setSelected(Settings.getDefaultOBSParameter(SettingsKeys.OBS_SAVE_PASSWORD).equals(ON));
+		chckbxAutoLogin.setSelected(Settings.getDefaultOBSParameter(SettingsKeys.OBS_AUTO_LOGIN).equals(ON));
+		chckbxCloseOnConnect.setSelected(Settings.getDefaultOBSParameter(SettingsKeys.OBS_CLOSE_ON_CONNECT).equals(ON));
+		chckbxUpdateOnConnect.setSelected(Settings.getDefaultOBSParameter(SettingsKeys.OBS_UPDATE_ON_CONNECT).equals(ON));
 	}
 	public void revertChanges() {
-		txtHost.setText(Settings.getOBSParameter("OBSHost")); //$NON-NLS-1$
-		txtPort.setText(Settings.getOBSParameter("OBSPort")); //$NON-NLS-1$
-		txtPassword.setText(Settings.getOBSParameter("OBSPassword")); //$NON-NLS-1$
-		txtMainScene.setText(Settings.getOBSParameter("OBSMainScene")); //$NON-NLS-1$
-		chckbxSavePassword.setSelected(Settings.getOBSParameter("OBSSavePassword").equals(ON)); //$NON-NLS-1$
-		chckbxAutoLogin.setSelected(Settings.getOBSParameter("OBSAutoLogin").equals(ON)); //$NON-NLS-1$
-		chckbxCloseOnConnect.setSelected(Settings.getOBSParameter("OBSCloseOnConnect").equals(ON)); //$NON-NLS-1$
-		chckbxUpdateOnConnect.setSelected(Settings.getOBSParameter("OBSUpdateOnConnect").equals(ON)); //$NON-NLS-1$
+		txtHost.setText(Settings.getOBSParameter(SettingsKeys.OBS_HOST));
+		txtPort.setText(Settings.getOBSParameter(SettingsKeys.OBS_PORT));
+		txtPassword.setText(Settings.getOBSParameter(SettingsKeys.OBS_PASSWORD));
+		txtMainScene.setText(Settings.getOBSParameter(SettingsKeys.OBS_MAIN_SCENE));
+		chckbxSavePassword.setSelected(Settings.getOBSParameter(SettingsKeys.OBS_SAVE_PASSWORD).equals(ON));
+		chckbxAutoLogin.setSelected(Settings.getOBSParameter(SettingsKeys.OBS_AUTO_LOGIN).equals(ON));
+		chckbxCloseOnConnect.setSelected(Settings.getOBSParameter(SettingsKeys.OBS_CLOSE_ON_CONNECT).equals(ON));
+		chckbxUpdateOnConnect.setSelected(Settings.getOBSParameter(SettingsKeys.OBS_UPDATE_ON_CONNECT).equals(ON));
 	}
 	public void saveSettings() {
 		updateOBS();
-		Settings.setOBS("OBSHost",txtHost.getText()); //$NON-NLS-1$
-		Settings.setOBS("OBSPort",txtPort.getText()); //$NON-NLS-1$
-		Settings.setOBS("OBSMainScene",txtMainScene.getText()); //$NON-NLS-1$
-		Settings.setOBS("OBSAutoLogin", chckbxAutoLogin.isSelected() ? ON : OFF); //$NON-NLS-1$
-		Settings.setOBS("OBSUpdateOnConnect", chckbxUpdateOnConnect.isSelected() ? ON : OFF); //$NON-NLS-1$
-		Settings.setOBS("OBSCloseOnConnect", chckbxCloseOnConnect.isSelected() ? ON : OFF); //$NON-NLS-1$
-		Settings.setOBS("OBSSavePassword",chckbxSavePassword.isSelected() ? ON : OFF); //$NON-NLS-1$
-		Settings.setOBS("OBSPassword",chckbxSavePassword.isSelected() ? txtPassword.getText() : ""); //$NON-NLS-1$ //$NON-NLS-2$
+		Settings.setOBS(SettingsKeys.OBS_HOST, txtHost.getText());
+		Settings.setOBS(SettingsKeys.OBS_PORT, txtPort.getText());
+		Settings.setOBS(SettingsKeys.OBS_MAIN_SCENE, txtMainScene.getText());
+		Settings.setOBS(SettingsKeys.OBS_AUTO_LOGIN, chckbxAutoLogin.isSelected() ? ON : OFF);
+		Settings.setOBS(SettingsKeys.OBS_UPDATE_ON_CONNECT, chckbxUpdateOnConnect.isSelected() ? ON : OFF);
+		Settings.setOBS(SettingsKeys.OBS_CLOSE_ON_CONNECT, chckbxCloseOnConnect.isSelected() ? ON : OFF);
+		Settings.setOBS(SettingsKeys.OBS_SAVE_PASSWORD, chckbxSavePassword.isSelected() ? ON : OFF);
+		Settings.setOBS(SettingsKeys.OBS_PASSWORD, chckbxSavePassword.isSelected() ? txtPassword.getText() : ""); //$NON-NLS-1$
 		OBS.setMainScene(txtMainScene.getText());
-		if (Settings.getOBSParameter("OBSAutoLogin").equals(ON)) { //$NON-NLS-1$
-			if (Settings.getOBSParameter("OBSHost").isEmpty() || Settings.getOBSParameter("OBSPassword").isEmpty() || Settings.getOBSParameter("OBSPort").isEmpty() || Settings.getOBSParameter("OBSSavePassword").equals(OFF)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				Settings.setOBS("OBSAutoLogin",OFF); //$NON-NLS-1$
+		if (Settings.getOBSParameter(SettingsKeys.OBS_AUTO_LOGIN).equals(ON)) {
+			if (Settings.getOBSParameter(SettingsKeys.OBS_HOST).isEmpty() || Settings.getOBSParameter(SettingsKeys.OBS_PASSWORD).isEmpty() || Settings.getOBSParameter(SettingsKeys.OBS_PORT).isEmpty() || Settings.getOBSParameter(SettingsKeys.OBS_SAVE_PASSWORD).equals(OFF)) {
+				Settings.setOBS(SettingsKeys.OBS_AUTO_LOGIN, OFF);
 				chckbxAutoLogin.setSelected(false);
 				String msg = Messages.getString("Errors.OBSConnectPanel.AutoLogin"); //$NON-NLS-1$
 				String ttl = Messages.getString("Errors.OBSConnectPanel.AutoLogin.Title"); //$NON-NLS-1$

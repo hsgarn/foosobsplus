@@ -35,6 +35,7 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 
 @SuppressWarnings("serial")
 public class TimerPanel extends JPanel {
@@ -192,35 +193,35 @@ public class TimerPanel extends JPanel {
 		add(btnResetTimer, gc);
 	}
 	private void setMnemonics() {
-		if(Settings.getHotKeyParameter("ShotTimer").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SHOT_TIMER).isEmpty()) { //$NON-NLS-1$
 			btnShotTimer.setMnemonic(-1);
 		} else {
-			btnShotTimer.setMnemonic(Settings.getHotKeyParameter("ShotTimer").charAt(0)); //$NON-NLS-1$
+			btnShotTimer.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SHOT_TIMER).charAt(0)); //$NON-NLS-1$
 		};
-		if(Settings.getHotKeyParameter("PassTimer").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_PASS_TIMER).isEmpty()) { //$NON-NLS-1$
 			btnPassTimer.setMnemonic(-1);
 		} else {
-			btnPassTimer.setMnemonic(Settings.getHotKeyParameter("PassTimer").charAt(0)); //$NON-NLS-1$
+			btnPassTimer.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_PASS_TIMER).charAt(0)); //$NON-NLS-1$
 		};
-		if(Settings.getHotKeyParameter("TimeOutTimer").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_TIME_OUT_TIMER).isEmpty()) { //$NON-NLS-1$
 			btnTimeOutTimer.setMnemonic(-1);
 		} else {
-			btnTimeOutTimer.setMnemonic(Settings.getHotKeyParameter("TimeOutTimer").charAt(0)); //$NON-NLS-1$
+			btnTimeOutTimer.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_TIME_OUT_TIMER).charAt(0)); //$NON-NLS-1$
 		};
-		if(Settings.getHotKeyParameter("GameTimer").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_GAME_TIMER).isEmpty()) { //$NON-NLS-1$
 			btnGameTimer.setMnemonic(-1);
 		} else {
-			btnGameTimer.setMnemonic(Settings.getHotKeyParameter("GameTimer").charAt(0)); //$NON-NLS-1$
+			btnGameTimer.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_GAME_TIMER).charAt(0)); //$NON-NLS-1$
 		};
-		if(Settings.getHotKeyParameter("RecallTimer").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_RECALL_TIMER).isEmpty()) { //$NON-NLS-1$
 			btnRecallTimer.setMnemonic(-1);
 		} else {
-			btnRecallTimer.setMnemonic(Settings.getHotKeyParameter("RecallTimer").charAt(0)); //$NON-NLS-1$
+			btnRecallTimer.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_RECALL_TIMER).charAt(0)); //$NON-NLS-1$
 		};
-		if(Settings.getHotKeyParameter("ResetTimers").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_RESET_TIMERS).isEmpty()) { //$NON-NLS-1$
 			btnResetTimer.setMnemonic(-1);
 		} else {
-			btnResetTimer.setMnemonic(Settings.getHotKeyParameter("ResetTimers").charAt(0)); //$NON-NLS-1$
+			btnResetTimer.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_RESET_TIMERS).charAt(0)); //$NON-NLS-1$
 		};
 	}
 	////// Listeners  //////

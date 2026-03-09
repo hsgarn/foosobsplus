@@ -242,13 +242,13 @@ public class GameClock implements Serializable {
 		timer.addActionListener(alAction);
 	}
 	private void writeGameTime() {
-		writeData(Settings.getSourceParameter("GameTime"), getGameTime());
+		writeData(Settings.getSourceParameter(SettingsKeys.SRC_GAME_TIME), getGameTime());
 	}
 	private void writeMatchTime() {
-		writeData(Settings.getSourceParameter("MatchTime"), getMatchTime());
+		writeData(Settings.getSourceParameter(SettingsKeys.SRC_MATCH_TIME), getMatchTime());
 	}
 	private void writeStreamTime() {
-		writeData(Settings.getSourceParameter("StreamTime"), getStreamTime());
+		writeData(Settings.getSourceParameter(SettingsKeys.SRC_STREAM_TIME), getStreamTime());
 	}
     private void writeData(String source, String data) {
 		obsInterface.writeData(source, data, "GameClock", Settings.getShowParsed());

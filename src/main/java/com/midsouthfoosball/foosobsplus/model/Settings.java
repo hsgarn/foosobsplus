@@ -64,15 +64,15 @@ public final class Settings {
 	private final static Properties defaultOBSProps 				= new Properties();
 	private final static Properties defaultAutoScoreSettingsProps 	= new Properties();
 	private final static Properties defaultAPIProps 				= new Properties();
-	public static Properties configControlProps;
-	public static Properties configSourceProps;
-	public static Properties configStatsSourceProps;
-	public static Properties configFilterProps;
-	public static Properties configPartnerProgramProps;
-	public static Properties configHotKeyProps;
-	public static Properties configOBSProps;
-	public static Properties configAutoScoreSettingsProps;
-	public static Properties configAPIProps;
+	private static Properties configControlProps;
+	private static Properties configSourceProps;
+	private static Properties configStatsSourceProps;
+	private static Properties configFilterProps;
+	private static Properties configPartnerProgramProps;
+	private static Properties configHotKeyProps;
+	private static Properties configOBSProps;
+	private static Properties configAutoScoreSettingsProps;
+	private static Properties configAPIProps;
 	private final static String CONFIGCONTROLFILENAME			= "control.properties";
 	private final static String CONFIGSOURCEFILENAME 			= "source.properties";
 	private final static String CONFIGSTATSSOURCEFILENAME 		= "statssource.properties";
@@ -431,10 +431,10 @@ public final class Settings {
 	public static int getBorderLeft() {return BORDERLEFT;};
 	public static int getBorderRight() {return BORDERRIGHT;};
 	public static String[] getLastScoredStrings() {
-		lastScoredStrings[0] = getControlParameter("ClearLastScored");
-		lastScoredStrings[1] = getControlParameter("Team1LastScored");
-		lastScoredStrings[2] = getControlParameter("Team2LastScored");
-		lastScoredStrings[3] = getControlParameter("Team3LastScored");
+		lastScoredStrings[0] = getControlParameter(SettingsKeys.CTRL_CLEAR_LAST_SCORED);
+		lastScoredStrings[1] = getControlParameter(SettingsKeys.CTRL_TEAM1_LAST_SCORED);
+		lastScoredStrings[2] = getControlParameter(SettingsKeys.CTRL_TEAM2_LAST_SCORED);
+		lastScoredStrings[3] = getControlParameter(SettingsKeys.CTRL_TEAM3_LAST_SCORED);
 		return lastScoredStrings;
 	}
 	public static String getGameType() {return GAMETYPE;}
@@ -701,8 +701,8 @@ public final class Settings {
 	}
 	public static void generateHotKeyScripts() {
 		String basePath = System.getProperty("user.dir");
-		String baseScriptText = getHotKeyParameter("HotKeyBaseScript");
-		String hotKeyScriptPath = getHotKeyParameter("HotKeyScriptPath");
+		String baseScriptText = getHotKeyParameter(SettingsKeys.HOTKEY_BASE_SCRIPT);
+		String hotKeyScriptPath = getHotKeyParameter(SettingsKeys.HOTKEY_SCRIPT_PATH);
 		if(Files.exists(Paths.get(basePath))) {
 			if(!Files.exists(Paths.get(hotKeyScriptPath))) {
 				try {
@@ -738,7 +738,7 @@ public final class Settings {
 	}
 	private static void createHotKeyScript(String keyFunction, String hotKey, String[] baseScript, String basePath) {
 		try {
-			File scriptFile = new File(getHotKeyParameter("HotKeyScriptPath") + File.separator + keyFunction + ".ahk");
+			File scriptFile = new File(getHotKeyParameter(SettingsKeys.HOTKEY_SCRIPT_PATH) + File.separator + keyFunction + ".ahk");
 			scriptFile.createNewFile();
                         try (FileWriter fileWriter = new FileWriter(scriptFile)) {
                             for (String ln: baseScript) {
@@ -746,7 +746,7 @@ public final class Settings {
                             }
                         }
 		} catch (IOException ex) {
-			logger.error("Could not write to " + getHotKeyParameter("HotKeyScriptPath") + File.separator + keyFunction + ".ahk");
+			logger.error("Could not write to " + getHotKeyParameter(SettingsKeys.HOTKEY_SCRIPT_PATH) + File.separator + keyFunction + ".ahk");
 			logger.error(ex.toString());
 			JOptionPane.showMessageDialog(null, Messages.getString("Errors.ScriptWriteFailure") + " " + keyFunction, "Scripting Error", 1);
 		}
@@ -754,8 +754,8 @@ public final class Settings {
 	public static int getMaxGameNumber() {
 		// 	for cutthroat -> GamesToWin*3-2;
 		//  for regular   -> GamesToWin*2-1;
-		int gamesToWin = Integer.parseInt(getControlParameter("GamesToWin"));
-		int cutThroatMode = Integer.parseInt(getControlParameter("CutThroatMode"));
+		int gamesToWin = Integer.parseInt(getControlParameter(SettingsKeys.CTRL_GAMES_TO_WIN));
+		int cutThroatMode = Integer.parseInt(getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE));
 		return gamesToWin*(2+cutThroatMode)-(1+cutThroatMode);
 	}
 }

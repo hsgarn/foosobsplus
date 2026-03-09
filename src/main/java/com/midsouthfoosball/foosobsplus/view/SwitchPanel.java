@@ -34,6 +34,7 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 
 @SuppressWarnings("serial")
 public class SwitchPanel extends JPanel {
@@ -179,55 +180,55 @@ public class SwitchPanel extends JPanel {
 		add(lblLastScored, gc);
 	}
 	private void setMnemonics() {
-		if(Settings.getHotKeyParameter("SwitchSides").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SWITCH_SIDES).isEmpty()) { //$NON-NLS-1$
 			btnSwitchSides.setMnemonic(-1);
 		} else {
-			btnSwitchSides.setMnemonic(Settings.getHotKeyParameter("SwitchSides").charAt(0)); //$NON-NLS-1$
+			btnSwitchSides.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SWITCH_SIDES).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("SwitchTeams").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SWITCH_TEAMS).isEmpty()) { //$NON-NLS-1$
 			btnSwitchTeams.setMnemonic(-1);
 		} else {
-			btnSwitchTeams.setMnemonic(Settings.getHotKeyParameter("SwitchTeams").charAt(0)); //$NON-NLS-1$
+			btnSwitchTeams.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SWITCH_TEAMS).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("SwitchForwards").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SWITCH_FORWARDS).isEmpty()) { //$NON-NLS-1$
 			btnSwitchForwards.setMnemonic(-1);
 		} else {
-			btnSwitchForwards.setMnemonic(Settings.getHotKeyParameter("SwitchForwards").charAt(0)); //$NON-NLS-1$
+			btnSwitchForwards.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SWITCH_FORWARDS).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("SwitchGoalies").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SWITCH_GOALIES).isEmpty()) { //$NON-NLS-1$
 			btnSwitchGoalies.setMnemonic(-1);
 		} else {
-			btnSwitchGoalies.setMnemonic(Settings.getHotKeyParameter("SwitchGoalies").charAt(0)); //$NON-NLS-1$
+			btnSwitchGoalies.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SWITCH_GOALIES).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("SwitchScores").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SWITCH_SCORES).isEmpty()) { //$NON-NLS-1$
 			btnSwitchScores.setMnemonic(-1);
 		} else {
-			btnSwitchScores.setMnemonic(Settings.getHotKeyParameter("SwitchScores").charAt(0)); //$NON-NLS-1$
+			btnSwitchScores.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SWITCH_SCORES).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("SwitchGameCounts").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SWITCH_GAME_COUNTS).isEmpty()) { //$NON-NLS-1$
 			btnSwitchGameCounts.setMnemonic(-1);
 		} else {
-			btnSwitchGameCounts.setMnemonic(Settings.getHotKeyParameter("SwitchGameCounts").charAt(0)); //$NON-NLS-1$
+			btnSwitchGameCounts.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SWITCH_GAME_COUNTS).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("SwitchMatchCounts").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SWITCH_MATCH_COUNTS).isEmpty()) { //$NON-NLS-1$
 			btnSwitchMatchCounts.setMnemonic(-1);
 		} else {
-			btnSwitchMatchCounts.setMnemonic(Settings.getHotKeyParameter("SwitchMatchCounts").charAt(0)); //$NON-NLS-1$
+			btnSwitchMatchCounts.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SWITCH_MATCH_COUNTS).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("SwitchTimeOuts").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SWITCH_TIME_OUTS).isEmpty()) { //$NON-NLS-1$
 			btnSwitchTimeOuts.setMnemonic(-1);
 		} else {
-			btnSwitchTimeOuts.setMnemonic(Settings.getHotKeyParameter("SwitchTimeOuts").charAt(0)); //$NON-NLS-1$
+			btnSwitchTimeOuts.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SWITCH_TIME_OUTS).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("SwitchResetWarns").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SWITCH_RESET_WARNS).isEmpty()) { //$NON-NLS-1$
 			btnSwitchResetWarns.setMnemonic(-1);
 		} else {
-			btnSwitchResetWarns.setMnemonic(Settings.getHotKeyParameter("SwitchResetWarns").charAt(0)); //$NON-NLS-1$
+			btnSwitchResetWarns.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SWITCH_RESET_WARNS).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("ClearAll").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_CLEAR_ALL).isEmpty()) { //$NON-NLS-1$
 			btnClearAll.setMnemonic(-1);
 		} else {
-			btnClearAll.setMnemonic(Settings.getHotKeyParameter("ClearAll").charAt(0)); //$NON-NLS-1$
+			btnClearAll.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_CLEAR_ALL).charAt(0)); //$NON-NLS-1$
 		}
 	}
 	////// Listeners \\\\\\

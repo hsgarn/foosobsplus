@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.model.OBS;
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 import com.midsouthfoosball.foosobsplus.view.BallPanel;
 import com.midsouthfoosball.foosobsplus.view.Messages;
 
@@ -235,7 +236,7 @@ public class OBSManager {
     private void updateConnected() {
         OBS.setConnected(true);
         uiCallback.onConnectionStatusChanged(true);
-        if (Settings.getOBSParameter("OBSUpdateOnConnect").equals(ON) && updateOnConnectCallback != null) { //$NON-NLS-1$
+        if (Settings.getOBSParameter(SettingsKeys.OBS_UPDATE_ON_CONNECT).equals(ON) && updateOnConnectCallback != null) { //$NON-NLS-1$
             updateOnConnectCallback.run();
         }
     }
@@ -264,7 +265,7 @@ public class OBSManager {
         });
 
         // Set the main scene
-        String sceneName = Settings.getOBSParameter("OBSMainScene"); //$NON-NLS-1$
+        String sceneName = Settings.getOBSParameter(SettingsKeys.OBS_MAIN_SCENE); //$NON-NLS-1$
         OBS.getController().setCurrentProgramScene(sceneName, response -> {
             if (response != null && response.isSuccessful()) {
                 OBS.setCurrentScene(sceneName);
@@ -286,7 +287,7 @@ public class OBSManager {
         checkAndSetSourceActive("ShowCutthroat", uiCallback::onShowCutthroatStateChanged, null);
 
         // Close connect window if setting is enabled
-        if (Settings.getOBSParameter("OBSCloseOnConnect").equals(ON)) { //$NON-NLS-1$
+        if (Settings.getOBSParameter(SettingsKeys.OBS_CLOSE_ON_CONNECT).equals(ON)) { //$NON-NLS-1$
             uiCallback.onCloseConnectWindow();
         }
 
@@ -368,17 +369,17 @@ public class OBSManager {
         String sceneName = event.getSceneName();
         Number itemId = event.getSceneItemId();
         boolean show = event.getSceneItemEnabled();
-        checkItemEnableStateChangeHelper(sceneName, show, Settings.getSourceParameter("ShowScores"), itemId, showParsed); //$NON-NLS-1$
-        checkItemEnableStateChangeHelper(sceneName, show, Settings.getSourceParameter("ShowCutthroat"), itemId, showParsed); //$NON-NLS-1$
+        checkItemEnableStateChangeHelper(sceneName, show, Settings.getSourceParameter(SettingsKeys.SRC_SHOW_SCORES), itemId, showParsed); //$NON-NLS-1$
+        checkItemEnableStateChangeHelper(sceneName, show, Settings.getSourceParameter(SettingsKeys.SRC_SHOW_CUTTHROAT), itemId, showParsed); //$NON-NLS-1$
     }
 
     private void checkItemEnableStateChangeHelper(String sceneName, boolean show, String sourceToCheck, Number itemId, boolean showParsed) {
         OBS.getController().getSceneItemId(sceneName, sourceToCheck, null, getSceneItemIdResponse -> {
             if (getSceneItemIdResponse != null && getSceneItemIdResponse.isSuccessful()) {
                 if (getSceneItemIdResponse.getSceneItemId().toString().equals(itemId.toString())) {
-                    if (sourceToCheck.equals(Settings.getSourceParameter("ShowScores"))) { //$NON-NLS-1$
+                    if (sourceToCheck.equals(Settings.getSourceParameter(SettingsKeys.SRC_SHOW_SCORES))) { //$NON-NLS-1$
                         uiCallback.onShowScoresStateChanged(show);
-                    } else if (sourceToCheck.equals(Settings.getSourceParameter("ShowCutthroat"))) { //$NON-NLS-1$
+                    } else if (sourceToCheck.equals(Settings.getSourceParameter(SettingsKeys.SRC_SHOW_CUTTHROAT))) { //$NON-NLS-1$
                         uiCallback.onShowCutthroatStateChanged(show);
                     }
                     if (showParsed) {
@@ -395,16 +396,16 @@ public class OBSManager {
 
     private void checkActiveStateChange(InputActiveStateChangedEvent event) {
         String name = event.getInputName();
-        if (!Settings.getSourceParameter("ShowTimer").isEmpty() && name.equals(Settings.getSourceParameter("ShowTimer"))) { //$NON-NLS-1$ //$NON-NLS-2$
+        if (!Settings.getSourceParameter(SettingsKeys.SRC_SHOW_TIMER).isEmpty() && name.equals(Settings.getSourceParameter(SettingsKeys.SRC_SHOW_TIMER))) { //$NON-NLS-1$ //$NON-NLS-2$
             boolean show = event.getVideoActive();
             uiCallback.onShowTimerStateChanged(show);
             if (timerWindowCallback != null) {
                 timerWindowCallback.accept(show);
             }
-        } else if (!Settings.getSourceParameter("ShowScores").isEmpty() && name.equals(Settings.getSourceParameter("ShowScores"))) { //$NON-NLS-1$ //$NON-NLS-2$
+        } else if (!Settings.getSourceParameter(SettingsKeys.SRC_SHOW_SCORES).isEmpty() && name.equals(Settings.getSourceParameter(SettingsKeys.SRC_SHOW_SCORES))) { //$NON-NLS-1$ //$NON-NLS-2$
             boolean show = event.getVideoActive();
             uiCallback.onShowScoresStateChanged(show);
-        } else if (!Settings.getSourceParameter("ShowCutthroat").isEmpty() && name.equals(Settings.getSourceParameter("ShowCutthroat"))) { //$NON-NLS-1$ //$NON-NLS-2$
+        } else if (!Settings.getSourceParameter(SettingsKeys.SRC_SHOW_CUTTHROAT).isEmpty() && name.equals(Settings.getSourceParameter(SettingsKeys.SRC_SHOW_CUTTHROAT))) { //$NON-NLS-1$ //$NON-NLS-2$
             boolean show = event.getVideoActive();
             uiCallback.onShowCutthroatStateChanged(show);
         }

@@ -51,6 +51,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 
 @SuppressWarnings("serial")
 public class StatsEntryPanel extends JPanel {
@@ -193,15 +194,15 @@ public class StatsEntryPanel extends JPanel {
 		add(btnRedo, gc);
 	}
 	private void setMnemonics() {
-		if(Settings.getHotKeyParameter("Undo").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_UNDO).isEmpty()) { //$NON-NLS-1$
 			btnUndo.setMnemonic(-1);
 		} else {
-			btnUndo.setMnemonic(Settings.getHotKeyParameter("Undo").charAt(0)); //$NON-NLS-1$
+			btnUndo.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_UNDO).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("Redo").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_REDO).isEmpty()) { //$NON-NLS-1$
 			btnRedo.setMnemonic(-1);
 		} else {
-			btnRedo.setMnemonic(Settings.getHotKeyParameter("Redo").charAt(0)); //$NON-NLS-1$
+			btnRedo.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_REDO).charAt(0)); //$NON-NLS-1$
 		}
 	}
 	////// Listeners  //////

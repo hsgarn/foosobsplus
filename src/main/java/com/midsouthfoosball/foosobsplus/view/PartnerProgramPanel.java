@@ -49,6 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -122,21 +123,21 @@ public class PartnerProgramPanel extends JPanel {
 		txtTournamentFileName.setText(Settings.getDefaultPartnerProgram("TournamentFileName")); //$NON-NLS-1$
 	}
 	private void revertChanges() {
-		txtPlayer1FileName.setText(Settings.getPartnerProgramParameter("Player1FileName")); //$NON-NLS-1$
-		txtPlayer2FileName.setText(Settings.getPartnerProgramParameter("Player2FileName")); //$NON-NLS-1$
-		txtPlayer3FileName.setText(Settings.getPartnerProgramParameter("Player3FileName")); //$NON-NLS-1$
-		txtPlayer4FileName.setText(Settings.getPartnerProgramParameter("Player4FileName")); //$NON-NLS-1$
-		txtEventFileName.setText(Settings.getPartnerProgramParameter("EventFileName")); //$NON-NLS-1$
-		txtTournamentFileName.setText(Settings.getPartnerProgramParameter("TournamentFileName")); //$NON-NLS-1$
+		txtPlayer1FileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER1_FILE)); //$NON-NLS-1$
+		txtPlayer2FileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER2_FILE)); //$NON-NLS-1$
+		txtPlayer3FileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER3_FILE)); //$NON-NLS-1$
+		txtPlayer4FileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER4_FILE)); //$NON-NLS-1$
+		txtEventFileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_EVENT_FILE)); //$NON-NLS-1$
+		txtTournamentFileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_TOURNAMENT_FILE)); //$NON-NLS-1$
 		takeSnapshot();
 	}
 	private void saveSettings() {
-		Settings.setPartnerProgram("Player1FileName",txtPlayer1FileName.getText()); //$NON-NLS-1$
-		Settings.setPartnerProgram("Player2FileName",txtPlayer2FileName.getText()); //$NON-NLS-1$
-		Settings.setPartnerProgram("Player3FileName",txtPlayer3FileName.getText()); //$NON-NLS-1$
-		Settings.setPartnerProgram("Player4FileName",txtPlayer4FileName.getText()); //$NON-NLS-1$
-		Settings.setPartnerProgram("EventFileName",txtEventFileName.getText()); //$NON-NLS-1$
-		Settings.setPartnerProgram("TournamentFileName",txtTournamentFileName.getText()); //$NON-NLS-1$
+		Settings.setPartnerProgram(SettingsKeys.PP_PLAYER1_FILE, txtPlayer1FileName.getText()); //$NON-NLS-1$
+		Settings.setPartnerProgram(SettingsKeys.PP_PLAYER2_FILE, txtPlayer2FileName.getText()); //$NON-NLS-1$
+		Settings.setPartnerProgram(SettingsKeys.PP_PLAYER3_FILE, txtPlayer3FileName.getText()); //$NON-NLS-1$
+		Settings.setPartnerProgram(SettingsKeys.PP_PLAYER4_FILE, txtPlayer4FileName.getText()); //$NON-NLS-1$
+		Settings.setPartnerProgram(SettingsKeys.PP_EVENT_FILE, txtEventFileName.getText()); //$NON-NLS-1$
+		Settings.setPartnerProgram(SettingsKeys.PP_TOURNAMENT_FILE, txtTournamentFileName.getText()); //$NON-NLS-1$
 		try {
 			Settings.savePartnerProgramConfig();
 		} catch (IOException ex) {
@@ -181,7 +182,7 @@ public class PartnerProgramPanel extends JPanel {
                 });
 		add(btnSelectPath, "cell 1 0"); //$NON-NLS-1$
 		formattedTxtPath = new JFormattedTextField();
-		formattedTxtPath.setText(Settings.getPartnerProgramParameter("PartnerProgramPath")); //$NON-NLS-1$
+		formattedTxtPath.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_PATH)); //$NON-NLS-1$
 		formattedTxtPath.addFocusListener(new FocusAdapter() {
                         @Override
 			public void focusLost(FocusEvent arg0) {
@@ -226,27 +227,27 @@ public class PartnerProgramPanel extends JPanel {
 		JLabel lblTournamentFileName = new JLabel(Messages.getString("PartnerProgramPanel.Tournament")); //$NON-NLS-1$
 		add(lblTournamentFileName, "cell 1 7,alignx right"); //$NON-NLS-1$
 		txtPlayer1FileName = new JTextField();
-		txtPlayer1FileName.setText(Settings.getPartnerProgramParameter("Player1FileName")); //$NON-NLS-1$
+		txtPlayer1FileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER1_FILE)); //$NON-NLS-1$
 		txtPlayer1FileName.setColumns(10);
 		add(txtPlayer1FileName, "cell 2 2,alignx left"); //$NON-NLS-1$
 		txtPlayer2FileName = new JTextField();
-		txtPlayer2FileName.setText(Settings.getPartnerProgramParameter("Player2FileName")); //$NON-NLS-1$
+		txtPlayer2FileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER2_FILE)); //$NON-NLS-1$
 		txtPlayer2FileName.setColumns(10);
 		add(txtPlayer2FileName, "cell 2 3,alignx left"); //$NON-NLS-1$
 		txtPlayer3FileName = new JTextField();
-		txtPlayer3FileName.setText(Settings.getPartnerProgramParameter("Player3FileName")); //$NON-NLS-1$
+		txtPlayer3FileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER3_FILE)); //$NON-NLS-1$
 		txtPlayer3FileName.setColumns(10);
 		add(txtPlayer3FileName, "cell 2 4,alignx left"); //$NON-NLS-1$
 		txtPlayer4FileName = new JTextField();
-		txtPlayer4FileName.setText(Settings.getPartnerProgramParameter("Player4FileName")); //$NON-NLS-1$
+		txtPlayer4FileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER4_FILE)); //$NON-NLS-1$
 		txtPlayer4FileName.setColumns(10);
 		add(txtPlayer4FileName, "cell 2 5,alignx left"); //$NON-NLS-1$
 		txtEventFileName = new JTextField();
-		txtEventFileName.setText(Settings.getPartnerProgramParameter("EventFileName")); //$NON-NLS-1$
+		txtEventFileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_EVENT_FILE)); //$NON-NLS-1$
 		txtEventFileName.setColumns(10);
 		add(txtEventFileName, "cell 2 6,alignx left"); //$NON-NLS-1$
 		txtTournamentFileName = new JTextField();
-		txtTournamentFileName.setText(Settings.getPartnerProgramParameter("TournamentFileName")); //$NON-NLS-1$
+		txtTournamentFileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_TOURNAMENT_FILE)); //$NON-NLS-1$
 		txtTournamentFileName.setColumns(10);
 		add(txtTournamentFileName, "cell 2 7,alignx left"); //$NON-NLS-1$
 		JButton btnApplyPartnerProgram = new JButton(Messages.getString("Global.Apply")); //$NON-NLS-1$

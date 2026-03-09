@@ -44,6 +44,7 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 
 @SuppressWarnings("serial")
 public class TeamPanel extends JPanel {
@@ -605,13 +606,13 @@ public class TeamPanel extends JPanel {
 		String theColor;
             switch (teamNbr) {
                 case 1:
-                    theColor = Settings.getControlParameter("Side1Color"); //$NON-NLS-1$
+                    theColor = Settings.getControlParameter(SettingsKeys.CTRL_SIDE1_COLOR); //$NON-NLS-1$
                     break;
                 case 2:
-                    theColor = Settings.getControlParameter("Side2Color"); //$NON-NLS-1$
+                    theColor = Settings.getControlParameter(SettingsKeys.CTRL_SIDE2_COLOR); //$NON-NLS-1$
                     break;
                 default:
-                    theColor = Settings.getControlParameter("Side2Color"); //$NON-NLS-1$
+                    theColor = Settings.getControlParameter(SettingsKeys.CTRL_SIDE2_COLOR); //$NON-NLS-1$
                     break;
             }
 		return Messages.getString("TeamPanel.Team") + teamNbr + Messages.getString("TeamPanel.Information") + theColor + Messages.getString("TeamPanel.Side"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

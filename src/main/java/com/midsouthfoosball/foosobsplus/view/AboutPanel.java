@@ -21,6 +21,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.view;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
@@ -42,8 +43,8 @@ import net.miginfocom.swing.MigLayout;
 
 public class AboutPanel extends JPanel {
 	private static final long serialVersionUID 	= 1L;
-	private static final String VERSIONNUMBER 	= "2.081"; //$NON-NLS-1$
-	private static final String RELEASEDATE 	= "03/07/2026"; //$NON-NLS-1$
+	private static final String VERSIONNUMBER 	= "2.082"; //$NON-NLS-1$
+	private static final String RELEASEDATE 	= "03/09/2026"; //$NON-NLS-1$
 	private static final String AUTHOR          = "Hugh Garner"; //$NON-NLS-1$
 	private static final String COPYRIGHT 		= "2020-2026 Hugh Garner"; //$NON-NLS-1$
 	public AboutPanel(JFrame aboutFrame) {
@@ -73,7 +74,7 @@ public class AboutPanel extends JPanel {
 		JTextArea txtrPermissionIsHereby = new JTextArea();
 		txtrPermissionIsHereby.setText(Messages.getString("AboutPanel.LicenseText")); //$NON-NLS-1$
 		add(txtrPermissionIsHereby, "cell 1 5,grow"); //$NON-NLS-1$
-		ImageIcon img = new ImageIcon(this.getClass().getResource(Settings.getControlParameter("IconImgPath"))); //$NON-NLS-1$
+		ImageIcon img = new ImageIcon(this.getClass().getResource(Settings.getControlParameter(SettingsKeys.CTRL_ICON_IMG_PATH))); //$NON-NLS-1$
 		img.setImage(img.getImage().getScaledInstance(100, 100,  Image.SCALE_DEFAULT));
 		Icon imgIcon = img;
 		JLabel lblIcon = new JLabel(imgIcon);
@@ -81,7 +82,7 @@ public class AboutPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent arg0) {
 				try {
-                    URI logoLinkURI = new URI(Settings.getControlParameter("LogoLink"));
+                    URI logoLinkURI = new URI(Settings.getControlParameter(SettingsKeys.CTRL_LOGO_LINK));
     				java.awt.Desktop.getDesktop().browse(logoLinkURI);
 				} catch (IOException | URISyntaxException ex) {
                     Logger.getLogger(AboutPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -89,7 +90,7 @@ public class AboutPanel extends JPanel {
 			}
 		});
         add(lblIcon, "cell 1 6,alignx left"); //$NON-NLS-1$
-		ImageIcon logo = new ImageIcon(this.getClass().getResource(Settings.getControlParameter("LogoImgPath"))); //$NON-NLS-1$
+		ImageIcon logo = new ImageIcon(this.getClass().getResource(Settings.getControlParameter(SettingsKeys.CTRL_LOGO_IMG_PATH))); //$NON-NLS-1$
 		logo.setImage(logo.getImage().getScaledInstance(100, 100,  Image.SCALE_DEFAULT));
 		Icon imgIcon2 = logo;
         JLabel lblLogo = new JLabel(imgIcon2);
@@ -99,7 +100,7 @@ public class AboutPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent arg0) {
 				try {
-                    URI logoLinkURI = new URI(Settings.getControlParameter("LogoLink"));
+                    URI logoLinkURI = new URI(Settings.getControlParameter(SettingsKeys.CTRL_LOGO_LINK));
     				java.awt.Desktop.getDesktop().browse(logoLinkURI);
 				} catch (IOException | URISyntaxException ex) {
                     Logger.getLogger(AboutPanel.class.getName()).log(Level.SEVERE, null, ex);

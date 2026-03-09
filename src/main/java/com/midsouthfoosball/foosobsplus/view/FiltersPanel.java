@@ -51,6 +51,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -281,50 +282,50 @@ public class FiltersPanel extends JPanel {
 	}
 	private void revertChanges() {
 		filterUpdating = true;
-		txtTeam1ScoreFilter.setSelectedItem(Settings.getFiltersFilter("Team1Score")); //$NON-NLS-1$
-		txtTeam2ScoreFilter.setSelectedItem(Settings.getFiltersFilter("Team2Score")); //$NON-NLS-1$
-		txtTeam1WinGameFilter.setSelectedItem(Settings.getFiltersFilter("Team1WinGame")); //$NON-NLS-1$
-		txtTeam2WinGameFilter.setSelectedItem(Settings.getFiltersFilter("Team2WinGame")); //$NON-NLS-1$
-		txtTeam1WinMatchFilter.setSelectedItem(Settings.getFiltersFilter("Team1WinMatch")); //$NON-NLS-1$
-		txtTeam2WinMatchFilter.setSelectedItem(Settings.getFiltersFilter("Team2WinMatch")); //$NON-NLS-1$
-		txtTeam1TimeOutFilter.setSelectedItem(Settings.getFiltersFilter("Team1TimeOut")); //$NON-NLS-1$
-		txtTeam2TimeOutFilter.setSelectedItem(Settings.getFiltersFilter("Team2TimeOut")); //$NON-NLS-1$
-		txtTeam1ResetFilter.setSelectedItem(Settings.getFiltersFilter("Team1Reset")); //$NON-NLS-1$
-		txtTeam2ResetFilter.setSelectedItem(Settings.getFiltersFilter("Team2Reset")); //$NON-NLS-1$
-		txtTeam1WarnFilter.setSelectedItem(Settings.getFiltersFilter("Team1Warn")); //$NON-NLS-1$
-		txtTeam2WarnFilter.setSelectedItem(Settings.getFiltersFilter("Team2Warn")); //$NON-NLS-1$
-		txtTeam1SwitchPositionsFilter.setSelectedItem(Settings.getFiltersFilter("Team1SwitchPositions")); //$NON-NLS-1$
-		txtTeam2SwitchPositionsFilter.setSelectedItem(Settings.getFiltersFilter("Team2SwitchPositions")); //$NON-NLS-1$
-		txtTeam1SkunkFilter.setSelectedItem(Settings.getFiltersFilter("Team1Skunk")); //$NON-NLS-1$
-		txtTeam2SkunkFilter.setSelectedItem(Settings.getFiltersFilter("Team2Skunk")); //$NON-NLS-1$
-		txtStartMatchFilter.setSelectedItem(Settings.getFiltersFilter("StartMatch")); //$NON-NLS-1$
-		txtStartGameFilter.setSelectedItem(Settings.getFiltersFilter("StartGame")); //$NON-NLS-1$
-		txtSwitchSidesFilter.setSelectedItem(Settings.getFiltersFilter("SwitchSides")); //$NON-NLS-1$
-		txtMeatballFilter.setSelectedItem(Settings.getFiltersFilter("Meatball")); //$NON-NLS-1$
+		txtTeam1ScoreFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM1_SCORE)); //$NON-NLS-1$
+		txtTeam2ScoreFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM2_SCORE)); //$NON-NLS-1$
+		txtTeam1WinGameFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM1_WIN_GAME)); //$NON-NLS-1$
+		txtTeam2WinGameFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM2_WIN_GAME)); //$NON-NLS-1$
+		txtTeam1WinMatchFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM1_WIN_MATCH)); //$NON-NLS-1$
+		txtTeam2WinMatchFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM2_WIN_MATCH)); //$NON-NLS-1$
+		txtTeam1TimeOutFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM1_TIME_OUT)); //$NON-NLS-1$
+		txtTeam2TimeOutFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM2_TIME_OUT)); //$NON-NLS-1$
+		txtTeam1ResetFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM1_RESET)); //$NON-NLS-1$
+		txtTeam2ResetFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM2_RESET)); //$NON-NLS-1$
+		txtTeam1WarnFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM1_WARN)); //$NON-NLS-1$
+		txtTeam2WarnFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM2_WARN)); //$NON-NLS-1$
+		txtTeam1SwitchPositionsFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM1_SWITCH_POSITIONS)); //$NON-NLS-1$
+		txtTeam2SwitchPositionsFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM2_SWITCH_POSITIONS)); //$NON-NLS-1$
+		txtTeam1SkunkFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM1_SKUNK)); //$NON-NLS-1$
+		txtTeam2SkunkFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM2_SKUNK)); //$NON-NLS-1$
+		txtStartMatchFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_START_MATCH)); //$NON-NLS-1$
+		txtStartGameFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_START_GAME)); //$NON-NLS-1$
+		txtSwitchSidesFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_SWITCH_SIDES)); //$NON-NLS-1$
+		txtMeatballFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_MEATBALL)); //$NON-NLS-1$
 		filterUpdating = false;
 		takeSnapshot();
 	}
 	private void saveSettings() {
-		Settings.setFilter("Team1Score",getComboText(txtTeam1ScoreFilter)); //$NON-NLS-1$
-		Settings.setFilter("Team2Score",getComboText(txtTeam2ScoreFilter)); //$NON-NLS-1$
-		Settings.setFilter("Team1WinGame",getComboText(txtTeam1WinGameFilter)); //$NON-NLS-1$
-		Settings.setFilter("Team2WinGame",getComboText(txtTeam2WinGameFilter)); //$NON-NLS-1$
-		Settings.setFilter("Team1WinMatch",getComboText(txtTeam1WinMatchFilter)); //$NON-NLS-1$
-		Settings.setFilter("Team2WinMatch",getComboText(txtTeam2WinMatchFilter)); //$NON-NLS-1$
-		Settings.setFilter("Team1TimeOut",getComboText(txtTeam1TimeOutFilter)); //$NON-NLS-1$
-		Settings.setFilter("Team2TimeOut",getComboText(txtTeam2TimeOutFilter)); //$NON-NLS-1$
-		Settings.setFilter("Team1Reset",getComboText(txtTeam1ResetFilter)); //$NON-NLS-1$
-		Settings.setFilter("Team2Reset",getComboText(txtTeam2ResetFilter)); //$NON-NLS-1$
-		Settings.setFilter("Team1Warn",getComboText(txtTeam1WarnFilter)); //$NON-NLS-1$
-		Settings.setFilter("Team2Warn",getComboText(txtTeam2WarnFilter)); //$NON-NLS-1$
-		Settings.setFilter("Team1SwitchPositions",getComboText(txtTeam1SwitchPositionsFilter)); //$NON-NLS-1$
-		Settings.setFilter("Team2SwitchPositions",getComboText(txtTeam2SwitchPositionsFilter)); //$NON-NLS-1$
-		Settings.setFilter("Team1Skunk",getComboText(txtTeam1SkunkFilter)); //$NON-NLS-1$
-		Settings.setFilter("Team2Skunk",getComboText(txtTeam2SkunkFilter)); //$NON-NLS-1$
-		Settings.setFilter("StartMatch",getComboText(txtStartMatchFilter)); //$NON-NLS-1$
-		Settings.setFilter("StartGame",getComboText(txtStartGameFilter)); //$NON-NLS-1$
-		Settings.setFilter("SwitchSides",getComboText(txtSwitchSidesFilter)); //$NON-NLS-1$
-		Settings.setFilter("Meatball", getComboText(txtMeatballFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_TEAM1_SCORE,getComboText(txtTeam1ScoreFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_TEAM2_SCORE,getComboText(txtTeam2ScoreFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_TEAM1_WIN_GAME,getComboText(txtTeam1WinGameFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_TEAM2_WIN_GAME,getComboText(txtTeam2WinGameFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_TEAM1_WIN_MATCH,getComboText(txtTeam1WinMatchFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_TEAM2_WIN_MATCH,getComboText(txtTeam2WinMatchFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_TEAM1_TIME_OUT,getComboText(txtTeam1TimeOutFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_TEAM2_TIME_OUT,getComboText(txtTeam2TimeOutFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_TEAM1_RESET,getComboText(txtTeam1ResetFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_TEAM2_RESET,getComboText(txtTeam2ResetFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_TEAM1_WARN,getComboText(txtTeam1WarnFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_TEAM2_WARN,getComboText(txtTeam2WarnFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_TEAM1_SWITCH_POSITIONS,getComboText(txtTeam1SwitchPositionsFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_TEAM2_SWITCH_POSITIONS,getComboText(txtTeam2SwitchPositionsFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_TEAM1_SKUNK,getComboText(txtTeam1SkunkFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_TEAM2_SKUNK,getComboText(txtTeam2SkunkFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_START_MATCH,getComboText(txtStartMatchFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_START_GAME,getComboText(txtStartGameFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_SWITCH_SIDES,getComboText(txtSwitchSidesFilter)); //$NON-NLS-1$
+		Settings.setFilter(SettingsKeys.FILTER_MEATBALL, getComboText(txtMeatballFilter)); //$NON-NLS-1$
 		try {
 			Settings.saveFilterConfig();
 		} catch (IOException ex) {
@@ -345,7 +346,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblTeam1ScoreFilter = new JLabel(Messages.getString("FiltersPanel.Team1Score")); //$NON-NLS-1$
 		add(lblTeam1ScoreFilter, "cell 1 2,alignx right"); //$NON-NLS-1$
 		txtTeam1ScoreFilter = new JComboBox<>();
-		txtTeam1ScoreFilter.setSelectedItem(Settings.getFiltersFilter("Team1Score")); //$NON-NLS-1$
+		txtTeam1ScoreFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM1_SCORE)); //$NON-NLS-1$
 		txtTeam1ScoreFilter.setPrototypeDisplayValue("                    ");
 		add(txtTeam1ScoreFilter, "cell 2 2,alignx left"); //$NON-NLS-1$
 		btnTeam1ScoreFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -353,7 +354,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblTeam2ScoreFilter = new JLabel(Messages.getString("FiltersPanel.Team2Score")); //$NON-NLS-1$
 		add(lblTeam2ScoreFilter, "cell 1 3,alignx right"); //$NON-NLS-1$
 		txtTeam2ScoreFilter = new JComboBox<>();
-		txtTeam2ScoreFilter.setSelectedItem(Settings.getFiltersFilter("Team2Score")); //$NON-NLS-1$
+		txtTeam2ScoreFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM2_SCORE)); //$NON-NLS-1$
 		txtTeam2ScoreFilter.setPrototypeDisplayValue("                    ");
 		add(txtTeam2ScoreFilter, "cell 2 3,alignx left"); //$NON-NLS-1$
 		btnTeam2ScoreFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -361,7 +362,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblTeam1WinGameFilter = new JLabel(Messages.getString("FiltersPanel.Team1WinGame")); //$NON-NLS-1$
 		add(lblTeam1WinGameFilter, "cell 1 4,alignx right"); //$NON-NLS-1$
 		txtTeam1WinGameFilter = new JComboBox<>();
-		txtTeam1WinGameFilter.setSelectedItem(Settings.getFiltersFilter("Team1WinGame")); //$NON-NLS-1$
+		txtTeam1WinGameFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM1_WIN_GAME)); //$NON-NLS-1$
 		txtTeam1WinGameFilter.setPrototypeDisplayValue("                    ");
 		add(txtTeam1WinGameFilter, "cell 2 4,alignx left"); //$NON-NLS-1$
 		btnTeam1WinGameFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -369,7 +370,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblTeam2WinGameFilter = new JLabel(Messages.getString("FiltersPanel.Team2WinGame")); //$NON-NLS-1$
 		add(lblTeam2WinGameFilter, "cell 1 5,alignx right"); //$NON-NLS-1$
 		txtTeam2WinGameFilter = new JComboBox<>();
-		txtTeam2WinGameFilter.setSelectedItem(Settings.getFiltersFilter("Team2WinGame")); //$NON-NLS-1$
+		txtTeam2WinGameFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM2_WIN_GAME)); //$NON-NLS-1$
 		txtTeam2WinGameFilter.setPrototypeDisplayValue("                    ");
 		add(txtTeam2WinGameFilter, "cell 2 5,alignx left"); //$NON-NLS-1$
 		btnTeam2WinGameFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -377,7 +378,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblTeam1WinMatchFilter = new JLabel(Messages.getString("FiltersPanel.Team1WinMatch")); //$NON-NLS-1$
 		add(lblTeam1WinMatchFilter, "cell 1 6,alignx right"); //$NON-NLS-1$
 		txtTeam1WinMatchFilter = new JComboBox<>();
-		txtTeam1WinMatchFilter.setSelectedItem(Settings.getFiltersFilter("Team1WinMatch")); //$NON-NLS-1$
+		txtTeam1WinMatchFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM1_WIN_MATCH)); //$NON-NLS-1$
 		txtTeam1WinMatchFilter.setPrototypeDisplayValue("                    ");
 		add(txtTeam1WinMatchFilter, "cell 2 6,alignx left"); //$NON-NLS-1$
 		btnTeam1WinMatchFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -385,7 +386,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblTeam2WinMatchFilter = new JLabel(Messages.getString("FiltersPanel.Team2WinMatch")); //$NON-NLS-1$
 		add(lblTeam2WinMatchFilter, "cell 1 7,alignx right"); //$NON-NLS-1$
 		txtTeam2WinMatchFilter = new JComboBox<>();
-		txtTeam2WinMatchFilter.setSelectedItem(Settings.getFiltersFilter("Team2WinMatch")); //$NON-NLS-1$
+		txtTeam2WinMatchFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM2_WIN_MATCH)); //$NON-NLS-1$
 		txtTeam2WinMatchFilter.setPrototypeDisplayValue("                    ");
 		add(txtTeam2WinMatchFilter, "cell 2 7,alignx left"); //$NON-NLS-1$
 		btnTeam2WinMatchFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -393,7 +394,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblTeam1TimeOutFilter = new JLabel(Messages.getString("FiltersPanel.Team1TimeOut")); //$NON-NLS-1$
 		add(lblTeam1TimeOutFilter, "cell 1 8,alignx right"); //$NON-NLS-1$
 		txtTeam1TimeOutFilter = new JComboBox<>();
-		txtTeam1TimeOutFilter.setSelectedItem(Settings.getFiltersFilter("Team1TimeOut")); //$NON-NLS-1$
+		txtTeam1TimeOutFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM1_TIME_OUT)); //$NON-NLS-1$
 		txtTeam1TimeOutFilter.setPrototypeDisplayValue("                    ");
 		add(txtTeam1TimeOutFilter, "cell 2 8,alignx left"); //$NON-NLS-1$
 		btnTeam1TimeOutFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -401,7 +402,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblTeam2TimeOutFilter = new JLabel(Messages.getString("FiltersPanel.Team2TimeOut")); //$NON-NLS-1$
 		add(lblTeam2TimeOutFilter, "cell 1 9,alignx right"); //$NON-NLS-1$
 		txtTeam2TimeOutFilter = new JComboBox<>();
-		txtTeam2TimeOutFilter.setSelectedItem(Settings.getFiltersFilter("Team2TimeOut")); //$NON-NLS-1$
+		txtTeam2TimeOutFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM2_TIME_OUT)); //$NON-NLS-1$
 		txtTeam2TimeOutFilter.setPrototypeDisplayValue("                    ");
 		add(txtTeam2TimeOutFilter, "cell 2 9,alignx left"); //$NON-NLS-1$
 		btnTeam2TimeOutFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -409,7 +410,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblTeam1ResetFilter = new JLabel(Messages.getString("FiltersPanel.Team1Reset")); //$NON-NLS-1$
 		add(lblTeam1ResetFilter, "cell 1 10,alignx right"); //$NON-NLS-1$
 		txtTeam1ResetFilter = new JComboBox<>();
-		txtTeam1ResetFilter.setSelectedItem(Settings.getFiltersFilter("Team1Reset")); //$NON-NLS-1$
+		txtTeam1ResetFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM1_RESET)); //$NON-NLS-1$
 		txtTeam1ResetFilter.setPrototypeDisplayValue("                    ");
 		add(txtTeam1ResetFilter, "cell 2 10,alignx left"); //$NON-NLS-1$
 		btnTeam1ResetFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -417,7 +418,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblTeam2ResetFilter = new JLabel(Messages.getString("FiltersPanel.Team2Reset")); //$NON-NLS-1$
 		add(lblTeam2ResetFilter, "cell 1 11,alignx right"); //$NON-NLS-1$
 		txtTeam2ResetFilter = new JComboBox<>();
-		txtTeam2ResetFilter.setSelectedItem(Settings.getFiltersFilter("Team2Reset")); //$NON-NLS-1$
+		txtTeam2ResetFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM2_RESET)); //$NON-NLS-1$
 		txtTeam2ResetFilter.setPrototypeDisplayValue("                    ");
 		add(txtTeam2ResetFilter, "cell 2 11,alignx left"); //$NON-NLS-1$
 		btnTeam2ResetFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -425,7 +426,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblTeam1WarnFilter = new JLabel(Messages.getString("FiltersPanel.Team1Warn")); //$NON-NLS-1$
 		add(lblTeam1WarnFilter, "cell 1 12,alignx right"); //$NON-NLS-1$
 		txtTeam1WarnFilter = new JComboBox<>();
-		txtTeam1WarnFilter.setSelectedItem(Settings.getFiltersFilter("Team1Warn")); //$NON-NLS-1$
+		txtTeam1WarnFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM1_WARN)); //$NON-NLS-1$
 		txtTeam1WarnFilter.setPrototypeDisplayValue("                    ");
 		add(txtTeam1WarnFilter, "cell 2 12,alignx left"); //$NON-NLS-1$
 		btnTeam1WarnFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -433,7 +434,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblTeam2WarnFilter = new JLabel(Messages.getString("FiltersPanel.Team2Warn")); //$NON-NLS-1$
 		add(lblTeam2WarnFilter, "cell 1 13,alignx right"); //$NON-NLS-1$
 		txtTeam2WarnFilter = new JComboBox<>();
-		txtTeam2WarnFilter.setSelectedItem(Settings.getFiltersFilter("Team2Warn")); //$NON-NLS-1$
+		txtTeam2WarnFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM2_WARN)); //$NON-NLS-1$
 		txtTeam2WarnFilter.setPrototypeDisplayValue("                    ");
 		add(txtTeam2WarnFilter, "cell 2 13,alignx left"); //$NON-NLS-1$
 		btnTeam2WarnFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -441,7 +442,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblTeam1SwitchPositionsFilter = new JLabel(Messages.getString("FiltersPanel.Team1SwitchPositions")); //$NON-NLS-1$
 		add(lblTeam1SwitchPositionsFilter, "cell 1 14,alignx right"); //$NON-NLS-1$
 		txtTeam1SwitchPositionsFilter = new JComboBox<>();
-		txtTeam1SwitchPositionsFilter.setSelectedItem(Settings.getFiltersFilter("Team1SwitchPositions")); //$NON-NLS-1$
+		txtTeam1SwitchPositionsFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM1_SWITCH_POSITIONS)); //$NON-NLS-1$
 		txtTeam1SwitchPositionsFilter.setPrototypeDisplayValue("                    ");
 		add(txtTeam1SwitchPositionsFilter, "cell 2 14,alignx left"); //$NON-NLS-1$
 		btnTeam1SwitchPositionsFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -449,7 +450,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblTeam2SwitchPositionsFilter = new JLabel(Messages.getString("FiltersPanel.Team2SwitchPositions")); //$NON-NLS-1$
 		add(lblTeam2SwitchPositionsFilter, "cell 1 15,alignx right"); //$NON-NLS-1$
 		txtTeam2SwitchPositionsFilter = new JComboBox<>();
-		txtTeam2SwitchPositionsFilter.setSelectedItem(Settings.getFiltersFilter("Team2SwitchPositions")); //$NON-NLS-1$
+		txtTeam2SwitchPositionsFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM2_SWITCH_POSITIONS)); //$NON-NLS-1$
 		txtTeam2SwitchPositionsFilter.setPrototypeDisplayValue("                    ");
 		add(txtTeam2SwitchPositionsFilter, "cell 2 15,alignx left"); //$NON-NLS-1$
 		btnTeam2SwitchPositionsFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -457,7 +458,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblTeam1SkunkFilter = new JLabel(Messages.getString("FiltersPanel.Team1Skunk")); //$NON-NLS-1$
 		add(lblTeam1SkunkFilter, "cell 1 16,alignx right"); //$NON-NLS-1$
 		txtTeam1SkunkFilter = new JComboBox<>();
-		txtTeam1SkunkFilter.setSelectedItem(Settings.getFiltersFilter("Team1Skunk")); //$NON-NLS-1$
+		txtTeam1SkunkFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM1_SKUNK)); //$NON-NLS-1$
 		txtTeam1SkunkFilter.setPrototypeDisplayValue("                    ");
 		add(txtTeam1SkunkFilter, "cell 2 16,alignx left"); //$NON-NLS-1$
 		btnTeam1SkunkFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -465,7 +466,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblTeam2SkunkFilter = new JLabel(Messages.getString("FiltersPanel.Team2Skunk")); //$NON-NLS-1$
 		add(lblTeam2SkunkFilter, "cell 1 17,alignx right"); //$NON-NLS-1$
 		txtTeam2SkunkFilter = new JComboBox<>();
-		txtTeam2SkunkFilter.setSelectedItem(Settings.getFiltersFilter("Team2Skunk")); //$NON-NLS-1$
+		txtTeam2SkunkFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_TEAM2_SKUNK)); //$NON-NLS-1$
 		txtTeam2SkunkFilter.setPrototypeDisplayValue("                    ");
 		add(txtTeam2SkunkFilter, "cell 2 17,alignx left"); //$NON-NLS-1$
 		btnTeam2SkunkFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -473,7 +474,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblStartMatchFilter = new JLabel(Messages.getString("FiltersPanel.StartMatch")); //$NON-NLS-1$
 		add(lblStartMatchFilter, "cell 4 2,alignx right"); //$NON-NLS-1$
 		txtStartMatchFilter = new JComboBox<>();
-		txtStartMatchFilter.setSelectedItem(Settings.getFiltersFilter("StartMatch")); //$NON-NLS-1$
+		txtStartMatchFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_START_MATCH)); //$NON-NLS-1$
 		txtStartMatchFilter.setPrototypeDisplayValue("                    ");
 		add(txtStartMatchFilter, "cell 5 2,alignx left"); //$NON-NLS-1$
 		btnStartMatchFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -481,7 +482,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblStartGameFilter = new JLabel(Messages.getString("FiltersPanel.StartGame")); //$NON-NLS-1$
 		add(lblStartGameFilter, "cell 4 3,alignx right"); //$NON-NLS-1$
 		txtStartGameFilter = new JComboBox<>();
-		txtStartGameFilter.setSelectedItem(Settings.getFiltersFilter("StartGame")); //$NON-NLS-1$
+		txtStartGameFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_START_GAME)); //$NON-NLS-1$
 		txtStartGameFilter.setPrototypeDisplayValue("                    ");
 		add(txtStartGameFilter, "cell 5 3,alignx left"); //$NON-NLS-1$
 		btnStartGameFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -489,7 +490,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblSwitchSidesFilter = new JLabel(Messages.getString("FiltersPanel.SwitchSides")); //$NON-NLS-1$
 		add(lblSwitchSidesFilter, "cell 4 4,alignx right"); //$NON-NLS-1$
 		txtSwitchSidesFilter = new JComboBox<>();
-		txtSwitchSidesFilter.setSelectedItem(Settings.getFiltersFilter("SwitchSides")); //$NON-NLS-1$
+		txtSwitchSidesFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_SWITCH_SIDES)); //$NON-NLS-1$
 		txtSwitchSidesFilter.setPrototypeDisplayValue("                    ");
 		add(txtSwitchSidesFilter, "cell 5 4,alignx left"); //$NON-NLS-1$
 		btnSwitchSidesFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$
@@ -497,7 +498,7 @@ public class FiltersPanel extends JPanel {
 		JLabel lblMeatballFilter = new JLabel(Messages.getString("FiltersPanel.Meatball")); //$NON-NLS-1$
 		add(lblMeatballFilter, "cell 4 5,alignx right"); //$NON-NLS-1$
 		txtMeatballFilter = new JComboBox<>();
-		txtMeatballFilter.setSelectedItem(Settings.getFiltersFilter("Meatball")); //$NON-NLS-1$
+		txtMeatballFilter.setSelectedItem(Settings.getFiltersFilter(SettingsKeys.FILTER_MEATBALL)); //$NON-NLS-1$
 		txtMeatballFilter.setPrototypeDisplayValue("                    ");
 		add(txtMeatballFilter, "cell 5 5,alignx left"); //$NON-NLS-1$
 		btnMeatballFilter = new JButton(Messages.getString("FiltersPanel.Test")); //$NON-NLS-1$

@@ -34,6 +34,7 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -58,7 +59,7 @@ public class OBSPanel extends JPanel {
 		setPreferredSize(dim);
 		setName(buildTitle());
 		boolean enableSkunkInitialState = false;
-		if (Settings.getControlParameter("ShowSkunk").equals(ON)) { //$NON-NLS-1$
+		if (Settings.getControlParameter(SettingsKeys.CTRL_SHOW_SKUNK).equals(ON)) { //$NON-NLS-1$
 			enableSkunkInitialState = true;
 		}
 		btnConnect = new JButton(Messages.getString("OBSPanel.Connect")); //$NON-NLS-1$
@@ -95,50 +96,50 @@ public class OBSPanel extends JPanel {
 		add(ckbxShowCutthroat, "wrap"); //$NON-NLS-1$
 	}
 	private void setMnemonics() {
-		if(Settings.getHotKeyParameter("Connect").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_CONNECT).isEmpty()) { //$NON-NLS-1$
 			btnConnect.setMnemonic(-1);
 		} else {
-			btnConnect.setMnemonic(Settings.getHotKeyParameter("Connect").charAt(0)); //$NON-NLS-1$
+			btnConnect.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_CONNECT).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("Disconnect").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_DISCONNECT).isEmpty()) { //$NON-NLS-1$
 			btnDisconnect.setMnemonic(-1);
 		} else {
-			btnDisconnect.setMnemonic(Settings.getHotKeyParameter("Disconnect").charAt(0)); //$NON-NLS-1$
+			btnDisconnect.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_DISCONNECT).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("Push").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_PUSH).isEmpty()) { //$NON-NLS-1$
 			btnPush.setMnemonic(-1);
 		} else {
-			btnPush.setMnemonic(Settings.getHotKeyParameter("Push").charAt(0)); //$NON-NLS-1$
+			btnPush.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_PUSH).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("Pull").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_PULL).isEmpty()) { //$NON-NLS-1$
 			btnPull.setMnemonic(-1);
 		} else {
-			btnPull.setMnemonic(Settings.getHotKeyParameter("Pull").charAt(0)); //$NON-NLS-1$
+			btnPull.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_PULL).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("ShowScores").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SHOW_SCORES).isEmpty()) { //$NON-NLS-1$
 			ckbxShowScores.setMnemonic(-1);
 		} else {
-			ckbxShowScores.setMnemonic(Settings.getHotKeyParameter("ShowScores").charAt(0)); //$NON-NLS-1$
+			ckbxShowScores.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SHOW_SCORES).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("ShowTimer").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SHOW_TIMER).isEmpty()) { //$NON-NLS-1$
 			ckbxShowTimer.setMnemonic(-1);
 		} else {
-			ckbxShowTimer.setMnemonic(Settings.getHotKeyParameter("ShowTimer").charAt(0)); //$NON-NLS-1$
+			ckbxShowTimer.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SHOW_TIMER).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("ShowSkunk").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SHOW_SKUNK).isEmpty()) { //$NON-NLS-1$
 			ckbxEnableSkunk.setMnemonic(-1);
 		} else {
-			ckbxEnableSkunk.setMnemonic(Settings.getHotKeyParameter("ShowSkunk").charAt(0)); //$NON-NLS-1$
+			ckbxEnableSkunk.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SHOW_SKUNK).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("StartStream").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_START_STREAM).isEmpty()) { //$NON-NLS-1$
 			tglbtnStartStream.setMnemonic(-1);
 		} else {
-			tglbtnStartStream.setMnemonic(Settings.getHotKeyParameter("StartStream").charAt(0)); //$NON-NLS-1$
+			tglbtnStartStream.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_START_STREAM).charAt(0)); //$NON-NLS-1$
 		}
-		if(Settings.getHotKeyParameter("ShowCutthroat").isEmpty()) { //$NON-NLS-1$
+		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SHOW_CUTTHROAT).isEmpty()) { //$NON-NLS-1$
 			ckbxShowCutthroat.setMnemonic(-1);
 		} else {
-			ckbxShowCutthroat.setMnemonic(Settings.getHotKeyParameter("ShowCutthroat").charAt(0)); //$NON-NLS-1$
+			ckbxShowCutthroat.setMnemonic(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_SHOW_CUTTHROAT).charAt(0)); //$NON-NLS-1$
 		}
 	}
 	////// Listeners  //////

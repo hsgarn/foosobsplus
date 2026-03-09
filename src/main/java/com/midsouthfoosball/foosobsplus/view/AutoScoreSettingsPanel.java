@@ -52,6 +52,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.net.InetAddresses;
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -84,11 +85,11 @@ public class AutoScoreSettingsPanel extends JPanel {
 		txtServerAddress = new JTextField();
 		txtServerAddress.setHorizontalAlignment(SwingConstants.CENTER);
 		txtServerAddress.setInputVerifier(new IPAddrInputVerifier());
-		txtServerAddress.setText(Settings.getAutoScoreParameter("AutoScoreSettingsServerAddress")); //$NON-NLS-1$
+		txtServerAddress.setText(Settings.getAutoScoreParameter(SettingsKeys.AS_SERVER_ADDRESS)); //$NON-NLS-1$
 		txtServerAddress.setColumns(10);
 		add(txtServerAddress, "cell 1 2,alignx left"); //$NON-NLS-1$
 		chckbxAutoConnect = new JCheckBox(Messages.getString("AutoScoreSettingsPanel.AutoConnectOnStartUp")); //$NON-NLS-1$
-		if (Settings.getAutoScoreParameter("AutoScoreSettingsAutoConnect").equals(ON)) { //$NON-NLS-1$
+		if (Settings.getAutoScoreParameter(SettingsKeys.AS_AUTO_CONNECT).equals(ON)) { //$NON-NLS-1$
 			chckbxAutoConnect.setSelected(true);
 		} else {
 			chckbxAutoConnect.setSelected(false);
@@ -98,11 +99,11 @@ public class AutoScoreSettingsPanel extends JPanel {
 		add(lblServerPort, "cell 0 3,alignx trailing"); //$NON-NLS-1$
 		txtServerPort = new JTextField();
 		txtServerPort.setHorizontalAlignment(SwingConstants.CENTER);
-		txtServerPort.setText(Settings.getAutoScoreParameter("AutoScoreSettingsServerPort")); //$NON-NLS-1$
+		txtServerPort.setText(Settings.getAutoScoreParameter(SettingsKeys.AS_SERVER_PORT)); //$NON-NLS-1$
 		txtServerPort.setColumns(10);
 		add(txtServerPort, "cell 1 3,alignx left,aligny top"); //$NON-NLS-1$
 		chckbxDetailLog = new JCheckBox(Messages.getString("AutoScoreSettingsPanel.DetailLog")); //$NON-NLS-1$
-		if (Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals(ON)) { //$NON-NLS-1$
+		if (Settings.getAutoScoreParameter(SettingsKeys.AS_DETAIL_LOG).equals(ON)) { //$NON-NLS-1$
 			chckbxDetailLog.setSelected(true);
 		} else {
 			chckbxDetailLog.setSelected(false);
@@ -182,14 +183,14 @@ public class AutoScoreSettingsPanel extends JPanel {
 		mdlMessageHistory.insertElementAt(message, 0);
 	}
 	private void restoreDefaults() {
-		txtServerAddress.setText(Settings.getDefaultAutoScoreSettings("AutoScoreSettingsServerAddress")); //$NON-NLS-1$
-		txtServerPort.setText(Settings.getDefaultAutoScoreSettings("AutoScoreSettingsServerPort")); //$NON-NLS-1$
+		txtServerAddress.setText(Settings.getDefaultAutoScoreSettings(SettingsKeys.AS_SERVER_ADDRESS)); //$NON-NLS-1$
+		txtServerPort.setText(Settings.getDefaultAutoScoreSettings(SettingsKeys.AS_SERVER_PORT)); //$NON-NLS-1$
 	}
 	private void revertChanges() {
-		txtServerAddress.setText(Settings.getAutoScoreParameter("AutoScoreSettingsServerAddress")); //$NON-NLS-1$
-		txtServerPort.setText(Settings.getAutoScoreParameter("AutoScoreSettingsServerPort")); //$NON-NLS-1$
-		chckbxAutoConnect.setSelected(Settings.getAutoScoreParameter("AutoScoreSettingsAutoConnect").equals(ON)); //$NON-NLS-1$
-		chckbxDetailLog.setSelected(Settings.getAutoScoreParameter("AutoScoreSettingsDetailLog").equals(ON)); //$NON-NLS-1$
+		txtServerAddress.setText(Settings.getAutoScoreParameter(SettingsKeys.AS_SERVER_ADDRESS)); //$NON-NLS-1$
+		txtServerPort.setText(Settings.getAutoScoreParameter(SettingsKeys.AS_SERVER_PORT)); //$NON-NLS-1$
+		chckbxAutoConnect.setSelected(Settings.getAutoScoreParameter(SettingsKeys.AS_AUTO_CONNECT).equals(ON)); //$NON-NLS-1$
+		chckbxDetailLog.setSelected(Settings.getAutoScoreParameter(SettingsKeys.AS_DETAIL_LOG).equals(ON)); //$NON-NLS-1$
 		takeSnapshot();
 	}
 	public void setSaveCallback(BooleanSupplier callback) { this.saveCallback = callback; }
@@ -242,10 +243,10 @@ public class AutoScoreSettingsPanel extends JPanel {
 		}
 	}
 	public void saveSettings() {
-		Settings.setAutoScore("AutoScoreSettingsServerAddress",txtServerAddress.getText()); //$NON-NLS-1$
-		Settings.setAutoScore("AutoScoreSettingsServerPort",txtServerPort.getText()); //$NON-NLS-1$
-		Settings.setAutoScore("AutoScoreSettingsAutoConnect",chckbxAutoConnect.isSelected() ? ON : OFF); //$NON-NLS-1$
-		Settings.setAutoScore("AutoScoreSettingsDetailLog",chckbxDetailLog.isSelected() ? ON : OFF); //$NON-NLS-1$
+		Settings.setAutoScore(SettingsKeys.AS_SERVER_ADDRESS,txtServerAddress.getText()); //$NON-NLS-1$
+		Settings.setAutoScore(SettingsKeys.AS_SERVER_PORT,txtServerPort.getText()); //$NON-NLS-1$
+		Settings.setAutoScore(SettingsKeys.AS_AUTO_CONNECT,chckbxAutoConnect.isSelected() ? ON : OFF); //$NON-NLS-1$
+		Settings.setAutoScore(SettingsKeys.AS_DETAIL_LOG,chckbxDetailLog.isSelected() ? ON : OFF); //$NON-NLS-1$
 		try {
 			Settings.saveAutoScoreSettingsConfig();
 			takeSnapshot();

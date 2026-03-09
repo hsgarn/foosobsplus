@@ -28,6 +28,7 @@ import java.util.Arrays;
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 import com.midsouthfoosball.foosobsplus.model.LastScoredClock;
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 import com.midsouthfoosball.foosobsplus.model.TimeClock;
 import com.midsouthfoosball.foosobsplus.view.LastScoredWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.TimerPanel;
@@ -78,7 +79,7 @@ public class TimerController {
         };
 	////// Utility Methods //////
 	public void startShotTimer() {
-		int count = Integer.parseInt(Settings.getControlParameter("ShotTime")) * 10;
+		int count = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_SHOT_TIME)) * 10;
 		timeClock.setTimerInUse("Shot Timer");
 		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
 		timerPanel.setTimerDisplayColor(Color.GREEN);
@@ -87,7 +88,7 @@ public class TimerController {
 		timeClock.setTimer(count);
 	}
 	public void startPassTimer() {
-		int count = Integer.parseInt(Settings.getControlParameter("PassTime")) * 10;
+		int count = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_PASS_TIME)) * 10;
 		timeClock.setTimerInUse("Pass Timer");
 		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
 		timerPanel.setTimerDisplayColor(Color.GREEN);
@@ -96,7 +97,7 @@ public class TimerController {
 		timeClock.setTimer(count);
 	}
 	public void startTimeOutTimer() {
-		int count = Integer.parseInt(Settings.getControlParameter("TimeOutTime")) * 10;
+		int count = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_TIME_OUT_TIME)) * 10;
 		timeClock.setTimerInUse("Time Out Timer");
 		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
 		timerPanel.setTimerDisplayColor(Color.GREEN);
@@ -105,7 +106,7 @@ public class TimerController {
 		timeClock.setTimer(count);
 	}
 	public void startGameTimer() {
-		int count = Integer.parseInt(Settings.getControlParameter("GameTime")) * 10;
+		int count = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_GAME_TIME)) * 10;
 		timeClock.setTimerInUse("Game Timer");
 		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
 		timerPanel.setTimerDisplayColor(Color.GREEN);
@@ -114,7 +115,7 @@ public class TimerController {
 		timeClock.setTimer(count);
 	}
 	public void startRecallTimer() {
-		int count = Integer.parseInt(Settings.getControlParameter("RecallTime")) * 600;
+		int count = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_RECALL_TIME)) * 600;
 		timeClock.setTimerInUse("Recall Timer");
 		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
 		timerPanel.setTimerDisplayColor(Color.GREEN);
@@ -174,6 +175,6 @@ public class TimerController {
 		lastScored3WindowFrame.setTimerDisplay(lastScored3Clock.getLastScoredTime());
 	}
 	private void writeTimeRemaining() {
-		obsInterface.writeData(Settings.getSourceParameter("TimeRemaining"), timerPanel.getTimerDisplayText(),"TimerController",Settings.getShowParsed());
+		obsInterface.writeData(Settings.getSourceParameter(SettingsKeys.SRC_TIME_REMAINING), timerPanel.getTimerDisplayText(),"TimerController",Settings.getShowParsed());
 	}
 }

@@ -32,8 +32,8 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class Memento {
-	private static final transient Logger logger = LoggerFactory.getLogger(Memento.class);
-	byte[] serializedObject;
+	private static final Logger logger = LoggerFactory.getLogger(Memento.class);
+	private byte[] serializedObject;
 	public Memento(Object object) {
 		try (ByteArrayOutputStream bo = new ByteArrayOutputStream();
 			ObjectOutputStream so = new ObjectOutputStream(bo)) {

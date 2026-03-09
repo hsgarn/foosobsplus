@@ -49,6 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -556,217 +557,217 @@ public class SourcesPanel extends JPanel {
 		JLabel lblTournament = new JLabel(Messages.getString("SourcesPanel.Tournament")); //$NON-NLS-1$
 		add(lblTournament, "cell 5 3,alignx right"); //$NON-NLS-1$
 		txtTournament = new JComboBox<>();
-		txtTournament.setSelectedItem(Settings.getSourceParameter("Tournament")); //$NON-NLS-1$
+		txtTournament.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_TOURNAMENT)); //$NON-NLS-1$
 		txtTournament.setPrototypeDisplayValue("          ");
 		add(txtTournament, "cell 6 3,alignx left"); //$NON-NLS-1$
 		//Event
 		JLabel lblEvent = new JLabel(Messages.getString("SourcesPanel.Event")); //$NON-NLS-1$
 		add(lblEvent, "cell 5 4,alignx right"); //$NON-NLS-1$
 		txtEvent = new JComboBox<>();
-		txtEvent.setSelectedItem(Settings.getSourceParameter("Event")); //$NON-NLS-1$
+		txtEvent.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_EVENT)); //$NON-NLS-1$
 		add(txtEvent, "cell 6 4,alignx left"); //$NON-NLS-1$
 		txtEvent.setPrototypeDisplayValue("          ");
 		//Table Name
 		JLabel lblTableName = new JLabel(Messages.getString("SourcesPanel.TableName")); //$NON-NLS-1$
 		add(lblTableName, "cell 5 5,alignx right"); //$NON-NLS-1$
 		txtTableName = new JComboBox<>();
-		txtTableName.setSelectedItem(Settings.getSourceParameter("TableName")); //$NON-NLS-1$
+		txtTableName.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_TABLE_NAME)); //$NON-NLS-1$
 		txtTableName.setPrototypeDisplayValue("          ");
 		add(txtTableName, "cell 6 5,alignx left"); //$NON-NLS-1$
 		//Timer in Use
 		JLabel lblTimer = new JLabel(Messages.getString("SourcesPanel.Timer")); //$NON-NLS-1$
 		add(lblTimer, "cell 5 6,alignx right"); //$NON-NLS-1$
 		txtTimerInUse = new JComboBox<>();
-		txtTimerInUse.setSelectedItem(Settings.getSourceParameter("TimerInUse")); //$NON-NLS-1$
+		txtTimerInUse.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_TIMER_IN_USE)); //$NON-NLS-1$
 		txtTimerInUse.setPrototypeDisplayValue("          ");
 		add(txtTimerInUse, "cell 6 6,alignx left"); //$NON-NLS-1$
 		//Time Remaining
 		JLabel lblTimeRemaining = new JLabel(Messages.getString("SourcesPanel.TimeRemaining")); //$NON-NLS-1$
 		add(lblTimeRemaining, "cell 5 7,alignx right"); //$NON-NLS-1$
 		txtTimeRemaining = new JComboBox<>();
-		txtTimeRemaining.setSelectedItem(Settings.getSourceParameter("TimeRemaining")); //$NON-NLS-1$
+		txtTimeRemaining.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_TIME_REMAINING)); //$NON-NLS-1$
 		txtTimeRemaining.setPrototypeDisplayValue("          ");
 		add(txtTimeRemaining, "cell 6 7,alignx left"); //$NON-NLS-1$
 		//Game Time
 		JLabel lblGameTime = new JLabel(Messages.getString("SourcesPanel.GameTime")); //$NON-NLS-1$
 		add(lblGameTime, "cell 5 8,alignx right"); //$NON-NLS-1$
 		txtGameTime = new JComboBox<>();
-		txtGameTime.setSelectedItem(Settings.getSourceParameter("GameTime")); //$NON-NLS-1$
+		txtGameTime.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_GAME_TIME)); //$NON-NLS-1$
 		txtGameTime.setPrototypeDisplayValue("          ");
 		add(txtGameTime, "cell 6 8,alignx left"); //$NON-NLS-1$
 		//Match Time
 		JLabel lblMatchTime = new JLabel(Messages.getString("SourcesPanel.MatchTime")); //$NON-NLS-1$
 		add(lblMatchTime, "cell 5 9,alignx right"); //$NON-NLS-1$
 		txtMatchTime = new JComboBox<>();
-		txtMatchTime.setSelectedItem(Settings.getSourceParameter("MatchTime")); //$NON-NLS-1$
+		txtMatchTime.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_MATCH_TIME)); //$NON-NLS-1$
 		txtMatchTime.setPrototypeDisplayValue("          ");
 		add(txtMatchTime, "cell 6 9,alignx left"); //$NON-NLS-1$
 		//Stream Time
 		JLabel lblStreamTime = new JLabel(Messages.getString("SourcesPanel.StreamTime")); //$NON-NLS-1$
 		add(lblStreamTime, "cell 5 10,alignx right"); //$NON-NLS-1$
 		txtStreamTime = new JComboBox<>();
-		txtStreamTime.setSelectedItem(Settings.getSourceParameter("StreamTime")); //$NON-NLS-1$
+		txtStreamTime.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_STREAM_TIME)); //$NON-NLS-1$
 		txtStreamTime.setPrototypeDisplayValue("          ");
 		add(txtStreamTime, "cell 6 10,alignx left"); //$NON-NLS-1$
 		//Last Scored
 		JLabel lblLastScored = new JLabel(Messages.getString("SourcesPanel.LastScored")); //$NON-NLS-1$
 		add(lblLastScored, "cell 5 11,alignx right"); //$NON-NLS-1$
 		txtLastScored = new JComboBox<>();
-		txtLastScored.setSelectedItem(Settings.getSourceParameter("LastScored")); //$NON-NLS-1$
+		txtLastScored.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_LAST_SCORED)); //$NON-NLS-1$
 		txtLastScored.setPrototypeDisplayValue("          ");
 		add(txtLastScored, "cell 6 11,alignx left"); //$NON-NLS-1$
 		//Match Winner
 		JLabel lblMatchWinner = new JLabel(Messages.getString("SourcesPanel.MatchWinner")); //$NON-NLS-1$
 		add(lblMatchWinner, "cell 5 12,alignx right"); //$NON-NLS-1$
 		txtMatchWinner = new JComboBox<>();
-		txtMatchWinner.setSelectedItem(Settings.getSourceParameter("MatchWinner")); //$NON-NLS-1$
+		txtMatchWinner.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_MATCH_WINNER)); //$NON-NLS-1$
 		txtMatchWinner.setPrototypeDisplayValue("          ");
 		add(txtMatchWinner, "cell 6 12,alignx left"); //$NON-NLS-1$
 		//Meatball
 		JLabel lblMeatball = new JLabel(Messages.getString("SourcesPanel.Meatball")); //$NON-NLS-1$
 		add(lblMeatball, "cell 5 13,alignx right"); //$NON-NLS-1$
 		txtMeatball = new JComboBox<>();
-		txtMeatball.setSelectedItem(Settings.getSourceParameter("Meatball")); //$NON-NLS-1$
+		txtMeatball.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_MEATBALL)); //$NON-NLS-1$
 		txtMeatball.setPrototypeDisplayValue("          ");
 		add(txtMeatball, "cell 6 13,alignx left"); //$NON-NLS-1$
 		//Game Results
 		JLabel lblGameResults = new JLabel(Messages.getString("SourcesPanel.GameResults")); //$NON-NLS-1$
 		add(lblGameResults, "cell 5 14,alignx right"); //$NON-NLS-1$
 		txtGameResults = new JComboBox<>();
-		txtGameResults.setSelectedItem(Settings.getSourceParameter("GameResults")); //$NON-NLS-1$
+		txtGameResults.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_GAME_RESULTS)); //$NON-NLS-1$
 		txtGameResults.setPrototypeDisplayValue("          ");
 		add(txtGameResults, "cell 6 14,alignx left"); //$NON-NLS-1$
 		//Show Scores
 		JLabel lblShowScores = new JLabel(Messages.getString("SourcesPanel.ShowScores")); //$NON-NLS-1$
 		add(lblShowScores, "cell 5 15,alignx trailing"); //$NON-NLS-1$
 		txtShowScores = new JComboBox<>();
-		txtShowScores.setSelectedItem(Settings.getSourceParameter("ShowScores")); //$NON-NLS-1$
+		txtShowScores.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_SHOW_SCORES)); //$NON-NLS-1$
 		txtShowScores.setPrototypeDisplayValue("          ");
 		add(txtShowScores, "cell 6 15,alignx left"); //$NON-NLS-1$
 		//Show Timer
 		JLabel lblShowTimer = new JLabel(Messages.getString("SourcesPanel.ShowTimer")); //$NON-NLS-1$
 		add(lblShowTimer, "cell 5 16,alignx trailing"); //$NON-NLS-1$
 		txtShowTimer = new JComboBox<>();
-		txtShowTimer.setSelectedItem(Settings.getSourceParameter("ShowTimer")); //$NON-NLS-1$
+		txtShowTimer.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_SHOW_TIMER)); //$NON-NLS-1$
 		txtShowTimer.setPrototypeDisplayValue("          ");
 		add(txtShowTimer, "cell 6 16,alignx left"); //$NON-NLS-1$
 		//Show Cutthroat
 		JLabel lblShowCutthroat = new JLabel(Messages.getString("SourcesPanel.ShowCutthroat")); //$NON-NLS-1$
 		add(lblShowCutthroat, "cell 5 17,alignx trailing"); //$NON-NLS-1$
 		txtShowCutthroat = new JComboBox<>();
-		txtShowCutthroat.setSelectedItem(Settings.getSourceParameter("ShowCutthroatSource")); //$NON-NLS-1$
+		txtShowCutthroat.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_SHOW_CUTTHROAT)); //$NON-NLS-1$
 		txtShowCutthroat.setPrototypeDisplayValue("          ");
 		add(txtShowCutthroat, "cell 6 17,alignx left"); //$NON-NLS-1$
 		//CueBall
 		JLabel lblCueBall = new JLabel(Messages.getString("SourcesPanel.CueBall")); //$NON-NLS-1$
 		add(lblCueBall, "cell 7 3,alignx right"); //$NON-NLS-1$
 		txtCueBall = new JComboBox<>();
-		txtCueBall.setSelectedItem(Settings.getSourceParameter("CueBall")); //$NON-NLS-1$
+		txtCueBall.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_CUE_BALL)); //$NON-NLS-1$
 		txtCueBall.setPrototypeDisplayValue("          ");
 		add(txtCueBall, "cell 8 3,alignx left"); //$NON-NLS-1$
 		//OneBall
 		JLabel lblOneBall = new JLabel(Messages.getString("SourcesPanel.OneBall")); //$NON-NLS-1$
 		add(lblOneBall, "cell 7 4,alignx right"); //$NON-NLS-1$
 		txtOneBall = new JComboBox<>();
-		txtOneBall.setSelectedItem(Settings.getSourceParameter("OneBall")); //$NON-NLS-1$
+		txtOneBall.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_ONE_BALL)); //$NON-NLS-1$
 		txtOneBall.setPrototypeDisplayValue("          ");
 		add(txtOneBall, "cell 8 4,alignx left"); //$NON-NLS-1$
 		//TwoBall
 		JLabel lblTwoBall = new JLabel(Messages.getString("SourcesPanel.TwoBall")); //$NON-NLS-1$
 		add(lblTwoBall, "cell 7 5,alignx right"); //$NON-NLS-1$
 		txtTwoBall = new JComboBox<>();
-		txtTwoBall.setSelectedItem(Settings.getSourceParameter("TwoBall")); //$NON-NLS-1$
+		txtTwoBall.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_TWO_BALL)); //$NON-NLS-1$
 		txtTwoBall.setPrototypeDisplayValue("          ");
 		add(txtTwoBall, "cell 8 5,alignx left"); //$NON-NLS-1$
 		//ThreeBall
 		JLabel lblThreeBall = new JLabel(Messages.getString("SourcesPanel.ThreeBall")); //$NON-NLS-1$
 		add(lblThreeBall, "cell 7 6,alignx right"); //$NON-NLS-1$
 		txtThreeBall = new JComboBox<>();
-		txtThreeBall.setSelectedItem(Settings.getSourceParameter("ThreeBall")); //$NON-NLS-1$
+		txtThreeBall.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_THREE_BALL)); //$NON-NLS-1$
 		txtThreeBall.setPrototypeDisplayValue("          ");
 		add(txtThreeBall, "cell 8 6,alignx left"); //$NON-NLS-1$
 		//FourBall
 		JLabel lblFourBall = new JLabel(Messages.getString("SourcesPanel.FourBall")); //$NON-NLS-1$
 		add(lblFourBall, "cell 7 7,alignx right"); //$NON-NLS-1$
 		txtFourBall = new JComboBox<>();
-		txtFourBall.setSelectedItem(Settings.getSourceParameter("FourBall")); //$NON-NLS-1$
+		txtFourBall.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_FOUR_BALL)); //$NON-NLS-1$
 		txtFourBall.setPrototypeDisplayValue("          ");
 		add(txtFourBall, "cell 8 7,alignx left"); //$NON-NLS-1$
 		//FiveBall
 		JLabel lblFiveBall = new JLabel(Messages.getString("SourcesPanel.FiveBall")); //$NON-NLS-1$
 		add(lblFiveBall, "cell 7 8,alignx right"); //$NON-NLS-1$
 		txtFiveBall = new JComboBox<>();
-		txtFiveBall.setSelectedItem(Settings.getSourceParameter("FiveBall")); //$NON-NLS-1$
+		txtFiveBall.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_FIVE_BALL)); //$NON-NLS-1$
 		txtFiveBall.setPrototypeDisplayValue("          ");
 		add(txtFiveBall, "cell 8 8,alignx left"); //$NON-NLS-1$
 		//SixBall
 		JLabel lblSixBall = new JLabel(Messages.getString("SourcesPanel.SixBall")); //$NON-NLS-1$
 		add(lblSixBall, "cell 7 9,alignx right"); //$NON-NLS-1$
 		txtSixBall = new JComboBox<>();
-		txtSixBall.setSelectedItem(Settings.getSourceParameter("SixBall")); //$NON-NLS-1$
+		txtSixBall.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_SIX_BALL)); //$NON-NLS-1$
 		txtSixBall.setPrototypeDisplayValue("          ");
 		add(txtSixBall, "cell 8 9,alignx left"); //$NON-NLS-1$
 		//SevenBall
 		JLabel lblSevenBall = new JLabel(Messages.getString("SourcesPanel.SevenBall")); //$NON-NLS-1$
 		add(lblSevenBall, "cell 7 10,alignx right"); //$NON-NLS-1$
 		txtSevenBall = new JComboBox<>();
-		txtSevenBall.setSelectedItem(Settings.getSourceParameter("SevenBall")); //$NON-NLS-1$
+		txtSevenBall.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_SEVEN_BALL)); //$NON-NLS-1$
 		txtSevenBall.setPrototypeDisplayValue("          ");
 		add(txtSevenBall, "cell 8 10,alignx left"); //$NON-NLS-1$
 		//EightBall
 		JLabel lblEightBall = new JLabel(Messages.getString("SourcesPanel.EightBall")); //$NON-NLS-1$
 		add(lblEightBall, "cell 7 11,alignx right"); //$NON-NLS-1$
 		txtEightBall = new JComboBox<>();
-		txtEightBall.setSelectedItem(Settings.getSourceParameter("EightBall")); //$NON-NLS-1$
+		txtEightBall.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_EIGHT_BALL)); //$NON-NLS-1$
 		txtEightBall.setPrototypeDisplayValue("          ");
 		add(txtEightBall, "cell 8 11,alignx left"); //$NON-NLS-1$
 		//NineBall
 		JLabel lblNineBall = new JLabel(Messages.getString("SourcesPanel.NineBall")); //$NON-NLS-1$
 		add(lblNineBall, "cell 7 12,alignx right"); //$NON-NLS-1$
 		txtNineBall = new JComboBox<>();
-		txtNineBall.setSelectedItem(Settings.getSourceParameter("NineBall")); //$NON-NLS-1$
+		txtNineBall.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_NINE_BALL)); //$NON-NLS-1$
 		txtNineBall.setPrototypeDisplayValue("          ");
 		add(txtNineBall, "cell 8 12,alignx left"); //$NON-NLS-1$
 		//TenBall
 		JLabel lblTenBall = new JLabel(Messages.getString("SourcesPanel.TenBall")); //$NON-NLS-1$
 		add(lblTenBall, "cell 7 13,alignx right"); //$NON-NLS-1$
 		txtTenBall = new JComboBox<>();
-		txtTenBall.setSelectedItem(Settings.getSourceParameter("TenBall")); //$NON-NLS-1$
+		txtTenBall.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_TEN_BALL)); //$NON-NLS-1$
 		txtTenBall.setPrototypeDisplayValue("          ");
 		add(txtTenBall, "cell 8 13,alignx left"); //$NON-NLS-1$
 		//ElevenBall
 		JLabel lblElevenBall = new JLabel(Messages.getString("SourcesPanel.ElevenBall")); //$NON-NLS-1$
 		add(lblElevenBall, "cell 7 14,alignx right"); //$NON-NLS-1$
 		txtElevenBall = new JComboBox<>();
-		txtElevenBall.setSelectedItem(Settings.getSourceParameter("ElevenBall")); //$NON-NLS-1$
+		txtElevenBall.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_ELEVEN_BALL)); //$NON-NLS-1$
 		txtElevenBall.setPrototypeDisplayValue("          ");
 		add(txtElevenBall, "cell 8 14,alignx left"); //$NON-NLS-1$
 		//TwelveBall
 		JLabel lblTwelveBall = new JLabel(Messages.getString("SourcesPanel.TwelveBall")); //$NON-NLS-1$
 		add(lblTwelveBall, "cell 7 15,alignx right"); //$NON-NLS-1$
 		txtTwelveBall = new JComboBox<>();
-		txtTwelveBall.setSelectedItem(Settings.getSourceParameter("TwelveBall")); //$NON-NLS-1$
+		txtTwelveBall.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_TWELVE_BALL)); //$NON-NLS-1$
 		txtTwelveBall.setPrototypeDisplayValue("          ");
 		add(txtTwelveBall, "cell 8 15,alignx left"); //$NON-NLS-1$
 		//ThirteenBall
 		JLabel lblThirteenBall = new JLabel(Messages.getString("SourcesPanel.ThirteenBall")); //$NON-NLS-1$
 		add(lblThirteenBall, "cell 7 16,alignx right"); //$NON-NLS-1$
 		txtThirteenBall = new JComboBox<>();
-		txtThirteenBall.setSelectedItem(Settings.getSourceParameter("ThirteenBall")); //$NON-NLS-1$
+		txtThirteenBall.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_THIRTEEN_BALL)); //$NON-NLS-1$
 		txtThirteenBall.setPrototypeDisplayValue("          ");
 		add(txtThirteenBall, "cell 8 16,alignx left"); //$NON-NLS-1$
 		//FourteenBall
 		JLabel lblFourteenBall = new JLabel(Messages.getString("SourcesPanel.FourteenBall")); //$NON-NLS-1$
 		add(lblFourteenBall, "cell 7 17,alignx right"); //$NON-NLS-1$
 		txtFourteenBall = new JComboBox<>();
-		txtFourteenBall.setSelectedItem(Settings.getSourceParameter("FourteenBall")); //$NON-NLS-1$
+		txtFourteenBall.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_FOURTEEN_BALL)); //$NON-NLS-1$
 		txtFourteenBall.setPrototypeDisplayValue("          ");
 		add(txtFourteenBall, "cell 8 17,alignx left"); //$NON-NLS-1$
 		//FifteenBall
 		JLabel lblFifteenBall = new JLabel(Messages.getString("SourcesPanel.FifteenBall")); //$NON-NLS-1$
 		add(lblFifteenBall, "cell 7 18,alignx right"); //$NON-NLS-1$
 		txtFifteenBall = new JComboBox<>();
-		txtFifteenBall.setSelectedItem(Settings.getSourceParameter("FifteenBall")); //$NON-NLS-1$
+		txtFifteenBall.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_FIFTEEN_BALL)); //$NON-NLS-1$
 		txtFifteenBall.setPrototypeDisplayValue("          ");
 		add(txtFifteenBall, "cell 8 18,alignx left"); //$NON-NLS-1$
         //Apply

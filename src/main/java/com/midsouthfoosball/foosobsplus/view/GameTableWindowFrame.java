@@ -25,6 +25,7 @@ import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 import com.midsouthfoosball.foosobsplus.model.AppConfig;
 import com.midsouthfoosball.foosobsplus.model.Settings;
+import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 
 @SuppressWarnings("serial")
 public class GameTableWindowFrame extends JFrame {
@@ -33,7 +34,7 @@ public class GameTableWindowFrame extends JFrame {
 	public GameTableWindowFrame(GameTableWindowPanel gameTableWindowPanel, MainFrame mainFrame) {
 		super(PROGRAMNAME + " " + Messages.getString("GameTableWindowFrame.GameTableWindow")); //$NON-NLS-1$ //$NON-NLS-2$
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		if (Settings.getControlParameter("CutThroatMode").equals(ON)) {
+		if (Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON)) {
 			gameTableWindowPanel.setPreferredSize(new Dimension(440, 100));
 		} else {
 			gameTableWindowPanel.setPreferredSize(new Dimension(440, 100));
