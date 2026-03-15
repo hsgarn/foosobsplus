@@ -66,7 +66,7 @@ public class PicoDiscovery {
                     if (msg.startsWith("Table")) { //$NON-NLS-1$
                         return msg;
                     }
-                } catch (SocketTimeoutException e) {
+                } catch (SocketTimeoutException _) {
                     String retryMsg = "No response, retrying (attempt " + (i+1) + ")..."; //$NON-NLS-1$ //$NON-NLS-2$
                     logger.info(retryMsg);
                     if (statusCallback != null) statusCallback.accept(retryMsg);

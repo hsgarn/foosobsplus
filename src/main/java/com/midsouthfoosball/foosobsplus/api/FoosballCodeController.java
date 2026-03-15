@@ -46,7 +46,7 @@ public class FoosballCodeController {
 
 			// Validate table number matches current table
 			try {
-				teamService.updatePlayerNames(createEmptyPlayerRequest(request.getTableNumber()));
+				teamService.updatePlayerNames(createEmptyPlayerRequest(request.tableNumber()));
 			} catch (TeamService.ValidationException e) {
 				ctx.status(400).json(new APIResponse(false, e.getMessage()));
 				logger.warn("API: Table number validation failed: {}", e.getMessage());
@@ -54,7 +54,7 @@ public class FoosballCodeController {
 			}
 
 			// Uppercase the code before processing
-			String code = request.getCode().toUpperCase();
+			String code = request.code().toUpperCase();
 
 			// Process code on EDT (Swing Event Dispatch Thread) and wait for result
 			try {
@@ -79,7 +79,7 @@ public class FoosballCodeController {
 				logger.warn("API: Invalid code '{}': {}", code, errorMsg);
 			} else {
 				ctx.status(200).json(new APIResponse(true, "Code submitted successfully", code));
-				logger.info("API: Successfully processed code '{}' for table {}", code, request.getTableNumber());
+				logger.info("API: Successfully processed code '{}' for table {}", code, request.tableNumber());
 			}
 
 		} catch (FoosballCodeRequest.ValidationException e) {

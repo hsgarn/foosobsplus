@@ -20,27 +20,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.api;
 
-public class FoosballCodeRequest {
+public record FoosballCodeRequest(String code, int tableNumber) {
 	private static final int MAX_CODE_LENGTH = 20;
-
-	private String code;
-	private int tableNumber;
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public int getTableNumber() {
-		return tableNumber;
-	}
-
-	public void setTableNumber(int tableNumber) {
-		this.tableNumber = tableNumber;
-	}
 
 	/**
 	 * Validate foosball code request
