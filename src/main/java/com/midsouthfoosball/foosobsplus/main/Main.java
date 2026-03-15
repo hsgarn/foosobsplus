@@ -2229,9 +2229,9 @@ public final class Main implements MatchObserver {
                     }
                 }
 
-                watchService = FileSystems.getDefault().newWatchService(); 
-				partnerPath.getFileSystem().newWatchService();
-				partnerPath.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
+                try (WatchService ws = FileSystems.getDefault().newWatchService()) {
+				watchService = ws;
+				partnerPath.register(ws, StandardWatchEventKinds.ENTRY_MODIFY);
 		        WatchKey watchKey;
 		        while (!isCancelled())
 		        {
@@ -2277,7 +2277,7 @@ public final class Main implements MatchObserver {
 			        	}
 	        		}
 		        }
-		        watchService.close();
+		        } // end try-with-resources: watchService closed automatically
 		        return true;
 			}
 			@Override
