@@ -96,8 +96,6 @@ public class FoosballCodeController {
 	 * Creates an empty PlayerNamesRequest just to validate table number
 	 */
 	private PlayerNamesRequest createEmptyPlayerRequest(int tableNumber) {
-		PlayerNamesRequest request = new PlayerNamesRequest();
-		request.setTableNumber(tableNumber);
-		return request;
+		return new PlayerNamesRequest(tableNumber, null, null);
 	}
 }

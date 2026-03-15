@@ -38,7 +38,7 @@ public class PlayerNamesController {
 			PlayerNamesRequest request = ctx.bodyAsClass(PlayerNamesRequest.class);
 
 			// Validate table number
-			if (request.getTableNumber() <= 0) {
+			if (request.tableNumber() <= 0) {
 				ctx.status(400).json(new APIResponse(false, "Invalid table number"));
 				return;
 			}
@@ -52,7 +52,7 @@ public class PlayerNamesController {
 			// Success response
 			ctx.status(200).json(new APIResponse(true, "Player names updated successfully"));
 
-			logger.info("API: Successfully updated player names for table {}", request.getTableNumber());
+			logger.info("API: Successfully updated player names for table {}", request.tableNumber());
 
 		} catch (PlayerNamesRequest.ValidationException e) {
 			ctx.status(400).json(new APIResponse(false, e.getMessage()));

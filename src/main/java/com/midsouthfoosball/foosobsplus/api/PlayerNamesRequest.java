@@ -20,36 +20,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.api;
 
-public class PlayerNamesRequest {
+public record PlayerNamesRequest(int tableNumber, TeamPlayers team1, TeamPlayers team2) {
 	private static final int MAX_NAME_LENGTH = 100;
-
-	private int tableNumber;
-	private TeamPlayers team1;
-	private TeamPlayers team2;
-
-	public int getTableNumber() {
-		return tableNumber;
-	}
-
-	public void setTableNumber(int tableNumber) {
-		this.tableNumber = tableNumber;
-	}
-
-	public TeamPlayers getTeam1() {
-		return team1;
-	}
-
-	public void setTeam1(TeamPlayers team1) {
-		this.team1 = team1;
-	}
-
-	public TeamPlayers getTeam2() {
-		return team2;
-	}
-
-	public void setTeam2(TeamPlayers team2) {
-		this.team2 = team2;
-	}
 
 	/**
 	 * Validate and sanitize player names
@@ -57,12 +29,12 @@ public class PlayerNamesRequest {
 	 */
 	public void validate() throws ValidationException {
 		if (team1 != null) {
-			validateAndSanitizeName("Team 1 Forward", team1.forward);
-			validateAndSanitizeName("Team 1 Goalie", team1.goalie);
+			validateAndSanitizeName("Team 1 Forward", team1.forward());
+			validateAndSanitizeName("Team 1 Goalie", team1.goalie());
 		}
 		if (team2 != null) {
-			validateAndSanitizeName("Team 2 Forward", team2.forward);
-			validateAndSanitizeName("Team 2 Goalie", team2.goalie);
+			validateAndSanitizeName("Team 2 Forward", team2.forward());
+			validateAndSanitizeName("Team 2 Goalie", team2.goalie());
 		}
 	}
 
@@ -86,24 +58,5 @@ public class PlayerNamesRequest {
 		}
 	}
 
-	public static class TeamPlayers {
-		private String forward;
-		private String goalie;
-
-		public String getForward() {
-			return forward;
-		}
-
-		public void setForward(String forward) {
-			this.forward = forward;
-		}
-
-		public String getGoalie() {
-			return goalie;
-		}
-
-		public void setGoalie(String goalie) {
-			this.goalie = goalie;
-		}
-	}
+	public record TeamPlayers(String forward, String goalie) {}
 }

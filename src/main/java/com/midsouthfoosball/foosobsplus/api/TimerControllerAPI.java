@@ -42,36 +42,36 @@ public class TimerControllerAPI {
 			request.validate();
 
 			// Execute timer action based on type
-			String timerType = request.getTimerType().toLowerCase();
+			String timerType = request.timerType().toLowerCase();
 			switch (timerType) {
 				case "shot":
 					teamController.startShotTimer();
-					logger.info("API: Started shot timer for table {}", request.getTableNumber());
+					logger.info("API: Started shot timer for table {}", request.tableNumber());
 					ctx.status(200).json(new APIResponse(true, "Shot timer started"));
 					break;
 				case "pass":
 					teamController.startPassTimer();
-					logger.info("API: Started pass timer for table {}", request.getTableNumber());
+					logger.info("API: Started pass timer for table {}", request.tableNumber());
 					ctx.status(200).json(new APIResponse(true, "Pass timer started"));
 					break;
 				case "timeout":
 					teamController.startTimeOutTimer();
-					logger.info("API: Started timeout timer for table {}", request.getTableNumber());
+					logger.info("API: Started timeout timer for table {}", request.tableNumber());
 					ctx.status(200).json(new APIResponse(true, "Timeout timer started"));
 					break;
 				case "game":
 					teamController.startGameTimer();
-					logger.info("API: Started game timer for table {}", request.getTableNumber());
+					logger.info("API: Started game timer for table {}", request.tableNumber());
 					ctx.status(200).json(new APIResponse(true, "Game timer started"));
 					break;
 				case "recall":
 					teamController.startRecallTimer();
-					logger.info("API: Started recall timer for table {}", request.getTableNumber());
+					logger.info("API: Started recall timer for table {}", request.tableNumber());
 					ctx.status(200).json(new APIResponse(true, "Recall timer started"));
 					break;
 				case "reset":
 					teamController.resetTimer();
-					logger.info("API: Reset timer for table {}", request.getTableNumber());
+					logger.info("API: Reset timer for table {}", request.tableNumber());
 					ctx.status(200).json(new APIResponse(true, "Timer reset"));
 					break;
 				default:

@@ -43,32 +43,32 @@ public class TeamService {
 	}
 
 	public void updatePlayerNames(PlayerNamesRequest request) throws ValidationException {
-		validateTableNumber(request.getTableNumber());
+		validateTableNumber(request.tableNumber());
 
 		// Use SwingUtilities.invokeLater to ensure updates happen on EDT
 		SwingUtilities.invokeLater(() -> {
 			try {
 				// Update Team 1
-				if (request.getTeam1() != null) {
-					if (request.getTeam1().getForward() != null) {
-						teamController.setTeam1ForwardName(request.getTeam1().getForward());
-						logger.info("API: Updated Team 1 Forward: {}", request.getTeam1().getForward());
+				if (request.team1() != null) {
+					if (request.team1().forward() != null) {
+						teamController.setTeam1ForwardName(request.team1().forward());
+						logger.info("API: Updated Team 1 Forward: {}", request.team1().forward());
 					}
-					if (request.getTeam1().getGoalie() != null) {
-						teamController.setTeam1GoalieName(request.getTeam1().getGoalie());
-						logger.info("API: Updated Team 1 Goalie: {}", request.getTeam1().getGoalie());
+					if (request.team1().goalie() != null) {
+						teamController.setTeam1GoalieName(request.team1().goalie());
+						logger.info("API: Updated Team 1 Goalie: {}", request.team1().goalie());
 					}
 				}
 
 				// Update Team 2
-				if (request.getTeam2() != null) {
-					if (request.getTeam2().getForward() != null) {
-						teamController.setTeam2ForwardName(request.getTeam2().getForward());
-						logger.info("API: Updated Team 2 Forward: {}", request.getTeam2().getForward());
+				if (request.team2() != null) {
+					if (request.team2().forward() != null) {
+						teamController.setTeam2ForwardName(request.team2().forward());
+						logger.info("API: Updated Team 2 Forward: {}", request.team2().forward());
 					}
-					if (request.getTeam2().getGoalie() != null) {
-						teamController.setTeam2GoalieName(request.getTeam2().getGoalie());
-						logger.info("API: Updated Team 2 Goalie: {}", request.getTeam2().getGoalie());
+					if (request.team2().goalie() != null) {
+						teamController.setTeam2GoalieName(request.team2().goalie());
+						logger.info("API: Updated Team 2 Goalie: {}", request.team2().goalie());
 					}
 				}
 			} catch (Exception e) {

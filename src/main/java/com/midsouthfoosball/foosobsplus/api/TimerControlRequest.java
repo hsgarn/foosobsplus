@@ -20,25 +20,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.api;
 
-public class TimerControlRequest {
-	private String timerType;
-	private int tableNumber;
-
-	public String getTimerType() {
-		return timerType;
-	}
-
-	public void setTimerType(String timerType) {
-		this.timerType = timerType;
-	}
-
-	public int getTableNumber() {
-		return tableNumber;
-	}
-
-	public void setTableNumber(int tableNumber) {
-		this.tableNumber = tableNumber;
-	}
+public record TimerControlRequest(String timerType, int tableNumber) {
 
 	/**
 	 * Validate timer control request
