@@ -23,6 +23,7 @@ package com.midsouthfoosball.foosobsplus.model;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
+import java.io.ObjectInputFilter;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -254,22 +255,22 @@ public class GameClock implements Serializable {
 		obsInterface.writeData(source, data, "GameClock", Settings.getShowParsed());
     }
     public void restoreState(byte[] serializedObject) {
-		GameClock tempGameClock = null;
 		try {
-			byte b[] = serializedObject;
-			ByteArrayInputStream bi = new ByteArrayInputStream(b);
+			ByteArrayInputStream bi = new ByteArrayInputStream(serializedObject);
 			ObjectInputStream si = new ObjectInputStream(bi);
-			tempGameClock = (GameClock) si.readObject();
+			si.setObjectInputFilter(ObjectInputFilter.Config.createFilter(
+				"com.midsouthfoosball.foosobsplus.model.*;java.lang.*;!*"));
+			GameClock tempGameClock = (GameClock) si.readObject();
+			this.setGameSeconds(tempGameClock.getGameSeconds());
+			this.setGameMinutes(tempGameClock.getGameMinutes());
+			this.setGameHours(tempGameClock.getGameHours());
+			this.setGameTimerRunning(tempGameClock.isGameTimerRunning());
+			this.setMatchSeconds(tempGameClock.getMatchSeconds());
+			this.setMatchMinutes(tempGameClock.getMatchMinutes());
+			this.setMatchHours(tempGameClock.getMatchHours());
+			this.setMatchTimerRunning(tempGameClock.isMatchTimerRunning());
 		} catch (IOException | ClassNotFoundException e) {
-			logger.error(e.toString());
+			logger.error("Failed to restore GameClock state: {}", e.toString());
 		}
-		this.setGameSeconds(tempGameClock.getGameSeconds());
-		this.setGameMinutes(tempGameClock.getGameMinutes());
-		this.setGameHours(tempGameClock.getGameHours());
-		this.setGameTimerRunning(tempGameClock.isGameTimerRunning());
-		this.setMatchSeconds(tempGameClock.getMatchSeconds());
-		this.setMatchMinutes(tempGameClock.getMatchMinutes());
-		this.setMatchHours(tempGameClock.getMatchHours());
-		this.setMatchTimerRunning(tempGameClock.isMatchTimerRunning());
 	}
 }

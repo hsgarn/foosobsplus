@@ -21,6 +21,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.model;
 
 import java.io.ByteArrayInputStream;
+import java.io.ObjectInputFilter;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -684,28 +685,28 @@ public class Match implements Serializable {
     }
     public void restoreState(byte[] serializedObject) {
 
-		Match tempMatch = null;
 		try {
-			byte b[] = serializedObject;
-			ByteArrayInputStream bi = new ByteArrayInputStream(b);
+			ByteArrayInputStream bi = new ByteArrayInputStream(serializedObject);
 			ObjectInputStream si = new ObjectInputStream(bi);
-			tempMatch = (Match) si.readObject();
+			si.setObjectInputFilter(ObjectInputFilter.Config.createFilter(
+				"com.midsouthfoosball.foosobsplus.model.*;java.util.*;java.lang.*;!*"));
+			Match tempMatch = (Match) si.readObject();
+			this.setLastScored(tempMatch.getLastScored());
+			this.setMatchPaused(tempMatch.isMatchPaused());
+			this.setGamePaused(tempMatch.isGamePaused());
+			this.setCurrentGameNumber(tempMatch.getCurrentGameNumber());
+			this.setGameWinners(tempMatch.getGameWinners());
+			this.setMatchWon(tempMatch.getMatchWon());
+			this.setMatchWinner(tempMatch.getMatchWinner());
+			this.setMaxPossibleGames(tempMatch.getMaxPossibleGames());
+			this.setMatchId(tempMatch.getMatchId());
+			this.setScoresTeam1(tempMatch.getScoresTeam1());
+			this.setScoresTeam2(tempMatch.getScoresTeam2());
+			this.setScoresTeam3(tempMatch.getScoresTeam3());
+			this.setTimes(tempMatch.getTimes());
 		} catch (IOException | ClassNotFoundException e) {
-			logger.error(e.toString());
+			logger.error("Failed to restore Match state: {}", e.toString());
 		}
-		this.setLastScored(tempMatch.getLastScored());
-		this.setMatchPaused(tempMatch.isMatchPaused());
-		this.setGamePaused(tempMatch.isGamePaused());
-		this.setCurrentGameNumber(tempMatch.getCurrentGameNumber());
-		this.setGameWinners(tempMatch.getGameWinners());
-		this.setMatchWon(tempMatch.getMatchWon());
-		this.setMatchWinner(tempMatch.getMatchWinner());
-		this.setMaxPossibleGames(tempMatch.getMaxPossibleGames());
-		this.setMatchId(tempMatch.getMatchId());
-		this.setScoresTeam1(tempMatch.getScoresTeam1());
-		this.setScoresTeam2(tempMatch.getScoresTeam2());
-		this.setScoresTeam3(tempMatch.getScoresTeam3());
-		this.setTimes(tempMatch.getTimes());
 	}
 	public void clearGameWinners() {
 		for(int i=0; i<gameWinners.length;i++) {

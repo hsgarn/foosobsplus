@@ -22,6 +22,7 @@ package com.midsouthfoosball.foosobsplus.model;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputFilter;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -737,16 +738,16 @@ public class Stats implements Serializable {
 		logger.info("");
 	}
 	public void restoreState(byte[] serializedObject) {
-		Stats tempStats = null;
 		try {
-			byte b[] = serializedObject;
-			ByteArrayInputStream bi = new ByteArrayInputStream(b);
+			ByteArrayInputStream bi = new ByteArrayInputStream(serializedObject);
 			ObjectInputStream si = new ObjectInputStream(bi);
-			tempStats = (Stats) si.readObject();
+			si.setObjectInputFilter(ObjectInputFilter.Config.createFilter(
+				"com.midsouthfoosball.foosobsplus.model.*;java.util.*;java.lang.*;!*"));
+			Stats tempStats = (Stats) si.readObject();
+			this.setCodeHistory(tempStats.getCodeHistory());
+			this.setPreviousCode(tempStats.getPreviousCode());
 		} catch (IOException | ClassNotFoundException e) {
-			logger.error(e.toString());
+			logger.error("Failed to restore Stats state: {}", e.toString());
 		}
-		this.setCodeHistory(tempStats.getCodeHistory());
-		this.setPreviousCode(tempStats.getPreviousCode());
 	}
 }

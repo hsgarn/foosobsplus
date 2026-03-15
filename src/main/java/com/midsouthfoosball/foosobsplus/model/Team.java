@@ -23,6 +23,7 @@ package com.midsouthfoosball.foosobsplus.model;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayInputStream;
+import java.io.ObjectInputFilter;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -802,16 +803,13 @@ public class Team implements Serializable {
 		writeStats();
 	}
 	public void restoreState(byte[] serializedObject) {
-		Team tempTeam = null;
 		try {
-			byte b[] = serializedObject;
-			ByteArrayInputStream bi = new ByteArrayInputStream(b);
+			ByteArrayInputStream bi = new ByteArrayInputStream(serializedObject);
 			ObjectInputStream si = new ObjectInputStream(bi);
-			tempTeam = (Team) si.readObject();
-		} catch (IOException | ClassNotFoundException e) {
-			logger.error(e.toString());
-		}
-		this.setTeamNbr(tempTeam.getTeamNbr());
+			si.setObjectInputFilter(ObjectInputFilter.Config.createFilter(
+				"com.midsouthfoosball.foosobsplus.model.*;java.util.*;java.lang.*;!*"));
+			Team tempTeam = (Team) si.readObject();
+			this.setTeamNbr(tempTeam.getTeamNbr());
 		this.setTeamName(tempTeam.getTeamName());
 		this.setForwardName(tempTeam.getForwardName());
 		this.setGoalieName(tempTeam.getGoalieName());
@@ -843,8 +841,11 @@ public class Team implements Serializable {
 		this.setThreeBarScoring(tempTeam.getThreeBarScoring());
 		this.setFiveBarScoring(tempTeam.getFiveBarScoring());
 		this.setTwoBarScoring(tempTeam.getTwoBarScoring());
-		this.setBreaks(tempTeam.getBreaks());
-		this.setStuffs(tempTeam.getStuffs());
+			this.setBreaks(tempTeam.getBreaks());
+			this.setStuffs(tempTeam.getStuffs());
+		} catch (IOException | ClassNotFoundException e) {
+			logger.error("Failed to restore Team state: {}", e.toString());
+		}
 	}
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		propertyChangeSupport.addPropertyChangeListener(listener);

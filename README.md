@@ -1327,6 +1327,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.088 03/15/2026</br>
+Add ObjectInputFilter to ObjectInputStream in Match, GameClock, Team, and Stats to whitelist only model, util, and lang classes. Move all field assignments inside the try block so a deserialization failure logs the error and aborts the restore rather than NPE-ing on a null reference.</br>
+<br>
 v2.087 03/15/2026</br>
 Migrate to Java 25</br>
 Update maven-compiler-plugin to 3.15.0 and set release target to 25.</br>
