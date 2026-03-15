@@ -510,77 +510,44 @@ public class BallPanel extends JPanel {
 		return btnFifteenBall.isSelected();
 	}
 	public boolean getBallSelectedState(String ball) {
-		boolean state = false;
-		switch (ball) {
-		case "Cue": state = btnCueBall.isSelected();
-			break;
-		case "One": state = btnOneBall.isSelected();
-			break;
-		case "Two": state = btnTwoBall.isSelected();
-			break;
-		case "Three": state = btnThreeBall.isSelected();
-			break;
-		case "Four": state = btnFourBall.isSelected();
-			break;
-		case "Five": state = btnFiveBall.isSelected();
-			break;
-		case "Six": state = btnSixBall.isSelected();
-			break;
-		case "Seven": state = btnSevenBall.isSelected();
-			break;
-		case "Eight": state = btnEightBall.isSelected();
-			break;
-		case "Nine": state = btnNineBall.isSelected();
-			break;
-		case "Ten": state = btnTenBall.isSelected();
-			break;
-		case "Eleven": state = btnElevenBall.isSelected();
-			break;
-		case "Twelve": state = btnTwelveBall.isSelected();
-			break;
-		case "Thirteen": state = btnThirteenBall.isSelected();
-			break;
-		case "Fourteen": state = btnFourteenBall.isSelected();
-			break;
-		case "Fifteen": state = btnFifteenBall.isSelected();
-			break;
-		}
-		return state;
+		return switch (ball) {
+			case "Cue"      -> btnCueBall.isSelected();
+			case "One"      -> btnOneBall.isSelected();
+			case "Two"      -> btnTwoBall.isSelected();
+			case "Three"    -> btnThreeBall.isSelected();
+			case "Four"     -> btnFourBall.isSelected();
+			case "Five"     -> btnFiveBall.isSelected();
+			case "Six"      -> btnSixBall.isSelected();
+			case "Seven"    -> btnSevenBall.isSelected();
+			case "Eight"    -> btnEightBall.isSelected();
+			case "Nine"     -> btnNineBall.isSelected();
+			case "Ten"      -> btnTenBall.isSelected();
+			case "Eleven"   -> btnElevenBall.isSelected();
+			case "Twelve"   -> btnTwelveBall.isSelected();
+			case "Thirteen" -> btnThirteenBall.isSelected();
+			case "Fourteen" -> btnFourteenBall.isSelected();
+			case "Fifteen"  -> btnFifteenBall.isSelected();
+			default         -> false;
+		};
 	}
 	public void setBallSelected(String ball, boolean selected) {
 		switch (ball) {
-			case "Cue": btnCueBall.setSelected(selected);
-				break;
-			case "One": btnOneBall.setSelected(selected);
-				break;
-			case "Two": btnTwoBall.setSelected(selected);
-				break;
-			case "Three": btnThreeBall.setSelected(selected);
-				break;
-			case "Four": btnFourBall.setSelected(selected);
-				break;
-			case "Five": btnFiveBall.setSelected(selected);
-				break;
-			case "Six": btnSixBall.setSelected(selected);
-				break;
-			case "Seven": btnSevenBall.setSelected(selected);
-				break;
-			case "Eight": btnEightBall.setSelected(selected);
-				break;
-			case "Nine": btnNineBall.setSelected(selected);
-				break;
-			case "Ten": btnTenBall.setSelected(selected);
-				break;
-			case "Eleven": btnElevenBall.setSelected(selected);
-				break;
-			case "Twelve": btnTwelveBall.setSelected(selected);
-				break;
-			case "Thirteen": btnThirteenBall.setSelected(selected);
-				break;
-			case "Fourteen": btnFourteenBall.setSelected(selected);
-				break;
-			case "Fifteen": btnFifteenBall.setSelected(selected);
-				break;
+			case "Cue"      -> btnCueBall.setSelected(selected);
+			case "One"      -> btnOneBall.setSelected(selected);
+			case "Two"      -> btnTwoBall.setSelected(selected);
+			case "Three"    -> btnThreeBall.setSelected(selected);
+			case "Four"     -> btnFourBall.setSelected(selected);
+			case "Five"     -> btnFiveBall.setSelected(selected);
+			case "Six"      -> btnSixBall.setSelected(selected);
+			case "Seven"    -> btnSevenBall.setSelected(selected);
+			case "Eight"    -> btnEightBall.setSelected(selected);
+			case "Nine"     -> btnNineBall.setSelected(selected);
+			case "Ten"      -> btnTenBall.setSelected(selected);
+			case "Eleven"   -> btnElevenBall.setSelected(selected);
+			case "Twelve"   -> btnTwelveBall.setSelected(selected);
+			case "Thirteen" -> btnThirteenBall.setSelected(selected);
+			case "Fourteen" -> btnFourteenBall.setSelected(selected);
+			case "Fifteen"  -> btnFifteenBall.setSelected(selected);
 		}
 	}
 	//////// Listeners \\\\\\\\\\

@@ -1327,6 +1327,8 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.084 03/15/2026</br>
+Convert switch statements to switch expressions in TimeControllerAPI and BallPanel.</br>
 v2.083 03/15/2026</br>
 Replace PlayerNamesRequest, TimerControlRequest, APIResponse, and the TeamPlayers inner class with records.</br>
 v2.082 03/09/2026</br>

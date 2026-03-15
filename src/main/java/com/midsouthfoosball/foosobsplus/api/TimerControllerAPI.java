@@ -43,41 +43,40 @@ public class TimerControllerAPI {
 
 			// Execute timer action based on type
 			String timerType = request.timerType().toLowerCase();
-			switch (timerType) {
-				case "shot":
+			APIResponse response = switch (timerType) {
+				case "shot" -> {
 					teamController.startShotTimer();
 					logger.info("API: Started shot timer for table {}", request.tableNumber());
-					ctx.status(200).json(new APIResponse(true, "Shot timer started"));
-					break;
-				case "pass":
+					yield new APIResponse(true, "Shot timer started");
+				}
+				case "pass" -> {
 					teamController.startPassTimer();
 					logger.info("API: Started pass timer for table {}", request.tableNumber());
-					ctx.status(200).json(new APIResponse(true, "Pass timer started"));
-					break;
-				case "timeout":
+					yield new APIResponse(true, "Pass timer started");
+				}
+				case "timeout" -> {
 					teamController.startTimeOutTimer();
 					logger.info("API: Started timeout timer for table {}", request.tableNumber());
-					ctx.status(200).json(new APIResponse(true, "Timeout timer started"));
-					break;
-				case "game":
+					yield new APIResponse(true, "Timeout timer started");
+				}
+				case "game" -> {
 					teamController.startGameTimer();
 					logger.info("API: Started game timer for table {}", request.tableNumber());
-					ctx.status(200).json(new APIResponse(true, "Game timer started"));
-					break;
-				case "recall":
+					yield new APIResponse(true, "Game timer started");
+				}
+				case "recall" -> {
 					teamController.startRecallTimer();
 					logger.info("API: Started recall timer for table {}", request.tableNumber());
-					ctx.status(200).json(new APIResponse(true, "Recall timer started"));
-					break;
-				case "reset":
+					yield new APIResponse(true, "Recall timer started");
+				}
+				case "reset" -> {
 					teamController.resetTimer();
 					logger.info("API: Reset timer for table {}", request.tableNumber());
-					ctx.status(200).json(new APIResponse(true, "Timer reset"));
-					break;
-				default:
-					ctx.status(400).json(new APIResponse(false, "Unknown timer type"));
-					break;
-			}
+					yield new APIResponse(true, "Timer reset");
+				}
+				default -> new APIResponse(false, "Unknown timer type");
+			};
+			ctx.status(response.success() ? 200 : 400).json(response);
 
 		} catch (TimerControlRequest.ValidationException e) {
 			ctx.status(400).json(new APIResponse(false, e.getMessage()));
