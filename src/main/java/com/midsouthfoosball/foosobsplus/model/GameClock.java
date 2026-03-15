@@ -23,7 +23,6 @@ package com.midsouthfoosball.foosobsplus.model;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
-import java.io.ObjectInputFilter;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -258,8 +257,6 @@ public class GameClock implements Serializable {
 		try {
 			ByteArrayInputStream bi = new ByteArrayInputStream(serializedObject);
 			ObjectInputStream si = new ObjectInputStream(bi);
-			si.setObjectInputFilter(ObjectInputFilter.Config.createFilter(
-				"com.midsouthfoosball.foosobsplus.model.*;java.lang.*;!*"));
 			GameClock tempGameClock = (GameClock) si.readObject();
 			this.setGameSeconds(tempGameClock.getGameSeconds());
 			this.setGameMinutes(tempGameClock.getGameMinutes());

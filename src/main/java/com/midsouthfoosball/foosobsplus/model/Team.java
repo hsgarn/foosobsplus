@@ -23,7 +23,6 @@ package com.midsouthfoosball.foosobsplus.model;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayInputStream;
-import java.io.ObjectInputFilter;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -806,8 +805,6 @@ public class Team implements Serializable {
 		try {
 			ByteArrayInputStream bi = new ByteArrayInputStream(serializedObject);
 			ObjectInputStream si = new ObjectInputStream(bi);
-			si.setObjectInputFilter(ObjectInputFilter.Config.createFilter(
-				"com.midsouthfoosball.foosobsplus.model.*;java.util.*;java.lang.*;!*"));
 			Team tempTeam = (Team) si.readObject();
 			this.setTeamNbr(tempTeam.getTeamNbr());
 		this.setTeamName(tempTeam.getTeamName());

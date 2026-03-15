@@ -966,6 +966,8 @@ public final class Main implements MatchObserver {
 				rotate = matchController.incrementScore(1);
 			} else if (stats.getTeamScored(2)) {
 				rotate = matchController.incrementScore(2);
+			} else if (stats.getTeamScored(3)) {
+				rotate = matchController.incrementScore(3);
 			}
 			if (rotate > 0) cutthroatRotate(rotate);
 			if (stats.getTeamTimeOut(1)) {

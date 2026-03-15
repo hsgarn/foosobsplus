@@ -21,7 +21,7 @@ OBS Studio scene utilizing FoosOBSPlus to display various data:
 <img align="left" width="1920" height="1090" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusScreen2.png">
 
 ## Setup
-FoosOBSPlus is a java program.  You can download the executable jar file from the Releases section. You will need to have Java 21 or higher loaded.
+FoosOBSPlus is a java program.  You can download the executable jar file from the Releases section. You will need to have Java 25 or higher loaded.
 
 ### Running FoosOBSPlus
 There are two common ways to launch the program:
@@ -1327,9 +1327,14 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
-v2.088 03/15/2026</br>
+v2.089 03/15/2026</br>
+Revert insecure deserialization fix; add CutThroat Team 3 rotation.</br>
+Remove ObjectInputFilter from restoreState() in Match, Team, GameClock, and Stats — the filter was too restrictive, silently blocking deserialization of java.beans.*, java.text.*, and other required packages, breaking CutThroat rotation for both Team 2 and Team 3. The state bytes are always produced internally by saveState() in the same JVM, so external deserialization risk does not apply.</br>
+Add missing else if (stats.getTeamScored(3)) branch in Main.processCode() so Team 3 scoring correctly triggers player rotation.</br>
+</br>
+v2.088 03/15/2026</>
 Add ObjectInputFilter to ObjectInputStream in Match, GameClock, Team, and Stats to whitelist only model, util, and lang classes. Move all field assignments inside the try block so a deserialization failure logs the error and aborts the restore rather than NPE-ing on a null reference.</br>
-<br>
+</br>
 v2.087 03/15/2026</br>
 Migrate to Java 25</br>
 Update maven-compiler-plugin to 3.15.0 and set release target to 25.</br>
@@ -1376,7 +1381,7 @@ Replace trim().isEmpty() with isBlank() (Java 11+ modernization).</br>
 Apply pattern matching for instanceof (Java 16+ modernization).</br>
 Correct README.md discrepancies vs code.</br>
 </br>
-v2.077 03/06/2026<br>
+v2.077 03/06/2026</br>
 Upgrade to Java 21.</br>
 Upgrade Gson 2.8.9 -> 2.10.1 to fix OBS websocket client issues upgrading to Java 21 caused.</br>
 </br>

@@ -21,7 +21,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.model;
 
 import java.io.ByteArrayInputStream;
-import java.io.ObjectInputFilter;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -688,8 +687,6 @@ public class Match implements Serializable {
 		try {
 			ByteArrayInputStream bi = new ByteArrayInputStream(serializedObject);
 			ObjectInputStream si = new ObjectInputStream(bi);
-			si.setObjectInputFilter(ObjectInputFilter.Config.createFilter(
-				"com.midsouthfoosball.foosobsplus.model.*;java.util.*;java.lang.*;!*"));
 			Match tempMatch = (Match) si.readObject();
 			this.setLastScored(tempMatch.getLastScored());
 			this.setMatchPaused(tempMatch.isMatchPaused());

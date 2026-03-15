@@ -22,7 +22,6 @@ package com.midsouthfoosball.foosobsplus.model;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.ObjectInputFilter;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -741,8 +740,6 @@ public class Stats implements Serializable {
 		try {
 			ByteArrayInputStream bi = new ByteArrayInputStream(serializedObject);
 			ObjectInputStream si = new ObjectInputStream(bi);
-			si.setObjectInputFilter(ObjectInputFilter.Config.createFilter(
-				"com.midsouthfoosball.foosobsplus.model.*;java.util.*;java.lang.*;!*"));
 			Stats tempStats = (Stats) si.readObject();
 			this.setCodeHistory(tempStats.getCodeHistory());
 			this.setPreviousCode(tempStats.getPreviousCode());
