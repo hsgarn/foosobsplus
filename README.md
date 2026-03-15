@@ -1327,10 +1327,15 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.085 03/15/2026</br>
+Show all local IPv4 addresses in API Settings panel.</br>
+</br>
 v2.084 03/15/2026</br>
 Convert switch statements to switch expressions in TimeControllerAPI and BallPanel.</br>
+</br>
 v2.083 03/15/2026</br>
 Replace PlayerNamesRequest, TimerControlRequest, APIResponse, and the TeamPlayers inner class with records.</br>
+</br>
 v2.082 03/09/2026</br>
 Add SettingsKeys.java — constants class replacing all property key string literals across 30+ files (controllers, view panels, main, OBS layer); eliminates runtime typo risk and provides compile-time safety.</br>
 Fix bug in SourcesPanel: "ShowCutthroatSource" was using the wrong key — corrected to "ShowCutthroat" (consistent with Settings defaults and OBSManager).</br>

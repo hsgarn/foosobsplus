@@ -23,7 +23,9 @@ package com.midsouthfoosball.foosobsplus.util;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,33 @@ import org.slf4j.LoggerFactory;
  */
 public class NetworkUtil {
 	private static final Logger logger = LoggerFactory.getLogger(NetworkUtil.class);
+
+	/**
+	 * Get all local machine IPv4 addresses across all active non-loopback interfaces.
+	 * @return list of IP address strings; empty if none found
+	 */
+	public static List<String> getAllLocalIPAddresses() {
+		List<String> addresses = new ArrayList<>();
+		try {
+			Enumeration<NetworkInterface> networks = NetworkInterface.getNetworkInterfaces();
+			while (networks.hasMoreElements()) {
+				NetworkInterface netInterface = networks.nextElement();
+				if (netInterface.isLoopback() || !netInterface.isUp()) {
+					continue;
+				}
+				Enumeration<InetAddress> inetAddresses = netInterface.getInetAddresses();
+				while (inetAddresses.hasMoreElements()) {
+					InetAddress inetAddress = inetAddresses.nextElement();
+					if (!inetAddress.isLoopbackAddress() && inetAddress.getHostAddress().contains(".")) {
+						addresses.add(inetAddress.getHostAddress());
+					}
+				}
+			}
+		} catch (SocketException e) {
+			logger.error("Error detecting local IP addresses", e);
+		}
+		return addresses;
+	}
 
 	/**
 	 * Get the local machine's IP address on the network

@@ -72,7 +72,11 @@ public class APISettingsPanel extends JPanel {
 		// Machine IP Address (read-only)
 		JLabel lblMachineIPLabel = new JLabel("Machine IP Address:"); //$NON-NLS-1$
 		add(lblMachineIPLabel, "cell 0 1,alignx right"); //$NON-NLS-1$
-		lblMachineIP = new JLabel(NetworkUtil.getLocalIPAddress());
+		java.util.List<String> ipAddresses = NetworkUtil.getAllLocalIPAddresses();
+		String ipText = ipAddresses.isEmpty()
+			? "Unknown"
+			: "<html>" + String.join("<br>", ipAddresses) + "</html>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		lblMachineIP = new JLabel(ipText);
 		lblMachineIP.setFont(new Font("Courier New", Font.PLAIN, 11)); //$NON-NLS-1$
 		add(lblMachineIP, "cell 1 1,growx"); //$NON-NLS-1$
 
