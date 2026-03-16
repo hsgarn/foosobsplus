@@ -56,10 +56,20 @@ public class Match implements Serializable {
 	private boolean isMatchStarted = false;
 	private final int maxGamesToShow = 12;
 	private int gameWinners[];
+	private String[] gameWinnerNames;
 	private String[] scoresTeam1;
 	private String[] scoresTeam2;
 	private String[] scoresTeam3;
+	private String[] scoreNamesTeam2;
+	private String[] scoreNamesTeam3;
 	private String[] times;
+	// Snapshot of the most recent completed CT game result (for winFilters)
+	private int ctLastKingScore = 0;
+	private String ctLastKingName = "";
+	private int ctLastDef2Score = 0;
+	private String ctLastDef2Name = "";
+	private int ctLastDef3Score = 0;
+	private String ctLastDef3Name = "";
 	private static final transient Logger logger = LoggerFactory.getLogger(Match.class);
 	private final StringBuilder gameResults = new StringBuilder();
 	private final transient List<MatchObserver> observers = new ArrayList<>();
@@ -71,15 +81,21 @@ public class Match implements Serializable {
 		this.obsInterface = obsInterface;
 		this.maxGameCount=Settings.getMaxGameNumber();
 		this.gameWinners  = new int[maxGamesToShow];
+		this.gameWinnerNames = new String[maxGamesToShow];
 		this.scoresTeam1 = new String[maxGamesToShow];
 		this.scoresTeam2 = new String[maxGamesToShow];
 		this.scoresTeam3 = new String[maxGamesToShow];
+		this.scoreNamesTeam2 = new String[maxGamesToShow];
+		this.scoreNamesTeam3 = new String[maxGamesToShow];
 		this.times = new String[maxGamesToShow];
 		for(int i=0;i < maxGamesToShow; i++) {
 			this.gameWinners[i] = 0;
+			this.gameWinnerNames[i] = "";
 			this.scoresTeam1[i] = "0";
 			this.scoresTeam2[i] = "0";
 			this.scoresTeam3[i] = "0";
+			this.scoreNamesTeam2[i] = "";
+			this.scoreNamesTeam3[i] = "";
 			this.times[i] = "00:00:00";
 		}
 		teamsMap.put(1, team1);
@@ -173,8 +189,10 @@ public class Match implements Serializable {
 	}
 	public void syncGameScores() {
 		scoresTeam1[currentGameNumber-1] = Integer.toString(team1.getScore());
-		scoresTeam2[currentGameNumber-1] = Integer.toString(team2.getScore());
-		scoresTeam3[currentGameNumber-1] = Integer.toString(team3.getScore());
+		if (!Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON)) {
+			scoresTeam2[currentGameNumber-1] = Integer.toString(team2.getScore());
+			scoresTeam3[currentGameNumber-1] = Integer.toString(team3.getScore());
+		}
 	}
 	public int getMaxPossibleGames() {
 		return maxGameCount;
@@ -211,6 +229,8 @@ public class Match implements Serializable {
 			scoresTeam1[i] = "0";
 			scoresTeam2[i] = "0";
 			scoresTeam3[i] = "0";
+			scoreNamesTeam2[i] = "";
+			scoreNamesTeam3[i] = "";
 		}
 	}
 	private void clearScoresAfterFirst() {
@@ -218,6 +238,8 @@ public class Match implements Serializable {
 			scoresTeam1[i] = "0";
 			scoresTeam2[i] = "0";
 			scoresTeam3[i] = "0";
+			scoreNamesTeam2[i] = "";
+			scoreNamesTeam3[i] = "";
 		}
 	}
 	private void clearTimes() {
@@ -248,6 +270,12 @@ public class Match implements Serializable {
 	public void setGameWinners(int[] gameWinners) {
 		this.gameWinners = gameWinners;
 	}
+	public String[] getGameWinnerNames() {
+		return gameWinnerNames;
+	}
+	public void setGameWinnerNames(String[] gameWinnerNames) {
+		this.gameWinnerNames = gameWinnerNames;
+	}
 	public String[] getScoresTeam1() {
 		return scoresTeam1;
 	}
@@ -257,6 +285,24 @@ public class Match implements Serializable {
 	public String[] getScoresTeam3() {
 		return scoresTeam3;
 	}
+	public String[] getScoreNamesTeam2() {
+		return scoreNamesTeam2;
+	}
+	public void setScoreNamesTeam2(String[] scoreNamesTeam2) {
+		this.scoreNamesTeam2 = scoreNamesTeam2;
+	}
+	public String[] getScoreNamesTeam3() {
+		return scoreNamesTeam3;
+	}
+	public void setScoreNamesTeam3(String[] scoreNamesTeam3) {
+		this.scoreNamesTeam3 = scoreNamesTeam3;
+	}
+	public int getCtLastKingScore() { return ctLastKingScore; }
+	public String getCtLastKingName() { return ctLastKingName; }
+	public int getCtLastDef2Score() { return ctLastDef2Score; }
+	public String getCtLastDef2Name() { return ctLastDef2Name; }
+	public int getCtLastDef3Score() { return ctLastDef3Score; }
+	public String getCtLastDef3Name() { return ctLastDef3Name; }
 	public String[] getTimes() {
 		return times;
 	}
@@ -405,6 +451,19 @@ public class Match implements Serializable {
                         int whoWon = checkForGameWin(team1.getScore(), team2.getScore(), team3.getScore());
                         if(whoWon == 1 || whoWon == 3) {
                             gameWinners[currentGameNumber-1]=1;
+                            if (Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON)) {
+                                gameWinnerNames[currentGameNumber-1] = truncateName(team1.getForwardName());
+                                scoresTeam2[currentGameNumber-1] = String.valueOf(team2.getScore());
+                                scoresTeam3[currentGameNumber-1] = String.valueOf(team3.getScore());
+                                scoreNamesTeam2[currentGameNumber-1] = team2.getForwardName() != null ? team2.getForwardName() : "";
+                                scoreNamesTeam3[currentGameNumber-1] = team3.getForwardName() != null ? team3.getForwardName() : "";
+                                ctLastKingScore = team1.getScore();
+                                ctLastKingName = team1.getForwardName() != null ? team1.getForwardName() : "";
+                                ctLastDef2Score = team2.getScore();
+                                ctLastDef2Name = team2.getForwardName() != null ? team2.getForwardName() : "";
+                                ctLastDef3Score = team3.getScore();
+                                ctLastDef3Name = team3.getForwardName() != null ? team3.getForwardName() : "";
+                            }
                             matchWon = incrementGameCount(team1);
                             if(matchWon) matchWinner=1;
                             winState = 1;
@@ -633,6 +692,11 @@ public class Match implements Serializable {
 		}
 		return isGameWon;
 	}
+	private static final int WINNER_NAME_MAX_LENGTH = 12;
+	private String truncateName(String name) {
+		if (name == null) return "";
+		return name.length() > WINNER_NAME_MAX_LENGTH ? name.substring(0, WINNER_NAME_MAX_LENGTH) : name;
+	}
 	private boolean checkForMatchWin(Team team) {
 		this.matchWon = false;
 		if(team.getGameCount()==Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_GAMES_TO_WIN))) {
@@ -693,6 +757,7 @@ public class Match implements Serializable {
 			this.setGamePaused(tempMatch.isGamePaused());
 			this.setCurrentGameNumber(tempMatch.getCurrentGameNumber());
 			this.setGameWinners(tempMatch.getGameWinners());
+			this.setGameWinnerNames(tempMatch.getGameWinnerNames());
 			this.setMatchWon(tempMatch.getMatchWon());
 			this.setMatchWinner(tempMatch.getMatchWinner());
 			this.setMaxPossibleGames(tempMatch.getMaxPossibleGames());
@@ -700,6 +765,8 @@ public class Match implements Serializable {
 			this.setScoresTeam1(tempMatch.getScoresTeam1());
 			this.setScoresTeam2(tempMatch.getScoresTeam2());
 			this.setScoresTeam3(tempMatch.getScoresTeam3());
+			this.setScoreNamesTeam2(tempMatch.getScoreNamesTeam2());
+			this.setScoreNamesTeam3(tempMatch.getScoreNamesTeam3());
 			this.setTimes(tempMatch.getTimes());
 		} catch (IOException | ClassNotFoundException e) {
 			logger.error("Failed to restore Match state: {}", e.toString());
@@ -708,11 +775,29 @@ public class Match implements Serializable {
 	public void clearGameWinners() {
 		for(int i=0; i<gameWinners.length;i++) {
 			gameWinners[i] = 0;
+			gameWinnerNames[i] = "";
 		}
 	}
 	public void clearGameWinnersAfterFirst() {
 		for(int i=1; i<gameWinners.length;i++) {
 			gameWinners[i] = 0;
+			gameWinnerNames[i] = "";
 		}
+	}
+	/** Called after cutthroatRotate(1): team2 and team3 swap positions. */
+	public void swapScoresTeam2Team3() {
+		String[] tmp = scoresTeam2;
+		scoresTeam2 = scoresTeam3;
+		scoresTeam3 = tmp;
+		String[] tmpNames = scoreNamesTeam2;
+		scoreNamesTeam2 = scoreNamesTeam3;
+		scoreNamesTeam3 = tmpNames;
+	}
+	/** Called after cutthroatRotate(2): new pos1←old pos2, new pos2←old pos3, new pos3←old pos1. */
+	public void rotateAllTeamScores() {
+		String[] tmp1 = scoresTeam1;
+		scoresTeam1 = scoresTeam2;
+		scoresTeam2 = scoresTeam3;
+		scoresTeam3 = tmp1;
 	}
 }

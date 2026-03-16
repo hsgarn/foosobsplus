@@ -40,7 +40,7 @@ import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
 
 public class MatchController {
-	private final Match match;
+private final Match match;
 //	private final Stats stats;
 	private final GameClock gameClock;
 	private final LastScoredClock lastScored1Clock;
@@ -98,13 +98,15 @@ public class MatchController {
 				streamIndexer.appendStreamIndexer(dtf.format(LocalDateTime.now()) + ": " + gameClock.getStreamTime() + ": Auto Start Match: " + teamController.getForwardName(1) + "/" + teamController.getGoalieName(1) + " vs " + teamController.getForwardName(2) + "/" + teamController.getGoalieName(2) + "\r\n");
 			}
 		}
-		if (Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON)) {
+if (Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON)) {
 			if (teamNumber == 1) {
 				//Single player scores
 				int won = teamController.incrementScore(teamNumber);
 				if (won > 0) {
 					//Rotate teams 2 & 3
 					rotate = 1;
+					match.increaseCurrentGameNumber();
+					startGame();
 					if (won==2) match.incrementMatchCount(teamNumber);
 				}
 			} else {
@@ -136,6 +138,7 @@ public class MatchController {
 	public final void updateGameTables() {
 		statsDisplayPanel.updateTeams(1,Main.combinePlayerNames(1),teamController.getTeamName(1));
 		statsDisplayPanel.updateTeams(2,Main.combinePlayerNames(2),teamController.getTeamName(2));
+		matchPanel.setTeams(Main.combinePlayerNames(1) + ":", Main.combinePlayerNames(2) + ":", Main.combinePlayerNames(3) + ":");
 		matchPanel.setGameWinners(match.getGameWinners());
 		matchPanel.setMatchWinner(match.getMatchWinner());
 		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getScoresTeam3(), match.getTimes(), match.getCurrentGameNumber());

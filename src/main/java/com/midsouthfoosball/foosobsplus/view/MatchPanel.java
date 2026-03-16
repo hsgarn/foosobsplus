@@ -62,6 +62,7 @@ public class MatchPanel extends JPanel {
 	private int currentGameNumber = 1;
 	private int gameWinners[] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
 	private int maxGameCount;
+	private String[] teamNames = {"Team 1:", "Team 2:", "Team 3:"};
 	private static final String ON = "1"; //$NON-NLS-1$
 	private final Border innerBorder;
 	
@@ -241,7 +242,7 @@ public class MatchPanel extends JPanel {
 	public void setTime(String time) {
 		int gameNumber = currentGameNumber;
 		int maxGameNumber = Settings.getMaxGameNumber();
-		int row = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE)) + 3; //$NON-NLS-1$
+		int row = Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON) ? 4 : 3;
 		if (gameNumber > maxGameNumber) gameNumber = maxGameNumber;
 		gameTable.setValueAt(time, row, gameNumber);
 		gameTable.repaint();
@@ -299,18 +300,30 @@ public class MatchPanel extends JPanel {
 		}
 		gameTable.repaint();
 	}
+	public void setTeams(String name1, String name2, String name3) {
+		boolean ct = Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON);
+		teamNames[0] = name1;
+		teamNames[1] = name2;
+		teamNames[2] = name3;
+		gameTable.setValueAt(name1, 1, 0);
+		gameTable.setValueAt(name2, 2, 0);
+		if (ct) {
+			gameTable.setValueAt(name3, 3, 0);
+		}
+	}
 	public void clearKingSeat() {
-		gameTable.setValueAt("Team 1",1,0); //$NON-NLS-1$
-		gameTable.setValueAt("Team 2",2,0); //$NON-NLS-1$
-		if (Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON)) { //$NON-NLS-1$
-			gameTable.setValueAt("Team 3",3,0); //$NON-NLS-1$
+		boolean ct = Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON);
+		gameTable.setValueAt(teamNames[0], 1, 0);
+		gameTable.setValueAt(teamNames[1], 2, 0);
+		if (ct) {
+			gameTable.setValueAt(teamNames[2], 3, 0);
 		}
 		gameTable.repaint();
 	}
 	public void setKingSeat(int teamNumber) {
 		if (teamNumber > 0 && (teamNumber < 3 || (teamNumber == 3 && Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON)))) { //$NON-NLS-1$
 			String kingSeat = Messages.getString("Global.KingSeat"); //$NON-NLS-1$
-			gameTable.setValueAt(kingSeat + "Team " + Integer.toString(teamNumber), teamNumber, 0); //$NON-NLS-1$
+			gameTable.setValueAt(kingSeat + teamNames[teamNumber - 1], teamNumber, 0);
 			gameTable.repaint();
 		}
 	}
@@ -345,33 +358,33 @@ public class MatchPanel extends JPanel {
 				  setBackground(Color.LIGHT_GRAY);
 			  }
 		  }
-		  ////// Highlight team1 name cell if they won the match \\\\\\
-		  if (row == 1 && column == 0) {
-			  if (matchWinner == 1) {
-				  setBackground(Color.GREEN);
+		  if (isCutthroatMode) {
+			  ////// Highlight team1 name cell if they won the match \\\\\\
+			  if (row == 1 && column == 0 && matchWinner == 1) setBackground(Color.GREEN);
+			  ////// Highlight team2 name cell if they won the match \\\\\\
+			  if (row == 2 && column == 0 && matchWinner == 2) setBackground(Color.GREEN);
+			  ////// Highlight team3 name cell if they won the match \\\\\\
+			  if (row == 3 && column == 0 && matchWinner == 3) setBackground(Color.GREEN);
+			  ////// Set score cells to center alignment and highlight winning scores \\\\\\
+			  if ((row==1 || row==2 || row==3) && column >= 1) {
+				  if (gameWinners[column-1] == row) setBackground(Color.CYAN);
+				  setHorizontalAlignment(SwingConstants.CENTER);
 			  }
-		  }
-		  ////// Highlight team2 name cell if they won the match \\\\\\
-		  if (row == 2 && column == 0) {
-			  if (matchWinner == 2) {
-				  setBackground(Color.GREEN);
+			  ////// Center time cells \\\\\\
+			  if (row == 4 && column >= 1) setHorizontalAlignment(SwingConstants.CENTER);
+		  } else {
+			  ////// Highlight team1 name cell if they won the match \\\\\\
+			  if (row == 1 && column == 0 && matchWinner == 1) setBackground(Color.GREEN);
+			  ////// Highlight team2 name cell if they won the match \\\\\\
+			  if (row == 2 && column == 0 && matchWinner == 2) setBackground(Color.GREEN);
+			  ////// Set score cells to center alignment and highlight winning scores \\\\\\
+			  if ((row==1 || row==2) && column >= 1) {
+				  if (gameWinners[column-1] == row) setBackground(Color.CYAN);
+				  setHorizontalAlignment(SwingConstants.CENTER);
 			  }
+			  ////// Center time cells \\\\\\
+			  if (row == 3 && column >= 1) setHorizontalAlignment(SwingConstants.CENTER);
 		  }
-		  ////// Highlight team3 name cell if they won the match \\\\\\
-		  if (row == 3 && column == 0 && isCutthroatMode) {
-			  if (matchWinner == 3) {
-				  setBackground(Color.GREEN);
-			  }
-		  }
-		  ////// Set score cells to center alignment and highlight winning scores \\\\\\
-          if ((row==1 || row==2 || (row==3 && isCutthroatMode)) && column>= 1 ) {
-        	  if ( gameWinners[column-1] == row) {
-        		  setBackground(Color.CYAN);
-        	  }
-        	  setHorizontalAlignment(SwingConstants.CENTER);
-          }
-          ////// Center time cells \\\\\\
-          if (((row==3 && !isCutthroatMode) || (row==4 && isCutthroatMode)) && column>=1) setHorizontalAlignment(SwingConstants.CENTER);
           setText(tmp);
           return this;
 	  }

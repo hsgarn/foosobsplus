@@ -963,10 +963,6 @@ public class TeamController {
 		matchPanel.setGameWinners(match.getGameWinners());
 		matchPanel.setMatchWinner(match.getMatchWinner());
 		matchPanel.updateGameTable(match.getScoresTeam1(), match.getScoresTeam2(), match.getScoresTeam3(), match.getTimes(), match.getCurrentGameNumber());
-		matchPanel.clearKingSeat();
-		for (int i = 1; i < 4; i++) {
-		    if (teamsMap.get(i).getKingSeat() ) matchPanel.setKingSeat(i);
-		}
 		updateGameTableWindowNames();
 		gameTableWindowPanel.setGameWinners(match.getGameWinners());
 		gameTableWindowPanel.setMatchWinner(match.getMatchWinner());
@@ -998,11 +994,7 @@ public class TeamController {
 			}
 			team.setKingSeat(!team.getKingSeat());
 			teamPanel.updateKingSeat(team.getKingSeat());
-			matchPanel.clearKingSeat();
 			updateGameTableWindowNames();
-			if (team.getKingSeat()) {
-				matchPanel.setKingSeat(teamNumber);
-			}
 		}
 	}
 	public void updateGameTableWindowNames() {
@@ -1016,6 +1008,7 @@ public class TeamController {
 		    }
 		    teamNames[i] = teamPrefixes[i] + Main.combinePlayerNames(i + 1) + ":";
 		}
+		matchPanel.setTeams(teamNames[0], teamNames[1], teamNames[2]);
 		gameTableWindowPanel.setTeams(teamNames[0], teamNames[1], teamNames[2]);
 	}
 	public void fetchAll() {
@@ -1334,6 +1327,14 @@ public class TeamController {
 			return team.getAces();
 		} else {
 			return -1;
+		}
+	}
+	public int getScore(int teamNumber) {
+		switch (teamNumber) {
+			case 1: return team1.getScore();
+			case 2: return team2.getScore();
+			case 3: return team3.getScore();
+			default: return 0;
 		}
 	}
 	public String getForwardName(int teamNumber) {

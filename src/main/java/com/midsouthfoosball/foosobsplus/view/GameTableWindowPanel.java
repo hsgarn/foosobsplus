@@ -70,9 +70,10 @@ public class GameTableWindowPanel extends JPanel {
 		add(gameTable);
 	}
 	public void setTeams(String name1, String name2, String name3) {
+		boolean ct = Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON);
 		gameTable.setValueAt(name1, 1, 0);
 		gameTable.setValueAt(name2, 2, 0);
-		if (Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON)) { //$NON-NLS-1$
+		if (ct) {
 			gameTable.setValueAt(name3, 3, 0);
 		}
 	}
@@ -86,7 +87,8 @@ public class GameTableWindowPanel extends JPanel {
 		int gameNumber = currentGameNumber;
 		int maxGameNumber = Settings.getMaxGameNumber();
 		if (gameNumber > maxGameNumber) gameNumber = maxGameNumber;
-		int row = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE)) + 3; //$NON-NLS-1$
+		boolean isCutthroat = Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON);
+		int row = isCutthroat ? 4 : 3;
 		gameTable.setValueAt(time, row, gameNumber);
 		gameTable.repaint();
 	}

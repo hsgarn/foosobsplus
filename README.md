@@ -1327,7 +1327,10 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
-v2.089 03/15/2026</br>
+v2.090 03/15/2026</br>
+CutThroat game table and results window overhaul.</br>
+</br>
+v2.089 03/15/2026</>
 Revert insecure deserialization fix; add CutThroat Team 3 rotation.</br>
 Remove ObjectInputFilter from restoreState() in Match, Team, GameClock, and Stats — the filter was too restrictive, silently blocking deserialization of java.beans.*, java.text.*, and other required packages, breaking CutThroat rotation for both Team 2 and Team 3. The state bytes are always produced internally by saveState() in the same JVM, so external deserialization risk does not apply.</br>
 Add missing else if (stats.getTeamScored(3)) branch in Main.processCode() so Team 3 scoring correctly triggers player rotation.</br>

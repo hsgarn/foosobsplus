@@ -587,7 +587,13 @@ public final class Main implements MatchObserver {
 				.plus(Duration.ofSeconds(Long.parseLong(gameDuration.substring(6,8))));
 		LocalTime startTime = endTime.minus(gameLength);
 		if(cutThroatMode) {
-			result = a + " " + team1.getForwardName() + " vs " + b + " " + team2.getForwardName() + "/" + team3.getForwardName() + " " + c + " (" + gameDuration + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+			int kingScore = match.getCtLastKingScore();
+			String kingName = match.getCtLastKingName().isEmpty() ? team1.getForwardName() : match.getCtLastKingName();
+			String def2Name = match.getCtLastDef2Name().isEmpty() ? team2.getForwardName() : match.getCtLastDef2Name();
+			String def3Name = match.getCtLastDef3Name().isEmpty() ? team3.getForwardName() : match.getCtLastDef3Name();
+			int def2Score = match.getCtLastDef2Score();
+			int def3Score = match.getCtLastDef3Score();
+			result = kingScore + " " + kingName + " vs " + def2Score + " " + def2Name + "/" + def3Name + " " + def3Score + " (" + gameDuration + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 		} else {
 			result = a + " " + combinePlayerNames(1) + " vs " + combinePlayerNames(2) + " " + b + " (" + gameDuration + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		}
@@ -859,6 +865,7 @@ public final class Main implements MatchObserver {
 			team3.restoreState(tmpTeam2.getState());
 			team2.setTeamNbr(2);
 			team3.setTeamNbr(3);
+			match.swapScoresTeam2Team3();
 			matchController.displayAllStats();
 			teamController.displayAll();
 		} else if (rotate ==2 ) {
@@ -871,6 +878,7 @@ public final class Main implements MatchObserver {
 			team1.setTeamNbr(1);
 			team2.setTeamNbr(2);
 			team3.setTeamNbr(3);
+			match.rotateAllTeamScores();
 			matchController.displayAllStats();
 			teamController.displayAll();
 		}

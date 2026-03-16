@@ -34,12 +34,12 @@ public class GameTableModel extends AbstractTableModel {
 	}
 	public GameTableModel(int maxGameCount, String cutthroatMode) {
 		this.columnNames = new String[maxGameCount+1];
-		this.data = new Object[5][maxGameCount+1];
 		this.columnNames[0] = "Game:";
-		this.data[0][0] = (Object) "Game:";
-		this.data[1][0] = (Object) "Team 1:";
-		this.data[2][0] = (Object) "Team 2:";
 		if (cutthroatMode.equals(OFF)) {
+			this.data = new Object[4][maxGameCount+1];
+			this.data[0][0] = (Object) "Game:";
+			this.data[1][0] = (Object) "Team 1:";
+			this.data[2][0] = (Object) "Team 2:";
 			this.data[3][0] = (Object) "Time:";
 			for(int i=1;i <= maxGameCount;i++) {
 				this.columnNames[i] = Integer.toString(i);
@@ -49,6 +49,10 @@ public class GameTableModel extends AbstractTableModel {
 				this.data[3][i] = (Object) "00:00:00";
 			}
 		} else {
+			this.data = new Object[5][maxGameCount+1];
+			this.data[0][0] = (Object) "Game:";
+			this.data[1][0] = (Object) "Team 1:";
+			this.data[2][0] = (Object) "Team 2:";
 			this.data[3][0] = (Object) "Team 3:";
 			this.data[4][0] = (Object) "Time:";
 			for(int i=1;i <= maxGameCount;i++) {
