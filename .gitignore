@@ -4,7 +4,9 @@
 .project
 .settings/
 .vscode/
-config.properties
+*.properties
+!src/main/resources/**/*.properties
+!.mvn/wrapper/maven-wrapper.properties
 /Chime.wav
 /nbproject/
 /logs/
