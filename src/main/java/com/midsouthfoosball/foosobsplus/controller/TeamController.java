@@ -602,6 +602,7 @@ public class TeamController {
 			team.callTimeOut();
 			teamPanel.updateTimeOutCount(team.getTimeOutCount());
 			startTimeOutTimer();
+			match.notifyTimeOut(teamNumber, team.getTimeOutCount());
 		}
 	}
 	public void restoreTimeOut(int teamNumber) {

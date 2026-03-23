@@ -188,6 +188,7 @@ public final class Main implements MatchObserver {
 	private static final DateTimeFormatter 		dtf 					= DateTimeFormatter.ofPattern(Messages.getString("Main.DateTimePattern")); //$NON-NLS-1$
 	private static com.midsouthfoosball.foosobsplus.api.APIServer apiServer;
 	private static com.midsouthfoosball.foosobsplus.api.TeamService teamService;
+	private static com.midsouthfoosball.foosobsplus.api.EventBroadcaster eventBroadcaster;
 	private static final StreamIndexer 			streamIndexer      		= new StreamIndexer(Settings.getControlParameter(SettingsKeys.CTRL_DATAPATH)); //$NON-NLS-1$
 	private static AutoScoreManager 			autoScoreManager;
     private static final Map<String, String>	teamGameShowSourcesMap	= new ConcurrentHashMap<>();
@@ -312,7 +313,9 @@ public final class Main implements MatchObserver {
 			if (apiEnabled != null && apiEnabled.equals(ON)) {
 				logger.info("Starting REST API server...");
 				teamService = new com.midsouthfoosball.foosobsplus.api.TeamService(teamController, tournament);
-				apiServer = new com.midsouthfoosball.foosobsplus.api.APIServer(teamService);
+				eventBroadcaster = new com.midsouthfoosball.foosobsplus.api.EventBroadcaster();
+				match.addObserver(eventBroadcaster);
+				apiServer = new com.midsouthfoosball.foosobsplus.api.APIServer(teamService, eventBroadcaster);
 				apiServer.start();
 				logger.info("REST API server started successfully");
 			} else {
@@ -453,7 +456,9 @@ public final class Main implements MatchObserver {
 			// Check if API should be enabled
 			if (apiEnabled != null && apiEnabled.equals(ON)) {
 				// Create new instance to pick up new settings
-				apiServer = new com.midsouthfoosball.foosobsplus.api.APIServer(teamService);
+				eventBroadcaster = new com.midsouthfoosball.foosobsplus.api.EventBroadcaster();
+				match.addObserver(eventBroadcaster);
+				apiServer = new com.midsouthfoosball.foosobsplus.api.APIServer(teamService, eventBroadcaster);
 				apiServer.start();
 				logger.info("REST API server restarted with new settings");
 			} else {
@@ -856,6 +861,14 @@ public final class Main implements MatchObserver {
     @Override
 	public void onMeatball() {
 		activateFilter("Meatball"); //$NON-NLS-1$
+	}
+	@Override
+	public void onScoreChange(int teamNumber, int newScore) {
+		// Handled by EventBroadcaster for SSE clients
+	}
+	@Override
+	public void onTimeOut(int teamNumber, int timeOutsRemaining) {
+		// Handled by EventBroadcaster for SSE clients
 	}
 	public static void cutthroatRotate(int rotate) {
 		if (rotate ==1) {

@@ -110,6 +110,16 @@ public class Match implements Serializable {
 			observer.onMeatball();
 		}
 	}
+	private void notifyScoreChange(int teamNumber, int newScore) {
+		for (MatchObserver observer : observers) {
+			observer.onScoreChange(teamNumber, newScore);
+		}
+	}
+	public void notifyTimeOut(int teamNumber, int timeOutsRemaining) {
+		for (MatchObserver observer : observers) {
+			observer.onTimeOut(teamNumber, timeOutsRemaining);
+		}
+	}
 	public void startMatch(String matchId) {
 		setMatchId(matchId);
 		setStartTime(getCurrentTime());
@@ -532,6 +542,10 @@ public class Match implements Serializable {
 			clearMatchWinner();
 		}
 		checkMeatball();
+		Team scoringTeam = teamsMap.getOrDefault(teamNbr, null);
+		if (scoringTeam != null) {
+			notifyScoreChange(teamNbr, scoringTeam.getScore());
+		}
 		return winState;
 	}
 	public void updateGameResults(StringBuilder results) {

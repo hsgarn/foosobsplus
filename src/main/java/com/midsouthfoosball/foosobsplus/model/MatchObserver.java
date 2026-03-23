@@ -22,4 +22,6 @@ package com.midsouthfoosball.foosobsplus.model;
 
 public interface MatchObserver {
 	void onMeatball();
+	void onScoreChange(int teamNumber, int newScore);
+	void onTimeOut(int teamNumber, int timeOutsRemaining);
 }

@@ -39,14 +39,16 @@ public class APIServer {
 	private final PlayerNamesController playerNamesController;
 	private final TimerControllerAPI timerControllerAPI;
 	private final FoosballCodeController foosballCodeController;
+	private final EventBroadcaster eventBroadcaster;
 	private final RateLimiter rateLimiter;
 
-	public APIServer(TeamService teamService) {
+	public APIServer(TeamService teamService, EventBroadcaster eventBroadcaster) {
 		this.port = Integer.parseInt(Settings.getAPIParameter(SettingsKeys.API_PORT));
 		this.apiKey = Settings.getAPIParameter(SettingsKeys.API_KEY);
 		this.playerNamesController = new PlayerNamesController(teamService);
 		this.timerControllerAPI = new TimerControllerAPI(teamService.getTeamController());
 		this.foosballCodeController = new FoosballCodeController(teamService);
+		this.eventBroadcaster = eventBroadcaster;
 		this.rateLimiter = new RateLimiter(MAX_REQUESTS_PER_MINUTE);
 	}
 
@@ -66,8 +68,8 @@ public class APIServer {
 			config.accessManager((handler, ctx, permittedRoles) -> {
 				String path = ctx.path();
 
-				// Rate limiting check (for all API endpoints)
-				if (path.startsWith("/api/")) {
+				// Rate limiting check (for all API endpoints except SSE)
+				if (path.startsWith("/api/") && !path.equals("/api/events")) {
 					String clientIp = ctx.ip();
 					if (!rateLimiter.allowRequest(clientIp)) {
 						ctx.status(429).json(new APIResponse(false, "Rate limit exceeded. Maximum " + MAX_REQUESTS_PER_MINUTE + " requests per minute."));
@@ -104,6 +106,9 @@ public class APIServer {
 		app.post("/api/timer", timerControllerAPI::controlTimer);
 		app.post("/api/code", foosballCodeController::submitCode);
 
+		// SSE event stream (requires API key, exempt from rate limiting)
+		app.get("/api/events", eventBroadcaster::addClient);
+
 		// Start server
 		try {
 			app.start(port);
@@ -118,6 +123,7 @@ public class APIServer {
 	public void stop() {
 		if (app != null) {
 			try {
+				eventBroadcaster.shutdown();
 				app.stop();
 				rateLimiter.shutdown();
 				logger.info("REST API Server stopped");
