@@ -980,6 +980,8 @@ Check this box to enable the REST API server. Uncheck to disable the REST API se
 The network port the API server will listen on. Default is 9051. Change this if the port conflicts with another application. Valid range is 1024-65535.
 #### API Key
 The authentication key required to access protected API endpoints. Default is "123thisismykey456". **Important:** Change this to a strong, unique key before deploying to prevent unauthorized access.
+#### SSE Events Enabled
+Check this box to enable Server-Sent Events (SSE) streaming on the REST API. When enabled, external applications can connect to the `/api/events` endpoint to receive real-time push notifications when scores change, timeouts are called, or a meatball condition occurs. This is useful for integrating with applications that need to react immediately to game events without polling. Default is off. Changing this setting requires the API server to restart.
 #### Apply
 Click the Apply button to apply any REST API settings changes made.
 #### Apply and Close
