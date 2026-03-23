@@ -107,7 +107,10 @@ public class APIServer {
 		app.post("/api/code", foosballCodeController::submitCode);
 
 		// SSE event stream (requires API key, exempt from rate limiting)
-		app.get("/api/events", eventBroadcaster::addClient);
+		if (eventBroadcaster != null) {
+			app.get("/api/events", eventBroadcaster::addClient);
+			logger.info("SSE event stream enabled at /api/events");
+		}
 
 		// Start server
 		try {
@@ -123,7 +126,9 @@ public class APIServer {
 	public void stop() {
 		if (app != null) {
 			try {
-				eventBroadcaster.shutdown();
+				if (eventBroadcaster != null) {
+					eventBroadcaster.shutdown();
+				}
 				app.stop();
 				rateLimiter.shutdown();
 				logger.info("REST API Server stopped");

@@ -313,8 +313,15 @@ public final class Main implements MatchObserver {
 			if (apiEnabled != null && apiEnabled.equals(ON)) {
 				logger.info("Starting REST API server...");
 				teamService = new com.midsouthfoosball.foosobsplus.api.TeamService(teamController, tournament);
-				eventBroadcaster = new com.midsouthfoosball.foosobsplus.api.EventBroadcaster();
-				match.addObserver(eventBroadcaster);
+				String sseEnabled = Settings.getAPIParameter(SettingsKeys.API_SSE_ENABLED);
+				if (sseEnabled != null && sseEnabled.equals(ON)) {
+					eventBroadcaster = new com.midsouthfoosball.foosobsplus.api.EventBroadcaster();
+					match.addObserver(eventBroadcaster);
+					logger.info("SSE event stream enabled");
+				} else {
+					eventBroadcaster = null;
+					logger.info("SSE event stream disabled");
+				}
 				apiServer = new com.midsouthfoosball.foosobsplus.api.APIServer(teamService, eventBroadcaster);
 				apiServer.start();
 				logger.info("REST API server started successfully");
@@ -456,8 +463,15 @@ public final class Main implements MatchObserver {
 			// Check if API should be enabled
 			if (apiEnabled != null && apiEnabled.equals(ON)) {
 				// Create new instance to pick up new settings
-				eventBroadcaster = new com.midsouthfoosball.foosobsplus.api.EventBroadcaster();
-				match.addObserver(eventBroadcaster);
+				String sseEnabled = Settings.getAPIParameter(SettingsKeys.API_SSE_ENABLED);
+				if (sseEnabled != null && sseEnabled.equals(ON)) {
+					eventBroadcaster = new com.midsouthfoosball.foosobsplus.api.EventBroadcaster();
+					match.addObserver(eventBroadcaster);
+					logger.info("SSE event stream enabled");
+				} else {
+					eventBroadcaster = null;
+					logger.info("SSE event stream disabled");
+				}
 				apiServer = new com.midsouthfoosball.foosobsplus.api.APIServer(teamService, eventBroadcaster);
 				apiServer.start();
 				logger.info("REST API server restarted with new settings");

@@ -47,7 +47,7 @@ public class APISettingsFrame extends JFrame {
 		} catch (IOException e) {
 			logger.error("Error loading API Settings Panel", e);
 		}
-		apiSettingsPanel.setPreferredSize(new Dimension(500, 200));
+		apiSettingsPanel.setPreferredSize(new Dimension(500, 230));
 		getContentPane().add(apiSettingsPanel);
 		pack();
 		addWindowListener(new WindowAdapter() {
