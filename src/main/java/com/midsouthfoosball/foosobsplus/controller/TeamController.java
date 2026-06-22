@@ -46,6 +46,7 @@ import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.OBS;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
+import com.midsouthfoosball.foosobsplus.model.TableSession;
 import com.midsouthfoosball.foosobsplus.model.Team;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowPanel;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
@@ -61,7 +62,7 @@ public class TeamController {
 	private Team team1;
 	private Team team2;
 	private Team team3;
-	private final Match match;
+	private Match match;
 	private final TeamPanel teamPanel1;
 	private final TeamPanel teamPanel2;
 	private final TeamPanel teamPanel3;
@@ -70,10 +71,10 @@ public class TeamController {
 	private final GameTableWindowPanel gameTableWindowPanel;
 	private final StatsDisplayPanel statsDisplayPanel;
 	private final TimerController timerController;
-	private final LastScoredClock lastScored1Clock;
-	private final LastScoredClock lastScored2Clock;
-	private final LastScoredClock lastScored3Clock;
-	private final GameClock gameClock;
+	private LastScoredClock lastScored1Clock;
+	private LastScoredClock lastScored2Clock;
+	private LastScoredClock lastScored3Clock;
+	private GameClock gameClock;
         private final MainController mainController;
         private final Map<Integer, Team> teamsMap;
         private final Map<Integer, TeamPanel> teamPanelsMap;
@@ -170,6 +171,34 @@ public class TeamController {
 		lastScoredClocksMap.put(2,  lastScored2Clock);
 		lastScoredClocksMap.put(3,  lastScored3Clock);
 		checkTeamNames();
+	}
+	////// Session Binding //////
+	// Repoints this controller at the active table's teams/match/clocks and
+	// rebuilds the derived maps. Listeners read these bound fields, so the team
+	// panels follow the active session after a switch.
+	public void bindSession(TableSession session) {
+		this.team1 = session.getTeam1();
+		this.team2 = session.getTeam2();
+		this.team3 = session.getTeam3();
+		this.match = session.getMatch();
+		this.gameClock = session.getGameClock();
+		this.lastScored1Clock = session.getLastScored1Clock();
+		this.lastScored2Clock = session.getLastScored2Clock();
+		this.lastScored3Clock = session.getLastScored3Clock();
+		teamsMap.put(1, team1);
+		teamsMap.put(2, team2);
+		teamsMap.put(3, team3);
+		lastScoredClocksMap.put(1, lastScored1Clock);
+		lastScoredClocksMap.put(2, lastScored2Clock);
+		lastScoredClocksMap.put(3, lastScored3Clock);
+	}
+	// Attaches this controller's last-scored clock listeners to a session's
+	// clocks. Call once per session at creation; the constructor wires the
+	// initial session.
+	public void attachListeners(TableSession session) {
+		session.getLastScored1Clock().addLastScoredClockTimerListener(new LastScoredClockTimerListener());
+		session.getLastScored2Clock().addLastScoredClockTimerListener(new LastScoredClockTimerListener());
+		session.getLastScored3Clock().addLastScoredClockTimerListener(new LastScoredClockTimerListener());
 	}
 	////// Team Panel Listener Objects //////
 	private class TeamNameListener implements ActionListener{

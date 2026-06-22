@@ -20,8 +20,12 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.view;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -99,6 +103,14 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private JMenu autoScoreMenu;
 	private JMenuItem autoScoreSettingsItem;
 	private JMenuItem autoScoreConfigItem;
+	private JMenu tablesMenu;
+	private final javax.swing.ButtonGroup tablesGroup = new javax.swing.ButtonGroup();
+	private java.util.function.IntConsumer tableSelectListener;
+	private JMenu autoScoreTablesMenu;
+	private java.util.function.IntConsumer autoScoreTableConnectListener;
+	private java.util.function.IntConsumer autoScoreTableDisconnectListener;
+	private Runnable autoScoreConnectAllListener;
+	private Runnable autoScoreDisconnectAllListener;
 	private ImageIcon imgOBSConnected;
 	private ImageIcon imgOBSDisconnected;
 	private Icon imgIconOBSConnected;
@@ -229,6 +241,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 		autoScoreMenu.add(autoScoreSettingsItem);
 		autoScoreMenu.setIcon(imgIconAutoScoreDisconnected);
 		autoScoreMenu.add(autoScoreConfigItem);
+		autoScoreTablesMenu = new JMenu(Messages.getString("MainFrame.Tables")); //$NON-NLS-1$
+		autoScoreMenu.add(autoScoreTablesMenu);
+		tablesMenu = new JMenu(Messages.getString("MainFrame.Tables")); //$NON-NLS-1$
 		JMenu viewMenu = new JMenu(Messages.getString("MainFrame.View")); //$NON-NLS-1$
 		viewMenu.add(viewAlwaysOnTop);
 		viewMenu.add(viewTimerWindow);
@@ -253,6 +268,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		menuBar.add(editMenu);
 		menuBar.add(obsMenu);
 		menuBar.add(autoScoreMenu);
+		menuBar.add(tablesMenu);
 		menuBar.add(viewMenu);
 		menuBar.add(helpMenu);
 		obsMenu.setIcon(imgIconOBSDisconnected);
@@ -398,8 +414,112 @@ public final class MainFrame extends JFrame implements WindowListener {
 			autoScoreMenu.setIcon(imgIconAutoScoreDisconnected);
 		}
 	}
+	// Tri-state AutoScore menu indicator: green = all tables connected,
+	// red = none, yellow = some-but-not-all.
+	public void setAutoScoreConnectionState(int connectedCount, int totalCount) {
+		Color color;
+		if (totalCount > 0 && connectedCount >= totalCount) {
+			color = new Color(0, 170, 0);
+		} else if (connectedCount <= 0) {
+			color = new Color(200, 0, 0);
+		} else {
+			color = new Color(220, 170, 0);
+		}
+		autoScoreMenu.setIcon(makeDotIcon(color));
+	}
+	private static Icon makeDotIcon(Color color) {
+		return new Icon() {
+			@Override public int getIconWidth() { return 12; }
+			@Override public int getIconHeight() { return 12; }
+			@Override public void paintIcon(Component c, Graphics g, int x, int y) {
+				Graphics2D g2 = (Graphics2D) g.create();
+				g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				g2.setColor(color);
+				g2.fillOval(x + 1, y + 1, 10, 10);
+				g2.setColor(color.darker());
+				g2.drawOval(x + 1, y + 1, 10, 10);
+				g2.dispose();
+			}
+		};
+	}
 	public void enableConnect(Boolean state) {
 		obsDisconnectItem.setEnabled(!state);
+	}
+	// Registers the callback invoked (with the table index) when the user picks a
+	// table from the Tables menu.
+	public void setTableSelectListener(java.util.function.IntConsumer listener) {
+		this.tableSelectListener = listener;
+	}
+	// (Re)builds the Tables menu as a radio group, one item per table label, with
+	// the active table preselected. Selecting an item fires the table-select
+	// listener with that table's index.
+	public void rebuildTablesMenu(java.util.List<String> labels, int activeIndex, boolean[] connected) {
+		tablesGroup.getElements().asIterator().forEachRemaining(tablesGroup::remove);
+		tablesMenu.removeAll();
+		javax.swing.JRadioButtonMenuItem activeItem = null;
+		for (int i = 0; i < labels.size(); i++) {
+			final int index = i;
+			boolean isConnected = i < connected.length && connected[i];
+			// Keep the radio item (so the active table still shows its selection),
+			// and render a green/red connection dot before the label via HTML.
+			String dotColor = isConnected ? "#00AA00" : "#C80000"; //$NON-NLS-1$ //$NON-NLS-2$
+			String text = "<html><font color='" + dotColor + "'>●</font>&nbsp;" + escapeHtml(labels.get(i)) + "</html>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			javax.swing.JRadioButtonMenuItem item = new javax.swing.JRadioButtonMenuItem(text);
+			item.addActionListener(e -> {
+				if (tableSelectListener != null) tableSelectListener.accept(index);
+			});
+			tablesGroup.add(item);
+			tablesMenu.add(item);
+			if (i == activeIndex) activeItem = item;
+		}
+		// Select the active item only after every item is in the group/menu, so the
+		// active table is shown selected on the very first build (e.g. at startup),
+		// not just after a later switch.
+		if (activeItem != null) activeItem.setSelected(true);
+	}
+	private static String escapeHtml(String s) {
+		return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+	}
+	// Registers callbacks for the AutoScore > Tables submenu.
+	public void setAutoScoreTableConnectListener(java.util.function.IntConsumer listener) {
+		this.autoScoreTableConnectListener = listener;
+	}
+	public void setAutoScoreTableDisconnectListener(java.util.function.IntConsumer listener) {
+		this.autoScoreTableDisconnectListener = listener;
+	}
+	public void setAutoScoreConnectAllListener(Runnable listener) {
+		this.autoScoreConnectAllListener = listener;
+	}
+	public void setAutoScoreDisconnectAllListener(Runnable listener) {
+		this.autoScoreDisconnectAllListener = listener;
+	}
+	// (Re)builds the AutoScore > Tables submenu: one item per table with a
+	// green/red dot, clicking toggles that table's connection, plus Connect All /
+	// Disconnect All entries.
+	public void rebuildAutoScoreTablesMenu(java.util.List<String> labels, boolean[] connected) {
+		if (autoScoreTablesMenu == null) return;
+		autoScoreTablesMenu.removeAll();
+		for (int i = 0; i < labels.size(); i++) {
+			final int index = i;
+			final boolean isConnected = i < connected.length && connected[i];
+			JMenuItem item = new JMenuItem(labels.get(i) + (isConnected ? "  — connected" : "  — disconnected")); //$NON-NLS-1$ //$NON-NLS-2$
+			item.setIcon(makeDotIcon(isConnected ? new Color(0, 170, 0) : new Color(200, 0, 0)));
+			item.addActionListener(e -> {
+				if (isConnected) {
+					if (autoScoreTableDisconnectListener != null) autoScoreTableDisconnectListener.accept(index);
+				} else {
+					if (autoScoreTableConnectListener != null) autoScoreTableConnectListener.accept(index);
+				}
+			});
+			autoScoreTablesMenu.add(item);
+		}
+		autoScoreTablesMenu.addSeparator();
+		JMenuItem connectAll = new JMenuItem(Messages.getString("MainFrame.ConnectAll")); //$NON-NLS-1$
+		connectAll.addActionListener(e -> { if (autoScoreConnectAllListener != null) autoScoreConnectAllListener.run(); });
+		autoScoreTablesMenu.add(connectAll);
+		JMenuItem disconnectAll = new JMenuItem(Messages.getString("MainFrame.DisconnectAll")); //$NON-NLS-1$
+		disconnectAll.addActionListener(e -> { if (autoScoreDisconnectAllListener != null) autoScoreDisconnectAllListener.run(); });
+		autoScoreTablesMenu.add(disconnectAll);
 	}
 	private void importStatsFile(String file) {
 		List<String> lines = Collections.emptyList();

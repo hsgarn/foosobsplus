@@ -29,6 +29,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.function.Function;
 
@@ -469,6 +471,84 @@ public final class Settings {
 	//AutoScore Settings
 	public static <T> T getAutoScoreParameter(String parameter, Function<String, T> parser) {return parser.apply(configAutoScoreSettingsProps.getProperty(parameter));}
 	public static String getAutoScoreParameter(String parameter) {return configAutoScoreSettingsProps.getProperty(parameter);}
+	//AutoScore multi-table connection list
+	/**
+	 * Returns the configured AutoScore table connections. If the indexed
+	 * multi-table keys are absent (a pre-multi-table config file), one connection
+	 * is built from the legacy single-connection keys so callers always get at
+	 * least one table.
+	 */
+	public static List<TableConnection> getTableConnections() {
+		List<TableConnection> connections = new ArrayList<>();
+		String countStr = configAutoScoreSettingsProps.getProperty(SettingsKeys.AS_TABLE_COUNT);
+		if (countStr != null) {
+			int count;
+			try { count = Integer.parseInt(countStr.trim()); } catch (NumberFormatException _) { count = 0; }
+			for (int i = 1; i <= count; i++) {
+				String base = SettingsKeys.AS_TABLE_PREFIX + i;
+				connections.add(new TableConnection(
+					configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_LABEL, "Table " + i),
+					configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_ADDRESS, ""),
+					configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_PORT, ""),
+					ON.equals(configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_AUTO_CONNECT)),
+					ON.equals(configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_DETAIL_LOG))));
+			}
+		}
+		if (connections.isEmpty()) {
+			connections.add(new TableConnection(
+				"Table 1",
+				configAutoScoreSettingsProps.getProperty(SettingsKeys.AS_SERVER_ADDRESS, ""),
+				configAutoScoreSettingsProps.getProperty(SettingsKeys.AS_SERVER_PORT, ""),
+				ON.equals(configAutoScoreSettingsProps.getProperty(SettingsKeys.AS_AUTO_CONNECT)),
+				ON.equals(configAutoScoreSettingsProps.getProperty(SettingsKeys.AS_DETAIL_LOG))));
+		}
+		return connections;
+	}
+	/**
+	 * Builds a {@link TableConnection} from the legacy single-connection keys.
+	 * These keys are kept mirrored to the currently selected table, so this
+	 * represents "the table Connect/Search currently act on" during the
+	 * single-manager phase of the multi-table migration.
+	 */
+	public static TableConnection getLegacyTableConnection() {
+		return new TableConnection(
+			"Table 1",
+			getAutoScoreParameter(SettingsKeys.AS_SERVER_ADDRESS),
+			getAutoScoreParameter(SettingsKeys.AS_SERVER_PORT),
+			ON.equals(getAutoScoreParameter(SettingsKeys.AS_AUTO_CONNECT)),
+			ON.equals(getAutoScoreParameter(SettingsKeys.AS_DETAIL_LOG)));
+	}
+	/**
+	 * Persists the AutoScore table connections as indexed keys plus a count, and
+	 * mirrors the first connection into the legacy single-connection keys so
+	 * existing readers (e.g. AutoScoreManager) keep working until per-session
+	 * wiring lands. Removes any stale indexed keys from deleted tables first.
+	 */
+	public static void saveTableConnections(List<TableConnection> connections) throws IOException {
+		List<String> staleKeys = new ArrayList<>();
+		for (String key : configAutoScoreSettingsProps.stringPropertyNames()) {
+			if (key.startsWith(SettingsKeys.AS_TABLE_PREFIX)) staleKeys.add(key);
+		}
+		for (String key : staleKeys) configAutoScoreSettingsProps.remove(key);
+		configAutoScoreSettingsProps.setProperty(SettingsKeys.AS_TABLE_COUNT, Integer.toString(connections.size()));
+		for (int idx = 0; idx < connections.size(); idx++) {
+			TableConnection c = connections.get(idx);
+			String base = SettingsKeys.AS_TABLE_PREFIX + (idx + 1);
+			configAutoScoreSettingsProps.setProperty(base + SettingsKeys.AS_SUFFIX_LABEL, c.getLabel());
+			configAutoScoreSettingsProps.setProperty(base + SettingsKeys.AS_SUFFIX_ADDRESS, c.getServerAddress());
+			configAutoScoreSettingsProps.setProperty(base + SettingsKeys.AS_SUFFIX_PORT, c.getServerPort());
+			configAutoScoreSettingsProps.setProperty(base + SettingsKeys.AS_SUFFIX_AUTO_CONNECT, c.isAutoConnect() ? ON : OFF);
+			configAutoScoreSettingsProps.setProperty(base + SettingsKeys.AS_SUFFIX_DETAIL_LOG, c.isDetailLog() ? ON : OFF);
+		}
+		if (!connections.isEmpty()) {
+			TableConnection first = connections.get(0);
+			configAutoScoreSettingsProps.setProperty(SettingsKeys.AS_SERVER_ADDRESS, first.getServerAddress());
+			configAutoScoreSettingsProps.setProperty(SettingsKeys.AS_SERVER_PORT, first.getServerPort());
+			configAutoScoreSettingsProps.setProperty(SettingsKeys.AS_AUTO_CONNECT, first.isAutoConnect() ? ON : OFF);
+			configAutoScoreSettingsProps.setProperty(SettingsKeys.AS_DETAIL_LOG, first.isDetailLog() ? ON : OFF);
+		}
+		saveAutoScoreSettingsConfig();
+	}
 	public static String getAPIParameter(String parameter) {return configAPIProps.getProperty(parameter);}
 	//Setters
 	//API Parameters

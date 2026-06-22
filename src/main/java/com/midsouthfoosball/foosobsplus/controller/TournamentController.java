@@ -33,6 +33,7 @@ import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
+import com.midsouthfoosball.foosobsplus.model.TableSession;
 import com.midsouthfoosball.foosobsplus.model.Tournament;
 import com.midsouthfoosball.foosobsplus.view.TournamentPanel;
 
@@ -40,6 +41,9 @@ public class TournamentController {
 	private final OBSInterface obsInterface;
 	private final Tournament tournament;
 	private final TournamentPanel tournamentPanel;
+	// The currently displayed table's session. Tournament/event names live on the
+	// shared Tournament object; the table name is per-session and read/written here.
+	private TableSession session;
 	public TournamentController(OBSInterface obsInterface, Tournament tournament, Match match, TournamentPanel tournamentPanel) {
 		this.obsInterface = obsInterface;
 		this.tournament = tournament;
@@ -51,9 +55,6 @@ public class TournamentController {
 		this.tournamentPanel.addEventNameListener(new EventNameListener());
 		this.tournamentPanel.addEventNameFocusListener(new EventNameFocusListener());
 		this.tournamentPanel.addEventNameMouseListener(new EventNameMouseListener());
-		this.tournamentPanel.addTableNameListener(new TableNameListener());
-		this.tournamentPanel.addTableNameFocusListener(new TableNameFocusListener());
-		this.tournamentPanel.addTableNameMouseListener(new TableNameMouseListener());
 		this.tournamentPanel.addClearListener(new ClearListener());
 	}
 	////// Tournament Panel Listener Objects //////
@@ -105,29 +106,11 @@ public class TournamentController {
 			tournamentPanel.selectEventName();
 		}
 	}
-	private class TableNameListener implements ActionListener{
-                @Override
-		public void actionPerformed(ActionEvent e) {
-			JTextField txt = (JTextField) e.getSource();
-			String tableName = txt.getText();
-			tournament.setTableName(tableName);
-			tournamentPanel.updateTableName(tableName);
-		}
-	}
-	private class TableNameFocusListener extends FocusAdapter{
-                @Override
-		public void focusLost(FocusEvent e) {
-			JTextField txt = (JTextField) e.getSource();
-			String tableName = txt.getText();
-			tournament.setTableName(tableName);
-			tournamentPanel.updateTableName(tableName);
-		}
-	}
-	private class TableNameMouseListener extends MouseAdapter{
-                @Override
-		public void mouseClicked(MouseEvent e) {
-			tournamentPanel.selectTableName();
-		}
+	// Renames the active table (from the Table Name combo editor): stores the name
+	// on the session and writes it to OBS via the shared Tournament object.
+	public void setTableName(String tableName) {
+		if (session != null) session.setTableName(tableName);
+		tournament.setTableName(tableName);
 	}
 	private class ClearListener implements ActionListener{
                 @Override
@@ -150,14 +133,22 @@ public class TournamentController {
 		tournamentPanel.updateTournamentName(tournament.getTournamentName());
 		tournament.setEventName(obsInterface.getContents(Settings.getSourceParameter(SettingsKeys.SRC_EVENT)));
 		tournamentPanel.updateEventName(tournament.getEventName());
-		tournament.setTableName(obsInterface.getContents(Settings.getSourceParameter(SettingsKeys.SRC_TABLE_NAME)));
-		tournamentPanel.updateTableName(tournament.getTableName());
 	}
 	public void writeAll() {
 		tournament.writeAll();
 	}
 	public void clearAll() {
-		tournament.clearAll();
+		// Clears tournament/event only; the per-table Table Name is left intact.
+		tournament.setTournamentName(""); //$NON-NLS-1$
+		tournament.setEventName(""); //$NON-NLS-1$
 		tournamentPanel.clearAllFields();
+	}
+	// Repoints the table name at the given (now active) session: writes its table
+	// name to OBS via the shared Tournament object (which serves the displayed
+	// table). The combo selection itself is refreshed by Main. Tournament/event
+	// names are unaffected.
+	public void bindSession(TableSession session) {
+		this.session = session;
+		tournament.setTableName(session.getTableName());
 	}
 }

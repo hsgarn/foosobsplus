@@ -128,6 +128,8 @@ import com.midsouthfoosball.foosobsplus.model.OBS;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 import com.midsouthfoosball.foosobsplus.model.Stats;
+import com.midsouthfoosball.foosobsplus.model.TableConnection;
+import com.midsouthfoosball.foosobsplus.model.TableSession;
 import com.midsouthfoosball.foosobsplus.model.Team;
 import com.midsouthfoosball.foosobsplus.model.TimeClock;
 import com.midsouthfoosball.foosobsplus.model.Tournament;
@@ -190,7 +192,11 @@ public final class Main implements MatchObserver {
 	private static com.midsouthfoosball.foosobsplus.api.TeamService teamService;
 	private static com.midsouthfoosball.foosobsplus.api.EventBroadcaster eventBroadcaster;
 	private static final StreamIndexer 			streamIndexer      		= new StreamIndexer(Settings.getControlParameter(SettingsKeys.CTRL_DATAPATH)); //$NON-NLS-1$
-	private static AutoScoreManager 			autoScoreManager;
+	// One AutoScoreManager per TableConnection, index-aligned with sessions. All
+	// run concurrently; each routes its score events to its own table (active ->
+	// processCode, background -> applyBackgroundEvent). The settings/config UI acts
+	// on the active table's manager (uiManager()).
+	private static final List<AutoScoreManager>	autoScoreManagers		= new ArrayList<>();
     private static final Map<String, String>	teamGameShowSourcesMap	= new ConcurrentHashMap<>();
    	private static Map<String, Boolean> allBallsMap 	= new ConcurrentHashMap<>();
 	private static Map<String, Boolean> nineBallsMap 	= new ConcurrentHashMap<>();
@@ -212,17 +218,35 @@ public final class Main implements MatchObserver {
 	private static CommandSwitch 				mySwitch;
 	////// Generate the Data Models (Mvc) \\\\\\
 	private static final Tournament				tournament				= new Tournament(obsInterface);
-	private static final Team 					team1 					= new Team(obsInterface, 1, Settings.getControlParameter(SettingsKeys.CTRL_SIDE1_COLOR)); //$NON-NLS-1$
-	private static final Team 					team2 					= new Team(obsInterface, 2, Settings.getControlParameter(SettingsKeys.CTRL_SIDE2_COLOR)); //$NON-NLS-1$
-	private static final Team         			team3              		= new Team(obsInterface, 3, Messages.getString("Main.None")); //$NON-NLS-1$
-	private static final Match 					match					= new Match(obsInterface, team1, team2, team3);
-	private static final Stats 					stats 					= new Stats(team1, team2);
+	// Silent OBS sink for background (non-displayed) tables, so their score and
+	// timer updates never reach OBS. The active table uses the live obsInterface.
+	private static final OBSInterface			silentObsInterface		= new OBSInterface();
+	static { silentObsInterface.setActive(false); }
+	// All per-table game state lives in a TableSession. activeSession is the
+	// displayed table; switchToSession repoints these fields, the controllers,
+	// and the OBS sinks. Background sessions keep updating against the silent
+	// sink. These fields are non-final so a switch can repoint them.
+	private static TableSession					activeSession			= new TableSession(
+			obsInterface,
+			Settings.getControlParameter(SettingsKeys.CTRL_SIDE1_COLOR), //$NON-NLS-1$
+			Settings.getControlParameter(SettingsKeys.CTRL_SIDE2_COLOR), //$NON-NLS-1$
+			Messages.getString("Main.None")); //$NON-NLS-1$
+	private static Team 						team1 					= activeSession.getTeam1();
+	private static Team 						team2 					= activeSession.getTeam2();
+	private static Team         				team3              		= activeSession.getTeam3();
+	private static Match 						match					= activeSession.getMatch();
+	private static Stats 						stats 					= activeSession.getStats();
 	////// Create a TimeClock to be the Timer \\\\\\
-	private static final TimeClock 				timeClock 				= new TimeClock(obsInterface);
-	private static final GameClock       		gameClock           	= new GameClock(obsInterface);
-	private static final LastScoredClock 		lastScored1Clock   		= new LastScoredClock();
-	private static final LastScoredClock		lastScored2Clock    	= new LastScoredClock();
-	private static final LastScoredClock 		lastScored3Clock		= new LastScoredClock();
+	private static TimeClock 					timeClock 				= activeSession.getTimeClock();
+	private static GameClock       				gameClock           	= activeSession.getGameClock();
+	private static LastScoredClock 				lastScored1Clock   		= activeSession.getLastScored1Clock();
+	private static LastScoredClock				lastScored2Clock    	= activeSession.getLastScored2Clock();
+	private static LastScoredClock 				lastScored3Clock		= activeSession.getLastScored3Clock();
+	// All table sessions (index 0 == the initial active session) and their backing
+	// connections. The Tables menu switches the displayed session among these.
+	private static Main							instance;
+	private static final List<TableSession>		sessions				= new ArrayList<>();
+	private static List<TableConnection>		tableConnections		= new ArrayList<>();
 	////// Create the View Panels to Display (mVc) \\\\\\
 	private static final TournamentPanel		tournamentPanel 		= new TournamentPanel();
 	private static final TimerPanel 			timerPanel 				= new TimerPanel();
@@ -279,6 +303,7 @@ public final class Main implements MatchObserver {
         match.addObserver(this);
     }
 	public Main() throws IOException {
+		instance = this;
 		buildTeamGameShowSourcesMap();
 		loadWindowsAndControllers();
 		initializeOBSManager();
@@ -301,9 +326,8 @@ public final class Main implements MatchObserver {
 		loadListeners();
 		loadCommands();
 		initializeAutoScoreManager();
-		if (Settings.getAutoScoreParameter(SettingsKeys.AS_AUTO_CONNECT).equals(ON)) { //$NON-NLS-1$
-			autoScoreManager.connect();
-		}
+		initializeSessions();
+		connectAutoConnectTables();
 		createFileWatchWorker();
 		fileWatchWorker.execute();
 		// Initialize and start REST API server if enabled
@@ -505,31 +529,258 @@ public final class Main implements MatchObserver {
 	}
 
     private static void initializeAutoScoreManager() {
-		autoScoreManager = new AutoScoreManager(
-			autoScoreSettingsPanel,
-			autoScoreConfigPanel,
-			autoScoreMainPanel
-		);
-		autoScoreManager.setConnectionStateListener(
-			connected -> mainFrame.setAutoScoreIconConnected(connected)
-		);
-		autoScoreManager.setScoreEventListener(
-			code -> processCode(code, false)
-		);
-		// Register AutoScore listeners
-		autoScoreSettingsPanel.addApplyListener(autoScoreManager.createSettingsApplyListener());
-		autoScoreSettingsPanel.addSaveListener(autoScoreManager.createSettingsSaveListener());
-		autoScoreSettingsPanel.addConnectListener(autoScoreManager.createSettingsConnectListener());
-		autoScoreSettingsPanel.addDisconnectListener(autoScoreManager.createSettingsDisconnectListener());
-		autoScoreSettingsPanel.addSearchListener(autoScoreManager.createSettingsSearchListener());
-		autoScoreConfigPanel.addReadConfigListener(autoScoreManager.createConfigReadListener());
-		autoScoreConfigPanel.addWriteConfigListener(autoScoreManager.createConfigWriteListener());
-		autoScoreConfigPanel.addValidateConfigListener(autoScoreManager.createConfigValidateListener());
-		autoScoreConfigPanel.addResetConfigListener(autoScoreManager.createConfigResetListener());
-		autoScoreConfigPanel.addClearConfigListener(autoScoreManager.createConfigClearListener());
-		autoScoreMainPanel.addConnectListener(autoScoreManager.createMainPanelConnectListener());
-		autoScoreMainPanel.addDisconnectListener(autoScoreManager.createMainPanelDisconnectListener());
+		autoScoreManagers.clear();
+		List<TableConnection> conns = Settings.getTableConnections();
+		for (int i = 0; i < conns.size(); i++) {
+			final int index = i;
+			AutoScoreManager mgr = new AutoScoreManager(
+				conns.get(i),
+				autoScoreSettingsPanel,
+				autoScoreConfigPanel,
+				autoScoreMainPanel
+			);
+			mgr.setConnectionStateListener(connected -> updateAutoScoreConnectionIcon());
+			mgr.setScoreEventListener(code -> routeScoreEvent(index, code));
+			autoScoreManagers.add(mgr);
+		}
+		// The settings/config/search/connect controls act on the active table's
+		// manager (uiManager()). The apply/save listeners refresh every manager's
+		// connection from the freshly-saved settings so edits take effect on the
+		// next connect. Adding/removing tables still requires a restart.
+		autoScoreSettingsPanel.addApplyListener(e -> { autoScoreSettingsPanel.saveSettings(); refreshManagerConnections(); });
+		autoScoreSettingsPanel.addSaveListener(e -> {
+			autoScoreSettingsPanel.saveSettings();
+			refreshManagerConnections();
+			Window win = SwingUtilities.getWindowAncestor((JComponent) e.getSource());
+			if (win != null) win.dispose();
+		});
+		// The Settings/Config window acts on the table SELECTED IN ITS DROPDOWN
+		// (settingsManager()), not the displayed table. Connect first applies the
+		// on-screen edits (save + refresh) so it connects to the IP/port shown.
+		autoScoreSettingsPanel.addConnectListener(e -> {
+			autoScoreSettingsPanel.saveSettings();
+			refreshManagerConnections();
+			settingsManager().setBlockReconnect(false);
+			settingsManager().connect();
+		});
+		autoScoreSettingsPanel.addDisconnectListener(e -> { settingsManager().setBlockReconnect(true); settingsManager().disconnect(); });
+		autoScoreSettingsPanel.addSearchListener(e -> settingsManager().search());
+		autoScoreConfigPanel.addReadConfigListener(e -> settingsManager().readConfig());
+		autoScoreConfigPanel.addWriteConfigListener(e -> settingsManager().writeConfig());
+		autoScoreConfigPanel.addValidateConfigListener(e -> {
+			if (settingsManager().validateConfig()) {
+				JOptionPane.showMessageDialog(null, Messages.getString("Main.ValidationPassed"), Messages.getString("Main.ValidationResults"), 1); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+		});
+		autoScoreConfigPanel.addResetConfigListener(e -> settingsManager().resetConfig());
+		autoScoreConfigPanel.addClearConfigListener(e -> settingsManager().clearConfig());
+		autoScoreMainPanel.addConnectListener(e -> { uiManager().setBlockReconnect(false); uiManager().connect(); });
+		autoScoreMainPanel.addDisconnectListener(e -> { uiManager().setBlockReconnect(true); uiManager().disconnect(); });
 		autoScoreMainPanel.addSettingsListener(e -> mainController.showAutoScore());
+		autoScoreSettingsPanel.setTableConnectedProvider(
+			i -> i >= 0 && i < autoScoreManagers.size() && autoScoreManagers.get(i).isConnected());
+		mainFrame.setAutoScoreTableConnectListener(Main::connectTable);
+		mainFrame.setAutoScoreTableDisconnectListener(Main::disconnectTable);
+		mainFrame.setAutoScoreConnectAllListener(Main::connectAllTables);
+		mainFrame.setAutoScoreDisconnectAllListener(Main::disconnectAllTables);
+		updateAutoScoreConnectionIcon();
+	}
+	/** Returns the AutoScore manager for the currently displayed table. */
+	private static AutoScoreManager uiManager() {
+		int i = sessions.indexOf(activeSession);
+		if (i < 0 || i >= autoScoreManagers.size()) i = 0;
+		return autoScoreManagers.get(i);
+	}
+	/** Returns the manager for the table selected in the AutoScore Settings dropdown. */
+	private static AutoScoreManager settingsManager() {
+		int i = autoScoreSettingsPanel.getSelectedTableIndex();
+		if (i < 0 || i >= autoScoreManagers.size()) i = 0;
+		return autoScoreManagers.get(i);
+	}
+	/** Repoints each manager at its freshly-saved connection (host/port/etc.). */
+	private static void refreshManagerConnections() {
+		List<TableConnection> conns = Settings.getTableConnections();
+		for (int i = 0; i < autoScoreManagers.size() && i < conns.size(); i++) {
+			autoScoreManagers.get(i).setConnection(conns.get(i));
+		}
+	}
+	/** Connects every table flagged Auto Connect on startup, in the background. */
+	private static void connectAutoConnectTables() {
+		List<TableConnection> conns = Settings.getTableConnections();
+		for (int i = 0; i < autoScoreManagers.size() && i < conns.size(); i++) {
+			if (conns.get(i).isAutoConnect()) {
+				autoScoreManagers.get(i).connect();
+			}
+		}
+	}
+	/** Connects the AutoScore table at the given index (manual connect). */
+	private static void connectTable(int i) {
+		if (i < 0 || i >= autoScoreManagers.size()) return;
+		autoScoreManagers.get(i).setBlockReconnect(false);
+		autoScoreManagers.get(i).connect();
+	}
+	/** Disconnects the AutoScore table at the given index (manual disconnect). */
+	private static void disconnectTable(int i) {
+		if (i < 0 || i >= autoScoreManagers.size()) return;
+		autoScoreManagers.get(i).setBlockReconnect(true);
+		autoScoreManagers.get(i).disconnect();
+	}
+	private static void connectAllTables() {
+		for (int i = 0; i < autoScoreManagers.size(); i++) connectTable(i);
+	}
+	private static void disconnectAllTables() {
+		for (int i = 0; i < autoScoreManagers.size(); i++) disconnectTable(i);
+	}
+	/** (Re)builds the AutoScore > Tables submenu with each table's label + state. */
+	private static void rebuildAutoScoreTablesMenu() {
+		List<TableConnection> conns = Settings.getTableConnections();
+		List<String> labels = new ArrayList<>();
+		boolean[] connected = new boolean[autoScoreManagers.size()];
+		for (int i = 0; i < autoScoreManagers.size(); i++) {
+			labels.add(i < conns.size() ? conns.get(i).getLabel()
+					: Messages.getString("MainFrame.Tables") + " " + (i + 1)); //$NON-NLS-1$ //$NON-NLS-2$
+			connected[i] = autoScoreManagers.get(i).isConnected();
+		}
+		mainFrame.rebuildAutoScoreTablesMenu(labels, connected);
+	}
+	/**
+	 * Routes an AutoScore goal/timeout code to its table. The displayed table goes
+	 * through the full processCode path (command history, filters, live OBS); any
+	 * background table is updated headless via {@link #applyBackgroundEvent}.
+	 */
+	private static void routeScoreEvent(int tableIndex, String code) {
+		if (tableIndex < 0 || tableIndex >= sessions.size()) return;
+		TableSession target = sessions.get(tableIndex);
+		logger.debug("AutoScore route: code=" + code + " from table index " + tableIndex //$NON-NLS-1$ //$NON-NLS-2$
+				+ " -> " + (target == activeSession ? "ACTIVE/displayed (index " + sessions.indexOf(activeSession) + ")" : "background")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		if (target == activeSession) {
+			processCode(code, false);
+		} else {
+			applyBackgroundEvent(target, code);
+		}
+	}
+	/**
+	 * Applies an AutoScore event to a non-displayed table. Temporarily binds the
+	 * controllers to that session and runs the same scoring path the live table
+	 * uses (so there is no divergent logic), then rebinds to the active session and
+	 * republishes its display. Because the session's models point at the silent OBS
+	 * sink and this runs synchronously on the EDT, no OBS output or visible panel
+	 * flash occurs, and the event is not added to any command/undo history.
+	 * Cutthroat rotation is not yet applied for background tables (logged).
+	 */
+	private static void applyBackgroundEvent(TableSession session, String code) {
+		teamController.bindSession(session);
+		matchController.bindSession(session);
+		statsController.bindSession(session);
+		timerController.bindSession(session);
+		try {
+			switch (code) {
+				case "XIST1": backgroundScore(1); break; //$NON-NLS-1$
+				case "XIST2": backgroundScore(2); break; //$NON-NLS-1$
+				case "XUTT1": teamController.callTimeOut(1); break; //$NON-NLS-1$
+				case "XUTT2": teamController.callTimeOut(2); break; //$NON-NLS-1$
+				default: break;
+			}
+		} finally {
+			teamController.bindSession(activeSession);
+			matchController.bindSession(activeSession);
+			statsController.bindSession(activeSession);
+			timerController.bindSession(activeSession);
+			republishActiveSession();
+		}
+	}
+	/** Background equivalent of the live ISTCommand score path (controllers bound). */
+	private static void backgroundScore(int teamNumber) {
+		int rotate = matchController.incrementScore(teamNumber);
+		if (rotate > 0) {
+			logger.warn("Cutthroat rotation not applied for background table (rotate=" + rotate + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+	/** Sets the AutoScore menu icon green=all / yellow=some / red=none connected. */
+	private static void updateAutoScoreConnectionIcon() {
+		int connectedCount = 0;
+		for (AutoScoreManager m : autoScoreManagers) {
+			if (m.isConnected()) connectedCount++;
+		}
+		mainFrame.setAutoScoreConnectionState(connectedCount, autoScoreManagers.size());
+		autoScoreSettingsPanel.refreshTableStatus();
+		rebuildAutoScoreTablesMenu();
+		if (!sessions.isEmpty()) rebuildTablesMenu();
+	}
+	/**
+	 * Builds one {@link TableSession} per configured {@link TableConnection}.
+	 * Index 0 is the already-active session (bound to the live view + OBS); any
+	 * additional tables get headless sessions writing to the silent OBS sink, with
+	 * their clock listeners attached so they drive the display once selected. Wires
+	 * the Tables menu so the user can switch the displayed table.
+	 */
+	private static void initializeSessions() {
+		tableConnections = Settings.getTableConnections();
+		sessions.clear();
+		sessions.add(activeSession);
+		String side1Color = Settings.getControlParameter(SettingsKeys.CTRL_SIDE1_COLOR); //$NON-NLS-1$
+		String side2Color = Settings.getControlParameter(SettingsKeys.CTRL_SIDE2_COLOR); //$NON-NLS-1$
+		String none = Messages.getString("Main.None"); //$NON-NLS-1$
+		String defaultTeamPrefix = Messages.getString("TeamPanel.Team"); //$NON-NLS-1$
+		for (int i = 1; i < tableConnections.size(); i++) {
+			TableSession session = new TableSession(silentObsInterface, side1Color, side2Color, none);
+			// Default team names ("Team 1/2/3") the same way the active session's
+			// teams are defaulted by TeamController.checkTeamNames() at construction,
+			// so every table starts with the same team-name defaults rather than blanks.
+			if (session.getTeam1().getTeamName().isEmpty()) session.getTeam1().setTeamName(defaultTeamPrefix + "1"); //$NON-NLS-1$
+			if (session.getTeam2().getTeamName().isEmpty()) session.getTeam2().setTeamName(defaultTeamPrefix + "2"); //$NON-NLS-1$
+			if (session.getTeam3().getTeamName().isEmpty()) session.getTeam3().setTeamName(defaultTeamPrefix + "3"); //$NON-NLS-1$
+			teamController.attachListeners(session);
+			matchController.attachListeners(session);
+			timerController.attachListeners(session);
+			sessions.add(session);
+		}
+		// Default each table's display name to its table number (1-based).
+		for (int i = 0; i < sessions.size(); i++) {
+			if (sessions.get(i).getTableName().isEmpty()) {
+				sessions.get(i).setTableName(String.valueOf(i + 1));
+			}
+		}
+		tournamentController.bindSession(activeSession);
+		mainFrame.setTableSelectListener(Main::selectTable);
+		// The Table Name combo in the Tournament panel is a second table switcher
+		// (and rename control) alongside the Tables menu.
+		tournamentPanel.addTableSelectListener(Main::selectTable);
+		tournamentPanel.addTableRenameListener(Main::renameActiveTable);
+		rebuildTablesMenu();
+		refreshTableNameCombo();
+	}
+	/** Switches the displayed table to the session at the given index. */
+	private static void selectTable(int index) {
+		if (index < 0 || index >= sessions.size()) return;
+		switchToSession(sessions.get(index));
+	}
+	/** Renames the active table from the Table Name combo, refreshing the dropdown. */
+	private static void renameActiveTable(String name) {
+		if (name == null || name.isEmpty()) return;
+		tournamentController.setTableName(name);
+		refreshTableNameCombo();
+	}
+	/** Rebuilds the Tournament panel's Table Name combo from the sessions' names. */
+	private static void refreshTableNameCombo() {
+		List<String> names = new ArrayList<>();
+		for (int i = 0; i < sessions.size(); i++) {
+			String name = sessions.get(i).getTableName();
+			names.add(name.isEmpty() ? String.valueOf(i + 1) : name);
+		}
+		tournamentPanel.setTableNames(names, sessions.indexOf(activeSession));
+	}
+	/** (Re)builds the Tables menu from the current sessions/connections, with a
+	 *  green/red connection dot per table. */
+	private static void rebuildTablesMenu() {
+		List<String> labels = new ArrayList<>();
+		boolean[] connected = new boolean[sessions.size()];
+		for (int i = 0; i < sessions.size(); i++) {
+			labels.add(i < tableConnections.size() ? tableConnections.get(i).getLabel()
+					: Messages.getString("MainFrame.Tables") + " " + (i + 1)); //$NON-NLS-1$ //$NON-NLS-2$
+			connected[i] = i < autoScoreManagers.size() && autoScoreManagers.get(i).isConnected();
+		}
+		mainFrame.rebuildTablesMenu(labels, sessions.indexOf(activeSession), connected);
 	}
 	private static void checkFilters(String code) {
 		String filter;
@@ -962,6 +1213,68 @@ public final class Main implements MatchObserver {
 	}
 	private static String createMatchId() {
 		return matchController.createMatchId();
+	}
+	/**
+	 * Switches the displayed table to the given session. Saves the current
+	 * table's command/undo working state, repoints Main's model fields and the
+	 * controllers at the new session, swaps the OBS sinks (outgoing -> silent,
+	 * incoming -> live), restores the new table's working state, and republishes
+	 * its state to the panels and OBS. The outgoing table keeps running headless.
+	 */
+	public static void switchToSession(TableSession next) {
+		logger.debug("switchToSession requested: from index " + sessions.indexOf(activeSession) //$NON-NLS-1$
+				+ " to index " + sessions.indexOf(next) + " (sessions total=" + sessions.size() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if (next == null || next == activeSession) return;
+		// 1. Preserve the outgoing table's command history / undo state.
+		activeSession.saveWorkingState(commandStack, codeStack, mementoStackTeam1, mementoStackTeam2,
+				mementoStackTeam3, mementoStackStats, mementoStackMatch, mementoStackGameClock, undoRedoPointer);
+		// 2. Silence the outgoing table; it keeps updating in the background. Also
+		//    detach its match observers so background play can't fire the meatball
+		//    filter or SSE events (v1 exposes the active table only).
+		activeSession.setObsInterface(silentObsInterface);
+		match.removeObserver(instance);
+		if (eventBroadcaster != null) match.removeObserver(eventBroadcaster);
+		// 3. Make next active: repoint Main's model fields, the controllers, and
+		//    point the new table at the live OBS sink.
+		activeSession = next;
+		team1 = next.getTeam1();
+		team2 = next.getTeam2();
+		team3 = next.getTeam3();
+		match = next.getMatch();
+		match.addObserver(instance);
+		if (eventBroadcaster != null) match.addObserver(eventBroadcaster);
+		stats = next.getStats();
+		timeClock = next.getTimeClock();
+		gameClock = next.getGameClock();
+		lastScored1Clock = next.getLastScored1Clock();
+		lastScored2Clock = next.getLastScored2Clock();
+		lastScored3Clock = next.getLastScored3Clock();
+		next.setObsInterface(obsInterface);
+		teamController.bindSession(next);
+		matchController.bindSession(next);
+		statsController.bindSession(next);
+		timerController.bindSession(next);
+		tournamentController.bindSession(next);
+		// 4. Restore the incoming table's command history / undo state.
+		undoRedoPointer = next.loadWorkingStateInto(commandStack, codeStack, mementoStackTeam1, mementoStackTeam2,
+				mementoStackTeam3, mementoStackStats, mementoStackMatch, mementoStackGameClock);
+		// 5. Republish the new table's state to the panels and live OBS.
+		republishActiveSession();
+		// 6. Keep both table switchers (Tables menu + Table Name combo) in sync.
+		rebuildTablesMenu();
+		refreshTableNameCombo();
+	}
+	/**
+	 * Pushes the active session's current model state to the panels and live OBS.
+	 * Used after a table switch so the display reflects the newly active table.
+	 */
+	private static void republishActiveSession() {
+		teamController.displayAll();
+		teamController.writeAll();
+		matchController.updateGameTables();
+		statsController.displayAllStats();
+		statsEntryPanel.rebuildCodeHistory(stats.getCodeHistoryAsList());
+		timerController.refreshDisplay();
 	}
 	public static void processCode(String code, Boolean isRedo) {
 		Command commandStatus;

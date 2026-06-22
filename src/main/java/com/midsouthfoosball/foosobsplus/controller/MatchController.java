@@ -33,6 +33,7 @@ import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 import com.midsouthfoosball.foosobsplus.model.Stats;
+import com.midsouthfoosball.foosobsplus.model.TableSession;
 import com.midsouthfoosball.foosobsplus.view.GameTableWindowPanel;
 import com.midsouthfoosball.foosobsplus.view.MatchPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
@@ -40,11 +41,11 @@ import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
 
 public class MatchController {
-private final Match match;
+private Match match;
 //	private final Stats stats;
-	private final GameClock gameClock;
-	private final LastScoredClock lastScored1Clock;
-	private final LastScoredClock lastScored2Clock;
+	private GameClock gameClock;
+	private LastScoredClock lastScored1Clock;
+	private LastScoredClock lastScored2Clock;
 	private final MatchPanel matchPanel;
 //	private final StatsEntryPanel statsEntryPanel;
 	private final StatsDisplayPanel statsDisplayPanel;
@@ -69,6 +70,20 @@ private final Match match;
 		this.gameClock.addGameClockTimerListener(new GameClockTimerListener());
 		this.streamIndexer = streamIndexer;
 		updateGameTables();
+	}
+	////// Session Binding \\\\\\
+	// Repoints this controller at the active table's match/clocks. Listeners read
+	// these bound fields, so the display follows the active session after a switch.
+	public void bindSession(TableSession session) {
+		this.match = session.getMatch();
+		this.gameClock = session.getGameClock();
+		this.lastScored1Clock = session.getLastScored1Clock();
+		this.lastScored2Clock = session.getLastScored2Clock();
+	}
+	// Attaches this controller's game-clock listener to a session's clock. Call
+	// once per session at creation; the constructor wires the initial session.
+	public void attachListeners(TableSession session) {
+		session.getGameClock().addGameClockTimerListener(new GameClockTimerListener());
 	}
 	////// Match Panel Listener Objects \\\\\\
 	private class GameClockTimerListener implements ActionListener {

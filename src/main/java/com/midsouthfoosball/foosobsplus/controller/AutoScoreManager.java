@@ -48,8 +48,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.main.PicoDiscovery;
-import com.midsouthfoosball.foosobsplus.model.Settings;
-import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
+import com.midsouthfoosball.foosobsplus.model.TableConnection;
 import com.midsouthfoosball.foosobsplus.view.Messages;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreConfigPanel;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreMainPanel;
@@ -62,7 +61,6 @@ import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsPanel;
 public class AutoScoreManager {
 
 	private static final Logger logger = LoggerFactory.getLogger(AutoScoreManager.class);
-	private static final String ON = "1"; //$NON-NLS-1$
 	private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern(Messages.getString("Main.DateTimePattern")); //$NON-NLS-1$
 
 	/**
@@ -79,12 +77,23 @@ public class AutoScoreManager {
 		void onScoreEvent(String code);
 	}
 
+	// Reconnect backoff. On an unexpected disconnect we retry after a delay that
+	// doubles each failed attempt up to a cap, instead of spinning a tight
+	// reconnect loop (which spawned SwingWorkers every ~30ms on instant failures).
+	private static final int RECONNECT_BASE_MS = 1000;
+	private static final int RECONNECT_MAX_MS = 30000;
+	private volatile int reconnectDelayMs = RECONNECT_BASE_MS;
+	private javax.swing.Timer reconnectTimer;
+
 	// Connection state
 	private volatile boolean connected = false;
 	private volatile boolean blockReconnect = false;
 	private Socket socket;
 	private volatile PrintWriter socketWriter;
 	private SwingWorker<Boolean, Integer> worker;
+
+	// Connection config for the table this manager drives.
+	private volatile TableConnection connection;
 
 	// UI Panels
 	private final AutoScoreSettingsPanel settingsPanel;
@@ -98,17 +107,35 @@ public class AutoScoreManager {
 	/**
 	 * Creates a new AutoScoreManager.
 	 *
+	 * @param connection the table connection (host/port/detailLog) this manager drives
 	 * @param settingsPanel the settings panel for displaying connection status
 	 * @param configPanel the config panel for device configuration
 	 * @param mainPanel the main panel with ignore sensors checkbox
 	 */
 	public AutoScoreManager(
+			TableConnection connection,
 			AutoScoreSettingsPanel settingsPanel,
 			AutoScoreConfigPanel configPanel,
 			AutoScoreMainPanel mainPanel) {
+		this.connection = connection;
 		this.settingsPanel = settingsPanel;
 		this.configPanel = configPanel;
 		this.mainPanel = mainPanel;
+	}
+
+	/**
+	 * Returns the table connection this manager drives.
+	 */
+	public TableConnection getConnection() {
+		return connection;
+	}
+
+	/**
+	 * Updates the table connection (host/port/detailLog) used for the next
+	 * connect. Takes effect on the next (re)connection.
+	 */
+	public void setConnection(TableConnection connection) {
+		this.connection = connection;
 	}
 
 	/**
@@ -155,6 +182,7 @@ public class AutoScoreManager {
 	public void disconnect() {
 		settingsPanel.addMessage(Messages.getString("Main.Disconnecting")); //$NON-NLS-1$
 		logger.info("Trying to disconnect from AutoScore..."); //$NON-NLS-1$
+		cancelReconnect();
 		// Notify Pico FIRST, before cancelling the worker or closing the socket
 		PrintWriter writer = socketWriter;
 		if (connected && writer != null) {
@@ -524,6 +552,34 @@ public class AutoScoreManager {
 		}
 	}
 
+	// Schedules a single reconnect attempt after the current backoff delay, then
+	// doubles the delay (capped) for the next attempt. Guards against stacking
+	// multiple pending timers.
+	private void scheduleReconnect() {
+		if (reconnectTimer != null && reconnectTimer.isRunning()) {
+			return;
+		}
+		int delay = reconnectDelayMs;
+		logger.info("Scheduling AutoScore reconnect in " + delay + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+		reconnectTimer = new javax.swing.Timer(delay, e -> {
+			((javax.swing.Timer) e.getSource()).stop();
+			if (!blockReconnect) {
+				connect();
+			}
+		});
+		reconnectTimer.setRepeats(false);
+		reconnectTimer.start();
+		reconnectDelayMs = Math.min(reconnectDelayMs * 2, RECONNECT_MAX_MS);
+	}
+
+	// Cancels any pending reconnect and resets the backoff to its base delay.
+	private void cancelReconnect() {
+		if (reconnectTimer != null) {
+			reconnectTimer.stop();
+		}
+		reconnectDelayMs = RECONNECT_BASE_MS;
+	}
+
 	private void createWorker() {
 		worker = new SwingWorker<Boolean, Integer>() {
 			BufferedReader dataIn;
@@ -531,8 +587,8 @@ public class AutoScoreManager {
 			@Override
 			protected Boolean doInBackground() throws Exception {
 				boolean isConnected = false;
-				String address = Settings.getAutoScoreParameter(SettingsKeys.AS_SERVER_ADDRESS); //$NON-NLS-1$
-				int port = Settings.getAutoScoreParameter(SettingsKeys.AS_SERVER_PORT, Integer::parseInt); //$NON-NLS-1$
+				String address = connection.getServerAddress();
+				int port = Integer.parseInt(connection.getServerPort());
 				try {
 					socket = new Socket(address, port);
 					socket.setSoTimeout(1000);
@@ -551,6 +607,7 @@ public class AutoScoreManager {
 					isConnected = true;
 					SwingUtilities.invokeLater(() -> notifyConnectionStateChanged(true));
 					connected = true;
+					reconnectDelayMs = RECONNECT_BASE_MS;
 				} catch (UnknownHostException uh) {
 					SwingUtilities.invokeLater(() -> settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.AutoScoreUnknownHostException"))); //$NON-NLS-1$
 					logger.error("Auto Score new Socket UnknownHostException"); //$NON-NLS-1$
@@ -605,7 +662,7 @@ public class AutoScoreManager {
 						}
 						logger.info("Received raw data: [" + raw + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 						logger.info("Parse command: " + cmd[0]); //$NON-NLS-1$
-						if (Settings.getAutoScoreParameter(SettingsKeys.AS_DETAIL_LOG).equals(ON)) { //$NON-NLS-1$
+						if (connection.isDetailLog()) {
 							final String receivedMsg = raw;
 							SwingUtilities.invokeLater(() -> settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Received") + receivedMsg)); //$NON-NLS-1$
 						}
@@ -672,7 +729,7 @@ public class AutoScoreManager {
 				if (isCancelled()) return;
 				int mostRecentValue = chunks.get(chunks.size() - 1);
 				boolean ignoreSensors = mainPanel.isIgnored();
-				if (Settings.getAutoScoreParameter(SettingsKeys.AS_DETAIL_LOG).equals(ON)) { //$NON-NLS-1$
+				if (connection.isDetailLog()) {
 					if (ignoreSensors) {
 						if (mostRecentValue == 1 || mostRecentValue == 2) {
 							settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team") + mostRecentValue + Messages.getString("Main.ScoredButIgnored")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -719,7 +776,7 @@ public class AutoScoreManager {
 				if (state == SwingWorker.StateValue.DONE) {
 					if (!blockReconnect) {
 						logger.info("Attempt reconnect to AutoScore..."); //$NON-NLS-1$
-						connect();
+						scheduleReconnect();
 					}
 				}
 			}
