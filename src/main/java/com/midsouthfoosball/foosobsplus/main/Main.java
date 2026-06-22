@@ -721,8 +721,15 @@ public final class Main implements MatchObserver {
 		String side1Color = Settings.getControlParameter(SettingsKeys.CTRL_SIDE1_COLOR); //$NON-NLS-1$
 		String side2Color = Settings.getControlParameter(SettingsKeys.CTRL_SIDE2_COLOR); //$NON-NLS-1$
 		String none = Messages.getString("Main.None"); //$NON-NLS-1$
+		String defaultTeamPrefix = Messages.getString("TeamPanel.Team"); //$NON-NLS-1$
 		for (int i = 1; i < tableConnections.size(); i++) {
 			TableSession session = new TableSession(silentObsInterface, side1Color, side2Color, none);
+			// Default team names ("Team 1/2/3") the same way the active session's
+			// teams are defaulted by TeamController.checkTeamNames() at construction,
+			// so every table starts with the same team-name defaults rather than blanks.
+			if (session.getTeam1().getTeamName().isEmpty()) session.getTeam1().setTeamName(defaultTeamPrefix + "1"); //$NON-NLS-1$
+			if (session.getTeam2().getTeamName().isEmpty()) session.getTeam2().setTeamName(defaultTeamPrefix + "2"); //$NON-NLS-1$
+			if (session.getTeam3().getTeamName().isEmpty()) session.getTeam3().setTeamName(defaultTeamPrefix + "3"); //$NON-NLS-1$
 			teamController.attachListeners(session);
 			matchController.attachListeners(session);
 			timerController.attachListeners(session);
