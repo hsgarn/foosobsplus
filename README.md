@@ -605,26 +605,42 @@ This window will show any messages relevant to communicating with OBS Studio.
 Click this menu item to disconnect FoosOBSPlus from OBS Studio.
 
 ## AutoScore
-This is the menu item for FoosScore AutoScore related activity.  A green solid circle will show before AutoScore to indicate that a connection has been established to the FoosScore AutoScore system.  A red solid circle indicates that FoosScore AutoScore is currently disconnected.
+This is the menu item for FoosScore AutoScore related activity.  FoosOBSPlus can connect to more than one FoosScore AutoScore system at a time — one per table (see the Tables menu below).  A solid circle before AutoScore indicates the overall connection state across all configured tables: green when every table is connected, yellow when some (but not all) are connected, and red when none are connected.
+
+### Tables
+This submenu lists each configured AutoScore table with a connection status dot (green for connected, red for disconnected).  Clicking a table toggles its connection — connecting it if it is disconnected, or disconnecting it if it is connected.  Below the list are two additional entries:
+#### Connect All
+Connects to every configured AutoScore table.
+#### Disconnect All
+Disconnects from every configured AutoScore table.
 
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScoreSettings.png">
 
 ## Settings
+The AutoScore Settings window manages the list of AutoScore tables.  Each table has its own name and connection settings.  Select a table from the Table drop-down to view or edit its settings; the remaining fields on the window (Name, Server Address, Server Port, Auto Connect, Detail Log) apply to the currently selected table.  A connection status dot (green for connected, red for disconnected) is shown beside each table in the drop-down.
 
+### Table
+This drop-down selects which configured table you are viewing and editing.  Choosing a different table loads that table's settings into the fields below.
+### Add
+This button adds a new table to the list, prefilled with default connection settings.  Edit its Name, Server Address and Server Port as needed.
+### Delete
+This button removes the currently selected table from the list.
+### Name
+This is a friendly name for the selected table (for example, "Table 1" or "Center Court").  This name is shown in the Table drop-down, the Tables menu, and the AutoScore -> Tables submenu.
 ### Server Address
-This is the IP Address of the FoosScore AutoScore server.  The AutoScore server will need to be on the same network as FoosOBSPlus in order to successfully communicate with FoosOBSPlus.
+This is the IP Address of the FoosScore AutoScore server for the selected table.  The AutoScore server will need to be on the same network as FoosOBSPlus in order to successfully communicate with FoosOBSPlus.
 ### Server Port
 This is the port number that the FoosScore AutoScore server is listening to.
 ### Auto Connect on Start Up
-When checked, FoosOBSPlus will attempt to automatically connect to the FoosScore AutoScore system when FoosOBSPlus if first started.  The Server Address and Server Port fields should be populated for Auto Connect to work. If unchecked, you must manually connect using the Connect button.
+When checked, FoosOBSPlus will attempt to automatically connect to the selected table's FoosScore AutoScore system when FoosOBSPlus if first started.  The Server Address and Server Port fields should be populated for Auto Connect to work. If unchecked, you must manually connect using the Connect button.  Auto Connect is per table, so any combination of tables can be set to connect on start up.
 ### Detail Log
-When checked, details sent from the FoosScore AutoScore system can be seen in the Message window.
+When checked, details sent from the selected table's FoosScore AutoScore system can be seen in the Message window.
 ### Search
 When pressed, will send a broadcast message on port 5051 to any FoosScore instances listening and will return the IP address of any FoosScore instances that responded.  The returned IP address will be displayed in the Message window and can be used in the Server Address box to connect to that FoosScore instance.
 ### Connect
-This button will connect to the FoosScore AutoScore system at the given Server Address and Server Port.
+This button will connect to the selected table's FoosScore AutoScore system at the given Server Address and Server Port.
 ### Disconnect
-This button will disconnect the current active FoosScore AutoScore session.
+This button will disconnect the selected table's FoosScore AutoScore session.
 ### Message
 This box shows communication and information for the FoosScore AutoScore system.
 #### Apply
@@ -665,6 +681,13 @@ This button will first validate the configuration. If validated successfully, th
 ### Reset Pico
 This will cause the FoosScore AutoScore system to restart allowing any configuration changes to take affect.
 
+## Tables
+FoosOBSPlus can track more than one foosball table at a time.  Each table has its own teams, scores, game counts, time outs, timers and statistics, and its own AutoScore connection (configured in AutoScore Settings).  Only one table is *displayed* at a time — the displayed table is bound to the main screen and is the table whose data is sent to OBS Studio.  The other tables continue to track their games in the background (including AutoScore points) so nothing is missed while they are off screen.  Switching the displayed table instantly swaps the entire main screen and the OBS output to that table.
+
+The Tables menu lists every configured table with a radio button and a connection status dot (green for connected, red for disconnected).  The currently displayed table is selected.  Choosing a different table makes it the displayed table.
+
+> **Note:** The displayed table can also be changed from the Table Name drop-down in the Tournament Information panel on the main screen (see below).  The two controls stay in sync.
+
 ## View
 
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusViewMenu.png">
@@ -704,7 +727,7 @@ Shows details about the current version of the program.
 The FoosOBSPlus Main Screen is divided into 13 panels.  Each panel has its own controls and purpose.  Below is a description of each panel.
 
 ### Tournament Information
-This panel contains information pertaining to the particular tournament being played.  Tournament name, event name and table name can be displayed.
+This panel contains information pertaining to the particular tournament being played.  Tournament name, event name and table name can be displayed.  The Tournament Name and Event Name are global (shared by every table), while the Table Name is per table and doubles as a way to switch which table is displayed.
 
 <img width="320" height="270" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusTournamentInformation.png">
 
@@ -713,9 +736,9 @@ This field will be sent to the source specified in the Tournament field in Sourc
 #### Event Name
 This field will be sent to the source specified in the Event field in Sources Settings. Use this to display the event currently being played (i.e. DYP, Singles, etc.).
 #### Table Name
-This field will be sent to the source specified in the Table Name field in Sources Settings.  Use this to display the table name (or number) that is currently being streamed.
+This is an editable drop-down that serves two purposes.  As a drop-down, it lists every configured table and lets you switch the displayed table by selecting one (the same as choosing a table from the Tables menu).  As an editable field, the name you type renames the currently displayed table.  The table name is sent to the source specified in the Table Name field in Sources Settings, so use it to display the table name (or number) currently being streamed.  Each table defaults its name to its table number.  Tournament and Event names are global and are not affected when you switch tables.
 #### Clear
-This button will clear all the fields in the Table Information panel.
+This button will clear the Tournament Name and Event Name fields in the Tournament Information panel.  (The Table Name is left unchanged, since it identifies the displayed table.)
 
 ### Match Information
 This panel provides a way to manage a match and shows a game table grid of the current match being played.
@@ -842,16 +865,16 @@ Once the Start Stream Timer button is pressed, it will toggle to Stop Stream Tim
 #### Stream Time:
 The time to the right of the Start Stream Timer/Stop Stream Timer button shows the running stream time when the Start Stream Timer button has been pressed.
 ### AutoScore Panel
-The AutoScore Panel controls the interaction with the AutoScore system.  This is a home grown system using lasers and a Raspberry Pico to detect when the ball is scored in one goal or the other.  When a score is detected, it sends data to FoosOBSPlus to increment the scoring team's score by one point.
+The AutoScore Panel controls the interaction with the AutoScore system.  This is a home grown system using lasers and a Raspberry Pico to detect when the ball is scored in one goal or the other.  When a score is detected, it sends data to FoosOBSPlus to increment the scoring team's score by one point.  The Connect and Disconnect buttons in this panel act on the currently displayed table.  When multiple tables are configured, connect and disconnect individual tables (or all of them at once) from the AutoScore -> Tables submenu, and use the Tables menu to choose which table is displayed.
 
 <img width="320" height="220" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScorePanel.png">
 
 #### Connect
-This button will connect to the AutoScore system.  The AutoScore system must already be configured in the AutoScore Settings for the connection to work.
+This button will connect the displayed table to its AutoScore system.  The AutoScore system must already be configured in the AutoScore Settings for the connection to work.
 #### Settings
 This button will bring up the AutoScore Settings window where the Server Address and Port can be configured.
 #### Disconnect
-This button will disconnect from the AutoScore system.
+This button will disconnect the displayed table from its AutoScore system.
 #### Ignore Sensors
 Check this box if there is a need to temporarily ignore the input from the AutoScore system.  Uncheck it to resume letting the AutoScore system update the scores.
 ### Switch Panel
@@ -1329,6 +1352,15 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.093 06/22/2026</br>
+Multi table AutoScore implemented.</br>
+FoosOBSPlus can now connect to multiple FoosScore AutoScore systems at once, one per table. Each table keeps its own teams, scores, game counts, time outs and timers, tracking in the background while a single table is displayed and sent to OBS. Switching the displayed table instantly swaps the main screen and OBS output.</br>
+AutoScore Settings now manages a list of tables (Add/Delete) each with its own Name, Server Address, Server Port, Auto Connect and Detail Log, with a connection status dot per table.</br>
+Added a Tables menu to switch the displayed table and an AutoScore -> Tables submenu to connect/disconnect individual tables or all tables at once, both showing per-table connection dots.</br>
+The Tournament Information Table Name field is now a drop-down that switches the displayed table and renames it; tournament and event names remain global. Table names default to the table number.</br>
+Each table defaults its team names to Team 1/Team 2/Team 3.</br>
+AutoScore reconnect now uses a capped backoff instead of retrying immediately.</br>
+</br>
 v2.092 03/23/2026</br>
 Add option to enable/disable API SSE.</br>
 </br>
