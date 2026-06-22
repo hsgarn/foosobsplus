@@ -601,6 +601,8 @@ public final class Main implements MatchObserver {
 	private static void routeScoreEvent(int tableIndex, String code) {
 		if (tableIndex < 0 || tableIndex >= sessions.size()) return;
 		TableSession target = sessions.get(tableIndex);
+		logger.info("AutoScore route: code=" + code + " from table index " + tableIndex //$NON-NLS-1$ //$NON-NLS-2$
+				+ " -> " + (target == activeSession ? "ACTIVE/displayed (index " + sessions.indexOf(activeSession) + ")" : "background")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		if (target == activeSession) {
 			processCode(code, false);
 		} else {
@@ -1130,6 +1132,8 @@ public final class Main implements MatchObserver {
 	 * its state to the panels and OBS. The outgoing table keeps running headless.
 	 */
 	public static void switchToSession(TableSession next) {
+		logger.info("switchToSession requested: from index " + sessions.indexOf(activeSession) //$NON-NLS-1$
+				+ " to index " + sessions.indexOf(next) + " (sessions total=" + sessions.size() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		if (next == null || next == activeSession) return;
 		// 1. Preserve the outgoing table's command history / undo state.
 		activeSession.saveWorkingState(commandStack, codeStack, mementoStackTeam1, mementoStackTeam2,
