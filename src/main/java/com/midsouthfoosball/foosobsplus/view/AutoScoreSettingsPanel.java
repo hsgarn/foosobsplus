@@ -334,6 +334,12 @@ public class AutoScoreSettingsPanel extends JPanel {
 			win.dispose();
 		}
 	}
+	// Index of the table currently selected in the dropdown. Aligned with the
+	// order of Settings.getTableConnections() (and therefore the AutoScoreManager
+	// list) as long as tables have not been added/removed without a restart.
+	public int getSelectedTableIndex() {
+		return cmbTables.getSelectedIndex();
+	}
 	public void saveSettings() {
 		commitFieldsTo(currentConnection);
 		try {

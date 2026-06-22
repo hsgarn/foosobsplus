@@ -554,18 +554,26 @@ public final class Main implements MatchObserver {
 			Window win = SwingUtilities.getWindowAncestor((JComponent) e.getSource());
 			if (win != null) win.dispose();
 		});
-		autoScoreSettingsPanel.addConnectListener(e -> { uiManager().setBlockReconnect(false); uiManager().connect(); });
-		autoScoreSettingsPanel.addDisconnectListener(e -> { uiManager().setBlockReconnect(true); uiManager().disconnect(); });
-		autoScoreSettingsPanel.addSearchListener(e -> uiManager().search());
-		autoScoreConfigPanel.addReadConfigListener(e -> uiManager().readConfig());
-		autoScoreConfigPanel.addWriteConfigListener(e -> uiManager().writeConfig());
+		// The Settings/Config window acts on the table SELECTED IN ITS DROPDOWN
+		// (settingsManager()), not the displayed table. Connect first applies the
+		// on-screen edits (save + refresh) so it connects to the IP/port shown.
+		autoScoreSettingsPanel.addConnectListener(e -> {
+			autoScoreSettingsPanel.saveSettings();
+			refreshManagerConnections();
+			settingsManager().setBlockReconnect(false);
+			settingsManager().connect();
+		});
+		autoScoreSettingsPanel.addDisconnectListener(e -> { settingsManager().setBlockReconnect(true); settingsManager().disconnect(); });
+		autoScoreSettingsPanel.addSearchListener(e -> settingsManager().search());
+		autoScoreConfigPanel.addReadConfigListener(e -> settingsManager().readConfig());
+		autoScoreConfigPanel.addWriteConfigListener(e -> settingsManager().writeConfig());
 		autoScoreConfigPanel.addValidateConfigListener(e -> {
-			if (uiManager().validateConfig()) {
+			if (settingsManager().validateConfig()) {
 				JOptionPane.showMessageDialog(null, Messages.getString("Main.ValidationPassed"), Messages.getString("Main.ValidationResults"), 1); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		});
-		autoScoreConfigPanel.addResetConfigListener(e -> uiManager().resetConfig());
-		autoScoreConfigPanel.addClearConfigListener(e -> uiManager().clearConfig());
+		autoScoreConfigPanel.addResetConfigListener(e -> settingsManager().resetConfig());
+		autoScoreConfigPanel.addClearConfigListener(e -> settingsManager().clearConfig());
 		autoScoreMainPanel.addConnectListener(e -> { uiManager().setBlockReconnect(false); uiManager().connect(); });
 		autoScoreMainPanel.addDisconnectListener(e -> { uiManager().setBlockReconnect(true); uiManager().disconnect(); });
 		autoScoreMainPanel.addSettingsListener(e -> mainController.showAutoScore());
@@ -574,6 +582,12 @@ public final class Main implements MatchObserver {
 	/** Returns the AutoScore manager for the currently displayed table. */
 	private static AutoScoreManager uiManager() {
 		int i = sessions.indexOf(activeSession);
+		if (i < 0 || i >= autoScoreManagers.size()) i = 0;
+		return autoScoreManagers.get(i);
+	}
+	/** Returns the manager for the table selected in the AutoScore Settings dropdown. */
+	private static AutoScoreManager settingsManager() {
+		int i = autoScoreSettingsPanel.getSelectedTableIndex();
 		if (i < 0 || i >= autoScoreManagers.size()) i = 0;
 		return autoScoreManagers.get(i);
 	}
