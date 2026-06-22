@@ -453,12 +453,17 @@ public final class MainFrame extends JFrame implements WindowListener {
 	// (Re)builds the Tables menu as a radio group, one item per table label, with
 	// the active table preselected. Selecting an item fires the table-select
 	// listener with that table's index.
-	public void rebuildTablesMenu(java.util.List<String> labels, int activeIndex) {
+	public void rebuildTablesMenu(java.util.List<String> labels, int activeIndex, boolean[] connected) {
 		tablesGroup.getElements().asIterator().forEachRemaining(tablesGroup::remove);
 		tablesMenu.removeAll();
 		for (int i = 0; i < labels.size(); i++) {
 			final int index = i;
-			javax.swing.JRadioButtonMenuItem item = new javax.swing.JRadioButtonMenuItem(labels.get(i));
+			boolean isConnected = i < connected.length && connected[i];
+			// Keep the radio item (so the active table still shows its selection),
+			// and render a green/red connection dot before the label via HTML.
+			String dotColor = isConnected ? "#00AA00" : "#C80000"; //$NON-NLS-1$ //$NON-NLS-2$
+			String text = "<html><font color='" + dotColor + "'>●</font>&nbsp;" + escapeHtml(labels.get(i)) + "</html>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			javax.swing.JRadioButtonMenuItem item = new javax.swing.JRadioButtonMenuItem(text);
 			item.setSelected(i == activeIndex);
 			item.addActionListener(e -> {
 				if (tableSelectListener != null) tableSelectListener.accept(index);
@@ -466,6 +471,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 			tablesGroup.add(item);
 			tablesMenu.add(item);
 		}
+	}
+	private static String escapeHtml(String s) {
+		return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 	}
 	// Registers callbacks for the AutoScore > Tables submenu.
 	public void setAutoScoreTableConnectListener(java.util.function.IntConsumer listener) {

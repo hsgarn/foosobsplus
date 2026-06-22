@@ -705,6 +705,7 @@ public final class Main implements MatchObserver {
 		mainFrame.setAutoScoreConnectionState(connectedCount, autoScoreManagers.size());
 		autoScoreSettingsPanel.refreshTableStatus();
 		rebuildAutoScoreTablesMenu();
+		if (!sessions.isEmpty()) rebuildTablesMenu();
 	}
 	/**
 	 * Builds one {@link TableSession} per configured {@link TableConnection}.
@@ -762,14 +763,17 @@ public final class Main implements MatchObserver {
 		}
 		tournamentPanel.setTableNames(names, sessions.indexOf(activeSession));
 	}
-	/** (Re)builds the Tables menu from the current sessions/connections. */
+	/** (Re)builds the Tables menu from the current sessions/connections, with a
+	 *  green/red connection dot per table. */
 	private static void rebuildTablesMenu() {
 		List<String> labels = new ArrayList<>();
+		boolean[] connected = new boolean[sessions.size()];
 		for (int i = 0; i < sessions.size(); i++) {
 			labels.add(i < tableConnections.size() ? tableConnections.get(i).getLabel()
 					: Messages.getString("MainFrame.Tables") + " " + (i + 1)); //$NON-NLS-1$ //$NON-NLS-2$
+			connected[i] = i < autoScoreManagers.size() && autoScoreManagers.get(i).isConnected();
 		}
-		mainFrame.rebuildTablesMenu(labels, sessions.indexOf(activeSession));
+		mainFrame.rebuildTablesMenu(labels, sessions.indexOf(activeSession), connected);
 	}
 	private static void checkFilters(String code) {
 		String filter;
