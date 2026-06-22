@@ -128,6 +128,7 @@ import com.midsouthfoosball.foosobsplus.model.OBS;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 import com.midsouthfoosball.foosobsplus.model.Stats;
+import com.midsouthfoosball.foosobsplus.model.TableConnection;
 import com.midsouthfoosball.foosobsplus.model.TableSession;
 import com.midsouthfoosball.foosobsplus.model.Team;
 import com.midsouthfoosball.foosobsplus.model.TimeClock;
@@ -237,6 +238,11 @@ public final class Main implements MatchObserver {
 	private static LastScoredClock 				lastScored1Clock   		= activeSession.getLastScored1Clock();
 	private static LastScoredClock				lastScored2Clock    	= activeSession.getLastScored2Clock();
 	private static LastScoredClock 				lastScored3Clock		= activeSession.getLastScored3Clock();
+	// All table sessions (index 0 == the initial active session) and their backing
+	// connections. The Tables menu switches the displayed session among these.
+	private static Main							instance;
+	private static final List<TableSession>		sessions				= new ArrayList<>();
+	private static List<TableConnection>		tableConnections		= new ArrayList<>();
 	////// Create the View Panels to Display (mVc) \\\\\\
 	private static final TournamentPanel		tournamentPanel 		= new TournamentPanel();
 	private static final TimerPanel 			timerPanel 				= new TimerPanel();
@@ -293,6 +299,7 @@ public final class Main implements MatchObserver {
         match.addObserver(this);
     }
 	public Main() throws IOException {
+		instance = this;
 		buildTeamGameShowSourcesMap();
 		loadWindowsAndControllers();
 		initializeOBSManager();
@@ -315,6 +322,7 @@ public final class Main implements MatchObserver {
 		loadListeners();
 		loadCommands();
 		initializeAutoScoreManager();
+		initializeSessions();
 		if (Settings.getAutoScoreParameter(SettingsKeys.AS_AUTO_CONNECT).equals(ON)) { //$NON-NLS-1$
 			autoScoreManager.connect();
 		}
@@ -549,6 +557,44 @@ public final class Main implements MatchObserver {
 		autoScoreMainPanel.addConnectListener(autoScoreManager.createMainPanelConnectListener());
 		autoScoreMainPanel.addDisconnectListener(autoScoreManager.createMainPanelDisconnectListener());
 		autoScoreMainPanel.addSettingsListener(e -> mainController.showAutoScore());
+	}
+	/**
+	 * Builds one {@link TableSession} per configured {@link TableConnection}.
+	 * Index 0 is the already-active session (bound to the live view + OBS); any
+	 * additional tables get headless sessions writing to the silent OBS sink, with
+	 * their clock listeners attached so they drive the display once selected. Wires
+	 * the Tables menu so the user can switch the displayed table.
+	 */
+	private static void initializeSessions() {
+		tableConnections = Settings.getTableConnections();
+		sessions.clear();
+		sessions.add(activeSession);
+		String side1Color = Settings.getControlParameter(SettingsKeys.CTRL_SIDE1_COLOR); //$NON-NLS-1$
+		String side2Color = Settings.getControlParameter(SettingsKeys.CTRL_SIDE2_COLOR); //$NON-NLS-1$
+		String none = Messages.getString("Main.None"); //$NON-NLS-1$
+		for (int i = 1; i < tableConnections.size(); i++) {
+			TableSession session = new TableSession(silentObsInterface, side1Color, side2Color, none);
+			teamController.attachListeners(session);
+			matchController.attachListeners(session);
+			timerController.attachListeners(session);
+			sessions.add(session);
+		}
+		mainFrame.setTableSelectListener(Main::selectTable);
+		rebuildTablesMenu();
+	}
+	/** Switches the displayed table to the session at the given index. */
+	private static void selectTable(int index) {
+		if (index < 0 || index >= sessions.size()) return;
+		switchToSession(sessions.get(index));
+	}
+	/** (Re)builds the Tables menu from the current sessions/connections. */
+	private static void rebuildTablesMenu() {
+		List<String> labels = new ArrayList<>();
+		for (int i = 0; i < sessions.size(); i++) {
+			labels.add(i < tableConnections.size() ? tableConnections.get(i).getLabel()
+					: Messages.getString("MainFrame.Tables") + " " + (i + 1)); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		mainFrame.rebuildTablesMenu(labels, sessions.indexOf(activeSession));
 	}
 	private static void checkFilters(String code) {
 		String filter;
@@ -994,8 +1040,12 @@ public final class Main implements MatchObserver {
 		// 1. Preserve the outgoing table's command history / undo state.
 		activeSession.saveWorkingState(commandStack, codeStack, mementoStackTeam1, mementoStackTeam2,
 				mementoStackTeam3, mementoStackStats, mementoStackMatch, mementoStackGameClock, undoRedoPointer);
-		// 2. Silence the outgoing table; it keeps updating in the background.
+		// 2. Silence the outgoing table; it keeps updating in the background. Also
+		//    detach its match observers so background play can't fire the meatball
+		//    filter or SSE events (v1 exposes the active table only).
 		activeSession.setObsInterface(silentObsInterface);
+		match.removeObserver(instance);
+		if (eventBroadcaster != null) match.removeObserver(eventBroadcaster);
 		// 3. Make next active: repoint Main's model fields, the controllers, and
 		//    point the new table at the live OBS sink.
 		activeSession = next;
@@ -1003,6 +1053,8 @@ public final class Main implements MatchObserver {
 		team2 = next.getTeam2();
 		team3 = next.getTeam3();
 		match = next.getMatch();
+		match.addObserver(instance);
+		if (eventBroadcaster != null) match.addObserver(eventBroadcaster);
 		stats = next.getStats();
 		timeClock = next.getTimeClock();
 		gameClock = next.getGameClock();
@@ -1023,14 +1075,13 @@ public final class Main implements MatchObserver {
 	/**
 	 * Pushes the active session's current model state to the panels and live OBS.
 	 * Used after a table switch so the display reflects the newly active table.
-	 * TODO: rebuild the stats-entry command-history list from the active stats,
-	 * and re-point the Match observers (meatball filter) to the active match.
 	 */
 	private static void republishActiveSession() {
 		teamController.displayAll();
 		teamController.writeAll();
 		matchController.updateGameTables();
 		statsController.displayAllStats();
+		statsEntryPanel.rebuildCodeHistory(stats.getCodeHistoryAsList());
 	}
 	public static void processCode(String code, Boolean isRedo) {
 		Command commandStatus;

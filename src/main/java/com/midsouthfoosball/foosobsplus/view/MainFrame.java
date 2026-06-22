@@ -99,6 +99,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private JMenu autoScoreMenu;
 	private JMenuItem autoScoreSettingsItem;
 	private JMenuItem autoScoreConfigItem;
+	private JMenu tablesMenu;
+	private final javax.swing.ButtonGroup tablesGroup = new javax.swing.ButtonGroup();
+	private java.util.function.IntConsumer tableSelectListener;
 	private ImageIcon imgOBSConnected;
 	private ImageIcon imgOBSDisconnected;
 	private Icon imgIconOBSConnected;
@@ -229,6 +232,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		autoScoreMenu.add(autoScoreSettingsItem);
 		autoScoreMenu.setIcon(imgIconAutoScoreDisconnected);
 		autoScoreMenu.add(autoScoreConfigItem);
+		tablesMenu = new JMenu(Messages.getString("MainFrame.Tables")); //$NON-NLS-1$
 		JMenu viewMenu = new JMenu(Messages.getString("MainFrame.View")); //$NON-NLS-1$
 		viewMenu.add(viewAlwaysOnTop);
 		viewMenu.add(viewTimerWindow);
@@ -253,6 +257,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		menuBar.add(editMenu);
 		menuBar.add(obsMenu);
 		menuBar.add(autoScoreMenu);
+		menuBar.add(tablesMenu);
 		menuBar.add(viewMenu);
 		menuBar.add(helpMenu);
 		obsMenu.setIcon(imgIconOBSDisconnected);
@@ -400,6 +405,28 @@ public final class MainFrame extends JFrame implements WindowListener {
 	}
 	public void enableConnect(Boolean state) {
 		obsDisconnectItem.setEnabled(!state);
+	}
+	// Registers the callback invoked (with the table index) when the user picks a
+	// table from the Tables menu.
+	public void setTableSelectListener(java.util.function.IntConsumer listener) {
+		this.tableSelectListener = listener;
+	}
+	// (Re)builds the Tables menu as a radio group, one item per table label, with
+	// the active table preselected. Selecting an item fires the table-select
+	// listener with that table's index.
+	public void rebuildTablesMenu(java.util.List<String> labels, int activeIndex) {
+		tablesGroup.getElements().asIterator().forEachRemaining(tablesGroup::remove);
+		tablesMenu.removeAll();
+		for (int i = 0; i < labels.size(); i++) {
+			final int index = i;
+			javax.swing.JRadioButtonMenuItem item = new javax.swing.JRadioButtonMenuItem(labels.get(i));
+			item.setSelected(i == activeIndex);
+			item.addActionListener(e -> {
+				if (tableSelectListener != null) tableSelectListener.accept(index);
+			});
+			tablesGroup.add(item);
+			tablesMenu.add(item);
+		}
 	}
 	private void importStatsFile(String file) {
 		List<String> lines = Collections.emptyList();

@@ -228,6 +228,15 @@ public class StatsEntryPanel extends JPanel {
 	public void updateCodeHistory(String code) {
 		mdlCodeHistory.insertElementAt(code, 0);
 	}
+	// Rebuilds the displayed history list from the given codes (oldest first, as
+	// stored by Stats), newest shown at the top. Used when switching the active
+	// table so the History list reflects that table's command history.
+	public void rebuildCodeHistory(java.util.List<String> codes) {
+		mdlCodeHistory.clear();
+		for (String code : codes) {
+			mdlCodeHistory.insertElementAt(code, 0);
+		}
+	}
 	public void errorCodeHistory() {
 		mdlCodeHistory.set(0, mdlCodeHistory.firstElement() + Messages.getString("StatsEntryPanel.Invalid")); //$NON-NLS-1$
 	}

@@ -108,6 +108,9 @@ public class Match implements Serializable {
 	public void addObserver(MatchObserver observer) {
 		observers.add(observer);
 	}
+	public void removeObserver(MatchObserver observer) {
+		observers.remove(observer);
+	}
 	private void notifyObservers() {
 		for (MatchObserver observer : observers) {
 			observer.onMeatball();
