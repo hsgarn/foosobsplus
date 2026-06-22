@@ -614,6 +614,8 @@ Connects to every configured AutoScore table.
 #### Disconnect All
 Disconnects from every configured AutoScore table.
 
+<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScoreMenuTables.png">
+
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScoreSettings.png">
 
 ## Settings
@@ -685,6 +687,8 @@ This will cause the FoosScore AutoScore system to restart allowing any configura
 FoosOBSPlus can track more than one foosball table at a time.  Each table has its own teams, scores, game counts, time outs, timers and statistics, and its own AutoScore connection (configured in AutoScore Settings).  Only one table is *displayed* at a time — the displayed table is bound to the main screen and is the table whose data is sent to OBS Studio.  The other tables continue to track their games in the background (including AutoScore points) so nothing is missed while they are off screen.  Switching the displayed table instantly swaps the entire main screen and the OBS output to that table.
 
 The Tables menu lists every configured table with a radio button and a connection status dot (green for connected, red for disconnected).  The currently displayed table is selected.  Choosing a different table makes it the displayed table.
+
+<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusTablesMenu.png">
 
 > **Note:** The displayed table can also be changed from the Table Name drop-down in the Tournament Information panel on the main screen (see below).  The two controls stay in sync.
 
