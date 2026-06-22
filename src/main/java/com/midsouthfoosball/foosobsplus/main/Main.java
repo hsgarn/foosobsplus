@@ -128,6 +128,7 @@ import com.midsouthfoosball.foosobsplus.model.OBS;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 import com.midsouthfoosball.foosobsplus.model.Stats;
+import com.midsouthfoosball.foosobsplus.model.TableSession;
 import com.midsouthfoosball.foosobsplus.model.Team;
 import com.midsouthfoosball.foosobsplus.model.TimeClock;
 import com.midsouthfoosball.foosobsplus.model.Tournament;
@@ -212,17 +213,26 @@ public final class Main implements MatchObserver {
 	private static CommandSwitch 				mySwitch;
 	////// Generate the Data Models (Mvc) \\\\\\
 	private static final Tournament				tournament				= new Tournament(obsInterface);
-	private static final Team 					team1 					= new Team(obsInterface, 1, Settings.getControlParameter(SettingsKeys.CTRL_SIDE1_COLOR)); //$NON-NLS-1$
-	private static final Team 					team2 					= new Team(obsInterface, 2, Settings.getControlParameter(SettingsKeys.CTRL_SIDE2_COLOR)); //$NON-NLS-1$
-	private static final Team         			team3              		= new Team(obsInterface, 3, Messages.getString("Main.None")); //$NON-NLS-1$
-	private static final Match 					match					= new Match(obsInterface, team1, team2, team3);
-	private static final Stats 					stats 					= new Stats(team1, team2);
+	// All per-table game state lives in a TableSession. Today there is a single
+	// active session; multi-table support will add more sessions and switch the
+	// active one. The fields below are pulled from the active session so the rest
+	// of Main can keep referring to them directly during the migration.
+	private static final TableSession			session					= new TableSession(
+			obsInterface,
+			Settings.getControlParameter(SettingsKeys.CTRL_SIDE1_COLOR), //$NON-NLS-1$
+			Settings.getControlParameter(SettingsKeys.CTRL_SIDE2_COLOR), //$NON-NLS-1$
+			Messages.getString("Main.None")); //$NON-NLS-1$
+	private static final Team 					team1 					= session.getTeam1();
+	private static final Team 					team2 					= session.getTeam2();
+	private static final Team         			team3              		= session.getTeam3();
+	private static final Match 					match					= session.getMatch();
+	private static final Stats 					stats 					= session.getStats();
 	////// Create a TimeClock to be the Timer \\\\\\
-	private static final TimeClock 				timeClock 				= new TimeClock(obsInterface);
-	private static final GameClock       		gameClock           	= new GameClock(obsInterface);
-	private static final LastScoredClock 		lastScored1Clock   		= new LastScoredClock();
-	private static final LastScoredClock		lastScored2Clock    	= new LastScoredClock();
-	private static final LastScoredClock 		lastScored3Clock		= new LastScoredClock();
+	private static final TimeClock 				timeClock 				= session.getTimeClock();
+	private static final GameClock       		gameClock           	= session.getGameClock();
+	private static final LastScoredClock 		lastScored1Clock   		= session.getLastScored1Clock();
+	private static final LastScoredClock		lastScored2Clock    	= session.getLastScored2Clock();
+	private static final LastScoredClock 		lastScored3Clock		= session.getLastScored3Clock();
 	////// Create the View Panels to Display (mVc) \\\\\\
 	private static final TournamentPanel		tournamentPanel 		= new TournamentPanel();
 	private static final TimerPanel 			timerPanel 				= new TimerPanel();
@@ -506,6 +516,7 @@ public final class Main implements MatchObserver {
 
     private static void initializeAutoScoreManager() {
 		autoScoreManager = new AutoScoreManager(
+			Settings.getLegacyTableConnection(),
 			autoScoreSettingsPanel,
 			autoScoreConfigPanel,
 			autoScoreMainPanel
@@ -516,9 +527,13 @@ public final class Main implements MatchObserver {
 		autoScoreManager.setScoreEventListener(
 			code -> processCode(code, false)
 		);
-		// Register AutoScore listeners
+		// Register AutoScore listeners. The refresh listeners run after the panel
+		// saves (added later in each chain) so the manager picks up edited
+		// connection details on the next connect.
 		autoScoreSettingsPanel.addApplyListener(autoScoreManager.createSettingsApplyListener());
+		autoScoreSettingsPanel.addApplyListener(e -> autoScoreManager.setConnection(Settings.getLegacyTableConnection()));
 		autoScoreSettingsPanel.addSaveListener(autoScoreManager.createSettingsSaveListener());
+		autoScoreSettingsPanel.addSaveListener(e -> autoScoreManager.setConnection(Settings.getLegacyTableConnection()));
 		autoScoreSettingsPanel.addConnectListener(autoScoreManager.createSettingsConnectListener());
 		autoScoreSettingsPanel.addDisconnectListener(autoScoreManager.createSettingsDisconnectListener());
 		autoScoreSettingsPanel.addSearchListener(autoScoreManager.createSettingsSearchListener());

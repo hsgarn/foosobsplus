@@ -22,16 +22,21 @@ package com.midsouthfoosball.foosobsplus.controller;
 
 import com.midsouthfoosball.foosobsplus.main.Main;
 import com.midsouthfoosball.foosobsplus.model.Stats;
+import com.midsouthfoosball.foosobsplus.model.TableSession;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 
 public class StatsController {
-	private final Stats stats;
+	private Stats stats;
 	private final StatsDisplayPanel statsDisplayPanel;
 	private final TeamController teamController;
 	public StatsController(Stats stats, StatsDisplayPanel statsDisplayPanel, TeamController teamController) {
 		this.stats = stats;
 		this.statsDisplayPanel = statsDisplayPanel;
 		this.teamController = teamController;
+	}
+	// Repoints this controller at the active table's stats (see TableSession).
+	public void bindSession(TableSession session) {
+		this.stats = session.getStats();
 	}
 	////// Utility Methods \\\\\\
 	public String getLastCode() {

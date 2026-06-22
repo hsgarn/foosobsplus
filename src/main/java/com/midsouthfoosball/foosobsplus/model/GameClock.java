@@ -60,9 +60,12 @@ public class GameClock implements Serializable {
 	private int streamHours;
 	private String lastGameTime;
 	private boolean streamTimerRunning;
-	private final transient OBSInterface obsInterface;
+	private transient OBSInterface obsInterface;
 	private final transient DecimalFormat df = new DecimalFormat("00");
 	private final static transient Logger logger = LoggerFactory.getLogger(GameClock.class);
+	public void setObsInterface(OBSInterface obsInterface) {
+		this.obsInterface = obsInterface;
+	}
 	public GameClock(OBSInterface obsInterface) {
 		this.obsInterface = obsInterface;
 		ActionListener action = (ActionEvent event) -> {

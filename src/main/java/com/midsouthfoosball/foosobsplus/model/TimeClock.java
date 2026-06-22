@@ -34,7 +34,10 @@ public class TimeClock {
 	private transient long startTime;
 	private Timer timer;
 	private String timerInUse;
-	private final OBSInterface obsInterface;
+	private OBSInterface obsInterface;
+	public void setObsInterface(OBSInterface obsInterface) {
+		this.obsInterface = obsInterface;
+	}
 	public TimeClock(OBSInterface obsInterface) {
 		this.obsInterface = obsInterface;
 		ActionListener action = (ActionEvent event) -> {

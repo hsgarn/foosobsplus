@@ -48,8 +48,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.main.PicoDiscovery;
-import com.midsouthfoosball.foosobsplus.model.Settings;
-import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
+import com.midsouthfoosball.foosobsplus.model.TableConnection;
 import com.midsouthfoosball.foosobsplus.view.Messages;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreConfigPanel;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreMainPanel;
@@ -62,7 +61,6 @@ import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsPanel;
 public class AutoScoreManager {
 
 	private static final Logger logger = LoggerFactory.getLogger(AutoScoreManager.class);
-	private static final String ON = "1"; //$NON-NLS-1$
 	private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern(Messages.getString("Main.DateTimePattern")); //$NON-NLS-1$
 
 	/**
@@ -86,6 +84,9 @@ public class AutoScoreManager {
 	private volatile PrintWriter socketWriter;
 	private SwingWorker<Boolean, Integer> worker;
 
+	// Connection config for the table this manager drives.
+	private volatile TableConnection connection;
+
 	// UI Panels
 	private final AutoScoreSettingsPanel settingsPanel;
 	private final AutoScoreConfigPanel configPanel;
@@ -98,17 +99,35 @@ public class AutoScoreManager {
 	/**
 	 * Creates a new AutoScoreManager.
 	 *
+	 * @param connection the table connection (host/port/detailLog) this manager drives
 	 * @param settingsPanel the settings panel for displaying connection status
 	 * @param configPanel the config panel for device configuration
 	 * @param mainPanel the main panel with ignore sensors checkbox
 	 */
 	public AutoScoreManager(
+			TableConnection connection,
 			AutoScoreSettingsPanel settingsPanel,
 			AutoScoreConfigPanel configPanel,
 			AutoScoreMainPanel mainPanel) {
+		this.connection = connection;
 		this.settingsPanel = settingsPanel;
 		this.configPanel = configPanel;
 		this.mainPanel = mainPanel;
+	}
+
+	/**
+	 * Returns the table connection this manager drives.
+	 */
+	public TableConnection getConnection() {
+		return connection;
+	}
+
+	/**
+	 * Updates the table connection (host/port/detailLog) used for the next
+	 * connect. Takes effect on the next (re)connection.
+	 */
+	public void setConnection(TableConnection connection) {
+		this.connection = connection;
 	}
 
 	/**
@@ -531,8 +550,8 @@ public class AutoScoreManager {
 			@Override
 			protected Boolean doInBackground() throws Exception {
 				boolean isConnected = false;
-				String address = Settings.getAutoScoreParameter(SettingsKeys.AS_SERVER_ADDRESS); //$NON-NLS-1$
-				int port = Settings.getAutoScoreParameter(SettingsKeys.AS_SERVER_PORT, Integer::parseInt); //$NON-NLS-1$
+				String address = connection.getServerAddress();
+				int port = Integer.parseInt(connection.getServerPort());
 				try {
 					socket = new Socket(address, port);
 					socket.setSoTimeout(1000);
@@ -605,7 +624,7 @@ public class AutoScoreManager {
 						}
 						logger.info("Received raw data: [" + raw + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 						logger.info("Parse command: " + cmd[0]); //$NON-NLS-1$
-						if (Settings.getAutoScoreParameter(SettingsKeys.AS_DETAIL_LOG).equals(ON)) { //$NON-NLS-1$
+						if (connection.isDetailLog()) {
 							final String receivedMsg = raw;
 							SwingUtilities.invokeLater(() -> settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Received") + receivedMsg)); //$NON-NLS-1$
 						}
@@ -672,7 +691,7 @@ public class AutoScoreManager {
 				if (isCancelled()) return;
 				int mostRecentValue = chunks.get(chunks.size() - 1);
 				boolean ignoreSensors = mainPanel.isIgnored();
-				if (Settings.getAutoScoreParameter(SettingsKeys.AS_DETAIL_LOG).equals(ON)) { //$NON-NLS-1$
+				if (connection.isDetailLog()) {
 					if (ignoreSensors) {
 						if (mostRecentValue == 1 || mostRecentValue == 2) {
 							settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team") + mostRecentValue + Messages.getString("Main.ScoredButIgnored")); //$NON-NLS-1$ //$NON-NLS-2$

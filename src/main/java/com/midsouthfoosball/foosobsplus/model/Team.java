@@ -48,7 +48,7 @@ public class Team implements Serializable {
 	private boolean resetState = false;
 	private boolean warnState = false;
 	private boolean kingSeatState = false;
-	private final transient OBSInterface obsInterface;
+	private transient OBSInterface obsInterface;
 	private int teamNbr;
 	private String teamColor;
 	private int passAttempts = 0;
@@ -77,6 +77,9 @@ public class Team implements Serializable {
 	private final DecimalFormat df = new DecimalFormat("###.#");
 	private static final transient Logger logger = LoggerFactory.getLogger(Team.class);
 	
+	public void setObsInterface(OBSInterface obsInterface) {
+		this.obsInterface = obsInterface;
+	}
 	public Team(OBSInterface obsInterface, Integer teamNbr, String teamColor) {
 		this.obsInterface = obsInterface;
 		this.teamNbr = teamNbr;

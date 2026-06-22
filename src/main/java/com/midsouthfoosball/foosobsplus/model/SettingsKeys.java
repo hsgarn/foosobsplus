@@ -338,10 +338,23 @@ public final class SettingsKeys {
     public static final String PP_TOURNAMENT_FILE       = "TournamentFileName";
 
     // ==================== AutoScore Settings Keys ====================
+    // Legacy single-connection keys. Kept as a mirror of the first table
+    // connection so existing readers keep working during the multi-table
+    // migration.
     public static final String AS_SERVER_ADDRESS        = "AutoScoreSettingsServerAddress";
     public static final String AS_SERVER_PORT           = "AutoScoreSettingsServerPort";
     public static final String AS_AUTO_CONNECT          = "AutoScoreSettingsAutoConnect";
     public static final String AS_DETAIL_LOG            = "AutoScoreSettingsDetailLog";
+    // Multi-table connection list. Stored as AutoScoreTableCount plus, per
+    // table i (1-based), AutoScoreTable.i.Label / .ServerAddress / .ServerPort
+    // / .AutoConnect / .DetailLog.
+    public static final String AS_TABLE_COUNT           = "AutoScoreTableCount";
+    public static final String AS_TABLE_PREFIX          = "AutoScoreTable.";
+    public static final String AS_SUFFIX_LABEL          = ".Label";
+    public static final String AS_SUFFIX_ADDRESS        = ".ServerAddress";
+    public static final String AS_SUFFIX_PORT           = ".ServerPort";
+    public static final String AS_SUFFIX_AUTO_CONNECT   = ".AutoConnect";
+    public static final String AS_SUFFIX_DETAIL_LOG     = ".DetailLog";
 
     // ==================== API Keys ====================
     public static final String API_ENABLED              = "APIEnabled";

@@ -32,8 +32,16 @@ import io.obswebsocket.community.client.message.response.inputs.GetInputSettings
 
 public class OBSInterface {
 	private static final Logger logger = LoggerFactory.getLogger(OBSInterface.class);
+	// When false this interface is a silent sink: writes are dropped and reads
+	// return empty. Background TableSessions (tables not currently displayed)
+	// use an inactive interface so their score/timer updates never touch OBS.
+	// The active (displayed) session keeps this true.
+	private volatile boolean active = true;
 	public OBSInterface() {}
+	public void setActive(boolean active) { this.active = active; }
+	public boolean isActive() { return active; }
 	public String getContents(String whichSource) {
+		if (!active) return "";
 		OBSRemoteController obsRemoteController = OBS.getController();
 		if (!(obsRemoteController==null) && OBS.getConnected()) {
 			GetInputSettingsResponse getInputSettings = obsRemoteController.getInputSettings(whichSource, 500);
@@ -44,6 +52,7 @@ public class OBSInterface {
 		return "";
 	}
 	public void writeData(String source, String data, String className, Boolean showParsed) {
+		if (!active) return;
 		if (source == null || source.isEmpty()) return;
 		OBSRemoteController obsRemoteController = OBS.getController();
 		if (obsRemoteController != null && OBS.getConnected()) {

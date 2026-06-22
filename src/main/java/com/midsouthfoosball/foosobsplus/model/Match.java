@@ -42,7 +42,7 @@ public class Match implements Serializable {
 	private transient Team team1;
 	private transient Team team2;
 	private transient Team team3;
-	private final transient OBSInterface obsInterface;
+	private transient OBSInterface obsInterface;
 	private transient String startTime;
     private final transient Map<Integer, Team> teamsMap = new HashMap<>();
 	private int lastScored; // team number of the last team to score in this match
@@ -74,6 +74,9 @@ public class Match implements Serializable {
 	private final StringBuilder gameResults = new StringBuilder();
 	private final transient List<MatchObserver> observers = new ArrayList<>();
 	private static final String ON = "1";
+	public void setObsInterface(OBSInterface obsInterface) {
+		this.obsInterface = obsInterface;
+	}
 	public Match(OBSInterface obsInterface, Team team1, Team team2, Team team3) {
 		this.team1 = team1;
 		this.team2 = team2;

@@ -29,6 +29,7 @@ import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 import com.midsouthfoosball.foosobsplus.model.LastScoredClock;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
+import com.midsouthfoosball.foosobsplus.model.TableSession;
 import com.midsouthfoosball.foosobsplus.model.TimeClock;
 import com.midsouthfoosball.foosobsplus.view.LastScoredWindowFrame;
 import com.midsouthfoosball.foosobsplus.view.TimerPanel;
@@ -38,13 +39,13 @@ public class TimerController {
 	private final OBSInterface obsInterface;
 	private final TimerPanel timerPanel;
 	private final TimerWindowFrame timerWindowFrame;
-	private final TimeClock timeClock;
+	private TimeClock timeClock;
 	private final LastScoredWindowFrame lastScored1WindowFrame;
-	private final LastScoredClock lastScored1Clock;
+	private LastScoredClock lastScored1Clock;
 	private final LastScoredWindowFrame lastScored2WindowFrame;
-	private final LastScoredClock lastScored2Clock;
+	private LastScoredClock lastScored2Clock;
 	private final LastScoredWindowFrame lastScored3WindowFrame;
-	private final LastScoredClock lastScored3Clock;
+	private LastScoredClock lastScored3Clock;
 	private final static int DISPLAYWIDTH = 9;
 	private int prefixWidth;
 	private final static int SUFFIXWIDTH = 3;
@@ -77,6 +78,25 @@ public class TimerController {
 	ActionListener lastScored3ClockListener = (ActionEvent event) -> {
             updateLastScored3Display();
         };
+	////// Session Binding //////
+	// Repoints this controller at the active table's clocks. The timer listeners
+	// read these bound fields (not the event source), so once repointed the
+	// display follows the new active session automatically; background clocks
+	// firing the same listeners simply re-render the active values.
+	public void bindSession(TableSession session) {
+		this.timeClock = session.getTimeClock();
+		this.lastScored1Clock = session.getLastScored1Clock();
+		this.lastScored2Clock = session.getLastScored2Clock();
+		this.lastScored3Clock = session.getLastScored3Clock();
+	}
+	// Attaches this controller's clock listeners to a session's clocks. Call once
+	// per session at creation; the constructor already wires the initial session.
+	public void attachListeners(TableSession session) {
+		session.getTimeClock().addTimeClockTimerListener(timeClockListener);
+		session.getLastScored1Clock().addLastScoredClockTimerListener(lastScored1ClockListener);
+		session.getLastScored2Clock().addLastScoredClockTimerListener(lastScored2ClockListener);
+		session.getLastScored3Clock().addLastScoredClockTimerListener(lastScored3ClockListener);
+	}
 	////// Utility Methods //////
 	public void startShotTimer() {
 		int count = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_SHOT_TIME)) * 10;
