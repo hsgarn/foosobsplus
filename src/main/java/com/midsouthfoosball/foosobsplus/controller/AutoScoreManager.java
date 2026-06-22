@@ -77,6 +77,14 @@ public class AutoScoreManager {
 		void onScoreEvent(String code);
 	}
 
+	// Reconnect backoff. On an unexpected disconnect we retry after a delay that
+	// doubles each failed attempt up to a cap, instead of spinning a tight
+	// reconnect loop (which spawned SwingWorkers every ~30ms on instant failures).
+	private static final int RECONNECT_BASE_MS = 1000;
+	private static final int RECONNECT_MAX_MS = 30000;
+	private volatile int reconnectDelayMs = RECONNECT_BASE_MS;
+	private javax.swing.Timer reconnectTimer;
+
 	// Connection state
 	private volatile boolean connected = false;
 	private volatile boolean blockReconnect = false;
@@ -174,6 +182,7 @@ public class AutoScoreManager {
 	public void disconnect() {
 		settingsPanel.addMessage(Messages.getString("Main.Disconnecting")); //$NON-NLS-1$
 		logger.info("Trying to disconnect from AutoScore..."); //$NON-NLS-1$
+		cancelReconnect();
 		// Notify Pico FIRST, before cancelling the worker or closing the socket
 		PrintWriter writer = socketWriter;
 		if (connected && writer != null) {
@@ -543,6 +552,34 @@ public class AutoScoreManager {
 		}
 	}
 
+	// Schedules a single reconnect attempt after the current backoff delay, then
+	// doubles the delay (capped) for the next attempt. Guards against stacking
+	// multiple pending timers.
+	private void scheduleReconnect() {
+		if (reconnectTimer != null && reconnectTimer.isRunning()) {
+			return;
+		}
+		int delay = reconnectDelayMs;
+		logger.info("Scheduling AutoScore reconnect in " + delay + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+		reconnectTimer = new javax.swing.Timer(delay, e -> {
+			((javax.swing.Timer) e.getSource()).stop();
+			if (!blockReconnect) {
+				connect();
+			}
+		});
+		reconnectTimer.setRepeats(false);
+		reconnectTimer.start();
+		reconnectDelayMs = Math.min(reconnectDelayMs * 2, RECONNECT_MAX_MS);
+	}
+
+	// Cancels any pending reconnect and resets the backoff to its base delay.
+	private void cancelReconnect() {
+		if (reconnectTimer != null) {
+			reconnectTimer.stop();
+		}
+		reconnectDelayMs = RECONNECT_BASE_MS;
+	}
+
 	private void createWorker() {
 		worker = new SwingWorker<Boolean, Integer>() {
 			BufferedReader dataIn;
@@ -570,6 +607,7 @@ public class AutoScoreManager {
 					isConnected = true;
 					SwingUtilities.invokeLater(() -> notifyConnectionStateChanged(true));
 					connected = true;
+					reconnectDelayMs = RECONNECT_BASE_MS;
 				} catch (UnknownHostException uh) {
 					SwingUtilities.invokeLater(() -> settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.AutoScoreUnknownHostException"))); //$NON-NLS-1$
 					logger.error("Auto Score new Socket UnknownHostException"); //$NON-NLS-1$
@@ -738,7 +776,7 @@ public class AutoScoreManager {
 				if (state == SwingWorker.StateValue.DONE) {
 					if (!blockReconnect) {
 						logger.info("Attempt reconnect to AutoScore..."); //$NON-NLS-1$
-						connect();
+						scheduleReconnect();
 					}
 				}
 			}
