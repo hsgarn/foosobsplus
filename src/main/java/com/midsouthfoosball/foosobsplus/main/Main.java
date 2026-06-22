@@ -689,14 +689,40 @@ public final class Main implements MatchObserver {
 			timerController.attachListeners(session);
 			sessions.add(session);
 		}
+		// Default each table's display name to its table number (1-based).
+		for (int i = 0; i < sessions.size(); i++) {
+			if (sessions.get(i).getTableName().isEmpty()) {
+				sessions.get(i).setTableName(String.valueOf(i + 1));
+			}
+		}
 		tournamentController.bindSession(activeSession);
 		mainFrame.setTableSelectListener(Main::selectTable);
+		// The Table Name combo in the Tournament panel is a second table switcher
+		// (and rename control) alongside the Tables menu.
+		tournamentPanel.addTableSelectListener(Main::selectTable);
+		tournamentPanel.addTableRenameListener(Main::renameActiveTable);
 		rebuildTablesMenu();
+		refreshTableNameCombo();
 	}
 	/** Switches the displayed table to the session at the given index. */
 	private static void selectTable(int index) {
 		if (index < 0 || index >= sessions.size()) return;
 		switchToSession(sessions.get(index));
+	}
+	/** Renames the active table from the Table Name combo, refreshing the dropdown. */
+	private static void renameActiveTable(String name) {
+		if (name == null || name.isEmpty()) return;
+		tournamentController.setTableName(name);
+		refreshTableNameCombo();
+	}
+	/** Rebuilds the Tournament panel's Table Name combo from the sessions' names. */
+	private static void refreshTableNameCombo() {
+		List<String> names = new ArrayList<>();
+		for (int i = 0; i < sessions.size(); i++) {
+			String name = sessions.get(i).getTableName();
+			names.add(name.isEmpty() ? String.valueOf(i + 1) : name);
+		}
+		tournamentPanel.setTableNames(names, sessions.indexOf(activeSession));
 	}
 	/** (Re)builds the Tables menu from the current sessions/connections. */
 	private static void rebuildTablesMenu() {
@@ -1185,6 +1211,9 @@ public final class Main implements MatchObserver {
 				mementoStackTeam3, mementoStackStats, mementoStackMatch, mementoStackGameClock);
 		// 5. Republish the new table's state to the panels and live OBS.
 		republishActiveSession();
+		// 6. Keep both table switchers (Tables menu + Table Name combo) in sync.
+		rebuildTablesMenu();
+		refreshTableNameCombo();
 	}
 	/**
 	 * Pushes the active session's current model state to the panels and live OBS.

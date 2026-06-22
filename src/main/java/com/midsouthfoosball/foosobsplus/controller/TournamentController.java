@@ -55,9 +55,6 @@ public class TournamentController {
 		this.tournamentPanel.addEventNameListener(new EventNameListener());
 		this.tournamentPanel.addEventNameFocusListener(new EventNameFocusListener());
 		this.tournamentPanel.addEventNameMouseListener(new EventNameMouseListener());
-		this.tournamentPanel.addTableNameListener(new TableNameListener());
-		this.tournamentPanel.addTableNameFocusListener(new TableNameFocusListener());
-		this.tournamentPanel.addTableNameMouseListener(new TableNameMouseListener());
 		this.tournamentPanel.addClearListener(new ClearListener());
 	}
 	////// Tournament Panel Listener Objects //////
@@ -109,30 +106,11 @@ public class TournamentController {
 			tournamentPanel.selectEventName();
 		}
 	}
-	private class TableNameListener implements ActionListener{
-                @Override
-		public void actionPerformed(ActionEvent e) {
-			JTextField txt = (JTextField) e.getSource();
-			tableNameChange(txt.getText());
-		}
-	}
-	private class TableNameFocusListener extends FocusAdapter{
-                @Override
-		public void focusLost(FocusEvent e) {
-			JTextField txt = (JTextField) e.getSource();
-			tableNameChange(txt.getText());
-		}
-	}
-	private void tableNameChange(String tableName) {
+	// Renames the active table (from the Table Name combo editor): stores the name
+	// on the session and writes it to OBS via the shared Tournament object.
+	public void setTableName(String tableName) {
 		if (session != null) session.setTableName(tableName);
 		tournament.setTableName(tableName);
-		tournamentPanel.updateTableName(tableName);
-	}
-	private class TableNameMouseListener extends MouseAdapter{
-                @Override
-		public void mouseClicked(MouseEvent e) {
-			tournamentPanel.selectTableName();
-		}
 	}
 	private class ClearListener implements ActionListener{
                 @Override
@@ -155,25 +133,22 @@ public class TournamentController {
 		tournamentPanel.updateTournamentName(tournament.getTournamentName());
 		tournament.setEventName(obsInterface.getContents(Settings.getSourceParameter(SettingsKeys.SRC_EVENT)));
 		tournamentPanel.updateEventName(tournament.getEventName());
-		tournament.setTableName(obsInterface.getContents(Settings.getSourceParameter(SettingsKeys.SRC_TABLE_NAME)));
-		if (session != null) session.setTableName(tournament.getTableName());
-		tournamentPanel.updateTableName(tournament.getTableName());
 	}
 	public void writeAll() {
 		tournament.writeAll();
 	}
 	public void clearAll() {
-		tournament.clearAll();
-		if (session != null) session.setTableName("");
+		// Clears tournament/event only; the per-table Table Name is left intact.
+		tournament.setTournamentName(""); //$NON-NLS-1$
+		tournament.setEventName(""); //$NON-NLS-1$
 		tournamentPanel.clearAllFields();
 	}
-	// Repoints the table-name field at the given (now active) session: pushes its
-	// table name into the panel and into the shared Tournament object (which writes
-	// it to OBS for the displayed table). Tournament/event names are unaffected.
+	// Repoints the table name at the given (now active) session: writes its table
+	// name to OBS via the shared Tournament object (which serves the displayed
+	// table). The combo selection itself is refreshed by Main. Tournament/event
+	// names are unaffected.
 	public void bindSession(TableSession session) {
 		this.session = session;
-		String name = session.getTableName();
-		tournament.setTableName(name);
-		tournamentPanel.updateTableName(name);
+		tournament.setTableName(session.getTableName());
 	}
 }
