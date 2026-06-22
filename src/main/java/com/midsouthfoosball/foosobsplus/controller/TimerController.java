@@ -150,6 +150,16 @@ public class TimerController {
 		timerWindowFrame.setTimerDisplayColor(Color.GREEN);
 		timeClock.setTimer(0);
 	}
+	// Re-renders the bound clocks to the timer + last-scored displays without
+	// mutating them. Used after a table switch (or a background score that briefly
+	// bound the controller to another table) so the panels show the active table.
+	public void refreshDisplay() {
+		timerPanel.updateTimerInUse(timeClock.getTimerInUse());
+		updateTimerDisplay();
+		updateLastScored1Display();
+		updateLastScored2Display();
+		updateLastScored3Display();
+	}
 	private void updateTimerDisplay() {
 		int timeRemaining = timeClock.getTimeRemaining();
 		int nbrOfSeconds = timeClock.getNbrOfSeconds();

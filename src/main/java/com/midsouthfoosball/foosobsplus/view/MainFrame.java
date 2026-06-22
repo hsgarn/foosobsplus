@@ -20,8 +20,12 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.view;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -402,6 +406,34 @@ public final class MainFrame extends JFrame implements WindowListener {
 		} else {
 			autoScoreMenu.setIcon(imgIconAutoScoreDisconnected);
 		}
+	}
+	// Tri-state AutoScore menu indicator: green = all tables connected,
+	// red = none, yellow = some-but-not-all.
+	public void setAutoScoreConnectionState(int connectedCount, int totalCount) {
+		Color color;
+		if (totalCount > 0 && connectedCount >= totalCount) {
+			color = new Color(0, 170, 0);
+		} else if (connectedCount <= 0) {
+			color = new Color(200, 0, 0);
+		} else {
+			color = new Color(220, 170, 0);
+		}
+		autoScoreMenu.setIcon(makeDotIcon(color));
+	}
+	private static Icon makeDotIcon(Color color) {
+		return new Icon() {
+			@Override public int getIconWidth() { return 12; }
+			@Override public int getIconHeight() { return 12; }
+			@Override public void paintIcon(Component c, Graphics g, int x, int y) {
+				Graphics2D g2 = (Graphics2D) g.create();
+				g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				g2.setColor(color);
+				g2.fillOval(x + 1, y + 1, 10, 10);
+				g2.setColor(color.darker());
+				g2.drawOval(x + 1, y + 1, 10, 10);
+				g2.dispose();
+			}
+		};
 	}
 	public void enableConnect(Boolean state) {
 		obsDisconnectItem.setEnabled(!state);
