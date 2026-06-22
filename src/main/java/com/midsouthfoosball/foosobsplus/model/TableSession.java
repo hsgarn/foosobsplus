@@ -54,6 +54,11 @@ public class TableSession {
 	private final LastScoredClock lastScored2Clock;
 	private final LastScoredClock lastScored3Clock;
 
+	// Per-table display name (shown in the Tournament Information panel and written
+	// to OBS for the active table). Tournament and event names stay global on the
+	// shared Tournament object; only the table name is per-session.
+	private String tableName = "";
+
 	// Per-table command/undo working state. While this session is the active
 	// (displayed) table, these mirror the live stacks in Main; on switch-away
 	// they are saved here and the incoming session's are loaded into Main. This
@@ -189,5 +194,13 @@ public class TableSession {
 
 	public LastScoredClock getLastScored3Clock() {
 		return lastScored3Clock;
+	}
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
 	}
 }

@@ -689,6 +689,7 @@ public final class Main implements MatchObserver {
 			timerController.attachListeners(session);
 			sessions.add(session);
 		}
+		tournamentController.bindSession(activeSession);
 		mainFrame.setTableSelectListener(Main::selectTable);
 		rebuildTablesMenu();
 	}
@@ -1178,6 +1179,7 @@ public final class Main implements MatchObserver {
 		matchController.bindSession(next);
 		statsController.bindSession(next);
 		timerController.bindSession(next);
+		tournamentController.bindSession(next);
 		// 4. Restore the incoming table's command history / undo state.
 		undoRedoPointer = next.loadWorkingStateInto(commandStack, codeStack, mementoStackTeam1, mementoStackTeam2,
 				mementoStackTeam3, mementoStackStats, mementoStackMatch, mementoStackGameClock);
