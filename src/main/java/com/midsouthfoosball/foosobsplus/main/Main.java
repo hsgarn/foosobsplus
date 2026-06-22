@@ -577,6 +577,12 @@ public final class Main implements MatchObserver {
 		autoScoreMainPanel.addConnectListener(e -> { uiManager().setBlockReconnect(false); uiManager().connect(); });
 		autoScoreMainPanel.addDisconnectListener(e -> { uiManager().setBlockReconnect(true); uiManager().disconnect(); });
 		autoScoreMainPanel.addSettingsListener(e -> mainController.showAutoScore());
+		autoScoreSettingsPanel.setTableConnectedProvider(
+			i -> i >= 0 && i < autoScoreManagers.size() && autoScoreManagers.get(i).isConnected());
+		mainFrame.setAutoScoreTableConnectListener(Main::connectTable);
+		mainFrame.setAutoScoreTableDisconnectListener(Main::disconnectTable);
+		mainFrame.setAutoScoreConnectAllListener(Main::connectAllTables);
+		mainFrame.setAutoScoreDisconnectAllListener(Main::disconnectAllTables);
 		updateAutoScoreConnectionIcon();
 	}
 	/** Returns the AutoScore manager for the currently displayed table. */
@@ -607,6 +613,36 @@ public final class Main implements MatchObserver {
 			}
 		}
 	}
+	/** Connects the AutoScore table at the given index (manual connect). */
+	private static void connectTable(int i) {
+		if (i < 0 || i >= autoScoreManagers.size()) return;
+		autoScoreManagers.get(i).setBlockReconnect(false);
+		autoScoreManagers.get(i).connect();
+	}
+	/** Disconnects the AutoScore table at the given index (manual disconnect). */
+	private static void disconnectTable(int i) {
+		if (i < 0 || i >= autoScoreManagers.size()) return;
+		autoScoreManagers.get(i).setBlockReconnect(true);
+		autoScoreManagers.get(i).disconnect();
+	}
+	private static void connectAllTables() {
+		for (int i = 0; i < autoScoreManagers.size(); i++) connectTable(i);
+	}
+	private static void disconnectAllTables() {
+		for (int i = 0; i < autoScoreManagers.size(); i++) disconnectTable(i);
+	}
+	/** (Re)builds the AutoScore > Tables submenu with each table's label + state. */
+	private static void rebuildAutoScoreTablesMenu() {
+		List<TableConnection> conns = Settings.getTableConnections();
+		List<String> labels = new ArrayList<>();
+		boolean[] connected = new boolean[autoScoreManagers.size()];
+		for (int i = 0; i < autoScoreManagers.size(); i++) {
+			labels.add(i < conns.size() ? conns.get(i).getLabel()
+					: Messages.getString("MainFrame.Tables") + " " + (i + 1)); //$NON-NLS-1$ //$NON-NLS-2$
+			connected[i] = autoScoreManagers.get(i).isConnected();
+		}
+		mainFrame.rebuildAutoScoreTablesMenu(labels, connected);
+	}
 	/**
 	 * Routes an AutoScore goal/timeout code to its table. The displayed table goes
 	 * through the full processCode path (command history, filters, live OBS); any
@@ -615,7 +651,7 @@ public final class Main implements MatchObserver {
 	private static void routeScoreEvent(int tableIndex, String code) {
 		if (tableIndex < 0 || tableIndex >= sessions.size()) return;
 		TableSession target = sessions.get(tableIndex);
-		logger.info("AutoScore route: code=" + code + " from table index " + tableIndex //$NON-NLS-1$ //$NON-NLS-2$
+		logger.debug("AutoScore route: code=" + code + " from table index " + tableIndex //$NON-NLS-1$ //$NON-NLS-2$
 				+ " -> " + (target == activeSession ? "ACTIVE/displayed (index " + sessions.indexOf(activeSession) + ")" : "background")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		if (target == activeSession) {
 			processCode(code, false);
@@ -667,6 +703,8 @@ public final class Main implements MatchObserver {
 			if (m.isConnected()) connectedCount++;
 		}
 		mainFrame.setAutoScoreConnectionState(connectedCount, autoScoreManagers.size());
+		autoScoreSettingsPanel.refreshTableStatus();
+		rebuildAutoScoreTablesMenu();
 	}
 	/**
 	 * Builds one {@link TableSession} per configured {@link TableConnection}.
@@ -1173,7 +1211,7 @@ public final class Main implements MatchObserver {
 	 * its state to the panels and OBS. The outgoing table keeps running headless.
 	 */
 	public static void switchToSession(TableSession next) {
-		logger.info("switchToSession requested: from index " + sessions.indexOf(activeSession) //$NON-NLS-1$
+		logger.debug("switchToSession requested: from index " + sessions.indexOf(activeSession) //$NON-NLS-1$
 				+ " to index " + sessions.indexOf(next) + " (sessions total=" + sessions.size() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		if (next == null || next == activeSession) return;
 		// 1. Preserve the outgoing table's command history / undo state.

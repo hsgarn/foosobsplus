@@ -23,6 +23,9 @@ package com.midsouthfoosball.foosobsplus.view;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,7 +34,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
+import java.util.function.IntPredicate;
 
+import javax.swing.Icon;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -94,6 +99,11 @@ public class AutoScoreSettingsPanel extends JPanel {
 	// Guards against the combo/editor listeners reacting while we are loading
 	// field values programmatically.
 	private boolean loadingFields = false;
+	// Supplies the live connection state of the table at a given index (set by
+	// Main), so the Table dropdown can show a green/red dot per table.
+	private IntPredicate tableConnected = i -> false;
+	private static final Icon DOT_CONNECTED = makeDot(new Color(0, 170, 0));
+	private static final Icon DOT_DISCONNECTED = makeDot(new Color(200, 0, 0));
 	public AutoScoreSettingsPanel() throws IOException {
 		connections = Settings.getTableConnections();
 		currentConnection = connections.get(0);
@@ -108,6 +118,7 @@ public class AutoScoreSettingsPanel extends JPanel {
 		cmbTables = new JComboBox<>(mdlTables);
 		cmbTables.setSelectedItem(currentConnection);
 		cmbTables.addActionListener((ActionEvent e) -> onTableSelected());
+		cmbTables.setRenderer(new ConnectionStatusRenderer());
 		add(cmbTables, "cell 1 0,growx"); //$NON-NLS-1$
 		btnAddTable = new JButton("Add"); //$NON-NLS-1$
 		btnAddTable.addActionListener((ActionEvent e) -> addTable());
@@ -357,6 +368,47 @@ public class AutoScoreSettingsPanel extends JPanel {
 		} catch (IOException ex) {
 			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());	//$NON-NLS-1$
 			logger.error(ex.toString());
+		}
+	}
+	// Registers the provider that reports each table's connection state by index,
+	// and triggers an initial repaint of the dropdown dots.
+	public void setTableConnectedProvider(IntPredicate provider) {
+		this.tableConnected = provider;
+		refreshTableStatus();
+	}
+	// Repaints the Table dropdown so its connection dots reflect current state.
+	public void refreshTableStatus() {
+		cmbTables.repaint();
+	}
+	private static Icon makeDot(Color color) {
+		return new Icon() {
+			@Override public int getIconWidth() { return 12; }
+			@Override public int getIconHeight() { return 12; }
+			@Override public void paintIcon(Component c, Graphics g, int x, int y) {
+				Graphics2D g2 = (Graphics2D) g.create();
+				g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				g2.setColor(color);
+				g2.fillOval(x + 1, y + 1, 10, 10);
+				g2.setColor(color.darker());
+				g2.drawOval(x + 1, y + 1, 10, 10);
+				g2.dispose();
+			}
+		};
+	}
+	// Renders each table in the dropdown with a green (connected) or red
+	// (disconnected) dot. For the collapsed display (index -1) it uses the
+	// currently selected table's state.
+	private class ConnectionStatusRenderer extends DefaultListCellRenderer {
+		@Override
+		public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+				boolean isSelected, boolean cellHasFocus) {
+			Component comp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+			int statusIdx = (index >= 0) ? index : cmbTables.getSelectedIndex();
+			boolean connected = statusIdx >= 0 && tableConnected.test(statusIdx);
+			if (comp instanceof JLabel) {
+				((JLabel) comp).setIcon(connected ? DOT_CONNECTED : DOT_DISCONNECTED);
+			}
+			return comp;
 		}
 	}
 	public class IPAddrInputVerifier extends InputVerifier {
