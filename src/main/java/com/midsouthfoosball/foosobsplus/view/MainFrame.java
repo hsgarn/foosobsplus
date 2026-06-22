@@ -456,6 +456,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	public void rebuildTablesMenu(java.util.List<String> labels, int activeIndex, boolean[] connected) {
 		tablesGroup.getElements().asIterator().forEachRemaining(tablesGroup::remove);
 		tablesMenu.removeAll();
+		javax.swing.JRadioButtonMenuItem activeItem = null;
 		for (int i = 0; i < labels.size(); i++) {
 			final int index = i;
 			boolean isConnected = i < connected.length && connected[i];
@@ -464,13 +465,17 @@ public final class MainFrame extends JFrame implements WindowListener {
 			String dotColor = isConnected ? "#00AA00" : "#C80000"; //$NON-NLS-1$ //$NON-NLS-2$
 			String text = "<html><font color='" + dotColor + "'>●</font>&nbsp;" + escapeHtml(labels.get(i)) + "</html>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			javax.swing.JRadioButtonMenuItem item = new javax.swing.JRadioButtonMenuItem(text);
-			item.setSelected(i == activeIndex);
 			item.addActionListener(e -> {
 				if (tableSelectListener != null) tableSelectListener.accept(index);
 			});
 			tablesGroup.add(item);
 			tablesMenu.add(item);
+			if (i == activeIndex) activeItem = item;
 		}
+		// Select the active item only after every item is in the group/menu, so the
+		// active table is shown selected on the very first build (e.g. at startup),
+		// not just after a later switch.
+		if (activeItem != null) activeItem.setSelected(true);
 	}
 	private static String escapeHtml(String s) {
 		return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
