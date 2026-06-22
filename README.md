@@ -15,7 +15,7 @@ Here is the basic workflow to get up and running for a match:
 6. **Between matches** — Click Start Match again to reset everything for the next match, or use the individual Reset buttons in the Reset Panel for more granular control.
 
 FoosOBSPlus Main Screen:
-<img align="left" width="850" height="630" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusScreen1.png">
+<img align="left" width="850" height="529" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusScreen1.png">
 
 OBS Studio scene utilizing FoosOBSPlus to display various data:
 <img align="left" width="1920" height="1090" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusScreen2.png">
@@ -614,9 +614,9 @@ Connects to every configured AutoScore table.
 #### Disconnect All
 Disconnects from every configured AutoScore table.
 
-<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScoreMenuTables.png">
+<img width="412" height="199" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScoreMenuTables.png">
 
-<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScoreSettings.png">
+<img width="494" height="425" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScoreSettings.png">
 
 ## Settings
 The AutoScore Settings window manages the list of AutoScore tables.  Each table has its own name and connection settings.  Select a table from the Table drop-down to view or edit its settings; the remaining fields on the window (Name, Server Address, Server Port, Auto Connect, Detail Log) apply to the currently selected table.  A connection status dot (green for connected, red for disconnected) is shown beside each table in the drop-down.
@@ -688,7 +688,7 @@ FoosOBSPlus can track more than one foosball table at a time.  Each table has it
 
 The Tables menu lists every configured table with a radio button and a connection status dot (green for connected, red for disconnected).  The currently displayed table is selected.  Choosing a different table makes it the displayed table.
 
-<img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusTablesMenu.png">
+<img width="352" height="132" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusTablesMenu.png">
 
 > **Note:** The displayed table can also be changed from the Table Name drop-down in the Tournament Information panel on the main screen (see below).  The two controls stay in sync.
 
@@ -733,7 +733,7 @@ The FoosOBSPlus Main Screen is divided into 13 panels.  Each panel has its own c
 ### Tournament Information
 This panel contains information pertaining to the particular tournament being played.  Tournament name, event name and table name can be displayed.  The Tournament Name and Event Name are global (shared by every table), while the Table Name is per table and doubles as a way to switch which table is displayed.
 
-<img width="320" height="270" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusTournamentInformation.png">
+<img width="352" height="198" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusTournamentInformation.png">
 
 #### Tournament Name
 This field will be sent to the source specified in the Tournament field in Sources Settings. Use this to display the name of the tournament or maybe the host venue's name.
