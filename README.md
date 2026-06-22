@@ -1356,6 +1356,11 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.094 06/22/2026</br>
+Update dependencies to address Dependabot security advisories.</br>
+Bump jackson-databind to 2.18.6 (pulls jackson-core 2.18.6) to clear GHSA-72hv-8253-57qq, a number length constraint bypass in the async parser that could lead to a denial of service.</br>
+Pin the transitive Kotlin stdlib (pulled in by Javalin) to 1.6.0 to clear GHSA-2qp4-g3q3-f92w (improper locking).</br>
+</br>
 v2.093 06/22/2026</br>
 Multi table AutoScore implemented.</br>
 FoosOBSPlus can now connect to multiple FoosScore AutoScore systems at once, one per table. Each table keeps its own teams, scores, game counts, time outs and timers, tracking in the background while a single table is displayed and sent to OBS. Switching the displayed table instantly swaps the main screen and OBS output.</br>
