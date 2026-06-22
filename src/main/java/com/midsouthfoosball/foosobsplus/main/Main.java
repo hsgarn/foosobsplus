@@ -213,26 +213,30 @@ public final class Main implements MatchObserver {
 	private static CommandSwitch 				mySwitch;
 	////// Generate the Data Models (Mvc) \\\\\\
 	private static final Tournament				tournament				= new Tournament(obsInterface);
-	// All per-table game state lives in a TableSession. Today there is a single
-	// active session; multi-table support will add more sessions and switch the
-	// active one. The fields below are pulled from the active session so the rest
-	// of Main can keep referring to them directly during the migration.
-	private static final TableSession			session					= new TableSession(
+	// Silent OBS sink for background (non-displayed) tables, so their score and
+	// timer updates never reach OBS. The active table uses the live obsInterface.
+	private static final OBSInterface			silentObsInterface		= new OBSInterface();
+	static { silentObsInterface.setActive(false); }
+	// All per-table game state lives in a TableSession. activeSession is the
+	// displayed table; switchToSession repoints these fields, the controllers,
+	// and the OBS sinks. Background sessions keep updating against the silent
+	// sink. These fields are non-final so a switch can repoint them.
+	private static TableSession					activeSession			= new TableSession(
 			obsInterface,
 			Settings.getControlParameter(SettingsKeys.CTRL_SIDE1_COLOR), //$NON-NLS-1$
 			Settings.getControlParameter(SettingsKeys.CTRL_SIDE2_COLOR), //$NON-NLS-1$
 			Messages.getString("Main.None")); //$NON-NLS-1$
-	private static final Team 					team1 					= session.getTeam1();
-	private static final Team 					team2 					= session.getTeam2();
-	private static final Team         			team3              		= session.getTeam3();
-	private static final Match 					match					= session.getMatch();
-	private static final Stats 					stats 					= session.getStats();
+	private static Team 						team1 					= activeSession.getTeam1();
+	private static Team 						team2 					= activeSession.getTeam2();
+	private static Team         				team3              		= activeSession.getTeam3();
+	private static Match 						match					= activeSession.getMatch();
+	private static Stats 						stats 					= activeSession.getStats();
 	////// Create a TimeClock to be the Timer \\\\\\
-	private static final TimeClock 				timeClock 				= session.getTimeClock();
-	private static final GameClock       		gameClock           	= session.getGameClock();
-	private static final LastScoredClock 		lastScored1Clock   		= session.getLastScored1Clock();
-	private static final LastScoredClock		lastScored2Clock    	= session.getLastScored2Clock();
-	private static final LastScoredClock 		lastScored3Clock		= session.getLastScored3Clock();
+	private static TimeClock 					timeClock 				= activeSession.getTimeClock();
+	private static GameClock       				gameClock           	= activeSession.getGameClock();
+	private static LastScoredClock 				lastScored1Clock   		= activeSession.getLastScored1Clock();
+	private static LastScoredClock				lastScored2Clock    	= activeSession.getLastScored2Clock();
+	private static LastScoredClock 				lastScored3Clock		= activeSession.getLastScored3Clock();
 	////// Create the View Panels to Display (mVc) \\\\\\
 	private static final TournamentPanel		tournamentPanel 		= new TournamentPanel();
 	private static final TimerPanel 			timerPanel 				= new TimerPanel();
@@ -977,6 +981,56 @@ public final class Main implements MatchObserver {
 	}
 	private static String createMatchId() {
 		return matchController.createMatchId();
+	}
+	/**
+	 * Switches the displayed table to the given session. Saves the current
+	 * table's command/undo working state, repoints Main's model fields and the
+	 * controllers at the new session, swaps the OBS sinks (outgoing -> silent,
+	 * incoming -> live), restores the new table's working state, and republishes
+	 * its state to the panels and OBS. The outgoing table keeps running headless.
+	 */
+	public static void switchToSession(TableSession next) {
+		if (next == null || next == activeSession) return;
+		// 1. Preserve the outgoing table's command history / undo state.
+		activeSession.saveWorkingState(commandStack, codeStack, mementoStackTeam1, mementoStackTeam2,
+				mementoStackTeam3, mementoStackStats, mementoStackMatch, mementoStackGameClock, undoRedoPointer);
+		// 2. Silence the outgoing table; it keeps updating in the background.
+		activeSession.setObsInterface(silentObsInterface);
+		// 3. Make next active: repoint Main's model fields, the controllers, and
+		//    point the new table at the live OBS sink.
+		activeSession = next;
+		team1 = next.getTeam1();
+		team2 = next.getTeam2();
+		team3 = next.getTeam3();
+		match = next.getMatch();
+		stats = next.getStats();
+		timeClock = next.getTimeClock();
+		gameClock = next.getGameClock();
+		lastScored1Clock = next.getLastScored1Clock();
+		lastScored2Clock = next.getLastScored2Clock();
+		lastScored3Clock = next.getLastScored3Clock();
+		next.setObsInterface(obsInterface);
+		teamController.bindSession(next);
+		matchController.bindSession(next);
+		statsController.bindSession(next);
+		timerController.bindSession(next);
+		// 4. Restore the incoming table's command history / undo state.
+		undoRedoPointer = next.loadWorkingStateInto(commandStack, codeStack, mementoStackTeam1, mementoStackTeam2,
+				mementoStackTeam3, mementoStackStats, mementoStackMatch, mementoStackGameClock);
+		// 5. Republish the new table's state to the panels and live OBS.
+		republishActiveSession();
+	}
+	/**
+	 * Pushes the active session's current model state to the panels and live OBS.
+	 * Used after a table switch so the display reflects the newly active table.
+	 * TODO: rebuild the stats-entry command-history list from the active stats,
+	 * and re-point the Match observers (meatball filter) to the active match.
+	 */
+	private static void republishActiveSession() {
+		teamController.displayAll();
+		teamController.writeAll();
+		matchController.updateGameTables();
+		statsController.displayAllStats();
 	}
 	public static void processCode(String code, Boolean isRedo) {
 		Command commandStatus;

@@ -20,6 +20,11 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.midsouthfoosball.foosobsplus.commands.Command;
+import com.midsouthfoosball.foosobsplus.commands.Memento;
 import com.midsouthfoosball.foosobsplus.main.OBSInterface;
 
 /**
@@ -48,6 +53,21 @@ public class TableSession {
 	private final LastScoredClock lastScored1Clock;
 	private final LastScoredClock lastScored2Clock;
 	private final LastScoredClock lastScored3Clock;
+
+	// Per-table command/undo working state. While this session is the active
+	// (displayed) table, these mirror the live stacks in Main; on switch-away
+	// they are saved here and the incoming session's are loaded into Main. This
+	// gives each table its own command history and undo/redo, independent of the
+	// other tables.
+	private final List<Command> commandStack = new ArrayList<>();
+	private final List<String> codeStack = new ArrayList<>();
+	private final List<Memento> mementoStackTeam1 = new ArrayList<>();
+	private final List<Memento> mementoStackTeam2 = new ArrayList<>();
+	private final List<Memento> mementoStackTeam3 = new ArrayList<>();
+	private final List<Memento> mementoStackStats = new ArrayList<>();
+	private final List<Memento> mementoStackMatch = new ArrayList<>();
+	private final List<Memento> mementoStackGameClock = new ArrayList<>();
+	private int undoRedoPointer = -1;
 
 	/**
 	 * Creates a session with its own set of model objects.
@@ -86,6 +106,49 @@ public class TableSession {
 		match.setObsInterface(obsInterface);
 		timeClock.setObsInterface(obsInterface);
 		gameClock.setObsInterface(obsInterface);
+	}
+
+	/**
+	 * Saves the given live command/undo working state into this session. Called
+	 * when switching away from this table so its history/undo state is preserved.
+	 */
+	public void saveWorkingState(List<Command> commandStack, List<String> codeStack,
+			List<Memento> mementoStackTeam1, List<Memento> mementoStackTeam2, List<Memento> mementoStackTeam3,
+			List<Memento> mementoStackStats, List<Memento> mementoStackMatch, List<Memento> mementoStackGameClock,
+			int undoRedoPointer) {
+		copy(commandStack, this.commandStack);
+		copy(codeStack, this.codeStack);
+		copy(mementoStackTeam1, this.mementoStackTeam1);
+		copy(mementoStackTeam2, this.mementoStackTeam2);
+		copy(mementoStackTeam3, this.mementoStackTeam3);
+		copy(mementoStackStats, this.mementoStackStats);
+		copy(mementoStackMatch, this.mementoStackMatch);
+		copy(mementoStackGameClock, this.mementoStackGameClock);
+		this.undoRedoPointer = undoRedoPointer;
+	}
+
+	/**
+	 * Loads this session's command/undo working state into the given live lists.
+	 * Called when switching to this table. Returns the undo/redo pointer to
+	 * restore.
+	 */
+	public int loadWorkingStateInto(List<Command> commandStack, List<String> codeStack,
+			List<Memento> mementoStackTeam1, List<Memento> mementoStackTeam2, List<Memento> mementoStackTeam3,
+			List<Memento> mementoStackStats, List<Memento> mementoStackMatch, List<Memento> mementoStackGameClock) {
+		copy(this.commandStack, commandStack);
+		copy(this.codeStack, codeStack);
+		copy(this.mementoStackTeam1, mementoStackTeam1);
+		copy(this.mementoStackTeam2, mementoStackTeam2);
+		copy(this.mementoStackTeam3, mementoStackTeam3);
+		copy(this.mementoStackStats, mementoStackStats);
+		copy(this.mementoStackMatch, mementoStackMatch);
+		copy(this.mementoStackGameClock, mementoStackGameClock);
+		return this.undoRedoPointer;
+	}
+
+	private static <T> void copy(List<T> from, List<T> to) {
+		to.clear();
+		to.addAll(from);
 	}
 
 	public Team getTeam1() {
