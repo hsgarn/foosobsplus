@@ -46,9 +46,10 @@ public class TimeClock {
                     int checkTimeDiffTenthSeconds = (int) (checkTimeDiff / 100);
                     timeRemaining = nbrOfSeconds - checkTimeDiffTenthSeconds;
                     if(timeRemaining < 0) {
-                        timer.stop();
-                    } else if(timeRemaining < 1 ) {
+                        // Clamp so the model never holds a negative value - refreshDisplay
+                        // reads timeRemaining directly after table switches/background events.
                         timeRemaining = 0;
+                        timer.stop();
                     }
                 };
 		timer = new Timer(100, action);

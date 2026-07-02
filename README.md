@@ -1369,6 +1369,10 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.097 07/02/2026</br>
+Fix Timer Panel showing -0.1 after a timer expired.</br>
+The time clock could store a value one tenth of a second below zero when a timer ran out; the display refresh added for multi table support (table switches and background score events) exposed that value as -0.1.  The clock now clamps at 0 so the timer can never show a negative time.</br>
+</br>
 v2.096 07/02/2026</br>
 Improve AutoScore Search to support multiple picos on the network.</br>
 Discovery now collects responses from every pico that answers (instead of stopping at the first) and shows them all in a selection window with each device's table number, IP address, port, MAC address and status; pick one to assign it to the currently selected table connection.</br>
