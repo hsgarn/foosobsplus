@@ -104,6 +104,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private JMenuItem autoScoreSettingsItem;
 	private JMenuItem autoScoreConfigItem;
 	private JMenu tablesMenu;
+	private JMenu tableViewsMenu;
+	private java.util.function.IntConsumer tableViewListener;
+	private Runnable tableViewAllListener;
 	private final javax.swing.ButtonGroup tablesGroup = new javax.swing.ButtonGroup();
 	private java.util.function.IntConsumer tableSelectListener;
 	private JMenu autoScoreTablesMenu;
@@ -254,6 +257,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewMenu.add(viewGameResultsWindow);
 		viewMenu.add(viewAllWindows);
         viewMenu.add(viewBallPanel);
+		viewMenu.addSeparator();
+		tableViewsMenu = new JMenu(Messages.getString("MainFrame.TableViews")); //$NON-NLS-1$
+		viewMenu.add(tableViewsMenu);
 		JMenu helpMenu 		= new JMenu(Messages.getString("MainFrame.Help")); //$NON-NLS-1$
 		JMenuItem helpPage 	= new JMenuItem(PROGRAMNAME + " " + Messages.getString("MainFrame.Help")); //$NON-NLS-1$ //$NON-NLS-2$
 		JMenuItem helpRules = new JMenuItem(Messages.getString("MainFrame.Rules")); //$NON-NLS-1$
@@ -476,6 +482,34 @@ public final class MainFrame extends JFrame implements WindowListener {
 		// active table is shown selected on the very first build (e.g. at startup),
 		// not just after a later switch.
 		if (activeItem != null) activeItem.setSelected(true);
+	}
+	// Registers the callback for the View > Table Views submenu; the index of the
+	// clicked table is passed so Main can open that table's monitor window.
+	public void setTableViewListener(java.util.function.IntConsumer listener) {
+		this.tableViewListener = listener;
+	}
+	// Registers the callback for the View > Table Views > View All Tables item.
+	public void setTableViewAllListener(Runnable listener) {
+		this.tableViewAllListener = listener;
+	}
+	// (Re)builds the View > Table Views submenu, one item per table label plus a
+	// View All Tables item. Clicking a table item opens (or focuses) that table's
+	// monitor window; View All Tables opens them all.
+	public void rebuildTableViewsMenu(java.util.List<String> labels) {
+		if (tableViewsMenu == null) return;
+		tableViewsMenu.removeAll();
+		for (int i = 0; i < labels.size(); i++) {
+			final int index = i;
+			JMenuItem item = new JMenuItem(labels.get(i));
+			item.addActionListener(e -> {
+				if (tableViewListener != null) tableViewListener.accept(index);
+			});
+			tableViewsMenu.add(item);
+		}
+		tableViewsMenu.addSeparator();
+		JMenuItem viewAll = new JMenuItem(Messages.getString("MainFrame.ViewAllTables")); //$NON-NLS-1$
+		viewAll.addActionListener(e -> { if (tableViewAllListener != null) tableViewAllListener.run(); });
+		tableViewsMenu.add(viewAll);
 	}
 	private static String escapeHtml(String s) {
 		return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$

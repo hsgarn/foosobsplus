@@ -166,6 +166,7 @@ import com.midsouthfoosball.foosobsplus.view.StatSourcesPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
+import com.midsouthfoosball.foosobsplus.view.TableViewFrame;
 import com.midsouthfoosball.foosobsplus.view.TeamPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerWindowFrame;
@@ -291,6 +292,10 @@ public final class Main implements MatchObserver {
 	private static LastScoredWindowFrame 		lastScored1WindowFrame;
 	private static LastScoredWindowFrame 		lastScored2WindowFrame;
 	private static LastScoredWindowFrame		lastScored3WindowFrame;
+	// Open per-table monitor windows (View > Table Views), keyed by table index.
+	// Lets a non-displayed table's live score/games/matches/timeouts be watched and
+	// pushed to OBS via its Send to OBS button.
+	private static final Map<Integer, TableViewFrame> tableViewFrames = new HashMap<>();
 	////// Build and Start the Controllers (mvC) \\\\\\
 	private static MainController 				mainController;
 	private static TimerController 				timerController;
@@ -743,12 +748,65 @@ public final class Main implements MatchObserver {
 		}
 		tournamentController.bindSession(activeSession);
 		mainFrame.setTableSelectListener(Main::selectTable);
+		mainFrame.setTableViewListener(Main::openTableView);
+		mainFrame.setTableViewAllListener(Main::openAllTableViews);
 		// The Table Name combo in the Tournament panel is a second table switcher
 		// (and rename control) alongside the Tables menu.
 		tournamentPanel.addTableSelectListener(Main::selectTable);
 		tournamentPanel.addTableRenameListener(Main::renameActiveTable);
 		rebuildTablesMenu();
 		refreshTableNameCombo();
+	}
+	/**
+	 * Opens (or focuses, if already open) the monitor window for the table at the
+	 * given index. The window shows that table's live score/games/matches/timeouts
+	 * and a Send to OBS button that makes it the displayed table.
+	 */
+	private static void openTableView(int index) {
+		if (index < 0 || index >= sessions.size()) return;
+		TableViewFrame existing = tableViewFrames.get(index);
+		if (existing != null && existing.isDisplayable()) {
+			existing.setVisible(true);
+			existing.toFront();
+			existing.requestFocus();
+			return;
+		}
+		TableSession session = sessions.get(index);
+		String name = session.getTableName().isEmpty() ? String.valueOf(index + 1) : session.getTableName();
+		TableViewFrame frame = new TableViewFrame(index, name, session,
+				() -> sessions.indexOf(activeSession), OBS::getConnected,
+				() -> index < autoScoreManagers.size() && autoScoreManagers.get(index).isConnected(),
+				Main::selectTable);
+		frame.addWindowListener(new WindowAdapter() {
+			@Override public void windowClosed(WindowEvent e) { tableViewFrames.remove(index); }
+		});
+		tableViewFrames.put(index, frame);
+		frame.setVisible(true);
+	}
+	/** Opens (or focuses) a monitor window for every table, tiled side by side
+	 *  (wrapping to a new row when they run off the screen). */
+	private static void openAllTableViews() {
+		java.awt.Rectangle screen = mainFrame.getGraphicsConfiguration().getBounds();
+		int gap = 10;
+		int x = screen.x;
+		int y = screen.y;
+		int rowHeight = 0;
+		for (int i = 0; i < sessions.size(); i++) {
+			openTableView(i);
+			TableViewFrame frame = tableViewFrames.get(i);
+			if (frame == null) continue;
+			int w = frame.getWidth();
+			int h = frame.getHeight();
+			if (x > screen.x && x + w > screen.x + screen.width) {
+				x = screen.x;
+				y += rowHeight + gap;
+				rowHeight = 0;
+			}
+			frame.setLocation(x, y);
+			frame.toFront();
+			x += w + gap;
+			rowHeight = Math.max(rowHeight, h);
+		}
 	}
 	/** Switches the displayed table to the session at the given index. */
 	private static void selectTable(int index) {
@@ -769,6 +827,13 @@ public final class Main implements MatchObserver {
 			names.add(name.isEmpty() ? String.valueOf(i + 1) : name);
 		}
 		tournamentPanel.setTableNames(names, sessions.indexOf(activeSession));
+		// Keep the View > Table Views menu labels and any open monitor window titles
+		// in sync with renamed tables.
+		mainFrame.rebuildTableViewsMenu(names);
+		for (Map.Entry<Integer, TableViewFrame> entry : tableViewFrames.entrySet()) {
+			int i = entry.getKey();
+			if (i >= 0 && i < names.size()) entry.getValue().setTableName(names.get(i));
+		}
 	}
 	/** (Re)builds the Tables menu from the current sessions/connections, with a
 	 *  green/red connection dot per table. */

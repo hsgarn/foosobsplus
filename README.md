@@ -719,6 +719,19 @@ When checked, all the above windows will display.  Unchecking the box will close
 
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAllWindows.png">
 
+### Table Views
+This submenu lists every configured table.  Selecting a table opens a small monitor window for it (selecting it again brings the existing window to the front rather than opening a duplicate).  This lets you keep an eye on tables that are not currently displayed.
+
+Each Table View window shows, for each team, that table's Score, Games (game count), Matches (match count) and Time Outs, updated about twice a second so a non-displayed table being scored in the background can be watched in real time.
+
+The window has two status indicators:
+- **AutoScore** – a solid circle showing that table's AutoScore connection: green when connected, red when not.
+- **OBS Live** – a solid circle showing whether this is the table currently being sent to OBS: green when this is the displayed table and OBS is connected, yellow when this is the displayed table but OBS is not connected, and red when this is a background (non-displayed) table.
+
+The window also has a **Send to OBS** button.  Pressing it makes that table the displayed table, switching the main screen and OBS output to it (the same as choosing it from the Tables menu).  The button is disabled on whichever table is already live.
+
+**View All Tables** (at the bottom of the submenu) opens a monitor window for every configured table at once, tiled side by side.
+
 ## Help
 ### FoosOBSPlus Help
 Clicking this entry will take you to the FoosOBSPlus Github page containing this README.md file.
@@ -1356,6 +1369,13 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.095 07/02/2026</br>
+Add Table View monitor windows for watching non-displayed tables.</br>
+A new View -> Table Views submenu lists every configured table; selecting one opens a small always-live window showing that table's per-team Score, Games, Matches and Time Outs, updated about twice a second so background (non-displayed) tables can be monitored in real time.</br>
+Each Table View window has a Send to OBS button that makes that table the displayed table and pushes it to OBS; the button is disabled on whichever table is already live.</br>
+Each window shows two status indicators: an AutoScore dot (green connected / red not) for that table's AutoScore system, and an OBS Live dot (green when this is the displayed table and OBS is connected, yellow when displayed but OBS is not connected, red for background tables).</br>
+Added a View All Tables option that opens a window for every table, tiled side by side.</br>
+</br>
 v2.094 06/22/2026</br>
 Update dependencies to address Dependabot security advisories.</br>
 Bump jackson-databind to 2.18.6 (pulls jackson-core 2.18.6) to clear GHSA-72hv-8253-57qq, a number length constraint bypass in the async parser that could lead to a denial of service.</br>
