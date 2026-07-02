@@ -20,6 +20,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.controller;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,8 +41,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComponent;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
@@ -91,6 +97,7 @@ public class AutoScoreManager {
 	private Socket socket;
 	private volatile PrintWriter socketWriter;
 	private SwingWorker<Boolean, Integer> worker;
+	private volatile boolean searching = false;
 
 	// Connection config for the table this manager drives.
 	private volatile TableConnection connection;
@@ -206,44 +213,104 @@ public class AutoScoreManager {
 	}
 
 	/**
-	 * Searches for AutoScore device on the network.
+	 * Searches for AutoScore devices on the network. There may be one pico per
+	 * table, so discovery collects every response, then lets the user pick which
+	 * device to assign to the currently selected table connection. Discovery
+	 * runs on a background worker so the UI stays responsive.
 	 */
 	public void search() {
-		try {
-			String picoIP = PicoDiscovery.listenForPico(5051, 300, msg -> settingsPanel.addMessage(msg));
-			if (picoIP != null) {
-				logger.info("Discovered Pico at: " + picoIP); //$NON-NLS-1$
-				settingsPanel.addMessage("Found: " + picoIP); //$NON-NLS-1$
-				// Response format: "Table N:ipaddress:port" (e.g., "Table 1:192.168.68.74:5051")
-				String[] parts = picoIP.split(":"); //$NON-NLS-1$
-				if (parts.length == 3) {
-					String label = parts[0];
-					String ipAddress = parts[1];
-					String port = parts[2];
-					String message = String.format(
-						"Discovered Device:\n\n%s\nIP Address: %s\nPort: %s\n\nWould you like to update the IP and Port?", //$NON-NLS-1$
-						label, ipAddress, port
-					);
-					int result = JOptionPane.showConfirmDialog(
-						settingsPanel,
-						message,
-						"Update Auto Score Settings", //$NON-NLS-1$
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.QUESTION_MESSAGE
-					);
-					if (result == JOptionPane.YES_OPTION) {
-						updateHostPort(ipAddress, port);
-					}
-				} else {
-					logger.warn("Invalid picoIP format: " + picoIP); //$NON-NLS-1$
-				}
-			} else {
-				logger.info("No Pico found."); //$NON-NLS-1$
-				settingsPanel.addMessage("No Pico found."); //$NON-NLS-1$
-			}
-		} catch (Exception e) {
-			logger.error("searchAutoScore call to PicoDiscovery Exception: " + e); //$NON-NLS-1$
+		if (searching) {
+			settingsPanel.addMessage("Search already in progress."); //$NON-NLS-1$
+			return;
 		}
+		searching = true;
+		new SwingWorker<List<PicoDiscovery.PicoInfo>, Void>() {
+			@Override
+			protected List<PicoDiscovery.PicoInfo> doInBackground() throws Exception {
+				return PicoDiscovery.discoverPicos(5051, 300, msg -> SwingUtilities.invokeLater(() -> settingsPanel.addMessage(msg)));
+			}
+			@Override
+			protected void done() {
+				searching = false;
+				List<PicoDiscovery.PicoInfo> picos;
+				try {
+					picos = get();
+				} catch (InterruptedException | ExecutionException e) {
+					logger.error("searchAutoScore call to PicoDiscovery Exception: " + e); //$NON-NLS-1$
+					settingsPanel.addMessage("Search failed: " + e); //$NON-NLS-1$
+					return;
+				}
+				if (picos.isEmpty()) {
+					logger.info("No Pico found."); //$NON-NLS-1$
+					settingsPanel.addMessage("No Pico found."); //$NON-NLS-1$
+					return;
+				}
+				for (PicoDiscovery.PicoInfo pico : picos) {
+					logger.info("Discovered Pico: " + pico.raw()); //$NON-NLS-1$
+					settingsPanel.addMessage("Found: " + pico.display()); //$NON-NLS-1$
+				}
+				PicoDiscovery.PicoInfo chosen = choosePico(picos);
+				if (chosen == null) {
+					return;
+				}
+				if (chosen.isBusy()) {
+					String clientIp = chosen.busyClientIp();
+					String busyDesc = clientIp.isEmpty()
+						? " reports status \"" + chosen.status() + "\"" //$NON-NLS-1$ //$NON-NLS-2$
+						: " is in a game with client " + clientIp; //$NON-NLS-1$
+					int confirm = JOptionPane.showConfirmDialog(
+						settingsPanel,
+						chosen.label() + busyDesc + " - it may already be in use by another table. Use it anyway?", //$NON-NLS-1$
+						"Device May Be In Use", //$NON-NLS-1$
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.WARNING_MESSAGE
+					);
+					if (confirm != JOptionPane.YES_OPTION) {
+						return;
+					}
+				}
+				updateHostPort(chosen.ipAddress(), chosen.port());
+			}
+		}.execute();
+	}
+
+	/**
+	 * Shows the discovered devices and returns the one the user picked to assign
+	 * to the currently selected table connection, or null if cancelled. Devices
+	 * reporting a non-Available status are grayed out (still selectable).
+	 */
+	private PicoDiscovery.PicoInfo choosePico(List<PicoDiscovery.PicoInfo> picos) {
+		JList<PicoDiscovery.PicoInfo> list = new JList<>(picos.toArray(new PicoDiscovery.PicoInfo[0]));
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list.setSelectedIndex(0);
+		list.setVisibleRowCount(Math.min(picos.size(), 10));
+		list.setCellRenderer(new DefaultListCellRenderer() {
+			@Override
+			public Component getListCellRendererComponent(JList<?> jList, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+				super.getListCellRendererComponent(jList, value, index, isSelected, cellHasFocus);
+				PicoDiscovery.PicoInfo pico = (PicoDiscovery.PicoInfo) value;
+				setText(pico.display());
+				if (pico.isBusy() && !isSelected) {
+					setForeground(Color.GRAY);
+				}
+				return this;
+			}
+		});
+		Object[] message = {
+			picos.size() + " device(s) found. Select the one to use for the current table's IP Address and Port:", //$NON-NLS-1$
+			new JScrollPane(list)
+		};
+		int result = JOptionPane.showConfirmDialog(
+			settingsPanel,
+			message,
+			"Update Auto Score Settings", //$NON-NLS-1$
+			JOptionPane.OK_CANCEL_OPTION,
+			JOptionPane.QUESTION_MESSAGE
+		);
+		if (result != JOptionPane.OK_OPTION) {
+			return null;
+		}
+		return list.getSelectedValue();
 	}
 
 	/**

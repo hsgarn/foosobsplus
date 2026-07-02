@@ -638,7 +638,7 @@ When checked, FoosOBSPlus will attempt to automatically connect to the selected 
 ### Detail Log
 When checked, details sent from the selected table's FoosScore AutoScore system can be seen in the Message window.
 ### Search
-When pressed, will send a broadcast message on port 5051 to any FoosScore instances listening and will return the IP address of any FoosScore instances that responded.  The returned IP address will be displayed in the Message window and can be used in the Server Address box to connect to that FoosScore instance.
+When pressed, will send a broadcast message on port 5051 to any FoosScore instances listening and collect responses from every FoosScore instance that answers (there may be one per table).  Each discovered device is displayed in the Message window with its table number, IP address, port, MAC address and status.  The status is FREE when the device has no active game connection, or BUSY followed by the IP address of the FoosOBSPlus client currently connected to it.  A pop up window then lists all discovered devices so you can pick which one to assign to the currently selected table; busy devices are shown as IN GAME with the connected client's IP, grayed out, and require confirmation before being assigned since they are already in use.
 ### Connect
 This button will connect to the selected table's FoosScore AutoScore system at the given Server Address and Server Port.
 ### Disconnect
@@ -1369,6 +1369,12 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.096 07/02/2026</br>
+Improve AutoScore Search to support multiple picos on the network.</br>
+Discovery now collects responses from every pico that answers (instead of stopping at the first) and shows them all in a selection window with each device's table number, IP address, port, MAC address and status; pick one to assign it to the currently selected table connection.</br>
+Supports the new discovery response format Table N:ip:port:MAC:Status, where status is FREE or BUSY:clientIP; busy picos are shown as IN GAME with the connected client's IP, grayed out, and require confirmation before being assigned.  Older 3-field responses (Table N:ip:port) are still accepted.</br>
+Search now runs in the background so the user interface no longer freezes while broadcasting, and repeated Search clicks are ignored while a search is in progress.</br>
+</br>
 v2.095 07/02/2026</br>
 Add Table View monitor windows for watching non-displayed tables.</br>
 A new View -> Table Views submenu lists every configured table; selecting one opens a small always-live window showing that table's per-team Score, Games, Matches and Time Outs, updated about twice a second so background (non-displayed) tables can be monitored in real time.</br>
