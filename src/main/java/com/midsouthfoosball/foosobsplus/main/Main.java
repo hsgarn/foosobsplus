@@ -813,6 +813,28 @@ public final class Main implements MatchObserver {
 		if (index < 0 || index >= sessions.size()) return;
 		switchToSession(sessions.get(index));
 	}
+	/** Returns the number of configured table sessions. */
+	public static int getTableCount() {
+		return sessions.size();
+	}
+	/** Returns the 1-based table number of the currently displayed table. */
+	public static int getActiveTableNumber() {
+		return sessions.indexOf(activeSession) + 1;
+	}
+	/** Returns the display name of the currently displayed table. */
+	public static String getActiveTableName() {
+		String name = activeSession.getTableName();
+		return name.isEmpty() ? String.valueOf(getActiveTableNumber()) : name;
+	}
+	/** Switches the displayed table to the given 1-based table number. */
+	public static void selectTableByNumber(int tableNumber) {
+		selectTable(tableNumber - 1);
+	}
+	/** Advances the displayed table to the next one, wrapping to the first. */
+	public static void selectNextTable() {
+		if (sessions.isEmpty()) return;
+		selectTable((sessions.indexOf(activeSession) + 1) % sessions.size());
+	}
 	/** Renames the active table from the Table Name combo, refreshing the dropdown. */
 	private static void renameActiveTable(String name) {
 		if (name == null || name.isEmpty()) return;

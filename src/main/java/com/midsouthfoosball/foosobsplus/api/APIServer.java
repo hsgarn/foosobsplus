@@ -39,6 +39,7 @@ public class APIServer {
 	private final PlayerNamesController playerNamesController;
 	private final TimerControllerAPI timerControllerAPI;
 	private final FoosballCodeController foosballCodeController;
+	private final TableControllerAPI tableControllerAPI;
 	private final EventBroadcaster eventBroadcaster;
 	private final RateLimiter rateLimiter;
 
@@ -48,6 +49,7 @@ public class APIServer {
 		this.playerNamesController = new PlayerNamesController(teamService);
 		this.timerControllerAPI = new TimerControllerAPI(teamService.getTeamController());
 		this.foosballCodeController = new FoosballCodeController(teamService);
+		this.tableControllerAPI = new TableControllerAPI();
 		this.eventBroadcaster = eventBroadcaster;
 		this.rateLimiter = new RateLimiter(MAX_REQUESTS_PER_MINUTE);
 	}
@@ -105,6 +107,7 @@ public class APIServer {
 		app.post("/api/players", playerNamesController::updatePlayerNames);
 		app.post("/api/timer", timerControllerAPI::controlTimer);
 		app.post("/api/code", foosballCodeController::submitCode);
+		app.post("/api/table", tableControllerAPI::selectTable);
 
 		// SSE event stream (requires API key, exempt from rate limiting)
 		if (eventBroadcaster != null) {
