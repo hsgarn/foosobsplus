@@ -1185,6 +1185,50 @@ Response (Validation Error) - HTTP Status 400 Bad Request:
       "message": "Code is required"
     }
 
+#### POST /api/table
+Switches the displayed (active) table. Supports selecting a specific table or advancing to the next table, wrapping around to the first table when on the last table. Useful for controlling table switching from external devices such as a Stream Deck (via an HTTP request plugin). Requires valid API key.
+
+Request (select a specific table):
+
+    POST http://localhost:9051/api/table
+    Headers:
+      X-API-Key: your-api-key-here
+      Content-Type: application/json
+
+    Body:
+    {
+      "action": "select",
+      "tableNumber": 2
+    }
+
+Request (advance to the next table, wrapping around to table 1):
+
+    Body:
+    {
+      "action": "next"
+    }
+
+- `action` - Either `select` (default if omitted) or `next`
+- `tableNumber` - The 1-based table number to display. Required for `select`, ignored for `next`
+
+Response (Success) - `data` reflects the now-active table:
+
+    {
+      "success": true,
+      "message": "Table 2 selected",
+      "data": {
+        "tableNumber": 2,
+        "tableName": "2"
+      }
+    }
+
+Response (Validation Error) - HTTP Status 400 Bad Request:
+
+    {
+      "success": false,
+      "message": "Invalid table number: 9. Only 2 table(s) configured."
+    }
+
 ### Security Features
 The REST API includes several security measures to protect against abuse:
 
@@ -1369,6 +1413,11 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.098 07/02/2026</br>
+Add POST /api/table REST endpoint for switching the displayed table from external devices such as a Stream Deck (via an HTTP request plugin).</br>
+Supports selecting a specific table ({"action":"select","tableNumber":N} or just {"tableNumber":N}) and advancing to the next table with wrap around to the first table ({"action":"next"}).</br>
+The response returns the now-active table's number and name.  The endpoint uses the existing API key authentication and rate limiting and keeps the Tables menu, Table Name drop-down and Table View windows in sync.</br>
+</br>
 v2.097 07/02/2026</br>
 Fix Timer Panel showing -0.1 after a timer expired.</br>
 The time clock could store a value one tenth of a second below zero when a timer ran out; the display refresh added for multi table support (table switches and background score events) exposed that value as -0.1.  The clock now clamps at 0 so the timer can never show a negative time.</br>
