@@ -537,25 +537,17 @@ public final class Main implements MatchObserver {
 		autoScoreManagers.clear();
 		List<TableConnection> conns = Settings.getTableConnections();
 		for (int i = 0; i < conns.size(); i++) {
-			final int index = i;
-			AutoScoreManager mgr = new AutoScoreManager(
-				conns.get(i),
-				autoScoreSettingsPanel,
-				autoScoreConfigPanel,
-				autoScoreMainPanel
-			);
-			mgr.setConnectionStateListener(connected -> updateAutoScoreConnectionIcon());
-			mgr.setScoreEventListener(code -> routeScoreEvent(index, code));
-			autoScoreManagers.add(mgr);
+			autoScoreManagers.add(createAutoScoreManager(i, conns.get(i)));
 		}
+		autoScoreSettingsPanel.setAfterSaveCallback(Main::syncAutoScoreRuntimeWithSettings);
+		autoScoreSettingsPanel.setSaveCallback(() -> { autoScoreSettingsPanel.saveSettings(); return true; });
 		// The settings/config/search/connect controls act on the active table's
 		// manager (uiManager()). The apply/save listeners refresh every manager's
 		// connection from the freshly-saved settings so edits take effect on the
-		// next connect. Adding/removing tables still requires a restart.
-		autoScoreSettingsPanel.addApplyListener(e -> { autoScoreSettingsPanel.saveSettings(); refreshManagerConnections(); });
+		// next connect and newly added tables become available immediately.
+		autoScoreSettingsPanel.addApplyListener(e -> autoScoreSettingsPanel.saveSettings());
 		autoScoreSettingsPanel.addSaveListener(e -> {
 			autoScoreSettingsPanel.saveSettings();
-			refreshManagerConnections();
 			Window win = SwingUtilities.getWindowAncestor((JComponent) e.getSource());
 			if (win != null) win.dispose();
 		});
@@ -564,7 +556,6 @@ public final class Main implements MatchObserver {
 		// on-screen edits (save + refresh) so it connects to the IP/port shown.
 		autoScoreSettingsPanel.addConnectListener(e -> {
 			autoScoreSettingsPanel.saveSettings();
-			refreshManagerConnections();
 			settingsManager().setBlockReconnect(false);
 			settingsManager().connect();
 		});
@@ -590,6 +581,17 @@ public final class Main implements MatchObserver {
 		mainFrame.setAutoScoreDisconnectAllListener(Main::disconnectAllTables);
 		updateAutoScoreConnectionIcon();
 	}
+	private static AutoScoreManager createAutoScoreManager(int index, TableConnection connection) {
+		AutoScoreManager mgr = new AutoScoreManager(
+			connection,
+			autoScoreSettingsPanel,
+			autoScoreConfigPanel,
+			autoScoreMainPanel
+		);
+		mgr.setConnectionStateListener(connected -> updateAutoScoreConnectionIcon());
+		mgr.setScoreEventListener(code -> routeScoreEvent(index, code));
+		return mgr;
+	}
 	/** Returns the AutoScore manager for the currently displayed table. */
 	private static AutoScoreManager uiManager() {
 		int i = sessions.indexOf(activeSession);
@@ -607,6 +609,34 @@ public final class Main implements MatchObserver {
 		List<TableConnection> conns = Settings.getTableConnections();
 		for (int i = 0; i < autoScoreManagers.size() && i < conns.size(); i++) {
 			autoScoreManagers.get(i).setConnection(conns.get(i));
+		}
+	}
+	private static void syncAutoScoreRuntimeWithSettings() {
+		List<TableConnection> conns = Settings.getTableConnections();
+		tableConnections = conns;
+		refreshManagerConnections();
+		for (int i = autoScoreManagers.size(); i < conns.size(); i++) {
+			autoScoreManagers.add(createAutoScoreManager(i, conns.get(i)));
+		}
+		addMissingTableSessions(conns.size());
+		updateAutoScoreConnectionIcon();
+		refreshTableNameCombo();
+	}
+	private static void addMissingTableSessions(int targetCount) {
+		String side1Color = Settings.getControlParameter(SettingsKeys.CTRL_SIDE1_COLOR); //$NON-NLS-1$
+		String side2Color = Settings.getControlParameter(SettingsKeys.CTRL_SIDE2_COLOR); //$NON-NLS-1$
+		String none = Messages.getString("Main.None"); //$NON-NLS-1$
+		String defaultTeamPrefix = Messages.getString("TeamPanel.Team"); //$NON-NLS-1$
+		while (sessions.size() < targetCount) {
+			TableSession session = new TableSession(silentObsInterface, side1Color, side2Color, none);
+			if (session.getTeam1().getTeamName().isEmpty()) session.getTeam1().setTeamName(defaultTeamPrefix + "1"); //$NON-NLS-1$
+			if (session.getTeam2().getTeamName().isEmpty()) session.getTeam2().setTeamName(defaultTeamPrefix + "2"); //$NON-NLS-1$
+			if (session.getTeam3().getTeamName().isEmpty()) session.getTeam3().setTeamName(defaultTeamPrefix + "3"); //$NON-NLS-1$
+			if (session.getTableName().isEmpty()) session.setTableName(String.valueOf(sessions.size() + 1));
+			teamController.attachListeners(session);
+			matchController.attachListeners(session);
+			timerController.attachListeners(session);
+			sessions.add(session);
 		}
 	}
 	/** Connects every table flagged Auto Connect on startup, in the background. */

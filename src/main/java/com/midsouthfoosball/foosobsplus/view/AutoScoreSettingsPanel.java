@@ -89,6 +89,7 @@ public class AutoScoreSettingsPanel extends JPanel {
 	private static final String OFF = "0"; //$NON-NLS-1$
 	private final Map<Component, Object> snapshot = new HashMap<>();
 	private BooleanSupplier saveCallback = () -> { saveSettings(); return true; };
+	private Runnable afterSaveCallback = () -> {};
 	private static final Logger logger = LoggerFactory.getLogger(AutoScoreSettingsPanel.class);
 	// In-memory list of table connections being edited and the one currently
 	// shown in the editor fields. Edits are committed to currentConnection when
@@ -268,6 +269,9 @@ public class AutoScoreSettingsPanel extends JPanel {
     public void setServerPort(String serverPort) {
         txtServerPort.setText(serverPort);
     }
+	public void setAfterSaveCallback(Runnable callback) {
+		this.afterSaveCallback = callback == null ? () -> {} : callback;
+	}
 	public void disableConnect() {
 		btnConnect.setEnabled(false);
 		btnDisconnect.setEnabled(true);
@@ -346,8 +350,7 @@ public class AutoScoreSettingsPanel extends JPanel {
 		}
 	}
 	// Index of the table currently selected in the dropdown. Aligned with the
-	// order of Settings.getTableConnections() (and therefore the AutoScoreManager
-	// list) as long as tables have not been added/removed without a restart.
+	// order of Settings.getTableConnections() and the live AutoScoreManager list.
 	public int getSelectedTableIndex() {
 		return cmbTables.getSelectedIndex();
 	}
@@ -365,6 +368,7 @@ public class AutoScoreSettingsPanel extends JPanel {
 			Settings.setAutoScore(SettingsKeys.AS_DETAIL_LOG, currentConnection.isDetailLog() ? ON : OFF); //$NON-NLS-1$
 			Settings.saveAutoScoreSettingsConfig();
 			takeSnapshot();
+			afterSaveCallback.run();
 		} catch (IOException ex) {
 			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());	//$NON-NLS-1$
 			logger.error(ex.toString());
