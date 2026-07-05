@@ -191,6 +191,21 @@ public class OBSPanel extends JPanel {
 	public void setShowCutthroat(boolean showCutthroat) {
 		ckbxShowCutthroat.setSelected(showCutthroat);
 	}
+	public boolean isShowScoresSelected() {
+		return ckbxShowScores.isSelected();
+	}
+	public boolean isShowTimerSelected() {
+		return ckbxShowTimer.isSelected();
+	}
+	public boolean isShowCutthroatSelected() {
+		return ckbxShowCutthroat.isSelected();
+	}
+	public boolean isEnableSkunkSelected() {
+		return ckbxEnableSkunk.isSelected();
+	}
+	public boolean isStartStreamSelected() {
+		return tglbtnStartStream.isSelected();
+	}
 	public void updateTimerDisplay(String timeElapsed) {
 		lblStreamTime.setText(timeElapsed);
 	}

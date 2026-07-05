@@ -37,8 +37,8 @@ public class PlayerNamesController {
 		try {
 			PlayerNamesRequest request = ctx.bodyAsClass(PlayerNamesRequest.class);
 
-			// Validate table number
-			if (request.tableNumber() <= 0) {
+			// Validate table number (null = active table)
+			if (request.tableNumber() != null && request.tableNumber() <= 0) {
 				ctx.status(400).json(new APIResponse(false, "Invalid table number"));
 				return;
 			}

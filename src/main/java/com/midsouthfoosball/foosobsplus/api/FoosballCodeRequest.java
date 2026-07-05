@@ -20,11 +20,12 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.api;
 
-public record FoosballCodeRequest(String code, int tableNumber) {
+public record FoosballCodeRequest(String code, Integer tableNumber) {
 	private static final int MAX_CODE_LENGTH = 20;
 
 	/**
-	 * Validate foosball code request
+	 * Validate foosball code request. tableNumber is optional: when omitted
+	 * the code applies to the active table.
 	 * @throws ValidationException if validation fails
 	 */
 	public void validate() throws ValidationException {
@@ -41,8 +42,8 @@ public record FoosballCodeRequest(String code, int tableNumber) {
 			throw new ValidationException("Code contains invalid control characters");
 		}
 
-		if (tableNumber <= 0) {
-			throw new ValidationException("Valid table number is required");
+		if (tableNumber != null && tableNumber <= 0) {
+			throw new ValidationException("Table number must be a positive integer");
 		}
 	}
 

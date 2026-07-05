@@ -20,10 +20,11 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.api;
 
-public record TimerControlRequest(String timerType, int tableNumber) {
+public record TimerControlRequest(String timerType, Integer tableNumber) {
 
 	/**
-	 * Validate timer control request
+	 * Validate timer control request. tableNumber is optional: when omitted
+	 * the action applies to the active table.
 	 * @throws ValidationException if validation fails
 	 */
 	public void validate() throws ValidationException {
@@ -38,8 +39,8 @@ public record TimerControlRequest(String timerType, int tableNumber) {
 			throw new ValidationException("Invalid timer type. Must be: shot, pass, timeout, game, recall, or reset");
 		}
 
-		if (tableNumber <= 0) {
-			throw new ValidationException("Valid table number is required");
+		if (tableNumber != null && tableNumber <= 0) {
+			throw new ValidationException("Table number must be a positive integer");
 		}
 	}
 

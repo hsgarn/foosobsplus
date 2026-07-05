@@ -77,7 +77,10 @@ public class TeamService {
 		});
 	}
 
-	private void validateTableNumber(int requestedTable) throws ValidationException {
+	public void validateTableNumber(Integer requestedTable) throws ValidationException {
+		if (requestedTable == null) {
+			return; // no table number provided - the request applies to the active table
+		}
 		String tableName = tournament.getTableName();
 		int currentTable = 1; // Default to table 1
 

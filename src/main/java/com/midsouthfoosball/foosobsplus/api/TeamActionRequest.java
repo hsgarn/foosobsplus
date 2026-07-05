@@ -1,5 +1,5 @@
 /**
-Copyright © 2025-2026 Hugh Garner
+Copyright © 2026 Hugh Garner
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -20,34 +20,37 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.api;
 
-public record PlayerNamesRequest(Integer tableNumber, TeamPlayers team1, TeamPlayers team2) {
-	private static final int MAX_NAME_LENGTH = 100;
+import java.util.List;
+
+public record TeamActionRequest(Integer tableNumber, int teamNumber, String action) {
+
+	public static final List<String> VALID_ACTIONS = List.of(
+			"scorePlus", "scoreMinus", "gameCountPlus", "gameCountMinus",
+			"matchCountPlus", "matchCountMinus", "timeOutPlus", "timeOutMinus",
+			"reset", "warn", "kingSeat", "switchPositions");
 
 	/**
-	 * Validate and sanitize player names
+	 * Validate team action request. tableNumber is optional: when omitted the
+	 * action applies to the active table.
+	 * @return the canonical action name (case-insensitive match)
 	 * @throws ValidationException if validation fails
 	 */
-	public void validate() throws ValidationException {
-		if (team1 != null) {
-			validateAndSanitizeName("Team 1 Forward", team1.forward());
-			validateAndSanitizeName("Team 1 Goalie", team1.goalie());
+	public String validate() throws ValidationException {
+		if (tableNumber != null && tableNumber <= 0) {
+			throw new ValidationException("Table number must be a positive integer");
 		}
-		if (team2 != null) {
-			validateAndSanitizeName("Team 2 Forward", team2.forward());
-			validateAndSanitizeName("Team 2 Goalie", team2.goalie());
+		if (teamNumber < 1 || teamNumber > 3) {
+			throw new ValidationException("Team number must be 1, 2 or 3");
 		}
-	}
-
-	private void validateAndSanitizeName(String fieldName, String name) throws ValidationException {
-		if (name != null) {
-			if (name.length() > MAX_NAME_LENGTH) {
-				throw new ValidationException(fieldName + " exceeds maximum length of " + MAX_NAME_LENGTH + " characters");
-			}
-			// Check for control characters or other potentially problematic characters
-			if (name.chars().anyMatch(ch -> ch < 32 && ch != 9 && ch != 10 && ch != 13)) {
-				throw new ValidationException(fieldName + " contains invalid control characters");
+		if (action == null || action.isBlank()) {
+			throw new ValidationException("Action is required");
+		}
+		for (String valid : VALID_ACTIONS) {
+			if (valid.equalsIgnoreCase(action)) {
+				return valid;
 			}
 		}
+		throw new ValidationException("Invalid action. Must be: " + String.join(", ", VALID_ACTIONS));
 	}
 
 	public static class ValidationException extends Exception {
@@ -57,6 +60,4 @@ public record PlayerNamesRequest(Integer tableNumber, TeamPlayers team1, TeamPla
 			super(message);
 		}
 	}
-
-	public record TeamPlayers(String forward, String goalie) {}
 }

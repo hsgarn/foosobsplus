@@ -40,6 +40,13 @@ public class APIServer {
 	private final TimerControllerAPI timerControllerAPI;
 	private final FoosballCodeController foosballCodeController;
 	private final TableControllerAPI tableControllerAPI;
+	private final TeamActionController teamActionController;
+	private final MatchActionController matchActionController;
+	private final SwitchActionController switchActionController;
+	private final ResetActionController resetActionController;
+	private final StatsActionController statsActionController;
+	private final OBSActionController obsActionController;
+	private final AutoScoreActionController autoScoreActionController;
 	private final EventBroadcaster eventBroadcaster;
 	private final RateLimiter rateLimiter;
 
@@ -50,6 +57,13 @@ public class APIServer {
 		this.timerControllerAPI = new TimerControllerAPI(teamService.getTeamController());
 		this.foosballCodeController = new FoosballCodeController(teamService);
 		this.tableControllerAPI = new TableControllerAPI();
+		this.teamActionController = new TeamActionController(teamService);
+		this.matchActionController = new MatchActionController(teamService);
+		this.switchActionController = new SwitchActionController(teamService);
+		this.resetActionController = new ResetActionController(teamService);
+		this.statsActionController = new StatsActionController(teamService);
+		this.obsActionController = new OBSActionController();
+		this.autoScoreActionController = new AutoScoreActionController();
 		this.eventBroadcaster = eventBroadcaster;
 		this.rateLimiter = new RateLimiter(MAX_REQUESTS_PER_MINUTE);
 	}
@@ -108,6 +122,13 @@ public class APIServer {
 		app.post("/api/timer", timerControllerAPI::controlTimer);
 		app.post("/api/code", foosballCodeController::submitCode);
 		app.post("/api/table", tableControllerAPI::selectTable);
+		app.post("/api/team", teamActionController::handle);
+		app.post("/api/match", matchActionController::handle);
+		app.post("/api/switch", switchActionController::handle);
+		app.post("/api/reset", resetActionController::handle);
+		app.post("/api/stats", statsActionController::handle);
+		app.post("/api/obs", obsActionController::handle);
+		app.post("/api/autoscore", autoScoreActionController::handle);
 
 		// SSE event stream (requires API key, exempt from rate limiting)
 		if (eventBroadcaster != null) {

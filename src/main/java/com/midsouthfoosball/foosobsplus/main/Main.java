@@ -963,7 +963,7 @@ public final class Main implements MatchObserver {
 		}
 		
 	}
-	private static void activateFilter(String filter) {
+	public static void activateFilter(String filter) {
 		setSourceFilterVisibility(OBS.getMainScene(), Settings.getFiltersFilter(filter), true);
 	}
 	public static void loadWindowsAndControllers() {
@@ -1430,6 +1430,95 @@ public final class Main implements MatchObserver {
 	 */
 	public static OBSManager getOBSManager() {
 		return obsManager;
+	}
+	////// API wrappers - called on the EDT by the api package controllers \\\\\\
+	/**
+	 * Activates the OBS filter a team panel button would activate. Reset, Warn
+	 * and KingSeat filters only fire when the team state ended up ON, matching
+	 * the toggle button behavior; SwitchPositions always fires.
+	 * @param kind Reset, Warn, KingSeat or SwitchPositions
+	 * @param teamNumber team number (1-3)
+	 */
+	public static void activateTeamFilterForAPI(String kind, int teamNumber) {
+		Team team = (teamNumber == 1) ? team1 : (teamNumber == 2) ? team2 : team3;
+		boolean activate = switch (kind) {
+			case "Reset" -> team.getReset(); //$NON-NLS-1$
+			case "Warn" -> team.getWarn(); //$NON-NLS-1$
+			case "KingSeat" -> team.getKingSeat(); //$NON-NLS-1$
+			case "SwitchPositions" -> true; //$NON-NLS-1$
+			default -> false;
+		};
+		if (activate) {
+			activateFilter("Team" + teamNumber + kind); //$NON-NLS-1$
+		}
+	}
+	public static void obsConnectFromAPI() {
+		obsConnectPanel.updateOBS();
+		connectToOBS();
+	}
+	public static void obsDisconnectFromAPI() {
+		obsManager.disconnect();
+	}
+	public static void obsPushFromAPI() {
+		if (Boolean.TRUE.equals(OBS.getConnected())) {
+			tournamentController.writeAll();
+			teamController.writeAll();
+			statsController.displayAllStats();
+			setTeamGameCountVisible("Team1", team1.getGameCount()); //$NON-NLS-1$
+			setTeamGameCountVisible("Team2", team2.getGameCount()); //$NON-NLS-1$
+			setTeamGameCountVisible("Team3", team3.getGameCount()); //$NON-NLS-1$
+		}
+	}
+	public static void obsPullFromAPI() {
+		if (Boolean.TRUE.equals(OBS.getConnected())) {
+			teamController.fetchAll();
+			teamController.displayAll();
+			tournamentController.fetchAll();
+			setTeamGameCountVisible("Team1", team1.getGameCount()); //$NON-NLS-1$
+			setTeamGameCountVisible("Team2", team2.getGameCount()); //$NON-NLS-1$
+			setTeamGameCountVisible("Team3", team3.getGameCount()); //$NON-NLS-1$
+		}
+	}
+	public static boolean obsShowScoresFromAPI(Boolean state) {
+		boolean show = (state != null) ? state : !obsPanel.isShowScoresSelected();
+		showScores(show);
+		return show;
+	}
+	public static boolean obsShowTimerFromAPI(Boolean state) {
+		boolean show = (state != null) ? state : !obsPanel.isShowTimerSelected();
+		obsPanel.setShowTimer(show); // showTimer() does not sync this checkbox
+		showTimer(show);
+		return show;
+	}
+	public static boolean obsShowCutthroatFromAPI(Boolean state) {
+		boolean show = (state != null) ? state : !obsPanel.isShowCutthroatSelected();
+		showCutthroat(show);
+		return show;
+	}
+	public static boolean obsShowSkunkFromAPI(Boolean state) {
+		boolean show = (state != null) ? state : !obsPanel.isEnableSkunkSelected();
+		obsPanel.setEnableSkunk(show);
+		parametersPanel.setEnableShowSkunk(show);
+		Settings.setControlParameter(SettingsKeys.CTRL_SHOW_SKUNK, show ? ON : OFF);
+		return show;
+	}
+	public static boolean obsStartStreamFromAPI(Boolean state) {
+		boolean start = (state != null) ? state : !obsPanel.isStartStreamSelected();
+		obsPanel.setStartStream(start);
+		if (start) {
+			gameClock.startStreamTimer();
+		} else {
+			gameClock.stopStreamTimer();
+		}
+		return start;
+	}
+	public static void autoScoreConnectFromAPI() {
+		uiManager().setBlockReconnect(false);
+		uiManager().connect();
+	}
+	public static void autoScoreDisconnectFromAPI() {
+		uiManager().setBlockReconnect(true);
+		uiManager().disconnect();
 	}
 	private static void makeMementos() {
 		deleteElementsAfterPointer(undoRedoPointer);

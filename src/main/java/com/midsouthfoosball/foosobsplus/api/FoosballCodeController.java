@@ -44,9 +44,9 @@ public class FoosballCodeController {
 			// Validate request
 			request.validate();
 
-			// Validate table number matches current table
+			// Validate table number matches current table (null = active table)
 			try {
-				teamService.updatePlayerNames(createEmptyPlayerRequest(request.tableNumber()));
+				teamService.validateTableNumber(request.tableNumber());
 			} catch (TeamService.ValidationException e) {
 				ctx.status(400).json(new APIResponse(false, e.getMessage()));
 				logger.warn("API: Table number validation failed: {}", e.getMessage());
@@ -92,10 +92,4 @@ public class FoosballCodeController {
 		}
 	}
 
-	/**
-	 * Creates an empty PlayerNamesRequest just to validate table number
-	 */
-	private PlayerNamesRequest createEmptyPlayerRequest(int tableNumber) {
-		return new PlayerNamesRequest(tableNumber, null, null);
-	}
 }

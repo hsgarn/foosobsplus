@@ -1092,6 +1092,8 @@ Request:
       }
     }
 
+- `tableNumber` - Optional. Defaults to the active table when omitted; if provided, must match the current (active) table
+
 Response (Success):
 
     {
@@ -1137,6 +1139,8 @@ Valid timer types:
 - `recall` - Start recall timer (reads RecallTime configuration)
 - `reset` - Reset all timers to 0
 
+`tableNumber` is optional. It defaults to the active table when omitted.
+
 Response (Success):
 
     {
@@ -1168,7 +1172,7 @@ Request:
     }
 
 - `code` - The foosball statistics code to submit (max 20 characters)
-- `tableNumber` - Must match the current table configuration
+- `tableNumber` - Optional. Defaults to the active table when omitted; if provided, must match the current (active) table
 
 Response (Success):
 
@@ -1227,6 +1231,226 @@ Response (Validation Error) - HTTP Status 400 Bad Request:
     {
       "success": false,
       "message": "Invalid table number: 9. Only 2 table(s) configured."
+    }
+
+#### POST /api/team
+Triggers a team hotkey action for a team (scoring, game/match counts, time outs, reset, warn, king seat, switch positions). Executes the same command the corresponding button/hotkey uses, so the action participates in undo/redo and fires the same OBS filters. Requires valid API key.
+
+Request:
+
+    POST http://localhost:9051/api/team
+    Headers:
+      X-API-Key: your-api-key-here
+      Content-Type: application/json
+
+    Body:
+    {
+      "tableNumber": 1,
+      "teamNumber": 1,
+      "action": "scorePlus"
+    }
+
+- `tableNumber` - Optional. Defaults to the active table when omitted; if provided, must match the current (active) table (use POST /api/table first to switch tables)
+- `teamNumber` - Team number 1-3
+- `action` - One of: `scorePlus`, `scoreMinus`, `gameCountPlus`, `gameCountMinus`, `matchCountPlus`, `matchCountMinus`, `timeOutPlus`, `timeOutMinus`, `reset`, `warn`, `kingSeat`, `switchPositions`
+
+Response (Success) - `data` echoes the dispatched command code:
+
+    {
+      "success": true,
+      "message": "Team 1 scorePlus processed",
+      "data": "XIST1"
+    }
+
+Response (Validation Error) - HTTP Status 400 Bad Request:
+
+    {
+      "success": false,
+      "message": "Invalid action. Must be: scorePlus, scoreMinus, gameCountPlus, gameCountMinus, matchCountPlus, matchCountMinus, timeOutPlus, timeOutMinus, reset, warn, kingSeat, switchPositions"
+    }
+
+#### POST /api/match
+Triggers a match hotkey action. Requires valid API key.
+
+Request:
+
+    POST http://localhost:9051/api/match
+    Headers:
+      X-API-Key: your-api-key-here
+      Content-Type: application/json
+
+    Body:
+    {
+      "tableNumber": 1,
+      "action": "start"
+    }
+
+- `tableNumber` - Optional. Defaults to the active table when omitted; if provided, must match the current (active) table
+- `action` - One of: `start`, `pause`, `end`, `startGame`, `startEvent`
+
+Response (Success):
+
+    {
+      "success": true,
+      "message": "Match start processed",
+      "data": "XPSM"
+    }
+
+#### POST /api/switch
+Triggers a switch hotkey action (swap sides, teams, scores, counts, etc). Requires valid API key.
+
+Request:
+
+    POST http://localhost:9051/api/switch
+    Headers:
+      X-API-Key: your-api-key-here
+      Content-Type: application/json
+
+    Body:
+    {
+      "tableNumber": 1,
+      "action": "sides"
+    }
+
+- `tableNumber` - Optional. Defaults to the active table when omitted; if provided, must match the current (active) table
+- `action` - One of: `sides`, `teams`, `scores`, `gameCounts`, `matchCounts`, `timeOuts`, `resetWarns`, `forwards`, `goalies`
+
+Response (Success):
+
+    {
+      "success": true,
+      "message": "Switch sides processed",
+      "data": "XPSS"
+    }
+
+#### POST /api/reset
+Triggers a reset hotkey action. Requires valid API key.
+
+Request:
+
+    POST http://localhost:9051/api/reset
+    Headers:
+      X-API-Key: your-api-key-here
+      Content-Type: application/json
+
+    Body:
+    {
+      "tableNumber": 1,
+      "action": "scores"
+    }
+
+- `tableNumber` - Optional. Defaults to the active table when omitted; if provided, must match the current (active) table
+- `action` - One of: `names`, `scores`, `gameCounts`, `matchCounts`, `timeOuts`, `resetWarns`, `all`
+
+Response (Success):
+
+    {
+      "success": true,
+      "message": "Reset scores processed",
+      "data": "XPRS"
+    }
+
+#### POST /api/stats
+Triggers undo, redo, clear all or clear tournament. Requires valid API key.
+
+Request:
+
+    POST http://localhost:9051/api/stats
+    Headers:
+      X-API-Key: your-api-key-here
+      Content-Type: application/json
+
+    Body:
+    {
+      "tableNumber": 1,
+      "action": "undo"
+    }
+
+- `tableNumber` - Optional. Defaults to the active table when omitted; if provided, must match the current (active) table
+- `action` - One of: `undo`, `redo`, `clearAll`, `clearTournament`
+
+Note: `undo` and `redo` silently do nothing (and still return success) when there is nothing to undo or redo, matching the hotkey behavior.
+
+Response (Success):
+
+    {
+      "success": true,
+      "message": "Stats undo processed"
+    }
+
+#### POST /api/obs
+Triggers an OBS hotkey action. Command actions (`connect`, `disconnect`, `push`, `pull`) perform the operation. Toggle actions (`showScores`, `showTimer`, `showCutthroat`, `showSkunk`, `startStream`) accept an optional boolean `state`: omit `state` to toggle the current state, or provide it to set the state explicitly. The corresponding checkboxes/buttons in the OBS panel are kept in sync. Requires valid API key.
+
+Request:
+
+    POST http://localhost:9051/api/obs
+    Headers:
+      X-API-Key: your-api-key-here
+      Content-Type: application/json
+
+    Body (command action):
+    {
+      "action": "push"
+    }
+
+    Body (toggle - flips the current state):
+    {
+      "action": "showScores"
+    }
+
+    Body (toggle - sets the state explicitly):
+    {
+      "action": "showScores",
+      "state": true
+    }
+
+- `action` - One of: `connect`, `disconnect`, `push`, `pull`, `showScores`, `showTimer`, `showCutthroat`, `showSkunk`, `startStream`
+- `state` - Optional boolean, only valid for toggle actions
+
+Notes:
+- `push`, `pull`, `showScores`, `showTimer` and `showCutthroat` require an active OBS connection and return HTTP Status 409 Conflict when OBS is not connected.
+- A success response for `connect` means the connection was initiated; it completes asynchronously.
+
+Response (Success, toggle) - `data` reflects the applied state:
+
+    {
+      "success": true,
+      "message": "OBS showScores set to true",
+      "data": {
+        "action": "showScores",
+        "state": true
+      }
+    }
+
+Response (OBS Not Connected) - HTTP Status 409 Conflict:
+
+    {
+      "success": false,
+      "message": "OBS is not connected"
+    }
+
+#### POST /api/autoscore
+Connects or disconnects the AutoScore unit for the currently displayed table, matching the AutoScore panel buttons. Requires valid API key.
+
+Request:
+
+    POST http://localhost:9051/api/autoscore
+    Headers:
+      X-API-Key: your-api-key-here
+      Content-Type: application/json
+
+    Body:
+    {
+      "action": "connect"
+    }
+
+- `action` - Either `connect` or `disconnect`
+
+Response (Success):
+
+    {
+      "success": true,
+      "message": "AutoScore connection initiated"
     }
 
 ### Security Features
@@ -1413,6 +1637,11 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.099 07/05/2026</br>
+Add REST API endpoints for all hotkey functions, organized by category: POST /api/team (scores, game/match counts, time outs, reset, warn, king seat, switch positions for teams 1-3), POST /api/match (start, pause, end, startGame, startEvent), POST /api/switch (sides, teams, scores, gameCounts, matchCounts, timeOuts, resetWarns, forwards, goalies), POST /api/reset (names, scores, gameCounts, matchCounts, timeOuts, resetWarns, all), POST /api/stats (undo, redo, clearAll, clearTournament), POST /api/obs (connect, disconnect, push, pull plus showScores/showTimer/showCutthroat/showSkunk/startStream toggles with optional explicit state) and POST /api/autoscore (connect, disconnect).</br>
+Actions execute the same commands as the buttons/hotkeys, so they participate in undo/redo, fire the same OBS filters and keep the GUI in sync.  All endpoints use the existing API key authentication and rate limiting.</br>
+tableNumber is now optional in all API request bodies that accept it (players, timer, code, team, match, switch, reset, stats): when omitted, the request applies to the current active table; when provided, it must match the active table as before.</br>
+</br>
 v2.098 07/02/2026</br>
 Add POST /api/table REST endpoint for switching the displayed table from external devices such as a Stream Deck (via an HTTP request plugin).</br>
 Supports selecting a specific table ({"action":"select","tableNumber":N} or just {"tableNumber":N}) and advancing to the next table with wrap around to the first table ({"action":"next"}).</br>
