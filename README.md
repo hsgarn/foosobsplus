@@ -882,14 +882,14 @@ Once the Start Stream Timer button is pressed, it will toggle to Stop Stream Tim
 #### Stream Time:
 The time to the right of the Start Stream Timer/Stop Stream Timer button shows the running stream time when the Start Stream Timer button has been pressed.
 ### AutoScore Panel
-The AutoScore Panel controls the interaction with the AutoScore system.  This is a home grown system using lasers and a Raspberry Pico to detect when the ball is scored in one goal or the other.  When a score is detected, it sends data to FoosOBSPlus to increment the scoring team's score by one point.  The Connect and Disconnect buttons in this panel act on the currently displayed table.  When multiple tables are configured, connect and disconnect individual tables (or all of them at once) from the AutoScore -> Tables submenu, and use the Tables menu to choose which table is displayed.
+The AutoScore Panel controls the interaction with the AutoScore system.  This is a home grown system using lasers and a Raspberry Pico to detect when the ball is scored in one goal or the other.  When a score is detected, it sends data to FoosOBSPlus to increment the scoring team's score by one point.  The Connect and Disconnect buttons in this panel act on the currently displayed table.  When multiple tables are configured, connect and disconnect individual tables (or all of them at once) from the AutoScore -> Tables submenu, and use the Tables menu to choose which table is displayed.  A connection status indicator is shown as a colored dot in the AutoScore Panel title: it appears green when the displayed table is connected to its AutoScore system and red when it is disconnected.
 
 <img width="320" height="220" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScorePanel.png">
 
 #### Connect
 This button will connect the displayed table to its AutoScore system.  The AutoScore system must already be configured in the AutoScore Settings for the connection to work.  Shift+click the button to connect every configured table at once; right-clicking the panel also offers Connect All and Disconnect All in a pop up menu.
 #### Settings
-This button will bring up the AutoScore Settings window where the Server Address and Port can be configured.
+This button will bring up the AutoScore Settings window.  Use the Table dropdown at the top (with Add and Delete) to select or manage the table being configured, then set that table's Name, Server Address and Server Port.  A Camera Source can be assigned to the table, and the Auto Connect on Start Up and Detail Log options can be toggled.  Search will look for available AutoScore devices, and the Message area shows connection activity.
 #### Disconnect
 This button will disconnect the displayed table from its AutoScore system.  Shift+click the button to disconnect every configured table at once.
 #### Ignore Sensors
