@@ -36,13 +36,22 @@ public class TableConnection {
 	private String serverPort;
 	private boolean autoConnect;
 	private boolean detailLog;
+	// OBS source (optionally "scene,source") shown for this table when the auto
+	// camera swap toggle is on and this table becomes the displayed one. Empty
+	// = no camera swap for this table.
+	private String cameraSource;
 
 	public TableConnection(String label, String serverAddress, String serverPort, boolean autoConnect, boolean detailLog) {
+		this(label, serverAddress, serverPort, autoConnect, detailLog, ""); //$NON-NLS-1$
+	}
+
+	public TableConnection(String label, String serverAddress, String serverPort, boolean autoConnect, boolean detailLog, String cameraSource) {
 		this.label = label;
 		this.serverAddress = serverAddress;
 		this.serverPort = serverPort;
 		this.autoConnect = autoConnect;
 		this.detailLog = detailLog;
+		this.cameraSource = cameraSource == null ? "" : cameraSource; //$NON-NLS-1$
 	}
 
 	public String getLabel() {
@@ -83,6 +92,14 @@ public class TableConnection {
 
 	public void setDetailLog(boolean detailLog) {
 		this.detailLog = detailLog;
+	}
+
+	public String getCameraSource() {
+		return cameraSource;
+	}
+
+	public void setCameraSource(String cameraSource) {
+		this.cameraSource = cameraSource == null ? "" : cameraSource; //$NON-NLS-1$
 	}
 
 	@Override

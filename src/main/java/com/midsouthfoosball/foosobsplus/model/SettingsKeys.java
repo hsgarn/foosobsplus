@@ -78,11 +78,16 @@ public final class SettingsKeys {
     public static final String OBS_SAVE_PASSWORD        = "OBSSavePassword";
     public static final String OBS_CLOSE_ON_CONNECT     = "OBSCloseOnConnect";
     public static final String OBS_UPDATE_ON_CONNECT    = "OBSUpdateOnConnect";
+    public static final String OBS_AUTO_CAMERA_SWAP     = "OBSAutoCameraSwap";
 
     // ==================== Source Keys ====================
     public static final String SRC_TOURNAMENT           = "Tournament";
     public static final String SRC_EVENT                = "Event";
     public static final String SRC_TABLE_NAME           = "TableName";
+    // Non-empty prefix enables the secondary ("mini") table OBS area: the most
+    // recently displayed background table writes a subset of its sources under
+    // <prefix> + the normal source name. Empty = feature off.
+    public static final String SRC_SECONDARY_PREFIX     = "SecondaryPrefix";
     public static final String SRC_TEAM1_NAME           = "Team1Name";
     public static final String SRC_TEAM1_FORWARD        = "Team1Forward";
     public static final String SRC_TEAM1_GOALIE         = "Team1Goalie";
@@ -355,6 +360,7 @@ public final class SettingsKeys {
     public static final String AS_SUFFIX_PORT           = ".ServerPort";
     public static final String AS_SUFFIX_AUTO_CONNECT   = ".AutoConnect";
     public static final String AS_SUFFIX_DETAIL_LOG     = ".DetailLog";
+    public static final String AS_SUFFIX_CAMERA         = ".CameraSource";
 
     // ==================== API Keys ====================
     public static final String API_ENABLED              = "APIEnabled";

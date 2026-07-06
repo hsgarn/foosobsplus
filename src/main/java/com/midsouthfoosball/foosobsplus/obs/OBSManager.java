@@ -507,18 +507,30 @@ public class OBSManager {
     }
 
     /**
-     * Fetches the list of all inputs (sources) from OBS.
+     * Fetches the list of all inputs (sources) from OBS, plus groups (the
+     * "folders" shown in the Sources list, which OBS exposes separately from
+     * inputs), merges and deduplicates them, then delivers the sorted list.
      */
     public void fetchInputList() {
         if (!isConnected()) return;
 
         OBS.getController().getInputList(null, response -> {
             if (response != null && response.isSuccessful()) {
-                List<String> inputNames = response.getInputs().stream()
+                List<String> names = new ArrayList<>(response.getInputs().stream()
                         .map(Input::getInputName)
-                        .sorted(String.CASE_INSENSITIVE_ORDER)
-                        .toList();
-                uiCallback.onInputListFetched(inputNames);
+                        .toList());
+                // Groups are not inputs in OBS; fetch them separately and merge so
+                // they appear in the source dropdowns too.
+                OBS.getController().getGroupList(groupResponse -> {
+                    if (groupResponse != null && groupResponse.isSuccessful() && groupResponse.getGroups() != null) {
+                        names.addAll(groupResponse.getGroups());
+                    }
+                    List<String> merged = names.stream()
+                            .distinct()
+                            .sorted(String.CASE_INSENSITIVE_ORDER)
+                            .toList();
+                    uiCallback.onInputListFetched(merged);
+                });
             } else {
                 String msg = Messages.getString("Errors.Main.FetchSourceError"); //$NON-NLS-1$
                 String ttl = Messages.getString("Errors.Main.FetchSource.Title"); //$NON-NLS-1$

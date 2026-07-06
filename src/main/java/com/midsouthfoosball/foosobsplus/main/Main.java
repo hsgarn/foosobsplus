@@ -223,6 +223,12 @@ public final class Main implements MatchObserver {
 	// timer updates never reach OBS. The active table uses the live obsInterface.
 	private static final OBSInterface			silentObsInterface		= new OBSInterface();
 	static { silentObsInterface.setActive(false); }
+	// Secondary ("mini") OBS sink. The most recently displayed background table is
+	// pointed here so a subset of its info is written under prefixed source names
+	// (see SecondaryOBSInterface). secondarySession tracks which session feeds it;
+	// all other background sessions stay on silentObsInterface.
+	private static final SecondaryOBSInterface	secondaryObsInterface	= new SecondaryOBSInterface();
+	private static TableSession					secondarySession		= null;
 	// All per-table game state lives in a TableSession. activeSession is the
 	// displayed table; switchToSession repoints these fields, the controllers,
 	// and the OBS sinks. Background sessions keep updating against the silent
@@ -415,6 +421,7 @@ public final class Main implements MatchObserver {
 				obsSourcesFetched = true;
 				sourcesPanel.populateObsSources(inputNames);
 				statSourcesPanel.populateObsSources(inputNames);
+				autoScoreSettingsPanel.populateObsSources(inputNames);
 			}
 
 			@Override
@@ -445,6 +452,17 @@ public final class Main implements MatchObserver {
 			}
 		}
 	}
+	/**
+	 * Runs after the Sources settings are saved: rebuilds the game-show source map
+	 * and refreshes the secondary sink's prefix + allowed source set (source names
+	 * or the prefix may have changed), then republishes the mini area so a renamed
+	 * source or a newly set prefix takes effect immediately.
+	 */
+	private static void onSourcesSaved() {
+		buildTeamGameShowSourcesMap();
+		secondaryObsInterface.refreshFromSettings();
+		publishSecondarySession();
+	}
 	public static void connectToOBS() {
 		obsManager.connect();
 	}
@@ -453,11 +471,11 @@ public final class Main implements MatchObserver {
 		obsConnectPanel.disableConnect();
 		mainFrame.enableConnect(false);
 		mainFrame.setOBSIconConnected(true);
-		if(Settings.getOBSParameter(SettingsKeys.OBS_UPDATE_ON_CONNECT).equals(ON)) { //$NON-NLS-1$
-			tournamentController.writeAll();
-			teamController.writeAll();
-			statsController.displayAllStats();
-		}
+		// The active-table publish (gated on OBSUpdateOnConnect) runs once via the
+		// OBSManager updateOnConnectCallback; don't duplicate it here. The secondary
+		// mini area and camera swap always (re)establish on connect/reconnect.
+		publishSecondarySession();
+		applyCameraSwap();
 	}
 	public static void updateOBSDisconnected() {
 		OBS.setConnected(false);
@@ -541,6 +559,16 @@ public final class Main implements MatchObserver {
 		}
 		autoScoreSettingsPanel.setAfterSaveCallback(Main::syncAutoScoreRuntimeWithSettings);
 		autoScoreSettingsPanel.setSaveCallback(() -> { autoScoreSettingsPanel.saveSettings(); return true; });
+		// Populate the Camera Source dropdown with OBS sources when the settings
+		// window opens (same lazy-fetch pattern as the Sources window).
+		autoScoreSettingsFrame.addWindowListener(new WindowAdapter() {
+			@Override public void windowOpened(WindowEvent e) {
+				if (obsManager.isConnected() && !obsSourcesFetched) obsManager.fetchInputList();
+			}
+			@Override public void windowActivated(WindowEvent e) {
+				if (obsManager.isConnected() && !obsSourcesFetched) obsManager.fetchInputList();
+			}
+		});
 		// The settings/config/search/connect controls act on the active table's
 		// manager (uiManager()). The apply/save listeners refresh every manager's
 		// connection from the freshly-saved settings so edits take effect on the
@@ -769,6 +797,7 @@ public final class Main implements MatchObserver {
 	 * the Tables menu so the user can switch the displayed table.
 	 */
 	private static void initializeSessions() {
+		secondaryObsInterface.refreshFromSettings();
 		tableConnections = Settings.getTableConnections();
 		sessions.clear();
 		sessions.add(activeSession);
@@ -796,6 +825,13 @@ public final class Main implements MatchObserver {
 			}
 		}
 		tournamentController.bindSession(activeSession);
+		// Seed the secondary ("mini") table: the second configured table feeds the
+		// prefixed OBS area at startup (before any switch), so the mini area is
+		// populated as soon as OBS connects. No-op while the prefix is empty.
+		if (sessions.size() > 1) {
+			secondarySession = sessions.get(1);
+			secondarySession.setObsInterface(secondaryObsInterface);
+		}
 		mainFrame.setTableSelectListener(Main::selectTable);
 		mainFrame.setTableViewListener(Main::openTableView);
 		mainFrame.setTableViewAllListener(Main::openAllTableViews);
@@ -1064,7 +1100,7 @@ public final class Main implements MatchObserver {
 		sourcesPanel.addApplyListener(new SourcesApplyListener());
 		sourcesPanel.addSaveListener(new SourcesSaveListener());
 		sourcesPanel.addFetchSourcesListener((ActionEvent ae) -> obsManager.fetchInputList());
-		sourcesPanel.setSaveCallback(() -> { boolean ok = sourcesPanel.saveSettings(); if (ok) buildTeamGameShowSourcesMap(); return ok; });
+		sourcesPanel.setSaveCallback(() -> { boolean ok = sourcesPanel.saveSettings(); if (ok) onSourcesSaved(); return ok; });
 		sourcesFrame.addWindowListener(new WindowAdapter() {
 			@Override public void windowOpened(WindowEvent e) {
 				if (obsManager.isConnected() && !obsSourcesFetched) obsManager.fetchInputList();
@@ -1126,6 +1162,7 @@ public final class Main implements MatchObserver {
 		obsPanel.addEnableSkunkListener(new OBSEnableSkunkListener());
 		obsPanel.addStartStreamListener(new OBSStartStreamListener());
 		obsPanel.addShowCutthroatListener(new OBSShowCutthroatListener());
+		obsPanel.addAutoCameraSwapListener(new OBSAutoCameraSwapListener());
 		statsEntryPanel.addUndoListener(new StatsEntryUndoListener());
 		statsEntryPanel.addRedoListener(new StatsEntryRedoListener());
 		statsEntryPanel.addCodeListener(new CodeListener());
@@ -1364,10 +1401,17 @@ public final class Main implements MatchObserver {
 		// 1. Preserve the outgoing table's command history / undo state.
 		activeSession.saveWorkingState(commandStack, codeStack, mementoStackTeam1, mementoStackTeam2,
 				mementoStackTeam3, mementoStackStats, mementoStackMatch, mementoStackGameClock, undoRedoPointer);
-		// 2. Silence the outgoing table; it keeps updating in the background. Also
-		//    detach its match observers so background play can't fire the meatball
-		//    filter or SSE events (v1 exposes the active table only).
-		activeSession.setObsInterface(silentObsInterface);
+		// 2. The outgoing table becomes the secondary ("mini") table, writing its
+		//    subset to the prefixed OBS area; it keeps updating in the background.
+		//    Any table previously in the secondary slot is fully silenced (3+ tables).
+		//    Also detach the outgoing match observers so background play can't fire
+		//    the meatball filter or SSE events (v1 exposes the active table only).
+		TableSession previousSecondary = secondarySession;
+		activeSession.setObsInterface(secondaryObsInterface);
+		secondarySession = activeSession;
+		if (previousSecondary != null && previousSecondary != next && previousSecondary != secondarySession) {
+			previousSecondary.setObsInterface(silentObsInterface);
+		}
 		match.removeObserver(instance);
 		if (eventBroadcaster != null) match.removeObserver(eventBroadcaster);
 		// 3. Make next active: repoint Main's model fields, the controllers, and
@@ -1394,8 +1438,11 @@ public final class Main implements MatchObserver {
 		// 4. Restore the incoming table's command history / undo state.
 		undoRedoPointer = next.loadWorkingStateInto(commandStack, codeStack, mementoStackTeam1, mementoStackTeam2,
 				mementoStackTeam3, mementoStackStats, mementoStackMatch, mementoStackGameClock);
-		// 5. Republish the new table's state to the panels and live OBS.
+		// 5. Republish the new table's state to the panels and live OBS, then push
+		//    the secondary table's subset to the prefixed area and swap cameras.
 		republishActiveSession();
+		publishSecondarySession();
+		applyCameraSwap();
 		// 6. Keep both table switchers (Tables menu + Table Name combo) and the
 		//    AutoScore panel's title dot in sync with the newly displayed table.
 		rebuildTablesMenu();
@@ -1413,6 +1460,38 @@ public final class Main implements MatchObserver {
 		statsController.displayAllStats();
 		statsEntryPanel.rebuildCodeHistory(stats.getCodeHistoryAsList());
 		timerController.refreshDisplay();
+	}
+	/**
+	 * Pushes the secondary ("mini") table's subset of info to the prefixed OBS
+	 * sources. Writes every team's fields (the secondary sink filters to the
+	 * allowed subset) plus the secondary table's name. No-op when the mini area is
+	 * disabled (empty prefix) or there is no distinct secondary session.
+	 */
+	private static void publishSecondarySession() {
+		if (secondarySession == null || secondarySession == activeSession) return;
+		if (!secondaryObsInterface.isEnabled()) return;
+		secondarySession.getTeam1().writeAll();
+		secondarySession.getTeam2().writeAll();
+		secondarySession.getTeam3().writeAll();
+		// Table name lives on the global Tournament, not per-session, so write it
+		// explicitly through the secondary sink (it filters/prefixes it).
+		secondaryObsInterface.writeData(Settings.getSourceParameter(SettingsKeys.SRC_TABLE_NAME),
+				secondarySession.getTableName(), "Tournament", Settings.getShowParsed()); //$NON-NLS-1$
+	}
+	/**
+	 * Shows the displayed table's configured camera source and hides all other
+	 * tables' cameras, so switching tables also switches the visible camera. No-op
+	 * unless the Auto Camera Swap toggle is on and OBS is connected.
+	 */
+	private static void applyCameraSwap() {
+		if (!Settings.getOBSParameter(SettingsKeys.OBS_AUTO_CAMERA_SWAP).equals(ON)) return;
+		if (!obsManager.isConnected()) return;
+		int activeIdx = sessions.indexOf(activeSession);
+		for (int i = 0; i < tableConnections.size(); i++) {
+			String camera = tableConnections.get(i).getCameraSource();
+			if (camera == null || camera.isEmpty()) continue;
+			obsManager.showSource(camera, i == activeIdx);
+		}
 	}
 	public static void processCode(String code, Boolean isRedo) {
 		Command commandStatus;
@@ -1943,7 +2022,7 @@ public final class Main implements MatchObserver {
         @Override
 		public void actionPerformed(ActionEvent e) {
 			if (sourcesPanel.saveSettings()) {
-				buildTeamGameShowSourcesMap();
+				onSourcesSaved();
 			}
 		}
 	}
@@ -1951,7 +2030,7 @@ public final class Main implements MatchObserver {
         @Override
 		public void actionPerformed(ActionEvent e) {
 			if (sourcesPanel.saveSettings()) {
-				buildTeamGameShowSourcesMap();
+				onSourcesSaved();
 				JComponent comp = (JComponent) e.getSource();
 				Window win = SwingUtilities.getWindowAncestor(comp);
 				win.dispose();
@@ -2113,6 +2192,23 @@ public final class Main implements MatchObserver {
 				AbstractButton abstractButton = (AbstractButton) e.getSource();
 				showCutthroat(abstractButton.getModel().isSelected());
 			}
+			setFocusOnCode();
+		}
+	}
+	private static class OBSAutoCameraSwapListener implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+			AbstractButton abstractButton = (AbstractButton) e.getSource();
+			boolean autoCameraSwap = abstractButton.getModel().isSelected();
+			Settings.setOBS(SettingsKeys.OBS_AUTO_CAMERA_SWAP, autoCameraSwap ? ON : OFF);
+			try {
+				Settings.saveOBSConfig();
+			} catch (IOException ex) {
+				logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage()); //$NON-NLS-1$
+			}
+			// When turned on, immediately establish the correct camera for the
+			// displayed table (turning off leaves current visibility as-is).
+			if (autoCameraSwap) applyCameraSwap();
 			setFocusOnCode();
 		}
 	}

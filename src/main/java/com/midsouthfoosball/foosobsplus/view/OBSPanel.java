@@ -49,19 +49,21 @@ public class OBSPanel extends JPanel {
 	private final JCheckBox ckbxEnableSkunk;
 	private final JToggleButton tglbtnStartStream;
 	private final JCheckBox ckbxShowCutthroat;
+	private final JCheckBox ckbxAutoCameraSwap;
 	private final JLabel lblStreamTime;
 	private final Border innerBorder;
 	private static final String ON = "1"; //$NON-NLS-1$
 	public OBSPanel() {
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
-		dim.height = 225;
+		dim.height = 250;
 		setPreferredSize(dim);
 		setName(buildTitle());
 		boolean enableSkunkInitialState = false;
 		if (Settings.getControlParameter(SettingsKeys.CTRL_SHOW_SKUNK).equals(ON)) { //$NON-NLS-1$
 			enableSkunkInitialState = true;
 		}
+		boolean autoCameraSwapInitialState = Settings.getOBSParameter(SettingsKeys.OBS_AUTO_CAMERA_SWAP).equals(ON); //$NON-NLS-1$
 		btnConnect = new JButton(Messages.getString("OBSPanel.Connect")); //$NON-NLS-1$
 		btnDisconnect = new JButton(Messages.getString("OBSPanel.Disconnect")); //$NON-NLS-1$
 		btnPull = new JButton(Messages.getString("OBSPanel.Pull")); //$NON-NLS-1$
@@ -72,6 +74,9 @@ public class OBSPanel extends JPanel {
 		ckbxEnableSkunk.setSelected(enableSkunkInitialState);
 		tglbtnStartStream = new JToggleButton(Messages.getString("OBSPanel.StartStreamTimer")); //$NON-NLS-1$
 		ckbxShowCutthroat = new JCheckBox(Messages.getString("OBSPanel.ShowCutthroat")); //$NON-NLS-1$
+		ckbxAutoCameraSwap = new JCheckBox(Messages.getString("OBSPanel.AutoCameraSwap")); //$NON-NLS-1$
+		ckbxAutoCameraSwap.setSelected(autoCameraSwapInitialState);
+		ckbxAutoCameraSwap.setToolTipText(Messages.getString("OBSPanel.AutoCameraSwapToolTip")); //$NON-NLS-1$
 		lblStreamTime = new JLabel("00:00:00"); //$NON-NLS-1$
 		lblStreamTime.setOpaque(true);
 		lblStreamTime.setBackground(Color.ORANGE);
@@ -94,6 +99,7 @@ public class OBSPanel extends JPanel {
 		add(ckbxEnableSkunk, "wrap"); //$NON-NLS-1$
 		add(ckbxShowTimer, ""); //$NON-NLS-1$
 		add(ckbxShowCutthroat, "wrap"); //$NON-NLS-1$
+		add(ckbxAutoCameraSwap, "wrap"); //$NON-NLS-1$
 	}
 	private void setMnemonics() {
 		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_CONNECT).isEmpty()) { //$NON-NLS-1$
@@ -170,6 +176,9 @@ public class OBSPanel extends JPanel {
 	public void addShowCutthroatListener(ActionListener listenForCkbxShowCutthroat) {
 		ckbxShowCutthroat.addActionListener(listenForCkbxShowCutthroat);
 	}
+	public void addAutoCameraSwapListener(ActionListener listenForCkbxAutoCameraSwap) {
+		ckbxAutoCameraSwap.addActionListener(listenForCkbxAutoCameraSwap);
+	}
 	////// Utility Methods //////
 	public void setShowScores(boolean show) {
 		ckbxShowScores.setSelected(show);
@@ -191,6 +200,9 @@ public class OBSPanel extends JPanel {
 	public void setShowCutthroat(boolean showCutthroat) {
 		ckbxShowCutthroat.setSelected(showCutthroat);
 	}
+	public void setAutoCameraSwap(boolean autoCameraSwap) {
+		ckbxAutoCameraSwap.setSelected(autoCameraSwap);
+	}
 	public boolean isShowScoresSelected() {
 		return ckbxShowScores.isSelected();
 	}
@@ -202,6 +214,9 @@ public class OBSPanel extends JPanel {
 	}
 	public boolean isEnableSkunkSelected() {
 		return ckbxEnableSkunk.isSelected();
+	}
+	public boolean isAutoCameraSwapSelected() {
+		return ckbxAutoCameraSwap.isSelected();
 	}
 	public boolean isStartStreamSelected() {
 		return tglbtnStartStream.isSelected();

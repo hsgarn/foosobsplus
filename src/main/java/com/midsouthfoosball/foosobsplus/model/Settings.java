@@ -135,6 +135,7 @@ public final class Settings {
 		defaultOBSProps.setProperty("OBSSavePassword", OFF);
 		defaultOBSProps.setProperty("OBSCloseOnConnect", ON);
 		defaultOBSProps.setProperty("OBSUpdateOnConnect",  ON);
+		defaultOBSProps.setProperty("OBSAutoCameraSwap", OFF);
 		//Sources
 		defaultSourceProps.setProperty("Tournament", "tournament");
 		defaultSourceProps.setProperty("Team1Name", "team1name");
@@ -210,6 +211,7 @@ public final class Settings {
         defaultSourceProps.setProperty("ThirteenBall", "ThirteenBall");
         defaultSourceProps.setProperty("FourteenBall", "FourteenBall");
         defaultSourceProps.setProperty("FifteenBall", "FifteenBall");
+        defaultSourceProps.setProperty("SecondaryPrefix", "");
         //Stat Sources
 		defaultStatsSourceProps.setProperty("Team1PassAttempts", "team1passattempts");
 		defaultStatsSourceProps.setProperty("Team2PassAttempts", "team2passattempts");
@@ -491,7 +493,8 @@ public final class Settings {
 					configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_ADDRESS, ""),
 					configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_PORT, ""),
 					ON.equals(configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_AUTO_CONNECT)),
-					ON.equals(configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_DETAIL_LOG))));
+					ON.equals(configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_DETAIL_LOG)),
+					configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_CAMERA, "")));
 			}
 		}
 		if (connections.isEmpty()) {
@@ -539,6 +542,7 @@ public final class Settings {
 			configAutoScoreSettingsProps.setProperty(base + SettingsKeys.AS_SUFFIX_PORT, c.getServerPort());
 			configAutoScoreSettingsProps.setProperty(base + SettingsKeys.AS_SUFFIX_AUTO_CONNECT, c.isAutoConnect() ? ON : OFF);
 			configAutoScoreSettingsProps.setProperty(base + SettingsKeys.AS_SUFFIX_DETAIL_LOG, c.isDetailLog() ? ON : OFF);
+			configAutoScoreSettingsProps.setProperty(base + SettingsKeys.AS_SUFFIX_CAMERA, c.getCameraSource());
 		}
 		if (!connections.isEmpty()) {
 			TableConnection first = connections.get(0);

@@ -1637,6 +1637,16 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.103 07/06/2026</br>
+Show a second table's info in OBS while another table is displayed.</br>
+Set a Secondary Prefix on the Sources settings screen (for example s-) to turn on a "mini" area: whichever table is not currently displayed writes a subset of its info (each team's name, forward, goalie, score, game count, match count and time outs, plus the table name) to prefixed OBS sources.  For example, with a prefix of s-, the source normally named team1score is written as s-team1score.  Add matching prefixed sources to your OBS scene and the mini area will follow the non-displayed table, updating live as it scores in the background.  Leave the prefix blank to turn the feature off (single-table behavior is unchanged).  The mini area republishes on table switch, on OBS connect/reconnect and when you save the Sources settings, so a renamed source takes effect right away.</br>
+Automatically swap the OBS camera when you switch tables.</br>
+Each table connection in the AutoScore settings window now has a Camera Source field: choose an OBS source (or group/folder) from the dropdown or type a name (a scene,source form is also accepted).  A new Auto Camera Swap checkbox on the OBS panel turns the feature on and off: when on, switching the displayed table shows that table's camera source in OBS and hides the others; when off, tables can be switched without touching the camera.  The toggle is remembered between runs.</br>
+Show OBS groups (folders) in the source dropdowns.</br>
+Fetching sources now also pulls OBS groups and merges them into the list, so folders such as a camera group appear alongside individual sources in the Sources, Stat Sources and Camera Source dropdowns.</br>
+Fix a duplicate OBS write on connect.</br>
+The active table's sources were being pushed to OBS twice each time OBS connected; they are now pushed once.</br>
+</br>
 v2.102 07/05/2026</br>
 Bump Jackson and Log4j versions to close security issues.</br>
 </br>

@@ -30,6 +30,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +55,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.JTextComponent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +79,7 @@ public class AutoScoreSettingsPanel extends JPanel {
 	private final JTextField txtLabel;
 	private final JTextField txtServerAddress;
 	private final JTextField txtServerPort;
+	private final JComboBox<String> cmbCameraSource;
 	private final JCheckBox chckbxAutoConnect;
 	private final JCheckBox chckbxDetailLog;
 	private final JButton btnApply;
@@ -100,6 +105,10 @@ public class AutoScoreSettingsPanel extends JPanel {
 	// Guards against the combo/editor listeners reacting while we are loading
 	// field values programmatically.
 	private boolean loadingFields = false;
+	// OBS source names for the Camera Source combo and a guard against the
+	// combo's editor filter listener reacting to programmatic changes.
+	private List<String> obsSourcesList = new ArrayList<>();
+	private boolean filterUpdating = false;
 	// Supplies the live connection state of the table at a given index (set by
 	// Main), so the Table dropdown can show a green/red dot per table.
 	private IntPredicate tableConnected = i -> false;
@@ -152,6 +161,18 @@ public class AutoScoreSettingsPanel extends JPanel {
 		add(txtServerPort, "cell 1 3,alignx left,aligny top"); //$NON-NLS-1$
 		chckbxDetailLog = new JCheckBox(Messages.getString("AutoScoreSettingsPanel.DetailLog")); //$NON-NLS-1$
 		add(chckbxDetailLog, "cell 2 3, alignx left"); //$NON-NLS-1$
+		// --- Camera source row (for the OBS auto camera swap feature) ---
+		// Editable, filterable combo populated with OBS source names (fetched on
+		// window open / Fetch Sources), like the Sources settings screen: pick from
+		// the list or type a name / "scene,source".
+		JLabel lblCameraSource = new JLabel(Messages.getString("AutoScoreSettingsPanel.CameraSource")); //$NON-NLS-1$
+		add(lblCameraSource, "cell 0 5,alignx trailing"); //$NON-NLS-1$
+		cmbCameraSource = new JComboBox<>();
+		cmbCameraSource.setEditable(true);
+		cmbCameraSource.setPrototypeDisplayValue("                    "); //$NON-NLS-1$
+		cmbCameraSource.setToolTipText(Messages.getString("AutoScoreSettingsPanel.CameraSourceToolTip")); //$NON-NLS-1$
+		setupComboFiltering(cmbCameraSource);
+		add(cmbCameraSource, "cell 1 5,growx"); //$NON-NLS-1$
         btnSearch = new JButton(Messages.getString("AutoScoreSettingsPanel.Search")); //$NON-NLS-1$
         add(btnSearch, "flowx,cell 0 4,alignx left"); //$NON-NLS-1$
 		btnConnect = new JButton(Messages.getString("AutoScoreSettingsPanel.Connect")); //$NON-NLS-1$
@@ -229,6 +250,14 @@ public class AutoScoreSettingsPanel extends JPanel {
 		txtLabel.setText(c.getLabel());
 		txtServerAddress.setText(c.getServerAddress());
 		txtServerPort.setText(c.getServerPort());
+		filterUpdating = true;
+		// Restore the full source list into the dropdown (it may still hold the
+		// previous table's typed filter) before showing this table's value.
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+		obsSourcesList.forEach(model::addElement);
+		cmbCameraSource.setModel(model);
+		cmbCameraSource.setSelectedItem(c.getCameraSource());
+		filterUpdating = false;
 		chckbxAutoConnect.setSelected(c.isAutoConnect());
 		chckbxDetailLog.setSelected(c.isDetailLog());
 		loadingFields = false;
@@ -237,9 +266,65 @@ public class AutoScoreSettingsPanel extends JPanel {
 		c.setLabel(txtLabel.getText());
 		c.setServerAddress(txtServerAddress.getText());
 		c.setServerPort(txtServerPort.getText());
+		c.setCameraSource(getCameraComboText());
 		c.setAutoConnect(chckbxAutoConnect.isSelected());
 		c.setDetailLog(chckbxDetailLog.isSelected());
 		cmbTables.repaint();
+	}
+	private String getCameraComboText() {
+		Object item = cmbCameraSource.getEditor().getItem();
+		return item != null ? item.toString() : ""; //$NON-NLS-1$
+	}
+	// Filters the Camera Source dropdown to OBS sources matching the typed text,
+	// mirroring the Sources settings screen so the user can pick or type a name.
+	private void setupComboFiltering(JComboBox<String> combo) {
+		JTextComponent editor = (JTextComponent) combo.getEditor().getEditorComponent();
+		editor.getDocument().addDocumentListener(new DocumentListener() {
+			private void filter() {
+				if (filterUpdating) return;
+				SwingUtilities.invokeLater(() -> {
+					if (filterUpdating) return;
+					filterUpdating = true;
+					try {
+						String text = editor.getText();
+						String lower = text.toLowerCase();
+						DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+						obsSourcesList.stream()
+							.filter(s -> s.toLowerCase().contains(lower))
+							.forEach(model::addElement);
+						combo.setModel(model);
+						editor.setText(text);
+						if (model.getSize() > 0 && !text.isEmpty()) {
+							combo.showPopup();
+						} else {
+							combo.hidePopup();
+						}
+					} finally {
+						filterUpdating = false;
+					}
+				});
+			}
+			@Override public void insertUpdate(DocumentEvent e) { filter(); }
+			@Override public void removeUpdate(DocumentEvent e) { filter(); }
+			@Override public void changedUpdate(DocumentEvent e) { filter(); }
+		});
+	}
+	// Populates the Camera Source dropdown with the fetched OBS source names,
+	// preserving the current typed/selected value. Called by Main when OBS
+	// delivers its input list (window open / Fetch Sources).
+	public void populateObsSources(List<String> inputNames) {
+		SwingUtilities.invokeLater(() -> {
+			obsSourcesList = new ArrayList<>(inputNames);
+			filterUpdating = true;
+			try {
+				String current = getCameraComboText();
+				cmbCameraSource.removeAllItems();
+				inputNames.forEach(cmbCameraSource::addItem);
+				cmbCameraSource.setSelectedItem(current);
+			} finally {
+				filterUpdating = false;
+			}
+		});
 	}
     public class AttributiveCellRenderer extends DefaultListCellRenderer {
 	  private static final long serialVersionUID = 1L;
@@ -306,6 +391,10 @@ public class AutoScoreSettingsPanel extends JPanel {
 		for (Component c : container.getComponents()) {
 			if (c instanceof JCheckBox cb) {
 				snapshot.put(cb, cb.isSelected());
+			} else if (c instanceof JComboBox<?> combo) {
+				// Only the editable Camera Source combo is an edit; the table
+				// selector is navigation and must not count as an unsaved change.
+				if (combo.isEditable()) snapshot.put(combo, combo.getEditor().getItem());
 			} else if (c instanceof JTextField tf) {
 				snapshot.put(tf, tf.getText());
 			} else if (c instanceof Container sub) {
@@ -319,6 +408,11 @@ public class AutoScoreSettingsPanel extends JPanel {
 			if (c instanceof JCheckBox cb) {
 				Object saved = snapshot.get(cb);
 				if (saved != null && !saved.equals(cb.isSelected())) return true;
+			} else if (c instanceof JComboBox<?> combo) {
+				if (combo.isEditable()) {
+					Object saved = snapshot.get(combo);
+					if (saved != null && !String.valueOf(combo.getEditor().getItem()).equals(String.valueOf(saved))) return true;
+				}
 			} else if (c instanceof JTextField tf) {
 				Object saved = snapshot.get(tf);
 				if (saved != null && !tf.getText().equals(saved)) return true;

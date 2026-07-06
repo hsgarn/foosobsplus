@@ -40,6 +40,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -128,6 +129,10 @@ public class SourcesPanel extends JPanel {
 	private JButton btnFetchSources;
 	private JButton btnApply;
 	private JButton btnSave;
+	// Plain text prefix (not an OBS source combo) for the secondary ("mini") table
+	// OBS area. Kept out of sourcesMap since that is combo-only; handled explicitly
+	// in save/revert/restore/change-tracking.
+	private JTextField txtSecondaryPrefix;
     private final Map<String, JComboBox<String>> sourcesMap = new HashMap<>();
 	private List<String> obsSourcesList = new ArrayList<>();
 	private boolean filterUpdating = false;
@@ -260,6 +265,7 @@ public class SourcesPanel extends JPanel {
 		sourcesMap.forEach((sourceName, textField) -> {
 			textField.setSelectedItem(Settings.getDefaultSource(sourceName));
 		});
+		txtSecondaryPrefix.setText(Settings.getDefaultSource(SettingsKeys.SRC_SECONDARY_PREFIX));
 		filterUpdating = false;
 	}
 	private void revertChanges() {
@@ -267,6 +273,7 @@ public class SourcesPanel extends JPanel {
 		sourcesMap.forEach((sourceName, textField) -> {
 			textField.setSelectedItem(Settings.getSourceParameter(sourceName));
 		});
+		txtSecondaryPrefix.setText(Settings.getSourceParameter(SettingsKeys.SRC_SECONDARY_PREFIX));
 		filterUpdating = false;
 		takeSnapshot();
 	}
@@ -275,6 +282,7 @@ public class SourcesPanel extends JPanel {
 		sourcesMap.forEach((sourceName, combo) -> {
 			Settings.setSource(sourceName, getComboText(combo));
 		});
+		Settings.setSource(SettingsKeys.SRC_SECONDARY_PREFIX, txtSecondaryPrefix.getText().trim());
 		try {
 			Settings.saveSourceConfig();
 			okToCloseWindow = true;
@@ -291,6 +299,8 @@ public class SourcesPanel extends JPanel {
 		for (Component c : container.getComponents()) {
 			if (c instanceof JComboBox<?> combo) {
 				snapshot.put(combo, combo.isEditable() ? combo.getEditor().getItem() : combo.getSelectedItem());
+			} else if (c instanceof JTextField field) {
+				snapshot.put(field, field.getText());
 			} else if (c instanceof Container sub) {
 				snapshotOf(sub);
 			}
@@ -303,6 +313,9 @@ public class SourcesPanel extends JPanel {
 				Object cur = combo.isEditable() ? combo.getEditor().getItem() : combo.getSelectedItem();
 				Object saved = snapshot.get(combo);
 				if (saved != null && !String.valueOf(cur).equals(String.valueOf(saved))) return true;
+			} else if (c instanceof JTextField field) {
+				Object saved = snapshot.get(field);
+				if (saved != null && !String.valueOf(field.getText()).equals(String.valueOf(saved))) return true;
 			} else if (c instanceof Container sub) {
 				if (checkChangesIn(sub)) return true;
 			}
@@ -658,6 +671,13 @@ public class SourcesPanel extends JPanel {
 		txtShowCutthroat.setSelectedItem(Settings.getSourceParameter(SettingsKeys.SRC_SHOW_CUTTHROAT)); //$NON-NLS-1$
 		txtShowCutthroat.setPrototypeDisplayValue("          ");
 		add(txtShowCutthroat, "cell 6 17,alignx left"); //$NON-NLS-1$
+		//Secondary ("mini") table prefix
+		JLabel lblSecondaryPrefix = new JLabel(Messages.getString("SourcesPanel.SecondaryPrefix")); //$NON-NLS-1$
+		add(lblSecondaryPrefix, "cell 5 18,alignx trailing"); //$NON-NLS-1$
+		txtSecondaryPrefix = new JTextField(Settings.getSourceParameter(SettingsKeys.SRC_SECONDARY_PREFIX));
+		txtSecondaryPrefix.setColumns(10);
+		txtSecondaryPrefix.setToolTipText(Messages.getString("SourcesPanel.SecondaryPrefixToolTip")); //$NON-NLS-1$
+		add(txtSecondaryPrefix, "cell 6 18,alignx left"); //$NON-NLS-1$
 		//CueBall
 		JLabel lblCueBall = new JLabel(Messages.getString("SourcesPanel.CueBall")); //$NON-NLS-1$
 		add(lblCueBall, "cell 7 3,alignx right"); //$NON-NLS-1$
