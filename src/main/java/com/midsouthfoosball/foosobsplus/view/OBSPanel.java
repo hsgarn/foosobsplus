@@ -22,6 +22,9 @@ package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
@@ -35,8 +38,6 @@ import javax.swing.border.TitledBorder;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
-
-import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class OBSPanel extends JPanel {
@@ -88,18 +89,49 @@ public class OBSPanel extends JPanel {
 		layoutComponents();
 	}
 	private void layoutComponents() {
-		setLayout(new MigLayout("fillx")); //$NON-NLS-1$
-		add(btnConnect,""); //$NON-NLS-1$
-		add(btnDisconnect, "wrap"); //$NON-NLS-1$
-		add(btnPush, ""); //$NON-NLS-1$
-		add(btnPull, "wrap"); //$NON-NLS-1$
-		add(tglbtnStartStream, ""); //$NON-NLS-1$
-		add(lblStreamTime, "wrap"); //$NON-NLS-1$
-		add(ckbxShowScores, ""); //$NON-NLS-1$
-		add(ckbxEnableSkunk, "wrap"); //$NON-NLS-1$
-		add(ckbxShowTimer, ""); //$NON-NLS-1$
-		add(ckbxShowCutthroat, "wrap"); //$NON-NLS-1$
-		add(ckbxAutoCameraSwap, "wrap"); //$NON-NLS-1$
+		setLayout(new GridBagLayout());
+		GridBagConstraints gc = new GridBagConstraints();
+		gc.fill = GridBagConstraints.NONE;
+		gc.anchor = GridBagConstraints.WEST;
+		gc.insets = new Insets(0, 0, 0, 0);
+		gc.weightx = 1;
+		gc.weighty = 0.1;
+		//////// Connect / Disconnect ////////
+		gc.gridy = 0;
+		gc.gridx = 0;
+		add(btnConnect, gc);
+		gc.gridx = 1;
+		add(btnDisconnect, gc);
+		//////// Push / Pull ////////
+		gc.gridy++;
+		gc.gridx = 0;
+		add(btnPush, gc);
+		gc.gridx = 1;
+		add(btnPull, gc);
+		//////// Start Stream / Stream Time ////////
+		gc.gridy++;
+		gc.gridx = 0;
+		add(tglbtnStartStream, gc);
+		gc.gridx = 1;
+		add(lblStreamTime, gc);
+		//////// Show Scores / Enable Skunk ////////
+		gc.gridy++;
+		gc.gridx = 0;
+		add(ckbxShowScores, gc);
+		gc.gridx = 1;
+		add(ckbxEnableSkunk, gc);
+		//////// Show Timer / Show Cutthroat ////////
+		gc.gridy++;
+		gc.gridx = 0;
+		add(ckbxShowTimer, gc);
+		gc.gridx = 1;
+		add(ckbxShowCutthroat, gc);
+		//////// Auto Camera Swap ////////
+		gc.gridy++;
+		gc.gridx = 0;
+		gc.gridwidth = 2;
+		gc.anchor = GridBagConstraints.CENTER;
+		add(ckbxAutoCameraSwap, gc);
 	}
 	private void setMnemonics() {
 		if(Settings.getHotKeyParameter(SettingsKeys.HOTKEY_CONNECT).isEmpty()) { //$NON-NLS-1$
