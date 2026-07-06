@@ -1637,6 +1637,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.102 07/05/2026</br>
+Bump Jackson and Log4j versions to close security issues.</br>
+</br>
 v2.101 07/05/2026</br>
 Add Assign All button to the AutoScore Search results window.</br>
 The device picker shown after a Search now offers Assign Selected, Assign All and Cancel.  Assign All assigns every discovered device to the table matching its reported table number (Table 2 goes to the second table connection and so on) and saves all connections in one shot; devices with an unrecognized table number, or numbered beyond the configured tables, are skipped with a message in the Message window.  Assign Selected keeps the previous behavior of assigning the highlighted device to the currently selected table.</br>
