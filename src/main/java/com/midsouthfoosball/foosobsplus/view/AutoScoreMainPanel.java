@@ -29,7 +29,9 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
@@ -42,7 +44,11 @@ public class AutoScoreMainPanel extends JPanel {
 	private final JButton btnDisconnect;
 	private final JButton btnSettings;
 	private final JCheckBox chkbxIgnore;
-	private final Border innerBorder;
+	private final JMenuItem mnuConnectAll;
+	private final JMenuItem mnuDisconnectAll;
+	// Connection state of the currently displayed table, shown as a colored
+	// dot in the panel title (green=connected, red=disconnected).
+	private boolean connected = false;
 	public AutoScoreMainPanel() {
 		Dimension dim = getPreferredSize();
 		dim.width = 340;
@@ -53,11 +59,21 @@ public class AutoScoreMainPanel extends JPanel {
 		btnDisconnect = new JButton(Messages.getString("AutoScoreMainPanel.Disconnect")); //$NON-NLS-1$
 		btnSettings = new JButton(Messages.getString("AutoScoreMainPanel.Settings")); //$NON-NLS-1$
 		chkbxIgnore = new JCheckBox(Messages.getString("AutoScoreMainPanel.Ignore")); //$NON-NLS-1$
+		btnConnect.setToolTipText(Messages.getString("AutoScoreMainPanel.ConnectToolTip")); //$NON-NLS-1$
+		btnDisconnect.setToolTipText(Messages.getString("AutoScoreMainPanel.DisconnectToolTip")); //$NON-NLS-1$
+		// Right-click menu exposing the all-tables actions without adding
+		// buttons to the fixed-size panel; Shift+click on Connect/Disconnect
+		// does the same (handled by the registered listeners).
+		mnuConnectAll = new JMenuItem(Messages.getString("MainFrame.ConnectAll")); //$NON-NLS-1$
+		mnuDisconnectAll = new JMenuItem(Messages.getString("MainFrame.DisconnectAll")); //$NON-NLS-1$
+		JPopupMenu mnuPopup = new JPopupMenu();
+		mnuPopup.add(mnuConnectAll);
+		mnuPopup.add(mnuDisconnectAll);
+		setComponentPopupMenu(mnuPopup);
+		btnConnect.setComponentPopupMenu(mnuPopup);
+		btnDisconnect.setComponentPopupMenu(mnuPopup);
 		setMnemonics();
-		innerBorder = BorderFactory.createTitledBorder(buildTitle());
-		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
-		Border outerBorder = BorderFactory.createEmptyBorder(Settings.getBorderTop(),Settings.getBorderLeft(),Settings.getBorderBottom(),Settings.getBorderRight());
-		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
+		refreshBorder();
 		layoutComponents();
 	}
 	private void layoutComponents() {
@@ -127,15 +143,38 @@ public class AutoScoreMainPanel extends JPanel {
 	public void addSettingsListener(ActionListener listenForBtnSettings) {
 		btnSettings.addActionListener(listenForBtnSettings);
 	}
+	public void addConnectAllListener(ActionListener listenForConnectAll) {
+		mnuConnectAll.addActionListener(listenForConnectAll);
+	}
+	public void addDisconnectAllListener(ActionListener listenForDisconnectAll) {
+		mnuDisconnectAll.addActionListener(listenForDisconnectAll);
+	}
 	////// Utility Methods //////
 	public void updateMnemonics() {
 		setMnemonics();
 	}
 	public void setTitle() {
-		String title=buildTitle();
-		TitledBorder border = BorderFactory.createTitledBorder(title);
-		border.setTitleJustification(TitledBorder.CENTER);
-		this.setBorder(border);
+		refreshBorder();
+	}
+	// Shows the displayed table's connection state as a colored dot in the
+	// panel title.
+	public void setConnectionState(boolean connected) {
+		if (this.connected == connected) return;
+		this.connected = connected;
+		refreshBorder();
+		repaint();
+	}
+	private void refreshBorder() {
+		TitledBorder innerBorder = BorderFactory.createTitledBorder(buildTitleWithStatus());
+		innerBorder.setTitleJustification(TitledBorder.CENTER);
+		Border outerBorder = BorderFactory.createEmptyBorder(Settings.getBorderTop(),Settings.getBorderLeft(),Settings.getBorderBottom(),Settings.getBorderRight());
+		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
+	}
+	// TitledBorder renders HTML titles, so the status dot is an HTML colored
+	// bullet (same approach as the Tables menu items).
+	private String buildTitleWithStatus() {
+		String color = connected ? "#00AA00" : "#C80000"; //$NON-NLS-1$ //$NON-NLS-2$
+		return "<html>" + buildTitle() + " <font color='" + color + "'>●</font></html>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 	private String buildTitle() {
 		return Messages.getString("AutoScoreMainPanel.Title"); //$NON-NLS-1$

@@ -66,6 +66,12 @@ public class PicoDiscovery {
 			return null;
 		}
 
+		/** The table number parsed from the label ("Table N"), or -1 if it cannot be parsed. */
+		public int tableNumber() {
+			java.util.regex.Matcher m = java.util.regex.Pattern.compile("(\\d+)\\s*$").matcher(label.trim()); //$NON-NLS-1$
+			return m.find() ? Integer.parseInt(m.group(1)) : -1;
+		}
+
 		/** True when the device reports anything other than FREE (a client is connected, or unknown status). */
 		public boolean isBusy() {
 			return !status.isEmpty() && !status.equalsIgnoreCase("FREE"); //$NON-NLS-1$

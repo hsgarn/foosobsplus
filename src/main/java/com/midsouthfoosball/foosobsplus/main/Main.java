@@ -570,8 +570,26 @@ public final class Main implements MatchObserver {
 		});
 		autoScoreConfigPanel.addResetConfigListener(e -> settingsManager().resetConfig());
 		autoScoreConfigPanel.addClearConfigListener(e -> settingsManager().clearConfig());
-		autoScoreMainPanel.addConnectListener(e -> { uiManager().setBlockReconnect(false); uiManager().connect(); });
-		autoScoreMainPanel.addDisconnectListener(e -> { uiManager().setBlockReconnect(true); uiManager().disconnect(); });
+		// Shift+click on the panel's Connect/Disconnect acts on ALL tables;
+		// a plain click acts on the displayed table only.
+		autoScoreMainPanel.addConnectListener(e -> {
+			if ((e.getModifiers() & ActionEvent.SHIFT_MASK) != 0) {
+				connectAllTables();
+			} else {
+				uiManager().setBlockReconnect(false);
+				uiManager().connect();
+			}
+		});
+		autoScoreMainPanel.addDisconnectListener(e -> {
+			if ((e.getModifiers() & ActionEvent.SHIFT_MASK) != 0) {
+				disconnectAllTables();
+			} else {
+				uiManager().setBlockReconnect(true);
+				uiManager().disconnect();
+			}
+		});
+		autoScoreMainPanel.addConnectAllListener(e -> connectAllTables());
+		autoScoreMainPanel.addDisconnectAllListener(e -> disconnectAllTables());
 		autoScoreMainPanel.addSettingsListener(e -> mainController.showAutoScore());
 		autoScoreSettingsPanel.setTableConnectedProvider(
 			i -> i >= 0 && i < autoScoreManagers.size() && autoScoreManagers.get(i).isConnected());
@@ -738,6 +756,7 @@ public final class Main implements MatchObserver {
 			if (m.isConnected()) connectedCount++;
 		}
 		mainFrame.setAutoScoreConnectionState(connectedCount, autoScoreManagers.size());
+		if (!autoScoreManagers.isEmpty()) autoScoreMainPanel.setConnectionState(uiManager().isConnected());
 		autoScoreSettingsPanel.refreshTableStatus();
 		rebuildAutoScoreTablesMenu();
 		if (!sessions.isEmpty()) rebuildTablesMenu();
@@ -1377,9 +1396,11 @@ public final class Main implements MatchObserver {
 				mementoStackTeam3, mementoStackStats, mementoStackMatch, mementoStackGameClock);
 		// 5. Republish the new table's state to the panels and live OBS.
 		republishActiveSession();
-		// 6. Keep both table switchers (Tables menu + Table Name combo) in sync.
+		// 6. Keep both table switchers (Tables menu + Table Name combo) and the
+		//    AutoScore panel's title dot in sync with the newly displayed table.
 		rebuildTablesMenu();
 		refreshTableNameCombo();
+		if (!autoScoreManagers.isEmpty()) autoScoreMainPanel.setConnectionState(uiManager().isConnected());
 	}
 	/**
 	 * Pushes the active session's current model state to the panels and live OBS.

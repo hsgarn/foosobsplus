@@ -638,7 +638,7 @@ When checked, FoosOBSPlus will attempt to automatically connect to the selected 
 ### Detail Log
 When checked, details sent from the selected table's FoosScore AutoScore system can be seen in the Message window.
 ### Search
-When pressed, will send a broadcast message on port 5051 to any FoosScore instances listening and collect responses from every FoosScore instance that answers (there may be one per table).  Each discovered device is displayed in the Message window with its table number, IP address, port, MAC address and status.  The status is FREE when the device has no active game connection, or BUSY followed by the IP address of the FoosOBSPlus client currently connected to it.  A pop up window then lists all discovered devices so you can pick which one to assign to the currently selected table; busy devices are shown as IN GAME with the connected client's IP, grayed out, and require confirmation before being assigned since they are already in use.
+When pressed, will send a broadcast message on port 5051 to any FoosScore instances listening and collect responses from every FoosScore instance that answers (there may be one per table).  Each discovered device is displayed in the Message window with its table number, IP address, port, MAC address and status.  The status is FREE when the device has no active game connection, or BUSY followed by the IP address of the FoosOBSPlus client currently connected to it.  A pop up window then lists all discovered devices; press Assign Selected to assign the highlighted device to the currently selected table, or Assign All to assign every discovered device to the table matching its reported table number in one shot (devices with an unrecognized table number, or numbered beyond the configured tables, are skipped with a message).  Busy devices are shown as IN GAME with the connected client's IP, grayed out, and require confirmation before being individually assigned since they are already in use.
 ### Connect
 This button will connect to the selected table's FoosScore AutoScore system at the given Server Address and Server Port.
 ### Disconnect
@@ -887,11 +887,11 @@ The AutoScore Panel controls the interaction with the AutoScore system.  This is
 <img width="320" height="220" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScorePanel.png">
 
 #### Connect
-This button will connect the displayed table to its AutoScore system.  The AutoScore system must already be configured in the AutoScore Settings for the connection to work.
+This button will connect the displayed table to its AutoScore system.  The AutoScore system must already be configured in the AutoScore Settings for the connection to work.  Shift+click the button to connect every configured table at once; right-clicking the panel also offers Connect All and Disconnect All in a pop up menu.
 #### Settings
 This button will bring up the AutoScore Settings window where the Server Address and Port can be configured.
 #### Disconnect
-This button will disconnect the displayed table from its AutoScore system.
+This button will disconnect the displayed table from its AutoScore system.  Shift+click the button to disconnect every configured table at once.
 #### Ignore Sensors
 Check this box if there is a need to temporarily ignore the input from the AutoScore system.  Uncheck it to resume letting the AutoScore system update the scores.
 ### Switch Panel
@@ -1637,6 +1637,18 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.101 07/05/2026</br>
+Add Assign All button to the AutoScore Search results window.</br>
+The device picker shown after a Search now offers Assign Selected, Assign All and Cancel.  Assign All assigns every discovered device to the table matching its reported table number (Table 2 goes to the second table connection and so on) and saves all connections in one shot; devices with an unrecognized table number, or numbered beyond the configured tables, are skipped with a message in the Message window.  Assign Selected keeps the previous behavior of assigning the highlighted device to the currently selected table.</br>
+Add a connection status dot to the AutoScore Panel title.</br>
+The panel title now shows a green dot when the displayed table's AutoScore system is connected and a red dot when it is not; the dot updates immediately on connect, disconnect and table switches.</br>
+Add Connect All and Disconnect All to the AutoScore Panel without changing its size.</br>
+Shift+click the panel's Connect or Disconnect button to act on every configured table at once, or right-click the panel for a pop up menu with Connect All and Disconnect All.  Tool tips on the buttons describe both shortcuts.</br>
+</br>
+v2.100 07/05/2026</br>
+Fix table state getting stale after Pico search/save.</br>
+Saving the AutoScore settings (Apply, Save, Connect or a Search assignment) now syncs the live runtime with the saved table list: every connection's address and port are refreshed, and tables added in the settings window get their AutoScore manager and table session created immediately, so a newly added table can be connected and switched to without restarting FoosOBSPlus.</br>
+</br>
 v2.099 07/05/2026</br>
 Add REST API endpoints for all hotkey functions, organized by category: POST /api/team (scores, game/match counts, time outs, reset, warn, king seat, switch positions for teams 1-3), POST /api/match (start, pause, end, startGame, startEvent), POST /api/switch (sides, teams, scores, gameCounts, matchCounts, timeOuts, resetWarns, forwards, goalies), POST /api/reset (names, scores, gameCounts, matchCounts, timeOuts, resetWarns, all), POST /api/stats (undo, redo, clearAll, clearTournament), POST /api/obs (connect, disconnect, push, pull plus showScores/showTimer/showCutthroat/showSkunk/startStream toggles with optional explicit state) and POST /api/autoscore (connect, disconnect).</br>
 Actions execute the same commands as the buttons/hotkeys, so they participate in undo/redo, fire the same OBS filters and keep the GUI in sync.  All endpoints use the existing API key authentication and rate limiting.</br>
