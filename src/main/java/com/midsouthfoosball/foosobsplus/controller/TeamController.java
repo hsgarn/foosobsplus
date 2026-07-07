@@ -1391,4 +1391,76 @@ public class TeamController {
 			return "";
 		}
 	}
+	////// Raw field adjustments (used by the Table View windows) //////
+	// These nudge a single counter on the bound team by delta (clamped at 0),
+	// like editing the field on the main panel - no game-win detection or timers.
+	public void adjustScore(int teamNumber, int delta) {
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			team.setScore(Math.max(0, team.getScore() + delta));
+			teamPanel.updateScore(team.getScore());
+			updateGameTables();
+		}
+	}
+	public void adjustGameCount(int teamNumber, int delta) {
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			team.setGameCount(Math.max(0, team.getGameCount() + delta));
+			match.syncCurrentGameNumber();
+			teamPanel.updateGameCount(team.getGameCount());
+			updateGameTables();
+		}
+	}
+	public void adjustMatchCount(int teamNumber, int delta) {
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			team.setMatchCount(Math.max(0, team.getMatchCount() + delta));
+			teamPanel.updateMatchCount(team.getMatchCount());
+			updateGameTables();
+		}
+	}
+	public void adjustTimeOutCount(int teamNumber, int delta) {
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team != null) {
+			team.setTimeOutCount(Math.max(0, team.getTimeOutCount() + delta));
+			teamPanel.updateTimeOutCount(team.getTimeOutCount());
+		}
+	}
+	// Sets a team's name, forward and goalie together (from the Table View name
+	// modal), applying the same auto-cap and empty-name fallback as the panel's
+	// own name fields.
+	public void applyNames(int teamNumber, String teamName, String forwardName, String goalieName) {
+		Team team = teamsMap.getOrDefault(teamNumber, null);
+		TeamPanel teamPanel = teamPanelsMap.getOrDefault(teamNumber, null);
+		if (team == null) {
+			return;
+		}
+		boolean autoCap = Settings.getControlParameter(SettingsKeys.CTRL_AUTO_CAP_NAMES).equals(ON);
+		String resolvedTeamName;
+		if (teamName == null || teamName.isEmpty()) {
+			resolvedTeamName = Messages.getString("TeamPanel.Team") + teamNumber;
+		} else if (autoCap) {
+			resolvedTeamName = capitalizeWords(teamName);
+		} else {
+			resolvedTeamName = teamName;
+		}
+		String resolvedForward = autoCap ? capitalizeWords(forwardName == null ? "" : forwardName)
+				: (forwardName == null ? "" : forwardName);
+		String resolvedGoalie = autoCap ? capitalizeWords(goalieName == null ? "" : goalieName)
+				: (goalieName == null ? "" : goalieName);
+		team.setTeamName(resolvedTeamName);
+		team.setForwardName(resolvedForward);
+		team.setGoalieName(resolvedGoalie);
+		teamPanel.updateTeamName(resolvedTeamName);
+		teamPanel.updateNames(resolvedForward, resolvedGoalie);
+		statsDisplayPanel.updateTeams(teamNumber, Main.combinePlayerNames(teamNumber), getTeamName(teamNumber));
+		if (match.getWinState() > 0) {
+			resetForNewGame();
+		}
+		updateGameTables();
+	}
 }

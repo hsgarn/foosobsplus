@@ -861,7 +861,9 @@ public final class Main implements MatchObserver {
 		TableViewFrame frame = new TableViewFrame(index, name, session,
 				() -> sessions.indexOf(activeSession), OBS::getConnected,
 				() -> index < autoScoreManagers.size() && autoScoreManagers.get(index).isConnected(),
-				Main::selectTable);
+				Main::selectTable,
+				(teamNumber, field, delta) -> editTableField(index, teamNumber, field, delta),
+				(teamNumber, teamName, forwardName, goalieName) -> editTableNames(index, teamNumber, teamName, forwardName, goalieName));
 		frame.addWindowListener(new WindowAdapter() {
 			@Override public void windowClosed(WindowEvent e) { tableViewFrames.remove(index); }
 		});
@@ -897,6 +899,60 @@ public final class Main implements MatchObserver {
 	private static void selectTable(int index) {
 		if (index < 0 || index >= sessions.size()) return;
 		switchToSession(sessions.get(index));
+	}
+	/**
+	 * Runs an edit against any table (active or background) using the same
+	 * temp-bind pattern as {@link #applyBackgroundEvent}: when the target is not
+	 * the displayed table, bind the controllers to it, run the action, then rebind
+	 * to the active session. Always finishes by republishing the active session
+	 * (so its panels/OBS reflect any active-table edit), pushing the secondary
+	 * ("mini") table, and refreshing any open Table View windows.
+	 */
+	private static void withTableBound(int tableIndex, Runnable action) {
+		if (tableIndex < 0 || tableIndex >= sessions.size()) return;
+		TableSession target = sessions.get(tableIndex);
+		boolean background = target != activeSession;
+		if (background) {
+			teamController.bindSession(target);
+			matchController.bindSession(target);
+			statsController.bindSession(target);
+			timerController.bindSession(target);
+		}
+		try {
+			action.run();
+		} finally {
+			if (background) {
+				teamController.bindSession(activeSession);
+				matchController.bindSession(activeSession);
+				statsController.bindSession(activeSession);
+				timerController.bindSession(activeSession);
+			}
+			republishActiveSession();
+			publishSecondarySession();
+			refreshTableViews();
+		}
+	}
+	/** Nudges every open Table View window to re-read its session immediately. */
+	private static void refreshTableViews() {
+		for (TableViewFrame frame : tableViewFrames.values()) {
+			frame.refreshNow();
+		}
+	}
+	/** Adjusts one counter (score/games/matches/timeouts) on a table's team by delta. */
+	private static void editTableField(int tableIndex, int teamNumber, TableViewFrame.Field field, int delta) {
+		withTableBound(tableIndex, () -> {
+			switch (field) {
+				case SCORE:    teamController.adjustScore(teamNumber, delta); break;
+				case GAMES:    teamController.adjustGameCount(teamNumber, delta); break;
+				case MATCHES:  teamController.adjustMatchCount(teamNumber, delta); break;
+				case TIMEOUTS: teamController.adjustTimeOutCount(teamNumber, delta); break;
+				default: break;
+			}
+		});
+	}
+	/** Sets a table team's name/forward/goalie together (from the Table View name modal). */
+	private static void editTableNames(int tableIndex, int teamNumber, String teamName, String forwardName, String goalieName) {
+		withTableBound(tableIndex, () -> teamController.applyNames(teamNumber, teamName, forwardName, goalieName));
 	}
 	/** Returns the number of configured table sessions. */
 	public static int getTableCount() {

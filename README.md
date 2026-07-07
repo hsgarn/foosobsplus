@@ -722,7 +722,13 @@ When checked, all the above windows will display.  Unchecking the box will close
 ### Table Views
 This submenu lists every configured table.  Selecting a table opens a small monitor window for it (selecting it again brings the existing window to the front rather than opening a duplicate).  This lets you keep an eye on tables that are not currently displayed.
 
-Each Table View window shows, for each team, that table's Score, Games (game count), Matches (match count) and Time Outs, updated about twice a second so a non-displayed table being scored in the background can be watched in real time.
+Each Table View window shows, for each team, that table's Score, Games (game count), Matches (match count) and Time Outs, updated about twice a second so a non-displayed table being scored in the background can be watched in real time.  Teams are shown side by side as columns, with the four counters listed down the left side.  In cut-throat mode a third team column appears.
+
+You can adjust any of these values right from the window.  Each counter has a minus button on its left and a plus button on its right for each team; pressing one changes that single value by one (values never go below zero).  These are direct corrections — for example, Score plus simply raises the score by one, it does not detect a game win, start a timer or advance to the next game.
+
+Each team column also shows the team name with the current forward (F:) and goalie (G:) beneath it, along with an **Edit Names** button.  Pressing **Edit Names** opens a small dialog with fields for the Team Name, Forward and Goalie, filled in with the current values; enter the names and press OK to apply them (Cancel leaves them unchanged).  Names follow the same automatic capitalization setting as the main screen.
+
+All of these edits act on that window's own table, even when it is a background (non-displayed) table.  When you edit the table that is currently displayed, the main screen, the game grid and the OBS output update to match automatically.
 
 The window has two status indicators:
 - **AutoScore** – a solid circle showing that table's AutoScore connection: green when connected, red when not.
@@ -1637,6 +1643,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.105 07/07/2026</br>
+Make the Table View windows editable.</br>
+</br>
 v2.104 07/06/2026</br>
 Convert OBS Panel to gridbaglayout like the other panels to improve consistency.</br>
 </br>
