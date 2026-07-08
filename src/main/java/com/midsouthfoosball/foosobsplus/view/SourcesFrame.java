@@ -37,7 +37,7 @@ public class SourcesFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setAlwaysOnTop(true);
 		sourcesPanel = new SourcesPanel();
-		sourcesPanel.setPreferredSize(new Dimension(1030, 625));
+		sourcesPanel.setPreferredSize(new Dimension(1030, 660));
 		getContentPane().add(sourcesPanel);
 		pack();
 		addWindowListener(new WindowAdapter() {
@@ -49,5 +49,14 @@ public class SourcesFrame extends JFrame {
 	}
 	public SourcesPanel getSourcesPanel() {
 		return sourcesPanel;
+	}
+	@Override
+	public void setVisible(boolean visible) {
+		// Clear stale validation highlighting every time the window is shown.
+		// (windowOpened only fires once per instance, so it is unreliable here.)
+		if (visible) {
+			sourcesPanel.clearValidationColors();
+		}
+		super.setVisible(visible);
 	}
 }

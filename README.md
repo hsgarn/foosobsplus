@@ -220,6 +220,13 @@ This is the source that holds the Winner Prefix, Team's Name and Winner Suffix o
 This is the source that holds the Meatball text when a game is tied just prior to the final point.  Default source is meatball.
 #### Game Results:
 This is the source that holds the results of all the games played since the program was started or the Start Event button was pressed.  It is intended to be a Text (GDI+) source with a scrolling filter applied.   Every time a game is won, the current time, team 1 forward & goalie names, team 1 score, team 2 forward & goalie names, team 2 score, and the game time length is added to the text on a new line.  Default source is gameresults.
+#### Validate
+Click the **Validate** button to check every configured source against OBS Studio.  FoosOBSPlus fetches a fresh list of sources from OBS, then displays a report of any problems it finds and highlights the affected fields by background color:
+* **Missing (not in OBS)** — light red: the name does not match any source in OBS.
+* **Wrong type** — light orange: the name matches something in OBS, but not a source (for example, a filter name).
+* **Duplicate name** — light yellow: the same name is used for more than one field.
+
+A color legend explaining these colors is shown at the bottom of the window.  When OBS is connected, each field is also validated automatically as soon as you finish editing it (when you move to another field or press Enter), so mistakes are flagged as you go.  Validation requires OBS to be connected.
 #### Apply
 Click the Apply button to save any source changes made and keep the window open.
 #### Apply and Close
@@ -281,6 +288,13 @@ This is the source that holds the number of scores from the 5-bar for a team.  D
 This is the source that holds the number of scores from the 2-bar for a team.  Default source is teamXtwobarscoring.
 #### Shots On Goal:
 This is the source that holds the number of shots on goal for a team.  Default source is teamXshotsongoal.
+#### Validate
+Click the **Validate** button to check every configured statistics source against OBS Studio.  FoosOBSPlus fetches a fresh list of sources from OBS, then displays a report of any problems it finds and highlights the affected fields by background color:
+* **Missing (not in OBS)** — light red: the name does not match any source in OBS.
+* **Wrong type** — light orange: the name matches something in OBS, but not a source (for example, a filter name).
+* **Duplicate name** — light yellow: the same name is used for more than one field.
+
+A color legend explaining these colors is shown at the bottom of the window.  When OBS is connected, each field is also validated automatically as soon as you finish editing it (when you move to another field or press Enter), so mistakes are flagged as you go.  Validation requires OBS to be connected.
 #### Apply
 Click the Apply button to save any statistics source changes made.
 #### Apply and Close
@@ -506,6 +520,13 @@ This is the name of the filter activated when the Start Game button is pressed.
 This is the name of the filter activated when the Switch Sides button is pressed.
 #### Meatball
 This is the name of the filter activated when both teams are tied and next ball wins the match.
+#### Validate
+Click the **Validate** button to check every configured filter against OBS Studio.  FoosOBSPlus fetches a fresh list of scene filters from OBS, then displays a report of any problems it finds and highlights the affected fields by background color:
+* **Missing (not in OBS)** — light red: the name does not match any filter in OBS.
+* **Wrong type** — light orange: the name matches something in OBS, but not a filter (for example, a source name).
+* **Duplicate name** — light yellow: the same name is used for more than one field.
+
+A color legend explaining these colors is shown near the bottom of the window.  When OBS is connected, each field is also validated automatically as soon as you finish editing it (when you move to another field or press Enter), so mistakes are flagged as you go.  Validation requires OBS to be connected.
 #### Apply
 Click the Apply button to save any filter changes made.
 #### Apply and Close
@@ -1648,6 +1669,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.107 07/08/2026</br>
+Add OBS sources/filter validation.</br>
+</br>
 v2.106 07/07/2026</br>
 Secure the REST API by default instead of shipping a shared static key.</br>
 Every install now gets its own randomly generated API key on first run (or the next run, for existing installs) instead of the previous fixed default key; a new "Restrict to Local Machine Only" checkbox on the REST API Settings page (checked by default) binds the API server to 127.0.0.1 so it isn't reachable from other devices on the network unless you explicitly opt in. Restore Defaults on that page now generates a fresh random key rather than reusing a known one.</br>

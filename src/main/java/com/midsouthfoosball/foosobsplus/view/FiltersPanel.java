@@ -20,6 +20,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.view;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.BooleanSupplier;
 
 import javax.swing.DefaultComboBoxModel;
@@ -41,6 +43,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
@@ -52,6 +56,9 @@ import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
+import com.midsouthfoosball.foosobsplus.obs.OBSSetupValidator;
+import com.midsouthfoosball.foosobsplus.obs.OBSSetupValidator.Result;
+import com.midsouthfoosball.foosobsplus.obs.OBSSetupValidator.Status;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -78,9 +85,16 @@ public class FiltersPanel extends JPanel {
 	private JComboBox<String> txtSwitchSidesFilter;
 	private JComboBox<String> txtMeatballFilter;
 	private JButton btnFetchFilters;
+	private JButton btnValidate;
 	private List<JComboBox<String>> allFilterCombos;
 	private List<String> obsFiltersList = new ArrayList<>();
+	private List<String> obsSourcesList = new ArrayList<>();
 	private boolean filterUpdating = false;
+	private boolean pendingValidation = false;
+	private boolean validationInputsReady = false;
+	private boolean validationFiltersReady = false;
+	private Color defaultEditorBackground;
+	private BooleanSupplier obsConnected = () -> false;
 	private JButton btnTeam1ScoreFilter;
 	private JButton btnTeam2ScoreFilter;
 	private JButton btnTeam1WinGameFilter;
@@ -144,6 +158,8 @@ public class FiltersPanel extends JPanel {
 			combo.setEditable(true);
 			setupComboFiltering(combo);
 		}
+		JComboBox<String> sampleCombo = allFilterCombos.get(0);
+		defaultEditorBackground = sampleCombo.getEditor().getEditorComponent().getBackground();
 		revertChanges();
 	}
 	private void setupComboFiltering(JComboBox<String> combo) {
@@ -177,6 +193,15 @@ public class FiltersPanel extends JPanel {
 			@Override public void removeUpdate(DocumentEvent e) { filter(); }
 			@Override public void changedUpdate(DocumentEvent e) { filter(); }
 		});
+		// Live validation: recolor when the user finishes with a field (focus lost)
+		// or commits it (Enter / picking from the popup). Gated internally on an OBS
+		// connection so it silently no-ops when disconnected.
+		editor.addFocusListener(new java.awt.event.FocusAdapter() {
+			@Override public void focusLost(java.awt.event.FocusEvent e) {
+				if (!e.isTemporary()) applyValidationColors();
+			}
+		});
+		combo.addActionListener(e -> { if (!filterUpdating) applyValidationColors(); });
 	}
 	public String getFilterText(String key) {
 		JComboBox<String> combo = filtersMap.get(key);
@@ -252,7 +277,119 @@ public class FiltersPanel extends JPanel {
 				combo.setSelectedItem(current);
 			}
 			filterUpdating = false;
+			validationFiltersReady = true;
+			runValidationIfReady();
 		});
+	}
+	public void cacheObsSources(List<String> inputNames) {
+		obsSourcesList = new ArrayList<>(inputNames);
+		validationInputsReady = true;
+		runValidationIfReady();
+	}
+	public void requestValidation() {
+		pendingValidation = true;
+		validationInputsReady = false;
+		validationFiltersReady = false;
+	}
+	// Clears all validation highlighting (e.g. when the window is (re)opened).
+	public void clearValidationColors() {
+		filtersMap.values().forEach(combo -> setComboBackground(combo, null));
+	}
+	private void runValidationIfReady() {
+		if (pendingValidation && validationInputsReady && validationFiltersReady) {
+			pendingValidation = false;
+			runValidation(obsFiltersList, obsSourcesList);
+		}
+	}
+	private static final Color COLOR_MISSING = ValidationColors.MISSING;
+	private static final Color COLOR_WRONG_TYPE = ValidationColors.WRONG_TYPE;
+	private static final Color COLOR_DUPLICATE = ValidationColors.DUPLICATE;
+	private void setComboBackground(JComboBox<String> combo, Color color) {
+		// An editable JComboBox under Nimbus paints its visible text area via a
+		// dedicated style region named ComboBox:"ComboBox.textField" (NOT the generic
+		// TextField region), so plain setBackground() and TextField overrides are
+		// ignored. We install a per-component backgroundPainter override on the editor
+		// keyed to that region. Passing null removes the override to restore defaults.
+		java.awt.Component editor = combo.getEditor().getEditorComponent();
+		if (editor instanceof JComponent jc) {
+			if (color == null) {
+				jc.putClientProperty("Nimbus.Overrides", null); //$NON-NLS-1$
+				jc.putClientProperty("Nimbus.Overrides.InheritDefaults", null); //$NON-NLS-1$
+				jc.setBackground(defaultEditorBackground);
+			} else {
+				javax.swing.UIDefaults overrides = new javax.swing.UIDefaults();
+				javax.swing.Painter<JComponent> painter = (g, c, w, h) -> { g.setColor(color); g.fillRect(0, 0, w, h); };
+				String prefix = "ComboBox:\"ComboBox.textField\""; //$NON-NLS-1$
+				overrides.put(prefix + "[Enabled].backgroundPainter", painter); //$NON-NLS-1$
+				overrides.put(prefix + "[Focused].backgroundPainter", painter); //$NON-NLS-1$
+				overrides.put(prefix + "[Selected].backgroundPainter", painter); //$NON-NLS-1$
+				overrides.put(prefix + "[Disabled].backgroundPainter", painter); //$NON-NLS-1$
+				jc.putClientProperty("Nimbus.Overrides", overrides); //$NON-NLS-1$
+				jc.putClientProperty("Nimbus.Overrides.InheritDefaults", true); //$NON-NLS-1$
+				jc.setBackground(color);
+			}
+			jc.revalidate();
+		}
+		combo.repaint();
+	}
+	public void setObsConnectedSupplier(BooleanSupplier supplier) {
+		this.obsConnected = supplier != null ? supplier : () -> false;
+	}
+	// Colors problem fields without popping a report dialog. Used for live
+	// (focus-lost / Enter) validation against the last-fetched OBS filter/source lists.
+	private void applyValidationColors() {
+		if (!obsConnected.getAsBoolean() || obsFiltersList.isEmpty()) return;
+		filtersMap.values().forEach(combo -> setComboBackground(combo, null));
+		Map<String, String> configured = new TreeMap<>();
+		filtersMap.forEach((key, combo) -> {
+			String value = getComboText(combo).trim();
+			if (!value.isEmpty()) configured.put(key, value);
+		});
+		Map<String, Result> results = OBSSetupValidator.validate(configured, obsFiltersList, obsSourcesList);
+		for (Result result : results.values()) {
+			JComboBox<String> combo = filtersMap.get(result.key());
+			switch (result.status()) {
+				case MISSING -> setComboBackground(combo, COLOR_MISSING);
+				case WRONG_TYPE -> setComboBackground(combo, COLOR_WRONG_TYPE);
+				case DUPLICATE -> setComboBackground(combo, COLOR_DUPLICATE);
+				default -> {}
+			}
+		}
+	}
+	public void runValidation(List<String> ownList, List<String> otherTypeList) {
+		filtersMap.values().forEach(combo -> setComboBackground(combo, null));
+		Map<String, String> configured = new TreeMap<>();
+		filtersMap.forEach((key, combo) -> {
+			String value = getComboText(combo).trim();
+			if (!value.isEmpty()) configured.put(key, value);
+		});
+		Map<String, Result> results = OBSSetupValidator.validate(configured, ownList, otherTypeList);
+		int missing = 0, wrongType = 0, duplicate = 0;
+		StringBuilder details = new StringBuilder();
+		for (Result result : results.values()) {
+			if (result.status() == Status.OK) continue;
+			JComboBox<String> combo = filtersMap.get(result.key());
+			switch (result.status()) {
+				case MISSING -> { setComboBackground(combo, COLOR_MISSING); missing++; }
+				case WRONG_TYPE -> { setComboBackground(combo, COLOR_WRONG_TYPE); wrongType++; }
+				case DUPLICATE -> { setComboBackground(combo, COLOR_DUPLICATE); duplicate++; }
+				default -> {}
+			}
+			details.append(result.key()).append(": ").append(result.status()) //$NON-NLS-1$
+				.append(" (").append(result.value()).append(")\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		showValidationReport(missing, wrongType, duplicate, details.toString());
+	}
+	private void showValidationReport(int missing, int wrongType, int duplicate, String details) {
+		String summary = Messages.getString("FiltersPanel.ValidateSummary") //$NON-NLS-1$
+			.replace("{0}", String.valueOf(missing)) //$NON-NLS-1$
+			.replace("{1}", String.valueOf(wrongType)) //$NON-NLS-1$
+			.replace("{2}", String.valueOf(duplicate)); //$NON-NLS-1$
+		JTextArea textArea = new JTextArea(summary + "\n\n" + details, 15, 50); //$NON-NLS-1$
+		textArea.setEditable(false);
+		JScrollPane scrollPane = new JScrollPane(textArea);
+		JOptionPane.showMessageDialog(this, scrollPane, Messages.getString("FiltersPanel.ValidateTitle"), //$NON-NLS-1$
+			(missing + wrongType + duplicate) == 0 ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.WARNING_MESSAGE);
 	}
 	private void restoreDefaults() {
 		filterUpdating = true;
@@ -530,10 +667,16 @@ public class FiltersPanel extends JPanel {
 		add(btnRestoreDefaults, "cell 5 19,alignx center"); //$NON-NLS-1$
 		btnFetchFilters = new JButton(Messages.getString("FiltersPanel.FetchFilters")); //$NON-NLS-1$
 		add(btnFetchFilters, "cell 6 19,alignx left"); //$NON-NLS-1$
+		btnValidate = new JButton(Messages.getString("FiltersPanel.Validate")); //$NON-NLS-1$
+		add(btnValidate, "cell 7 19,alignx left"); //$NON-NLS-1$
+		add(ValidationColors.buildLegend(), "cell 1 18 8 1,alignx left"); //$NON-NLS-1$
 	}
 	////// Listeners  //////
 	public void addFetchFiltersListener(ActionListener listenForBtnFetchFilters) {
 		btnFetchFilters.addActionListener(listenForBtnFetchFilters);
+	}
+	public void addValidateListener(ActionListener listenForBtnValidate) {
+		btnValidate.addActionListener(listenForBtnValidate);
 	}
 	public void addTeam1ScoreFilterListener(ActionListener listenForBtnTeam1ScoreFilter) {
 		btnTeam1ScoreFilter.addActionListener(listenForBtnTeam1ScoreFilter);

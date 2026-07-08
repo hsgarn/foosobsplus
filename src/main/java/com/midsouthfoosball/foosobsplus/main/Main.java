@@ -423,6 +423,7 @@ public final class Main implements MatchObserver {
 				sourcesPanel.populateObsSources(inputNames);
 				statSourcesPanel.populateObsSources(inputNames);
 				autoScoreSettingsPanel.populateObsSources(inputNames);
+				filtersPanel.cacheObsSources(inputNames);
 			}
 
 			@Override
@@ -466,6 +467,12 @@ public final class Main implements MatchObserver {
 	}
 	public static void connectToOBS() {
 		obsManager.connect();
+	}
+	private static boolean requireObsConnected() {
+		if (obsManager != null && obsManager.isConnected()) return true;
+		JOptionPane.showMessageDialog(null, Messages.getString("Global.ObsNotConnected"), //$NON-NLS-1$
+			Messages.getString("Global.ObsNotConnectedTitle"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
+		return false;
 	}
 	public static void updateOBSConnected() {
 		OBS.setConnected(true);
@@ -1166,6 +1173,12 @@ public final class Main implements MatchObserver {
 		sourcesPanel.addApplyListener(new SourcesApplyListener());
 		sourcesPanel.addSaveListener(new SourcesSaveListener());
 		sourcesPanel.addFetchSourcesListener((ActionEvent ae) -> obsManager.fetchInputList());
+		sourcesPanel.addValidateListener((ActionEvent ae) -> {
+			if (!requireObsConnected()) return;
+			sourcesPanel.requestValidation();
+			obsManager.fetchInputList();
+		});
+		sourcesPanel.setObsConnectedSupplier(() -> obsManager != null && obsManager.isConnected());
 		sourcesPanel.setSaveCallback(() -> { boolean ok = sourcesPanel.saveSettings(); if (ok) onSourcesSaved(); return ok; });
 		sourcesFrame.addWindowListener(new WindowAdapter() {
 			@Override public void windowOpened(WindowEvent e) {
@@ -1178,6 +1191,12 @@ public final class Main implements MatchObserver {
 		statSourcesPanel.addApplyListener(new StatSourcesApplyListener());
 		statSourcesPanel.addSaveListener(new StatSourcesSaveListener());
 		statSourcesPanel.addFetchSourcesListener((ActionEvent ae) -> obsManager.fetchInputList());
+		statSourcesPanel.addValidateListener((ActionEvent ae) -> {
+			if (!requireObsConnected()) return;
+			statSourcesPanel.requestValidation();
+			obsManager.fetchInputList();
+		});
+		statSourcesPanel.setObsConnectedSupplier(() -> obsManager != null && obsManager.isConnected());
 		statSourcesFrame.addWindowListener(new WindowAdapter() {
 			@Override public void windowOpened(WindowEvent e) {
 				if (obsManager.isConnected() && !obsSourcesFetched) obsManager.fetchInputList();
@@ -1187,6 +1206,13 @@ public final class Main implements MatchObserver {
 			}
 		});
 		filtersPanel.addFetchFiltersListener((ActionEvent ae) -> obsManager.fetchSceneFilterList());
+		filtersPanel.addValidateListener((ActionEvent ae) -> {
+			if (!requireObsConnected()) return;
+			filtersPanel.requestValidation();
+			obsManager.fetchInputList();
+			obsManager.fetchSceneFilterList();
+		});
+		filtersPanel.setObsConnectedSupplier(() -> obsManager != null && obsManager.isConnected());
 		filtersFrame.addWindowListener(new WindowAdapter() {
 			@Override public void windowOpened(WindowEvent e) {
 				if (obsManager.isConnected() && !obsFiltersFetched) obsManager.fetchSceneFilterList();

@@ -47,7 +47,7 @@ public class FiltersFrame extends JFrame {
 			logger.error(Messages.getString("Errors.LoadSettingsError")); //$NON-NLS-1$
 			logger.error(e.toString());
 		}
-		filtersPanel.setPreferredSize(new Dimension(750, 630));
+		filtersPanel.setPreferredSize(new Dimension(880, 660));
 		getContentPane().add(filtersPanel);
 		pack();
 		addWindowListener(new WindowAdapter() {
@@ -59,5 +59,14 @@ public class FiltersFrame extends JFrame {
 	}
 	public FiltersPanel getFiltersPanel() {
 		return filtersPanel;
+	}
+	@Override
+	public void setVisible(boolean visible) {
+		// Clear stale validation highlighting every time the window is shown.
+		// (windowOpened only fires once per instance, so it is unreliable here.)
+		if (visible && filtersPanel != null) {
+			filtersPanel.clearValidationColors();
+		}
+		super.setVisible(visible);
 	}
 }
