@@ -479,6 +479,7 @@ public final class Main implements MatchObserver {
 		obsConnectPanel.disableConnect();
 		mainFrame.enableConnect(false);
 		mainFrame.setOBSIconConnected(true);
+		obsPanel.setConnectionState(true);
 		// The active-table publish (gated on OBSUpdateOnConnect) runs once via the
 		// OBSManager updateOnConnectCallback; don't duplicate it here. The secondary
 		// mini area and camera swap always (re)establish on connect/reconnect.
@@ -492,6 +493,7 @@ public final class Main implements MatchObserver {
 		obsConnectPanel.enableConnect();
 		mainFrame.enableConnect(true);
 		mainFrame.setOBSIconConnected(false);
+		obsPanel.setConnectionState(false);
 	}
 	public static void shutdownAPIServer() {
 		if (apiServer != null && apiServer.isRunning()) {

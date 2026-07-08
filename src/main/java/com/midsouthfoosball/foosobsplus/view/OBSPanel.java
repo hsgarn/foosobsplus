@@ -52,7 +52,9 @@ public class OBSPanel extends JPanel {
 	private final JCheckBox ckbxShowCutthroat;
 	private final JCheckBox ckbxAutoCameraSwap;
 	private final JLabel lblStreamTime;
-	private final Border innerBorder;
+	// OBS connection state, shown as a colored dot in the panel title
+	// (green=connected, red=disconnected).
+	private boolean connected = false;
 	private static final String ON = "1"; //$NON-NLS-1$
 	public OBSPanel() {
 		Dimension dim = getPreferredSize();
@@ -82,10 +84,7 @@ public class OBSPanel extends JPanel {
 		lblStreamTime.setOpaque(true);
 		lblStreamTime.setBackground(Color.ORANGE);
 		setMnemonics();
-		innerBorder = BorderFactory.createTitledBorder(buildTitle());
-		((TitledBorder) innerBorder).setTitleJustification(TitledBorder.CENTER);
-		Border outerBorder = BorderFactory.createEmptyBorder(Settings.getBorderTop(),Settings.getBorderLeft(),Settings.getBorderBottom(),Settings.getBorderRight());
-		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
+		refreshBorder();
 		layoutComponents();
 	}
 	private void layoutComponents() {
@@ -260,10 +259,26 @@ public class OBSPanel extends JPanel {
 		setMnemonics();
 	}
 	public void setTitle() {
-		String title=buildTitle();
-		TitledBorder border = BorderFactory.createTitledBorder(title);
-		border.setTitleJustification(TitledBorder.CENTER);
-		this.setBorder(border);
+		refreshBorder();
+	}
+	// Shows the OBS connection state as a colored dot in the panel title.
+	public void setConnectionState(boolean connected) {
+		if (this.connected == connected) return;
+		this.connected = connected;
+		refreshBorder();
+		repaint();
+	}
+	private void refreshBorder() {
+		TitledBorder innerBorder = BorderFactory.createTitledBorder(buildTitleWithStatus());
+		innerBorder.setTitleJustification(TitledBorder.CENTER);
+		Border outerBorder = BorderFactory.createEmptyBorder(Settings.getBorderTop(),Settings.getBorderLeft(),Settings.getBorderBottom(),Settings.getBorderRight());
+		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
+	}
+	// TitledBorder renders HTML titles, so the status dot is an HTML colored
+	// bullet (same approach as the AutoScore panel).
+	private String buildTitleWithStatus() {
+		String color = connected ? "#00AA00" : "#C80000"; //$NON-NLS-1$ //$NON-NLS-2$
+		return "<html>" + buildTitle() + " <font color='" + color + "'>●</font></html>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 	private String buildTitle() {
 		return Messages.getString("OBSPanel.OBSPanel"); //$NON-NLS-1$
