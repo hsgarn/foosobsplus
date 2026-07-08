@@ -22,7 +22,9 @@ package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
@@ -42,8 +44,10 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -62,7 +66,10 @@ public class OBSConnectPanel extends JPanel {
 	private final JTextField txtHost;
 	private final JTextField txtPort;
 	private final JButton btnConnect;
-	private final JTextField txtPassword;
+	private final JPasswordField txtPassword;
+	private final JToggleButton btnRevealPassword;
+	private final JButton btnCopyPassword;
+	private final char defaultEchoChar;
 	private final JTextField txtMainScene;
 	private final JButton btnSetMainScene;
 	private final JCheckBox chckbxSavePassword;
@@ -118,10 +125,19 @@ public class OBSConnectPanel extends JPanel {
 		row += 1;
 		JLabel lblPassword = new JLabel(Messages.getString("OBSConnectPanel.Password")); //$NON-NLS-1$
 		add(lblPassword, "cell " + COLUMN0 + " " + row + ",alignx trailing"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		txtPassword = new JTextField();
+		txtPassword = new JPasswordField();
+		defaultEchoChar = txtPassword.getEchoChar();
 		txtPassword.setText(Settings.getOBSParameter(SettingsKeys.OBS_PASSWORD));
 		txtPassword.setColumns(10);
 		add(txtPassword, "cell " + COLUMN1 + " " + row + " 2,growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		btnRevealPassword = new JToggleButton(Messages.getString("OBSConnectPanel.ShowPassword")); //$NON-NLS-1$
+		btnRevealPassword.setToolTipText(Messages.getString("OBSConnectPanel.ShowPasswordToolTip")); //$NON-NLS-1$
+		btnRevealPassword.addActionListener((ActionEvent e) -> togglePasswordVisibility());
+		add(btnRevealPassword, "cell " + COLUMN3 + " " + row + ",growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		btnCopyPassword = new JButton(Messages.getString("OBSConnectPanel.CopyPassword")); //$NON-NLS-1$
+		btnCopyPassword.setToolTipText(Messages.getString("OBSConnectPanel.CopyPasswordToolTip")); //$NON-NLS-1$
+		btnCopyPassword.addActionListener((ActionEvent e) -> copyPasswordToClipboard());
+		add(btnCopyPassword, "cell " + COLUMN4 + " " + row + ",growx"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		row += 1;
 		JLabel lblMainScene = new JLabel(Messages.getString("OBSConnectPanel.MainScene")); //$NON-NLS-1$
 		add(lblMainScene, "cell " + COLUMN0 + " " + row + ", alignx trailing"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -210,6 +226,27 @@ public class OBSConnectPanel extends JPanel {
                 });
 		add(btnRestoreDefaults, "cell " + COLUMN4+ " " + row + ",alignx left"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
+	// Reads the password as a String without going through the deprecated
+	// JPasswordField.getText().
+	private String getPasswordText() {
+		return new String(txtPassword.getPassword());
+	}
+	// Toggles between masking the password and showing it in the clear.
+	private void togglePasswordVisibility() {
+		if (btnRevealPassword.isSelected()) {
+			txtPassword.setEchoChar((char) 0);
+			btnRevealPassword.setText(Messages.getString("OBSConnectPanel.HidePassword")); //$NON-NLS-1$
+			btnRevealPassword.setToolTipText(Messages.getString("OBSConnectPanel.HidePasswordToolTip")); //$NON-NLS-1$
+		} else {
+			txtPassword.setEchoChar(defaultEchoChar);
+			btnRevealPassword.setText(Messages.getString("OBSConnectPanel.ShowPassword")); //$NON-NLS-1$
+			btnRevealPassword.setToolTipText(Messages.getString("OBSConnectPanel.ShowPasswordToolTip")); //$NON-NLS-1$
+		}
+	}
+	private void copyPasswordToClipboard() {
+		StringSelection selection = new StringSelection(getPasswordText());
+		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
+	}
 	public void disableConnect() {
 		btnConnect.setEnabled(false);
 		btnDisconnect.setEnabled(true);
@@ -226,7 +263,7 @@ public class OBSConnectPanel extends JPanel {
 		boolean changed = false;
 		if (!txtHost.getText().equals(Settings.getOBSParameter(SettingsKeys.OBS_HOST)) ||
 			!txtPort.getText().equals(Settings.getOBSParameter(SettingsKeys.OBS_PORT))  ||
-			!txtPassword.getText().equals(Settings.getOBSParameter(SettingsKeys.OBS_PASSWORD))) {
+			!getPasswordText().equals(Settings.getOBSParameter(SettingsKeys.OBS_PASSWORD))) {
 			changed = true;
 		}
 		return changed;
@@ -260,7 +297,7 @@ public class OBSConnectPanel extends JPanel {
 		Settings.setOBS(SettingsKeys.OBS_UPDATE_ON_CONNECT, chckbxUpdateOnConnect.isSelected() ? ON : OFF);
 		Settings.setOBS(SettingsKeys.OBS_CLOSE_ON_CONNECT, chckbxCloseOnConnect.isSelected() ? ON : OFF);
 		Settings.setOBS(SettingsKeys.OBS_SAVE_PASSWORD, chckbxSavePassword.isSelected() ? ON : OFF);
-		Settings.setOBS(SettingsKeys.OBS_PASSWORD, chckbxSavePassword.isSelected() ? txtPassword.getText() : ""); //$NON-NLS-1$
+		Settings.setOBS(SettingsKeys.OBS_PASSWORD, chckbxSavePassword.isSelected() ? getPasswordText() : ""); //$NON-NLS-1$
 		OBS.setMainScene(txtMainScene.getText());
 		if (Settings.getOBSParameter(SettingsKeys.OBS_AUTO_LOGIN).equals(ON)) {
 			if (Settings.getOBSParameter(SettingsKeys.OBS_HOST).isEmpty() || Settings.getOBSParameter(SettingsKeys.OBS_PASSWORD).isEmpty() || Settings.getOBSParameter(SettingsKeys.OBS_PORT).isEmpty() || Settings.getOBSParameter(SettingsKeys.OBS_SAVE_PASSWORD).equals(OFF)) {
@@ -283,7 +320,7 @@ public class OBSConnectPanel extends JPanel {
 	public void updateOBS() {
 		OBS.setHost(txtHost.getText());
 		OBS.setPort(txtPort.getText());
-		OBS.setPassword(txtPassword.getText());
+		OBS.setPassword(getPasswordText());
 		OBS.setMainScene(txtMainScene.getText());
 		OBS.setAutoLogin(chckbxAutoLogin.isSelected());
 		OBS.setUpdateOnConnect(chckbxUpdateOnConnect.isSelected());

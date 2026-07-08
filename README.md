@@ -580,7 +580,7 @@ This is the host name or ip address of the computer running OBS Studio. FoosOBSP
 #### Port
 This is the port that OBS Studio is listening too for connections.  OBS Studio will provide the connection details by going to Tools -> WebSocket Server Settings -> Show Connect Info.
 #### Password
-This is the password for OBS Studio.  OBS Studio will provide the connection details by going to Tools -> WebSocket Server Settings -> Show Connect Info.
+This is the password for OBS Studio.  OBS Studio will provide the connection details by going to Tools -> WebSocket Server Settings -> Show Connect Info.  The password is masked as you type.  Use the Show button beside the field to reveal it (press it again, now labeled Hide, to mask it), or the Copy button to copy the password to the clipboard.
 #### Main Scene
 This is the name of the scene in OBS Studio that FoosOBSPlus will be sending it's data to.  You can type the scene name in, or you can choose it from the Scene drop down box and press the Set Main Scene button.
 #### Set Main Scene
@@ -883,7 +883,7 @@ This button starts the Recall Timer.  The amount of time allowed for a recall is
 #### Reset Timer
 This button will reset the timer.  This is useful when the ball jumps off the table.  A hot key can be assigned to this button in Hot Keys Settings.
 ### OBS Panel
-The OBS Panel provides some controls to manage OBS.  OBS must be configured in the Connect item in the OBS menu for any of the OBS Panel buttons to work.
+The OBS Panel provides some controls to manage OBS.  OBS must be configured in the Connect item in the OBS menu for any of the OBS Panel buttons to work.  A connection status indicator is shown as a colored dot in the OBS Panel title: it appears green when FoosOBSPlus is connected to OBS and red when it is disconnected; the dot updates immediately on connect and disconnect.
 
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusOBSPanel.png">
 
@@ -1046,7 +1046,7 @@ Check this box to enable the REST API server. Uncheck to disable the REST API se
 #### API Port
 The network port the API server will listen on. Default is 9051. Change this if the port conflicts with another application. Valid range is 1024-65535.
 #### API Key
-The authentication key required to access protected API endpoints. A unique, random key is generated automatically the first time FoosOBSPlus runs (stored in `api.properties`); it is not a shared default. You can view or change it on this page, or generate a new one with Restore Defaults. **Important:** Keep this key secret, and avoid reusing it across installs.
+The authentication key required to access protected API endpoints. A unique, random key is generated automatically the first time FoosOBSPlus runs (stored in `api.properties`); it is not a shared default. The key is masked in the field.  Use the Show button beside it to reveal it (press it again, now labeled Hide, to mask it), the Copy button to copy it to the clipboard, and the Generate API Key button to replace it with a fresh random key.  You can also generate a new one with Restore Defaults. **Important:** Keep this key secret, and avoid reusing it across installs.
 #### SSE Events Enabled
 Check this box to enable Server-Sent Events (SSE) streaming on the REST API. When enabled, external applications can connect to the `/api/events` endpoint to receive real-time push notifications when scores change, timeouts are called, or a meatball condition occurs. This is useful for integrating with applications that need to react immediately to game events without polling. Default is off. Changing this setting requires the API server to restart.
 #### Restrict to Local Machine Only
@@ -1669,6 +1669,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.109 07/08/2026</br>
+Add safer password/API-key inputs.</br>
+</br>
 v2.108 07/08/2026</br>
 Add OBS Connection Status Dot to OBS Panel title bar.</br>
 </br>

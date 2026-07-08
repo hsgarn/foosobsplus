@@ -21,7 +21,9 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.midsouthfoosball.foosobsplus.view;
 
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
@@ -30,7 +32,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +54,11 @@ public class APISettingsPanel extends JPanel {
 	private final JLabel lblMachineIP;
 	private final JCheckBox chckbxAPIEnabled;
 	private final JTextField txtAPIPort;
-	private final JTextField txtAPIKey;
+	private final JPasswordField txtAPIKey;
+	private final JToggleButton btnRevealKey;
+	private final JButton btnCopyKey;
+	private final JButton btnGenerateKey;
+	private final char defaultKeyEchoChar;
 	private final JCheckBox chckbxSSEEnabled;
 	private final JCheckBox chckbxLocalOnly;
 	private final JButton btnApply;
@@ -105,11 +113,26 @@ public class APISettingsPanel extends JPanel {
 		// API Key
 		JLabel lblAPIKey = new JLabel("API Key:"); //$NON-NLS-1$
 		add(lblAPIKey, "cell 0 4,alignx right"); //$NON-NLS-1$
-		txtAPIKey = new JTextField();
+		txtAPIKey = new JPasswordField();
+		defaultKeyEchoChar = txtAPIKey.getEchoChar();
 		originalAPIKey = Settings.getAPIParameter(SettingsKeys.API_KEY); //$NON-NLS-1$
 		txtAPIKey.setText(originalAPIKey != null ? originalAPIKey : ""); //$NON-NLS-1$
 		txtAPIKey.setColumns(10);
-		add(txtAPIKey, "cell 1 4,growx"); //$NON-NLS-1$
+		JPanel keyPanel = new JPanel(new MigLayout("insets 0", "[grow][][][]", "[]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		keyPanel.add(txtAPIKey, "growx"); //$NON-NLS-1$
+		btnRevealKey = new JToggleButton("Show"); //$NON-NLS-1$
+		btnRevealKey.setToolTipText("Reveal the API key"); //$NON-NLS-1$
+		btnRevealKey.addActionListener(e -> toggleKeyVisibility());
+		keyPanel.add(btnRevealKey);
+		btnCopyKey = new JButton("Copy"); //$NON-NLS-1$
+		btnCopyKey.setToolTipText("Copy the API key to the clipboard"); //$NON-NLS-1$
+		btnCopyKey.addActionListener(e -> copyKeyToClipboard());
+		keyPanel.add(btnCopyKey);
+		btnGenerateKey = new JButton("Generate API Key"); //$NON-NLS-1$
+		btnGenerateKey.setToolTipText("Generate a new random API key"); //$NON-NLS-1$
+		btnGenerateKey.addActionListener(e -> generateKey());
+		keyPanel.add(btnGenerateKey);
+		add(keyPanel, "cell 1 4,growx"); //$NON-NLS-1$
 
 		// SSE Enabled checkbox
 		JLabel lblSSEEnabled = new JLabel("SSE Events Enabled:"); //$NON-NLS-1$
@@ -149,6 +172,31 @@ public class APISettingsPanel extends JPanel {
 		add(buttonPanel, "cell 0 7 2 1"); //$NON-NLS-1$
 	}
 
+	// Reads the API key as a String without the deprecated JPasswordField.getText().
+	private String getKeyText() {
+		return new String(txtAPIKey.getPassword());
+	}
+	// Toggles between masking the API key and showing it in the clear.
+	private void toggleKeyVisibility() {
+		if (btnRevealKey.isSelected()) {
+			txtAPIKey.setEchoChar((char) 0);
+			btnRevealKey.setText("Hide"); //$NON-NLS-1$
+			btnRevealKey.setToolTipText("Hide the API key"); //$NON-NLS-1$
+		} else {
+			txtAPIKey.setEchoChar(defaultKeyEchoChar);
+			btnRevealKey.setText("Show"); //$NON-NLS-1$
+			btnRevealKey.setToolTipText("Reveal the API key"); //$NON-NLS-1$
+		}
+	}
+	private void copyKeyToClipboard() {
+		StringSelection selection = new StringSelection(getKeyText());
+		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
+	}
+	// Fills the field with a fresh random key so installs don't share a known secret.
+	private void generateKey() {
+		txtAPIKey.setText(Settings.generateRandomAPIKey());
+	}
+
 	/**
 	 * Apply API settings (in-memory only, not saved to file)
 	 */
@@ -171,7 +219,7 @@ public class APISettingsPanel extends JPanel {
 			}
 
 			// Validate API key is not empty
-			if (chckbxAPIEnabled.isSelected() && txtAPIKey.getText().isBlank()) {
+			if (chckbxAPIEnabled.isSelected() && getKeyText().isBlank()) {
 				JOptionPane.showMessageDialog(null,
 					"API Key cannot be empty.",
 					"Invalid API Key", JOptionPane.ERROR_MESSAGE);
@@ -184,7 +232,7 @@ public class APISettingsPanel extends JPanel {
 			// Apply settings
 			Settings.setAPIParameter(SettingsKeys.API_ENABLED, chckbxAPIEnabled.isSelected() ? ON : OFF); //$NON-NLS-1$
 			Settings.setAPIParameter(SettingsKeys.API_PORT, txtAPIPort.getText()); //$NON-NLS-1$
-			Settings.setAPIParameter(SettingsKeys.API_KEY, txtAPIKey.getText()); //$NON-NLS-1$
+			Settings.setAPIParameter(SettingsKeys.API_KEY, getKeyText()); //$NON-NLS-1$
 			Settings.setAPIParameter(SettingsKeys.API_SSE_ENABLED, chckbxSSEEnabled.isSelected() ? ON : OFF);
 			Settings.setAPIParameter(SettingsKeys.API_ALLOW_LOCAL_ONLY, chckbxLocalOnly.isSelected() ? ON : OFF);
 
@@ -226,7 +274,7 @@ public class APISettingsPanel extends JPanel {
 				return;
 			}
 
-			if (chckbxAPIEnabled.isSelected() && txtAPIKey.getText().isBlank()) {
+			if (chckbxAPIEnabled.isSelected() && getKeyText().isBlank()) {
 				JOptionPane.showMessageDialog(null,
 					"API Key cannot be empty.",
 					"Invalid API Key", JOptionPane.ERROR_MESSAGE);
@@ -239,7 +287,7 @@ public class APISettingsPanel extends JPanel {
 			// Save settings
 			Settings.setAPIParameter(SettingsKeys.API_ENABLED, chckbxAPIEnabled.isSelected() ? ON : OFF); //$NON-NLS-1$
 			Settings.setAPIParameter(SettingsKeys.API_PORT, txtAPIPort.getText()); //$NON-NLS-1$
-			Settings.setAPIParameter(SettingsKeys.API_KEY, txtAPIKey.getText()); //$NON-NLS-1$
+			Settings.setAPIParameter(SettingsKeys.API_KEY, getKeyText()); //$NON-NLS-1$
 			Settings.setAPIParameter(SettingsKeys.API_SSE_ENABLED, chckbxSSEEnabled.isSelected() ? ON : OFF);
 			Settings.setAPIParameter(SettingsKeys.API_ALLOW_LOCAL_ONLY, chckbxLocalOnly.isSelected() ? ON : OFF);
 
@@ -313,7 +361,7 @@ public class APISettingsPanel extends JPanel {
 		String currentPort = txtAPIPort.getText();
 		String defaultPort = originalAPIPort != null ? originalAPIPort : "9051"; //$NON-NLS-1$
 		boolean portChanged = !currentPort.equals(defaultPort);
-		String currentKey = txtAPIKey.getText();
+		String currentKey = getKeyText();
 		String defaultKey = originalAPIKey != null ? originalAPIKey : ""; //$NON-NLS-1$
 		boolean keyChanged = !currentKey.equals(defaultKey);
 		boolean sseEnabledChanged = chckbxSSEEnabled.isSelected() != originalSSEEnabled;
@@ -327,7 +375,7 @@ public class APISettingsPanel extends JPanel {
 	private void updateOriginalValues() {
 		originalAPIEnabled = chckbxAPIEnabled.isSelected();
 		originalAPIPort = txtAPIPort.getText();
-		originalAPIKey = txtAPIKey.getText();
+		originalAPIKey = getKeyText();
 		originalSSEEnabled = chckbxSSEEnabled.isSelected();
 		originalLocalOnly = chckbxLocalOnly.isSelected();
 	}
