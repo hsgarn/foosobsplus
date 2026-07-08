@@ -33,9 +33,13 @@ public class APIServer {
 	private static final int MAX_REQUEST_SIZE_BYTES = 10 * 1024; // 10KB max request size
 	private static final int MAX_REQUESTS_PER_MINUTE = 30; // Rate limit
 
+	private static final String LOCALHOST_ONLY_HOST = "127.0.0.1";
+	private static final String ALL_INTERFACES_HOST = "0.0.0.0";
+
 	private Javalin app;
 	private final int port;
 	private final String apiKey;
+	private final boolean allowLocalOnly;
 	private final PlayerNamesController playerNamesController;
 	private final TimerControllerAPI timerControllerAPI;
 	private final FoosballCodeController foosballCodeController;
@@ -53,6 +57,8 @@ public class APIServer {
 	public APIServer(TeamService teamService, EventBroadcaster eventBroadcaster) {
 		this.port = Integer.parseInt(Settings.getAPIParameter(SettingsKeys.API_PORT));
 		this.apiKey = Settings.getAPIParameter(SettingsKeys.API_KEY);
+		String allowLocalOnlySetting = Settings.getAPIParameter(SettingsKeys.API_ALLOW_LOCAL_ONLY);
+		this.allowLocalOnly = allowLocalOnlySetting == null || !allowLocalOnlySetting.equals("0");
 		this.playerNamesController = new PlayerNamesController(teamService);
 		this.timerControllerAPI = new TimerControllerAPI(teamService.getTeamController());
 		this.foosballCodeController = new FoosballCodeController(teamService);
@@ -138,8 +144,10 @@ public class APIServer {
 
 		// Start server
 		try {
-			app.start(port);
-			logger.info("REST API Server started on port {}", port);
+			String host = allowLocalOnly ? LOCALHOST_ONLY_HOST : ALL_INTERFACES_HOST;
+			app.start(host, port);
+			logger.info("REST API Server started on {}:{} ({})", host, port,
+				allowLocalOnly ? "local machine only" : "all network interfaces");
 			logger.info("API Key authentication: enabled");
 		} catch (Exception e) {
 			logger.error("Failed to start REST API Server on port {}", port, e);

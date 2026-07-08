@@ -23,12 +23,14 @@ package com.midsouthfoosball.foosobsplus.view;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,7 +45,8 @@ import net.miginfocom.swing.MigLayout;
 
 public class AboutPanel extends JPanel {
 	private static final long serialVersionUID 	= 1L;
-	private static final String VERSIONNUMBER 	= "2.105"; //$NON-NLS-1$
+	private static final Logger LOGGER          = Logger.getLogger(AboutPanel.class.getName());
+	private static final String VERSIONNUMBER 	= "2.106"; //$NON-NLS-1$
 	private static final String RELEASEDATE 	= "07/07/2026"; //$NON-NLS-1$
 	private static final String AUTHOR          = "Hugh Garner"; //$NON-NLS-1$
 	private static final String COPYRIGHT 		= "2020-2026 Hugh Garner"; //$NON-NLS-1$
@@ -74,39 +77,56 @@ public class AboutPanel extends JPanel {
 		JTextArea txtrPermissionIsHereby = new JTextArea();
 		txtrPermissionIsHereby.setText(Messages.getString("AboutPanel.LicenseText")); //$NON-NLS-1$
 		add(txtrPermissionIsHereby, "cell 1 5,grow"); //$NON-NLS-1$
-		ImageIcon img = new ImageIcon(this.getClass().getResource(Settings.getControlParameter(SettingsKeys.CTRL_ICON_IMG_PATH))); //$NON-NLS-1$
-		img.setImage(img.getImage().getScaledInstance(100, 100,  Image.SCALE_DEFAULT));
-		Icon imgIcon = img;
+		Icon imgIcon = loadScaledIcon(Settings.getControlParameter(SettingsKeys.CTRL_ICON_IMG_PATH));
 		JLabel lblIcon = new JLabel(imgIcon);
    		lblIcon.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent arg0) {
-				try {
-                    URI logoLinkURI = new URI(Settings.getControlParameter(SettingsKeys.CTRL_LOGO_LINK));
-    				java.awt.Desktop.getDesktop().browse(logoLinkURI);
-				} catch (IOException | URISyntaxException ex) {
-                    Logger.getLogger(AboutPanel.class.getName()).log(Level.SEVERE, null, ex);
- 				}
+				browseLogoLink();
 			}
 		});
         add(lblIcon, "cell 1 6,alignx left"); //$NON-NLS-1$
-		ImageIcon logo = new ImageIcon(this.getClass().getResource(Settings.getControlParameter(SettingsKeys.CTRL_LOGO_IMG_PATH))); //$NON-NLS-1$
-		logo.setImage(logo.getImage().getScaledInstance(100, 100,  Image.SCALE_DEFAULT));
-		Icon imgIcon2 = logo;
+		Icon imgIcon2 = loadScaledIcon(Settings.getControlParameter(SettingsKeys.CTRL_LOGO_IMG_PATH));
         JLabel lblLogo = new JLabel(imgIcon2);
 		lblLogo.setBackground(Color.BLACK);
         lblLogo.setOpaque(true);
    		lblLogo.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent arg0) {
-				try {
-                    URI logoLinkURI = new URI(Settings.getControlParameter(SettingsKeys.CTRL_LOGO_LINK));
-    				java.awt.Desktop.getDesktop().browse(logoLinkURI);
-				} catch (IOException | URISyntaxException ex) {
-                    Logger.getLogger(AboutPanel.class.getName()).log(Level.SEVERE, null, ex);
- 				}
+				browseLogoLink();
 			}
 		});
 		add(lblLogo, "cell 1 6, alignx right"); //$NON-NLS-1$
+	}
+	private Icon loadScaledIcon(String resourcePath) {
+		if (resourcePath == null || resourcePath.isBlank()) {
+			LOGGER.log(Level.WARNING, "About panel image resource path is not configured."); //$NON-NLS-1$
+			return null;
+		}
+		URL resource = this.getClass().getResource(resourcePath);
+		if (resource == null) {
+			LOGGER.log(Level.WARNING, "About panel image resource not found: {0}", resourcePath); //$NON-NLS-1$
+			return null;
+		}
+		ImageIcon icon = new ImageIcon(resource);
+		icon.setImage(icon.getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+		return icon;
+	}
+	private void browseLogoLink() {
+		try {
+			if (!Desktop.isDesktopSupported() || !Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+				LOGGER.log(Level.WARNING, "Desktop browse action is not supported."); //$NON-NLS-1$
+				return;
+			}
+			String logoLink = Settings.getControlParameter(SettingsKeys.CTRL_LOGO_LINK);
+			if (logoLink == null || logoLink.isBlank()) {
+				LOGGER.log(Level.WARNING, "Logo link is not configured."); //$NON-NLS-1$
+				return;
+			}
+			URI logoLinkURI = new URI(logoLink);
+			Desktop.getDesktop().browse(logoLinkURI);
+		} catch (IOException | URISyntaxException | UnsupportedOperationException | SecurityException ex) {
+			LOGGER.log(Level.SEVERE, null, ex);
+		}
 	}
 }

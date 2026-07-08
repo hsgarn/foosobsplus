@@ -29,7 +29,9 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Properties;
 import java.util.function.Function;
@@ -400,7 +402,7 @@ public final class Settings {
 		// API Settings
 		defaultAPIProps.setProperty("APIEnabled", ON);
 		defaultAPIProps.setProperty("APIPort", "9051");
-		defaultAPIProps.setProperty("APIKey", "123thisismykey456");
+		defaultAPIProps.setProperty("APIAllowLocalOnly", ON);
 		defaultAPIProps.setProperty("APISSEEnabled", OFF);
 		//Config Properties
 		configControlProps 				= new Properties(defaultControlProps);
@@ -554,6 +556,15 @@ public final class Settings {
 		saveAutoScoreSettingsConfig();
 	}
 	public static String getAPIParameter(String parameter) {return configAPIProps.getProperty(parameter);}
+	/**
+	 * Generates a fresh, unguessable API key so installs don't share a single known secret.
+	 */
+	public static String generateRandomAPIKey() {
+		SecureRandom secureRandom = new SecureRandom();
+		byte[] randomBytes = new byte[32];
+		secureRandom.nextBytes(randomBytes);
+		return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
+	}
 	//Setters
 	//API Parameters
 	public static void setAPIParameter(String parameter, String value) {
@@ -705,10 +716,17 @@ public final class Settings {
 	public static void loadFromAPIConfig() throws IOException {
 		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGAPIFILENAME))) {
 			configAPIProps.load(inputStream);
+			String apiKey = configAPIProps.getProperty("APIKey");
+			if (apiKey == null || apiKey.isBlank()) {
+				logger.info("No API key found in " + Paths.get(CONFIGAPIFILENAME) + ". Generating a new one.");
+				configAPIProps.setProperty("APIKey", generateRandomAPIKey());
+				saveAPIConfig();
+			}
 		} catch (NoSuchFileException _) {
 			logger.info(Paths.get(CONFIGAPIFILENAME) + " not found. Writing defaults.");
 			Files.createFile(Paths.get(CONFIGAPIFILENAME));
 			configAPIProps.putAll(defaultAPIProps);
+			configAPIProps.setProperty("APIKey", generateRandomAPIKey());
 			saveAPIConfig();
 		}
 	}

@@ -367,4 +367,5 @@ public final class SettingsKeys {
     public static final String API_PORT                 = "APIPort";
     public static final String API_KEY                  = "APIKey";
     public static final String API_SSE_ENABLED          = "APISSEEnabled";
+    public static final String API_ALLOW_LOCAL_ONLY     = "APIAllowLocalOnly";
 }

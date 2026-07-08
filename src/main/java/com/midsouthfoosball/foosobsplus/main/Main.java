@@ -52,6 +52,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -490,6 +491,7 @@ public final class Main implements MatchObserver {
 			apiServer.stop();
 			logger.info("REST API server stopped during shutdown");
 		}
+		detachEventBroadcaster();
 	}
 	public static void shutdownOBS() {
 		if (obsManager != null && obsManager.isConnected()) {
@@ -506,6 +508,7 @@ public final class Main implements MatchObserver {
 				apiServer.stop();
 				logger.info("REST API server stopped");
 			}
+			detachEventBroadcaster();
 
 			// Check if API should be enabled
 			if (apiEnabled != null && apiEnabled.equals(ON)) {
@@ -528,6 +531,13 @@ public final class Main implements MatchObserver {
 			}
 		} catch (Exception e) {
 			logger.error("Error restarting REST API server", e);
+			detachEventBroadcaster();
+		}
+	}
+	private static void detachEventBroadcaster() {
+		if (eventBroadcaster != null) {
+			match.removeObserver(eventBroadcaster);
+			eventBroadcaster = null;
 		}
 	}
 	public static void obsSyncBalls() {
@@ -2960,11 +2970,11 @@ public final class Main implements MatchObserver {
 
                 try (WatchService ws = FileSystems.getDefault().newWatchService()) {
 				watchService = ws;
-				partnerPath.register(ws, StandardWatchEventKinds.ENTRY_MODIFY);
+				partnerPath.register(ws, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
 		        WatchKey watchKey;
 		        while (!isCancelled())
 		        {
-		        	watchKey = watchService.poll();
+		        	watchKey = watchService.poll(500, TimeUnit.MILLISECONDS);
 		        	if (watchKey != null) {
 		        		for (WatchEvent<?> watchEvent : watchKey.pollEvents()) {
 		        			final Kind<?> kind = watchEvent.kind();

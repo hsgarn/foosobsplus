@@ -52,6 +52,7 @@ public class APISettingsPanel extends JPanel {
 	private final JTextField txtAPIPort;
 	private final JTextField txtAPIKey;
 	private final JCheckBox chckbxSSEEnabled;
+	private final JCheckBox chckbxLocalOnly;
 	private final JButton btnApply;
 	private final JButton btnApplyClose;
 	private final JButton btnCancel;
@@ -62,9 +63,10 @@ public class APISettingsPanel extends JPanel {
 	private String originalAPIPort;
 	private String originalAPIKey;
 	private boolean originalSSEEnabled;
+	private boolean originalLocalOnly;
 
 	public APISettingsPanel() throws IOException {
-		setLayout(new MigLayout("", "[150.00][grow,left]", "[][][][][] []")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		setLayout(new MigLayout("", "[150.00][grow,left]", "[][][][][][] []")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		// Title
 		JLabel lblTitle = new JLabel("REST API Settings"); //$NON-NLS-1$
@@ -118,6 +120,15 @@ public class APISettingsPanel extends JPanel {
 		chckbxSSEEnabled.setSelected(originalSSEEnabled);
 		add(chckbxSSEEnabled, "cell 1 5"); //$NON-NLS-1$
 
+		// Restrict to Local Machine Only checkbox
+		JLabel lblLocalOnly = new JLabel("Restrict to Local Machine Only:"); //$NON-NLS-1$
+		add(lblLocalOnly, "cell 0 6,alignx right"); //$NON-NLS-1$
+		chckbxLocalOnly = new JCheckBox();
+		String localOnly = Settings.getAPIParameter(SettingsKeys.API_ALLOW_LOCAL_ONLY);
+		originalLocalOnly = localOnly == null || localOnly.equals("1"); //$NON-NLS-1$
+		chckbxLocalOnly.setSelected(originalLocalOnly);
+		add(chckbxLocalOnly, "cell 1 6"); //$NON-NLS-1$
+
 		// Buttons
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new MigLayout("", "[][][][]", "[]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -135,7 +146,7 @@ public class APISettingsPanel extends JPanel {
 		btnRestoreDefaults.addActionListener(e -> restoreDefaults());
 		buttonPanel.add(btnRestoreDefaults, "cell 3 0"); //$NON-NLS-1$
 
-		add(buttonPanel, "cell 0 6 2 1"); //$NON-NLS-1$
+		add(buttonPanel, "cell 0 7 2 1"); //$NON-NLS-1$
 	}
 
 	/**
@@ -175,6 +186,7 @@ public class APISettingsPanel extends JPanel {
 			Settings.setAPIParameter(SettingsKeys.API_PORT, txtAPIPort.getText()); //$NON-NLS-1$
 			Settings.setAPIParameter(SettingsKeys.API_KEY, txtAPIKey.getText()); //$NON-NLS-1$
 			Settings.setAPIParameter(SettingsKeys.API_SSE_ENABLED, chckbxSSEEnabled.isSelected() ? ON : OFF);
+			Settings.setAPIParameter(SettingsKeys.API_ALLOW_LOCAL_ONLY, chckbxLocalOnly.isSelected() ? ON : OFF);
 
 			// Update original values to current values for next comparison
 			updateOriginalValues();
@@ -229,6 +241,7 @@ public class APISettingsPanel extends JPanel {
 			Settings.setAPIParameter(SettingsKeys.API_PORT, txtAPIPort.getText()); //$NON-NLS-1$
 			Settings.setAPIParameter(SettingsKeys.API_KEY, txtAPIKey.getText()); //$NON-NLS-1$
 			Settings.setAPIParameter(SettingsKeys.API_SSE_ENABLED, chckbxSSEEnabled.isSelected() ? ON : OFF);
+			Settings.setAPIParameter(SettingsKeys.API_ALLOW_LOCAL_ONLY, chckbxLocalOnly.isSelected() ? ON : OFF);
 
 			Settings.saveAPIConfig();
 
@@ -266,6 +279,9 @@ public class APISettingsPanel extends JPanel {
 			String sseEnabled = Settings.getAPIParameter(SettingsKeys.API_SSE_ENABLED);
 			chckbxSSEEnabled.setSelected(sseEnabled != null && sseEnabled.equals("1")); //$NON-NLS-1$
 
+			String localOnly = Settings.getAPIParameter(SettingsKeys.API_ALLOW_LOCAL_ONLY);
+			chckbxLocalOnly.setSelected(localOnly == null || localOnly.equals("1")); //$NON-NLS-1$
+
 			updateOriginalValues();
 			logger.info("API Settings reloaded from configuration");
 		} catch (Exception e) {
@@ -301,7 +317,8 @@ public class APISettingsPanel extends JPanel {
 		String defaultKey = originalAPIKey != null ? originalAPIKey : ""; //$NON-NLS-1$
 		boolean keyChanged = !currentKey.equals(defaultKey);
 		boolean sseEnabledChanged = chckbxSSEEnabled.isSelected() != originalSSEEnabled;
-		return apiEnabledChanged || portChanged || keyChanged || sseEnabledChanged;
+		boolean localOnlyChanged = chckbxLocalOnly.isSelected() != originalLocalOnly;
+		return apiEnabledChanged || portChanged || keyChanged || sseEnabledChanged || localOnlyChanged;
 	}
 
 	/**
@@ -312,6 +329,7 @@ public class APISettingsPanel extends JPanel {
 		originalAPIPort = txtAPIPort.getText();
 		originalAPIKey = txtAPIKey.getText();
 		originalSSEEnabled = chckbxSSEEnabled.isSelected();
+		originalLocalOnly = chckbxLocalOnly.isSelected();
 	}
 
 	/**
@@ -320,8 +338,9 @@ public class APISettingsPanel extends JPanel {
 	private void restoreDefaults() {
 		chckbxAPIEnabled.setSelected(true);
 		txtAPIPort.setText("9051"); //$NON-NLS-1$
-		txtAPIKey.setText(""); //$NON-NLS-1$
+		txtAPIKey.setText(Settings.generateRandomAPIKey());
 		chckbxSSEEnabled.setSelected(false);
+		chckbxLocalOnly.setSelected(true);
 		logger.info("API Settings restored to defaults");
 	}
 

@@ -1025,9 +1025,11 @@ Check this box to enable the REST API server. Uncheck to disable the REST API se
 #### API Port
 The network port the API server will listen on. Default is 9051. Change this if the port conflicts with another application. Valid range is 1024-65535.
 #### API Key
-The authentication key required to access protected API endpoints. Default is "123thisismykey456". **Important:** Change this to a strong, unique key before deploying to prevent unauthorized access.
+The authentication key required to access protected API endpoints. A unique, random key is generated automatically the first time FoosOBSPlus runs (stored in `api.properties`); it is not a shared default. You can view or change it on this page, or generate a new one with Restore Defaults. **Important:** Keep this key secret, and avoid reusing it across installs.
 #### SSE Events Enabled
 Check this box to enable Server-Sent Events (SSE) streaming on the REST API. When enabled, external applications can connect to the `/api/events` endpoint to receive real-time push notifications when scores change, timeouts are called, or a meatball condition occurs. This is useful for integrating with applications that need to react immediately to game events without polling. Default is off. Changing this setting requires the API server to restart.
+#### Restrict to Local Machine Only
+Check this box (checked by default) to bind the API server to `127.0.0.1` so only applications running on the same machine can connect. Uncheck it to allow connections from other devices on your network — only do this if you trust your network, since anyone with the API key on the LAN could then reach the API. Changing this setting requires the API server to restart.
 #### Apply
 Click the Apply button to apply any REST API settings changes made.
 #### Apply and Close
@@ -1035,7 +1037,7 @@ Click the Apply and Close button to apply any REST API settings changes made and
 #### Cancel
 Click the Cancel button to discard any REST API settings changes made and close the window.
 #### Restore Defaults
-Click the Restore Defaults button to restore the default REST API settings.
+Click the Restore Defaults button to restore the default REST API settings. This generates a new random API key rather than reusing any previous key.
 
 ### API Endpoints
 #### GET /api/health
@@ -1463,7 +1465,10 @@ Response (Success):
 The REST API includes several security measures to protect against abuse:
 
 #### API Key Authentication
-All endpoints except `/api/health` require a valid API key passed in the `X-API-Key` header. Configure your API key in the `api.properties` file and ensure it is kept secret.
+All endpoints except `/api/health` require a valid API key passed in the `X-API-Key` header. A random key is generated for you on first run and stored in the `api.properties` file; ensure it is kept secret.
+
+#### Local-Only Binding
+By default the API server only binds to `127.0.0.1`, so it cannot be reached from other devices on your network even if they know the API key. Uncheck "Restrict to Local Machine Only" in the API Settings page to allow LAN connections.
 
 #### Rate Limiting
 Each IP address is limited to 30 requests per minute across all API endpoints. Exceeding this limit returns HTTP Status 429 Too Many Requests:
@@ -1643,6 +1648,14 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.106 07/07/2026</br>
+Secure the REST API by default instead of shipping a shared static key.</br>
+Every install now gets its own randomly generated API key on first run (or the next run, for existing installs) instead of the previous fixed default key; a new "Restrict to Local Machine Only" checkbox on the REST API Settings page (checked by default) binds the API server to 127.0.0.1 so it isn't reachable from other devices on the network unless you explicitly opt in. Restore Defaults on that page now generates a fresh random key rather than reusing a known one.</br>
+Fix the REST API Settings window being too short by default, cutting off the buttons at the bottom.</br>
+Fix a stale event broadcaster accumulating on the Match observer list each time the REST API settings were changed with SSE toggled, which could leak duplicate event handlers over repeated settings changes.</br>
+Fix the partner program file watcher spinning continuously on a CPU core while idle instead of waiting between checks, and fix it never noticing newly created partner program files (only edits to existing ones).</br>
+Fix the About panel to handle a missing image resource or an unavailable desktop browser gracefully instead of risking a crash.</br>
+</br>
 v2.105 07/07/2026</br>
 Make the Table View windows editable.</br>
 </br>
