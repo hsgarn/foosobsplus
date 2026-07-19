@@ -1669,6 +1669,10 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.110 07/19/2026</br>
+Fix combo box cursor repositioning bug.</br>
+Allow empty files to clear player name.</br>
+</br>
 v2.109 07/08/2026</br>
 Add safer password/API-key inputs.</br>
 </br>

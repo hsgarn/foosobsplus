@@ -175,6 +175,7 @@ public class SourcesPanel extends JPanel {
 					filterUpdating = true;
 					try {
 						String text = editor.getText();
+						int caret = Math.min(editor.getCaretPosition(), text.length());
 						String lower = text.toLowerCase();
 						DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
 						obsSourcesList.stream()
@@ -182,6 +183,8 @@ public class SourcesPanel extends JPanel {
 							.forEach(model::addElement);
 						combo.setModel(model);
 						editor.setText(text);
+						// setModel/setText leave the caret at the end; put it back where the user was typing
+						editor.setCaretPosition(caret);
 						if (model.getSize() > 0 && !text.isEmpty()) {
 							combo.showPopup();
 						} else {

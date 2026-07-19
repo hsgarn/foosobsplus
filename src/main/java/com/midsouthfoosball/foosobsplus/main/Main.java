@@ -3019,14 +3019,14 @@ public final class Main implements MatchObserver {
 				        			try {
 				        				File file = new File(partnerProgramDir + "\\" + fileName); //$NON-NLS-1$
                                         try (Scanner fileReader = new Scanner(file)) {
-                                            if (fileReader.hasNextLine()) {
-                                                String data = fileReader.nextLine();
-                                                if (!data.equals(clearString)) {
-                                                    try (FileWriter fileWriter = new FileWriter(file)) {
-                                                        fileWriter.write(clearString);
-                                                    }
-                                                    publish(fileName + "=" + data); //$NON-NLS-1$
+                                            // A zero-byte file means "clear this value" (PartnerUpFoos
+                                            // writes an empty file when a match has no player in a slot)
+                                            String data = fileReader.hasNextLine() ? fileReader.nextLine() : ""; //$NON-NLS-1$
+                                            if (!data.equals(clearString)) {
+                                                try (FileWriter fileWriter = new FileWriter(file)) {
+                                                    fileWriter.write(clearString);
                                                 }
+                                                publish(fileName + "=" + data); //$NON-NLS-1$
                                             }
                                         }
 				        			} catch (FileNotFoundException e) {
