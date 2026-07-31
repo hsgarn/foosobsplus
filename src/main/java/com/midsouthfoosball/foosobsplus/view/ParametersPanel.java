@@ -73,6 +73,7 @@ public class ParametersPanel extends JPanel {
 	private final JCheckBox chckbxEnableShowSkunk;
 	private final JCheckBox chckbxCutThroatMode;
 	private final JCheckBox chckbxRackMode;
+	private final JCheckBox chckbxAllowParametersFromFile;
 	private final JTextField txtTeam1LastScored;
 	private final JTextField txtTeam2LastScored;
 	private final JTextField txtClearLastScored;
@@ -83,7 +84,8 @@ public class ParametersPanel extends JPanel {
 	private final JButton btnSave;
 	private final JButton btnCancel;
 	private final JButton btnRestoreDefaults;
-	private final Integer maxGamesToWin = 6;
+	public static final int MAX_GAMES_TO_WIN = 6;
+	private final Integer maxGamesToWin = MAX_GAMES_TO_WIN;
 	private static final String ON = "1"; //$NON-NLS-1$
 	private static final String OFF = "0"; //$NON-NLS-1$
 	private final Map<Component, Object> snapshot = new HashMap<>();
@@ -116,9 +118,11 @@ public class ParametersPanel extends JPanel {
 		txtShotTime.setColumns(10);
 		add(txtShotTime, "cell 3 1,growx"); //$NON-NLS-1$
 		JLabel lblMaxWin = new JLabel(Messages.getString("ParametersPanel.MaxWin")); //$NON-NLS-1$
+		lblMaxWin.setToolTipText(Messages.getString("ParametersPanel.MaxWinToolTip")); //$NON-NLS-1$
 		add(lblMaxWin, "flowx,cell 0 2,alignx right"); //$NON-NLS-1$
 		txtMaxWin = new JTextField();
-		txtMaxWin.setText(Settings.getControlParameter(SettingsKeys.CTRL_MAX_WIN));
+		txtMaxWin.setText(Settings.formatMaxWin(Settings.getControlParameter(SettingsKeys.CTRL_MAX_WIN)));
+		txtMaxWin.setToolTipText(Messages.getString("ParametersPanel.MaxWinToolTip")); //$NON-NLS-1$
 		txtMaxWin.setColumns(10);
 		add(txtMaxWin, "cell 1 2,alignx left"); //$NON-NLS-1$
 		JLabel lblPassTime = new JLabel(Messages.getString("ParametersPanel.PassTime")); //$NON-NLS-1$
@@ -204,6 +208,13 @@ public class ParametersPanel extends JPanel {
 		chckbxRackMode = new JCheckBox(""); //$NON-NLS-1$
 		chckbxRackMode.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_RACK_MODE).equals(ON));
 		add(chckbxRackMode, "cell 1 9"); //$NON-NLS-1$
+		JLabel lblAllowParametersFromFile = new JLabel(Messages.getString("ParametersPanel.AllowParametersFromFile")); //$NON-NLS-1$
+		lblAllowParametersFromFile.setToolTipText(Messages.getString("ParametersPanel.AllowParametersFromFileToolTip")); //$NON-NLS-1$
+		add(lblAllowParametersFromFile, "cell 0 10,alignx right"); //$NON-NLS-1$
+		chckbxAllowParametersFromFile = new JCheckBox(""); //$NON-NLS-1$
+		chckbxAllowParametersFromFile.setToolTipText(Messages.getString("ParametersPanel.AllowParametersFromFileToolTip")); //$NON-NLS-1$
+		chckbxAllowParametersFromFile.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_ALLOW_PARAMS_FROM_FILE).equals(ON));
+		add(chckbxAllowParametersFromFile, "cell 1 10"); //$NON-NLS-1$
 		JLabel lblAutoIncrementGame = new JLabel(Messages.getString("ParametersPanel.AutoIncrementGame")); //$NON-NLS-1$
 		add(lblAutoIncrementGame, "cell 0 12,alignx right"); //$NON-NLS-1$
 		chckbxAutoIncrementGame = new JCheckBox(""); //$NON-NLS-1$
@@ -284,7 +295,7 @@ public class ParametersPanel extends JPanel {
 	private void restoreDefaults() {
 		txtPointsToWin.setText(Settings.getDefaultParameter(SettingsKeys.CTRL_POINTS_TO_WIN));
 		txtShotTime.setText(Settings.getDefaultParameter(SettingsKeys.CTRL_SHOT_TIME));
-		txtMaxWin.setText(Settings.getDefaultParameter(SettingsKeys.CTRL_MAX_WIN));
+		txtMaxWin.setText(Settings.formatMaxWin(Settings.getDefaultParameter(SettingsKeys.CTRL_MAX_WIN)));
 		txtPassTime.setText(Settings.getDefaultParameter(SettingsKeys.CTRL_PASS_TIME));
 		txtWinBy.setText(Settings.getDefaultParameter(SettingsKeys.CTRL_WIN_BY));
 		txtTimeOutTime.setText(Settings.getDefaultParameter(SettingsKeys.CTRL_TIME_OUT_TIME));
@@ -295,6 +306,7 @@ public class ParametersPanel extends JPanel {
 		txtMaxTimeOuts.setText(Settings.getDefaultParameter(SettingsKeys.CTRL_MAX_TIME_OUTS));
 		txtRecallTime.setText(Settings.getDefaultParameter(SettingsKeys.CTRL_RECALL_TIME));
 		chckbxRackMode.setSelected(Settings.getDefaultParameter(SettingsKeys.CTRL_RACK_MODE).equals(ON));
+		chckbxAllowParametersFromFile.setSelected(Settings.getDefaultParameter(SettingsKeys.CTRL_ALLOW_PARAMS_FROM_FILE).equals(ON));
 		chckbxAutoIncrementGame.setSelected(Settings.getDefaultParameter(SettingsKeys.CTRL_AUTO_INCREMENT_GAME).equals(ON));
 		chckbxAnnounceWinner.setSelected(Settings.getDefaultParameter(SettingsKeys.CTRL_ANNOUNCE_WINNER).equals(ON));
 		chckbxAnnounceMeatball.setSelected(Settings.getDefaultParameter(SettingsKeys.CTRL_ANNOUNCE_MEATBALL).equals(ON));
@@ -316,7 +328,7 @@ public class ParametersPanel extends JPanel {
 	private void revertChanges() {
 		txtPointsToWin.setText(Settings.getControlParameter(SettingsKeys.CTRL_POINTS_TO_WIN));
 		txtShotTime.setText(Settings.getControlParameter(SettingsKeys.CTRL_SHOT_TIME));
-		txtMaxWin.setText(Settings.getControlParameter(SettingsKeys.CTRL_MAX_WIN));
+		txtMaxWin.setText(Settings.formatMaxWin(Settings.getControlParameter(SettingsKeys.CTRL_MAX_WIN)));
 		txtPassTime.setText(Settings.getControlParameter(SettingsKeys.CTRL_PASS_TIME));
 		txtWinBy.setText(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY));
 		txtTimeOutTime.setText(Settings.getControlParameter(SettingsKeys.CTRL_TIME_OUT_TIME));
@@ -327,6 +339,7 @@ public class ParametersPanel extends JPanel {
 		txtMaxTimeOuts.setText(Settings.getControlParameter(SettingsKeys.CTRL_MAX_TIME_OUTS));
 		txtRecallTime.setText(Settings.getControlParameter(SettingsKeys.CTRL_RECALL_TIME));
 		chckbxRackMode.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_RACK_MODE).equals(ON));
+		chckbxAllowParametersFromFile.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_ALLOW_PARAMS_FROM_FILE).equals(ON));
 		chckbxAutoIncrementGame.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_AUTO_INCREMENT_GAME).equals(ON));
 		chckbxAnnounceMeatball.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_ANNOUNCE_MEATBALL).equals(ON));
 		chckbxAnnounceWinner.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_ANNOUNCE_WINNER).equals(ON));
@@ -347,13 +360,24 @@ public class ParametersPanel extends JPanel {
 		setEnableShowSkunk(Settings.getControlParameter(SettingsKeys.CTRL_SHOW_SKUNK).equals(ON));
 		takeSnapshot();
 	}
+	/**
+	 * Reloads every field from the current settings, discarding any unsaved edits.
+	 * Used when something outside this panel (e.g. the partner program interface)
+	 * changes a control parameter while the panel is open.
+	 */
+	public void refreshFromSettings() {
+		revertChanges();
+	}
 	private void saveIntegerSetting(String parameter, String value) {
 		if (isValidInteger(value)) {
 			Settings.setControlParameter(parameter, value);
 		}
 	}
 	private void saveMaxWin(String parameter, String maxWin, String pointsToWin) {
-	    if (isValidInteger(maxWin)) {
+	    if (Settings.isUnlimitedMaxWin(maxWin)) {
+	        Settings.setControlParameter(parameter, Integer.toString(Settings.MAX_WIN_UNLIMITED));
+	        txtMaxWin.setText(Messages.getString("Global.Unlimited")); //$NON-NLS-1$
+	    } else if (isValidInteger(maxWin)) {
 	        int intMaxWin = Integer.parseInt(maxWin);
 	        int intPointsToWin = Integer.parseInt(pointsToWin);
 	        if (intPointsToWin > intMaxWin) {
@@ -364,6 +388,7 @@ public class ParametersPanel extends JPanel {
 	        }
 	    } else {
 	    	Settings.setControlParameter(parameter, pointsToWin);
+	    	txtMaxWin.setText(pointsToWin);
 	    }
 	}
 	public void saveSettings(Settings settings) {
@@ -381,6 +406,7 @@ public class ParametersPanel extends JPanel {
     	}
     	saveIntegerSetting(SettingsKeys.CTRL_MAX_TIME_OUTS, txtMaxTimeOuts.getText());
    		Settings.setControlParameter(SettingsKeys.CTRL_RACK_MODE, chckbxRackMode.isSelected() ? ON : OFF);
+    	Settings.setControlParameter(SettingsKeys.CTRL_ALLOW_PARAMS_FROM_FILE, chckbxAllowParametersFromFile.isSelected() ? ON : OFF);
     	Settings.setControlParameter(SettingsKeys.CTRL_AUTO_INCREMENT_GAME, chckbxAutoIncrementGame.isSelected() ? ON : OFF);
     	Settings.setControlParameter(SettingsKeys.CTRL_ANNOUNCE_WINNER, chckbxAnnounceWinner.isSelected() ? ON : OFF);
     	Settings.setControlParameter(SettingsKeys.CTRL_ANNOUNCE_MEATBALL, chckbxAnnounceMeatball.isSelected() ? ON : OFF);

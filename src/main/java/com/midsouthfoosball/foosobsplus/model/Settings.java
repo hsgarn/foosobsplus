@@ -126,6 +126,7 @@ public final class Settings {
 		defaultControlProps.setProperty("ShowSkunk",  ON);
 		defaultControlProps.setProperty("CutThroatMode", OFF);
 		defaultControlProps.setProperty("RackMode", OFF);
+		defaultControlProps.setProperty("AllowParametersFromFile", ON);
 		defaultControlProps.setProperty("LogoImageURL", "/imgs/MidsouthFoosballLogo4.png");
 		defaultControlProps.setProperty("LogoLinkURI", "https://www.facebook.com/midsouthfoosball");
 		//OBS
@@ -312,6 +313,11 @@ public final class Settings {
 		defaultPartnerProgramProps.setProperty("Player4FileName", "Player4.txt");
 		defaultPartnerProgramProps.setProperty("EventFileName", "Event.txt");
 		defaultPartnerProgramProps.setProperty("TournamentFileName", "Tournament.txt");
+		defaultPartnerProgramProps.setProperty("PointsToWinFileName", "PointsToWin.txt");
+		defaultPartnerProgramProps.setProperty("MaxWinFileName", "MaxWin.txt");
+		defaultPartnerProgramProps.setProperty("WinByFileName", "WinBy.txt");
+		defaultPartnerProgramProps.setProperty("GamesToWinFileName", "GamesToWin.txt");
+		defaultPartnerProgramProps.setProperty("RackModeFileName", "RackMode.txt");
 		//HotKeys
 		defaultHotKeyProps.setProperty("Team1SwitchPositions", "t");
 		defaultHotKeyProps.setProperty("Team2SwitchPositions", "m");
@@ -853,6 +859,29 @@ public final class Settings {
 			logger.error(ex.toString());
 			JOptionPane.showMessageDialog(null, Messages.getString("Errors.ScriptWriteFailure") + " " + keyFunction, "Scripting Error", 1);
 		}
+	}
+	// Max Win may be set to "unlimited", meaning a game is never won on the point
+	// cap alone. It is stored as Integer.MAX_VALUE rather than a special string so
+	// that every numeric reader keeps working unchanged: no score can reach the cap,
+	// so the "score >= maxWin" tests simply never fire.
+	public static final int MAX_WIN_UNLIMITED = Integer.MAX_VALUE;
+	private static final String MAX_WIN_UNLIMITED_ABBREVIATION = "U";
+	/**
+	 * True if text asks for an unlimited Max Win. Accepts the "U" abbreviation, the
+	 * "Unlimited" display text and the stored sentinel, ignoring case and surrounding
+	 * whitespace, so a value can be round-tripped through the settings field or a
+	 * partner program file.
+	 */
+	public static boolean isUnlimitedMaxWin(String text) {
+		if (text == null) return false;
+		String trimmed = text.trim();
+		return trimmed.equalsIgnoreCase(MAX_WIN_UNLIMITED_ABBREVIATION)
+			|| trimmed.equalsIgnoreCase(Messages.getString("Global.Unlimited"))
+			|| trimmed.equals(Integer.toString(MAX_WIN_UNLIMITED));
+	}
+	/** Renders a stored Max Win for display, showing the unlimited sentinel as "Unlimited". */
+	public static String formatMaxWin(String storedValue) {
+		return isUnlimitedMaxWin(storedValue) ? Messages.getString("Global.Unlimited") : storedValue;
 	}
 	public static int getMaxGameNumber() {
 		// 	for cutthroat -> GamesToWin*3-2;

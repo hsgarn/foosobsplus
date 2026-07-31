@@ -62,6 +62,11 @@ public class PartnerProgramPanel extends JPanel {
 	private JTextField txtPlayer4FileName;
 	private JTextField txtEventFileName;
 	private JTextField txtTournamentFileName;
+	private JTextField txtPointsToWinFileName;
+	private JTextField txtMaxWinFileName;
+	private JTextField txtWinByFileName;
+	private JTextField txtGamesToWinFileName;
+	private JTextField txtRackModeFileName;
 	private final Map<Component, Object> snapshot = new HashMap<>();
 	private BooleanSupplier saveCallback = () -> { saveSettings(); return true; };
 	private static final Logger logger = LoggerFactory.getLogger(PartnerProgramPanel.class);
@@ -121,6 +126,11 @@ public class PartnerProgramPanel extends JPanel {
 		txtPlayer4FileName.setText(Settings.getDefaultPartnerProgram("Player4FileName")); //$NON-NLS-1$
 		txtEventFileName.setText(Settings.getDefaultPartnerProgram("EventFileName")); //$NON-NLS-1$
 		txtTournamentFileName.setText(Settings.getDefaultPartnerProgram("TournamentFileName")); //$NON-NLS-1$
+		txtPointsToWinFileName.setText(Settings.getDefaultPartnerProgram(SettingsKeys.PP_POINTS_TO_WIN_FILE));
+		txtMaxWinFileName.setText(Settings.getDefaultPartnerProgram(SettingsKeys.PP_MAX_WIN_FILE));
+		txtWinByFileName.setText(Settings.getDefaultPartnerProgram(SettingsKeys.PP_WIN_BY_FILE));
+		txtGamesToWinFileName.setText(Settings.getDefaultPartnerProgram(SettingsKeys.PP_GAMES_TO_WIN_FILE));
+		txtRackModeFileName.setText(Settings.getDefaultPartnerProgram(SettingsKeys.PP_RACK_MODE_FILE));
 	}
 	private void revertChanges() {
 		txtPlayer1FileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER1_FILE)); //$NON-NLS-1$
@@ -129,6 +139,11 @@ public class PartnerProgramPanel extends JPanel {
 		txtPlayer4FileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER4_FILE)); //$NON-NLS-1$
 		txtEventFileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_EVENT_FILE)); //$NON-NLS-1$
 		txtTournamentFileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_TOURNAMENT_FILE)); //$NON-NLS-1$
+		txtPointsToWinFileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_POINTS_TO_WIN_FILE));
+		txtMaxWinFileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_MAX_WIN_FILE));
+		txtWinByFileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_WIN_BY_FILE));
+		txtGamesToWinFileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_GAMES_TO_WIN_FILE));
+		txtRackModeFileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_RACK_MODE_FILE));
 		takeSnapshot();
 	}
 	private void saveSettings() {
@@ -138,6 +153,11 @@ public class PartnerProgramPanel extends JPanel {
 		Settings.setPartnerProgram(SettingsKeys.PP_PLAYER4_FILE, txtPlayer4FileName.getText()); //$NON-NLS-1$
 		Settings.setPartnerProgram(SettingsKeys.PP_EVENT_FILE, txtEventFileName.getText()); //$NON-NLS-1$
 		Settings.setPartnerProgram(SettingsKeys.PP_TOURNAMENT_FILE, txtTournamentFileName.getText()); //$NON-NLS-1$
+		Settings.setPartnerProgram(SettingsKeys.PP_POINTS_TO_WIN_FILE, txtPointsToWinFileName.getText());
+		Settings.setPartnerProgram(SettingsKeys.PP_MAX_WIN_FILE, txtMaxWinFileName.getText());
+		Settings.setPartnerProgram(SettingsKeys.PP_WIN_BY_FILE, txtWinByFileName.getText());
+		Settings.setPartnerProgram(SettingsKeys.PP_GAMES_TO_WIN_FILE, txtGamesToWinFileName.getText());
+		Settings.setPartnerProgram(SettingsKeys.PP_RACK_MODE_FILE, txtRackModeFileName.getText());
 		try {
 			Settings.savePartnerProgramConfig();
 		} catch (IOException ex) {
@@ -226,6 +246,16 @@ public class PartnerProgramPanel extends JPanel {
 		add(lblEventFileName, "cell 1 6,alignx right"); //$NON-NLS-1$
 		JLabel lblTournamentFileName = new JLabel(Messages.getString("PartnerProgramPanel.Tournament")); //$NON-NLS-1$
 		add(lblTournamentFileName, "cell 1 7,alignx right"); //$NON-NLS-1$
+		JLabel lblPointsToWinFileName = new JLabel(Messages.getString("PartnerProgramPanel.PointsToWin")); //$NON-NLS-1$
+		add(lblPointsToWinFileName, "cell 1 8,alignx right"); //$NON-NLS-1$
+		JLabel lblMaxWinFileName = new JLabel(Messages.getString("PartnerProgramPanel.MaxWin")); //$NON-NLS-1$
+		add(lblMaxWinFileName, "cell 1 9,alignx right"); //$NON-NLS-1$
+		JLabel lblWinByFileName = new JLabel(Messages.getString("PartnerProgramPanel.WinBy")); //$NON-NLS-1$
+		add(lblWinByFileName, "cell 1 10,alignx right"); //$NON-NLS-1$
+		JLabel lblGamesToWinFileName = new JLabel(Messages.getString("PartnerProgramPanel.GamesToWin")); //$NON-NLS-1$
+		add(lblGamesToWinFileName, "cell 1 11,alignx right"); //$NON-NLS-1$
+		JLabel lblRackModeFileName = new JLabel(Messages.getString("PartnerProgramPanel.RackMode")); //$NON-NLS-1$
+		add(lblRackModeFileName, "cell 1 12,alignx right"); //$NON-NLS-1$
 		txtPlayer1FileName = new JTextField();
 		txtPlayer1FileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER1_FILE)); //$NON-NLS-1$
 		txtPlayer1FileName.setColumns(10);
@@ -250,6 +280,26 @@ public class PartnerProgramPanel extends JPanel {
 		txtTournamentFileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_TOURNAMENT_FILE)); //$NON-NLS-1$
 		txtTournamentFileName.setColumns(10);
 		add(txtTournamentFileName, "cell 2 7,alignx left"); //$NON-NLS-1$
+		txtPointsToWinFileName = new JTextField();
+		txtPointsToWinFileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_POINTS_TO_WIN_FILE));
+		txtPointsToWinFileName.setColumns(10);
+		add(txtPointsToWinFileName, "cell 2 8,alignx left"); //$NON-NLS-1$
+		txtMaxWinFileName = new JTextField();
+		txtMaxWinFileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_MAX_WIN_FILE));
+		txtMaxWinFileName.setColumns(10);
+		add(txtMaxWinFileName, "cell 2 9,alignx left"); //$NON-NLS-1$
+		txtWinByFileName = new JTextField();
+		txtWinByFileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_WIN_BY_FILE));
+		txtWinByFileName.setColumns(10);
+		add(txtWinByFileName, "cell 2 10,alignx left"); //$NON-NLS-1$
+		txtGamesToWinFileName = new JTextField();
+		txtGamesToWinFileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_GAMES_TO_WIN_FILE));
+		txtGamesToWinFileName.setColumns(10);
+		add(txtGamesToWinFileName, "cell 2 11,alignx left"); //$NON-NLS-1$
+		txtRackModeFileName = new JTextField();
+		txtRackModeFileName.setText(Settings.getPartnerProgramParameter(SettingsKeys.PP_RACK_MODE_FILE));
+		txtRackModeFileName.setColumns(10);
+		add(txtRackModeFileName, "cell 2 12,alignx left"); //$NON-NLS-1$
 		JButton btnApplyPartnerProgram = new JButton(Messages.getString("Global.Apply")); //$NON-NLS-1$
 		btnApplyPartnerProgram.addActionListener((ActionEvent e) -> {
                     saveSettings();

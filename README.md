@@ -84,6 +84,8 @@ Parameter Settings Page:</br>
 This is the number of points required to win a game.  This is only used if the Auto Increment Game checkbox is checked and the Rack Mode check box is unchecked. Once a team's score reaches this number, it will reset the scores to zero and increase the game counter for the team.  If the Announce Winner check box is set and the team has reached the number set in the Games to Win parameter, then the Team's name will be sent to the Match Winner OBS source along with the text specified in the Winner Prefix and Winner Suffix parameters.  Points to Win is also utilized to determine if it is meatball (both teams 1 point away from winning score in final game).
 #### Max Win
 The Max Win parameter is only used when the Win By parameter is greater than 1.  If a team has to win by more than 1 point, then Max Win is the maximum score a team can get and at that point it does not matter if they won by more than 1 point.
+
+Enter `U` (or `Unlimited`) for no cap at all.  The field then displays **Unlimited** and a game can only be won by reaching Points to Win *and* leading by Win By, no matter how high the score goes.  Typing a number replaces Unlimited with that cap again.  A number below Points to Win is raised to Points to Win, since a cap below the winning score would end games early.
 #### Win By
 The Win By parameter is used to force a team to win by a specified number of points.  Default is 1 which means that a team only has to win by 1 point (normal game behavior).  Setting the parameter to 2 would require that a team win by two points.  If a team reaches the Points to Win value without being ahead by the Win By value, then the game continues until either a team wins by the Win By margin, or the Max Win value is reached.  Note: If Win By in Final Game Only is checked, then the Win By points are only considered in the last game of the match (prior games are win by 1).
 #### Games to Win
@@ -99,6 +101,16 @@ This is the number of balls in the table when using a coin op table.  This is us
 #### Rack Mode
 When checked, Rack Mode is on.  A game is completed in Rack Mode when the number of balls in the Balls in Rack field have been scored. Whoever scored the most, wins.  So if Balls in Rack is 9, then the game ends when 9 points have been scored (the score could be 8 to 1, or 5 to 4 or 3 to 6, etc).  This mode is typically played on pay tables with pick up games as people play the full rack before starting a new game.
 When unchecked, Rack Mode is off and a game is completed after a team scores the number of points required to win a game.  This is the typical mode used for tournaments and is the default.
+#### Allow Parameters From File
+This controls whether tournament software may set the game parameters on this page.
+
+FoosOBSPlus has long watched a directory for player, event and tournament names written by a partner program such as PartnerUpFoos.  Five of the parameters on this page — **Points to Win**, **Max Win**, **Win By**, **Games to Win** and **Rack Mode** — can now be set the same way.  The partner program writes the value to a file, FoosOBSPlus notices the change within half a second, applies it, saves it to `control.properties` and updates this page.  No button press is needed and the value survives a restart, exactly as if it had been typed here.  The directory and the five file names are set on the [Partner Program](#partner-program) settings page, where the accepted values for each file are listed.
+
+When **checked** (the default), those five files are watched and applied.  Values are validated first, so a typo cannot put the scoreboard into a strange state: a non-numeric or out of range value is written to the log and ignored, leaving the current setting alone.  Games to Win above 6 is capped at 6, and a Max Win below Points to Win is raised to Points to Win, the same rules this page enforces when you type a value yourself.
+
+When **unchecked**, the five parameter files are ignored and left untouched, and the parameters on this page can only be changed here.  Uncheck this when you want to keep local control of how games are scored while still letting the partner program call matches — the player, event and tournament name files are watched either way.
+
+Note that a parameter arriving from a file refreshes this page immediately.  If you have this window open with edits you have not applied yet, those edits are replaced by the incoming values.
 #### Shot Time
 This is the time allowed to shoot the ball from the forward 3 rod or the goalie area in seconds.  The default is 15 seconds.
 #### Pass Time
@@ -537,7 +549,7 @@ Click the cancel button to discard any filter changes made.
 Click the Restore Defaults button to restore the default filters.
 
 ### Partner Program
-FoosOBSPlus can read player names, the event name, and the tournament name from files.  For example, we have a web based tournament management software called PartnerUpFoos (formerly an Access 2003 program called Partner Program) and when a match is called in this program, it writes the players' names to text files.  FoosOBSPlus **watches those files for changes automatically** — as soon as the external program writes a new name to a file, FoosOBSPlus picks it up and updates the corresponding field on the main screen (and sends it to OBS) without any button press required.  The directory and filenames can be set in the Partner Program Settings window.
+FoosOBSPlus can read player names, the event name, the tournament name, and the game parameters (Points to Win, Max Win, Win By, Games to Win and Rack Mode) from files.  For example, we have a web based tournament management software called PartnerUpFoos (formerly an Access 2003 program called Partner Program) and when a match is called in this program, it writes the players' names to text files.  FoosOBSPlus **watches those files for changes automatically** — as soon as the external program writes a new value to a file, FoosOBSPlus picks it up and updates the corresponding field on the main screen (and sends it to OBS) without any button press required.  The directory and filenames can be set in the Partner Program Settings window.
 
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings7.png">
 
@@ -558,6 +570,20 @@ This is the name of the file containing the name of Team 2's goalie.  Default is
 This is the name of the file containing the event name.  When the Partner Program writes an event name to this file, FoosOBSPlus will automatically pick it up and populate the Event Name field in the Tournament Information panel.  Default is Event.txt.
 #### Tournament
 This is the name of the file containing the tournament name.  When the Partner Program writes a tournament name to this file, FoosOBSPlus will automatically pick it up and populate the Tournament Name field in the Tournament Information panel.  Default is Tournament.txt.
+#### Points to Win
+This is the name of the file containing the Points to Win value.  When the Partner Program writes a whole number to this file, FoosOBSPlus updates the Points to Win parameter on the Parameters settings page.  If the new Points to Win is greater than the current Max Win, Max Win is raised to match it.  Default is PointsToWin.txt.
+#### Max Win
+This is the name of the file containing the Max Win value.  A value below the current Points to Win is raised to Points to Win.  Write `U` (or `Unlimited`) for no cap — the Max Win field then shows Unlimited.  Default is MaxWin.txt.
+#### Win By
+This is the name of the file containing the Win By value.  Default is WinBy.txt.
+#### Games to Win
+This is the name of the file containing the Games to Win value.  Values above 6 are capped at 6, the same limit the Parameters settings page enforces.  Default is GamesToWin.txt.
+#### Rack Mode
+This is the name of the file containing the Rack Mode flag.  Write `1`, `true`, `yes` or `on` to turn Rack Mode on; `0`, `false`, `no` or `off` to turn it off.  Default is RackMode.txt.
+
+The five parameter files above are only watched while **Allow Parameters From File** is checked on the Parameters settings page.  When it is unchecked they are ignored and left untouched; the player, event and tournament name files are watched either way.
+
+Values written to the parameter files are validated before being applied — a non-numeric or out of range value is logged and ignored, leaving the current setting in place.  Applied values are saved to `control.properties`, so they persist across restarts just as if they had been entered on the Parameters settings page.
 #### Apply
 Click the Apply button to save any changes made.
 #### Apply and Close
@@ -1669,6 +1695,11 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.111 07/31/2026</br>
+Allow PartnerUpFoos to set Points to Win, Max Win, Win By, Games to Win and Rack Mode via watched files.</br>
+Add Allow Parameters From File setting to Parameters Settings to block or allow those files.</br>
+Allow U for Unlimited in Max Win, on the Parameters Settings page and in MaxWin.txt.</br>
+</br>
 v2.110 07/19/2026</br>
 Fix combo box cursor repositioning bug.</br>
 Allow empty files to clear player name.</br>

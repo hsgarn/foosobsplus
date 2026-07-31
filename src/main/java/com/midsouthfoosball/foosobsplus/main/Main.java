@@ -46,9 +46,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -2939,12 +2941,6 @@ public final class Main implements MatchObserver {
 			protected Boolean doInBackground() throws Exception {
 				String partnerProgramDir = Settings.getPartnerProgramParameter(SettingsKeys.PP_PATH); //$NON-NLS-1$
 				final String clearString = "XXX_ALREADY_READ_XXX";//= Settings.getPartnerProgramClearString(); //$NON-NLS-1$
-				String partnerProgramPlayer1FileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER1_FILE); //$NON-NLS-1$
-				String partnerProgramPlayer2FileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER2_FILE); //$NON-NLS-1$
-				String partnerProgramPlayer3FileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER3_FILE); //$NON-NLS-1$
-				String partnerProgramPlayer4FileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_PLAYER4_FILE); //$NON-NLS-1$
-				String partnerProgramEventFileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_EVENT_FILE); //$NON-NLS-1$
-				String partnerProgramTournamentFileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_TOURNAMENT_FILE); //$NON-NLS-1$
 				Path partnerPath = Paths.get(partnerProgramDir);
 
                 // Check if directory exists
@@ -3015,7 +3011,7 @@ public final class Main implements MatchObserver {
 								final WatchEvent<Path> watchEventPath = (WatchEvent<Path>) watchEvent;
 		        				final Path filePath = watchEventPath.context();
 			        			String fileName = filePath.toString();
-			        			if (fileName.equals(partnerProgramPlayer1FileName) || fileName.equals(partnerProgramPlayer2FileName) || fileName.equals(partnerProgramPlayer3FileName) || fileName.equals(partnerProgramPlayer4FileName) || fileName.equals(partnerProgramEventFileName) || fileName.equals(partnerProgramTournamentFileName)) {
+			        			if (watchedPartnerProgramFileNames().contains(fileName)) {
 				        			try {
 				        				File file = new File(partnerProgramDir + "\\" + fileName); //$NON-NLS-1$
                                         try (Scanner fileReader = new Scanner(file)) {
@@ -3069,12 +3065,17 @@ public final class Main implements MatchObserver {
 					String partnerProgramEventFileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_EVENT_FILE); //$NON-NLS-1$
 					String partnerProgramTournamentFileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_TOURNAMENT_FILE); //$NON-NLS-1$
 					String newName;
-					String[] pieces = value.split("="); //$NON-NLS-1$
+					String[] pieces = value.split("=", 2); //$NON-NLS-1$
 					if (pieces.length == 1) {
 						newName = ""; //$NON-NLS-1$
 					}
 					else {
 						newName = pieces[1];
+					}
+					// Game parameters are applied to the settings, not to a team/tournament,
+					// and must not trigger the auto-start-match-on-name-change below.
+					if (applyPartnerProgramParameter(pieces[0], newName)) {
+						continue;
 					}
 					if (pieces[0].equals(partnerProgramPlayer1FileName)) {
 						teamController.setTeam1ForwardName(newName);
@@ -3112,6 +3113,139 @@ public final class Main implements MatchObserver {
 		};
 	}
 
+	private static final String[] PP_NAME_FILE_KEYS = {
+		SettingsKeys.PP_PLAYER1_FILE, SettingsKeys.PP_PLAYER2_FILE,
+		SettingsKeys.PP_PLAYER3_FILE, SettingsKeys.PP_PLAYER4_FILE,
+		SettingsKeys.PP_EVENT_FILE, SettingsKeys.PP_TOURNAMENT_FILE
+	};
+	private static final String[] PP_PARAMETER_FILE_KEYS = {
+		SettingsKeys.PP_POINTS_TO_WIN_FILE, SettingsKeys.PP_MAX_WIN_FILE,
+		SettingsKeys.PP_WIN_BY_FILE, SettingsKeys.PP_GAMES_TO_WIN_FILE,
+		SettingsKeys.PP_RACK_MODE_FILE
+	};
+	/**
+	 * The set of file names the partner program interface watches for. Re-read on
+	 * each event so file name changes in the Partner Program settings, and the
+	 * Allow Parameters From File setting, take effect without restarting the watcher.
+	 * While parameters from file are blocked the parameter files are left untouched
+	 * rather than read and cleared.
+	 */
+	private static Set<String> watchedPartnerProgramFileNames() {
+		Set<String> fileNames = partnerProgramFileNames(PP_NAME_FILE_KEYS);
+		if (partnerProgramParametersAllowed()) {
+			fileNames.addAll(partnerProgramFileNames(PP_PARAMETER_FILE_KEYS));
+		}
+		return fileNames;
+	}
+	private static Set<String> partnerProgramFileNames(String[] keys) {
+		Set<String> fileNames = new HashSet<>();
+		for (String key : keys) {
+			String fileName = Settings.getPartnerProgramParameter(key);
+			if (fileName != null && !fileName.isEmpty()) fileNames.add(fileName);
+		}
+		return fileNames;
+	}
+	private static boolean partnerProgramParametersAllowed() {
+		return "1".equals(Settings.getControlParameter(SettingsKeys.CTRL_ALLOW_PARAMS_FROM_FILE)); //$NON-NLS-1$
+	}
+	/**
+	 * Applies a game parameter the partner program dropped in the interface
+	 * directory. Returns true if fileName was one of the game parameter files,
+	 * whether or not the value was usable.
+	 */
+	private static boolean applyPartnerProgramParameter(String fileName, String value) {
+		if (!partnerProgramFileNames(PP_PARAMETER_FILE_KEYS).contains(fileName)) return false;
+		if (!partnerProgramParametersAllowed()) {
+			logger.info("Ignoring partner program parameter file " + fileName + "; Allow Parameters From File is off."); //$NON-NLS-1$ //$NON-NLS-2$
+			return true;
+		}
+		String pointsToWinFileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_POINTS_TO_WIN_FILE);
+		String maxWinFileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_MAX_WIN_FILE);
+		String winByFileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_WIN_BY_FILE);
+		String gamesToWinFileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_GAMES_TO_WIN_FILE);
+		String rackModeFileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_RACK_MODE_FILE);
+		String data = value.trim();
+		boolean gamesToWinChanged = false;
+		if (fileName.equals(pointsToWinFileName)) {
+			Integer pointsToWin = parsePartnerProgramInteger(fileName, data, 1);
+			if (pointsToWin == null) return true;
+			Settings.setControlParameter(SettingsKeys.CTRL_POINTS_TO_WIN, pointsToWin.toString());
+			// Max Win can never be less than Points to Win.
+			int maxWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_MAX_WIN));
+			if (maxWin < pointsToWin) {
+				Settings.setControlParameter(SettingsKeys.CTRL_MAX_WIN, pointsToWin.toString());
+			}
+		} else if (fileName.equals(maxWinFileName)) {
+			if (Settings.isUnlimitedMaxWin(data)) {
+				Settings.setControlParameter(SettingsKeys.CTRL_MAX_WIN, Integer.toString(Settings.MAX_WIN_UNLIMITED));
+			} else {
+				Integer maxWin = parsePartnerProgramInteger(fileName, data, 1);
+				if (maxWin == null) return true;
+				int pointsToWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_POINTS_TO_WIN));
+				if (maxWin < pointsToWin) maxWin = pointsToWin;
+				Settings.setControlParameter(SettingsKeys.CTRL_MAX_WIN, maxWin.toString());
+			}
+		} else if (fileName.equals(winByFileName)) {
+			Integer winBy = parsePartnerProgramInteger(fileName, data, 1);
+			if (winBy == null) return true;
+			Settings.setControlParameter(SettingsKeys.CTRL_WIN_BY, winBy.toString());
+		} else if (fileName.equals(gamesToWinFileName)) {
+			Integer gamesToWin = parsePartnerProgramInteger(fileName, data, 1);
+			if (gamesToWin == null) return true;
+			if (gamesToWin > ParametersPanel.MAX_GAMES_TO_WIN) {
+				logger.warn("Partner program " + fileName + " requested " + gamesToWin + " games to win; capping at " + ParametersPanel.MAX_GAMES_TO_WIN + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				gamesToWin = ParametersPanel.MAX_GAMES_TO_WIN;
+			}
+			gamesToWinChanged = gamesToWin != Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_GAMES_TO_WIN));
+			Settings.setControlParameter(SettingsKeys.CTRL_GAMES_TO_WIN, gamesToWin.toString());
+		} else if (fileName.equals(rackModeFileName)) {
+			Boolean rackMode = parsePartnerProgramBoolean(fileName, data);
+			if (rackMode == null) return true;
+			Settings.setControlParameter(SettingsKeys.CTRL_RACK_MODE, rackMode ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
+		} else {
+			return false;
+		}
+		try {
+			Settings.saveControlConfig();
+		} catch (IOException e) {
+			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile")); //$NON-NLS-1$
+			logger.error(e.toString());
+		}
+		if (gamesToWinChanged) {
+			matchPanel.resizeGameTable();
+			gameTableWindowPanel.resizeGameTable();
+			match.setMaxPossibleGames(Settings.getMaxGameNumber());
+		}
+		parametersPanel.refreshFromSettings();
+		teamPanel1.setTitle();
+		teamPanel2.setTitle();
+		teamPanel3.setTitle();
+		teamController.displayAll();
+		return true;
+	}
+	private static Integer parsePartnerProgramInteger(String fileName, String data, int minimum) {
+		try {
+			int parsed = Integer.parseInt(data);
+			if (parsed < minimum) {
+				logger.error("Partner program " + fileName + " value \'" + data + "\' is below the minimum of " + minimum + "; ignoring."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				return null;
+			}
+			return parsed;
+		} catch (NumberFormatException e) {
+			logger.error("Partner program " + fileName + " value \'" + data + "\' is not a number; ignoring."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			return null;
+		}
+	}
+	private static Boolean parsePartnerProgramBoolean(String fileName, String data) {
+		switch (data.toLowerCase()) {
+			case "1", "true", "yes", "on" -> { return Boolean.TRUE; } //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			case "0", "false", "no", "off" -> { return Boolean.FALSE; } //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			default -> {
+				logger.error("Partner program " + fileName + " value \'" + data + "\' is not a true/false value; ignoring."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				return null;
+			}
+		}
+	}
 	public static void updateGameResults(StringBuilder gameResults) {
 		matchController.updateGameResults(gameResults);
 	}

@@ -66,6 +66,8 @@ public final class SettingsKeys {
     public static final String CTRL_SHOW_SKUNK          = "ShowSkunk";
     public static final String CTRL_CUT_THROAT_MODE     = "CutThroatMode";
     public static final String CTRL_RACK_MODE           = "RackMode";
+    // When off, game parameter files written by the partner program are ignored.
+    public static final String CTRL_ALLOW_PARAMS_FROM_FILE = "AllowParametersFromFile";
     public static final String CTRL_LOGO_IMAGE_URL      = "LogoImageURL";
     public static final String CTRL_LOGO_LINK_URI       = "LogoLinkURI";
 
@@ -341,6 +343,13 @@ public final class SettingsKeys {
     public static final String PP_PLAYER4_FILE          = "Player4FileName";
     public static final String PP_EVENT_FILE            = "EventFileName";
     public static final String PP_TOURNAMENT_FILE       = "TournamentFileName";
+    // Game parameters the partner program may set, using the same drop-a-file
+    // mechanism as the player/event/tournament names above.
+    public static final String PP_POINTS_TO_WIN_FILE    = "PointsToWinFileName";
+    public static final String PP_MAX_WIN_FILE          = "MaxWinFileName";
+    public static final String PP_WIN_BY_FILE           = "WinByFileName";
+    public static final String PP_GAMES_TO_WIN_FILE     = "GamesToWinFileName";
+    public static final String PP_RACK_MODE_FILE        = "RackModeFileName";
 
     // ==================== AutoScore Settings Keys ====================
     // Legacy single-connection keys. Kept as a mirror of the first table
