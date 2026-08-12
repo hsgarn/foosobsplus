@@ -484,6 +484,7 @@ public class AutoScoreManager {
 				}
 			}
 		}
+		copyNames.remove("SENSOR3"); //$NON-NLS-1$
 		if (!copyNames.isEmpty()) {
 			String msg = "Validation Failed. Missing parameters:\r\n"; //$NON-NLS-1$
 			for (String missing : copyNames) {

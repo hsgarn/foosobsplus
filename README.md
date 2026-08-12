@@ -1695,6 +1695,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.112 08/12/2026</br>
+Make SENSOR3 optional in AutoScore validation.</br>
+</br>
 v2.111 07/31/2026</br>
 Allow PartnerUpFoos to set Points to Win, Max Win, Win By, Games to Win and Rack Mode via watched files.</br>
 Add Allow Parameters From File setting to Parameters Settings to block or allow those files.</br>
