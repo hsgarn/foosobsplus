@@ -1695,6 +1695,11 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.115 08/14/2026</br>
+Add AutoScore Manage Tables option to see and setup all tables in one place.</br>
+</br>
+v2.114 08/14/2026</br>
+Broadcast DISCOVER_PICO on all interfaces as OS would not always pick the correct one.
 v2.113 08/14/2026</br>
 Add Table selector to AutoScore Configuration modal.</br>
 </br>

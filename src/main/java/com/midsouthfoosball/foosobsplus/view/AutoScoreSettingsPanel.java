@@ -63,13 +63,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.net.InetAddresses;
+import com.midsouthfoosball.foosobsplus.controller.PicoSearchHelper;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 import com.midsouthfoosball.foosobsplus.model.TableConnection;
 
 import net.miginfocom.swing.MigLayout;
 
-public class AutoScoreSettingsPanel extends JPanel {
+public class AutoScoreSettingsPanel extends JPanel implements PicoSearchHelper.AssignTarget {
 
 	private static final long serialVersionUID = 1L;
 	private final JComboBox<TableConnection> cmbTables;
@@ -231,6 +232,19 @@ public class AutoScoreSettingsPanel extends JPanel {
 		cmbTables.setSelectedItem(added);
 		loadingFields = false;
 		loadConnectionIntoFields(added);
+	}
+	// Grows the table list to at least minCount by appending default table
+	// connections (used by Assign All when discovery finds devices for more
+	// tables than are currently configured). No-op if already at minCount.
+	@Override
+	public void ensureTableCount(int minCount) {
+		while (connections.size() < minCount) {
+			addTable();
+		}
+	}
+	@Override
+	public void saveAssignments() {
+		saveSettings();
 	}
 	private void deleteTable() {
 		if (connections.size() <= 1) {

@@ -140,6 +140,8 @@ import com.midsouthfoosball.foosobsplus.view.AutoScoreConfigFrame;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreConfigPanel;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreMainPanel;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsFrame;
+import com.midsouthfoosball.foosobsplus.view.AutoScoreTablesFrame;
+import com.midsouthfoosball.foosobsplus.view.AutoScoreTablesPanel;
 import com.midsouthfoosball.foosobsplus.view.APISettingsFrame;
 import com.midsouthfoosball.foosobsplus.view.APISettingsPanel;
 import com.midsouthfoosball.foosobsplus.view.AutoScoreSettingsPanel;
@@ -291,6 +293,8 @@ public final class Main implements MatchObserver {
 	private static final AutoScoreSettingsPanel	autoScoreSettingsPanel	= autoScoreSettingsFrame.getAutoScoreSettingsPanel();
 	private static final AutoScoreConfigFrame	autoScoreConfigFrame	= new AutoScoreConfigFrame();
 	private static final AutoScoreConfigPanel	autoScoreConfigPanel	= autoScoreConfigFrame.getAutoScoreConfigPanel();
+	private static final AutoScoreTablesFrame	autoScoreTablesFrame	= new AutoScoreTablesFrame();
+	private static final AutoScoreTablesPanel	autoScoreTablesPanel	= autoScoreTablesFrame.getAutoScoreTablesPanel();
 	////// Set up The Main Window JFrame \\\\\\
 	private static MainFrame 					mainFrame;
 	////// Set up independent Windows \\\\\\
@@ -425,6 +429,7 @@ public final class Main implements MatchObserver {
 				sourcesPanel.populateObsSources(inputNames);
 				statSourcesPanel.populateObsSources(inputNames);
 				autoScoreSettingsPanel.populateObsSources(inputNames);
+				autoScoreTablesPanel.populateObsSources(inputNames);
 				filtersPanel.cacheObsSources(inputNames);
 			}
 
@@ -590,6 +595,14 @@ public final class Main implements MatchObserver {
 				if (obsManager.isConnected() && !obsSourcesFetched) obsManager.fetchInputList();
 			}
 		});
+		autoScoreTablesFrame.addWindowListener(new WindowAdapter() {
+			@Override public void windowOpened(WindowEvent e) {
+				if (obsManager.isConnected() && !obsSourcesFetched) obsManager.fetchInputList();
+			}
+			@Override public void windowActivated(WindowEvent e) {
+				if (obsManager.isConnected() && !obsSourcesFetched) obsManager.fetchInputList();
+			}
+		});
 		// The settings/config/search/connect controls act on the active table's
 		// manager (uiManager()). The apply/save listeners refresh every manager's
 		// connection from the freshly-saved settings so edits take effect on the
@@ -646,6 +659,17 @@ public final class Main implements MatchObserver {
 		autoScoreMainPanel.addSettingsListener(e -> mainController.showAutoScore());
 		autoScoreSettingsPanel.setTableConnectedProvider(
 			i -> i >= 0 && i < autoScoreManagers.size() && autoScoreManagers.get(i).isConnected());
+		// The Tables Grid is a second, alongside AutoScore configuration UI (all
+		// tables editable at once) - see AutoScoreTablesPanel. It manages its own
+		// row Add/Delete/Search/Cancel internally; only Save/Apply need to reach
+		// back into Main to refresh the runtime managers/sessions.
+		autoScoreTablesPanel.setAfterSaveCallback(Main::syncAutoScoreRuntimeWithSettings);
+		autoScoreTablesPanel.setTableConnectedProvider(
+			i -> i >= 0 && i < autoScoreManagers.size() && autoScoreManagers.get(i).isConnected());
+		autoScoreTablesPanel.setTableConnectListener(Main::connectTable);
+		autoScoreTablesPanel.setTableDisconnectListener(Main::disconnectTable);
+		autoScoreTablesPanel.setConnectAllListener(Main::connectAllTables);
+		autoScoreTablesPanel.setDisconnectAllListener(Main::disconnectAllTables);
 		mainFrame.setAutoScoreTableConnectListener(Main::connectTable);
 		mainFrame.setAutoScoreTableDisconnectListener(Main::disconnectTable);
 		mainFrame.setAutoScoreConnectAllListener(Main::connectAllTables);
@@ -828,6 +852,7 @@ public final class Main implements MatchObserver {
 		mainFrame.setAutoScoreConnectionState(connectedCount, autoScoreManagers.size());
 		if (!autoScoreManagers.isEmpty()) autoScoreMainPanel.setConnectionState(uiManager().isConnected());
 		autoScoreSettingsPanel.refreshTableStatus();
+		autoScoreTablesPanel.refreshTableStatus();
 		refreshAutoScoreConfigTable();
 		rebuildAutoScoreTablesMenu();
 		if (!sessions.isEmpty()) rebuildTablesMenu();
@@ -1153,7 +1178,7 @@ public final class Main implements MatchObserver {
 	public static void loadWindowsAndControllers() {
 		mainFrame = new MainFrame(Settings.getInstance(), tournamentPanel, timerPanel, obsPanel, autoScoreMainPanel, teamPanel1, teamPanel2, teamPanel3, statsEntryPanel,
 				switchPanel, resetPanel, statsDisplayPanel, matchPanel, parametersFrame, hotKeysFrame, sourcesFrame, statSourcesFrame, filtersFrame,
-				partnerProgramFrame, apiSettingsFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, ballPanel);
+				partnerProgramFrame, apiSettingsFrame, obsConnectFrame, autoScoreSettingsFrame, autoScoreConfigFrame, autoScoreTablesFrame, ballPanel);
 		////// Set up independent Windows \\\\\\
 		mainFrame.windowActivated(null);
 		gameTableWindowPanel		= new GameTableWindowPanel();

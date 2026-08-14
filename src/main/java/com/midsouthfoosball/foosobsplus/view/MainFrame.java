@@ -87,6 +87,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private final OBSConnectFrame obsConnectFrame;
 	private final AutoScoreSettingsFrame autoScoreSettingsFrame;
 	private final AutoScoreConfigFrame autoScoreConfigFrame;
+	private final AutoScoreTablesFrame autoScoreTablesFrame;
 	private final JCheckBoxMenuItem viewTimerWindow;
 	private final JCheckBoxMenuItem viewAlwaysOnTop;
 	private final JCheckBoxMenuItem viewLastScored1Window;
@@ -103,6 +104,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private JMenu autoScoreMenu;
 	private JMenuItem autoScoreSettingsItem;
 	private JMenuItem autoScoreConfigItem;
+	private JMenuItem autoScoreTablesGridItem;
 	private JMenu tablesMenu;
 	private JMenu tableViewsMenu;
 	private java.util.function.IntConsumer tableViewListener;
@@ -128,7 +130,7 @@ public final class MainFrame extends JFrame implements WindowListener {
             TeamPanel team1Panel, TeamPanel team2Panel, TeamPanel team3Panel, StatsEntryPanel statsEntryPanel, SwitchPanel switchPanel, ResetPanel resetPanel, 
             StatsDisplayPanel statsDisplayPanel, MatchPanel matchPanel, ParametersFrame parametersFrame, HotKeysFrame hotKeysFrame, SourcesFrame sourcesFrame,
             StatSourcesFrame statSourcesFrame, FiltersFrame filtersFrame, PartnerProgramFrame partnerProgramFrame, APISettingsFrame apiSettingsFrame, OBSConnectFrame obsConnectFrame, AutoScoreSettingsFrame
-                    autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame, BallPanel ballPanel) {
+                    autoScoreSettingsFrame, AutoScoreConfigFrame autoScoreConfigFrame, AutoScoreTablesFrame autoScoreTablesFrame, BallPanel ballPanel) {
 		super(PROGRAMNAME + ": Foosball"); //$NON-NLS-1$
 		this.tournamentPanel 		= tournamentPanel;
 		this.timerPanel 			= timerPanel;
@@ -152,6 +154,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 		this.obsConnectFrame 		= obsConnectFrame;
 		this.autoScoreSettingsFrame = autoScoreSettingsFrame;
 		this.autoScoreConfigFrame 	= autoScoreConfigFrame;
+		this.autoScoreTablesFrame 	= autoScoreTablesFrame;
         this.ballPanel              = ballPanel;
 		viewLastScored1Window 	= new JCheckBoxMenuItem(Messages.getString("MainFrame.Team1LastScoredWindow")); //$NON-NLS-1$
 		viewLastScored2Window 	= new JCheckBoxMenuItem(Messages.getString("MainFrame.Team2LastScoredWindow")); //$NON-NLS-1$
@@ -241,9 +244,11 @@ public final class MainFrame extends JFrame implements WindowListener {
 		imgAutoScoreDisconnected = new ImageIcon(this.getClass().getResource("/Disconnected.png")); //$NON-NLS-1$
 		imgAutoScoreDisconnected.setImage(imgOBSDisconnected.getImage().getScaledInstance(12, 12,  Image.SCALE_DEFAULT));
 		imgIconAutoScoreDisconnected = imgOBSDisconnected;
+		autoScoreTablesGridItem = new JMenuItem(Messages.getString("MainFrame.AutoScoreTablesGrid")); //$NON-NLS-1$
 		autoScoreMenu.add(autoScoreSettingsItem);
 		autoScoreMenu.setIcon(imgIconAutoScoreDisconnected);
 		autoScoreMenu.add(autoScoreConfigItem);
+		autoScoreMenu.add(autoScoreTablesGridItem);
 		autoScoreTablesMenu = new JMenu(Messages.getString("MainFrame.Tables")); //$NON-NLS-1$
 		autoScoreMenu.add(autoScoreTablesMenu);
 		tablesMenu = new JMenu(Messages.getString("MainFrame.Tables")); //$NON-NLS-1$
@@ -301,6 +306,9 @@ public final class MainFrame extends JFrame implements WindowListener {
                 });
 		autoScoreConfigItem.addActionListener((ActionEvent ae) -> {
                     autoScoreConfigFrame.setVisible(true);
+                });
+		autoScoreTablesGridItem.addActionListener((ActionEvent ae) -> {
+                    autoScoreTablesFrame.setVisible(true);
                 });
 		settingsSourceItem.addActionListener((ActionEvent ae) -> {
                     sourcesFrame.setVisible(true);

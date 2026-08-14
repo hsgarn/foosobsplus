@@ -20,7 +20,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.controller;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -41,12 +40,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComponent;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
@@ -240,125 +235,9 @@ public class AutoScoreManager {
 					settingsPanel.addMessage("Search failed: " + e); //$NON-NLS-1$
 					return;
 				}
-				if (picos.isEmpty()) {
-					logger.info("No Pico found."); //$NON-NLS-1$
-					settingsPanel.addMessage("No Pico found."); //$NON-NLS-1$
-					return;
-				}
-				for (PicoDiscovery.PicoInfo pico : picos) {
-					logger.info("Discovered Pico: " + pico.raw()); //$NON-NLS-1$
-					settingsPanel.addMessage("Found: " + pico.display()); //$NON-NLS-1$
-				}
-				SearchAction action = choosePico(picos);
-				if (action == null) {
-					return;
-				}
-				if (action.assignAll()) {
-					assignAllPicos(picos);
-					return;
-				}
-				PicoDiscovery.PicoInfo chosen = action.pico();
-				if (chosen.isBusy()) {
-					String clientIp = chosen.busyClientIp();
-					String busyDesc = clientIp.isEmpty()
-						? " reports status \"" + chosen.status() + "\"" //$NON-NLS-1$ //$NON-NLS-2$
-						: " is in a game with client " + clientIp; //$NON-NLS-1$
-					int confirm = JOptionPane.showConfirmDialog(
-						settingsPanel,
-						chosen.label() + busyDesc + " - it may already be in use by another table. Use it anyway?", //$NON-NLS-1$
-						"Device May Be In Use", //$NON-NLS-1$
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.WARNING_MESSAGE
-					);
-					if (confirm != JOptionPane.YES_OPTION) {
-						return;
-					}
-				}
-				updateHostPort(chosen.ipAddress(), chosen.port());
+				PicoSearchHelper.handleDiscoveryResult(settingsPanel, picos, settingsPanel, settingsPanel::getSelectedTableIndex);
 			}
 		}.execute();
-	}
-
-	/**
-	 * The user's choice in the search results dialog: a single device to assign
-	 * to the currently selected table, or assign every device to its own table.
-	 */
-	private record SearchAction(PicoDiscovery.PicoInfo pico, boolean assignAll) {}
-
-	/**
-	 * Shows the discovered devices and returns the action the user picked:
-	 * Assign Selected (one device for the currently selected table connection),
-	 * Assign All (every device to the table matching its reported table number),
-	 * or null if cancelled. Devices reporting a non-Available status are grayed
-	 * out (still selectable).
-	 */
-	private SearchAction choosePico(List<PicoDiscovery.PicoInfo> picos) {
-		JList<PicoDiscovery.PicoInfo> list = new JList<>(picos.toArray(new PicoDiscovery.PicoInfo[0]));
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.setSelectedIndex(0);
-		list.setVisibleRowCount(Math.min(picos.size(), 10));
-		list.setCellRenderer(new DefaultListCellRenderer() {
-			@Override
-			public Component getListCellRendererComponent(JList<?> jList, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-				super.getListCellRendererComponent(jList, value, index, isSelected, cellHasFocus);
-				PicoDiscovery.PicoInfo pico = (PicoDiscovery.PicoInfo) value;
-				setText(pico.display());
-				if (pico.isBusy() && !isSelected) {
-					setForeground(Color.GRAY);
-				}
-				return this;
-			}
-		});
-		Object[] message = {
-			picos.size() + " device(s) found. Select the one to use for the current table's IP Address and Port," //$NON-NLS-1$
-				+ " or Assign All to assign every device to the table matching its table number:", //$NON-NLS-1$
-			new JScrollPane(list)
-		};
-		String[] options = {"Assign Selected", "Assign All", "Cancel"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		int result = JOptionPane.showOptionDialog(
-			settingsPanel,
-			message,
-			"Update Auto Score Settings", //$NON-NLS-1$
-			JOptionPane.DEFAULT_OPTION,
-			JOptionPane.QUESTION_MESSAGE,
-			null,
-			options,
-			options[0]
-		);
-		if (result == 0) {
-			return new SearchAction(list.getSelectedValue(), false);
-		}
-		if (result == 1) {
-			return new SearchAction(null, true);
-		}
-		return null;
-	}
-
-	/**
-	 * Assigns every discovered device to the table connection matching its
-	 * reported table number ("Table N" goes to the Nth table), then saves all
-	 * connections in one shot. Devices without a parsable table number, or
-	 * numbered beyond the configured tables, are skipped with a message.
-	 */
-	private void assignAllPicos(List<PicoDiscovery.PicoInfo> picos) {
-		boolean assignedAny = false;
-		for (PicoDiscovery.PicoInfo pico : picos) {
-			int tableNumber = pico.tableNumber();
-			if (tableNumber < 1) {
-				settingsPanel.addMessage("Skipped " + pico.display() + " - could not determine its table number."); //$NON-NLS-1$ //$NON-NLS-2$
-				continue;
-			}
-			if (tableNumber > settingsPanel.getTableCount()) {
-				settingsPanel.addMessage("Skipped " + pico.label() + " - only " + settingsPanel.getTableCount() + " table(s) configured."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				continue;
-			}
-			settingsPanel.setTableAddress(tableNumber - 1, pico.ipAddress(), pico.port());
-			settingsPanel.addMessage("Assigned " + pico.display() + " to table " + tableNumber + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			assignedAny = true;
-		}
-		if (assignedAny) {
-			settingsPanel.saveSettings();
-		}
 	}
 
 	/**
@@ -649,12 +528,6 @@ public class AutoScoreManager {
 	}
 
 	// --- Private helper methods ---
-
-	private void updateHostPort(String host, String port) {
-		settingsPanel.setServerAddress(host);
-		settingsPanel.setServerPort(port);
-		settingsPanel.saveSettings();
-	}
 
 	private void notifyConnectionStateChanged(boolean isConnected) {
 		if (connectionListener != null) {
