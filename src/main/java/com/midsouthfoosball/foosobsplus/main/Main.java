@@ -610,15 +610,19 @@ public final class Main implements MatchObserver {
 		});
 		autoScoreSettingsPanel.addDisconnectListener(e -> { settingsManager().setBlockReconnect(true); settingsManager().disconnect(); });
 		autoScoreSettingsPanel.addSearchListener(e -> settingsManager().search());
-		autoScoreConfigPanel.addReadConfigListener(e -> settingsManager().readConfig());
-		autoScoreConfigPanel.addWriteConfigListener(e -> settingsManager().writeConfig());
+		// The Config window acts on the table SELECTED IN ITS OWN DROPDOWN
+		// (configManager()), independent of the Settings window's dropdown.
+		autoScoreConfigPanel.addReadConfigListener(e -> configManager().readConfig());
+		autoScoreConfigPanel.addWriteConfigListener(e -> configManager().writeConfig());
 		autoScoreConfigPanel.addValidateConfigListener(e -> {
-			if (settingsManager().validateConfig()) {
+			if (configManager().validateConfig()) {
 				JOptionPane.showMessageDialog(null, Messages.getString("Main.ValidationPassed"), Messages.getString("Main.ValidationResults"), 1); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		});
-		autoScoreConfigPanel.addResetConfigListener(e -> settingsManager().resetConfig());
-		autoScoreConfigPanel.addClearConfigListener(e -> settingsManager().clearConfig());
+		autoScoreConfigPanel.addResetConfigListener(e -> configManager().resetConfig());
+		autoScoreConfigPanel.addClearConfigListener(e -> configManager().clearConfig());
+		autoScoreConfigPanel.setTableConnectedProvider(
+			i -> i >= 0 && i < autoScoreManagers.size() && autoScoreManagers.get(i).isConnected());
 		// Shift+click on the panel's Connect/Disconnect acts on ALL tables;
 		// a plain click acts on the displayed table only.
 		autoScoreMainPanel.addConnectListener(e -> {
@@ -668,6 +672,12 @@ public final class Main implements MatchObserver {
 	/** Returns the manager for the table selected in the AutoScore Settings dropdown. */
 	private static AutoScoreManager settingsManager() {
 		int i = autoScoreSettingsPanel.getSelectedTableIndex();
+		if (i < 0 || i >= autoScoreManagers.size()) i = 0;
+		return autoScoreManagers.get(i);
+	}
+	/** Returns the manager for the table selected in the AutoScore Config window's own dropdown. */
+	private static AutoScoreManager configManager() {
+		int i = autoScoreConfigPanel.getSelectedTableIndex();
 		if (i < 0 || i >= autoScoreManagers.size()) i = 0;
 		return autoScoreManagers.get(i);
 	}
@@ -745,6 +755,17 @@ public final class Main implements MatchObserver {
 		}
 		mainFrame.rebuildAutoScoreTablesMenu(labels, connected);
 	}
+	/** Refreshes the AutoScore Config window's own Table dropdown with each table's label. */
+	private static void refreshAutoScoreConfigTable() {
+		List<TableConnection> conns = Settings.getTableConnections();
+		List<String> labels = new ArrayList<>();
+		for (int i = 0; i < autoScoreManagers.size(); i++) {
+			labels.add(i < conns.size() ? conns.get(i).getLabel()
+					: Messages.getString("MainFrame.Tables") + " " + (i + 1)); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		autoScoreConfigPanel.setTableLabels(labels);
+		autoScoreConfigPanel.refreshTableStatus();
+	}
 	/**
 	 * Routes an AutoScore goal/timeout code to its table. The displayed table goes
 	 * through the full processCode path (command history, filters, live OBS); any
@@ -807,6 +828,7 @@ public final class Main implements MatchObserver {
 		mainFrame.setAutoScoreConnectionState(connectedCount, autoScoreManagers.size());
 		if (!autoScoreManagers.isEmpty()) autoScoreMainPanel.setConnectionState(uiManager().isConnected());
 		autoScoreSettingsPanel.refreshTableStatus();
+		refreshAutoScoreConfigTable();
 		rebuildAutoScoreTablesMenu();
 		if (!sessions.isEmpty()) rebuildTablesMenu();
 	}
