@@ -107,8 +107,10 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private JMenuItem autoScoreTablesGridItem;
 	private JMenu tablesMenu;
 	private JMenu tableViewsMenu;
+	private JMenuItem tableDataGridItem;
 	private java.util.function.IntConsumer tableViewListener;
 	private Runnable tableViewAllListener;
+	private Runnable tableDataGridListener;
 	private final javax.swing.ButtonGroup tablesGroup = new javax.swing.ButtonGroup();
 	private java.util.function.IntConsumer tableSelectListener;
 	private JMenu autoScoreTablesMenu;
@@ -265,6 +267,9 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewMenu.addSeparator();
 		tableViewsMenu = new JMenu(Messages.getString("MainFrame.TableViews")); //$NON-NLS-1$
 		viewMenu.add(tableViewsMenu);
+		tableDataGridItem = new JMenuItem(Messages.getString("MainFrame.TableDataGrid")); //$NON-NLS-1$
+		tableDataGridItem.addActionListener(ae -> { if (tableDataGridListener != null) tableDataGridListener.run(); });
+		viewMenu.add(tableDataGridItem);
 		JMenu helpMenu 		= new JMenu(Messages.getString("MainFrame.Help")); //$NON-NLS-1$
 		JMenuItem helpPage 	= new JMenuItem(PROGRAMNAME + " " + Messages.getString("MainFrame.Help")); //$NON-NLS-1$ //$NON-NLS-2$
 		JMenuItem helpRules = new JMenuItem(Messages.getString("MainFrame.Rules")); //$NON-NLS-1$
@@ -499,6 +504,10 @@ public final class MainFrame extends JFrame implements WindowListener {
 	// Registers the callback for the View > Table Views > View All Tables item.
 	public void setTableViewAllListener(Runnable listener) {
 		this.tableViewAllListener = listener;
+	}
+	// Registers the callback for the View > Table Data item (opens the all-tables data grid).
+	public void setTableDataGridListener(Runnable listener) {
+		this.tableDataGridListener = listener;
 	}
 	// (Re)builds the View > Table Views submenu, one item per table label plus a
 	// View All Tables item. Clicking a table item opens (or focuses) that table's

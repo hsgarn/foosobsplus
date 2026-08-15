@@ -171,6 +171,7 @@ import com.midsouthfoosball.foosobsplus.view.StatSourcesPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsDisplayPanel;
 import com.midsouthfoosball.foosobsplus.view.StatsEntryPanel;
 import com.midsouthfoosball.foosobsplus.view.SwitchPanel;
+import com.midsouthfoosball.foosobsplus.view.TableDataFrame;
 import com.midsouthfoosball.foosobsplus.view.TableViewFrame;
 import com.midsouthfoosball.foosobsplus.view.TeamPanel;
 import com.midsouthfoosball.foosobsplus.view.TimerPanel;
@@ -309,6 +310,9 @@ public final class Main implements MatchObserver {
 	// Lets a non-displayed table's live score/games/matches/timeouts be watched and
 	// pushed to OBS via its Send to OBS button.
 	private static final Map<Integer, TableViewFrame> tableViewFrames = new HashMap<>();
+	// The all-tables live data grid (View > Table Data). Created on demand, like
+	// the per-table monitor windows above; null/disposed until first opened.
+	private static TableDataFrame tableDataFrame;
 	////// Build and Start the Controllers (mvC) \\\\\\
 	private static MainController 				mainController;
 	private static TimerController 				timerController;
@@ -903,6 +907,7 @@ public final class Main implements MatchObserver {
 		mainFrame.setTableSelectListener(Main::selectTable);
 		mainFrame.setTableViewListener(Main::openTableView);
 		mainFrame.setTableViewAllListener(Main::openAllTableViews);
+		mainFrame.setTableDataGridListener(Main::openTableDataGrid);
 		// The Table Name combo in the Tournament panel is a second table switcher
 		// (and rename control) alongside the Tables menu.
 		tournamentPanel.addTableSelectListener(Main::selectTable);
@@ -963,10 +968,68 @@ public final class Main implements MatchObserver {
 			rowHeight = Math.max(rowHeight, h);
 		}
 	}
+	/**
+	 * Opens (or focuses, if already open) the all-tables live data grid: every
+	 * table's score/games/matches/timeouts in one window, editable inline, with a
+	 * Send to OBS action per row. Reuses the same edit/switch machinery as the
+	 * per-table monitor windows ({@link #editTableField} / {@link #selectTable}).
+	 */
+	private static void openTableDataGrid() {
+		if (tableDataFrame != null && tableDataFrame.isDisplayable()) {
+			tableDataFrame.setVisible(true);
+			tableDataFrame.toFront();
+			tableDataFrame.requestFocus();
+			return;
+		}
+		tableDataFrame = new TableDataFrame(() -> sessions, () -> activeSession, OBS::getConnected,
+				i -> i >= 0 && i < autoScoreManagers.size() && autoScoreManagers.get(i).isConnected(),
+				Main::selectTable, Main::editTableField, Main::editTableNames,
+				Main::clearTableData, Main::clearAllTablesData);
+		tableDataFrame.setVisible(true);
+	}
 	/** Switches the displayed table to the session at the given index. */
 	private static void selectTable(int index) {
 		if (index < 0 || index >= sessions.size()) return;
 		switchToSession(sessions.get(index));
+	}
+	/**
+	 * Clears one table's scores/games/matches/timeouts/reset-warn flags/king
+	 * seats/stats and resets its match.
+	 * <p>
+	 * If this is the DISPLAYED table, it runs through the real
+	 * {@code processCode("XPCA")} pipeline - the exact same path as the main
+	 * screen's Switch Panel Clear All button - so it also toggles the OBS
+	 * "games won" indicator sources and, importantly, is fully undoable via the
+	 * normal Ctrl+Z / Undo button, since {@code processCode} snapshots state
+	 * onto the undo stack before running the command.
+	 * <p>
+	 * If this is a BACKGROUND table, undo is not available: the app's undo
+	 * stack is Main's shared, active-table-only state (only swapped per table
+	 * at real {@link #switchToSession} time), so running a background table's
+	 * clear through it would snapshot the wrong table and corrupt a later
+	 * Undo/Redo. Instead this falls back to the same lightweight, non-undoable
+	 * path used elsewhere for background edits ({@link #withTableBound}); it
+	 * also skips the OBS "games won" indicator toggle, since those sources are
+	 * always scoped to the live/active OBS scene, not to any one table's
+	 * session, and touching them here would show/hide the DISPLAYED table's
+	 * overlay while clearing a different table.
+	 */
+	private static void clearTableData(int tableIndex) {
+		if (tableIndex < 0 || tableIndex >= sessions.size()) return;
+		if (sessions.get(tableIndex) == activeSession) {
+			processCode("XPCA", false); //$NON-NLS-1$
+			return;
+		}
+		withTableBound(tableIndex, () -> {
+			teamController.clearAll();
+			matchController.resetMatch();
+		});
+	}
+	/** Clears every configured table (see {@link #clearTableData}). */
+	private static void clearAllTablesData() {
+		for (int i = 0; i < sessions.size(); i++) {
+			clearTableData(i);
+		}
 	}
 	/**
 	 * Runs an edit against any table (active or background) using the same
@@ -1006,8 +1069,39 @@ public final class Main implements MatchObserver {
 			frame.refreshNow();
 		}
 	}
-	/** Adjusts one counter (score/games/matches/timeouts) on a table's team by delta. */
+	/**
+	 * Adjusts one counter (score/games/matches/timeouts) on a table's team by
+	 * delta (always &plusmn;1, from a monitor window's or the Table Data grid's
+	 * +/- button).
+	 * <p>
+	 * If this is the DISPLAYED table, routes through {@code processCode} with
+	 * the same {@code X<cmd><team>} codes the main screen's own +/- buttons use
+	 * (see {@code ScoreIncreaseListener} etc.) - e.g. {@code XIST1}/{@code
+	 * XDST1} for Score, {@code XUTT1}/{@code XRTT1} for Timeouts - so it is
+	 * fully undoable via Ctrl+Z / the Undo button, identically to clicking the
+	 * real button on the main panel. That also means it carries the SAME real
+	 * game-logic side effects those buttons already have (e.g. incrementing
+	 * Score past a won game/match starts a new one) - this is not a change in
+	 * behavior versus the main panel, just reuse of it.
+	 * <p>
+	 * If this is a BACKGROUND table, falls back to the raw, side-effect-free
+	 * adjust methods via {@link #withTableBound} (unchanged from before): the
+	 * shared undo stack is only ever wired to the active table (see {@link
+	 * #clearTableData}'s javadoc for why), so a background table's +/- still
+	 * can't be undone.
+	 */
 	private static void editTableField(int tableIndex, int teamNumber, TableViewFrame.Field field, int delta) {
+		if (tableIndex < 0 || tableIndex >= sessions.size()) return;
+		if (sessions.get(tableIndex) == activeSession) {
+			String prefix = switch (field) {
+				case SCORE -> delta > 0 ? "IST" : "DST"; //$NON-NLS-1$ //$NON-NLS-2$
+				case GAMES -> delta > 0 ? "IGT" : "DGT"; //$NON-NLS-1$ //$NON-NLS-2$
+				case MATCHES -> delta > 0 ? "IMT" : "DMT"; //$NON-NLS-1$ //$NON-NLS-2$
+				case TIMEOUTS -> delta > 0 ? "UTT" : "RTT"; //$NON-NLS-1$ //$NON-NLS-2$
+			};
+			processCode("X" + prefix + teamNumber, false); //$NON-NLS-1$
+			return;
+		}
 		withTableBound(tableIndex, () -> {
 			switch (field) {
 				case SCORE:    teamController.adjustScore(teamNumber, delta); break;
