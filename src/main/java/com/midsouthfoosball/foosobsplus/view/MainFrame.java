@@ -106,6 +106,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	private JMenuItem autoScoreConfigItem;
 	private JMenuItem autoScoreTablesGridItem;
 	private JMenu tablesMenu;
+	private JMenu activeTableMenu;
 	private JMenu tableViewsMenu;
 	private JMenuItem tableDataGridItem;
 	private java.util.function.IntConsumer tableViewListener;
@@ -247,13 +248,22 @@ public final class MainFrame extends JFrame implements WindowListener {
 		imgAutoScoreDisconnected.setImage(imgOBSDisconnected.getImage().getScaledInstance(12, 12,  Image.SCALE_DEFAULT));
 		imgIconAutoScoreDisconnected = imgOBSDisconnected;
 		autoScoreTablesGridItem = new JMenuItem(Messages.getString("MainFrame.AutoScoreTablesGrid")); //$NON-NLS-1$
-		autoScoreMenu.add(autoScoreSettingsItem);
 		autoScoreMenu.setIcon(imgIconAutoScoreDisconnected);
-		autoScoreMenu.add(autoScoreConfigItem);
-		autoScoreMenu.add(autoScoreTablesGridItem);
-		autoScoreTablesMenu = new JMenu(Messages.getString("MainFrame.Tables")); //$NON-NLS-1$
+		autoScoreTablesMenu = new JMenu(Messages.getString("MainFrame.AutoScoreConnections")); //$NON-NLS-1$
 		autoScoreMenu.add(autoScoreTablesMenu);
+		autoScoreMenu.addSeparator();
+		autoScoreMenu.add(autoScoreSettingsItem);
+		autoScoreMenu.add(autoScoreTablesGridItem);
+		autoScoreMenu.add(autoScoreConfigItem);
 		tablesMenu = new JMenu(Messages.getString("MainFrame.Tables")); //$NON-NLS-1$
+		activeTableMenu = new JMenu(Messages.getString("MainFrame.ActiveTable")); //$NON-NLS-1$
+		tablesMenu.add(activeTableMenu);
+		tablesMenu.addSeparator();
+		tableViewsMenu = new JMenu(Messages.getString("MainFrame.TableViews")); //$NON-NLS-1$
+		tablesMenu.add(tableViewsMenu);
+		tableDataGridItem = new JMenuItem(Messages.getString("MainFrame.TableDataGrid")); //$NON-NLS-1$
+		tableDataGridItem.addActionListener(ae -> { if (tableDataGridListener != null) tableDataGridListener.run(); });
+		tablesMenu.add(tableDataGridItem);
 		JMenu viewMenu = new JMenu(Messages.getString("MainFrame.View")); //$NON-NLS-1$
 		viewMenu.add(viewAlwaysOnTop);
 		viewMenu.add(viewTimerWindow);
@@ -264,12 +274,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 		viewMenu.add(viewGameResultsWindow);
 		viewMenu.add(viewAllWindows);
         viewMenu.add(viewBallPanel);
-		viewMenu.addSeparator();
-		tableViewsMenu = new JMenu(Messages.getString("MainFrame.TableViews")); //$NON-NLS-1$
-		viewMenu.add(tableViewsMenu);
-		tableDataGridItem = new JMenuItem(Messages.getString("MainFrame.TableDataGrid")); //$NON-NLS-1$
-		tableDataGridItem.addActionListener(ae -> { if (tableDataGridListener != null) tableDataGridListener.run(); });
-		viewMenu.add(tableDataGridItem);
 		JMenu helpMenu 		= new JMenu(Messages.getString("MainFrame.Help")); //$NON-NLS-1$
 		JMenuItem helpPage 	= new JMenuItem(PROGRAMNAME + " " + Messages.getString("MainFrame.Help")); //$NON-NLS-1$ //$NON-NLS-2$
 		JMenuItem helpRules = new JMenuItem(Messages.getString("MainFrame.Rules")); //$NON-NLS-1$
@@ -474,7 +478,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 	// listener with that table's index.
 	public void rebuildTablesMenu(java.util.List<String> labels, int activeIndex, boolean[] connected) {
 		tablesGroup.getElements().asIterator().forEachRemaining(tablesGroup::remove);
-		tablesMenu.removeAll();
+		activeTableMenu.removeAll();
 		javax.swing.JRadioButtonMenuItem activeItem = null;
 		for (int i = 0; i < labels.size(); i++) {
 			final int index = i;
@@ -488,7 +492,7 @@ public final class MainFrame extends JFrame implements WindowListener {
 				if (tableSelectListener != null) tableSelectListener.accept(index);
 			});
 			tablesGroup.add(item);
-			tablesMenu.add(item);
+			activeTableMenu.add(item);
 			if (i == activeIndex) activeItem = item;
 		}
 		// Select the active item only after every item is in the group/menu, so the
@@ -891,4 +895,3 @@ public final class MainFrame extends JFrame implements WindowListener {
 		Main.updateGameResults(gameResults);
 	}
 }
-

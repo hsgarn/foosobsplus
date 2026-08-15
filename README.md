@@ -654,7 +654,7 @@ Click this menu item to disconnect FoosOBSPlus from OBS Studio.
 ## AutoScore
 This is the menu item for FoosScore AutoScore related activity.  FoosOBSPlus can connect to more than one FoosScore AutoScore system at a time — one per table (see the Tables menu below).  A solid circle before AutoScore indicates the overall connection state across all configured tables: green when every table is connected, yellow when some (but not all) are connected, and red when none are connected.
 
-### Tables
+### Connections
 This submenu lists each configured AutoScore table with a connection status dot (green for connected, red for disconnected).  Clicking a table toggles its connection — connecting it if it is disconnected, or disconnecting it if it is connected.  Below the list are two additional entries:
 #### Connect All
 Connects to every configured AutoScore table.
@@ -665,7 +665,7 @@ Disconnects from every configured AutoScore table.
 
 <img width="494" height="425" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScoreSettings.png">
 
-## Settings
+## Connection Setup
 The AutoScore Settings window manages the list of AutoScore tables.  Each table has its own name and connection settings.  Select a table from the Table drop-down to view or edit its settings; the remaining fields on the window (Name, Server Address, Server Port, Auto Connect, Detail Log) apply to the currently selected table.  A connection status dot (green for connected, red for disconnected) is shown beside each table in the drop-down.
 
 ### Table
@@ -675,7 +675,7 @@ This button adds a new table to the list, prefilled with default connection sett
 ### Delete
 This button removes the currently selected table from the list.
 ### Name
-This is a friendly name for the selected table (for example, "Table 1" or "Center Court").  This name is shown in the Table drop-down, the Tables menu, and the AutoScore -> Tables submenu.
+This is a friendly name for the selected table (for example, "Table 1" or "Center Court").  This name is shown in the Table drop-down, the Tables -> Active Table submenu, and the AutoScore -> Connections submenu.
 ### Server Address
 This is the IP Address of the FoosScore AutoScore server for the selected table.  The AutoScore server will need to be on the same network as FoosOBSPlus in order to successfully communicate with FoosOBSPlus.
 ### Server Port
@@ -703,7 +703,7 @@ This button will restore the AutoScore Settings defaults.  The Apply button or t
 
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScoreConfig.png">
 
-## Configuration
+## Pico Configuration
 
 ### AutoScore Configuration:
 This window is where you can edit the FoosScore AutoScore configuration.  Typically you would press the Read Configuration to see the current configuration.  Then make any changes desired.  THen press the Validate Configuration button to verify changes are acceptable. Then press Write Configuration to send the changes to the FoosScore AutoScore system (Raspberry Pico).  Lastly, press Reset Pico for the changes to take affect. You will have to reconnect after the Pico resets.
@@ -733,7 +733,9 @@ This will cause the FoosScore AutoScore system to restart allowing any configura
 ## Tables
 FoosOBSPlus can track more than one foosball table at a time.  Each table has its own teams, scores, game counts, time outs, timers and statistics, and its own AutoScore connection (configured in AutoScore Settings).  Only one table is *displayed* at a time — the displayed table is bound to the main screen and is the table whose data is sent to OBS Studio.  The other tables continue to track their games in the background (including AutoScore points) so nothing is missed while they are off screen.  Switching the displayed table instantly swaps the entire main screen and the OBS output to that table.
 
-The Tables menu lists every configured table with a radio button and a connection status dot (green for connected, red for disconnected).  The currently displayed table is selected.  Choosing a different table makes it the displayed table.
+The **Active Table** submenu lists every configured table with a radio button and a connection status dot (green for connected, red for disconnected).  The currently displayed table is selected.  Choosing a different table makes it the displayed table.
+
+The **Table Monitors** submenu opens a monitor for an individual table or all tables, including tables currently running in the background. **Edit Table Data** opens the consolidated all-tables data editor.
 
 <img width="352" height="132" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusTablesMenu.png">
 
@@ -766,8 +768,8 @@ When checked, all the above windows will display.  Unchecking the box will close
 
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAllWindows.png">
 
-### Table Views
-This submenu lists every configured table.  Selecting a table opens a small monitor window for it (selecting it again brings the existing window to the front rather than opening a duplicate).  This lets you keep an eye on tables that are not currently displayed.
+### Table Monitors
+This submenu is now under **Tables** rather than **View**. It lists every configured table. Selecting a table opens a small monitor window for it (selecting it again brings the existing window to the front rather than opening a duplicate). This lets you keep an eye on tables that are not currently displayed.
 
 Each Table View window shows, for each team, that table's Score, Games (game count), Matches (match count) and Time Outs, updated about twice a second so a non-displayed table being scored in the background can be watched in real time.  Teams are shown side by side as columns, with the four counters listed down the left side.  In cut-throat mode a third team column appears.
 
@@ -783,7 +785,7 @@ The window has two status indicators:
 
 The window also has a **Send to OBS** button.  Pressing it makes that table the displayed table, switching the main screen and OBS output to it (the same as choosing it from the Tables menu).  The button is disabled on whichever table is already live.
 
-**View All Tables** (at the bottom of the submenu) opens a monitor window for every configured table at once, tiled side by side.
+**Open All Table Monitors** (at the bottom of the submenu) opens a monitor window for every configured table at once, tiled side by side.
 
 ## Help
 ### FoosOBSPlus Help
@@ -935,7 +937,7 @@ Once the Start Stream Timer button is pressed, it will toggle to Stop Stream Tim
 #### Stream Time:
 The time to the right of the Start Stream Timer/Stop Stream Timer button shows the running stream time when the Start Stream Timer button has been pressed.
 ### AutoScore Panel
-The AutoScore Panel controls the interaction with the AutoScore system.  This is a home grown system using lasers and a Raspberry Pico to detect when the ball is scored in one goal or the other.  When a score is detected, it sends data to FoosOBSPlus to increment the scoring team's score by one point.  The Connect and Disconnect buttons in this panel act on the currently displayed table.  When multiple tables are configured, connect and disconnect individual tables (or all of them at once) from the AutoScore -> Tables submenu, and use the Tables menu to choose which table is displayed.  A connection status indicator is shown as a colored dot in the AutoScore Panel title: it appears green when the displayed table is connected to its AutoScore system and red when it is disconnected.
+The AutoScore Panel controls the interaction with the AutoScore system.  This is a home grown system using lasers and a Raspberry Pico to detect when the ball is scored in one goal or the other.  When a score is detected, it sends data to FoosOBSPlus to increment the scoring team's score by one point.  The Connect and Disconnect buttons in this panel act on the currently displayed table.  When multiple tables are configured, connect and disconnect individual tables (or all of them at once) from the AutoScore -> Connections submenu, and use Tables -> Active Table to choose which table is displayed.  A connection status indicator is shown as a colored dot in the AutoScore Panel title: it appears green when the displayed table is connected to its AutoScore system and red when it is disconnected.
 
 <img width="320" height="220" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusAutoScorePanel.png">
 
@@ -1695,6 +1697,10 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.117 08/15/2026</br>
+Reorganize the Tables, AutoScore, and View menus so table selection, monitoring, and data editing are grouped under Tables, while Pico connections and configuration are grouped under AutoScore.</br>
+Rename menu items to clarify their purpose, including Active Table, Table Monitors, Edit Table Data, Connections, Connection Setup, Manage All Connections, and Pico Configuration.</br>
+</br>
 v2.116 08/14/2026</br>
 Add a AutoScore Manage Table Data consolidated window.</br>
 </br>
