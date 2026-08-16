@@ -41,10 +41,11 @@ public class PicoDiscovery {
 	 * One discovered AutoScore device, parsed from a discovery response.
 	 * Response formats:
 	 *   Legacy: "Table N:ipaddress:port"                        (e.g., "Table 1:192.168.68.74:5051")
-	 *   Free:   "Table N:ipaddress:port:MAC:FREE"               (e.g., "Table 2:192.168.68.75:5051:28-CD-C1-0F-12-34:FREE")
+	 *   Free:   "Table N:ipaddress:port:MAC:FREE"               (e.g., "Table 2:192.168.68.75:5051:28-cd-c1-0f-12-34:FREE")
 	 *   Busy:   "Table N:ipaddress:port:MAC:BUSY:clientIP"      (a FoosOBSPlus TCP client at clientIP is connected)
-	 * The MAC address uses dashes (or no separator), never colons; the only colon
-	 * past the MAC is the one inside "BUSY:clientIP", which stays in the status field.
+	 * The MAC address is lowercase, using dashes (or no separator), never colons;
+	 * the only colon past the MAC is the one inside "BUSY:clientIP", which stays
+	 * in the status field.
 	 */
 	public record PicoInfo(String label, String ipAddress, String port, String macAddress, String status, String raw) {
 		private static final String BUSY_PREFIX = "BUSY:"; //$NON-NLS-1$

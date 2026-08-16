@@ -14,7 +14,7 @@ class AutoScoreConnectionValidatorTest {
 		assertTrue(AutoScoreConnectionValidator.validate(List.of(one, two)).isEmpty());
 		assertEquals("One", one.getLabel());
 		assertEquals("10.0.0.1", one.getServerAddress());
-		assertEquals("AA-BB-CC-DD-EE-01", one.getMacAddress());
+		assertEquals("aa-bb-cc-dd-ee-01", one.getMacAddress());
 	}
 
 	@Test void rejectsAllIdentityAndEndpointConflicts() {

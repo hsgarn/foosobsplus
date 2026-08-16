@@ -64,11 +64,11 @@ class PicoInfoTest {
 		PicoInfo info = PicoInfo.parse("  Table 2:192.168.68.75:5051:28-CD-C1-0F-12-34:FREE  ");
 
 		assertEquals(2, info.tableNumber());
-		assertEquals("28-CD-C1-0F-12-34", info.macAddress());
+		assertEquals("28-cd-c1-0f-12-34", info.macAddress());
 		assertEquals("FREE", info.status());
 		assertFalse(info.isBusy());
 		assertEquals("", info.busyClientIp());
-		assertEquals("Table 2  192.168.68.75:5051  MAC 28-CD-C1-0F-12-34  [FREE]", info.display());
+		assertEquals("Table 2  192.168.68.75:5051  MAC 28-cd-c1-0f-12-34  [FREE]", info.display());
 	}
 
 	@Test
@@ -80,7 +80,7 @@ class PicoInfoTest {
 		assertEquals("BUSY:10.0.0.8", info.status());
 		assertTrue(info.isBusy());
 		assertEquals("10.0.0.8", info.busyClientIp());
-		assertEquals("Table 3  10.0.0.30:5051  MAC AA-BB-CC-DD-EE-FF  [IN GAME - 10.0.0.8]", info.display());
+		assertEquals("Table 3  10.0.0.30:5051  MAC aa-bb-cc-dd-ee-ff  [IN GAME - 10.0.0.8]", info.display());
 	}
 
 	@Test

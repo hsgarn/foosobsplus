@@ -30,6 +30,8 @@ import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.midsouthfoosball.foosobsplus.model.TableConnection;
+
 /**
  * Sends the AutoScore (Pico) FLASH and REPORT_TABLE commands directly to a
  * single device by IP, matching the protocol used by FoosTableManager.py's
@@ -76,8 +78,10 @@ public final class PicoCommand {
 					String[] parts = reply.split(":"); //$NON-NLS-1$
 					// The reply's 2nd colon-field is always the mac (FLASHING:<mac>,
 					// REPORTING:<mac>:<table>, BUSY:<mac>) - only trust a reply that
-					// names the device we actually addressed.
-					if (parts.length >= 2 && parts[1].trim().equalsIgnoreCase(mac)) {
+					// names the device we actually addressed. The Pico replies with its
+					// mac lowercase and unseparated, so normalize it to the same
+					// dashed/lowercase form used for storing and sending the mac.
+					if (parts.length >= 2 && TableConnection.normalizeMac(parts[1].trim()).equals(mac)) {
 						return new Result(true, reply);
 					}
 					logger.info("PicoCommand ignoring reply not matching mac " + mac + ": " + reply); //$NON-NLS-1$ //$NON-NLS-2$

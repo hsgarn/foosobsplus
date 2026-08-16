@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 class TableConnectionTest {
 	@Test
 	void normalizesCommonMacFormats() {
-		assertEquals("28-CD-C1-0F-12-34", TableConnection.normalizeMac("28:cd:c1:0f:12:34"));
-		assertEquals("28-CD-C1-0F-12-34", TableConnection.normalizeMac("28cdc10f1234"));
+		assertEquals("28-cd-c1-0f-12-34", TableConnection.normalizeMac("28:cd:c1:0f:12:34"));
+		assertEquals("28-cd-c1-0f-12-34", TableConnection.normalizeMac("28cdc10f1234"));
 		assertTrue(TableConnection.isValidMac("28:cd:c1:0f:12:34"));
 		assertFalse(TableConnection.isValidMac("not-a-mac"));
 	}

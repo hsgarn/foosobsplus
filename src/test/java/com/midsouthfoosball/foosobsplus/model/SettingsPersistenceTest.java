@@ -157,7 +157,7 @@ class SettingsPersistenceTest {
 		TableConnection loaded = Settings.getTableConnections().get(0);
 		assertEquals(id, loaded.getId());
 		assertEquals("After", loaded.getLabel());
-		assertEquals("AA-BB-CC-DD-EE-06", loaded.getMacAddress());
+		assertEquals("aa-bb-cc-dd-ee-06", loaded.getMacAddress());
 	}
 
 	@Test

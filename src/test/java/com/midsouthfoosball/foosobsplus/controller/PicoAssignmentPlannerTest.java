@@ -56,7 +56,7 @@ class PicoAssignmentPlannerTest {
 		target.rows.get(0).setMacAddress("AA-BB-CC-DD-EE-01");
 		PicoInfo legacy = new PicoInfo("Table 1", "10.0.0.8", "5051", "", "", "raw");
 		PicoAssignmentPlanner.apply(PicoAssignmentPlanner.plan(List.of(legacy), target.macs(), true), target);
-		assertEquals("AA-BB-CC-DD-EE-01", target.rows.get(0).getMacAddress());
+		assertEquals("aa-bb-cc-dd-ee-01", target.rows.get(0).getMacAddress());
 	}
 
 	@Test void failedSaveRollsBackAndDoesNotLogSuccess() {

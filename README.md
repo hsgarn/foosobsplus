@@ -1697,6 +1697,10 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.121 08/16/2026</br>
+Fixed Flash and Report Table Number not registering the Pico's reply, since the Pico sends its MAC back lowercase with no separators.</br>
+MAC addresses are now normalized to the Pico's own lowercase, dashed format everywhere (storage, outgoing commands, and incoming reply matching), instead of uppercase.</br>
+</br>
 v2.120 08/16/2026</br>
 Enhance AutoScore table management:</br>
 Added persistent stable IDs for logical tables, independent of labels and row positions.</br>

@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
  * {@link TableSession}.
  */
 public class TableConnection {
-	private static final Pattern MAC_PATTERN = Pattern.compile("(?:[0-9A-F]{2}-){5}[0-9A-F]{2}"); //$NON-NLS-1$
+	private static final Pattern MAC_PATTERN = Pattern.compile("(?:[0-9a-f]{2}-){5}[0-9a-f]{2}"); //$NON-NLS-1$
 
 	private final String id;
 	private String label;
@@ -80,10 +80,12 @@ public class TableConnection {
 		return new TableConnection(id, label, serverAddress, serverPort, autoConnect, detailLog, cameraSource, macAddress);
 	}
 
+	// Lowercase to match the Pico's own MAC representation, which it uses both
+	// in its discovery/reply payloads and expects in incoming commands.
 	public static String normalizeMac(String macAddress) {
 		if (macAddress == null || macAddress.isBlank()) return ""; //$NON-NLS-1$
-		String compact = macAddress.trim().toUpperCase(Locale.ROOT).replace(":", "").replace("-", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		if (compact.length() != 12) return macAddress.trim().toUpperCase(Locale.ROOT);
+		String compact = macAddress.trim().toLowerCase(Locale.ROOT).replace(":", "").replace("-", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if (compact.length() != 12) return macAddress.trim().toLowerCase(Locale.ROOT);
 		return compact.replaceAll("(..)(?!$)", "$1-"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
