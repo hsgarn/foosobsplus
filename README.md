@@ -1697,6 +1697,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.122 08/16/2026</br>
+Fixed AutoScore table labels colliding after a table Search: newly discovered tables were all defaulting to the same table number in the Tournament Information Table Name list and the Table Monitor, because the default name was computed from the session count before the new sessions were added. New tables now default correctly to their own table number.</br>
+</br>
 v2.121 08/16/2026</br>
 Fixed Flash and Report Table Number not registering the Pico's reply, since the Pico sends its MAC back lowercase with no separators.</br>
 MAC addresses are now normalized to the Pico's own lowercase, dashed format everywhere (storage, outgoing commands, and incoming reply matching), instead of uppercase.</br>
