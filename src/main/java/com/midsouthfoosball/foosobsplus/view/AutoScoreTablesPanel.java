@@ -85,13 +85,16 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 	private static final int COL_LABEL = 0;
 	private static final int COL_ADDRESS = 1;
 	private static final int COL_PORT = 2;
-	private static final int COL_AUTO_CONNECT = 3;
-	private static final int COL_DETAIL_LOG = 4;
-	private static final int COL_CAMERA_SOURCE = 5;
-	private static final int COL_STATUS = 6;
-	private static final int COL_ACTION = 7;
+	private static final int COL_MAC = 3;
+	private static final int COL_AUTO_CONNECT = 4;
+	private static final int COL_DETAIL_LOG = 5;
+	private static final int COL_CAMERA_SOURCE = 6;
+	private static final int COL_STATUS = 7;
+	private static final int COL_FLASH = 8;
+	private static final int COL_REPORT = 9;
+	private static final int COL_ACTION = 10;
 	private static final String[] COLUMN_NAMES = {
-		"Label", "Address", "Port", "Auto Connect", "Detail Log", "Camera Source", "Status", "" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+		"Label", "Address", "Port", "MAC Address", "Auto Connect", "Detail Log", "Camera Source", "Status", "", "", "" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$
 	};
 
 	private final List<TableConnection> connections;
@@ -114,6 +117,11 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 	private IntConsumer disconnectListener = i -> {};
 	private Runnable connectAllListener = () -> {};
 	private Runnable disconnectAllListener = () -> {};
+	// Flash / Report Table Number callbacks (set by Main); each fires for the
+	// row it was clicked on. Both require a MAC address on file (learned from
+	// a prior Search / Assign), so the buttons are disabled until then.
+	private IntConsumer flashListener = i -> {};
+	private IntConsumer reportTableListener = i -> {};
 	// Camera Source column editor: a single editable, filterable combo shared
 	// across all rows/edits (standard JTable cell-editor pattern), populated
 	// with OBS source names when available - same combo + filtering behavior
@@ -131,6 +139,10 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 		table.setRowHeight(22);
 		table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 		table.getColumnModel().getColumn(COL_STATUS).setCellRenderer(new StatusCellRenderer());
+		table.getColumnModel().getColumn(COL_FLASH).setCellRenderer(new DeviceButtonRenderer("Flash")); //$NON-NLS-1$
+		table.getColumnModel().getColumn(COL_FLASH).setCellEditor(new DeviceButtonEditor("Flash", i -> flashListener.accept(i))); //$NON-NLS-1$
+		table.getColumnModel().getColumn(COL_REPORT).setCellRenderer(new DeviceButtonRenderer("Report Table Number")); //$NON-NLS-1$
+		table.getColumnModel().getColumn(COL_REPORT).setCellEditor(new DeviceButtonEditor("Report Table Number", i -> reportTableListener.accept(i))); //$NON-NLS-1$
 		table.getColumnModel().getColumn(COL_ACTION).setCellRenderer(new ActionButtonRenderer());
 		table.getColumnModel().getColumn(COL_ACTION).setCellEditor(new ActionButtonEditor());
 		cameraSourceCombo.setEditable(true);
@@ -138,14 +150,22 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 		cameraSourceCombo.setToolTipText(Messages.getString("AutoScoreSettingsPanel.CameraSourceToolTip")); //$NON-NLS-1$
 		setupComboFiltering(cameraSourceCombo);
 		table.getColumnModel().getColumn(COL_CAMERA_SOURCE).setCellEditor(new CameraSourceCellEditor(cameraSourceCombo));
-		setColumnWidth(COL_LABEL, 90);
-		setColumnWidth(COL_ADDRESS, 110);
+		// AUTO_RESIZE_OFF keeps every column at its set width regardless of the
+		// viewport size - if the window is narrower than the sum of columns, a
+		// horizontal scrollbar appears instead of Swing's default behavior of
+		// silently shrinking (and truncating the text in) every column to fit.
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		setColumnWidth(COL_LABEL, 100);
+		setColumnWidth(COL_ADDRESS, 120);
 		setColumnWidth(COL_PORT, 60);
-		setColumnWidth(COL_AUTO_CONNECT, 90);
-		setColumnWidth(COL_DETAIL_LOG, 80);
-		setColumnWidth(COL_CAMERA_SOURCE, 150);
-		setColumnWidth(COL_STATUS, 90);
-		setColumnWidth(COL_ACTION, 90);
+		setColumnWidth(COL_MAC, 140);
+		setColumnWidth(COL_AUTO_CONNECT, 100);
+		setColumnWidth(COL_DETAIL_LOG, 90);
+		setColumnWidth(COL_CAMERA_SOURCE, 160);
+		setColumnWidth(COL_STATUS, 130);
+		setColumnWidth(COL_FLASH, 70);
+		setColumnWidth(COL_REPORT, 160);
+		setColumnWidth(COL_ACTION, 100);
 
 		setLayout(new MigLayout("", "[grow]", "[grow][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		add(new JScrollPane(table), "cell 0 0,grow,height 160:200:"); //$NON-NLS-1$
@@ -247,11 +267,12 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 		return connections.size();
 	}
 	@Override
-	public void setTableAddress(int index, String host, String port) {
+	public void setTableAddress(int index, String host, String port, String mac) {
 		if (index < 0 || index >= connections.size()) return;
 		TableConnection c = connections.get(index);
 		c.setServerAddress(host);
 		c.setServerPort(port);
+		c.setMacAddress(mac);
 		tableModel.fireTableRowsUpdated(index, index);
 	}
 	@Override
@@ -362,6 +383,7 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 			fields.add(Boolean.toString(c.isAutoConnect()));
 			fields.add(Boolean.toString(c.isDetailLog()));
 			fields.add(c.getCameraSource());
+			fields.add(c.getMacAddress());
 		}
 		return String.join("|", fields); //$NON-NLS-1$
 	}
@@ -410,6 +432,14 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 	}
 	public void setDisconnectAllListener(Runnable listener) {
 		this.disconnectAllListener = listener;
+	}
+
+	// --- Flash / Report Table Number ---
+	public void setFlashListener(IntConsumer listener) {
+		this.flashListener = listener;
+	}
+	public void setReportTableListener(IntConsumer listener) {
+		this.reportTableListener = listener;
 	}
 
 	// --- Camera Source combo (OBS sources) ---
@@ -486,6 +516,18 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 			return getCameraComboText();
 		}
 	}
+	// Explains why a disabled Flash / Report Table Number button is disabled;
+	// null (no tooltip) when it's actually clickable.
+	private String deviceButtonTooltip(int row) {
+		if (row < 0 || row >= connections.size()) return null;
+		if (connections.get(row).getMacAddress().isEmpty()) {
+			return "Run Search or Assign to discover this table's MAC address first."; //$NON-NLS-1$
+		}
+		if (tableConnected.test(row)) {
+			return "Disconnect this table first - the Pico refuses this while a game connection is active."; //$NON-NLS-1$
+		}
+		return null;
+	}
 	private static Icon makeDot(Color color) {
 		return new Icon() {
 			@Override public int getIconWidth() { return 12; }
@@ -511,6 +553,45 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 			label.setText(connected ? "Connected" : "Disconnected"); //$NON-NLS-1$ //$NON-NLS-2$
 			label.setHorizontalAlignment(SwingConstants.LEFT);
 			return label;
+		}
+	}
+	// A single fixed-label button (Flash / Report Table Number) per row. Only
+	// enabled once that row's MAC address is known (a prior Search / Assign
+	// discovered it) and the table is disconnected (the Pico refuses both
+	// commands with BUSY while a game connection is active) -
+	// isCellEditable() keeps the cell out of edit mode otherwise, so this
+	// renderer only needs to mirror that same condition for the disabled look.
+	private class DeviceButtonRenderer extends JButton implements javax.swing.table.TableCellRenderer {
+		private static final long serialVersionUID = 1L;
+		DeviceButtonRenderer(String text) { setOpaque(true); setText(text); }
+		@Override
+		public Component getTableCellRendererComponent(JTable jTable, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+			setEnabled(row >= 0 && row < connections.size()
+				&& !connections.get(row).getMacAddress().isEmpty()
+				&& !tableConnected.test(row));
+			setToolTipText(deviceButtonTooltip(row));
+			return this;
+		}
+	}
+	private class DeviceButtonEditor extends javax.swing.AbstractCellEditor implements javax.swing.table.TableCellEditor {
+		private static final long serialVersionUID = 1L;
+		private final JButton button;
+		private int editingRow = -1;
+		DeviceButtonEditor(String text, IntConsumer action) {
+			button = new JButton(text);
+			button.addActionListener((ActionEvent e) -> {
+				fireEditingStopped();
+				if (editingRow >= 0 && editingRow < connections.size()) action.accept(editingRow);
+			});
+		}
+		@Override
+		public Component getTableCellEditorComponent(JTable jTable, Object value, boolean isSelected, int row, int col) {
+			editingRow = row;
+			return button;
+		}
+		@Override
+		public Object getCellEditorValue() {
+			return null;
 		}
 	}
 	// A single button that toggles Connect/Disconnect based on the row's live
@@ -566,7 +647,16 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 		}
 		@Override
 		public boolean isCellEditable(int row, int col) {
-			return col != COL_STATUS;
+			if (col == COL_STATUS) return false;
+			if (col == COL_FLASH || col == COL_REPORT) {
+				// Both need the row's MAC on file, and the Pico refuses either
+				// command with BUSY while a game connection is active - so only
+				// allow them while disconnected.
+				return row >= 0 && row < connections.size()
+					&& !connections.get(row).getMacAddress().isEmpty()
+					&& !tableConnected.test(row);
+			}
+			return true;
 		}
 		@Override
 		public Object getValueAt(int row, int col) {
@@ -575,10 +665,13 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 				case COL_LABEL -> c.getLabel();
 				case COL_ADDRESS -> c.getServerAddress();
 				case COL_PORT -> c.getServerPort();
+				case COL_MAC -> c.getMacAddress();
 				case COL_AUTO_CONNECT -> c.isAutoConnect();
 				case COL_DETAIL_LOG -> c.isDetailLog();
 				case COL_CAMERA_SOURCE -> c.getCameraSource();
 				case COL_STATUS -> ""; //$NON-NLS-1$
+				case COL_FLASH -> ""; //$NON-NLS-1$
+				case COL_REPORT -> ""; //$NON-NLS-1$
 				case COL_ACTION -> ""; //$NON-NLS-1$
 				default -> null;
 			};
@@ -590,6 +683,7 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 				case COL_LABEL -> c.setLabel((String) value);
 				case COL_ADDRESS -> c.setServerAddress((String) value);
 				case COL_PORT -> c.setServerPort((String) value);
+				case COL_MAC -> c.setMacAddress((String) value);
 				case COL_AUTO_CONNECT -> c.setAutoConnect((Boolean) value);
 				case COL_DETAIL_LOG -> c.setDetailLog((Boolean) value);
 				case COL_CAMERA_SOURCE -> c.setCameraSource((String) value);

@@ -1697,6 +1697,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.119 08/15/2026</br>
+Add Flash and Report Table Number buttons to each row of the AutoScore Manage Tables grid, so a table found by Search or Assign can be flashed to locate it on the floor, or asked what table number it currently holds, without leaving the grid.</br>
+</br>
 v2.118 08/15/2026</br>
 Add lots of automated testing.</br>
 </br>

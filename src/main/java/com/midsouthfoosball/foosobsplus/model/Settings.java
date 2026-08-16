@@ -509,7 +509,8 @@ public final class Settings {
 					configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_PORT, ""),
 					ON.equals(configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_AUTO_CONNECT)),
 					ON.equals(configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_DETAIL_LOG)),
-					configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_CAMERA, "")));
+					configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_CAMERA, ""),
+					configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_MAC, "")));
 			}
 		}
 		if (connections.isEmpty()) {
@@ -558,6 +559,7 @@ public final class Settings {
 			configAutoScoreSettingsProps.setProperty(base + SettingsKeys.AS_SUFFIX_AUTO_CONNECT, c.isAutoConnect() ? ON : OFF);
 			configAutoScoreSettingsProps.setProperty(base + SettingsKeys.AS_SUFFIX_DETAIL_LOG, c.isDetailLog() ? ON : OFF);
 			configAutoScoreSettingsProps.setProperty(base + SettingsKeys.AS_SUFFIX_CAMERA, c.getCameraSource());
+			configAutoScoreSettingsProps.setProperty(base + SettingsKeys.AS_SUFFIX_MAC, c.getMacAddress());
 		}
 		if (!connections.isEmpty()) {
 			TableConnection first = connections.get(0);

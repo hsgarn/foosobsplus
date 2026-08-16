@@ -37,7 +37,10 @@ public class AutoScoreTablesFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setAlwaysOnTop(true);
 		autoScoreTablesPanel = new AutoScoreTablesPanel();
-		autoScoreTablesPanel.setPreferredSize(new Dimension(720, 420));
+		// Wide enough for every grid column (Label..Action, ~1230px total) to
+		// show at its set width by default, rather than Swing's default
+		// auto-resize shrinking (and truncating) columns to fit a narrower window.
+		autoScoreTablesPanel.setPreferredSize(new Dimension(1290, 420));
 		getContentPane().add(autoScoreTablesPanel);
 		pack();
 		addWindowListener(new WindowAdapter() {

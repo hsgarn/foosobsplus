@@ -54,8 +54,8 @@ public final class PicoSearchHelper {
 	public interface AssignTarget {
 		/** Number of table connections currently configured. */
 		int getTableCount();
-		/** Applies a device's address/port to the connection at the given index. */
-		void setTableAddress(int index, String host, String port);
+		/** Applies a device's address/port/MAC to the connection at the given index. */
+		void setTableAddress(int index, String host, String port, String mac);
 		/** Grows the table list to at least minCount (appending default connections). */
 		void ensureTableCount(int minCount);
 		/** Appends a line to the target's message/status log. */
@@ -119,7 +119,7 @@ public final class PicoSearchHelper {
 			target.addMessage("No table selected - could not assign " + chosen.display() + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			return;
 		}
-		target.setTableAddress(index, chosen.ipAddress(), chosen.port());
+		target.setTableAddress(index, chosen.ipAddress(), chosen.port(), chosen.macAddress());
 		target.addMessage("Assigned " + chosen.display() + " to table " + (index + 1) + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		target.saveAssignments();
 	}
@@ -215,7 +215,7 @@ public final class PicoSearchHelper {
 				target.addMessage("Skipped " + pico.label() + " - only " + target.getTableCount() + " table(s) configured."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				continue;
 			}
-			target.setTableAddress(tableNumber - 1, pico.ipAddress(), pico.port());
+			target.setTableAddress(tableNumber - 1, pico.ipAddress(), pico.port(), pico.macAddress());
 			target.addMessage("Assigned " + pico.display() + " to table " + tableNumber + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			assignedAny = true;
 			assignedTableNumbers.add(tableNumber);

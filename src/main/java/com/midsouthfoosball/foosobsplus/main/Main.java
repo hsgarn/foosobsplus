@@ -674,6 +674,8 @@ public final class Main implements MatchObserver {
 		autoScoreTablesPanel.setTableDisconnectListener(Main::disconnectTable);
 		autoScoreTablesPanel.setConnectAllListener(Main::connectAllTables);
 		autoScoreTablesPanel.setDisconnectAllListener(Main::disconnectAllTables);
+		autoScoreTablesPanel.setFlashListener(Main::flashTable);
+		autoScoreTablesPanel.setReportTableListener(Main::reportTableNumber);
 		mainFrame.setAutoScoreTableConnectListener(Main::connectTable);
 		mainFrame.setAutoScoreTableDisconnectListener(Main::disconnectTable);
 		mainFrame.setAutoScoreConnectAllListener(Main::connectAllTables);
@@ -770,6 +772,45 @@ public final class Main implements MatchObserver {
 	}
 	private static void disconnectAllTables() {
 		for (int i = 0; i < autoScoreManagers.size(); i++) disconnectTable(i);
+	}
+	/** Asks the AutoScore Manage Tables grid's Flash button's target device to flash its LEDs, to find it on the floor. */
+	private static void flashTable(int i) {
+		runPicoCommand(i, "Flash", PicoCommand::flash); //$NON-NLS-1$
+	}
+	/** Asks the AutoScore Manage Tables grid's Report Table Number button's target device what table number it currently holds, without reassigning it. */
+	private static void reportTableNumber(int i) {
+		runPicoCommand(i, "Report Table Number", PicoCommand::reportTable); //$NON-NLS-1$
+	}
+	// Shared plumbing for Flash / Report Table Number: both need the row's
+	// MAC address (learned from a prior Search/Assign, not always on file),
+	// and both talk to the Pico over UDP so the send+retry has to run off the
+	// EDT. actionLabel is only used for log messages.
+	private static void runPicoCommand(int i, String actionLabel, java.util.function.BiFunction<String, String, PicoCommand.Result> command) {
+		if (i < 0 || i >= tableConnections.size()) return;
+		TableConnection connection = tableConnections.get(i);
+		String ip = connection.getServerAddress();
+		String mac = connection.getMacAddress();
+		if (mac == null || mac.isEmpty()) {
+			autoScoreTablesPanel.addMessage(connection.getLabel() + ": no MAC address on file for " + actionLabel + " - run Search or Assign to discover it first."); //$NON-NLS-1$ //$NON-NLS-2$
+			return;
+		}
+		autoScoreTablesPanel.addMessage(actionLabel + ": " + connection.getLabel() + "..."); //$NON-NLS-1$ //$NON-NLS-2$
+		new SwingWorker<PicoCommand.Result, Void>() {
+			@Override
+			protected PicoCommand.Result doInBackground() {
+				return command.apply(ip, mac);
+			}
+			@Override
+			protected void done() {
+				try {
+					PicoCommand.Result result = get();
+					autoScoreTablesPanel.addMessage(connection.getLabel() + ": " //$NON-NLS-1$
+						+ (result.acked() ? result.reply() : "no response to " + actionLabel + ".")); //$NON-NLS-1$ //$NON-NLS-2$
+				} catch (InterruptedException | ExecutionException e) {
+					logger.error(actionLabel + " on " + connection.getLabel() + " failed: " + e); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+			}
+		}.execute();
 	}
 	/** (Re)builds the AutoScore > Tables submenu with each table's label + state. */
 	private static void rebuildAutoScoreTablesMenu() {

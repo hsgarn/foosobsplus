@@ -468,14 +468,18 @@ public class AutoScoreSettingsPanel extends JPanel implements PicoSearchHelper.A
 	public int getTableCount() {
 		return connections.size();
 	}
-	// Applies a discovered device's address/port to the table connection at the
-	// given index (dropdown order). When that connection is the one being edited,
-	// the editor fields are updated too so a later commit does not overwrite it.
-	public void setTableAddress(int index, String host, String port) {
+	// Applies a discovered device's address/port/MAC to the table connection at
+	// the given index (dropdown order). When that connection is the one being
+	// edited, the editor fields are updated too so a later commit does not
+	// overwrite it. The MAC isn't shown in this panel's fields; it's kept so
+	// Flash / Report Table Number (on the Manage Tables grid) can target this
+	// device without re-discovering it.
+	public void setTableAddress(int index, String host, String port, String mac) {
 		if (index < 0 || index >= connections.size()) return;
 		TableConnection c = connections.get(index);
 		c.setServerAddress(host);
 		c.setServerPort(port);
+		c.setMacAddress(mac);
 		if (c == currentConnection) {
 			loadingFields = true;
 			txtServerAddress.setText(host);
