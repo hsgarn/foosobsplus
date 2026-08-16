@@ -25,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,6 +37,12 @@ import com.midsouthfoosball.foosobsplus.main.PicoDiscovery.PicoInfo;
 
 @DisplayName("AutoScore Pico discovery response parsing")
 class PicoInfoTest {
+	@Test
+	void rejectsMalformedEndpointAndMac() {
+		assertNull(PicoInfo.parse("Table 1:not-an-ip:5051:28-CD-C1-0F-12-34:FREE"));
+		assertNull(PicoInfo.parse("Table 1:192.168.1.2:70000:28-CD-C1-0F-12-34:FREE"));
+		assertNull(PicoInfo.parse("Table 1:192.168.1.2:5051:not-a-mac:FREE"));
+	}
 	@Test
 	@DisplayName("legacy response parses without status or MAC")
 	void parsesLegacyResponse() {
@@ -72,14 +80,14 @@ class PicoInfoTest {
 		assertEquals("BUSY:10.0.0.8", info.status());
 		assertTrue(info.isBusy());
 		assertEquals("10.0.0.8", info.busyClientIp());
-		assertEquals("Table 3  10.0.0.30:5051  MAC AABBCCDDEEFF  [IN GAME - 10.0.0.8]", info.display());
+		assertEquals("Table 3  10.0.0.30:5051  MAC AA-BB-CC-DD-EE-FF  [IN GAME - 10.0.0.8]", info.display());
 	}
 
 	@Test
 	@DisplayName("busy and free status checks are case insensitive")
 	void statusChecksIgnoreCase() {
-		PicoInfo free = PicoInfo.parse("Table 1:10.0.0.1:5051:AA:free");
-		PicoInfo busy = PicoInfo.parse("Table 2:10.0.0.2:5051:BB:busy:10.0.0.9");
+		PicoInfo free = PicoInfo.parse("Table 1:10.0.0.1:5051:AA-BB-CC-DD-EE-01:free");
+		PicoInfo busy = PicoInfo.parse("Table 2:10.0.0.2:5051:AA-BB-CC-DD-EE-02:busy:10.0.0.9");
 
 		assertFalse(free.isBusy());
 		assertTrue(busy.isBusy());
@@ -110,9 +118,24 @@ class PicoInfoTest {
 	@Test
 	@DisplayName("unknown nonempty status is treated as busy")
 	void unknownStatusIsConservativelyBusy() {
-		PicoInfo info = PicoInfo.parse("Table 4:10.0.0.4:5051:AA:UNKNOWN");
+		PicoInfo info = PicoInfo.parse("Table 4:10.0.0.4:5051:AA-BB-CC-DD-EE-04:UNKNOWN");
 		assertTrue(info.isBusy());
 		assertEquals("", info.busyClientIp());
 		assertTrue(info.display().endsWith("[UNKNOWN]"));
+	}
+
+	@Test
+	void deduplicatesByNormalizedMacEvenWhenStatusChanges() {
+		List<PicoInfo> infos = PicoDiscovery.parseUniqueResponses(List.of(
+			"Table 1:10.0.0.1:5051:AA-BB-CC-DD-EE-01:FREE",
+			"Table 1:10.0.0.1:5051:aabbccddee01:BUSY:10.0.0.9"), null);
+		assertEquals(1, infos.size());
+	}
+
+	@Test
+	void legacyResponsesDeduplicateByEndpointAndMalformedResponsesAreIgnored() {
+		List<PicoInfo> infos = PicoDiscovery.parseUniqueResponses(List.of(
+			"Table 1:10.0.0.1:5051", "Table 9:10.0.0.1:5051", "Table 2:not-an-ip:5051"), null);
+		assertEquals(1, infos.size());
 	}
 }

@@ -117,6 +117,7 @@ import com.midsouthfoosball.foosobsplus.commands.PHACommand;
 import com.midsouthfoosball.foosobsplus.commands.PSACommand;
 import com.midsouthfoosball.foosobsplus.commands.PNBCommand;
 import com.midsouthfoosball.foosobsplus.controller.AutoScoreManager;
+import com.midsouthfoosball.foosobsplus.controller.AutoScoreRuntimeReconciler;
 import com.midsouthfoosball.foosobsplus.controller.MainController;
 import com.midsouthfoosball.foosobsplus.controller.MatchController;
 import com.midsouthfoosball.foosobsplus.controller.StatsController;
@@ -588,7 +589,7 @@ public final class Main implements MatchObserver {
 			autoScoreManagers.add(createAutoScoreManager(i, conns.get(i)));
 		}
 		autoScoreSettingsPanel.setAfterSaveCallback(Main::syncAutoScoreRuntimeWithSettings);
-		autoScoreSettingsPanel.setSaveCallback(() -> { autoScoreSettingsPanel.saveSettings(); return true; });
+		autoScoreSettingsPanel.setSaveCallback(autoScoreSettingsPanel::saveSettings);
 		// Populate the Camera Source dropdown with OBS sources when the settings
 		// window opens (same lazy-fetch pattern as the Sources window).
 		autoScoreSettingsFrame.addWindowListener(new WindowAdapter() {
@@ -621,7 +622,7 @@ public final class Main implements MatchObserver {
 		// (settingsManager()), not the displayed table. Connect first applies the
 		// on-screen edits (save + refresh) so it connects to the IP/port shown.
 		autoScoreSettingsPanel.addConnectListener(e -> {
-			autoScoreSettingsPanel.saveSettings();
+			if (!autoScoreSettingsPanel.saveSettings()) return;
 			settingsManager().setBlockReconnect(false);
 			settingsManager().connect();
 		});
@@ -720,14 +721,53 @@ public final class Main implements MatchObserver {
 	}
 	private static void syncAutoScoreRuntimeWithSettings() {
 		List<TableConnection> conns = Settings.getTableConnections();
-		tableConnections = conns;
-		refreshManagerConnections();
-		for (int i = autoScoreManagers.size(); i < conns.size(); i++) {
-			autoScoreManagers.add(createAutoScoreManager(i, conns.get(i)));
+		int activeOldIndex = sessions.indexOf(activeSession);
+		Set<Integer> connectedOldIndices = new HashSet<>();
+		for (int i = 0; i < autoScoreManagers.size(); i++) if (autoScoreManagers.get(i).isConnected()) connectedOldIndices.add(i);
+		AutoScoreRuntimeReconciler.Plan plan = AutoScoreRuntimeReconciler.plan(
+			tableConnections, conns, activeOldIndex, connectedOldIndices);
+		if (!plan.structuralChange()) {
+			tableConnections = conns;
+			refreshManagerConnections();
+			updateAutoScoreConnectionIcon();
+			refreshTableNameCombo();
+			return;
 		}
-		addMissingTableSessions(conns.size());
+		for (AutoScoreManager manager : autoScoreManagers) {
+			manager.setBlockReconnect(true);
+			manager.disconnect();
+		}
+		autoScoreManagers.clear();
+		List<TableSession> reconciled = new ArrayList<>();
+		for (int oldIndex : plan.newToOldIndex()) {
+			TableSession session = oldIndex >= 0 && oldIndex < sessions.size() ? sessions.get(oldIndex) : createTableSession();
+			reconciled.add(session);
+		}
+		sessions.clear();
+		sessions.addAll(reconciled);
+		tableConnections = conns;
+		for (int i = 0; i < conns.size(); i++) autoScoreManagers.add(createAutoScoreManager(i, conns.get(i)));
+		if (!sessions.isEmpty()) switchToSession(sessions.get(plan.activeNewIndex()));
+		for (int i = 0; i < conns.size(); i++) {
+			if (plan.reconnectNewIndices().contains(i)) connectTable(i);
+		}
 		updateAutoScoreConnectionIcon();
 		refreshTableNameCombo();
+	}
+	private static TableSession createTableSession() {
+		String side1Color = Settings.getControlParameter(SettingsKeys.CTRL_SIDE1_COLOR); //$NON-NLS-1$
+		String side2Color = Settings.getControlParameter(SettingsKeys.CTRL_SIDE2_COLOR); //$NON-NLS-1$
+		String none = Messages.getString("Main.None"); //$NON-NLS-1$
+		String defaultTeamPrefix = Messages.getString("TeamPanel.Team"); //$NON-NLS-1$
+		TableSession session = new TableSession(silentObsInterface, side1Color, side2Color, none);
+		if (session.getTeam1().getTeamName().isEmpty()) session.getTeam1().setTeamName(defaultTeamPrefix + "1"); //$NON-NLS-1$
+		if (session.getTeam2().getTeamName().isEmpty()) session.getTeam2().setTeamName(defaultTeamPrefix + "2"); //$NON-NLS-1$
+		if (session.getTeam3().getTeamName().isEmpty()) session.getTeam3().setTeamName(defaultTeamPrefix + "3"); //$NON-NLS-1$
+		if (session.getTableName().isEmpty()) session.setTableName(String.valueOf(sessions.size() + 1));
+		teamController.attachListeners(session);
+		matchController.attachListeners(session);
+		timerController.attachListeners(session);
+		return session;
 	}
 	private static void addMissingTableSessions(int targetCount) {
 		String side1Color = Settings.getControlParameter(SettingsKeys.CTRL_SIDE1_COLOR); //$NON-NLS-1$
@@ -735,14 +775,11 @@ public final class Main implements MatchObserver {
 		String none = Messages.getString("Main.None"); //$NON-NLS-1$
 		String defaultTeamPrefix = Messages.getString("TeamPanel.Team"); //$NON-NLS-1$
 		while (sessions.size() < targetCount) {
-			TableSession session = new TableSession(silentObsInterface, side1Color, side2Color, none);
+			TableSession session = createTableSession();
 			if (session.getTeam1().getTeamName().isEmpty()) session.getTeam1().setTeamName(defaultTeamPrefix + "1"); //$NON-NLS-1$
 			if (session.getTeam2().getTeamName().isEmpty()) session.getTeam2().setTeamName(defaultTeamPrefix + "2"); //$NON-NLS-1$
 			if (session.getTeam3().getTeamName().isEmpty()) session.getTeam3().setTeamName(defaultTeamPrefix + "3"); //$NON-NLS-1$
 			if (session.getTableName().isEmpty()) session.setTableName(String.valueOf(sessions.size() + 1));
-			teamController.attachListeners(session);
-			matchController.attachListeners(session);
-			timerController.attachListeners(session);
 			sessions.add(session);
 		}
 	}

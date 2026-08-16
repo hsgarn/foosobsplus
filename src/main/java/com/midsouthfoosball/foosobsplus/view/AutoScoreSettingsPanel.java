@@ -67,6 +67,7 @@ import com.midsouthfoosball.foosobsplus.controller.PicoSearchHelper;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 import com.midsouthfoosball.foosobsplus.model.TableConnection;
+import com.midsouthfoosball.foosobsplus.model.AutoScoreConnectionValidator;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -94,7 +95,7 @@ public class AutoScoreSettingsPanel extends JPanel implements PicoSearchHelper.A
 	private static final String ON = "1"; //$NON-NLS-1$
 	private static final String OFF = "0"; //$NON-NLS-1$
 	private final Map<Component, Object> snapshot = new HashMap<>();
-	private BooleanSupplier saveCallback = () -> { saveSettings(); return true; };
+	private BooleanSupplier saveCallback = this::saveSettings;
 	private Runnable afterSaveCallback = () -> {};
 	private static final Logger logger = LoggerFactory.getLogger(AutoScoreSettingsPanel.class);
 	// In-memory list of table connections being edited and the one currently
@@ -243,12 +244,33 @@ public class AutoScoreSettingsPanel extends JPanel implements PicoSearchHelper.A
 		}
 	}
 	@Override
-	public void saveAssignments() {
-		saveSettings();
+	public boolean saveAssignments() {
+		return saveSettings();
+	}
+	@Override
+	public int findTableByMac(String mac) {
+		String normalized = TableConnection.normalizeMac(mac);
+		if (normalized.isEmpty()) return -1;
+		for (int i = 0; i < connections.size(); i++) if (normalized.equals(connections.get(i).getMacAddress())) return i;
+		return -1;
+	}
+	@Override
+	public String getTableMac(int index) {
+		return index >= 0 && index < connections.size() ? connections.get(index).getMacAddress() : ""; //$NON-NLS-1$
+	}
+	@Override public Object createAssignmentSnapshot() { commitFieldsTo(currentConnection); return connections.stream().map(TableConnection::copy).toList(); }
+	@Override @SuppressWarnings("unchecked") public void restoreAssignmentSnapshot(Object snapshot) {
+		connections.clear(); connections.addAll((List<TableConnection>) snapshot);
+		mdlTables.removeAllElements(); for (TableConnection c : connections) mdlTables.addElement(c);
+		currentConnection = connections.get(0); cmbTables.setSelectedItem(currentConnection); loadConnectionIntoFields(currentConnection);
 	}
 	private void deleteTable() {
 		if (connections.size() <= 1) {
 			JOptionPane.showMessageDialog(this, "At least one table connection is required.", "Cannot Delete", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
+			return;
+		}
+		if (tableConnected.test(cmbTables.getSelectedIndex())) {
+			JOptionPane.showMessageDialog(this, "Disconnect this table before deleting it.", "Table Connected", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
 			return;
 		}
 		connections.remove(currentConnection);
@@ -278,7 +300,9 @@ public class AutoScoreSettingsPanel extends JPanel implements PicoSearchHelper.A
 	}
 	private void commitFieldsTo(TableConnection c) {
 		c.setLabel(txtLabel.getText());
-		c.setServerAddress(txtServerAddress.getText());
+		String address = txtServerAddress.getText().trim();
+		if (!address.equals(c.getServerAddress())) c.setMacAddress(""); //$NON-NLS-1$
+		c.setServerAddress(address);
 		c.setServerPort(txtServerPort.getText());
 		c.setCameraSource(getCameraComboText());
 		c.setAutoConnect(chckbxAutoConnect.isSelected());
@@ -388,6 +412,7 @@ public class AutoScoreSettingsPanel extends JPanel implements PicoSearchHelper.A
 	private void restoreDefaults() {
 		txtServerAddress.setText(Settings.getDefaultAutoScoreSettings(SettingsKeys.AS_SERVER_ADDRESS)); //$NON-NLS-1$
 		txtServerPort.setText(Settings.getDefaultAutoScoreSettings(SettingsKeys.AS_SERVER_PORT)); //$NON-NLS-1$
+		currentConnection.setMacAddress(""); //$NON-NLS-1$
 	}
 	private void revertChanges() {
 		// Discard in-memory edits by reloading the saved connection list.
@@ -479,7 +504,7 @@ public class AutoScoreSettingsPanel extends JPanel implements PicoSearchHelper.A
 		TableConnection c = connections.get(index);
 		c.setServerAddress(host);
 		c.setServerPort(port);
-		c.setMacAddress(mac);
+		if (mac != null && !mac.isBlank()) c.setMacAddress(mac);
 		if (c == currentConnection) {
 			loadingFields = true;
 			txtServerAddress.setText(host);
@@ -488,8 +513,13 @@ public class AutoScoreSettingsPanel extends JPanel implements PicoSearchHelper.A
 		}
 		cmbTables.repaint();
 	}
-	public void saveSettings() {
+	public boolean saveSettings() {
 		commitFieldsTo(currentConnection);
+		List<String> errors = validateConnections();
+		if (!errors.isEmpty()) {
+			JOptionPane.showMessageDialog(this, String.join("\n", errors), "Invalid Table Configuration", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
+			return false;
+		}
 		try {
 			Settings.saveTableConnections(connections);
 			// Mirror the currently selected connection into the legacy
@@ -503,10 +533,15 @@ public class AutoScoreSettingsPanel extends JPanel implements PicoSearchHelper.A
 			Settings.saveAutoScoreSettingsConfig();
 			takeSnapshot();
 			afterSaveCallback.run();
+			return true;
 		} catch (IOException ex) {
 			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile") + ex.getMessage());	//$NON-NLS-1$
 			logger.error(ex.toString());
+			return false;
 		}
+	}
+	private List<String> validateConnections() {
+		return AutoScoreConnectionValidator.validate(connections);
 	}
 	// Registers the provider that reports each table's connection state by index,
 	// and triggers an initial repaint of the dropdown dots.

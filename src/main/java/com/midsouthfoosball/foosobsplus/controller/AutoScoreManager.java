@@ -38,6 +38,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JComponent;
@@ -96,6 +97,13 @@ public class AutoScoreManager {
 
 	// Connection config for the table this manager drives.
 	private volatile TableConnection connection;
+
+	// Identifies this manager's connection across reconnects (sent as "hello:<id>" right
+	// after connecting and with every "ping:<id>") so the Pico can recognize a fresh
+	// connection as superseding a stale one it hasn't noticed died yet, instead of
+	// broadcasting scores/time-outs to both. Generated once per manager instance - stable
+	// across every automatic reconnect this manager drives, but not across an app restart.
+	private final String sessionId = UUID.randomUUID().toString();
 
 	// UI Panels
 	private final AutoScoreSettingsPanel settingsPanel;
@@ -610,6 +618,8 @@ public class AutoScoreManager {
 						socketWriter = new PrintWriter(socket.getOutputStream(), true);
 						if (socketWriter.checkError()) {
 							logger.error("createAutoScoreWork doInBackground new PrintWriter error:"); //$NON-NLS-1$
+						} else {
+							socketWriter.println("hello:" + sessionId); //$NON-NLS-1$
 						}
 					} catch (IOException ex) {
 						logger.error("createAutoScoreWork doInBackground PrintWriter exception:"); //$NON-NLS-1$
@@ -647,7 +657,7 @@ public class AutoScoreManager {
 							lastPingTime = System.currentTimeMillis();
 							PrintWriter pingWriter = socketWriter;
 							if (pingWriter != null) {
-								pingWriter.println("ping:");
+								pingWriter.println("ping:" + sessionId);
 								if (pingWriter.checkError()) {
 									logger.info("Ping failed - connection appears dead.");
 									SwingUtilities.invokeLater(() -> displayMessage(

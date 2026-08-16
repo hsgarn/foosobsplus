@@ -1697,6 +1697,23 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.120 08/16/2026</br>
+Enhance AutoScore table management:</br>
+Added persistent stable IDs for logical tables, independent of labels and row positions.</br>
+Runtime managers and sessions now reconcile by stable ID after add/delete/reorder.</br>
+Removed managers are disconnected; connected retained tables reconnect safely.</br>
+Assign All now handles BUSY devices explicitly and shows an assignment preview.</br>
+Discovery matches existing devices by MAC before reported table number.</br>
+Duplicate MACs, table-number conflicts, endpoints, and labels are detected.</br>
+Legacy discovery responses no longer erase known MAC addresses.</br>
+MAC addresses are normalized, validated, and read-only in the table grid.</br>
+Manual address changes and Restore Defaults clear stale MAC associations.</br>
+Assignment changes are rolled back when validation or persistence fails.</br>
+Success messages are emitted only after assignments save successfully.</br>
+Discovery responses now validate IP, port, table number, and MAC.</br>
+Added stable-ID persistence, MAC normalization, and malformed discovery tests.</br>
+Both AutoScore settings interfaces now enforce consistent validation.</br>
+</br>
 v2.119 08/15/2026</br>
 Add Flash and Report Table Number buttons to each row of the AutoScore Manage Tables grid, so a table found by Search or Assign can be flashed to locate it on the floor, or asked what table number it currently holds, without leaving the grid.</br>
 </br>

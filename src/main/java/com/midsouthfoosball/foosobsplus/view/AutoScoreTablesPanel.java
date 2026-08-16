@@ -60,12 +60,12 @@ import javax.swing.text.JTextComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.net.InetAddresses;
 import com.midsouthfoosball.foosobsplus.controller.PicoSearchHelper;
 import com.midsouthfoosball.foosobsplus.main.PicoDiscovery;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 import com.midsouthfoosball.foosobsplus.model.TableConnection;
+import com.midsouthfoosball.foosobsplus.model.AutoScoreConnectionValidator;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -248,18 +248,25 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 			JOptionPane.showMessageDialog(this, "At least one table connection is required.", "Cannot Delete", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
 			return;
 		}
+		if (!canDeleteRow(row)) {
+			JOptionPane.showMessageDialog(this, "Disconnect this table before deleting it.", "Table Connected", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
+			return;
+		}
 		if (table.isEditing()) table.getCellEditor().cancelCellEditing();
 		connections.remove(row);
 		tableModel.fireTableDataChanged();
 	}
-	private void restoreSelectedRowDefaults() {
+	void restoreSelectedRowDefaults() {
 		int row = table.getSelectedRow();
 		if (row < 0) return;
 		TableConnection c = connections.get(row);
 		c.setServerAddress(Settings.getDefaultAutoScoreSettings(SettingsKeys.AS_SERVER_ADDRESS)); //$NON-NLS-1$
 		c.setServerPort(Settings.getDefaultAutoScoreSettings(SettingsKeys.AS_SERVER_PORT)); //$NON-NLS-1$
+		c.setMacAddress(""); //$NON-NLS-1$
 		tableModel.fireTableRowsUpdated(row, row);
 	}
+	boolean canDeleteRow(int row) { return row >= 0 && row < connections.size() && !tableConnected.test(row); }
+	JTable tableForTesting() { return table; }
 
 	// --- PicoSearchHelper.AssignTarget ---
 	@Override
@@ -272,7 +279,7 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 		TableConnection c = connections.get(index);
 		c.setServerAddress(host);
 		c.setServerPort(port);
-		c.setMacAddress(mac);
+		if (mac != null && !mac.isBlank()) c.setMacAddress(mac);
 		tableModel.fireTableRowsUpdated(index, index);
 	}
 	@Override
@@ -287,8 +294,25 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 		lstMessageHistory.ensureIndexIsVisible(mdlMessageHistory.getSize() - 1);
 	}
 	@Override
-	public void saveAssignments() {
-		save();
+	public boolean saveAssignments() {
+		return save();
+	}
+	@Override
+	public int findTableByMac(String mac) {
+		String normalized = TableConnection.normalizeMac(mac);
+		if (normalized.isEmpty()) return -1;
+		for (int i = 0; i < connections.size(); i++) {
+			if (normalized.equals(connections.get(i).getMacAddress())) return i;
+		}
+		return -1;
+	}
+	@Override
+	public String getTableMac(int index) {
+		return index >= 0 && index < connections.size() ? connections.get(index).getMacAddress() : ""; //$NON-NLS-1$
+	}
+	@Override public Object createAssignmentSnapshot() { return connections.stream().map(TableConnection::copy).toList(); }
+	@Override @SuppressWarnings("unchecked") public void restoreAssignmentSnapshot(Object snapshot) {
+		connections.clear(); connections.addAll((List<TableConnection>) snapshot); tableModel.fireTableDataChanged();
 	}
 
 	// --- Search ---
@@ -340,25 +364,7 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 		}
 	}
 	private List<String> validateConnections() {
-		List<String> errors = new ArrayList<>();
-		for (int i = 0; i < connections.size(); i++) {
-			TableConnection c = connections.get(i);
-			String addr = c.getServerAddress();
-			if (addr == null || !InetAddresses.isInetAddress(addr)) {
-				errors.add(c.getLabel() + ": invalid IP address \"" + addr + "\"."); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			boolean validPort = false;
-			try {
-				int port = Integer.parseInt(c.getServerPort().trim());
-				validPort = port > 0 && port < 65535;
-			} catch (NumberFormatException | NullPointerException e) {
-				validPort = false;
-			}
-			if (!validPort) {
-				errors.add(c.getLabel() + ": invalid port \"" + c.getServerPort() + "\"."); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-		}
-		return errors;
+		return AutoScoreConnectionValidator.validate(connections);
 	}
 	/** Discards in-memory edits, reloading rows from the last-saved settings. */
 	public void reload() {
@@ -647,7 +653,7 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 		}
 		@Override
 		public boolean isCellEditable(int row, int col) {
-			if (col == COL_STATUS) return false;
+			if (col == COL_STATUS || col == COL_MAC) return false;
 			if (col == COL_FLASH || col == COL_REPORT) {
 				// Both need the row's MAC on file, and the Pico refuses either
 				// command with BUSY while a game connection is active - so only
@@ -681,9 +687,12 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 			TableConnection c = connections.get(row);
 			switch (col) {
 				case COL_LABEL -> c.setLabel((String) value);
-				case COL_ADDRESS -> c.setServerAddress((String) value);
-				case COL_PORT -> c.setServerPort((String) value);
-				case COL_MAC -> c.setMacAddress((String) value);
+				case COL_ADDRESS -> {
+					String address = ((String) value).trim();
+					if (!address.equals(c.getServerAddress())) c.setMacAddress(""); //$NON-NLS-1$
+					c.setServerAddress(address);
+				}
+				case COL_PORT -> c.setServerPort(((String) value).trim());
 				case COL_AUTO_CONNECT -> c.setAutoConnect((Boolean) value);
 				case COL_DETAIL_LOG -> c.setDetailLog((Boolean) value);
 				case COL_CAMERA_SOURCE -> c.setCameraSource((String) value);

@@ -371,6 +371,7 @@ public final class SettingsKeys {
     public static final String AS_SUFFIX_DETAIL_LOG     = ".DetailLog";
     public static final String AS_SUFFIX_CAMERA         = ".CameraSource";
     public static final String AS_SUFFIX_MAC            = ".MacAddress";
+    public static final String AS_SUFFIX_ID             = ".Id";
 
     // ==================== API Keys ====================
     public static final String API_ENABLED              = "APIEnabled";

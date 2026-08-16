@@ -30,6 +30,8 @@ import java.util.function.Consumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.google.common.net.InetAddresses;
+import com.midsouthfoosball.foosobsplus.model.TableConnection;
 
 public class PicoDiscovery {
 	private static final Logger logger = LoggerFactory.getLogger(PicoDiscovery.class);
@@ -58,19 +60,21 @@ public class PicoDiscovery {
 			}
 			// Limit 5 keeps "BUSY:clientIP" together as the status field.
 			String[] parts = trimmed.split(":", 5); //$NON-NLS-1$
-			if (parts.length == 3) {
-				return new PicoInfo(parts[0], parts[1], parts[2], "", "", trimmed); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			if (parts.length == 5) {
-				return new PicoInfo(parts[0], parts[1], parts[2], parts[3], parts[4], trimmed);
-			}
-			return null;
+			if (parts.length != 3 && parts.length != 5) return null;
+			if (!InetAddresses.isInetAddress(parts[1])) return null;
+			try { int p = Integer.parseInt(parts[2]); if (p < 1 || p > 65535) return null; }
+			catch (NumberFormatException e) { return null; }
+			String mac = parts.length == 5 ? TableConnection.normalizeMac(parts[3]) : ""; //$NON-NLS-1$
+			if (!TableConnection.isValidMac(mac)) return null;
+			PicoInfo info = new PicoInfo(parts[0].trim(), parts[1], parts[2], mac, parts.length == 5 ? parts[4] : "", trimmed); //$NON-NLS-1$
+			return info.tableNumber() > 0 ? info : null;
 		}
 
 		/** The table number parsed from the label ("Table N"), or -1 if it cannot be parsed. */
 		public int tableNumber() {
 			java.util.regex.Matcher m = java.util.regex.Pattern.compile("(\\d+)\\s*$").matcher(label.trim()); //$NON-NLS-1$
-			return m.find() ? Integer.parseInt(m.group(1)) : -1;
+			if (!m.find()) return -1;
+			try { return Integer.parseInt(m.group(1)); } catch (NumberFormatException e) { return -1; }
 		}
 
 		/** True when the device reports anything other than FREE (a client is connected, or unknown status). */
@@ -224,13 +228,21 @@ public class PicoDiscovery {
 			}
 		}
 
+		return parseUniqueResponses(rawResponses, statusCallback);
+	}
+
+	/** Parses and deduplicates responses by MAC, or by endpoint for legacy devices. */
+	public static List<PicoInfo> parseUniqueResponses(Iterable<String> rawResponses, Consumer<String> statusCallback) {
 		List<PicoInfo> picos = new ArrayList<>();
+		Set<String> deviceKeys = new LinkedHashSet<>();
 		for (String raw : rawResponses) {
 			PicoInfo info = PicoInfo.parse(raw);
 			if (info == null) {
 				logger.warn("Invalid discovery response format: " + raw); //$NON-NLS-1$
 				if (statusCallback != null) statusCallback.accept("Ignoring invalid response: " + raw); //$NON-NLS-1$
 			} else {
+				String key = info.macAddress().isEmpty() ? info.ipAddress() + ":" + info.port() : info.macAddress(); //$NON-NLS-1$
+				if (!deviceKeys.add(key)) continue;
 				picos.add(info);
 			}
 		}

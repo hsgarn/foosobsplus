@@ -20,6 +20,10 @@ OTHER DEALINGS IN THE SOFTWARE.
 **/
 package com.midsouthfoosball.foosobsplus.model;
 
+import java.util.Locale;
+import java.util.UUID;
+import java.util.regex.Pattern;
+
 /**
  * AutoScore connection details for a single foosball table.
  *
@@ -30,7 +34,9 @@ package com.midsouthfoosball.foosobsplus.model;
  * {@link TableSession}.
  */
 public class TableConnection {
+	private static final Pattern MAC_PATTERN = Pattern.compile("(?:[0-9A-F]{2}-){5}[0-9A-F]{2}"); //$NON-NLS-1$
 
+	private final String id;
 	private String label;
 	private String serverAddress;
 	private String serverPort;
@@ -55,13 +61,34 @@ public class TableConnection {
 	}
 
 	public TableConnection(String label, String serverAddress, String serverPort, boolean autoConnect, boolean detailLog, String cameraSource, String macAddress) {
+		this(UUID.randomUUID().toString(), label, serverAddress, serverPort, autoConnect, detailLog, cameraSource, macAddress);
+	}
+
+	public TableConnection(String id, String label, String serverAddress, String serverPort, boolean autoConnect, boolean detailLog, String cameraSource, String macAddress) {
+		this.id = id == null || id.isBlank() ? UUID.randomUUID().toString() : id.trim();
 		this.label = label;
 		this.serverAddress = serverAddress;
 		this.serverPort = serverPort;
 		this.autoConnect = autoConnect;
 		this.detailLog = detailLog;
 		this.cameraSource = cameraSource == null ? "" : cameraSource; //$NON-NLS-1$
-		this.macAddress = macAddress == null ? "" : macAddress; //$NON-NLS-1$
+		this.macAddress = normalizeMac(macAddress);
+	}
+
+	public String getId() { return id; }
+	public TableConnection copy() {
+		return new TableConnection(id, label, serverAddress, serverPort, autoConnect, detailLog, cameraSource, macAddress);
+	}
+
+	public static String normalizeMac(String macAddress) {
+		if (macAddress == null || macAddress.isBlank()) return ""; //$NON-NLS-1$
+		String compact = macAddress.trim().toUpperCase(Locale.ROOT).replace(":", "").replace("-", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if (compact.length() != 12) return macAddress.trim().toUpperCase(Locale.ROOT);
+		return compact.replaceAll("(..)(?!$)", "$1-"); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	public static boolean isValidMac(String macAddress) {
+		return macAddress == null || macAddress.isBlank() || MAC_PATTERN.matcher(normalizeMac(macAddress)).matches();
 	}
 
 	public String getLabel() {
@@ -117,7 +144,7 @@ public class TableConnection {
 	}
 
 	public void setMacAddress(String macAddress) {
-		this.macAddress = macAddress == null ? "" : macAddress; //$NON-NLS-1$
+		this.macAddress = normalizeMac(macAddress);
 	}
 
 	@Override

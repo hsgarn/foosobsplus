@@ -108,6 +108,8 @@ class SettingsPersistenceTest {
 		assertEquals(2, actual.size());
 		assertConnection(actual.get(0), "Table 1", "10.0.0.11", "5051", true, false, "Camera 1");
 		assertConnection(actual.get(1), "Finals", "10.0.0.12", "6060", false, true, "Scene,Camera 2");
+		assertEquals(expected.get(0).getId(), actual.get(0).getId());
+		assertEquals(expected.get(1).getId(), actual.get(1).getId());
 		assertEquals("10.0.0.11", Settings.getAutoScoreParameter(SettingsKeys.AS_SERVER_ADDRESS),
 			"the first connection remains mirrored to legacy keys");
 	}
@@ -127,6 +129,35 @@ class SettingsPersistenceTest {
 			.anyMatch(key -> key.startsWith(SettingsKeys.AS_TABLE_PREFIX + "2")));
 		assertFalse(persisted.stringPropertyNames().stream()
 			.anyMatch(key -> key.startsWith(SettingsKeys.AS_TABLE_PREFIX + "3")));
+	}
+
+	@Test
+	void indexedSettingsWithoutIdMigrateToStablePersistedId() throws Exception {
+		Properties properties = new Properties();
+		properties.setProperty(SettingsKeys.AS_TABLE_COUNT, "1");
+		properties.setProperty(SettingsKeys.AS_TABLE_PREFIX + "1" + SettingsKeys.AS_SUFFIX_LABEL, "Legacy Indexed");
+		properties.setProperty(SettingsKeys.AS_TABLE_PREFIX + "1" + SettingsKeys.AS_SUFFIX_ADDRESS, "10.0.0.5");
+		properties.setProperty(SettingsKeys.AS_TABLE_PREFIX + "1" + SettingsKeys.AS_SUFFIX_PORT, "5051");
+		store(configDirectory.resolve("autoscoresettings.properties"), properties);
+		Settings.loadFromAutoScoreSettingsConfig();
+		TableConnection migrated = Settings.getTableConnections().get(0);
+		assertFalse(migrated.getId().isBlank());
+		Settings.saveTableConnections(List.of(migrated));
+		Settings.loadFromAutoScoreSettingsConfig();
+		assertEquals(migrated.getId(), Settings.getTableConnections().get(0).getId());
+	}
+
+	@Test
+	void identitySurvivesRenameAndMacIsNormalizedAcrossPersistence() throws Exception {
+		TableConnection connection = new TableConnection("Before", "10.0.0.6", "5051", false, false, "", "aa:bb:cc:dd:ee:06");
+		String id = connection.getId();
+		connection.setLabel("After");
+		Settings.saveTableConnections(List.of(connection));
+		Settings.loadFromAutoScoreSettingsConfig();
+		TableConnection loaded = Settings.getTableConnections().get(0);
+		assertEquals(id, loaded.getId());
+		assertEquals("After", loaded.getLabel());
+		assertEquals("AA-BB-CC-DD-EE-06", loaded.getMacAddress());
 	}
 
 	@Test

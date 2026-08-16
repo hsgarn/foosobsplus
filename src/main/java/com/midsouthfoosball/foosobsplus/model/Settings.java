@@ -504,6 +504,7 @@ public final class Settings {
 			for (int i = 1; i <= count; i++) {
 				String base = SettingsKeys.AS_TABLE_PREFIX + i;
 				connections.add(new TableConnection(
+					configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_ID, ""),
 					configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_LABEL, "Table " + i),
 					configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_ADDRESS, ""),
 					configAutoScoreSettingsProps.getProperty(base + SettingsKeys.AS_SUFFIX_PORT, ""),
@@ -553,6 +554,7 @@ public final class Settings {
 		for (int idx = 0; idx < connections.size(); idx++) {
 			TableConnection c = connections.get(idx);
 			String base = SettingsKeys.AS_TABLE_PREFIX + (idx + 1);
+			configAutoScoreSettingsProps.setProperty(base + SettingsKeys.AS_SUFFIX_ID, c.getId());
 			configAutoScoreSettingsProps.setProperty(base + SettingsKeys.AS_SUFFIX_LABEL, c.getLabel());
 			configAutoScoreSettingsProps.setProperty(base + SettingsKeys.AS_SUFFIX_ADDRESS, c.getServerAddress());
 			configAutoScoreSettingsProps.setProperty(base + SettingsKeys.AS_SUFFIX_PORT, c.getServerPort());

@@ -22,9 +22,8 @@ package com.midsouthfoosball.foosobsplus.controller;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.function.IntSupplier;
 
 import javax.swing.DefaultListCellRenderer;
@@ -34,6 +33,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
 import com.midsouthfoosball.foosobsplus.main.PicoDiscovery;
+import com.midsouthfoosball.foosobsplus.model.TableConnection;
 
 /**
  * Shared UI flow for handling AutoScore (Pico) discovery results: showing the
@@ -58,10 +58,16 @@ public final class PicoSearchHelper {
 		void setTableAddress(int index, String host, String port, String mac);
 		/** Grows the table list to at least minCount (appending default connections). */
 		void ensureTableCount(int minCount);
+		/** Existing row for this physical device, or -1 when unassigned. */
+		int findTableByMac(String mac);
+		/** MAC currently assigned to a row. */
+		String getTableMac(int index);
+		Object createAssignmentSnapshot();
+		void restoreAssignmentSnapshot(Object snapshot);
 		/** Appends a line to the target's message/status log. */
 		void addMessage(String message);
 		/** Persists the assignment(s) just made and refreshes any dependent runtime state. */
-		void saveAssignments();
+		boolean saveAssignments();
 	}
 
 	/**
@@ -119,9 +125,20 @@ public final class PicoSearchHelper {
 			target.addMessage("No table selected - could not assign " + chosen.display() + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			return;
 		}
-		target.setTableAddress(index, chosen.ipAddress(), chosen.port(), chosen.macAddress());
-		target.addMessage("Assigned " + chosen.display() + " to table " + (index + 1) + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		target.saveAssignments();
+		String mac = chosen.macAddress();
+		int existing = target.findTableByMac(mac);
+		if (existing >= 0 && existing != index) {
+			target.addMessage("Device " + mac + " is already assigned to table " + (existing + 1) + "; assignment cancelled."); //$NON-NLS-1$ //$NON-NLS-2$
+			return;
+		}
+		Object snapshot = target.createAssignmentSnapshot();
+		target.setTableAddress(index, chosen.ipAddress(), chosen.port(), mac);
+		if (target.saveAssignments()) {
+			target.addMessage("Assigned " + chosen.display() + " to table " + (index + 1) + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		} else {
+			target.restoreAssignmentSnapshot(snapshot);
+			target.addMessage("Assignment was not saved; correct the configuration errors and try again."); //$NON-NLS-1$
+		}
 	}
 
 	/**
@@ -183,9 +200,21 @@ public final class PicoSearchHelper {
 	 * tables with no matching device are reported, not modified.
 	 */
 	private static void assignAll(Component parent, AssignTarget target, List<PicoDiscovery.PicoInfo> picos) {
+		Object snapshot = target.createAssignmentSnapshot();
+		List<PicoDiscovery.PicoInfo> busy = picos.stream().filter(PicoDiscovery.PicoInfo::isBusy).toList();
+		boolean includeBusy = true;
+		if (!busy.isEmpty()) {
+			String details = busy.stream().map(PicoDiscovery.PicoInfo::display).reduce((a, b) -> a + "\n" + b).orElse(""); //$NON-NLS-1$ //$NON-NLS-2$
+			int confirm = JOptionPane.showConfirmDialog(parent,
+				"These devices are already in use and will be skipped unless you explicitly continue:\n" + details + "\n\nAssign them anyway?", //$NON-NLS-1$
+				"Busy AutoScore Devices", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
+			if (confirm != JOptionPane.YES_OPTION) {
+				includeBusy = false;
+			}
+		}
 		int maxTableNumber = 0;
 		for (PicoDiscovery.PicoInfo pico : picos) {
-			maxTableNumber = Math.max(maxTableNumber, pico.tableNumber());
+			if (includeBusy || !pico.isBusy()) maxTableNumber = Math.max(maxTableNumber, pico.tableNumber());
 		}
 		int configuredCount = target.getTableCount();
 		if (maxTableNumber > configuredCount) {
@@ -202,32 +231,34 @@ public final class PicoSearchHelper {
 				target.ensureTableCount(maxTableNumber);
 			}
 		}
+		List<String> tableMacs = new ArrayList<>();
+		for (int i = 0; i < target.getTableCount(); i++) tableMacs.add(target.getTableMac(i));
+		List<PicoAssignmentPlanner.Assignment> plan = PicoAssignmentPlanner.plan(picos, tableMacs, includeBusy);
+		StringBuilder preview = new StringBuilder("Proposed AutoScore assignments:\n"); //$NON-NLS-1$
+		for (PicoAssignmentPlanner.Assignment assignment : plan) {
+			preview.append(assignment.pico().display()).append("  -> "); //$NON-NLS-1$
+			if (assignment.assignable()) preview.append("table ").append(assignment.targetIndex() + 1); //$NON-NLS-1$
+			else preview.append("SKIP: ").append(assignment.reason()); //$NON-NLS-1$
+			preview.append('\n');
+		}
+		int apply = JOptionPane.showConfirmDialog(parent, preview + "\nApply these assignments?", //$NON-NLS-1$
+			"Confirm AutoScore Assignments", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE); //$NON-NLS-1$
+		if (apply != JOptionPane.OK_OPTION) {
+			target.restoreAssignmentSnapshot(snapshot);
+			return;
+		}
 
-		boolean assignedAny = false;
-		Set<Integer> assignedTableNumbers = new HashSet<>();
-		for (PicoDiscovery.PicoInfo pico : picos) {
-			int tableNumber = pico.tableNumber();
-			if (tableNumber < 1) {
-				target.addMessage("Skipped " + pico.display() + " - could not determine its table number."); //$NON-NLS-1$ //$NON-NLS-2$
-				continue;
-			}
-			if (tableNumber > target.getTableCount()) {
-				target.addMessage("Skipped " + pico.label() + " - only " + target.getTableCount() + " table(s) configured."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				continue;
-			}
-			target.setTableAddress(tableNumber - 1, pico.ipAddress(), pico.port(), pico.macAddress());
-			target.addMessage("Assigned " + pico.display() + " to table " + tableNumber + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			assignedAny = true;
-			assignedTableNumbers.add(tableNumber);
-		}
-		for (int t = 1; t <= target.getTableCount(); t++) {
-			if (!assignedTableNumbers.contains(t)) {
-				target.addMessage("Table " + t + " - no matching device found; left unchanged."); //$NON-NLS-1$ //$NON-NLS-2$
+		for (PicoAssignmentPlanner.Assignment assignment : plan) {
+			if (!assignment.assignable()) {
+				target.addMessage("Skipped " + assignment.pico().display() + " - " + assignment.reason() + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
-		target.addMessage("Assigned " + assignedTableNumbers.size() + " of " + target.getTableCount() + " table(s)."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		if (assignedAny) {
-			target.saveAssignments();
+		PicoAssignmentPlanner.ApplyResult result = PicoAssignmentPlanner.apply(plan, target);
+		if (!result.saved()) target.restoreAssignmentSnapshot(snapshot);
+		for (int row = 0; row < target.getTableCount(); row++) {
+			if (!result.assignedRows().contains(row)) {
+				target.addMessage("Table " + (row + 1) + " - no matching device found; left unchanged."); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 		}
 	}
 }

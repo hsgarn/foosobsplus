@@ -47,12 +47,15 @@ class AutoScoreManagerTest {
 	void connectionScoreAndDisconnectProtocol() throws Exception {
 		server = new ServerSocket(0);
 		CountDownLatch accepted = new CountDownLatch(1);
+		AtomicReference<String> hello = new AtomicReference<>();
 		AtomicReference<String> command = new AtomicReference<>();
 		startServer(socket -> {
 			accepted.countDown();
 			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			hello.set(in.readLine()); // "hello:<sessionId>", sent right after connecting
 			out.println("Team:1");
-			command.set(new BufferedReader(new InputStreamReader(socket.getInputStream())).readLine());
+			command.set(in.readLine());
 		});
 		manager = manager(false);
 		CountDownLatch connected = new CountDownLatch(1);
@@ -69,6 +72,7 @@ class AutoScoreManagerTest {
 		assertTrue(scored.await(2, TimeUnit.SECONDS));
 		assertTrue(manager.isConnected());
 		assertEquals(List.of("XIST1"), manager.events);
+		assertTrue(hello.get() != null && hello.get().startsWith("hello:"));
 
 		manager.setBlockReconnect(true);
 		manager.disconnect();
