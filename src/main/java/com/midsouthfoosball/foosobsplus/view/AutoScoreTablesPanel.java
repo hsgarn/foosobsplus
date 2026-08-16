@@ -377,7 +377,7 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 	private void takeSnapshot() {
 		savedSignature = signature();
 	}
-	private boolean hasChanges() {
+	public boolean hasChanges() {
 		return !signature().equals(savedSignature);
 	}
 	private String signature() {

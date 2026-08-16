@@ -414,6 +414,12 @@ public class AutoScoreSettingsPanel extends JPanel implements PicoSearchHelper.A
 		txtServerPort.setText(Settings.getDefaultAutoScoreSettings(SettingsKeys.AS_SERVER_PORT)); //$NON-NLS-1$
 		currentConnection.setMacAddress(""); //$NON-NLS-1$
 	}
+	// Discards in-memory edits, reloading connections from the last-saved
+	// settings. Called when the window (re)opens, so edits made in the Manage
+	// Tables grid (or a prior session) are reflected - see AutoScoreTablesPanel.reload().
+	public void reload() {
+		revertChanges();
+	}
 	private void revertChanges() {
 		// Discard in-memory edits by reloading the saved connection list.
 		connections.clear();

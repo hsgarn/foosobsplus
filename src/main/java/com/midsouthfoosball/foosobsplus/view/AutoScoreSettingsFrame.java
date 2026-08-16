@@ -55,6 +55,10 @@ public class AutoScoreSettingsFrame extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				if (autoScoreSettingsPanel != null) autoScoreSettingsPanel.confirmClose(AutoScoreSettingsFrame.this);
 			}
+			@Override
+			public void windowOpened(WindowEvent e) {
+				if (autoScoreSettingsPanel != null) autoScoreSettingsPanel.reload();
+			}
 		});
 	}
 	public AutoScoreSettingsPanel getAutoScoreSettingsPanel() {

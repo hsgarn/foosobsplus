@@ -588,7 +588,16 @@ public final class Main implements MatchObserver {
 		for (int i = 0; i < conns.size(); i++) {
 			autoScoreManagers.add(createAutoScoreManager(i, conns.get(i)));
 		}
-		autoScoreSettingsPanel.setAfterSaveCallback(Main::syncAutoScoreRuntimeWithSettings);
+		// Manage Tables grid and Connection Setup each keep their own in-memory
+		// copy of the connection list, only (re)loaded from Settings when their
+		// window opens. Whichever one just saved, refresh the OTHER one's copy
+		// immediately - never its own (that would reset its table dropdown/
+		// selection out from under whatever the user is still doing there) -
+		// and only if it has no unsaved edits of its own to silently discard.
+		autoScoreSettingsPanel.setAfterSaveCallback(() -> {
+			syncAutoScoreRuntimeWithSettings();
+			if (!autoScoreTablesPanel.hasChanges()) autoScoreTablesPanel.reload();
+		});
 		autoScoreSettingsPanel.setSaveCallback(autoScoreSettingsPanel::saveSettings);
 		// Populate the Camera Source dropdown with OBS sources when the settings
 		// window opens (same lazy-fetch pattern as the Sources window).
@@ -668,7 +677,10 @@ public final class Main implements MatchObserver {
 		// tables editable at once) - see AutoScoreTablesPanel. It manages its own
 		// row Add/Delete/Search/Cancel internally; only Save/Apply need to reach
 		// back into Main to refresh the runtime managers/sessions.
-		autoScoreTablesPanel.setAfterSaveCallback(Main::syncAutoScoreRuntimeWithSettings);
+		autoScoreTablesPanel.setAfterSaveCallback(() -> {
+			syncAutoScoreRuntimeWithSettings();
+			if (!autoScoreSettingsPanel.hasChanges()) autoScoreSettingsPanel.reload();
+		});
 		autoScoreTablesPanel.setTableConnectedProvider(
 			i -> i >= 0 && i < autoScoreManagers.size() && autoScoreManagers.get(i).isConnected());
 		autoScoreTablesPanel.setTableConnectListener(Main::connectTable);
@@ -745,6 +757,13 @@ public final class Main implements MatchObserver {
 		}
 		sessions.clear();
 		sessions.addAll(reconciled);
+		// Default each new table's display name to its table number (1-based),
+		// now that sessions reflects its final, reconciled order.
+		for (int i = 0; i < sessions.size(); i++) {
+			if (sessions.get(i).getTableName().isEmpty()) {
+				sessions.get(i).setTableName(String.valueOf(i + 1));
+			}
+		}
 		tableConnections = conns;
 		for (int i = 0; i < conns.size(); i++) autoScoreManagers.add(createAutoScoreManager(i, conns.get(i)));
 		if (!sessions.isEmpty()) switchToSession(sessions.get(plan.activeNewIndex()));
@@ -763,7 +782,6 @@ public final class Main implements MatchObserver {
 		if (session.getTeam1().getTeamName().isEmpty()) session.getTeam1().setTeamName(defaultTeamPrefix + "1"); //$NON-NLS-1$
 		if (session.getTeam2().getTeamName().isEmpty()) session.getTeam2().setTeamName(defaultTeamPrefix + "2"); //$NON-NLS-1$
 		if (session.getTeam3().getTeamName().isEmpty()) session.getTeam3().setTeamName(defaultTeamPrefix + "3"); //$NON-NLS-1$
-		if (session.getTableName().isEmpty()) session.setTableName(String.valueOf(sessions.size() + 1));
 		teamController.attachListeners(session);
 		matchController.attachListeners(session);
 		timerController.attachListeners(session);
