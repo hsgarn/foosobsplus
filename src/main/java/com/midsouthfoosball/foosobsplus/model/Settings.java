@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -86,7 +87,13 @@ public final class Settings {
 	private final static String CONFIGOBSFILENAME        		= "obs.properties";
 	private final static String CONFIGAUTOSCORESETTINGSFILENAME	= "autoscoresettings.properties";
 	private final static String CONFIGAPIFILENAME				= "api.properties";
+	static final String CONFIG_DIRECTORY_PROPERTY = "foosobsplus.config.dir";
 	private final static Logger logger = LoggerFactory.getLogger(Settings.class);
+	private static Path configPath(String filename) {
+		String configuredDirectory = System.getProperty(CONFIG_DIRECTORY_PROPERTY);
+		return configuredDirectory == null || configuredDirectory.isBlank()
+				? Paths.get(filename) : Paths.get(configuredDirectory, filename);
+	}
 	static {
 		// Parameter settings
         defaultControlProps.setProperty("LogoLink", DEFAULTLOGOLINK);
@@ -640,97 +647,98 @@ public final class Settings {
 	public static String getDefaultAutoScoreSettings(String property) {return defaultAutoScoreSettingsProps.getProperty(property);}
 	//Load Configs
 	public static void loadFromControlConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGCONTROLFILENAME))) {
+		try(InputStream inputStream = Files.newInputStream(configPath(CONFIGCONTROLFILENAME))) {
 			configControlProps.load(inputStream);
 		} catch (NoSuchFileException _) {
-			logger.info(Paths.get(CONFIGCONTROLFILENAME) + " not found. Writing defaults.");
-			Files.createFile(Paths.get(CONFIGCONTROLFILENAME));
+			logger.info(configPath(CONFIGCONTROLFILENAME) + " not found. Writing defaults.");
+			Files.createFile(configPath(CONFIGCONTROLFILENAME));
 			configControlProps.putAll(defaultControlProps);
 			saveControlConfig();
 		}
 	}
 	public static void loadFromOBSConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGOBSFILENAME))) {
+		try(InputStream inputStream = Files.newInputStream(configPath(CONFIGOBSFILENAME))) {
 			configOBSProps.load(inputStream);
 		} catch (NoSuchFileException _) {
-			logger.info(Paths.get(CONFIGOBSFILENAME) + " not found. Writing defaults.");
-			Files.createFile(Paths.get(CONFIGOBSFILENAME));
+			logger.info(configPath(CONFIGOBSFILENAME) + " not found. Writing defaults.");
+			Files.createFile(configPath(CONFIGOBSFILENAME));
 			configOBSProps.putAll(defaultOBSProps);
 			saveOBSConfig();
 		}
 	}
 	public static void loadFromSourceConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGSOURCEFILENAME))) {
+		try(InputStream inputStream = Files.newInputStream(configPath(CONFIGSOURCEFILENAME))) {
 			configSourceProps.load(inputStream);
 		} catch (NoSuchFileException _) {
-			logger.info(Paths.get(CONFIGSOURCEFILENAME) + " not found. Writing defaults.");
-			Files.createFile(Paths.get(CONFIGSOURCEFILENAME));
+			logger.info(configPath(CONFIGSOURCEFILENAME) + " not found. Writing defaults.");
+			Files.createFile(configPath(CONFIGSOURCEFILENAME));
 			configSourceProps.putAll(defaultSourceProps);
 			saveSourceConfig();
 		}
 	}
 	public static void loadFromStatsSourceConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGSTATSSOURCEFILENAME))) {
+		try(InputStream inputStream = Files.newInputStream(configPath(CONFIGSTATSSOURCEFILENAME))) {
 			configStatsSourceProps.load(inputStream);
 		} catch (NoSuchFileException _) {
-			logger.info(Paths.get(CONFIGSTATSSOURCEFILENAME) + " not found. Writing defaults.");
-			Files.createFile(Paths.get(CONFIGSTATSSOURCEFILENAME));
+			logger.info(configPath(CONFIGSTATSSOURCEFILENAME) + " not found. Writing defaults.");
+			Files.createFile(configPath(CONFIGSTATSSOURCEFILENAME));
 			configStatsSourceProps.putAll(defaultStatsSourceProps);
 			saveStatsSourceConfig();
 		}
 	}
 	public static void loadFromFilterConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGFILTERFILENAME))) {
+		try(InputStream inputStream = Files.newInputStream(configPath(CONFIGFILTERFILENAME))) {
 			configFilterProps.load(inputStream);
 		} catch (NoSuchFileException _) {
-			logger.info(Paths.get(CONFIGFILTERFILENAME) + " not found. Writing defaults.");
-			Files.createFile(Paths.get(CONFIGFILTERFILENAME));
+			logger.info(configPath(CONFIGFILTERFILENAME) + " not found. Writing defaults.");
+			Files.createFile(configPath(CONFIGFILTERFILENAME));
 			configFilterProps.putAll(defaultFilterProps);
 			saveFilterConfig();
 		}
 	}
 	public static void loadFromPartnerProgramConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGPARTNERMPROGRAMFILENAME))) {
+		try(InputStream inputStream = Files.newInputStream(configPath(CONFIGPARTNERMPROGRAMFILENAME))) {
 			configPartnerProgramProps.load(inputStream);
 		} catch (NoSuchFileException _) {
-			logger.info(Paths.get(CONFIGPARTNERMPROGRAMFILENAME) + " not found. Writing defaults.");
-			Files.createFile(Paths.get(CONFIGPARTNERMPROGRAMFILENAME));
+			logger.info(configPath(CONFIGPARTNERMPROGRAMFILENAME) + " not found. Writing defaults.");
+			Files.createFile(configPath(CONFIGPARTNERMPROGRAMFILENAME));
 			configPartnerProgramProps.putAll(defaultPartnerProgramProps);
 			savePartnerProgramConfig();
 		}
 	}
 	public static void loadFromHotKeyConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGHOTKEYFILENAME))) {
+		try(InputStream inputStream = Files.newInputStream(configPath(CONFIGHOTKEYFILENAME))) {
 			configHotKeyProps.load(inputStream);
 		} catch (NoSuchFileException _) {
-			logger.info(Paths.get(CONFIGHOTKEYFILENAME) + " not found. Writing defaults.");
-			Files.createFile(Paths.get(CONFIGHOTKEYFILENAME));
+			logger.info(configPath(CONFIGHOTKEYFILENAME) + " not found. Writing defaults.");
+			Files.createFile(configPath(CONFIGHOTKEYFILENAME));
 			configHotKeyProps.putAll(defaultHotKeyProps);
 			saveHotKeyConfig();
 		}
 	}
 	public static void loadFromAutoScoreSettingsConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGAUTOSCORESETTINGSFILENAME))) {
+		try(InputStream inputStream = Files.newInputStream(configPath(CONFIGAUTOSCORESETTINGSFILENAME))) {
+			configAutoScoreSettingsProps.clear();
 			configAutoScoreSettingsProps.load(inputStream);
 		} catch (NoSuchFileException _) {
-			logger.info(Paths.get(CONFIGAUTOSCORESETTINGSFILENAME) + " not found. Writing defaults.");
-			Files.createFile(Paths.get(CONFIGAUTOSCORESETTINGSFILENAME));
+			logger.info(configPath(CONFIGAUTOSCORESETTINGSFILENAME) + " not found. Writing defaults.");
+			Files.createFile(configPath(CONFIGAUTOSCORESETTINGSFILENAME));
 			configAutoScoreSettingsProps.putAll(defaultAutoScoreSettingsProps);
 			saveAutoScoreSettingsConfig();
 		}
 	}
 	public static void loadFromAPIConfig() throws IOException {
-		try(InputStream inputStream = Files.newInputStream(Paths.get(CONFIGAPIFILENAME))) {
+		try(InputStream inputStream = Files.newInputStream(configPath(CONFIGAPIFILENAME))) {
 			configAPIProps.load(inputStream);
 			String apiKey = configAPIProps.getProperty("APIKey");
 			if (apiKey == null || apiKey.isBlank()) {
-				logger.info("No API key found in " + Paths.get(CONFIGAPIFILENAME) + ". Generating a new one.");
+				logger.info("No API key found in " + configPath(CONFIGAPIFILENAME) + ". Generating a new one.");
 				configAPIProps.setProperty("APIKey", generateRandomAPIKey());
 				saveAPIConfig();
 			}
 		} catch (NoSuchFileException _) {
-			logger.info(Paths.get(CONFIGAPIFILENAME) + " not found. Writing defaults.");
-			Files.createFile(Paths.get(CONFIGAPIFILENAME));
+			logger.info(configPath(CONFIGAPIFILENAME) + " not found. Writing defaults.");
+			Files.createFile(configPath(CONFIGAPIFILENAME));
 			configAPIProps.putAll(defaultAPIProps);
 			configAPIProps.setProperty("APIKey", generateRandomAPIKey());
 			saveAPIConfig();
@@ -738,74 +746,74 @@ public final class Settings {
 	}
 	public static void saveControlConfig() throws IOException {
 		//Control Parameters
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGCONTROLFILENAME))) {
+		try(OutputStream outputStream = Files.newOutputStream(configPath(CONFIGCONTROLFILENAME))) {
 			configControlProps.store(outputStream, "FoosOBSPlus Control settings");
 		} catch (Exception _) {
-			logger.error("Could not write to " + Paths.get(CONFIGCONTROLFILENAME));
+			logger.error("Could not write to " + configPath(CONFIGCONTROLFILENAME));
 		}
 	}
 	public static void saveOBSConfig() throws IOException {
 		//OBS
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGOBSFILENAME))) {
+		try(OutputStream outputStream = Files.newOutputStream(configPath(CONFIGOBSFILENAME))) {
 			configOBSProps.store(outputStream, "FoosOBSPlus OBS Settings");
 		} catch (Exception _) {
-			logger.error("Could not write to " + Paths.get(CONFIGOBSFILENAME));
+			logger.error("Could not write to " + configPath(CONFIGOBSFILENAME));
 		}
 	}
 	public static void saveSourceConfig() throws IOException {
 		//Source
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGSOURCEFILENAME))) {
+		try(OutputStream outputStream = Files.newOutputStream(configPath(CONFIGSOURCEFILENAME))) {
 			configSourceProps.store(outputStream, "FoosOBSPlus Source Settings");
 		} catch (Exception _) {
-			logger.error("Could not write to " + Paths.get(CONFIGSOURCEFILENAME));
+			logger.error("Could not write to " + configPath(CONFIGSOURCEFILENAME));
 		}
 	}
 	public static void saveStatsSourceConfig() throws IOException {
 		//Stats Source
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGSTATSSOURCEFILENAME))) {
+		try(OutputStream outputStream = Files.newOutputStream(configPath(CONFIGSTATSSOURCEFILENAME))) {
 			configStatsSourceProps.store(outputStream, "FoosOBSPlus Stats Source Settings");
 		} catch (Exception _) {
-			logger.error("Could not write to " + Paths.get(CONFIGSTATSSOURCEFILENAME));
+			logger.error("Could not write to " + configPath(CONFIGSTATSSOURCEFILENAME));
 		}
 	}
 	public static void saveFilterConfig() throws IOException {
 		//Filter
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGFILTERFILENAME))) {
+		try(OutputStream outputStream = Files.newOutputStream(configPath(CONFIGFILTERFILENAME))) {
 			configFilterProps.store(outputStream, "FoosOBSPlus Filter Settings");
 		} catch (Exception _) {
-			logger.error("Could not write to " + Paths.get(CONFIGFILTERFILENAME));
+			logger.error("Could not write to " + configPath(CONFIGFILTERFILENAME));
 		}
 	}
 	public static void savePartnerProgramConfig() throws IOException {
 		//PartnerProgram
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGPARTNERMPROGRAMFILENAME))) {
+		try(OutputStream outputStream = Files.newOutputStream(configPath(CONFIGPARTNERMPROGRAMFILENAME))) {
 			configPartnerProgramProps.store(outputStream, "FoosOBSPlus Partner Program Settings");
 		} catch (Exception _) {
-			logger.error("Could not write to " + Paths.get(CONFIGPARTNERMPROGRAMFILENAME));
+			logger.error("Could not write to " + configPath(CONFIGPARTNERMPROGRAMFILENAME));
 		}
 	}
 	public static void saveHotKeyConfig() throws IOException {
 		//HotKeys
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGHOTKEYFILENAME))) {
+		try(OutputStream outputStream = Files.newOutputStream(configPath(CONFIGHOTKEYFILENAME))) {
 			configHotKeyProps.store(outputStream, "FoosOBSPlus Hot Key Settings");
 		} catch (Exception _) {
-			logger.error("Could not write to " + Paths.get(CONFIGHOTKEYFILENAME));
+			logger.error("Could not write to " + configPath(CONFIGHOTKEYFILENAME));
 		}
 	}
 	public static void saveAutoScoreSettingsConfig() throws IOException {
 		//AutoScore Settings
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGAUTOSCORESETTINGSFILENAME))) {
+		try(OutputStream outputStream = Files.newOutputStream(configPath(CONFIGAUTOSCORESETTINGSFILENAME))) {
 			configAutoScoreSettingsProps.store(outputStream, "FoosOBSPlus AutoScore Settings");
 		} catch (Exception _) {
-			logger.error("Could not write to " + Paths.get(CONFIGAUTOSCORESETTINGSFILENAME));
+			logger.error("Could not write to " + configPath(CONFIGAUTOSCORESETTINGSFILENAME));
 		}
 	}
 	public static void saveAPIConfig() throws IOException {
 		//API Settings
-		try(OutputStream outputStream = Files.newOutputStream(Paths.get(CONFIGAPIFILENAME))) {
+		try(OutputStream outputStream = Files.newOutputStream(configPath(CONFIGAPIFILENAME))) {
 			configAPIProps.store(outputStream, "FoosOBSPlus API settings");
 		} catch (Exception _) {
-			logger.error("Could not write to " + Paths.get(CONFIGAPIFILENAME));
+			logger.error("Could not write to " + configPath(CONFIGAPIFILENAME));
 		}
 	}
 	public static void generateHotKeyScripts() {

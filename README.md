@@ -1697,6 +1697,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.118 08/15/2026</br>
+Add lots of automated testing.</br>
+</br>
 v2.117 08/15/2026</br>
 Reorganize the Tables, AutoScore, and View menus so table selection, monitoring, and data editing are grouped under Tables, while Pico connections and configuration are grouped under AutoScore.</br>
 Rename menu items to clarify their purpose, including Active Table, Table Monitors, Edit Table Data, Connections, Connection Setup, Manage All Connections, and Pico Configuration.</br>

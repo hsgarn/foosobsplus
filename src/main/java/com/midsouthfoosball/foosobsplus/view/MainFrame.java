@@ -200,7 +200,6 @@ public final class MainFrame extends JFrame implements WindowListener {
 		}
  	}
 	private JMenuBar createMenuBar() {
-		JMenuBar menuBar = new JMenuBar();
 		JMenu fileMenu 			= new JMenu(Messages.getString("MainFrame.File")); //$NON-NLS-1$
 		JMenuItem exportItem 	= new JMenuItem(Messages.getString("MainFrame.ExportStats")); //$NON-NLS-1$
 		JMenuItem importItem 	= new JMenuItem(Messages.getString("MainFrame.ImportStats")); //$NON-NLS-1$
@@ -284,13 +283,8 @@ public final class MainFrame extends JFrame implements WindowListener {
 		helpMenu.add(helpShowParsed);
 		helpMenu.addSeparator();
 		helpMenu.add(helpAbout);
-		menuBar.add(fileMenu);
-		menuBar.add(editMenu);
-		menuBar.add(obsMenu);
-		menuBar.add(autoScoreMenu);
-		menuBar.add(tablesMenu);
-		menuBar.add(viewMenu);
-		menuBar.add(helpMenu);
+		JMenuBar menuBar = SwingMenuSupport.menuBar(fileMenu, editMenu, obsMenu,
+			autoScoreMenu, tablesMenu, viewMenu, helpMenu);
 		obsMenu.setIcon(imgIconOBSDisconnected);
 		autoScoreMenu.setIcon(imgIconAutoScoreDisconnected);
         viewBallPanel.addActionListener((ActionEvent ae) -> {
@@ -477,28 +471,8 @@ public final class MainFrame extends JFrame implements WindowListener {
 	// the active table preselected. Selecting an item fires the table-select
 	// listener with that table's index.
 	public void rebuildTablesMenu(java.util.List<String> labels, int activeIndex, boolean[] connected) {
-		tablesGroup.getElements().asIterator().forEachRemaining(tablesGroup::remove);
-		activeTableMenu.removeAll();
-		javax.swing.JRadioButtonMenuItem activeItem = null;
-		for (int i = 0; i < labels.size(); i++) {
-			final int index = i;
-			boolean isConnected = i < connected.length && connected[i];
-			// Keep the radio item (so the active table still shows its selection),
-			// and render a green/red connection dot before the label via HTML.
-			String dotColor = isConnected ? "#00AA00" : "#C80000"; //$NON-NLS-1$ //$NON-NLS-2$
-			String text = "<html><font color='" + dotColor + "'>●</font>&nbsp;" + escapeHtml(labels.get(i)) + "</html>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			javax.swing.JRadioButtonMenuItem item = new javax.swing.JRadioButtonMenuItem(text);
-			item.addActionListener(e -> {
-				if (tableSelectListener != null) tableSelectListener.accept(index);
-			});
-			tablesGroup.add(item);
-			activeTableMenu.add(item);
-			if (i == activeIndex) activeItem = item;
-		}
-		// Select the active item only after every item is in the group/menu, so the
-		// active table is shown selected on the very first build (e.g. at startup),
-		// not just after a later switch.
-		if (activeItem != null) activeItem.setSelected(true);
+		SwingMenuSupport.rebuildActiveTables(activeTableMenu, tablesGroup, labels,
+			activeIndex, connected, tableSelectListener);
 	}
 	// Registers the callback for the View > Table Views submenu; the index of the
 	// clicked table is passed so Main can open that table's monitor window.
@@ -518,22 +492,8 @@ public final class MainFrame extends JFrame implements WindowListener {
 	// monitor window; View All Tables opens them all.
 	public void rebuildTableViewsMenu(java.util.List<String> labels) {
 		if (tableViewsMenu == null) return;
-		tableViewsMenu.removeAll();
-		for (int i = 0; i < labels.size(); i++) {
-			final int index = i;
-			JMenuItem item = new JMenuItem(labels.get(i));
-			item.addActionListener(e -> {
-				if (tableViewListener != null) tableViewListener.accept(index);
-			});
-			tableViewsMenu.add(item);
-		}
-		tableViewsMenu.addSeparator();
-		JMenuItem viewAll = new JMenuItem(Messages.getString("MainFrame.ViewAllTables")); //$NON-NLS-1$
-		viewAll.addActionListener(e -> { if (tableViewAllListener != null) tableViewAllListener.run(); });
-		tableViewsMenu.add(viewAll);
-	}
-	private static String escapeHtml(String s) {
-		return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+		SwingMenuSupport.rebuildTableViews(tableViewsMenu, labels, tableViewListener,
+			tableViewAllListener, Messages.getString("MainFrame.ViewAllTables")); //$NON-NLS-1$
 	}
 	// Registers callbacks for the AutoScore > Tables submenu.
 	public void setAutoScoreTableConnectListener(java.util.function.IntConsumer listener) {
@@ -553,28 +513,10 @@ public final class MainFrame extends JFrame implements WindowListener {
 	// Disconnect All entries.
 	public void rebuildAutoScoreTablesMenu(java.util.List<String> labels, boolean[] connected) {
 		if (autoScoreTablesMenu == null) return;
-		autoScoreTablesMenu.removeAll();
-		for (int i = 0; i < labels.size(); i++) {
-			final int index = i;
-			final boolean isConnected = i < connected.length && connected[i];
-			JMenuItem item = new JMenuItem(labels.get(i) + (isConnected ? "  — connected" : "  — disconnected")); //$NON-NLS-1$ //$NON-NLS-2$
-			item.setIcon(makeDotIcon(isConnected ? new Color(0, 170, 0) : new Color(200, 0, 0)));
-			item.addActionListener(e -> {
-				if (isConnected) {
-					if (autoScoreTableDisconnectListener != null) autoScoreTableDisconnectListener.accept(index);
-				} else {
-					if (autoScoreTableConnectListener != null) autoScoreTableConnectListener.accept(index);
-				}
-			});
-			autoScoreTablesMenu.add(item);
-		}
-		autoScoreTablesMenu.addSeparator();
-		JMenuItem connectAll = new JMenuItem(Messages.getString("MainFrame.ConnectAll")); //$NON-NLS-1$
-		connectAll.addActionListener(e -> { if (autoScoreConnectAllListener != null) autoScoreConnectAllListener.run(); });
-		autoScoreTablesMenu.add(connectAll);
-		JMenuItem disconnectAll = new JMenuItem(Messages.getString("MainFrame.DisconnectAll")); //$NON-NLS-1$
-		disconnectAll.addActionListener(e -> { if (autoScoreDisconnectAllListener != null) autoScoreDisconnectAllListener.run(); });
-		autoScoreTablesMenu.add(disconnectAll);
+		SwingMenuSupport.rebuildAutoScoreConnections(autoScoreTablesMenu, labels, connected,
+			autoScoreTableConnectListener, autoScoreTableDisconnectListener,
+			autoScoreConnectAllListener, autoScoreDisconnectAllListener,
+			Messages.getString("MainFrame.ConnectAll"), Messages.getString("MainFrame.DisconnectAll")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	private void importStatsFile(String file) {
 		List<String> lines = Collections.emptyList();

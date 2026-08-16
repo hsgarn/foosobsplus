@@ -22,6 +22,7 @@ package com.midsouthfoosball.foosobsplus.model;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.function.LongSupplier;
 
 import javax.swing.Timer;
 
@@ -35,23 +36,19 @@ public class TimeClock {
 	private Timer timer;
 	private String timerInUse;
 	private OBSInterface obsInterface;
+	private final LongSupplier currentTimeMillis;
 	public void setObsInterface(OBSInterface obsInterface) {
 		this.obsInterface = obsInterface;
 	}
 	public TimeClock(OBSInterface obsInterface) {
+		this(obsInterface, System::currentTimeMillis);
+	}
+	TimeClock(OBSInterface obsInterface, LongSupplier currentTimeMillis) {
 		this.obsInterface = obsInterface;
+		this.currentTimeMillis = currentTimeMillis;
 		ActionListener action = (ActionEvent event) -> {
-                    currentTime = System.currentTimeMillis();
-                    long checkTimeDiff = (currentTime - startTime);
-                    int checkTimeDiffTenthSeconds = (int) (checkTimeDiff / 100);
-                    timeRemaining = nbrOfSeconds - checkTimeDiffTenthSeconds;
-                    if(timeRemaining < 0) {
-                        // Clamp so the model never holds a negative value - refreshDisplay
-                        // reads timeRemaining directly after table switches/background events.
-                        timeRemaining = 0;
-                        timer.stop();
-                    }
-                };
+					updateTime();
+				};
 		timer = new Timer(100, action);
 		timer.setInitialDelay(0);
 	}
@@ -63,10 +60,25 @@ public class TimeClock {
 		writeTimerInUse();
 	}
 	public void setTimer(int nbrOfSeconds) {
-		this.startTime = System.currentTimeMillis();
+		this.startTime = currentTimeMillis.getAsLong();
 		this.nbrOfSeconds = nbrOfSeconds;
 		this.timeRemaining = this.nbrOfSeconds;
 		timer.restart();
+	}
+	void updateTime() {
+		currentTime = currentTimeMillis.getAsLong();
+		long checkTimeDiff = currentTime - startTime;
+		int checkTimeDiffTenthSeconds = (int) (checkTimeDiff / 100);
+		timeRemaining = nbrOfSeconds - checkTimeDiffTenthSeconds;
+		if (timeRemaining <= 0) {
+			// Clamp so the model never holds a negative value - refreshDisplay
+			// reads timeRemaining directly after table switches/background events.
+			timeRemaining = 0;
+			timer.stop();
+		}
+	}
+	Timer getTimer() {
+		return timer;
 	}
 	public int getTimeRemaining() {
 		return timeRemaining;

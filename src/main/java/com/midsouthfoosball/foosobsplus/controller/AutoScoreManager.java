@@ -172,7 +172,7 @@ public class AutoScoreManager {
 	 * Connects to the AutoScore device.
 	 */
 	public void connect() {
-		settingsPanel.addMessage(Messages.getString("Main.TryingToConnectToAutoScore")); //$NON-NLS-1$
+		displayMessage(Messages.getString("Main.TryingToConnectToAutoScore")); //$NON-NLS-1$
 		logger.info("Trying to connect to AutoScore..."); //$NON-NLS-1$
 		createWorker();
 		worker.execute();
@@ -182,7 +182,7 @@ public class AutoScoreManager {
 	 * Disconnects from the AutoScore device.
 	 */
 	public void disconnect() {
-		settingsPanel.addMessage(Messages.getString("Main.Disconnecting")); //$NON-NLS-1$
+		displayMessage(Messages.getString("Main.Disconnecting")); //$NON-NLS-1$
 		logger.info("Trying to disconnect from AutoScore..."); //$NON-NLS-1$
 		cancelReconnect();
 		// Notify Pico FIRST, before cancelling the worker or closing the socket
@@ -260,7 +260,7 @@ public class AutoScoreManager {
 		if (validateConfig()) {
 			PrintWriter writer = socketWriter;
 			if (connected && writer != null) {
-				String config = configPanel.getConfigTextArea();
+				String config = getConfigText();
 				String dateStamp = dtf.format(LocalDateTime.now());
 				dateStamp = dateStamp.replace(":", ""); //$NON-NLS-1$ //$NON-NLS-2$
 				dateStamp = dateStamp.replace("/", ""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -289,7 +289,7 @@ public class AutoScoreManager {
 		String[] paramTests = {"PORT", "PIN", "PIN", "PIN", "PIN", "PIN", "TIME", "TIME", "PIN", "PIN"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
 		List<String> copyNames = new ArrayList<>(Arrays.asList(paramNames));
 		List<String> copyTests = new ArrayList<>(Arrays.asList(paramTests));
-		String config = configPanel.getConfigTextArea();
+		String config = getConfigText();
 		String[] lines = config.split("\n"); //$NON-NLS-1$
 		for (String line : lines) {
 			if (line.contains("=")) { //$NON-NLS-1$
@@ -399,7 +399,7 @@ public class AutoScoreManager {
 	 * Clears the configuration text area.
 	 */
 	public void clearConfig() {
-		configPanel.clearConfigTextArea();
+		clearConfigText();
 	}
 
 	// --- ActionListener factory methods ---
@@ -541,6 +541,28 @@ public class AutoScoreManager {
 		}
 	}
 
+	// Package-private seams keep the socket protocol testable without constructing
+	// application windows. Production instances delegate directly to their panels.
+	void displayMessage(String message) {
+		settingsPanel.addMessage(message);
+	}
+
+	String getConfigText() {
+		return configPanel.getConfigTextArea();
+	}
+
+	void clearConfigText() {
+		configPanel.clearConfigTextArea();
+	}
+
+	void appendConfigText(String line) {
+		configPanel.appendConfigTextArea(line);
+	}
+
+	boolean areSensorsIgnored() {
+		return mainPanel.isIgnored();
+	}
+
 	// Schedules a single reconnect attempt after the current backoff delay, then
 	// doubles the delay (capped) for the next attempt. Guards against stacking
 	// multiple pending timers.
@@ -581,7 +603,7 @@ public class AutoScoreManager {
 				try {
 					socket = new Socket(address, port);
 					socket.setSoTimeout(1000);
-					SwingUtilities.invokeLater(() -> settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.ConnectedTo") + address + ": " + port)); //$NON-NLS-1$ //$NON-NLS-2$
+					SwingUtilities.invokeLater(() -> displayMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.ConnectedTo") + address + ": " + port)); //$NON-NLS-1$ //$NON-NLS-2$
 					logger.info("Auto Score connected to " + address + ": " + port); //$NON-NLS-1$ //$NON-NLS-2$
 					dataIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					try {
@@ -598,11 +620,11 @@ public class AutoScoreManager {
 					connected = true;
 					reconnectDelayMs = RECONNECT_BASE_MS;
 				} catch (UnknownHostException uh) {
-					SwingUtilities.invokeLater(() -> settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.AutoScoreUnknownHostException"))); //$NON-NLS-1$
+					SwingUtilities.invokeLater(() -> displayMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.AutoScoreUnknownHostException"))); //$NON-NLS-1$
 					logger.error("Auto Score new Socket UnknownHostException"); //$NON-NLS-1$
 					logger.error(uh.toString());
 				} catch (IOException io) {
-					SwingUtilities.invokeLater(() -> settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.AutoScoreIOException"))); //$NON-NLS-1$
+					SwingUtilities.invokeLater(() -> displayMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.AutoScoreIOException"))); //$NON-NLS-1$
 					logger.error("Auto Score new Socket IOException"); //$NON-NLS-1$
 					logger.error(io.toString());
 				}
@@ -628,7 +650,7 @@ public class AutoScoreManager {
 								pingWriter.println("ping:");
 								if (pingWriter.checkError()) {
 									logger.info("Ping failed - connection appears dead.");
-									SwingUtilities.invokeLater(() -> settingsPanel.addMessage(
+									SwingUtilities.invokeLater(() -> displayMessage(
 										dtf.format(LocalDateTime.now()) + Messages.getString("Main.ConnectionAppearedDead")));
 									isConnected = false;
 								}
@@ -638,7 +660,7 @@ public class AutoScoreManager {
 					} catch (IOException io) {
 						if (!isCancelled()) {
 							final String errorMsg = io.toString();
-							SwingUtilities.invokeLater(() -> settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + errorMsg)); //$NON-NLS-1$
+							SwingUtilities.invokeLater(() -> displayMessage(dtf.format(LocalDateTime.now()) + ": " + errorMsg)); //$NON-NLS-1$
 							logger.error(errorMsg);
 						}
 						isConnected = false;
@@ -653,7 +675,7 @@ public class AutoScoreManager {
 						logger.info("Parse command: " + cmd[0]); //$NON-NLS-1$
 						if (connection.isDetailLog()) {
 							final String receivedMsg = raw;
-							SwingUtilities.invokeLater(() -> settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Received") + receivedMsg)); //$NON-NLS-1$
+							SwingUtilities.invokeLater(() -> displayMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Received") + receivedMsg)); //$NON-NLS-1$
 						}
 						if (cmd[0].equals("Team")) { //$NON-NLS-1$
 							str = cmd[1].split("[,]", 0); //$NON-NLS-1$
@@ -671,15 +693,15 @@ public class AutoScoreManager {
 							}
 						}
 						if (cmd[0].equals("Read")) { //$NON-NLS-1$
-							SwingUtilities.invokeLater(() -> configPanel.clearConfigTextArea());
+							SwingUtilities.invokeLater(() -> clearConfigText());
 						}
 						if (cmd[0].equals("Line")) { //$NON-NLS-1$
 							final String line = cmd[1] + "\n"; //$NON-NLS-1$
-							SwingUtilities.invokeLater(() -> configPanel.appendConfigTextArea(line));
+							SwingUtilities.invokeLater(() -> appendConfigText(line));
 						}
 					}
 				}
-				SwingUtilities.invokeLater(() -> settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.ConnectionTerminated"))); //$NON-NLS-1$
+				SwingUtilities.invokeLater(() -> displayMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.ConnectionTerminated"))); //$NON-NLS-1$
 				logger.info("Auto Score Connection Terminated!!"); //$NON-NLS-1$
 				try {
 					if (dataIn != null) {
@@ -691,7 +713,7 @@ public class AutoScoreManager {
 					isConnected = false;
 				} catch (IOException io) {
 					final String errorMsg = io.toString();
-					SwingUtilities.invokeLater(() -> settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + errorMsg)); //$NON-NLS-1$
+					SwingUtilities.invokeLater(() -> displayMessage(dtf.format(LocalDateTime.now()) + ": " + errorMsg)); //$NON-NLS-1$
 					logger.error(errorMsg);
 				}
 				return isConnected;
@@ -703,9 +725,9 @@ public class AutoScoreManager {
 				if (!isCancelled()) {
 					try {
 						status = get();
-						settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.WorkerCompletedWithIsConnected") + status); //$NON-NLS-1$
+						displayMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.WorkerCompletedWithIsConnected") + status); //$NON-NLS-1$
 					} catch (InterruptedException | ExecutionException e) {
-						settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString()); //$NON-NLS-1$
+						displayMessage(dtf.format(LocalDateTime.now()) + ": " + e.toString()); //$NON-NLS-1$
 						logger.error(e.toString());
 					}
 				}
@@ -717,19 +739,19 @@ public class AutoScoreManager {
 			protected void process(List<Integer> chunks) {
 				if (isCancelled()) return;
 				int mostRecentValue = chunks.get(chunks.size() - 1);
-				boolean ignoreSensors = mainPanel.isIgnored();
+				boolean ignoreSensors = areSensorsIgnored();
 				if (connection.isDetailLog()) {
 					if (ignoreSensors) {
 						if (mostRecentValue == 1 || mostRecentValue == 2) {
-							settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team") + mostRecentValue + Messages.getString("Main.ScoredButIgnored")); //$NON-NLS-1$ //$NON-NLS-2$
+							displayMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team") + mostRecentValue + Messages.getString("Main.ScoredButIgnored")); //$NON-NLS-1$ //$NON-NLS-2$
 						} else {
-							settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team") + (mostRecentValue - 2) + Messages.getString("Main.CalledTimeOut")); //$NON-NLS-1$ //$NON-NLS-2$
+							displayMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team") + (mostRecentValue - 2) + Messages.getString("Main.CalledTimeOut")); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 					} else {
 						if (mostRecentValue == 1 || mostRecentValue == 2) {
-							settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team") + mostRecentValue + Messages.getString("Main.Scored")); //$NON-NLS-1$ //$NON-NLS-2$
+							displayMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team") + mostRecentValue + Messages.getString("Main.Scored")); //$NON-NLS-1$ //$NON-NLS-2$
 						} else {
-							settingsPanel.addMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team") + (mostRecentValue - 2) + Messages.getString("Main.CalledTimeOut")); //$NON-NLS-1$ //$NON-NLS-2$
+							displayMessage(dtf.format(LocalDateTime.now()) + Messages.getString("Main.Team") + (mostRecentValue - 2) + Messages.getString("Main.CalledTimeOut")); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 					}
 				}
