@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.function.IntSupplier;
 
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -72,16 +73,18 @@ public final class PicoSearchHelper {
 
 	/**
 	 * The user's choice in the search results dialog: a single device to
-	 * assign to a specific table, or assign every device to its own table.
+	 * assign to a specific table (tableIndex, chosen in the dialog itself so
+	 * it's never left unset), or assign every device to its own table.
 	 */
-	private record SearchAction(PicoDiscovery.PicoInfo pico, boolean assignAll) {}
+	private record SearchAction(PicoDiscovery.PicoInfo pico, boolean assignAll, int tableIndex) {}
 
 	/**
 	 * Full post-discovery flow: logs found devices, shows the picker dialog,
 	 * and applies the result to {@code target}. {@code selectedIndexSupplier}
-	 * gives the table index Assign Selected should target (e.g. the row/table
-	 * currently selected in the caller's UI); a negative value means no table
-	 * is selected.
+	 * gives the row/table currently selected in the caller's UI, used only to
+	 * seed the picker dialog's own "Assign Selected to:" default (a negative
+	 * value means no table is selected there); the dialog's dropdown is the
+	 * actual source of truth for which table gets the assignment.
 	 */
 	public static void handleDiscoveryResult(
 			Component parent,
@@ -95,7 +98,7 @@ public final class PicoSearchHelper {
 		for (PicoDiscovery.PicoInfo pico : picos) {
 			target.addMessage("Found: " + pico.display()); //$NON-NLS-1$
 		}
-		SearchAction action = choosePico(parent, picos);
+		SearchAction action = choosePico(parent, picos, target, selectedIndexSupplier);
 		if (action == null) {
 			return;
 		}
@@ -120,11 +123,7 @@ public final class PicoSearchHelper {
 				return;
 			}
 		}
-		int index = selectedIndexSupplier.getAsInt();
-		if (index < 0 || index >= target.getTableCount()) {
-			target.addMessage("No table selected - could not assign " + chosen.display() + "."); //$NON-NLS-1$ //$NON-NLS-2$
-			return;
-		}
+		int index = action.tableIndex();
 		String mac = chosen.macAddress();
 		int existing = target.findTableByMac(mac);
 		if (existing >= 0 && existing != index) {
@@ -143,12 +142,17 @@ public final class PicoSearchHelper {
 
 	/**
 	 * Shows the discovered devices and returns the action the user picked:
-	 * Assign Selected (one device for a specific table connection), Assign
+	 * Assign Selected (one device for a table connection chosen right here via
+	 * a dropdown, so there's no separate selection step to forget), Assign
 	 * All (every device to the table matching its reported table number), or
 	 * null if cancelled. Devices reporting a non-Available status are grayed
 	 * out (still selectable).
 	 */
-	private static SearchAction choosePico(Component parent, List<PicoDiscovery.PicoInfo> picos) {
+	private static SearchAction choosePico(
+			Component parent,
+			List<PicoDiscovery.PicoInfo> picos,
+			AssignTarget target,
+			IntSupplier selectedIndexSupplier) {
 		JList<PicoDiscovery.PicoInfo> list = new JList<>(picos.toArray(new PicoDiscovery.PicoInfo[0]));
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setSelectedIndex(0);
@@ -165,10 +169,16 @@ public final class PicoSearchHelper {
 				return this;
 			}
 		});
+		int tableCount = target.getTableCount();
+		JComboBox<String> tableCombo = new JComboBox<>();
+		for (int i = 0; i < tableCount; i++) tableCombo.addItem("Table " + (i + 1)); //$NON-NLS-1$
+		tableCombo.setSelectedIndex(defaultTableIndex(target, selectedIndexSupplier, tableCount));
 		Object[] message = {
-			picos.size() + " device(s) found. Select the one to use for the selected table's IP Address and Port," //$NON-NLS-1$
+			picos.size() + " device(s) found. Select the one to use for Assign Selected," //$NON-NLS-1$
 				+ " or Assign All to assign every device to the table matching its table number:", //$NON-NLS-1$
-			new JScrollPane(list)
+			new JScrollPane(list),
+			"Assign Selected to:", //$NON-NLS-1$
+			tableCombo
 		};
 		String[] options = {"Assign Selected", "Assign All", "Cancel"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		int result = JOptionPane.showOptionDialog(
@@ -182,12 +192,27 @@ public final class PicoSearchHelper {
 			options[0]
 		);
 		if (result == 0) {
-			return new SearchAction(list.getSelectedValue(), false);
+			return new SearchAction(list.getSelectedValue(), false, tableCombo.getSelectedIndex());
 		}
 		if (result == 1) {
-			return new SearchAction(null, true);
+			return new SearchAction(null, true, -1);
 		}
 		return null;
+	}
+
+	/**
+	 * The table the "Assign Selected to:" combo should default to: the row
+	 * already selected in the caller's grid/dropdown, or - since that's often
+	 * unset - the first table with no MAC on file yet, or table 1 if every
+	 * table already has one.
+	 */
+	private static int defaultTableIndex(AssignTarget target, IntSupplier selectedIndexSupplier, int tableCount) {
+		int selected = selectedIndexSupplier.getAsInt();
+		if (selected >= 0 && selected < tableCount) return selected;
+		for (int i = 0; i < tableCount; i++) {
+			if (target.getTableMac(i).isEmpty()) return i;
+		}
+		return 0;
 	}
 
 	/**

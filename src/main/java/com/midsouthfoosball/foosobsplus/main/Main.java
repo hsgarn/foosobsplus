@@ -839,10 +839,12 @@ public final class Main implements MatchObserver {
 	// Shared plumbing for Flash / Report Table Number: both need the row's
 	// MAC address (learned from a prior Search/Assign, not always on file),
 	// and both talk to the Pico over UDP so the send+retry has to run off the
-	// EDT. actionLabel is only used for log messages.
+	// EDT. actionLabel is only used for log messages. Reads the row's live
+	// (possibly unsaved) grid state, not the last-saved tableConnections, so
+	// e.g. a just-picked Discovered Device works before Save/Apply is clicked.
 	private static void runPicoCommand(int i, String actionLabel, java.util.function.BiFunction<String, String, PicoCommand.Result> command) {
-		if (i < 0 || i >= tableConnections.size()) return;
-		TableConnection connection = tableConnections.get(i);
+		TableConnection connection = autoScoreTablesPanel.getLiveConnection(i);
+		if (connection == null) return;
 		String ip = connection.getServerAddress();
 		String mac = connection.getMacAddress();
 		if (mac == null || mac.isEmpty()) {

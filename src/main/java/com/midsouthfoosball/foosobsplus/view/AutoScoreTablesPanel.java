@@ -60,7 +60,6 @@ import javax.swing.text.JTextComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.midsouthfoosball.foosobsplus.controller.PicoSearchHelper;
 import com.midsouthfoosball.foosobsplus.main.PicoDiscovery;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
@@ -78,7 +77,7 @@ import net.miginfocom.swing.MigLayout;
  * edge cases - discovering more or fewer devices than configured tables -
  * are visible directly in the grid rather than inferred from a log.
  */
-public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.AssignTarget {
+public class AutoScoreTablesPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(AutoScoreTablesPanel.class);
@@ -93,9 +92,14 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 	private static final int COL_FLASH = 8;
 	private static final int COL_REPORT = 9;
 	private static final int COL_ACTION = 10;
+	private static final int COL_DISCOVERED = 11;
 	private static final String[] COLUMN_NAMES = {
-		"Label", "Address", "Port", "MAC Address", "Auto Connect", "Detail Log", "Camera Source", "Status", "", "", "" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$
+		"Label", "Address", "Port", "MAC Address", "Auto Connect", "Detail Log", "Camera Source", "Status", "", "", "", "Discovered Device" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$
 	};
+	// Options that flank the discovered-device list in the Discovered Device
+	// column's dropdown, rather than a device display() string.
+	private static final String DISCOVERED_NONE = "None"; //$NON-NLS-1$
+	private static final String DISCOVERED_DELETE = "Delete"; //$NON-NLS-1$
 
 	private final List<TableConnection> connections;
 	private final ConnectionsTableModel tableModel;
@@ -129,6 +133,13 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 	private final JComboBox<String> cameraSourceCombo = new JComboBox<>();
 	private List<String> obsSourcesList = new ArrayList<>();
 	private boolean filterUpdating = false;
+	// Discovered Device column editor: a single combo shared across all
+	// rows/edits, rebuilt per edit from the most recent Search results (same
+	// pattern as cameraSourceCombo, but a fixed list rather than free text).
+	private final JComboBox<String> discoveredDeviceCombo = new JComboBox<>();
+	// Devices found by the most recent Search; each row's Discovered Device
+	// column offers all of these plus None/Delete.
+	private List<PicoDiscovery.PicoInfo> lastDiscovered = new ArrayList<>();
 
 	public AutoScoreTablesPanel() {
 		connections = new ArrayList<>(Settings.getTableConnections());
@@ -150,6 +161,7 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 		cameraSourceCombo.setToolTipText(Messages.getString("AutoScoreSettingsPanel.CameraSourceToolTip")); //$NON-NLS-1$
 		setupComboFiltering(cameraSourceCombo);
 		table.getColumnModel().getColumn(COL_CAMERA_SOURCE).setCellEditor(new CameraSourceCellEditor(cameraSourceCombo));
+		table.getColumnModel().getColumn(COL_DISCOVERED).setCellEditor(new DiscoveredDeviceCellEditor(discoveredDeviceCombo));
 		// AUTO_RESIZE_OFF keeps every column at its set width regardless of the
 		// viewport size - if the window is narrower than the sum of columns, a
 		// horizontal scrollbar appears instead of Swing's default behavior of
@@ -166,6 +178,7 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 		setColumnWidth(COL_FLASH, 70);
 		setColumnWidth(COL_REPORT, 160);
 		setColumnWidth(COL_ACTION, 100);
+		setColumnWidth(COL_DISCOVERED, 260);
 
 		setLayout(new MigLayout("", "[grow]", "[grow][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		add(new JScrollPane(table), "cell 0 0,grow,height 160:200:"); //$NON-NLS-1$
@@ -244,6 +257,13 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 			JOptionPane.showMessageDialog(this, "Select a table to delete.", "No Selection", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
 			return;
 		}
+		if (table.isEditing()) table.getCellEditor().cancelCellEditing();
+		deleteRow(row);
+	}
+	// Shared by the Delete Table button and the Discovered Device column's
+	// "Delete" option.
+	private void deleteRow(int row) {
+		if (row < 0 || row >= connections.size()) return;
 		if (connections.size() <= 1) {
 			JOptionPane.showMessageDialog(this, "At least one table connection is required.", "Cannot Delete", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
 			return;
@@ -252,7 +272,6 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 			JOptionPane.showMessageDialog(this, "Disconnect this table before deleting it.", "Table Connected", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
 			return;
 		}
-		if (table.isEditing()) table.getCellEditor().cancelCellEditing();
 		connections.remove(row);
 		tableModel.fireTableDataChanged();
 	}
@@ -267,13 +286,15 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 	}
 	boolean canDeleteRow(int row) { return row >= 0 && row < connections.size() && !tableConnected.test(row); }
 	JTable tableForTesting() { return table; }
-
-	// --- PicoSearchHelper.AssignTarget ---
-	@Override
-	public int getTableCount() {
-		return connections.size();
+	// The row's connection as currently shown in the grid, including any edits
+	// (e.g. a just-picked Discovered Device) not yet committed by Save/Apply -
+	// what Flash / Report Table Number should act on, since waiting for a save
+	// first would target a stale address/MAC.
+	public TableConnection getLiveConnection(int row) {
+		return row >= 0 && row < connections.size() ? connections.get(row).copy() : null;
 	}
-	@Override
+
+	// --- Row-level table connection helpers (also used by the Discovered Device column) ---
 	public void setTableAddress(int index, String host, String port, String mac) {
 		if (index < 0 || index >= connections.size()) return;
 		TableConnection c = connections.get(index);
@@ -282,22 +303,10 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 		if (mac != null && !mac.isBlank()) c.setMacAddress(mac);
 		tableModel.fireTableRowsUpdated(index, index);
 	}
-	@Override
-	public void ensureTableCount(int minCount) {
-		while (connections.size() < minCount) {
-			addRow();
-		}
-	}
-	@Override
 	public void addMessage(String message) {
 		mdlMessageHistory.addElement(message);
 		lstMessageHistory.ensureIndexIsVisible(mdlMessageHistory.getSize() - 1);
 	}
-	@Override
-	public boolean saveAssignments() {
-		return save();
-	}
-	@Override
 	public int findTableByMac(String mac) {
 		String normalized = TableConnection.normalizeMac(mac);
 		if (normalized.isEmpty()) return -1;
@@ -305,14 +314,6 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 			if (normalized.equals(connections.get(i).getMacAddress())) return i;
 		}
 		return -1;
-	}
-	@Override
-	public String getTableMac(int index) {
-		return index >= 0 && index < connections.size() ? connections.get(index).getMacAddress() : ""; //$NON-NLS-1$
-	}
-	@Override public Object createAssignmentSnapshot() { return connections.stream().map(TableConnection::copy).toList(); }
-	@Override @SuppressWarnings("unchecked") public void restoreAssignmentSnapshot(Object snapshot) {
-		connections.clear(); connections.addAll((List<TableConnection>) snapshot); tableModel.fireTableDataChanged();
 	}
 
 	// --- Search ---
@@ -338,9 +339,96 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 					addMessage("Search failed: " + e); //$NON-NLS-1$
 					return;
 				}
-				PicoSearchHelper.handleDiscoveryResult(AutoScoreTablesPanel.this, picos, AutoScoreTablesPanel.this, table::getSelectedRow);
+				applyDiscoveryResults(picos);
 			}
 		}.execute();
+	}
+	// Logs what was found, offers to grow the table list so every discovered
+	// device has a row to be picked into, then makes every device pickable
+	// from each row's Discovered Device dropdown - no row is changed here;
+	// the user assigns (or deletes) rows explicitly, one dropdown at a time.
+	private void applyDiscoveryResults(List<PicoDiscovery.PicoInfo> picos) {
+		if (picos.isEmpty()) {
+			addMessage("No Pico found."); //$NON-NLS-1$
+			lastDiscovered = List.of();
+			return;
+		}
+		for (PicoDiscovery.PicoInfo pico : picos) {
+			addMessage("Found: " + pico.display()); //$NON-NLS-1$
+		}
+		if (picos.size() > connections.size()) {
+			int toAdd = picos.size() - connections.size();
+			int confirm = JOptionPane.showConfirmDialog(
+				this,
+				"Found " + picos.size() + " device(s) but only " + connections.size() + " table(s) configured. Add " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ toAdd + " table(s) so every device has a row to be assigned to?", //$NON-NLS-1$
+				"Add Tables?", //$NON-NLS-1$
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE
+			);
+			if (confirm == JOptionPane.YES_OPTION) {
+				while (connections.size() < picos.size()) addRow();
+			}
+		}
+		lastDiscovered = picos;
+		addMessage("Pick a device from each table's Discovered Device column to assign it, or Delete to remove a row."); //$NON-NLS-1$
+		tableModel.fireTableDataChanged();
+	}
+	// Applies a chosen discovered device to a row: confirms if it's reportedly
+	// busy, refuses if another row already has that MAC on file, otherwise
+	// writes address/port/MAC straight into the row (same as editing Address
+	// by hand) - Save/Apply still governs when that becomes persistent.
+	private void applyDiscoveredDevice(int row, PicoDiscovery.PicoInfo pico) {
+		if (pico.isBusy()) {
+			String clientIp = pico.busyClientIp();
+			String busyDesc = clientIp.isEmpty()
+				? " reports status \"" + pico.status() + "\"" //$NON-NLS-1$ //$NON-NLS-2$
+				: " is in a game with client " + clientIp; //$NON-NLS-1$
+			int confirm = JOptionPane.showConfirmDialog(
+				this,
+				pico.label() + busyDesc + " - it may already be in use by another table. Use it anyway?", //$NON-NLS-1$
+				"Device May Be In Use", //$NON-NLS-1$
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.WARNING_MESSAGE
+			);
+			if (confirm != JOptionPane.YES_OPTION) {
+				tableModel.fireTableRowsUpdated(row, row);
+				return;
+			}
+		}
+		String mac = TableConnection.normalizeMac(pico.macAddress());
+		int existing = findTableByMac(mac);
+		if (existing >= 0 && existing != row) {
+			addMessage("Device " + mac + " is already assigned to table " + (existing + 1) + "; assignment cancelled."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			tableModel.fireTableRowsUpdated(row, row);
+			return;
+		}
+		setTableAddress(row, pico.ipAddress(), pico.port(), mac);
+		addMessage("Assigned " + pico.display() + " to table " + (row + 1) + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
+	// The Discovered Device combo's current display for a row: the discovered
+	// device whose MAC matches this row's, if any, else "None".
+	private String discoveredDisplayFor(int row) {
+		return matchingDiscovered(row).map(PicoDiscovery.PicoInfo::display).orElse(DISCOVERED_NONE);
+	}
+	// The discovered device (from the most recent Search) that this row's MAC
+	// is currently pinned to, if any - i.e. what the row's dropdown is showing
+	// instead of "None" right now.
+	private java.util.Optional<PicoDiscovery.PicoInfo> matchingDiscovered(int row) {
+		if (row < 0 || row >= connections.size()) return java.util.Optional.empty();
+		String mac = connections.get(row).getMacAddress();
+		if (mac.isEmpty()) return java.util.Optional.empty();
+		return lastDiscovered.stream().filter(pico -> mac.equals(TableConnection.normalizeMac(pico.macAddress()))).findFirst();
+	}
+	// Selecting "None" undoes a discovered-device pick made from this same
+	// dropdown, by clearing the MAC that ties the row to it - only when the
+	// row's MAC actually came from that pick, so a manually-configured MAC
+	// (or one from a device no longer in lastDiscovered) is left untouched.
+	private void clearDiscoveredAssignment(int row) {
+		if (matchingDiscovered(row).isEmpty()) return;
+		connections.get(row).setMacAddress(""); //$NON-NLS-1$
+		tableModel.fireTableRowsUpdated(row, row);
+		addMessage("Cleared discovered device for table " + (row + 1) + "."); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	// --- Apply / Save / Cancel ---
@@ -522,6 +610,27 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 			return getCameraComboText();
 		}
 	}
+	// Rebuilds the shared combo's item list from the latest Search results
+	// every time a cell starts editing, since which devices are available is
+	// the same for every row and can change between edits (a fresh Search, or
+	// another row claiming a device).
+	private class DiscoveredDeviceCellEditor extends DefaultCellEditor {
+		private static final long serialVersionUID = 1L;
+		private final JComboBox<String> combo;
+		DiscoveredDeviceCellEditor(JComboBox<String> combo) {
+			super(combo);
+			this.combo = combo;
+		}
+		@Override
+		public Component getTableCellEditorComponent(JTable jTable, Object value, boolean isSelected, int row, int col) {
+			combo.removeAllItems();
+			combo.addItem(DISCOVERED_NONE);
+			for (PicoDiscovery.PicoInfo pico : lastDiscovered) combo.addItem(pico.display());
+			combo.addItem(DISCOVERED_DELETE);
+			combo.setSelectedItem(value);
+			return combo;
+		}
+	}
 	// Explains why a disabled Flash / Report Table Number button is disabled;
 	// null (no tooltip) when it's actually clickable.
 	private String deviceButtonTooltip(int row) {
@@ -679,6 +788,7 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 				case COL_FLASH -> ""; //$NON-NLS-1$
 				case COL_REPORT -> ""; //$NON-NLS-1$
 				case COL_ACTION -> ""; //$NON-NLS-1$
+				case COL_DISCOVERED -> discoveredDisplayFor(row);
 				default -> null;
 			};
 		}
@@ -696,6 +806,19 @@ public class AutoScoreTablesPanel extends JPanel implements PicoSearchHelper.Ass
 				case COL_AUTO_CONNECT -> c.setAutoConnect((Boolean) value);
 				case COL_DETAIL_LOG -> c.setDetailLog((Boolean) value);
 				case COL_CAMERA_SOURCE -> c.setCameraSource((String) value);
+				case COL_DISCOVERED -> {
+					String choice = (String) value;
+					if (choice == null || choice.equals(DISCOVERED_NONE)) {
+						clearDiscoveredAssignment(row);
+					} else if (choice.equals(DISCOVERED_DELETE)) {
+						// Deferred: removing the row here, mid-edit-commit, would
+						// yank the model out from under the JTable's cell editor.
+						SwingUtilities.invokeLater(() -> deleteRow(row));
+					} else {
+						lastDiscovered.stream().filter(p -> p.display().equals(choice)).findFirst()
+							.ifPresent(pico -> applyDiscoveredDevice(row, pico));
+					}
+				}
 				default -> { /* Status column is read-only */ }
 			}
 			fireTableCellUpdated(row, col);
