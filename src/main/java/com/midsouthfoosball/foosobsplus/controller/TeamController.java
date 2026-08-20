@@ -841,6 +841,12 @@ public class TeamController {
 		teamPanel1.updateGameCount(team1.getGameCount());
 		teamPanel2.updateGameCount(team2.getGameCount());
 		teamPanel3.updateGameCount(team3.getGameCount());
+		// setGameCount() only pushes the Game1/2/3 Show OBS sources via a property-change
+		// side effect, which no-ops when the count was already 0 (e.g. OBS wasn't connected
+		// when the previous match ended). Push the visibility explicitly so it can't get stuck.
+		Main.setTeamGameCountVisible("Team1", team1.getGameCount());
+		Main.setTeamGameCountVisible("Team2", team2.getGameCount());
+		Main.setTeamGameCountVisible("Team3", team3.getGameCount());
 		match.resetGameCounts();
 		match.setCurrentScoreTeam1(team1.getScore());
 		match.setCurrentScoreTeam2(team2.getScore());

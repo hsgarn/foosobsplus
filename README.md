@@ -1697,6 +1697,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.124 08/20/2026</br>
+Fix Game 1, 2, 3 sources not reseting when Start Match button pressed.<br>
+</br>
 v2.123 08/16/2026</br>
 Reworked AutoScore table search/assign: each row in the AutoScore Tables grid now has a Discovered Device column listing every table found by Search (plus None and Delete), so you assign, unassign, or remove a table directly from its own row instead of a single modal picker that could close without an assignment made.</br>
 Search now offers to add rows only when more devices were actually found than there are table rows, rather than going by a found device's self-reported table number.</br>
