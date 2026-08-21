@@ -1706,6 +1706,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.126 08/21/2026</br>
+Fix Game 1, 2, 3 sources when bumping score via hardware.</br>
+</br>
 v2.125 08/21/2026</br>
 Fix Game 1, 2, 3 sources not showing on a win after switching the active table: visibility is now pushed explicitly wherever a team's game count changes, instead of relying on a property-change listener that stayed bound to whichever table was active at launch.</br>
 The Sources Settings Validate check now recognizes the SceneName,SourceName format: it validates the scene/group name and the source name separately against OBS, instead of always reporting the whole value Missing.</br>

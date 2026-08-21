@@ -191,6 +191,13 @@ public class TeamController {
 		lastScoredClocksMap.put(1, lastScored1Clock);
 		lastScoredClocksMap.put(2, lastScored2Clock);
 		lastScoredClocksMap.put(3, lastScored3Clock);
+		// The session just bound in may already have game wins (e.g. it kept playing
+		// in the background while a different table was displayed) that the Game1/2/3
+		// Show OBS sources don't reflect yet - nothing else pushes visibility on a
+		// table switch, only on a count change afterwards. Sync it now.
+		pushGameCountVisibility(1, team1.getGameCount());
+		pushGameCountVisibility(2, team2.getGameCount());
+		pushGameCountVisibility(3, team3.getGameCount());
 	}
 	// Attaches this controller's last-scored clock listeners to a session's
 	// clocks. Call once per session at creation; the constructor wires the
@@ -419,6 +426,15 @@ public class TeamController {
 		if(winState==1) {
 			startGameTimer();
 			gameClock.stopGameTimer();
+		}
+		if (winState >= 1) {
+			// A game (or match) was won: match.incrementScore() bumped the winning
+			// team's game count internally, without going through this controller's
+			// own increment/adjust methods, so push visibility for all three here
+			// rather than relying on the property-change listener (see bindSession()).
+			pushGameCountVisibility(1, team1.getGameCount());
+			pushGameCountVisibility(2, team2.getGameCount());
+			pushGameCountVisibility(3, team3.getGameCount());
 		}
 		displayAll();
 		return winState;
