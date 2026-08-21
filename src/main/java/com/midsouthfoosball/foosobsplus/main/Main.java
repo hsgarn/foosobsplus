@@ -439,6 +439,11 @@ public final class Main implements MatchObserver {
 			}
 
 			@Override
+			public void onSceneAndGroupListFetched(java.util.List<String> sceneAndGroupNames) {
+				sourcesPanel.populateObsScenesAndGroups(sceneAndGroupNames);
+			}
+
+			@Override
 			public void onSceneFilterListFetched(java.util.List<String> filterNames) {
 				obsFiltersFetched = true;
 				filtersPanel.populateObsFilters(filterNames);

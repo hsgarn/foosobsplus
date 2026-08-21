@@ -143,6 +143,11 @@ public class SourcesPanel extends JPanel {
 	private JTextField txtSecondaryPrefix;
     private final Map<String, JComboBox<String>> sourcesMap = new HashMap<>();
 	private List<String> obsSourcesList = new ArrayList<>();
+	// Scene + group names from OBS, used to validate the scene half of a
+	// "SceneName,SourceName" value. Populated alongside obsSourcesList (see
+	// populateObsScenesAndGroups); OBSManager delivers it first so it's already
+	// in hand by the time a pending validation (triggered off obsSourcesList) runs.
+	private List<String> obsScenesAndGroupsList = new ArrayList<>();
 	private boolean filterUpdating = false;
 	private boolean pendingValidation = false;
 	private Color defaultEditorBackground;
@@ -371,6 +376,10 @@ public class SourcesPanel extends JPanel {
 	private void setupLayout() {	
 		setBounds(100, 100, 900, 489);
 		setLayout(new MigLayout("", "[][][][][][][][][][][][]", "[][][][][][][][][][][][][][][][][][][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		//Source vs Scene,Source blurb
+		JLabel lblSourceVsSceneSource = new JLabel(Messages.getString("SourcesPanel.SourceVsSceneSourceBlurb")); //$NON-NLS-1$
+		lblSourceVsSceneSource.setFont(lblSourceVsSceneSource.getFont().deriveFont(Font.PLAIN, 11f));
+		add(lblSourceVsSceneSource, "cell 1 0 8 1,alignx left,wmax 700"); //$NON-NLS-1$
 		//Column Headers
 		JLabel lblTeam1Column = new JLabel(Messages.getString("SourcesPanel.Team1Column")); //$NON-NLS-1$
 		lblTeam1Column.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
@@ -871,6 +880,13 @@ public class SourcesPanel extends JPanel {
 			}
 		});
 	}
+	// Stores the scene+group "container" list used to validate the scene half of a
+	// "SceneName,SourceName" value. OBSManager.fetchInputList() delivers this before
+	// the input list, so it's already in hand once populateObsSources's pending
+	// validation (if any) runs.
+	public void populateObsScenesAndGroups(List<String> sceneAndGroupNames) {
+		SwingUtilities.invokeLater(() -> obsScenesAndGroupsList = new ArrayList<>(sceneAndGroupNames));
+	}
 	public void requestValidation() { pendingValidation = true; }
 	// Clears all validation highlighting (e.g. when the window is (re)opened).
 	public void clearValidationColors() {
@@ -920,11 +936,11 @@ public class SourcesPanel extends JPanel {
 			String value = getComboText(combo).trim();
 			if (!value.isEmpty()) configured.put(key, value);
 		});
-		Map<String, Result> results = OBSSetupValidator.validate(configured, obsSourcesList, null);
+		Map<String, Result> results = OBSSetupValidator.validate(configured, obsSourcesList, null, obsScenesAndGroupsList);
 		for (Result result : results.values()) {
 			JComboBox<String> combo = sourcesMap.get(result.key());
 			switch (result.status()) {
-				case MISSING -> setComboBackground(combo, COLOR_MISSING);
+				case MISSING, MISSING_SCENE -> setComboBackground(combo, COLOR_MISSING);
 				case WRONG_TYPE -> setComboBackground(combo, COLOR_WRONG_TYPE);
 				case DUPLICATE -> setComboBackground(combo, COLOR_DUPLICATE);
 				default -> {}
@@ -938,14 +954,14 @@ public class SourcesPanel extends JPanel {
 			String value = getComboText(combo).trim();
 			if (!value.isEmpty()) configured.put(key, value);
 		});
-		Map<String, Result> results = OBSSetupValidator.validate(configured, ownList, otherTypeList);
+		Map<String, Result> results = OBSSetupValidator.validate(configured, ownList, otherTypeList, obsScenesAndGroupsList);
 		int missing = 0, wrongType = 0, duplicate = 0;
 		StringBuilder details = new StringBuilder();
 		for (Result result : results.values()) {
 			if (result.status() == Status.OK) continue;
 			JComboBox<String> combo = sourcesMap.get(result.key());
 			switch (result.status()) {
-				case MISSING -> { setComboBackground(combo, COLOR_MISSING); missing++; }
+				case MISSING, MISSING_SCENE -> { setComboBackground(combo, COLOR_MISSING); missing++; }
 				case WRONG_TYPE -> { setComboBackground(combo, COLOR_WRONG_TYPE); wrongType++; }
 				case DUPLICATE -> { setComboBackground(combo, COLOR_DUPLICATE); duplicate++; }
 				default -> {}

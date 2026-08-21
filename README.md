@@ -162,6 +162,13 @@ FoosOBSPlus sends most of its data to sources in OBS Studio so it can be display
 #### OBS Source Selection
 Each source field is an editable drop-down.  You can type a source name directly, or select one from a list of available sources in OBS Studio.  When OBS is connected, the drop-downs are populated automatically when you open either settings window.  You can also click the **Fetch OBS Sources** button at any time to refresh the list.  As you type in a field, the drop-down filters in real time to show only sources whose names contain the text you have typed (case-insensitive), making it easy to find a source in a large OBS scene.
 
+#### Source vs Scene,Source
+Most source fields just need a plain source name, e.g. `teamXscore`. That's enough for fields that update a source's content, like Name, Score, Game Count, and the other text fields — those are set by input name, and OBS finds the input regardless of which scene it lives in.
+
+Some fields instead toggle a source's *visibility* (Show Scores, Show Timer, Show Cutthroat, and Game 1/2/3 below). Visibility in OBS is tracked per scene, not globally, so FoosOBSPlus needs to know which scene to look in. Normally that's just whichever scene is currently on Program, so a plain source name still works. But if the source you want to toggle is nested one level down — for example it lives in a "Scores" scene that is itself placed as a source inside your main streaming scene — a plain name won't resolve, because the source isn't a direct item of the scene that's live. In that case, enter the value as `SceneName,SourceName` (e.g. `Scores,Game1`) so FoosOBSPlus looks the source up in the correct scene. Leave off the scene name whenever the source sits directly on your main scene.
+
+The Validate button (see below) understands both forms: for a `SceneName,SourceName` value it checks the scene name against OBS's scenes and groups, and the source name against OBS's sources, separately, so it can tell you specifically which half doesn't exist in OBS.
+
 <img width="420" height="320" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings3.png">
 
 Sources Settings Page:</br>
@@ -190,17 +197,18 @@ The warn source for each team can be set.  The default source is teamXwarn where
 #### King Seat: (Team 1, Team 2, Team 3)
 The king seat source for each team can be set.  The default source is teamXkingseat where X is the team number (1, 2 or 3).
 #### Game 1: (Team 1, Team 2, Team 3)
-This is the source that will be made visible when team X wins their first game.  This source can be any source type as long as it has the visible property (i.e. Text GUI+, Image, etc.).  The default source is teamXgame1 where X is the team number (1, 2 or 3).
+This is the source that will be made visible when team X wins their first game.  This source can be any source type as long as it has the visible property (i.e. Text GUI+, Image, etc.).  The default source is teamXgame1 where X is the team number (1, 2 or 3).  This is a visibility-toggle field — if the source is nested inside another scene rather than sitting directly on your main scene, use the `SceneName,SourceName` format described in [Source vs Scene,Source](#source-vs-scenesource) above.
 #### Game 2: (Team 1, Team 2, Team 3)
-This is the source that will be made visible when team X wins their second game.  Game 1's source will remain visible.  This source can be any source type as long as it has the visible property (i.e. Text GUI+, Image, etc.).  The default source is teamXgame2 where X is the team number (1, 2 or 3).
+This is the source that will be made visible when team X wins their second game.  Game 1's source will remain visible.  This source can be any source type as long as it has the visible property (i.e. Text GUI+, Image, etc.).  The default source is teamXgame2 where X is the team number (1, 2 or 3).  Same visibility-toggle notes as Game 1 apply.
 #### Game 3: (Team 1, Team 2, Team 3)
-This is the source that will be made visible when team X wins their third game.  Game 1 and 2 sources will remain visible.  This source can be any source type as long as it has the visible property (i.e. Text GUI+, Image, etc.).  The default source is teamXgame3 where X is the team number (1, 2 or 3).
+This is the source that will be made visible when team X wins their third game.  Game 1 and 2 sources will remain visible.  This source can be any source type as long as it has the visible property (i.e. Text GUI+, Image, etc.).  The default source is teamXgame3 where X is the team number (1, 2 or 3).  Same visibility-toggle notes as Game 1 apply.
 #### Show Scores:
 This is the source that is controlled by the Show Score check box in the OBS Panel on the main screen.  This is intended to be a named group of sources within within OBS or a scene with OBS that contains all the scoring fields and their associated labels.  This group or scene can then be included in your main streaming scene.  When you want to keep score, check the Show Score check box on the main screen.  When no one is keeping the score, uncheck the Show Scores button which will turn the scene/group in the Show Scores: source box off.
 The following sources would typically be contained in this scene or group:
 Last Scored, Time Out (Teams 1 & 2), Match Count 1 (Teams 1 & 2), Game Count (Teams 1 & 2), Score (Teams 1 & 2), King Seat (Teams 1 & 2).
 Note: Team 3 sources are controlled by Show Cutthroat discussed later.
 Also include any labels that would look out of place without the above fields.
+This is a visibility-toggle field — if that group or scene is nested inside another scene rather than sitting directly on your main scene, use the `SceneName,SourceName` format described in [Source vs Scene,Source](#source-vs-scenesource) above.
 #### Show Timer:
 This is the source that shows the time remaining.  This should be a Window Capture source in OBS. The window should be setup as follows:</br>
 <img width="500" height="200" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettingsTimerWindow.png">
@@ -208,6 +216,7 @@ This is the source that shows the time remaining.  This should be a Window Captu
 This is the source that is controlled by the Show Cutthroat check box in the OBS Panel on the main screen.  This is intended to be a named group of sources within within OBS or a scene with OBS that contains all the scoring fields and their associated labels for team 3.  This group or scene can then be included in your main streaming scene.  When you want to show team 3's information, check the Show Cutthroat check box on the main screen.  When no one is keeping the score, uncheck the Show Scores button which will turn the scene/group in the Show Scores: source box off.
 The following sources would typically be contained in this scene or group:
 Time Out (Team 3), Match Count (Team 3), Game Count (Team 3), Score (Team 3), King Seat (Team 3).
+This is a visibility-toggle field — same `SceneName,SourceName` notes as Show Scores apply.
 #### Tournament:
 This is the source of a freeform text field that can be used for the name of the tournament or venue.  Default source is tournament.
 #### Event:
@@ -1697,6 +1706,11 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.125 08/21/2026</br>
+Fix Game 1, 2, 3 sources not showing on a win after switching the active table: visibility is now pushed explicitly wherever a team's game count changes, instead of relying on a property-change listener that stayed bound to whichever table was active at launch.</br>
+The Sources Settings Validate check now recognizes the SceneName,SourceName format: it validates the scene/group name and the source name separately against OBS, instead of always reporting the whole value Missing.</br>
+Documented the SceneName,SourceName option (for sources nested in another scene) in Sources Settings and in the README.</br>
+</br>
 v2.124 08/20/2026</br>
 Fix Game 1, 2, 3 sources not reseting when Start Match button pressed.<br>
 </br>

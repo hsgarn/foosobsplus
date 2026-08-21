@@ -102,4 +102,97 @@ class OBSSetupValidatorTest {
 
 		assertEquals(Status.MISSING, results.get("team1Score").status());
 	}
+
+	@Test
+	void sceneSourceValueIsOkWhenSourcePartIsKnown() {
+		Map<String, Result> results = OBSSetupValidator.validate(
+			Map.of("team1Game1Show", "Scores,Game1"), List.of("Game1"), List.of());
+
+		assertEquals(Status.OK, results.get("team1Game1Show").status());
+	}
+
+	@Test
+	void sceneSourceValueIsMissingWhenSourcePartIsUnknown() {
+		Map<String, Result> results = OBSSetupValidator.validate(
+			Map.of("team1Game1Show", "Scores,Misspelled"), List.of("Game1"), List.of());
+
+		assertEquals(Status.MISSING, results.get("team1Game1Show").status());
+	}
+
+	@Test
+	void sceneSourceValueIsWrongTypeWhenSourcePartIsOnlyInOtherType() {
+		Map<String, Result> results = OBSSetupValidator.validate(
+			Map.of("team1Game1Show", "Scores,blur-filter"), List.of("Game1"), List.of("blur-filter"));
+
+		assertEquals(Status.WRONG_TYPE, results.get("team1Game1Show").status());
+	}
+
+	@Test
+	void trailingCommaWithNoSourcePartIsNotTreatedAsSceneSource() {
+		Map<String, Result> results = OBSSetupValidator.validate(
+			Map.of("team1Game1Show", "Scores,"), List.of("Scores,"), List.of());
+
+		assertEquals(Status.OK, results.get("team1Game1Show").status());
+	}
+
+	@Test
+	void sceneListNullSkipsSceneValidationEvenWithKnownSource() {
+		Map<String, Result> results = OBSSetupValidator.validate(
+			Map.of("team1Game1Show", "Nonexistent Scene,Game1"), List.of("Game1"), List.of(), null);
+
+		assertEquals(Status.OK, results.get("team1Game1Show").status());
+	}
+
+	@Test
+	void sceneSourceValueIsOkWhenBothSceneAndSourcePartsAreKnown() {
+		Map<String, Result> results = OBSSetupValidator.validate(
+			Map.of("team1Game1Show", "Scores,Game1"), List.of("Game1"), List.of(), List.of("Scores"));
+
+		assertEquals(Status.OK, results.get("team1Game1Show").status());
+	}
+
+	@Test
+	void sceneSourceValueIsMissingSceneWhenScenePartIsUnknown() {
+		Map<String, Result> results = OBSSetupValidator.validate(
+			Map.of("team1Game1Show", "Misspelled Scene,Game1"), List.of("Game1"), List.of(), List.of("Scores"));
+
+		assertEquals(Status.MISSING_SCENE, results.get("team1Game1Show").status());
+	}
+
+	@Test
+	void missingSceneTakesPrecedenceOverMissingSource() {
+		Map<String, Result> results = OBSSetupValidator.validate(
+			Map.of("team1Game1Show", "Misspelled Scene,Misspelled Source"), List.of("Game1"), List.of(), List.of("Scores"));
+
+		assertEquals(Status.MISSING_SCENE, results.get("team1Game1Show").status());
+	}
+
+	@Test
+	void groupNameIsAcceptedAsSceneHalf() {
+		Map<String, Result> results = OBSSetupValidator.validate(
+			Map.of("team1Game1Show", "ScoreGroup,Game1"), List.of("Game1"), List.of(), List.of("ScoreGroup"));
+
+		assertEquals(Status.OK, results.get("team1Game1Show").status());
+	}
+
+	@Test
+	void duplicateTakesPrecedenceOverMissingScene() {
+		Map<String, String> configured = new LinkedHashMap<>();
+		configured.put("team1Game1Show", "Misspelled Scene,Game1");
+		configured.put("team2Game1Show", "Misspelled Scene,Game1");
+
+		Map<String, Result> results = OBSSetupValidator.validate(
+			configured, List.of("Game1"), List.of(), List.of("Scores"));
+
+		assertEquals(Status.DUPLICATE, results.get("team1Game1Show").status());
+		assertEquals(Status.DUPLICATE, results.get("team2Game1Show").status());
+	}
+
+	@Test
+	void extraCommaSegmentIsIgnoredJustLikeShowSourceIgnoresIt() {
+		Map<String, Result> results = OBSSetupValidator.validate(
+			Map.of("team1Game1Show", "Scores,Game1,ExtraIgnoredSegment"), List.of("Game1"), List.of(), List.of("Scores"));
+
+		assertEquals(Status.OK, results.get("team1Game1Show").status());
+	}
 }

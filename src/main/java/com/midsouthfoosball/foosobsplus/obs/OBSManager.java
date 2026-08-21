@@ -510,33 +510,52 @@ public class OBSManager {
      * Fetches the list of all inputs (sources) from OBS, plus groups (the
      * "folders" shown in the Sources list, which OBS exposes separately from
      * inputs), merges and deduplicates them, then delivers the sorted list.
+     * Also fetches scenes and delivers the combined scene+group "container" list
+     * (see onSceneAndGroupListFetched) before the input list, so a Sources
+     * Settings validation triggered off the input list callback already has it.
      */
     public void fetchInputList() {
         if (!isConnected()) return;
 
-        OBS.getController().getInputList(null, response -> {
-            if (response != null && response.isSuccessful()) {
-                List<String> names = new ArrayList<>(response.getInputs().stream()
-                        .map(Input::getInputName)
-                        .toList());
-                // Groups are not inputs in OBS; fetch them separately and merge so
-                // they appear in the source dropdowns too.
-                OBS.getController().getGroupList(groupResponse -> {
-                    if (groupResponse != null && groupResponse.isSuccessful() && groupResponse.getGroups() != null) {
-                        names.addAll(groupResponse.getGroups());
-                    }
-                    List<String> merged = names.stream()
-                            .distinct()
-                            .sorted(String.CASE_INSENSITIVE_ORDER)
-                            .toList();
-                    uiCallback.onInputListFetched(merged);
-                });
-            } else {
-                String msg = Messages.getString("Errors.Main.FetchSourceError"); //$NON-NLS-1$
-                String ttl = Messages.getString("Errors.Main.FetchSource.Title"); //$NON-NLS-1$
-                logger.warn(msg);
-                uiCallback.showErrorDialog(ttl, msg);
+        OBS.getController().getSceneList(sceneResponse -> {
+            List<String> scenes = new ArrayList<>();
+            if (sceneResponse != null && sceneResponse.isSuccessful() && sceneResponse.getScenes() != null) {
+                sceneResponse.getScenes().forEach(scene -> scenes.add(scene.getSceneName()));
             }
+            OBS.getController().getGroupList(groupResponse -> {
+                List<String> groups = new ArrayList<>();
+                if (groupResponse != null && groupResponse.isSuccessful() && groupResponse.getGroups() != null) {
+                    groups.addAll(groupResponse.getGroups());
+                }
+                List<String> containers = new ArrayList<>(scenes);
+                containers.addAll(groups);
+                List<String> mergedContainers = containers.stream()
+                        .distinct()
+                        .sorted(String.CASE_INSENSITIVE_ORDER)
+                        .toList();
+                uiCallback.onSceneAndGroupListFetched(mergedContainers);
+
+                OBS.getController().getInputList(null, response -> {
+                    if (response != null && response.isSuccessful()) {
+                        List<String> names = new ArrayList<>(response.getInputs().stream()
+                                .map(Input::getInputName)
+                                .toList());
+                        // Groups are not inputs in OBS; merge in the groups already
+                        // fetched above so they appear in the source dropdowns too.
+                        names.addAll(groups);
+                        List<String> merged = names.stream()
+                                .distinct()
+                                .sorted(String.CASE_INSENSITIVE_ORDER)
+                                .toList();
+                        uiCallback.onInputListFetched(merged);
+                    } else {
+                        String msg = Messages.getString("Errors.Main.FetchSourceError"); //$NON-NLS-1$
+                        String ttl = Messages.getString("Errors.Main.FetchSource.Title"); //$NON-NLS-1$
+                        logger.warn(msg);
+                        uiCallback.showErrorDialog(ttl, msg);
+                    }
+                });
+            });
         });
     }
 

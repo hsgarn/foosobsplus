@@ -321,6 +321,7 @@ public class TeamController {
 			if (team != null) {
 				team.setGameCount(gameCount);
 				teamPanel.updateGameCount(gameCount);
+				pushGameCountVisibility(teamNumber, team.getGameCount());
 				updateGameTables();
 			}
 		}
@@ -336,6 +337,7 @@ public class TeamController {
 			if (team != null) {
 				team.setGameCount(gameCount);
 				teamPanel.updateGameCount(gameCount);
+				pushGameCountVisibility(teamNumber, team.getGameCount());
 				updateGameTables();
 			}
 		}
@@ -428,6 +430,7 @@ public class TeamController {
 			boolean matchWon = match.incrementGameCount(team);
 			match.syncCurrentGameNumber();
 			teamPanel.updateGameCount(team.getGameCount());
+			pushGameCountVisibility(teamNumber, team.getGameCount());
 			if(matchWon) {
 				resetKingSeats();
 			} else {
@@ -597,6 +600,7 @@ public class TeamController {
 			team.decrementGameCount();
 			match.syncCurrentGameNumber();
 			teamPanel.updateGameCount(team.getGameCount());
+			pushGameCountVisibility(teamNumber, team.getGameCount());
 			updateGameTables();
 		}
 	}
@@ -762,6 +766,8 @@ public class TeamController {
 		team2.setGameCount(tmp);
 		teamPanel1.updateGameCount(team1.getGameCount());
 		teamPanel2.updateGameCount(team2.getGameCount());
+		pushGameCountVisibility(1, team1.getGameCount());
+		pushGameCountVisibility(2, team2.getGameCount());
 		updateGameTables();
 	}
 	public void switchMatchCounts() {
@@ -834,6 +840,15 @@ public class TeamController {
 		teamPanel2.updateScore(team2.getScore());
 		teamPanel3.updateScore(team3.getScore());
 	}
+	// setGameCount()'s property-change side effect that pushes the Game1/2/3 Show OBS
+	// sources is unreliable: it no-ops when the count doesn't change value, and its
+	// listener stays bound to whichever session's team objects were active when the
+	// listener was registered, so it stops firing for the displayed team after a table
+	// switch (bindSession() repoints team1/2/3 but nothing re-attaches the listener).
+	// Callers push the visibility explicitly instead of depending on it.
+	private void pushGameCountVisibility(int teamNumber, int gameCount) {
+		Main.setTeamGameCountVisible("Team" + teamNumber, gameCount);
+	}
 	public void resetGameCounts() {
 		team1.setGameCount(0);
 		team2.setGameCount(0);
@@ -841,12 +856,9 @@ public class TeamController {
 		teamPanel1.updateGameCount(team1.getGameCount());
 		teamPanel2.updateGameCount(team2.getGameCount());
 		teamPanel3.updateGameCount(team3.getGameCount());
-		// setGameCount() only pushes the Game1/2/3 Show OBS sources via a property-change
-		// side effect, which no-ops when the count was already 0 (e.g. OBS wasn't connected
-		// when the previous match ended). Push the visibility explicitly so it can't get stuck.
-		Main.setTeamGameCountVisible("Team1", team1.getGameCount());
-		Main.setTeamGameCountVisible("Team2", team2.getGameCount());
-		Main.setTeamGameCountVisible("Team3", team3.getGameCount());
+		pushGameCountVisibility(1, team1.getGameCount());
+		pushGameCountVisibility(2, team2.getGameCount());
+		pushGameCountVisibility(3, team3.getGameCount());
 		match.resetGameCounts();
 		match.setCurrentScoreTeam1(team1.getScore());
 		match.setCurrentScoreTeam2(team2.getScore());
@@ -1416,6 +1428,7 @@ public class TeamController {
 			team.setGameCount(Math.max(0, team.getGameCount() + delta));
 			match.syncCurrentGameNumber();
 			teamPanel.updateGameCount(team.getGameCount());
+			pushGameCountVisibility(teamNumber, team.getGameCount());
 			updateGameTables();
 		}
 	}

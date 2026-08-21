@@ -34,7 +34,7 @@ import java.util.Set;
 public final class OBSSetupValidator {
 	private OBSSetupValidator() {}
 
-	public enum Status { OK, MISSING, WRONG_TYPE, DUPLICATE }
+	public enum Status { OK, MISSING, MISSING_SCENE, WRONG_TYPE, DUPLICATE }
 
 	public record Result(String key, Status status, String value) {}
 
@@ -44,20 +44,44 @@ public final class OBSSetupValidator {
 	 * @param otherTypeList OBS names of the other type, used only for WRONG_TYPE detection; may be null
 	 */
 	public static Map<String, Result> validate(Map<String, String> configured, List<String> ownList, List<String> otherTypeList) {
+		return validate(configured, ownList, otherTypeList, null);
+	}
+
+	/**
+	 * @param configured key to current (already-trimmed, non-blank) field text
+	 * @param ownList OBS names of the type being validated (e.g. inputs for a sources check)
+	 * @param otherTypeList OBS names of the other type, used only for WRONG_TYPE detection; may be null
+	 * @param sceneAndGroupList OBS scene + group names, used to validate the scene half of a
+	 *        "SceneName,SourceName" value (see showSource()). Null means the scene half isn't
+	 *        checked at all (e.g. callers that never use that format, or the list hasn't been
+	 *        fetched from OBS yet) - this differs from ownList/otherTypeList, where null/empty
+	 *        means "checked against nothing" and so always fails; here it means "not checked".
+	 */
+	public static Map<String, Result> validate(Map<String, String> configured, List<String> ownList, List<String> otherTypeList, List<String> sceneAndGroupList) {
 		Map<String, Result> results = new HashMap<>();
 		Set<String> own = ownList == null ? Set.of() : new HashSet<>(ownList);
 		Set<String> otherType = otherTypeList == null ? Set.of() : new HashSet<>(otherTypeList);
+		Set<String> containers = sceneAndGroupList == null ? null : new HashSet<>(sceneAndGroupList);
 
 		Map<String, Integer> nameCounts = new HashMap<>();
 		configured.values().forEach(value -> nameCounts.merge(value, 1, Integer::sum));
 
 		configured.forEach((key, value) -> {
 			Status status;
+			// A "Scene,Source" value (see showSource()) names a source nested in a specific
+			// scene or group; split it the same way showSource() does (plain split(","),
+			// which drops a trailing empty piece) so validation checks exactly what OBS
+			// would actually be asked to look up.
+			String[] parts = value.split(",");
+			String scenePart = parts.length >= 2 && !parts[0].isEmpty() ? parts[0] : null;
+			String lookupValue = parts.length >= 2 ? parts[1] : value;
 			if (nameCounts.get(value) > 1) {
 				status = Status.DUPLICATE;
-			} else if (own.contains(value)) {
+			} else if (scenePart != null && containers != null && !containers.contains(scenePart)) {
+				status = Status.MISSING_SCENE;
+			} else if (own.contains(lookupValue)) {
 				status = Status.OK;
-			} else if (otherType.contains(value)) {
+			} else if (otherType.contains(lookupValue)) {
 				status = Status.WRONG_TYPE;
 			} else {
 				status = Status.MISSING;

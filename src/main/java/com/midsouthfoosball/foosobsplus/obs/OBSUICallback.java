@@ -60,6 +60,15 @@ public interface OBSUICallback {
     void onInputListFetched(List<String> inputNames);
 
     /**
+     * Called when the combined scene + group name list is fetched from OBS. These
+     * are the only container names valid as the scene half of a "SceneName,SourceName"
+     * value (see showSource()). Delivered before onInputListFetched so validation
+     * that runs off that callback already has this list in hand.
+     * @param sceneAndGroupNames sorted, deduplicated list of all scene and group names in OBS
+     */
+    void onSceneAndGroupListFetched(List<String> sceneAndGroupNames);
+
+    /**
      * Called when the scene filter list is fetched from OBS.
      * @param filterNames sorted, deduplicated list of all filter names across all scenes
      */
