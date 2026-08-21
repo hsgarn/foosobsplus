@@ -1706,6 +1706,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.127 08/21/2026</br>
+Fix multitable filters.</br>
+</br>
 v2.126 08/21/2026</br>
 Fix Game 1, 2, 3 sources when bumping score via hardware.</br>
 </br>
