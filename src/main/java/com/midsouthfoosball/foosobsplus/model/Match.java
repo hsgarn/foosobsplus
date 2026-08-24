@@ -464,7 +464,7 @@ public class Match implements Serializable {
                         team1.incrementScore();
                         setLastScored(1);
                         setCurrentScoreTeam1(team1.getScore());
-                        int whoWon = checkForGameWin(team1.getScore(), team2.getScore(), team3.getScore());
+                        int whoWon = checkForGameWin(1, team1.getScore(), team2.getScore(), team3.getScore());
                         if(whoWon == 1 || whoWon == 3) {
                             gameWinners[currentGameNumber-1]=1;
                             if (Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON)) {
@@ -498,7 +498,7 @@ public class Match implements Serializable {
                         team2.incrementScore();
                         setLastScored(2);
                         setCurrentScoreTeam2(team2.getScore());
-                        int whoWon = checkForGameWin(team2.getScore(), team1.getScore(), team3.getScore());
+                        int whoWon = checkForGameWin(2, team2.getScore(), team1.getScore(), team3.getScore());
                         if (whoWon == 1 || whoWon == 3) {
                             gameWinners[currentGameNumber-1]=2;
                             matchWon = incrementGameCount(team2);
@@ -519,7 +519,7 @@ public class Match implements Serializable {
                         team3.incrementScore();
                         setLastScored(0);
                         setCurrentScoreTeam3(team3.getScore());
-                        int whoWon = checkForGameWin(team3.getScore(), team1.getScore(), team2.getScore());
+                        int whoWon = checkForGameWin(3, team3.getScore(), team1.getScore(), team2.getScore());
                         if(whoWon == 1 || whoWon == 3) {
                             gameWinners[currentGameNumber-1]=1;
                             matchWon = incrementGameCount(team3);
@@ -560,9 +560,9 @@ public class Match implements Serializable {
 	public void updateGameResults() {
 		updateGameResults(getGameResults());
 	}
-	private int checkForGameWin(int score1, int score2, int score3) {
+	private int checkForGameWin(int teamNbr, int score1, int score2, int score3) {
 		int whoWon = 0;// rack mode returns 0, 1 or 2 (1 if scoring team won or 2 if other team won). non rack mode returns 0, 3 (3=team who called checkForGameWin won)  .
-		int pointsToWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_POINTS_TO_WIN));
+		int pointsToWin = Settings.getEffectivePointsToWin(teamNbr);
 		int maxWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_MAX_WIN));
 		int winBy = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY));
 		int winByFinalOnly = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY_FINAL_ONLY));
@@ -645,6 +645,12 @@ public class Match implements Serializable {
 		return false;
 	}
 	private void checkMeatball() {
+		// Meatball detection assumes every team shares the same Points to Win, so it
+		// doesn't have a well-defined meaning once Handicapped gives each team its own.
+		if (Settings.getControlParameter(SettingsKeys.CTRL_HANDICAPPED).equals(ON)) {
+			clearMeatball();
+			return;
+		}
 		int points1 = team1.getScore();
 		int points2 = team2.getScore();
 		int points3 = team3.getScore();
@@ -681,7 +687,6 @@ public class Match implements Serializable {
 	private boolean checkForGameWinOnly() {
 		boolean isGameWon = false;
 		if (currentGameNumber!=0) {
-			int pointsToWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_POINTS_TO_WIN));
 			int winBy = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY));
 			int maxWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_MAX_WIN));
 			int winByFinalOnly = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY_FINAL_ONLY));
@@ -690,13 +695,17 @@ public class Match implements Serializable {
 			int score1 = Integer.parseInt(scoresTeam1[currentGameNumber-1]);
 			int score2 = Integer.parseInt(scoresTeam2[currentGameNumber-1]);
 			int score3 = Integer.parseInt(scoresTeam3[currentGameNumber-1]);
+			int teamNbr = 1;
 			if (score2 > score1 && score2 > score3) {
+				teamNbr = 2;
 				score1 = score2;
 				score2 = Integer.parseInt(scoresTeam1[currentGameNumber-1]);
 			} else if (score3 > score1 && score3 > score2) {
+				teamNbr = 3;
 				score1 = score3;
 				score3 = Integer.parseInt(scoresTeam1[currentGameNumber-1]);
 			}
+			int pointsToWin = Settings.getEffectivePointsToWin(teamNbr);
 			if (rackMode) {
 				if (score1 + score2 >= ballsInRack) {
 					isGameWon = true;

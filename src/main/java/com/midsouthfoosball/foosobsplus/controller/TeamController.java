@@ -1239,6 +1239,12 @@ public class TeamController {
 		team2.writeAll();
 		team3.writeAll();
 	}
+	/** Refreshes just the Handicap sources, without touching the rest of each team's OBS output. */
+	public void writeHandicap() {
+		team1.writeHandicap();
+		team2.writeHandicap();
+		team3.writeHandicap();
+	}
 	public int getPassAttempts(int teamNumber) {
 		Team team = teamsMap.getOrDefault(teamNumber, null);
 		if (team != null) {

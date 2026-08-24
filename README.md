@@ -147,6 +147,14 @@ When checked, a team must win by the margin in Win By parameter in the final gam
 When checked, the program will activate the OBS filter defined in the OBS Connect dialogue box when a team wins a game without the opposing team scoring a single point in the game.
 #### CutThroat Mode
 When checked, the program activates CutThroat Mode to support the game of CutThroat.  In CutThroat, three people play against each other. One player starts on the scoring side (Team 1) while the other players play on Team 2. The player on the scoring side always serves the ball and when scores, gets a point.  If the players on other side score, then everybody rotates so that Team 2 Forward moves to the scoring side. Team 2 Goalie moves to the Team 1 Forward position.  And the player who was on the scoring side moves to the Team 2 Goalie position.  The scores in this mode are appended to the players names.
+#### Handicapped
+When checked, each team wins on its own Points to Win value (Team 1/2/3 Points to Win below) instead of the shared Points to Win parameter above.  Use this for handicapped play, where one team needs fewer points to win than the other.  Unchecking Handicapped does not clear the Team 1/2/3 Points to Win values below — they are simply not used, so re-checking the box brings them straight back.  Switch Sides swaps Team 1's and Team 2's handicapped values along with everything else that switches sides; cutthroat rotate similarly rotates all three teams' handicapped values with the rest of their state.  Meatball detection is disabled while Handicapped is checked, since it depends on every team sharing the same Points to Win.  Max Win automatically rises to cover whichever of the four Points to Win values (shared or handicapped) is highest.
+#### Team 1 Points to Win
+The number of points Team 1 must reach to win a game when Handicapped is checked.  Ignored when Handicapped is unchecked.
+#### Team 2 Points to Win
+The number of points Team 2 must reach to win a game when Handicapped is checked.  Ignored when Handicapped is unchecked.
+#### Team 3 Points to Win
+The number of points Team 3 must reach to win a game when Handicapped is checked (CutThroat Mode).  Ignored when Handicapped is unchecked.
 #### Apply
 Click the Apply button to save any parameter changes made and keep the window open.
 #### Apply and Close
@@ -202,6 +210,8 @@ This is the source that will be made visible when team X wins their first game. 
 This is the source that will be made visible when team X wins their second game.  Game 1's source will remain visible.  This source can be any source type as long as it has the visible property (i.e. Text GUI+, Image, etc.).  The default source is teamXgame2 where X is the team number (1, 2 or 3).  Same visibility-toggle notes as Game 1 apply.
 #### Game 3: (Team 1, Team 2, Team 3)
 This is the source that will be made visible when team X wins their third game.  Game 1 and 2 sources will remain visible.  This source can be any source type as long as it has the visible property (i.e. Text GUI+, Image, etc.).  The default source is teamXgame3 where X is the team number (1, 2 or 3).  Same visibility-toggle notes as Game 1 apply.
+#### Handicap: (Team 1, Team 2, Team 3)
+This is the source that receives team X's handicapped Points to Win (see the Handicapped parameter in Parameter Settings).  While Handicapped is checked, this source is kept in sync with the team's Points to Win value; while it is unchecked, this source is cleared (sent an empty value) so nothing displays.  The default source is teamXhandicap where X is the team number (1, 2 or 3).
 #### Show Scores:
 This is the source that is controlled by the Show Score check box in the OBS Panel on the main screen.  This is intended to be a named group of sources within within OBS or a scene with OBS that contains all the scoring fields and their associated labels.  This group or scene can then be included in your main streaming scene.  When you want to keep score, check the Show Score check box on the main screen.  When no one is keeping the score, uncheck the Show Scores button which will turn the scene/group in the Show Scores: source box off.
 The following sources would typically be contained in this scene or group:
@@ -444,7 +454,7 @@ Assigns the hot key for the Clear button for the Tournament Information panel. D
 #### Switch Match Counts
 Assigns the hot key for the Switch Match Counts button. Default hot key is unassigned.
 #### Switch Sides
-Assigns the hot key to swap all Team 1's data with Team 2's data.  Use this when the teams switch sides. Default hot key is w.
+Assigns the hot key to swap all Team 1's data with Team 2's data, including their handicapped Points to Win when Handicapped is checked.  Use this when the teams switch sides. Default hot key is w.
 #### Switch Teams
 Assigns the hot key to swap Team 1's and Team 2's names (Team, Forward & Goalie) with each other.  Default hot key is e.
 #### Switch Scores
@@ -964,7 +974,7 @@ The Switch Panel is used to swap the information between Team 1 and Team 2.
 <img width="320" height="370" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSwitchPanel.png">
 
 #### Switch Sides
-The Switch Sides button is used when the teams switch sides.  The team names, player names, scores, time outs, game counts, match counts, reset/warns, king seat and last scored times will all be swapped. A hot key can be assigned to this button in Hot Keys Settings.
+The Switch Sides button is used when the teams switch sides.  The team names, player names, scores, time outs, game counts, match counts, reset/warns, king seat, last scored times and (when Handicapped is checked) handicapped Points to Win will all be swapped. A hot key can be assigned to this button in Hot Keys Settings.
 #### Switch Teams
 This button will swap the Team Name, Forward Name and Goalie Name of Team 1 and Team 2. A hot key can be assigned to this button in Hot Keys Settings.
 #### Switch Forward
@@ -1495,6 +1505,72 @@ Response (OBS Not Connected) - HTTP Status 409 Conflict:
       "message": "OBS is not connected"
     }
 
+#### POST /api/handicap
+Controls handicapped Points to Win: toggle the Handicapped checkbox, increase/decrease a team's handicapped Points to Win, or swap it between two teams. These are control parameters shared across every table (the same as Max Win/Win By), so there is no `tableNumber` field. Requires valid API key.
+
+Request:
+
+    POST http://localhost:9051/api/handicap
+    Headers:
+      X-API-Key: your-api-key-here
+      Content-Type: application/json
+
+    Body (toggle - flips the current state):
+    {
+      "action": "toggle"
+    }
+
+    Body (toggle - sets the state explicitly):
+    {
+      "action": "toggle",
+      "state": true
+    }
+
+    Body (increase/decrease - requires teamNumber):
+    {
+      "action": "increase",
+      "teamNumber": 1
+    }
+
+    Body (swap - requires teamNumber and teamNumber2):
+    {
+      "action": "swap",
+      "teamNumber": 1,
+      "teamNumber2": 2
+    }
+
+- `action` - One of: `toggle`, `increase`, `decrease`, `swap`
+- `state` - Optional boolean, only valid for `toggle`
+- `teamNumber` - Required for `increase`, `decrease` and `swap`. Must be 1, 2 or 3
+- `teamNumber2` - Required for `swap`. Must be 1, 2 or 3, and different from `teamNumber`
+
+Notes:
+- `increase`/`decrease` change the team's handicapped Points to Win by 1, floored at 1.
+- The Parameters settings page (if open) and the team's Handicap OBS source are refreshed immediately after every successful call.
+
+Response (Success, toggle) - `data` reflects the applied state:
+
+    {
+      "success": true,
+      "message": "Handicapped set to true",
+      "data": {
+        "action": "toggle",
+        "handicapped": true
+      }
+    }
+
+Response (Success, increase/decrease) - `data` reflects the new value:
+
+    {
+      "success": true,
+      "message": "Team 1 handicapped Points to Win set to 6",
+      "data": {
+        "action": "increase",
+        "teamNumber": 1,
+        "pointsToWin": 6
+      }
+    }
+
 #### POST /api/autoscore
 Connects or disconnects the AutoScore unit for the currently displayed table, matching the AutoScore panel buttons. Requires valid API key.
 
@@ -1706,6 +1782,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.129 08/24/2026</br>
+Add global handicap scoring.</br>
+</br>
 v2.128 08/24/2026</br>
 Fix Game 1, 2, 3 sources not updating on Switch Sides, cutthroat rotate, and undo when a non-active table is displayed.</br>
 </br>

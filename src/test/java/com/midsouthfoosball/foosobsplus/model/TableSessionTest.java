@@ -85,7 +85,7 @@ class TableSessionTest {
 			new ArrayList<>(List.of("XPS1")),
 			new ArrayList<>(List.of(savedMemento)),
 			new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
-			4);
+			new ArrayList<>(), 4);
 
 		List<Command> commands = new ArrayList<>(List.of(new TestCommand("stale")));
 		List<String> codes = new ArrayList<>(List.of("STALE"));
@@ -95,9 +95,10 @@ class TableSessionTest {
 		List<Memento> statsMementos = new ArrayList<>();
 		List<Memento> matchMementos = new ArrayList<>();
 		List<Memento> clockMementos = new ArrayList<>();
+		List<String[]> handicapMementos = new ArrayList<>();
 
 		int pointer = session.loadWorkingStateInto(commands, codes, team1Mementos,
-			team2Mementos, team3Mementos, statsMementos, matchMementos, clockMementos);
+			team2Mementos, team3Mementos, statsMementos, matchMementos, clockMementos, handicapMementos);
 
 		assertEquals(4, pointer);
 		assertEquals(1, commands.size());
@@ -115,10 +116,10 @@ class TableSessionTest {
 		TableSession second = session(new OBSInterface());
 		first.saveWorkingState(new ArrayList<>(), new ArrayList<>(List.of("FIRST")),
 			new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
-			new ArrayList<>(), new ArrayList<>(), 1);
+			new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1);
 		second.saveWorkingState(new ArrayList<>(), new ArrayList<>(List.of("SECOND")),
 			new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
-			new ArrayList<>(), new ArrayList<>(), 7);
+			new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 7);
 
 		List<String> loadedCodes = new ArrayList<>();
 		assertEquals(1, loadCodes(first, loadedCodes));
@@ -151,7 +152,7 @@ class TableSessionTest {
 
 	private static int loadCodes(TableSession session, List<String> codes) {
 		return session.loadWorkingStateInto(new ArrayList<>(), codes, new ArrayList<>(),
-			new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+			new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 	}
 
 	private record TestCommand(String code) implements Command {

@@ -766,6 +766,20 @@ public class Team implements Serializable {
     private void writeScore() {
     	writeData(Settings.getTeamSourceParameter(Integer.toString(teamNbr),"Score"), Integer.toString(score));
     }
+    /**
+     * Pushes this team's handicapped Points to Win to its Handicap source when
+     * Handicapped is checked, or clears the source when it isn't. The underlying
+     * Team1/2/3PointsToWin setting itself is never cleared, so re-checking
+     * Handicapped brings the previous value straight back.
+     */
+    public void writeHandicap() {
+    	String src = Settings.getTeamSourceParameter(Integer.toString(teamNbr), "Handicap");
+    	if (Settings.getControlParameter(SettingsKeys.CTRL_HANDICAPPED).equals(ON)) {
+    		writeData(src, Settings.getControlParameter(Settings.getHandicappedPointsToWinKey(teamNbr)));
+    	} else {
+    		writeData(src, "");
+    	}
+    }
 	private void writeData(String source, String data) {
 		obsInterface.writeData(source, data, "Team", Settings.getShowParsed());
 	}
@@ -802,6 +816,7 @@ public class Team implements Serializable {
 		writeWarn();
 		writeKingSeat();
 		writeTimeOuts();
+		writeHandicap();
 		writeStats();
 	}
 	public void restoreState(byte[] serializedObject) {

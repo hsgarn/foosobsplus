@@ -222,6 +222,10 @@ public final class Main implements MatchObserver {
 	private static final ArrayList<Memento> 	mementoStackStats 		= new ArrayList<>();
 	private static final ArrayList<Memento> 	mementoStackMatch		= new ArrayList<>();
 	private static final ArrayList<Memento> 	mementoStackGameClock	= new ArrayList<>();
+	// Team1/2/3PointsToWin (a control parameter, not part of any Team's Memento
+	// state - see swapHandicappedPointsToWin) snapshotted alongside the other
+	// mementos so undo can revert the swap switchSides/cutthroatRotate perform.
+	private static final ArrayList<String[]>	mementoStackHandicap	= new ArrayList<>();
 	private static final ArrayList<String>		codeStack 				= new ArrayList<>();
 	private static CommandSwitch 				mySwitch;
 	////// Generate the Data Models (Mvc) \\\\\\
@@ -1668,6 +1672,7 @@ public final class Main implements MatchObserver {
 			// so push visibility explicitly for the two teams that were swapped.
 			setTeamGameCountVisible("Team2", team2.getGameCount()); //$NON-NLS-1$
 			setTeamGameCountVisible("Team3", team3.getGameCount()); //$NON-NLS-1$
+			swapHandicappedPointsToWin(2, 3);
 		} else if (rotate ==2 ) {
 			Memento tmpTeam1 = saveState(team1);
 			Memento tmpTeam2 = saveState(team2);
@@ -1684,7 +1689,18 @@ public final class Main implements MatchObserver {
 			setTeamGameCountVisible("Team1", team1.getGameCount()); //$NON-NLS-1$
 			setTeamGameCountVisible("Team2", team2.getGameCount()); //$NON-NLS-1$
 			setTeamGameCountVisible("Team3", team3.getGameCount()); //$NON-NLS-1$
+			rotateHandicappedPointsToWin();
 		}
+	}
+	/** New team1 <- old team2, new team2 <- old team3, new team3 <- old team1; mirrors the Team Memento rotation above. */
+	private static void rotateHandicappedPointsToWin() {
+		String value1 = Settings.getControlParameter(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN);
+		String value2 = Settings.getControlParameter(SettingsKeys.CTRL_TEAM2_POINTS_TO_WIN);
+		String value3 = Settings.getControlParameter(SettingsKeys.CTRL_TEAM3_POINTS_TO_WIN);
+		Settings.setControlParameter(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN, value2);
+		Settings.setControlParameter(SettingsKeys.CTRL_TEAM2_POINTS_TO_WIN, value3);
+		Settings.setControlParameter(SettingsKeys.CTRL_TEAM3_POINTS_TO_WIN, value1);
+		persistControlConfigAndRefreshParameters();
 	}
 	public static void startEvent() {
 		if(gameClock.isStreamTimerRunning()) {
@@ -1727,6 +1743,31 @@ public final class Main implements MatchObserver {
 		team2.setTeamNbr(2);
 		matchController.switchSides();
 		teamController.switchSides();
+		swapHandicappedPointsToWin(1, 2);
+	}
+	/**
+	 * Swaps the handicapped Points to Win of two teams (a control parameter, not
+	 * part of Team's Memento state) and persists/refreshes it. Used by switchSides
+	 * and cutthroatRotate so a team's handicap follows it when it changes seats.
+	 */
+	private static void swapHandicappedPointsToWin(int teamA, int teamB) {
+		String keyA = Settings.getHandicappedPointsToWinKey(teamA);
+		String keyB = Settings.getHandicappedPointsToWinKey(teamB);
+		String valueA = Settings.getControlParameter(keyA);
+		String valueB = Settings.getControlParameter(keyB);
+		Settings.setControlParameter(keyA, valueB);
+		Settings.setControlParameter(keyB, valueA);
+		persistControlConfigAndRefreshParameters();
+	}
+	private static void persistControlConfigAndRefreshParameters() {
+		try {
+			Settings.saveControlConfig();
+		} catch (IOException e) {
+			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile")); //$NON-NLS-1$
+			logger.error(e.toString());
+		}
+		parametersPanel.refreshFromSettings();
+		teamController.writeHandicap();
 	}
 	public static void setShowParsed(boolean showParsed) {
 		Settings.setControlParameter(SettingsKeys.CTRL_SHOW_PARSED,showParsed); //$NON-NLS-1$
@@ -1752,7 +1793,7 @@ public final class Main implements MatchObserver {
 		if (next == null || next == activeSession) return;
 		// 1. Preserve the outgoing table's command history / undo state.
 		activeSession.saveWorkingState(commandStack, codeStack, mementoStackTeam1, mementoStackTeam2,
-				mementoStackTeam3, mementoStackStats, mementoStackMatch, mementoStackGameClock, undoRedoPointer);
+				mementoStackTeam3, mementoStackStats, mementoStackMatch, mementoStackGameClock, mementoStackHandicap, undoRedoPointer);
 		// 2. The outgoing table becomes the secondary ("mini") table, writing its
 		//    subset to the prefixed OBS area; it keeps updating in the background.
 		//    Any table previously in the secondary slot is fully silenced (3+ tables).
@@ -1789,7 +1830,7 @@ public final class Main implements MatchObserver {
 		tournamentController.bindSession(next);
 		// 4. Restore the incoming table's command history / undo state.
 		undoRedoPointer = next.loadWorkingStateInto(commandStack, codeStack, mementoStackTeam1, mementoStackTeam2,
-				mementoStackTeam3, mementoStackStats, mementoStackMatch, mementoStackGameClock);
+				mementoStackTeam3, mementoStackStats, mementoStackMatch, mementoStackGameClock, mementoStackHandicap);
 		// 5. Republish the new table's state to the panels and live OBS, then push
 		//    the secondary table's subset to the prefixed area and swap cameras.
 		republishActiveSession();
@@ -1984,6 +2025,26 @@ public final class Main implements MatchObserver {
 		Settings.setControlParameter(SettingsKeys.CTRL_SHOW_SKUNK, show ? ON : OFF);
 		return show;
 	}
+	public static boolean toggleHandicappedFromAPI(Boolean state) {
+		boolean handicapped = (state != null) ? state : !Settings.getControlParameter(SettingsKeys.CTRL_HANDICAPPED).equals(ON);
+		Settings.setControlParameter(SettingsKeys.CTRL_HANDICAPPED, handicapped ? ON : OFF);
+		persistControlConfigAndRefreshParameters();
+		return handicapped;
+	}
+	/**
+	 * Increases (positive delta) or decreases (negative delta) team teamNumber's
+	 * handicapped Points to Win by 1, floored at 1. Returns the new value.
+	 */
+	public static int adjustHandicappedPointsToWinFromAPI(int teamNumber, int delta) {
+		String key = Settings.getHandicappedPointsToWinKey(teamNumber);
+		int newValue = Math.max(1, Integer.parseInt(Settings.getControlParameter(key)) + delta);
+		Settings.setControlParameter(key, Integer.toString(newValue));
+		persistControlConfigAndRefreshParameters();
+		return newValue;
+	}
+	public static void swapHandicappedPointsToWinFromAPI(int teamA, int teamB) {
+		swapHandicappedPointsToWin(teamA, teamB);
+	}
 	public static boolean obsStartStreamFromAPI(Boolean state) {
 		boolean start = (state != null) ? state : !obsPanel.isStartStreamSelected();
 		obsPanel.setStartStream(start);
@@ -2010,6 +2071,23 @@ public final class Main implements MatchObserver {
    		mementoStackStats.add(saveState(stats));
    		mementoStackMatch.add(saveState(match));
    		mementoStackGameClock.add(saveState(gameClock));
+   		mementoStackHandicap.add(currentHandicappedPointsToWin());
+	}
+	private static String[] currentHandicappedPointsToWin() {
+		return new String[] {
+			Settings.getControlParameter(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN),
+			Settings.getControlParameter(SettingsKeys.CTRL_TEAM2_POINTS_TO_WIN),
+			Settings.getControlParameter(SettingsKeys.CTRL_TEAM3_POINTS_TO_WIN)
+		};
+	}
+	/** No-op (and no disk write/UI refresh) unless the snapshot differs from the current values. */
+	private static void restoreHandicappedPointsToWin(String[] values) {
+		String[] current = currentHandicappedPointsToWin();
+		if (values[0].equals(current[0]) && values[1].equals(current[1]) && values[2].equals(current[2])) return;
+		Settings.setControlParameter(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN, values[0]);
+		Settings.setControlParameter(SettingsKeys.CTRL_TEAM2_POINTS_TO_WIN, values[1]);
+		Settings.setControlParameter(SettingsKeys.CTRL_TEAM3_POINTS_TO_WIN, values[2]);
+		persistControlConfigAndRefreshParameters();
 	}
 	private static Memento saveState(Object object) {
 		return new Memento(object);
@@ -2030,6 +2108,7 @@ public final class Main implements MatchObserver {
 	    match.restoreState(mementoMatch.getState());
 	    Memento mementoGameClock = mementoStackGameClock.get(undoRedoPointer);
 	    gameClock.restoreState(mementoGameClock.getState());
+	    restoreHandicappedPointsToWin(mementoStackHandicap.get(undoRedoPointer));
 	    undoRedoPointer--;
 	    statsEntryPanel.removeCodeHistory();
 	    stats.showParsed();
@@ -2080,6 +2159,7 @@ public final class Main implements MatchObserver {
 		        mementoStackStats.remove(i);
 		        mementoStackMatch.remove(i);
 		        mementoStackGameClock.remove(i);
+		        mementoStackHandicap.remove(i);
 		    }
 	    }
     }
@@ -2636,6 +2716,7 @@ public final class Main implements MatchObserver {
 		teamPanel2.setTitle();
 		teamPanel3.setTitle();
 		teamController.displayAll();
+		teamController.writeHandicap();
 	}
 	private static class ScoreIncreaseListener implements ActionListener{
         @Override

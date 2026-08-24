@@ -103,6 +103,10 @@ public final class Settings {
 		defaultControlProps.setProperty("TableName", "");
 		defaultControlProps.setProperty("datapath", "c:" + SEPARATOR + "temp");
 		defaultControlProps.setProperty("PointsToWin", "5");
+		defaultControlProps.setProperty("Handicapped", OFF);
+		defaultControlProps.setProperty("Team1PointsToWin", "5");
+		defaultControlProps.setProperty("Team2PointsToWin", "5");
+		defaultControlProps.setProperty("Team3PointsToWin", "5");
 		defaultControlProps.setProperty("MaxWin", "8");
 		defaultControlProps.setProperty("WinBy", "1");
 		defaultControlProps.setProperty("GamesToWin", "2");
@@ -169,6 +173,9 @@ public final class Settings {
 		defaultSourceProps.setProperty("Team2MatchCount", "team2matchcount");
 		defaultSourceProps.setProperty("Team3MatchCount", "team3matchcount");
 		defaultSourceProps.setProperty("Team1Score", "team1score");
+		defaultSourceProps.setProperty("Team1Handicap", "team1handicap");
+		defaultSourceProps.setProperty("Team2Handicap", "team2handicap");
+		defaultSourceProps.setProperty("Team3Handicap", "team3handicap");
 		defaultSourceProps.setProperty("MatchWinner", "matchwinner");
 		defaultSourceProps.setProperty("Meatball",  "meatball");
 		defaultSourceProps.setProperty("GameResults", "gameresults");
@@ -901,5 +908,23 @@ public final class Settings {
 		int gamesToWin = Integer.parseInt(getControlParameter(SettingsKeys.CTRL_GAMES_TO_WIN));
 		int cutThroatMode = Integer.parseInt(getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE));
 		return gamesToWin*(2+cutThroatMode)-(1+cutThroatMode);
+	}
+	/** Control-parameter key holding team teamNbr's (1-3) handicapped Points to Win. */
+	public static String getHandicappedPointsToWinKey(int teamNbr) {
+		return switch (teamNbr) {
+			case 1 -> SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN;
+			case 2 -> SettingsKeys.CTRL_TEAM2_POINTS_TO_WIN;
+			default -> SettingsKeys.CTRL_TEAM3_POINTS_TO_WIN;
+		};
+	}
+	/**
+	 * Points to Win that applies to team teamNbr (1-3): the team's own handicapped
+	 * value when Handicapped is checked, otherwise the shared Points to Win.
+	 */
+	public static int getEffectivePointsToWin(int teamNbr) {
+		if (ON.equals(getControlParameter(SettingsKeys.CTRL_HANDICAPPED))) {
+			return Integer.parseInt(getControlParameter(getHandicappedPointsToWinKey(teamNbr)));
+		}
+		return Integer.parseInt(getControlParameter(SettingsKeys.CTRL_POINTS_TO_WIN));
 	}
 }

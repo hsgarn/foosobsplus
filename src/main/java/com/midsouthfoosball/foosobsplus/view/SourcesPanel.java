@@ -75,6 +75,9 @@ public class SourcesPanel extends JPanel {
 	private JComboBox<String> txtTeam1Score;
 	private JComboBox<String> txtTeam2Score;
 	private JComboBox<String> txtTeam3Score;
+	private JComboBox<String> txtTeam1Handicap;
+	private JComboBox<String> txtTeam2Handicap;
+	private JComboBox<String> txtTeam3Handicap;
 	private JComboBox<String> txtTeam1GameCount;
 	private JComboBox<String> txtTeam2GameCount;
 	private JComboBox<String> txtTeam3GameCount;
@@ -240,6 +243,9 @@ public class SourcesPanel extends JPanel {
 		sourcesMap.put("Team1Score",txtTeam1Score); //$NON-NLS-1$
 		sourcesMap.put("Team2Score",txtTeam2Score); //$NON-NLS-1$
 		sourcesMap.put("Team3Score",txtTeam3Score); //$NON-NLS-1$
+		sourcesMap.put("Team1Handicap",txtTeam1Handicap); //$NON-NLS-1$
+		sourcesMap.put("Team2Handicap",txtTeam2Handicap); //$NON-NLS-1$
+		sourcesMap.put("Team3Handicap",txtTeam3Handicap); //$NON-NLS-1$
 		sourcesMap.put("Team1TimeOut",txtTeam1TimeOut); //$NON-NLS-1$
 		sourcesMap.put("Team2TimeOut",txtTeam2TimeOut); //$NON-NLS-1$
 		sourcesMap.put("Team3TimeOut",txtTeam3TimeOut); //$NON-NLS-1$
@@ -600,6 +606,21 @@ public class SourcesPanel extends JPanel {
 		txtTeam3Game3Show.setSelectedItem(Settings.getTeamGameShowSource(3,3));
 		txtTeam3Game3Show.setPrototypeDisplayValue("          ");
 		add(txtTeam3Game3Show, "cell 4 15, alignx left"); //$NON-NLS-1$
+		//Handicap
+		JLabel lblHandicap = new JLabel(Messages.getString("SourcesPanel.Handicap")); //$NON-NLS-1$
+		add(lblHandicap, "cell 1 16,alignx right"); //$NON-NLS-1$
+		txtTeam1Handicap = new JComboBox<>();
+		txtTeam1Handicap.setSelectedItem(Settings.getTeamSourceParameter(TEAM1,"Handicap")); //$NON-NLS-1$
+		txtTeam1Handicap.setPrototypeDisplayValue("          ");
+		add(txtTeam1Handicap, "cell 2 16,alignx left"); //$NON-NLS-1$
+		txtTeam2Handicap = new JComboBox<>();
+		txtTeam2Handicap.setSelectedItem(Settings.getTeamSourceParameter(TEAM2,"Handicap")); //$NON-NLS-1$
+		txtTeam2Handicap.setPrototypeDisplayValue("          ");
+		add(txtTeam2Handicap, "cell 3 16,alignx left"); //$NON-NLS-1$
+		txtTeam3Handicap = new JComboBox<>();
+		txtTeam3Handicap.setSelectedItem(Settings.getTeamSourceParameter(TEAM3,"Handicap")); //$NON-NLS-1$
+		txtTeam3Handicap.setPrototypeDisplayValue("          ");
+		add(txtTeam3Handicap, "cell 4 16,alignx left"); //$NON-NLS-1$
 		//Tournament
 		JLabel lblTournament = new JLabel(Messages.getString("SourcesPanel.Tournament")); //$NON-NLS-1$
 		add(lblTournament, "cell 5 3,alignx right"); //$NON-NLS-1$

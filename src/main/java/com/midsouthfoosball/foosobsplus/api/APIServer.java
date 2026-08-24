@@ -51,6 +51,7 @@ public class APIServer {
 	private final StatsActionController statsActionController;
 	private final OBSActionController obsActionController;
 	private final AutoScoreActionController autoScoreActionController;
+	private final HandicapActionController handicapActionController;
 	private final EventBroadcaster eventBroadcaster;
 	private final RateLimiter rateLimiter;
 
@@ -70,6 +71,7 @@ public class APIServer {
 		this.statsActionController = new StatsActionController(teamService);
 		this.obsActionController = new OBSActionController();
 		this.autoScoreActionController = new AutoScoreActionController();
+		this.handicapActionController = new HandicapActionController();
 		this.eventBroadcaster = eventBroadcaster;
 		this.rateLimiter = new RateLimiter(MAX_REQUESTS_PER_MINUTE);
 	}
@@ -135,6 +137,7 @@ public class APIServer {
 		app.post("/api/stats", statsActionController::handle);
 		app.post("/api/obs", obsActionController::handle);
 		app.post("/api/autoscore", autoScoreActionController::handle);
+		app.post("/api/handicap", handicapActionController::handle);
 
 		// SSE event stream (requires API key, exempt from rate limiting)
 		if (eventBroadcaster != null) {

@@ -72,6 +72,9 @@ public class TableSession {
 	private final List<Memento> mementoStackStats = new ArrayList<>();
 	private final List<Memento> mementoStackMatch = new ArrayList<>();
 	private final List<Memento> mementoStackGameClock = new ArrayList<>();
+	// Team1/2/3PointsToWin snapshots (a control parameter, not part of any
+	// Team's Memento state) - see Main.mementoStackHandicap.
+	private final List<String[]> mementoStackHandicap = new ArrayList<>();
 	private int undoRedoPointer = -1;
 
 	/**
@@ -120,7 +123,7 @@ public class TableSession {
 	public void saveWorkingState(List<Command> commandStack, List<String> codeStack,
 			List<Memento> mementoStackTeam1, List<Memento> mementoStackTeam2, List<Memento> mementoStackTeam3,
 			List<Memento> mementoStackStats, List<Memento> mementoStackMatch, List<Memento> mementoStackGameClock,
-			int undoRedoPointer) {
+			List<String[]> mementoStackHandicap, int undoRedoPointer) {
 		copy(commandStack, this.commandStack);
 		copy(codeStack, this.codeStack);
 		copy(mementoStackTeam1, this.mementoStackTeam1);
@@ -129,6 +132,7 @@ public class TableSession {
 		copy(mementoStackStats, this.mementoStackStats);
 		copy(mementoStackMatch, this.mementoStackMatch);
 		copy(mementoStackGameClock, this.mementoStackGameClock);
+		copy(mementoStackHandicap, this.mementoStackHandicap);
 		this.undoRedoPointer = undoRedoPointer;
 	}
 
@@ -139,7 +143,8 @@ public class TableSession {
 	 */
 	public int loadWorkingStateInto(List<Command> commandStack, List<String> codeStack,
 			List<Memento> mementoStackTeam1, List<Memento> mementoStackTeam2, List<Memento> mementoStackTeam3,
-			List<Memento> mementoStackStats, List<Memento> mementoStackMatch, List<Memento> mementoStackGameClock) {
+			List<Memento> mementoStackStats, List<Memento> mementoStackMatch, List<Memento> mementoStackGameClock,
+			List<String[]> mementoStackHandicap) {
 		copy(this.commandStack, commandStack);
 		copy(this.codeStack, codeStack);
 		copy(this.mementoStackTeam1, mementoStackTeam1);
@@ -148,6 +153,7 @@ public class TableSession {
 		copy(this.mementoStackStats, mementoStackStats);
 		copy(this.mementoStackMatch, mementoStackMatch);
 		copy(this.mementoStackGameClock, mementoStackGameClock);
+		copy(this.mementoStackHandicap, mementoStackHandicap);
 		return this.undoRedoPointer;
 	}
 

@@ -36,6 +36,10 @@ public final class SettingsKeys {
     public static final String CTRL_TABLE_NAME          = "TableName";
     public static final String CTRL_DATAPATH            = "datapath";
     public static final String CTRL_POINTS_TO_WIN       = "PointsToWin";
+    public static final String CTRL_HANDICAPPED         = "Handicapped";
+    public static final String CTRL_TEAM1_POINTS_TO_WIN = "Team1PointsToWin";
+    public static final String CTRL_TEAM2_POINTS_TO_WIN = "Team2PointsToWin";
+    public static final String CTRL_TEAM3_POINTS_TO_WIN = "Team3PointsToWin";
     public static final String CTRL_MAX_WIN             = "MaxWin";
     public static final String CTRL_WIN_BY              = "WinBy";
     public static final String CTRL_GAMES_TO_WIN        = "GamesToWin";
@@ -102,6 +106,9 @@ public final class SettingsKeys {
     public static final String SRC_TEAM1_SCORE          = "Team1Score";
     public static final String SRC_TEAM2_SCORE          = "Team2Score";
     public static final String SRC_TEAM3_SCORE          = "Team3Score";
+    public static final String SRC_TEAM1_HANDICAP       = "Team1Handicap";
+    public static final String SRC_TEAM2_HANDICAP       = "Team2Handicap";
+    public static final String SRC_TEAM3_HANDICAP       = "Team3Handicap";
     public static final String SRC_TEAM1_GAME_COUNT     = "Team1GameCount";
     public static final String SRC_TEAM2_GAME_COUNT     = "Team2GameCount";
     public static final String SRC_TEAM3_GAME_COUNT     = "Team3GameCount";

@@ -47,7 +47,8 @@ class MatchTest {
 		SettingsKeys.CTRL_BALLS_IN_RACK,
 		SettingsKeys.CTRL_CUT_THROAT_MODE,
 		SettingsKeys.CTRL_ANNOUNCE_MEATBALL,
-		SettingsKeys.CTRL_ANNOUNCE_WINNER
+		SettingsKeys.CTRL_ANNOUNCE_WINNER,
+		SettingsKeys.CTRL_HANDICAPPED
 	};
 
 	private final Map<String, String> originalSettings = new HashMap<>();
@@ -73,6 +74,10 @@ class MatchTest {
 		Settings.setControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE, "0");
 		Settings.setControlParameter(SettingsKeys.CTRL_ANNOUNCE_MEATBALL, "0");
 		Settings.setControlParameter(SettingsKeys.CTRL_ANNOUNCE_WINNER, "0");
+		// Handicapped (per-team Points to Win) is a separate, real user-facing
+		// setting that isn't part of this test's scenario - pin it off so these
+		// tests aren't at the mercy of whatever's saved in control.properties.
+		Settings.setControlParameter(SettingsKeys.CTRL_HANDICAPPED, "0");
 
 		obs = new OBSInterface();
 		obs.setActive(false);
