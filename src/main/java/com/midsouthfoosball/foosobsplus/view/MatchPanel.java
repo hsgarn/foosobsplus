@@ -103,8 +103,8 @@ public class MatchPanel extends JPanel {
 		lblGameTimeLabel.setText(Messages.getString("MatchPanel.GameTime")); //$NON-NLS-1$
 		setTitle();
 	}
-	public void resizeGameTable() {
-		maxGameCount = Settings.getMaxGameNumber();
+	public void resizeGameTable(int maxGameCount) {
+		this.maxGameCount = maxGameCount;
 		GameTableModel tableModel = new GameTableModel(maxGameCount,Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE)); //$NON-NLS-1$
 		gameTable.setModel(tableModel);
 	}
@@ -241,7 +241,7 @@ public class MatchPanel extends JPanel {
 	}
 	public void setTime(String time) {
 		int gameNumber = currentGameNumber;
-		int maxGameNumber = Settings.getMaxGameNumber();
+		int maxGameNumber = maxGameCount;
 		int row = Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON) ? 4 : 3;
 		if (gameNumber > maxGameNumber) gameNumber = maxGameNumber;
 		gameTable.setValueAt(time, row, gameNumber);

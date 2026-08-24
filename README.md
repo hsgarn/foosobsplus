@@ -80,8 +80,10 @@ FoosOBSPlus tries to make keeping track of a foosball match's progress as simple
 Parameter Settings Page:</br>
 <img width="552" height="442" src="https://github.com/hsgarn/foosOBSPlus/blob/master/foosOBSPlusSettings2.png">
 
+> **Per-table parameters:** Points to Win, Max Win, Win By, Games to Win, Handicapped and the Team 1/2/3 Points to Win values below all belong to whichever table is currently displayed — each table remembers its own values, so one table can play to 5 while another plays to 7, or one can be handicapped while another isn't. This page always shows and edits the *displayed* table; switch tables (Tables menu or the Table Name combo) to edit a different one, or use a table's **Edit Parameters...** button in [Table Monitors](#table-monitors) to edit a background table without switching to it. Unlike the rest of this page, these per-table values are **not saved to `control.properties`** and do not survive a restart — each table starts back at the values below (Restore Defaults) the next time the program is launched.
+
 #### Points to Win
-This is the number of points required to win a game.  This is only used if the Auto Increment Game checkbox is checked and the Rack Mode check box is unchecked. Once a team's score reaches this number, it will reset the scores to zero and increase the game counter for the team.  If the Announce Winner check box is set and the team has reached the number set in the Games to Win parameter, then the Team's name will be sent to the Match Winner OBS source along with the text specified in the Winner Prefix and Winner Suffix parameters.  Points to Win is also utilized to determine if it is meatball (both teams 1 point away from winning score in final game).
+This is the number of points required to win a game on the current table.  This is only used if the Auto Increment Game checkbox is checked and the Rack Mode check box is unchecked. Once a team's score reaches this number, it will reset the scores to zero and increase the game counter for the team.  If the Announce Winner check box is set and the team has reached the number set in the Games to Win parameter, then the Team's name will be sent to the Match Winner OBS source along with the text specified in the Winner Prefix and Winner Suffix parameters.  Points to Win is also utilized to determine if it is meatball (both teams 1 point away from winning score in final game).
 #### Max Win
 The Max Win parameter is only used when the Win By parameter is greater than 1.  If a team has to win by more than 1 point, then Max Win is the maximum score a team can get and at that point it does not matter if they won by more than 1 point.
 
@@ -89,7 +91,7 @@ Enter `U` (or `Unlimited`) for no cap at all.  The field then displays **Unlimit
 #### Win By
 The Win By parameter is used to force a team to win by a specified number of points.  Default is 1 which means that a team only has to win by 1 point (normal game behavior).  Setting the parameter to 2 would require that a team win by two points.  If a team reaches the Points to Win value without being ahead by the Win By value, then the game continues until either a team wins by the Win By margin, or the Max Win value is reached.  Note: If Win By in Final Game Only is checked, then the Win By points are only considered in the last game of the match (prior games are win by 1).
 #### Games to Win
-The Games to Win parameter is used to determine when a match is won.  Specify the number of games required to win the match.  Default is 2 for a 2 out of 3 match.  Use 3 for a 3 out of 5 match. etc.  6 is the maximum value supported at this time.
+The Games to Win parameter is used to determine when a match is won.  Specify the number of games required to win the match on the current table.  Default is 2 for a 2 out of 3 match.  Use 3 for a 3 out of 5 match. etc.  6 is the maximum value supported at this time.
 #### Max Time Outs
 The Max Time Outs parameter is used to set how many time outs each team has.  The default is 2.
 #### Team 1 Color
@@ -104,13 +106,21 @@ When unchecked, Rack Mode is off and a game is completed after a team scores the
 #### Allow Parameters From File
 This controls whether tournament software may set the game parameters on this page.
 
-FoosOBSPlus has long watched a directory for player, event and tournament names written by a partner program such as PartnerUpFoos.  Five of the parameters on this page — **Points to Win**, **Max Win**, **Win By**, **Games to Win** and **Rack Mode** — can now be set the same way.  The partner program writes the value to a file, FoosOBSPlus notices the change within half a second, applies it, saves it to `control.properties` and updates this page.  No button press is needed and the value survives a restart, exactly as if it had been typed here.  The directory and the five file names are set on the [Partner Program](#partner-program) settings page, where the accepted values for each file are listed.
+FoosOBSPlus has long watched a directory for player, event and tournament names written by a partner program such as PartnerUpFoos.  Five of the parameters on this page — **Points to Win**, **Max Win**, **Win By**, **Games to Win** and **Rack Mode** — can now be set the same way.  The partner program writes the value to a file, FoosOBSPlus notices the change within half a second and applies it.  No button press is needed.  The directory and the five file names are set on the [Partner Program](#partner-program) settings page, where the accepted values for each file are listed.
 
 When **checked** (the default), those five files are watched and applied.  Values are validated first, so a typo cannot put the scoreboard into a strange state: a non-numeric or out of range value is written to the log and ignored, leaving the current setting alone.  Games to Win above 6 is capped at 6, and a Max Win below Points to Win is raised to Points to Win, the same rules this page enforces when you type a value yourself.
 
 When **unchecked**, the five parameter files are ignored and left untouched, and the parameters on this page can only be changed here.  Uncheck this when you want to keep local control of how games are scored while still letting the partner program call matches — the player, event and tournament name files are watched either way.
 
 Note that a parameter arriving from a file refreshes this page immediately.  If you have this window open with edits you have not applied yet, those edits are replaced by the incoming values.
+#### Apply to All Tables
+This controls how far a Partner Program change to Points to Win, Max Win, Win By or Games to Win reaches when there is more than one table configured.
+
+When **unchecked** (the default), a value written to one of those files applies only to the currently displayed table, exactly like typing it into this page.
+
+When **checked**, the same value is applied to every configured table at once — useful when a tournament management program calls a format for the whole event rather than one table at a time.
+
+Rack Mode is unaffected by this checkbox — a Rack Mode file always applies to every table, since Rack Mode itself is not a per-table setting.
 #### Shot Time
 This is the time allowed to shoot the ball from the forward 3 rod or the goalie area in seconds.  The default is 15 seconds.
 #### Pass Time
@@ -148,13 +158,13 @@ When checked, the program will activate the OBS filter defined in the OBS Connec
 #### CutThroat Mode
 When checked, the program activates CutThroat Mode to support the game of CutThroat.  In CutThroat, three people play against each other. One player starts on the scoring side (Team 1) while the other players play on Team 2. The player on the scoring side always serves the ball and when scores, gets a point.  If the players on other side score, then everybody rotates so that Team 2 Forward moves to the scoring side. Team 2 Goalie moves to the Team 1 Forward position.  And the player who was on the scoring side moves to the Team 2 Goalie position.  The scores in this mode are appended to the players names.
 #### Handicapped
-When checked, each team wins on its own Points to Win value (Team 1/2/3 Points to Win below) instead of the shared Points to Win parameter above.  Use this for handicapped play, where one team needs fewer points to win than the other.  Unchecking Handicapped does not clear the Team 1/2/3 Points to Win values below — they are simply not used, so re-checking the box brings them straight back.  Switch Sides swaps Team 1's and Team 2's handicapped values along with everything else that switches sides; cutthroat rotate similarly rotates all three teams' handicapped values with the rest of their state.  Meatball detection is disabled while Handicapped is checked, since it depends on every team sharing the same Points to Win.  Max Win automatically rises to cover whichever of the four Points to Win values (shared or handicapped) is highest.
+When checked, each team on the current table wins on its own Points to Win value (Team 1/2/3 Points to Win below) instead of the shared Points to Win parameter above.  Use this for handicapped play, where one team needs fewer points to win than the other.  Because Handicapped is a per-table setting, one table can run a handicap match while another table runs a normal, non-handicapped one at the same time.  Unchecking Handicapped does not clear the Team 1/2/3 Points to Win values below — they are simply not used, so re-checking the box brings them straight back.  Switch Sides swaps Team 1's and Team 2's handicapped values along with everything else that switches sides; cutthroat rotate similarly rotates all three teams' handicapped values with the rest of their state.  Meatball detection is disabled while Handicapped is checked, since it depends on every team sharing the same Points to Win.  Max Win automatically rises to cover whichever of the four Points to Win values (shared or handicapped) is highest.
 #### Team 1 Points to Win
-The number of points Team 1 must reach to win a game when Handicapped is checked.  Ignored when Handicapped is unchecked.
+The number of points Team 1 must reach to win a game on the current table when Handicapped is checked.  Ignored when Handicapped is unchecked.
 #### Team 2 Points to Win
-The number of points Team 2 must reach to win a game when Handicapped is checked.  Ignored when Handicapped is unchecked.
+The number of points Team 2 must reach to win a game on the current table when Handicapped is checked.  Ignored when Handicapped is unchecked.
 #### Team 3 Points to Win
-The number of points Team 3 must reach to win a game when Handicapped is checked (CutThroat Mode).  Ignored when Handicapped is unchecked.
+The number of points Team 3 must reach to win a game on the current table when Handicapped is checked (CutThroat Mode).  Ignored when Handicapped is unchecked.
 #### Apply
 Click the Apply button to save any parameter changes made and keep the window open.
 #### Apply and Close
@@ -211,7 +221,7 @@ This is the source that will be made visible when team X wins their second game.
 #### Game 3: (Team 1, Team 2, Team 3)
 This is the source that will be made visible when team X wins their third game.  Game 1 and 2 sources will remain visible.  This source can be any source type as long as it has the visible property (i.e. Text GUI+, Image, etc.).  The default source is teamXgame3 where X is the team number (1, 2 or 3).  Same visibility-toggle notes as Game 1 apply.
 #### Handicap: (Team 1, Team 2, Team 3)
-This is the source that receives team X's handicapped Points to Win (see the Handicapped parameter in Parameter Settings).  While Handicapped is checked, this source is kept in sync with the team's Points to Win value; while it is unchecked, this source is cleared (sent an empty value) so nothing displays.  The default source is teamXhandicap where X is the team number (1, 2 or 3).
+This is the source that receives team X's handicapped Points to Win (see the Handicapped parameter in Parameter Settings, which is set per table).  While Handicapped is checked on that team's table, this source is kept in sync with the team's Points to Win value; while it is unchecked, this source is cleared (sent an empty value) so nothing displays.  The default source is teamXhandicap where X is the team number (1, 2 or 3).
 #### Show Scores:
 This is the source that is controlled by the Show Score check box in the OBS Panel on the main screen.  This is intended to be a named group of sources within within OBS or a scene with OBS that contains all the scoring fields and their associated labels.  This group or scene can then be included in your main streaming scene.  When you want to keep score, check the Show Score check box on the main screen.  When no one is keeping the score, uncheck the Show Scores button which will turn the scene/group in the Show Scores: source box off.
 The following sources would typically be contained in this scene or group:
@@ -590,19 +600,19 @@ This is the name of the file containing the event name.  When the Partner Progra
 #### Tournament
 This is the name of the file containing the tournament name.  When the Partner Program writes a tournament name to this file, FoosOBSPlus will automatically pick it up and populate the Tournament Name field in the Tournament Information panel.  Default is Tournament.txt.
 #### Points to Win
-This is the name of the file containing the Points to Win value.  When the Partner Program writes a whole number to this file, FoosOBSPlus updates the Points to Win parameter on the Parameters settings page.  If the new Points to Win is greater than the current Max Win, Max Win is raised to match it.  Default is PointsToWin.txt.
+This is the name of the file containing the Points to Win value.  When the Partner Program writes a whole number to this file, FoosOBSPlus updates the Points to Win parameter on the Parameters settings page — for the displayed table only, or for every table, depending on the **Apply to All Tables** checkbox on that page.  If the new Points to Win is greater than the current Max Win (on each affected table), Max Win is raised to match it.  Default is PointsToWin.txt.
 #### Max Win
-This is the name of the file containing the Max Win value.  A value below the current Points to Win is raised to Points to Win.  Write `U` (or `Unlimited`) for no cap — the Max Win field then shows Unlimited.  Default is MaxWin.txt.
+This is the name of the file containing the Max Win value.  A value below the current Points to Win (on each affected table) is raised to Points to Win.  Write `U` (or `Unlimited`) for no cap — the Max Win field then shows Unlimited.  Default is MaxWin.txt.
 #### Win By
 This is the name of the file containing the Win By value.  Default is WinBy.txt.
 #### Games to Win
 This is the name of the file containing the Games to Win value.  Values above 6 are capped at 6, the same limit the Parameters settings page enforces.  Default is GamesToWin.txt.
 #### Rack Mode
-This is the name of the file containing the Rack Mode flag.  Write `1`, `true`, `yes` or `on` to turn Rack Mode on; `0`, `false`, `no` or `off` to turn it off.  Default is RackMode.txt.
+This is the name of the file containing the Rack Mode flag.  Write `1`, `true`, `yes` or `on` to turn Rack Mode on; `0`, `false`, `no` or `off` to turn it off.  Unlike the four parameters above, Rack Mode always applies to every table regardless of Apply to All Tables, since Rack Mode is not a per-table setting.  Default is RackMode.txt.
 
 The five parameter files above are only watched while **Allow Parameters From File** is checked on the Parameters settings page.  When it is unchecked they are ignored and left untouched; the player, event and tournament name files are watched either way.
 
-Values written to the parameter files are validated before being applied — a non-numeric or out of range value is logged and ignored, leaving the current setting in place.  Applied values are saved to `control.properties`, so they persist across restarts just as if they had been entered on the Parameters settings page.
+Values written to the parameter files are validated before being applied — a non-numeric or out of range value is logged and ignored, leaving the current setting in place.  Rack Mode is saved to `control.properties`, so it persists across restarts.  Points to Win, Max Win, Win By and Games to Win are per-table settings and are **not** saved to `control.properties` — like typing them on the Parameters settings page, they apply immediately but reset to the default values the next time the program is launched.
 #### Apply
 Click the Apply button to save any changes made.
 #### Apply and Close
@@ -795,6 +805,8 @@ Each Table View window shows, for each team, that table's Score, Games (game cou
 You can adjust any of these values right from the window.  Each counter has a minus button on its left and a plus button on its right for each team; pressing one changes that single value by one (values never go below zero).  These are direct corrections — for example, Score plus simply raises the score by one, it does not detect a game win, start a timer or advance to the next game.
 
 Each team column also shows the team name with the current forward (F:) and goalie (G:) beneath it, along with an **Edit Names** button.  Pressing **Edit Names** opens a small dialog with fields for the Team Name, Forward and Goalie, filled in with the current values; enter the names and press OK to apply them (Cancel leaves them unchanged).  Names follow the same automatic capitalization setting as the main screen.
+
+Below the counters, an **Edit Parameters...** button opens a dialog for that table's own Points to Win, Max Win, Win By, Games to Win, Handicapped and Team 1/2/3 Points to Win — the same per-table values described under [Parameters](#parameters) — filled in with that table's current values. This is the way to set up a handicap match (or a different point total) on a table that is not currently displayed, without having to switch to it first. Press OK to apply, or Cancel to leave the table unchanged.
 
 All of these edits act on that window's own table, even when it is a background (non-displayed) table.  When you edit the table that is currently displayed, the main screen, the game grid and the OBS output update to match automatically.
 
@@ -1506,7 +1518,7 @@ Response (OBS Not Connected) - HTTP Status 409 Conflict:
     }
 
 #### POST /api/handicap
-Controls handicapped Points to Win: toggle the Handicapped checkbox, increase/decrease a team's handicapped Points to Win, or swap it between two teams. These are control parameters shared across every table (the same as Max Win/Win By), so there is no `tableNumber` field. Requires valid API key.
+Controls handicapped Points to Win: toggle the Handicapped checkbox, increase/decrease a team's handicapped Points to Win, or swap it between two teams. Handicapped and each team's Points to Win are per-table settings; this endpoint always acts on the currently **displayed** table (the same as every other action endpoint), so there is no `tableNumber` field — switch the displayed table first if you need to act on a different one. Requires valid API key.
 
 Request:
 
@@ -1782,6 +1794,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.130 08/24/2026</br>
+Make Points to Win, Max Win, Win By, Games to Win and Handicapped per-table settings instead of global, so different tables can run different point totals and one table can be handicapped while another isn't. Added an Apply to All Tables checkbox for Partner Program parameter files, and an Edit Parameters button to the Table Monitor windows for editing a background table's settings without switching to it.</br>
+</br>
 v2.129 08/24/2026</br>
 Add global handicap scoring.</br>
 </br>

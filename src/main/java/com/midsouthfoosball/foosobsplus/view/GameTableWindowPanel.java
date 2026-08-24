@@ -85,7 +85,7 @@ public class GameTableWindowPanel extends JPanel {
 	}
 	public void setTime(String time) {
 		int gameNumber = currentGameNumber;
-		int maxGameNumber = Settings.getMaxGameNumber();
+		int maxGameNumber = this.maxGameCount;
 		if (gameNumber > maxGameNumber) gameNumber = maxGameNumber;
 		boolean isCutthroat = Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON);
 		int row = isCutthroat ? 4 : 3;
@@ -110,8 +110,8 @@ public class GameTableWindowPanel extends JPanel {
 		}
 		gameTable.repaint();
 	}
-	public void resizeGameTable() {
-		this.maxGameCount = Settings.getMaxGameNumber();
+	public void resizeGameTable(int maxGameCount) {
+		this.maxGameCount = maxGameCount;
 		GameTableModel tableModel = new GameTableModel(this.maxGameCount ,Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE)); //$NON-NLS-1$
 		gameTable.setModel(tableModel);
 		updateGameTableColumnWidths();

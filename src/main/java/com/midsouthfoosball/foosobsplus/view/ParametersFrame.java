@@ -31,18 +31,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.midsouthfoosball.foosobsplus.model.AppConfig;
+import com.midsouthfoosball.foosobsplus.model.Match;
 
 @SuppressWarnings("serial")
 public class ParametersFrame extends JFrame {
 	private ParametersPanel parametersPanel;
 	private static final String PROGRAMNAME = AppConfig.PROGRAM_NAME;
 	private static final Logger logger = LoggerFactory.getLogger(ParametersFrame.class);
-	public ParametersFrame() {
+	public ParametersFrame(Match activeMatch) {
 		super(PROGRAMNAME + " " + Messages.getString("ParametersFrame.ParameterSettings")); //$NON-NLS-1$ //$NON-NLS-2$
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setAlwaysOnTop(true);
 		try {
-			parametersPanel = new ParametersPanel();
+			parametersPanel = new ParametersPanel(activeMatch);
 		} catch (IOException e) {
 			logger.error(Messages.getString("Errors.LoadSettingsError")); //$NON-NLS-1$
 			logger.error(e.toString());

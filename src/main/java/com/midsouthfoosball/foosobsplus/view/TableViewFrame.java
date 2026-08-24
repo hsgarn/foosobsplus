@@ -36,6 +36,7 @@ import java.util.function.IntSupplier;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -48,6 +49,7 @@ import javax.swing.Timer;
 import net.miginfocom.swing.MigLayout;
 
 import com.midsouthfoosball.foosobsplus.model.AppConfig;
+import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 import com.midsouthfoosball.foosobsplus.model.TableSession;
@@ -85,6 +87,12 @@ public class TableViewFrame extends JFrame {
 		void apply(int teamNumber, String teamName, String forwardName, String goalieName);
 	}
 
+	/** Notified when the user commits new win-condition values from the Edit Parameters modal. */
+	public interface ParametersListener {
+		void apply(boolean handicapped, int pointsToWin, int maxWin, int winBy, int gamesToWin,
+				int team1PointsToWin, int team2PointsToWin, int team3PointsToWin);
+	}
+
 	private static final String PROGRAMNAME = AppConfig.PROGRAM_NAME;
 	private static final String ON = "1"; //$NON-NLS-1$
 	private static final int REFRESH_MS = 500;
@@ -99,6 +107,7 @@ public class TableViewFrame extends JFrame {
 	private final BooleanSupplier autoScoreConnectedSupplier;
 	private final FieldAdjustListener adjustListener;
 	private final NamesListener namesListener;
+	private final ParametersListener parametersListener;
 	private final Timer refreshTimer;
 	private final JLabel[] teamNameLabels = new JLabel[3];
 	private final JLabel[] forwardLabels = new JLabel[3];
@@ -132,10 +141,13 @@ public class TableViewFrame extends JFrame {
 	 *                                   presses Send to OBS
 	 * @param adjustListener             invoked when the user nudges a counter
 	 * @param namesListener              invoked when the user commits new names
+	 * @param parametersListener         invoked when the user commits new win-condition
+	 *                                   values from the Edit Parameters modal
 	 */
 	public TableViewFrame(int tableIndex, String tableName, TableSession session, IntSupplier activeIndexSupplier,
 			BooleanSupplier obsConnectedSupplier, BooleanSupplier autoScoreConnectedSupplier,
-			IntConsumer sendToObsListener, FieldAdjustListener adjustListener, NamesListener namesListener) {
+			IntConsumer sendToObsListener, FieldAdjustListener adjustListener, NamesListener namesListener,
+			ParametersListener parametersListener) {
 		super(buildTitle(tableName));
 		this.tableIndex = tableIndex;
 		this.session = session;
@@ -144,6 +156,7 @@ public class TableViewFrame extends JFrame {
 		this.autoScoreConnectedSupplier = autoScoreConnectedSupplier;
 		this.adjustListener = adjustListener;
 		this.namesListener = namesListener;
+		this.parametersListener = parametersListener;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationByPlatform(true);
 
@@ -195,6 +208,10 @@ public class TableViewFrame extends JFrame {
 			if (sendToObsListener != null) sendToObsListener.accept(this.tableIndex);
 		});
 		panel.add(sendToObsButton, "cell 0 9 4 1,alignx center,gaptop 6"); //$NON-NLS-1$
+
+		JButton editParametersButton = new JButton(Messages.getString("TableViewFrame.EditParameters")); //$NON-NLS-1$
+		editParametersButton.addActionListener(e -> openParametersDialog());
+		panel.add(editParametersButton, "cell 0 10 4 1,alignx center,gaptop 6"); //$NON-NLS-1$
 
 		getContentPane().add(panel);
 		refresh();
@@ -275,6 +292,51 @@ public class TableViewFrame extends JFrame {
 		if (result == JOptionPane.OK_OPTION && namesListener != null) {
 			namesListener.apply(teamNumber, teamField.getText().trim(), forwardField.getText().trim(), goalieField.getText().trim());
 			refresh();
+		}
+	}
+
+	/**
+	 * Opens a modal pre-filled with this table's current Points to Win/Max Win/
+	 * Win By/Games to Win/Handicapped/per-team handicapped Points to Win; commits
+	 * via {@link #parametersListener}. Lets a background table's win-condition
+	 * format be configured without switching to it first.
+	 */
+	private void openParametersDialog() {
+		Match match = session.getMatch();
+		JCheckBox handicappedBox = new JCheckBox("", match.isHandicapped()); //$NON-NLS-1$
+		JTextField pointsToWinField = new JTextField(Integer.toString(match.getPointsToWin()), 6);
+		JTextField maxWinField = new JTextField(Settings.formatMaxWin(Integer.toString(match.getMaxWin())), 6);
+		JTextField winByField = new JTextField(Integer.toString(match.getWinBy()), 6);
+		JTextField gamesToWinField = new JTextField(Integer.toString(match.getGamesToWin()), 6);
+		JTextField team1Field = new JTextField(Integer.toString(match.getTeamPointsToWin(1)), 6);
+		JTextField team2Field = new JTextField(Integer.toString(match.getTeamPointsToWin(2)), 6);
+		JTextField team3Field = new JTextField(Integer.toString(match.getTeamPointsToWin(3)), 6);
+		JPanel form = new JPanel(new MigLayout("wrap 2", "[right][grow,fill]")); //$NON-NLS-1$ //$NON-NLS-2$
+		form.add(new JLabel(Messages.getString("TableViewFrame.PointsToWin"))); form.add(pointsToWinField); //$NON-NLS-1$
+		form.add(new JLabel(Messages.getString("TableViewFrame.MaxWin"))); form.add(maxWinField); //$NON-NLS-1$
+		form.add(new JLabel(Messages.getString("TableViewFrame.WinBy"))); form.add(winByField); //$NON-NLS-1$
+		form.add(new JLabel(Messages.getString("TableViewFrame.GamesToWin"))); form.add(gamesToWinField); //$NON-NLS-1$
+		form.add(new JLabel(Messages.getString("TableViewFrame.Handicapped"))); form.add(handicappedBox); //$NON-NLS-1$
+		form.add(new JLabel(Messages.getString("TableViewFrame.Team1PointsToWin"))); form.add(team1Field); //$NON-NLS-1$
+		form.add(new JLabel(Messages.getString("TableViewFrame.Team2PointsToWin"))); form.add(team2Field); //$NON-NLS-1$
+		form.add(new JLabel(Messages.getString("TableViewFrame.Team3PointsToWin"))); form.add(team3Field); //$NON-NLS-1$
+		String title = Messages.getString("TableViewFrame.EditParametersTitle"); //$NON-NLS-1$
+		int result = JOptionPane.showConfirmDialog(this, form, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+		if (result != JOptionPane.OK_OPTION || parametersListener == null) return;
+		try {
+			int pointsToWin = Integer.parseInt(pointsToWinField.getText().trim());
+			String maxWinText = maxWinField.getText().trim();
+			int maxWin = Settings.isUnlimitedMaxWin(maxWinText) ? Settings.MAX_WIN_UNLIMITED : Integer.parseInt(maxWinText);
+			int winBy = Integer.parseInt(winByField.getText().trim());
+			int gamesToWin = Integer.parseInt(gamesToWinField.getText().trim());
+			int team1PointsToWin = Integer.parseInt(team1Field.getText().trim());
+			int team2PointsToWin = Integer.parseInt(team2Field.getText().trim());
+			int team3PointsToWin = Integer.parseInt(team3Field.getText().trim());
+			parametersListener.apply(handicappedBox.isSelected(), pointsToWin, maxWin, winBy, gamesToWin,
+					team1PointsToWin, team2PointsToWin, team3PointsToWin);
+			refresh();
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(this, Messages.getString("TableViewFrame.InvalidNumber")); //$NON-NLS-1$
 		}
 	}
 

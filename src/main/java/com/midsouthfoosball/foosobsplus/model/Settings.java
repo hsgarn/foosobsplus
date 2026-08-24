@@ -138,6 +138,7 @@ public final class Settings {
 		defaultControlProps.setProperty("CutThroatMode", OFF);
 		defaultControlProps.setProperty("RackMode", OFF);
 		defaultControlProps.setProperty("AllowParametersFromFile", ON);
+		defaultControlProps.setProperty("ParametersFromFileAllTables", OFF);
 		defaultControlProps.setProperty("LogoImageURL", "/imgs/MidsouthFoosballLogo4.png");
 		defaultControlProps.setProperty("LogoLinkURI", "https://www.facebook.com/midsouthfoosball");
 		//OBS
@@ -908,23 +909,5 @@ public final class Settings {
 		int gamesToWin = Integer.parseInt(getControlParameter(SettingsKeys.CTRL_GAMES_TO_WIN));
 		int cutThroatMode = Integer.parseInt(getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE));
 		return gamesToWin*(2+cutThroatMode)-(1+cutThroatMode);
-	}
-	/** Control-parameter key holding team teamNbr's (1-3) handicapped Points to Win. */
-	public static String getHandicappedPointsToWinKey(int teamNbr) {
-		return switch (teamNbr) {
-			case 1 -> SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN;
-			case 2 -> SettingsKeys.CTRL_TEAM2_POINTS_TO_WIN;
-			default -> SettingsKeys.CTRL_TEAM3_POINTS_TO_WIN;
-		};
-	}
-	/**
-	 * Points to Win that applies to team teamNbr (1-3): the team's own handicapped
-	 * value when Handicapped is checked, otherwise the shared Points to Win.
-	 */
-	public static int getEffectivePointsToWin(int teamNbr) {
-		if (ON.equals(getControlParameter(SettingsKeys.CTRL_HANDICAPPED))) {
-			return Integer.parseInt(getControlParameter(getHandicappedPointsToWinKey(teamNbr)));
-		}
-		return Integer.parseInt(getControlParameter(SettingsKeys.CTRL_POINTS_TO_WIN));
 	}
 }

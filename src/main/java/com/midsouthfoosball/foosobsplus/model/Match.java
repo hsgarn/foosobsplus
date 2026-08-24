@@ -74,6 +74,21 @@ public class Match implements Serializable {
 	private final StringBuilder gameResults = new StringBuilder();
 	private final transient List<MatchObserver> observers = new ArrayList<>();
 	private static final String ON = "1";
+	// Per-table win-condition parameters (Points to Win, Max Win, Win By, Games to
+	// Win, and the Handicapped per-team overrides). Each table's Match owns its own
+	// copy - seeded from the global Settings defaults when the table is created -
+	// so different tables can run different (or no) handicap/scoring formats at
+	// once. Deliberately NOT part of restoreState()'s selective copy: like the
+	// rest of the app's match-format settings (which were never undoable even
+	// when global), changing these mid-match isn't meant to be undo/redo-tracked.
+	private boolean handicapped;
+	private int pointsToWin;
+	private int maxWin;
+	private int winBy;
+	private int gamesToWin;
+	private int team1PointsToWin;
+	private int team2PointsToWin;
+	private int team3PointsToWin;
 	public void setObsInterface(OBSInterface obsInterface) {
 		this.obsInterface = obsInterface;
 	}
@@ -82,7 +97,18 @@ public class Match implements Serializable {
 		this.team2 = team2;
 		this.team3 = team3;
 		this.obsInterface = obsInterface;
-		this.maxGameCount=Settings.getMaxGameNumber();
+		team1.setMatch(this);
+		team2.setMatch(this);
+		team3.setMatch(this);
+		this.handicapped = Settings.getControlParameter(SettingsKeys.CTRL_HANDICAPPED).equals(ON);
+		this.pointsToWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_POINTS_TO_WIN));
+		this.maxWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_MAX_WIN));
+		this.winBy = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY));
+		this.gamesToWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_GAMES_TO_WIN));
+		this.team1PointsToWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN));
+		this.team2PointsToWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_TEAM2_POINTS_TO_WIN));
+		this.team3PointsToWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_TEAM3_POINTS_TO_WIN));
+		this.maxGameCount=getMaxGameNumber();
 		this.gameWinners  = new int[maxGamesToShow];
 		this.gameWinnerNames = new String[maxGamesToShow];
 		this.scoresTeam1 = new String[maxGamesToShow];
@@ -104,6 +130,68 @@ public class Match implements Serializable {
 		teamsMap.put(1, team1);
 		teamsMap.put(2, team2);
 		teamsMap.put(3, team3);
+	}
+	public boolean isHandicapped() {
+		return handicapped;
+	}
+	public void setHandicapped(boolean handicapped) {
+		this.handicapped = handicapped;
+	}
+	public int getPointsToWin() {
+		return pointsToWin;
+	}
+	public void setPointsToWin(int pointsToWin) {
+		this.pointsToWin = pointsToWin;
+	}
+	public int getMaxWin() {
+		return maxWin;
+	}
+	public void setMaxWin(int maxWin) {
+		this.maxWin = maxWin;
+	}
+	public int getWinBy() {
+		return winBy;
+	}
+	public void setWinBy(int winBy) {
+		this.winBy = winBy;
+	}
+	public int getGamesToWin() {
+		return gamesToWin;
+	}
+	public void setGamesToWin(int gamesToWin) {
+		this.gamesToWin = gamesToWin;
+	}
+	/** This team's (1-3) handicapped Points to Win, used when Handicapped is checked. */
+	public int getTeamPointsToWin(int teamNbr) {
+		return switch (teamNbr) {
+			case 1 -> team1PointsToWin;
+			case 2 -> team2PointsToWin;
+			default -> team3PointsToWin;
+		};
+	}
+	public void setTeamPointsToWin(int teamNbr, int value) {
+		switch (teamNbr) {
+			case 1 -> team1PointsToWin = value;
+			case 2 -> team2PointsToWin = value;
+			default -> team3PointsToWin = value;
+		}
+	}
+	/**
+	 * Points to Win that applies to team teamNbr (1-3): the team's own handicapped
+	 * value when Handicapped is checked, otherwise the shared Points to Win.
+	 */
+	public int getEffectivePointsToWin(int teamNbr) {
+		return handicapped ? getTeamPointsToWin(teamNbr) : pointsToWin;
+	}
+	/**
+	 * The number of games this table's format can possibly reach, from this
+	 * table's own Games to Win (cutthroat mode itself stays a global setting).
+	 * Mirrors {@link Settings#getMaxGameNumber()}, which uses the global Games to
+	 * Win instead - used only to seed a newly created table.
+	 */
+	public int getMaxGameNumber() {
+		int cutThroatMode = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE));
+		return gamesToWin*(2+cutThroatMode)-(1+cutThroatMode);
 	}
 	public void addObserver(MatchObserver observer) {
 		observers.add(observer);
@@ -215,7 +303,7 @@ public class Match implements Serializable {
 	}
 	public void setMaxPossibleGames(int maxPossibleGames) {
 		if (maxPossibleGames<=0) {
-			maxPossibleGames = Settings.getMaxGameNumber();
+			maxPossibleGames = getMaxGameNumber();
 		}
 		this.maxGameCount = maxPossibleGames;
 	}
@@ -454,7 +542,7 @@ public class Match implements Serializable {
 			resetScores();
 			resetTimeOuts();
 			resetResetWarn();
-			int maximumGameCount = Settings.getMaxGameNumber();
+			int maximumGameCount = getMaxGameNumber();
 			if (currentGameNumber > maximumGameCount) currentGameNumber = maximumGameCount;
 			winState = 0;
 		}
@@ -562,9 +650,9 @@ public class Match implements Serializable {
 	}
 	private int checkForGameWin(int teamNbr, int score1, int score2, int score3) {
 		int whoWon = 0;// rack mode returns 0, 1 or 2 (1 if scoring team won or 2 if other team won). non rack mode returns 0, 3 (3=team who called checkForGameWin won)  .
-		int pointsToWin = Settings.getEffectivePointsToWin(teamNbr);
-		int maxWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_MAX_WIN));
-		int winBy = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY));
+		int pointsToWin = getEffectivePointsToWin(teamNbr);
+		int maxWin = this.maxWin;
+		int winBy = this.winBy;
 		int winByFinalOnly = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY_FINAL_ONLY));
 		int ballsInRack = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_BALLS_IN_RACK));
 		boolean rackMode = Settings.getControlParameter(SettingsKeys.CTRL_RACK_MODE).equals(ON);
@@ -647,7 +735,7 @@ public class Match implements Serializable {
 	private void checkMeatball() {
 		// Meatball detection assumes every team shares the same Points to Win, so it
 		// doesn't have a well-defined meaning once Handicapped gives each team its own.
-		if (Settings.getControlParameter(SettingsKeys.CTRL_HANDICAPPED).equals(ON)) {
+		if (handicapped) {
 			clearMeatball();
 			return;
 		}
@@ -658,8 +746,8 @@ public class Match implements Serializable {
 		int gameCount2 = team2.getGameCount();
 		int gameCount3 = team3.getGameCount();
 		Boolean isCutthroat = Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON);
-		int winBy = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY));
-		int pointsToWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_POINTS_TO_WIN));
+		int winBy = this.winBy;
+		int pointsToWin = this.pointsToWin;
 		boolean isPotentialMeatball = false;
 		if (Settings.getControlParameter(SettingsKeys.CTRL_ANNOUNCE_MEATBALL).equals(ON)) {
 			if (isCutthroat) {
@@ -687,8 +775,8 @@ public class Match implements Serializable {
 	private boolean checkForGameWinOnly() {
 		boolean isGameWon = false;
 		if (currentGameNumber!=0) {
-			int winBy = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY));
-			int maxWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_MAX_WIN));
+			int winBy = this.winBy;
+			int maxWin = this.maxWin;
 			int winByFinalOnly = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY_FINAL_ONLY));
 			int ballsInRack = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_BALLS_IN_RACK));
 			boolean rackMode = Settings.getControlParameter(SettingsKeys.CTRL_RACK_MODE).equals(ON);
@@ -705,7 +793,7 @@ public class Match implements Serializable {
 				score1 = score3;
 				score3 = Integer.parseInt(scoresTeam1[currentGameNumber-1]);
 			}
-			int pointsToWin = Settings.getEffectivePointsToWin(teamNbr);
+			int pointsToWin = getEffectivePointsToWin(teamNbr);
 			if (rackMode) {
 				if (score1 + score2 >= ballsInRack) {
 					isGameWon = true;
@@ -728,7 +816,7 @@ public class Match implements Serializable {
 	}
 	private boolean checkForMatchWin(Team team) {
 		this.matchWon = false;
-		if(team.getGameCount()==Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_GAMES_TO_WIN))) {
+		if(team.getGameCount()==gamesToWin) {
 			matchWon=true;
 		}
 		return matchWon;

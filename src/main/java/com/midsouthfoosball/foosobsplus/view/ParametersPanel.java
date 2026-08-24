@@ -44,6 +44,7 @@ import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.midsouthfoosball.foosobsplus.model.Match;
 import com.midsouthfoosball.foosobsplus.model.Settings;
 import com.midsouthfoosball.foosobsplus.model.SettingsKeys;
 
@@ -78,6 +79,7 @@ public class ParametersPanel extends JPanel {
 	private final JTextField txtTeam3PointsToWin;
 	private final JCheckBox chckbxRackMode;
 	private final JCheckBox chckbxAllowParametersFromFile;
+	private final JCheckBox chckbxParametersFromFileAllTables;
 	private final JTextField txtTeam1LastScored;
 	private final JTextField txtTeam2LastScored;
 	private final JTextField txtClearLastScored;
@@ -95,7 +97,13 @@ public class ParametersPanel extends JPanel {
 	private final Map<Component, Object> snapshot = new HashMap<>();
 	private BooleanSupplier saveCallback = () -> { saveSettings(null); return true; };
 	private static final Logger logger = LoggerFactory.getLogger(ParametersPanel.class);
-	public ParametersPanel() throws IOException {
+	// Points to Win/Max Win/Win By/Games to Win/Handicapped/Team1-3 Points to Win
+	// are per-table fields on Match (see Match.java), not Settings control
+	// parameters, so this panel always edits whichever table is currently active.
+	// Main repoints this via setActiveMatch on every table switch.
+	private Match activeMatch;
+	public ParametersPanel(Match activeMatch) throws IOException {
+		this.activeMatch = activeMatch;
 		setLayout(new MigLayout("", "[119.00][50.00:87.00,grow,left][78.00,grow][grow][]", "[][][][][][][][][][][][][][][][][][][][][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		JLabel lblParameter = new JLabel(Messages.getString("ParametersPanel.Parameter")); //$NON-NLS-1$
 		lblParameter.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
@@ -112,7 +120,7 @@ public class ParametersPanel extends JPanel {
 		JLabel lblPointsToWin = new JLabel(Messages.getString("ParametersPanel.PointsToWin")); //$NON-NLS-1$
 		add(lblPointsToWin, "flowx,cell 0 1,alignx right"); //$NON-NLS-1$
 		txtPointsToWin = new JTextField();
-		txtPointsToWin.setText(Settings.getControlParameter(SettingsKeys.CTRL_POINTS_TO_WIN));
+		txtPointsToWin.setText(Integer.toString(activeMatch.getPointsToWin()));
 		txtPointsToWin.setColumns(10);
 		add(txtPointsToWin, "cell 1 1,alignx left"); //$NON-NLS-1$
 		JLabel lblShotTime = new JLabel(Messages.getString("ParametersPanel.ShotTime")); //$NON-NLS-1$
@@ -125,7 +133,7 @@ public class ParametersPanel extends JPanel {
 		lblMaxWin.setToolTipText(Messages.getString("ParametersPanel.MaxWinToolTip")); //$NON-NLS-1$
 		add(lblMaxWin, "flowx,cell 0 2,alignx right"); //$NON-NLS-1$
 		txtMaxWin = new JTextField();
-		txtMaxWin.setText(Settings.formatMaxWin(Settings.getControlParameter(SettingsKeys.CTRL_MAX_WIN)));
+		txtMaxWin.setText(Settings.formatMaxWin(Integer.toString(activeMatch.getMaxWin())));
 		txtMaxWin.setToolTipText(Messages.getString("ParametersPanel.MaxWinToolTip")); //$NON-NLS-1$
 		txtMaxWin.setColumns(10);
 		add(txtMaxWin, "cell 1 2,alignx left"); //$NON-NLS-1$
@@ -138,7 +146,7 @@ public class ParametersPanel extends JPanel {
 		JLabel lblWinBy = new JLabel(Messages.getString("ParametersPanel.WinBy")); //$NON-NLS-1$
 		add(lblWinBy, "cell 0 3,alignx trailing"); //$NON-NLS-1$
 		txtWinBy = new JTextField();
-		txtWinBy.setText(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY));
+		txtWinBy.setText(Integer.toString(activeMatch.getWinBy()));
 		txtWinBy.setColumns(10);
 		add(txtWinBy, "cell 1 3,alignx left"); //$NON-NLS-1$
 		JLabel lblTimeOutTime = new JLabel(Messages.getString("ParametersPanel.TimeOutTime")); //$NON-NLS-1$
@@ -150,7 +158,7 @@ public class ParametersPanel extends JPanel {
 		JLabel lblGamesToWin = new JLabel(Messages.getString("ParametersPanel.GamesToWin")); //$NON-NLS-1$
 		add(lblGamesToWin, "cell 0 4,alignx trailing"); //$NON-NLS-1$
 		txtGamesToWin = new JTextField();
-		txtGamesToWin.setText(Settings.getControlParameter(SettingsKeys.CTRL_GAMES_TO_WIN));
+		txtGamesToWin.setText(Integer.toString(activeMatch.getGamesToWin()));
 		txtGamesToWin.setColumns(10);
 		add(txtGamesToWin, "cell 1 4,alignx left"); //$NON-NLS-1$
 		JLabel lblGameTime = new JLabel(Messages.getString("ParametersPanel.GameTime")); //$NON-NLS-1$
@@ -219,6 +227,13 @@ public class ParametersPanel extends JPanel {
 		chckbxAllowParametersFromFile.setToolTipText(Messages.getString("ParametersPanel.AllowParametersFromFileToolTip")); //$NON-NLS-1$
 		chckbxAllowParametersFromFile.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_ALLOW_PARAMS_FROM_FILE).equals(ON));
 		add(chckbxAllowParametersFromFile, "cell 1 10"); //$NON-NLS-1$
+		JLabel lblParametersFromFileAllTables = new JLabel(Messages.getString("ParametersPanel.ParametersFromFileAllTables")); //$NON-NLS-1$
+		lblParametersFromFileAllTables.setToolTipText(Messages.getString("ParametersPanel.ParametersFromFileAllTablesToolTip")); //$NON-NLS-1$
+		add(lblParametersFromFileAllTables, "cell 2 10,alignx trailing"); //$NON-NLS-1$
+		chckbxParametersFromFileAllTables = new JCheckBox(""); //$NON-NLS-1$
+		chckbxParametersFromFileAllTables.setToolTipText(Messages.getString("ParametersPanel.ParametersFromFileAllTablesToolTip")); //$NON-NLS-1$
+		chckbxParametersFromFileAllTables.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_PARAMS_FROM_FILE_ALL_TABLES).equals(ON));
+		add(chckbxParametersFromFileAllTables, "cell 3 10"); //$NON-NLS-1$
 		JLabel lblAutoIncrementGame = new JLabel(Messages.getString("ParametersPanel.AutoIncrementGame")); //$NON-NLS-1$
 		add(lblAutoIncrementGame, "cell 0 12,alignx right"); //$NON-NLS-1$
 		chckbxAutoIncrementGame = new JCheckBox(""); //$NON-NLS-1$
@@ -262,7 +277,7 @@ public class ParametersPanel extends JPanel {
 		add(lblHandicapped, "cell 2 15,alignx trailing"); //$NON-NLS-1$
 		chckbxHandicapped = new JCheckBox(""); //$NON-NLS-1$
 		chckbxHandicapped.setToolTipText(Messages.getString("ParametersPanel.HandicappedToolTip")); //$NON-NLS-1$
-		chckbxHandicapped.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_HANDICAPPED).equals(ON));
+		chckbxHandicapped.setSelected(activeMatch.isHandicapped());
 		add(chckbxHandicapped, "cell 3 15"); //$NON-NLS-1$
 		JLabel lblAutoCapitalizeTeam = new JLabel(Messages.getString("ParametersPanel.AutoCapitalizeNames")); //$NON-NLS-1$
 		add(lblAutoCapitalizeTeam, "cell 0 16,alignx right"); //$NON-NLS-1$
@@ -272,7 +287,7 @@ public class ParametersPanel extends JPanel {
 		JLabel lblTeam1PointsToWin = new JLabel(Messages.getString("ParametersPanel.Team1PointsToWin")); //$NON-NLS-1$
 		add(lblTeam1PointsToWin, "cell 2 16,alignx trailing"); //$NON-NLS-1$
 		txtTeam1PointsToWin = new JTextField();
-		txtTeam1PointsToWin.setText(Settings.getControlParameter(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN));
+		txtTeam1PointsToWin.setText(Integer.toString(activeMatch.getTeamPointsToWin(1)));
 		txtTeam1PointsToWin.setColumns(10);
 		add(txtTeam1PointsToWin, "cell 3 16,growx"); //$NON-NLS-1$
 		JLabel lblWinByFinalOnly = new JLabel(Messages.getString("ParametersPanel.WinByFinalGameOnly")); //$NON-NLS-1$
@@ -283,7 +298,7 @@ public class ParametersPanel extends JPanel {
 		JLabel lblTeam2PointsToWin = new JLabel(Messages.getString("ParametersPanel.Team2PointsToWin")); //$NON-NLS-1$
 		add(lblTeam2PointsToWin, "cell 2 17,alignx trailing"); //$NON-NLS-1$
 		txtTeam2PointsToWin = new JTextField();
-		txtTeam2PointsToWin.setText(Settings.getControlParameter(SettingsKeys.CTRL_TEAM2_POINTS_TO_WIN));
+		txtTeam2PointsToWin.setText(Integer.toString(activeMatch.getTeamPointsToWin(2)));
 		txtTeam2PointsToWin.setColumns(10);
 		add(txtTeam2PointsToWin, "cell 3 17,growx"); //$NON-NLS-1$
 		JLabel lblEnableShowSkunk = new JLabel(Messages.getString("ParametersPanel.EnableShowSkunk")); //$NON-NLS-1$
@@ -294,7 +309,7 @@ public class ParametersPanel extends JPanel {
 		JLabel lblTeam3PointsToWin = new JLabel(Messages.getString("ParametersPanel.Team3PointsToWin")); //$NON-NLS-1$
 		add(lblTeam3PointsToWin, "cell 2 18,alignx trailing"); //$NON-NLS-1$
 		txtTeam3PointsToWin = new JTextField();
-		txtTeam3PointsToWin.setText(Settings.getControlParameter(SettingsKeys.CTRL_TEAM3_POINTS_TO_WIN));
+		txtTeam3PointsToWin.setText(Integer.toString(activeMatch.getTeamPointsToWin(3)));
 		txtTeam3PointsToWin.setColumns(10);
 		add(txtTeam3PointsToWin, "cell 3 18,growx"); //$NON-NLS-1$
 		JLabel lblCutThroatMode = new JLabel(Messages.getString("ParametersPanel.CutThroatMode")); //$NON-NLS-1$
@@ -336,6 +351,7 @@ public class ParametersPanel extends JPanel {
 		txtRecallTime.setText(Settings.getDefaultParameter(SettingsKeys.CTRL_RECALL_TIME));
 		chckbxRackMode.setSelected(Settings.getDefaultParameter(SettingsKeys.CTRL_RACK_MODE).equals(ON));
 		chckbxAllowParametersFromFile.setSelected(Settings.getDefaultParameter(SettingsKeys.CTRL_ALLOW_PARAMS_FROM_FILE).equals(ON));
+		chckbxParametersFromFileAllTables.setSelected(Settings.getDefaultParameter(SettingsKeys.CTRL_PARAMS_FROM_FILE_ALL_TABLES).equals(ON));
 		chckbxAutoIncrementGame.setSelected(Settings.getDefaultParameter(SettingsKeys.CTRL_AUTO_INCREMENT_GAME).equals(ON));
 		chckbxAnnounceWinner.setSelected(Settings.getDefaultParameter(SettingsKeys.CTRL_ANNOUNCE_WINNER).equals(ON));
 		chckbxAnnounceMeatball.setSelected(Settings.getDefaultParameter(SettingsKeys.CTRL_ANNOUNCE_MEATBALL).equals(ON));
@@ -359,13 +375,13 @@ public class ParametersPanel extends JPanel {
 		txtBallsInRack.setText(Settings.getDefaultParameter(SettingsKeys.CTRL_BALLS_IN_RACK));
 	}
 	private void revertChanges() {
-		txtPointsToWin.setText(Settings.getControlParameter(SettingsKeys.CTRL_POINTS_TO_WIN));
+		txtPointsToWin.setText(Integer.toString(activeMatch.getPointsToWin()));
 		txtShotTime.setText(Settings.getControlParameter(SettingsKeys.CTRL_SHOT_TIME));
-		txtMaxWin.setText(Settings.formatMaxWin(Settings.getControlParameter(SettingsKeys.CTRL_MAX_WIN)));
+		txtMaxWin.setText(Settings.formatMaxWin(Integer.toString(activeMatch.getMaxWin())));
 		txtPassTime.setText(Settings.getControlParameter(SettingsKeys.CTRL_PASS_TIME));
-		txtWinBy.setText(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY));
+		txtWinBy.setText(Integer.toString(activeMatch.getWinBy()));
 		txtTimeOutTime.setText(Settings.getControlParameter(SettingsKeys.CTRL_TIME_OUT_TIME));
-		int checkValue = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_GAMES_TO_WIN));
+		int checkValue = activeMatch.getGamesToWin();
 		if (checkValue > maxGamesToWin) checkValue = maxGamesToWin;
 		txtGamesToWin.setText(Integer.toString(checkValue));
 		txtGameTime.setText(Settings.getControlParameter(SettingsKeys.CTRL_GAME_TIME));
@@ -373,6 +389,7 @@ public class ParametersPanel extends JPanel {
 		txtRecallTime.setText(Settings.getControlParameter(SettingsKeys.CTRL_RECALL_TIME));
 		chckbxRackMode.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_RACK_MODE).equals(ON));
 		chckbxAllowParametersFromFile.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_ALLOW_PARAMS_FROM_FILE).equals(ON));
+		chckbxParametersFromFileAllTables.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_PARAMS_FROM_FILE_ALL_TABLES).equals(ON));
 		chckbxAutoIncrementGame.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_AUTO_INCREMENT_GAME).equals(ON));
 		chckbxAnnounceMeatball.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_ANNOUNCE_MEATBALL).equals(ON));
 		chckbxAnnounceWinner.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_ANNOUNCE_WINNER).equals(ON));
@@ -381,10 +398,10 @@ public class ParametersPanel extends JPanel {
 		chckbxWinByFinalOnly.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_WIN_BY_FINAL_ONLY).equals(ON));
 		chckbxEnableShowSkunk.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_SHOW_SKUNK).equals(ON));
 		chckbxCutThroatMode.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON));
-		chckbxHandicapped.setSelected(Settings.getControlParameter(SettingsKeys.CTRL_HANDICAPPED).equals(ON));
-		txtTeam1PointsToWin.setText(Settings.getControlParameter(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN));
-		txtTeam2PointsToWin.setText(Settings.getControlParameter(SettingsKeys.CTRL_TEAM2_POINTS_TO_WIN));
-		txtTeam3PointsToWin.setText(Settings.getControlParameter(SettingsKeys.CTRL_TEAM3_POINTS_TO_WIN));
+		chckbxHandicapped.setSelected(activeMatch.isHandicapped());
+		txtTeam1PointsToWin.setText(Integer.toString(activeMatch.getTeamPointsToWin(1)));
+		txtTeam2PointsToWin.setText(Integer.toString(activeMatch.getTeamPointsToWin(2)));
+		txtTeam3PointsToWin.setText(Integer.toString(activeMatch.getTeamPointsToWin(3)));
 		txtWinnerPrefix.setText(Settings.getControlParameter(SettingsKeys.CTRL_WINNER_PREFIX));
 		txtWinnerSuffix.setText(Settings.getControlParameter(SettingsKeys.CTRL_WINNER_SUFFIX));
 		txtMeatball.setText(Settings.getControlParameter(SettingsKeys.CTRL_MEATBALL));
@@ -405,48 +422,63 @@ public class ParametersPanel extends JPanel {
 	public void refreshFromSettings() {
 		revertChanges();
 	}
+	/**
+	 * Repoints this panel at a new active table's Match (Points to Win/Max Win/
+	 * Win By/Games to Win/Handicapped live there, not in Settings) and reloads
+	 * every field, discarding any unsaved edits. Called on every table switch.
+	 */
+	public void setActiveMatch(Match activeMatch) {
+		this.activeMatch = activeMatch;
+		revertChanges();
+	}
 	private void saveIntegerSetting(String parameter, String value) {
 		if (isValidInteger(value)) {
 			Settings.setControlParameter(parameter, value);
 		}
 	}
-	private void saveMaxWin(String parameter, String maxWin, String pointsToWin) {
+	private void saveMatchInteger(String value, java.util.function.IntConsumer setter) {
+		if (isValidInteger(value)) {
+			setter.accept(Integer.parseInt(value));
+		}
+	}
+	/** Max Win can never be less than Points to Win, so it's set on the active table's Match here too. */
+	private void saveMaxWin(String maxWin, String pointsToWin) {
 	    if (Settings.isUnlimitedMaxWin(maxWin)) {
-	        Settings.setControlParameter(parameter, Integer.toString(Settings.MAX_WIN_UNLIMITED));
+	        activeMatch.setMaxWin(Settings.MAX_WIN_UNLIMITED);
 	        txtMaxWin.setText(Messages.getString("Global.Unlimited")); //$NON-NLS-1$
 	    } else if (isValidInteger(maxWin)) {
 	        int intMaxWin = Integer.parseInt(maxWin);
 	        int intPointsToWin = Integer.parseInt(pointsToWin);
 	        if (intPointsToWin > intMaxWin) {
-	            Settings.setControlParameter(parameter, pointsToWin);
+	            activeMatch.setMaxWin(intPointsToWin);
 	            txtMaxWin.setText(pointsToWin);
 	        } else {
-	            Settings.setControlParameter(parameter, maxWin);
+	            activeMatch.setMaxWin(intMaxWin);
 	        }
 	    } else {
-	    	Settings.setControlParameter(parameter, pointsToWin);
+	    	activeMatch.setMaxWin(Integer.parseInt(pointsToWin));
 	    	txtMaxWin.setText(pointsToWin);
 	    }
 	}
 	/**
-	 * Highest of the shared Points to Win and the three handicapped Points to Win
-	 * values, so Max Win auto-adjusts to cover whichever value a team actually
-	 * plays to.
+	 * Highest of the active table's shared Points to Win and its three
+	 * handicapped Points to Win values, so Max Win auto-adjusts to cover
+	 * whichever value a team on THIS table actually plays to.
 	 */
 	private String highestPointsToWinSetting() {
-		int highest = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_POINTS_TO_WIN));
-		for (String key : new String[] {SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN, SettingsKeys.CTRL_TEAM2_POINTS_TO_WIN, SettingsKeys.CTRL_TEAM3_POINTS_TO_WIN}) {
-			highest = Math.max(highest, Integer.parseInt(Settings.getControlParameter(key)));
+		int highest = activeMatch.getPointsToWin();
+		for (int teamNbr = 1; teamNbr <= 3; teamNbr++) {
+			highest = Math.max(highest, activeMatch.getTeamPointsToWin(teamNbr));
 		}
 		return Integer.toString(highest);
 	}
 	public void saveSettings(Settings settings) {
-		saveIntegerSetting(SettingsKeys.CTRL_POINTS_TO_WIN, txtPointsToWin.getText());
-		saveIntegerSetting(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN, txtTeam1PointsToWin.getText());
-		saveIntegerSetting(SettingsKeys.CTRL_TEAM2_POINTS_TO_WIN, txtTeam2PointsToWin.getText());
-		saveIntegerSetting(SettingsKeys.CTRL_TEAM3_POINTS_TO_WIN, txtTeam3PointsToWin.getText());
-		saveMaxWin(SettingsKeys.CTRL_MAX_WIN, txtMaxWin.getText(), highestPointsToWinSetting());
-		saveIntegerSetting(SettingsKeys.CTRL_WIN_BY, txtWinBy.getText());
+		saveMatchInteger(txtPointsToWin.getText(), activeMatch::setPointsToWin);
+		saveMatchInteger(txtTeam1PointsToWin.getText(), v -> activeMatch.setTeamPointsToWin(1, v));
+		saveMatchInteger(txtTeam2PointsToWin.getText(), v -> activeMatch.setTeamPointsToWin(2, v));
+		saveMatchInteger(txtTeam3PointsToWin.getText(), v -> activeMatch.setTeamPointsToWin(3, v));
+		saveMaxWin(txtMaxWin.getText(), highestPointsToWinSetting());
+		saveMatchInteger(txtWinBy.getText(), activeMatch::setWinBy);
     	if (isValidInteger(txtGamesToWin.getText())) {
     		Integer checkValue = Integer.valueOf(txtGamesToWin.getText());
     		if (checkValue > maxGamesToWin) {
@@ -454,11 +486,12 @@ public class ParametersPanel extends JPanel {
     			JOptionPane.showMessageDialog(null,Messages.getString("ParametersPanel.GamesToWinExceedError") + maxGamesToWin + Messages.getString("ParametersPanel.SettingTo") + maxGamesToWin + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     		}
     		txtGamesToWin.setText(Integer.toString(checkValue));
-    		Settings.setControlParameter(SettingsKeys.CTRL_GAMES_TO_WIN, txtGamesToWin.getText());
+    		activeMatch.setGamesToWin(checkValue);
     	}
     	saveIntegerSetting(SettingsKeys.CTRL_MAX_TIME_OUTS, txtMaxTimeOuts.getText());
    		Settings.setControlParameter(SettingsKeys.CTRL_RACK_MODE, chckbxRackMode.isSelected() ? ON : OFF);
     	Settings.setControlParameter(SettingsKeys.CTRL_ALLOW_PARAMS_FROM_FILE, chckbxAllowParametersFromFile.isSelected() ? ON : OFF);
+    	Settings.setControlParameter(SettingsKeys.CTRL_PARAMS_FROM_FILE_ALL_TABLES, chckbxParametersFromFileAllTables.isSelected() ? ON : OFF);
     	Settings.setControlParameter(SettingsKeys.CTRL_AUTO_INCREMENT_GAME, chckbxAutoIncrementGame.isSelected() ? ON : OFF);
     	Settings.setControlParameter(SettingsKeys.CTRL_ANNOUNCE_WINNER, chckbxAnnounceWinner.isSelected() ? ON : OFF);
     	Settings.setControlParameter(SettingsKeys.CTRL_ANNOUNCE_MEATBALL, chckbxAnnounceMeatball.isSelected() ? ON : OFF);
@@ -481,7 +514,7 @@ public class ParametersPanel extends JPanel {
     	Settings.setControlParameter(SettingsKeys.CTRL_WIN_BY_FINAL_ONLY, chckbxWinByFinalOnly.isSelected() ? ON : OFF);
     	Settings.setControlParameter(SettingsKeys.CTRL_SHOW_SKUNK, chckbxEnableShowSkunk.isSelected() ? ON : OFF);
 		Settings.setControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE, chckbxCutThroatMode.isSelected() ? ON : OFF);
-		Settings.setControlParameter(SettingsKeys.CTRL_HANDICAPPED, chckbxHandicapped.isSelected() ? ON : OFF);
+		activeMatch.setHandicapped(chckbxHandicapped.isSelected());
 		try {
 			Settings.saveControlConfig();
 		} catch (IOException ex) {

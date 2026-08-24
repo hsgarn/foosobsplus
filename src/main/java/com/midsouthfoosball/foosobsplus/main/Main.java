@@ -222,10 +222,6 @@ public final class Main implements MatchObserver {
 	private static final ArrayList<Memento> 	mementoStackStats 		= new ArrayList<>();
 	private static final ArrayList<Memento> 	mementoStackMatch		= new ArrayList<>();
 	private static final ArrayList<Memento> 	mementoStackGameClock	= new ArrayList<>();
-	// Team1/2/3PointsToWin (a control parameter, not part of any Team's Memento
-	// state - see swapHandicappedPointsToWin) snapshotted alongside the other
-	// mementos so undo can revert the swap switchSides/cutthroatRotate perform.
-	private static final ArrayList<String[]>	mementoStackHandicap	= new ArrayList<>();
 	private static final ArrayList<String>		codeStack 				= new ArrayList<>();
 	private static CommandSwitch 				mySwitch;
 	////// Generate the Data Models (Mvc) \\\\\\
@@ -280,7 +276,7 @@ public final class Main implements MatchObserver {
 	private static final StatsDisplayPanel 		statsDisplayPanel 		= new StatsDisplayPanel();
     private static final BallPanel              ballPanel               = new BallPanel();
 	////// Set up Timer and Settings Windows \\\\\\
-	private static final ParametersFrame 		parametersFrame 		= new ParametersFrame();
+	private static final ParametersFrame 		parametersFrame 		= new ParametersFrame(match);
 	private static final ParametersPanel		parametersPanel			= parametersFrame.getSettingsPanel();
 	private static final HotKeysFrame 			hotKeysFrame 			= new HotKeysFrame();
 	private static final HotKeysPanel 			hotKeysPanel			= hotKeysFrame.getHotKeysPanel();
@@ -1043,7 +1039,9 @@ public final class Main implements MatchObserver {
 				() -> index < autoScoreManagers.size() && autoScoreManagers.get(index).isConnected(),
 				Main::selectTable,
 				(teamNumber, field, delta) -> editTableField(index, teamNumber, field, delta),
-				(teamNumber, teamName, forwardName, goalieName) -> editTableNames(index, teamNumber, teamName, forwardName, goalieName));
+				(teamNumber, teamName, forwardName, goalieName) -> editTableNames(index, teamNumber, teamName, forwardName, goalieName),
+				(handicapped, pointsToWin, maxWin, winBy, gamesToWin, team1Ptw, team2Ptw, team3Ptw) ->
+						editTableParameters(index, handicapped, pointsToWin, maxWin, winBy, gamesToWin, team1Ptw, team2Ptw, team3Ptw));
 		frame.addWindowListener(new WindowAdapter() {
 			@Override public void windowClosed(WindowEvent e) { tableViewFrames.remove(index); }
 		});
@@ -1222,6 +1220,41 @@ public final class Main implements MatchObserver {
 	/** Sets a table team's name/forward/goalie together (from the Table View name modal). */
 	private static void editTableNames(int tableIndex, int teamNumber, String teamName, String forwardName, String goalieName) {
 		withTableBound(tableIndex, () -> teamController.applyNames(teamNumber, teamName, forwardName, goalieName));
+	}
+	/**
+	 * Sets a table's win-condition fields together (from the Table View Edit
+	 * Parameters modal), so a background table's Points to Win/Max Win/Win By/
+	 * Games to Win/Handicap can be configured without switching to it. These are
+	 * plain fields on that table's own Match (see Match.java) - no controller
+	 * binding is needed, unlike score/name edits.
+	 */
+	private static void editTableParameters(int tableIndex, boolean handicapped, int pointsToWin, int maxWin,
+			int winBy, int gamesToWin, int team1PointsToWin, int team2PointsToWin, int team3PointsToWin) {
+		if (tableIndex < 0 || tableIndex >= sessions.size()) return;
+		TableSession target = sessions.get(tableIndex);
+		Match targetMatch = target.getMatch();
+		targetMatch.setHandicapped(handicapped);
+		targetMatch.setPointsToWin(pointsToWin);
+		// Max Win can never be less than Points to Win.
+		targetMatch.setMaxWin(Math.max(maxWin, pointsToWin));
+		targetMatch.setWinBy(winBy);
+		targetMatch.setGamesToWin(gamesToWin);
+		targetMatch.setTeamPointsToWin(1, team1PointsToWin);
+		targetMatch.setTeamPointsToWin(2, team2PointsToWin);
+		targetMatch.setTeamPointsToWin(3, team3PointsToWin);
+		// Refresh this table's Handicap OBS source directly (works whether it's
+		// live, secondary/prefixed, or silent - each team already writes through
+		// its own currently-assigned OBS interface).
+		target.getTeam1().writeHandicap();
+		target.getTeam2().writeHandicap();
+		target.getTeam3().writeHandicap();
+		if (target == activeSession) {
+			targetMatch.setMaxPossibleGames(targetMatch.getMaxGameNumber());
+			matchPanel.resizeGameTable(targetMatch.getMaxPossibleGames());
+			gameTableWindowPanel.resizeGameTable(targetMatch.getMaxPossibleGames());
+			parametersPanel.refreshFromSettings();
+		}
+		refreshTableViews();
 	}
 	/** Returns the number of configured table sessions. */
 	public static int getTableCount() {
@@ -1694,13 +1727,13 @@ public final class Main implements MatchObserver {
 	}
 	/** New team1 <- old team2, new team2 <- old team3, new team3 <- old team1; mirrors the Team Memento rotation above. */
 	private static void rotateHandicappedPointsToWin() {
-		String value1 = Settings.getControlParameter(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN);
-		String value2 = Settings.getControlParameter(SettingsKeys.CTRL_TEAM2_POINTS_TO_WIN);
-		String value3 = Settings.getControlParameter(SettingsKeys.CTRL_TEAM3_POINTS_TO_WIN);
-		Settings.setControlParameter(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN, value2);
-		Settings.setControlParameter(SettingsKeys.CTRL_TEAM2_POINTS_TO_WIN, value3);
-		Settings.setControlParameter(SettingsKeys.CTRL_TEAM3_POINTS_TO_WIN, value1);
-		persistControlConfigAndRefreshParameters();
+		int value1 = match.getTeamPointsToWin(1);
+		int value2 = match.getTeamPointsToWin(2);
+		int value3 = match.getTeamPointsToWin(3);
+		match.setTeamPointsToWin(1, value2);
+		match.setTeamPointsToWin(2, value3);
+		match.setTeamPointsToWin(3, value1);
+		refreshMatchParameterDisplay();
 	}
 	public static void startEvent() {
 		if(gameClock.isStreamTimerRunning()) {
@@ -1746,26 +1779,25 @@ public final class Main implements MatchObserver {
 		swapHandicappedPointsToWin(1, 2);
 	}
 	/**
-	 * Swaps the handicapped Points to Win of two teams (a control parameter, not
-	 * part of Team's Memento state) and persists/refreshes it. Used by switchSides
-	 * and cutthroatRotate so a team's handicap follows it when it changes seats.
+	 * Swaps the handicapped Points to Win of two teams on the active table's Match
+	 * and refreshes the display. Used by switchSides and cutthroatRotate so a
+	 * team's handicap follows it when it changes seats.
 	 */
 	private static void swapHandicappedPointsToWin(int teamA, int teamB) {
-		String keyA = Settings.getHandicappedPointsToWinKey(teamA);
-		String keyB = Settings.getHandicappedPointsToWinKey(teamB);
-		String valueA = Settings.getControlParameter(keyA);
-		String valueB = Settings.getControlParameter(keyB);
-		Settings.setControlParameter(keyA, valueB);
-		Settings.setControlParameter(keyB, valueA);
-		persistControlConfigAndRefreshParameters();
+		int valueA = match.getTeamPointsToWin(teamA);
+		int valueB = match.getTeamPointsToWin(teamB);
+		match.setTeamPointsToWin(teamA, valueB);
+		match.setTeamPointsToWin(teamB, valueA);
+		refreshMatchParameterDisplay();
 	}
-	private static void persistControlConfigAndRefreshParameters() {
-		try {
-			Settings.saveControlConfig();
-		} catch (IOException e) {
-			logger.error(Messages.getString("Errors.ErrorSavingPropertiesFile")); //$NON-NLS-1$
-			logger.error(e.toString());
-		}
+	/**
+	 * Refreshes the Parameters panel and each team's Handicap OBS source from the
+	 * active table's Match after one of its win-condition fields (Points to
+	 * Win/Max Win/Win By/Games to Win/Handicapped) changes directly on the Match
+	 * object - these are per-table fields now, not Settings control parameters,
+	 * so there is nothing to save to disk here.
+	 */
+	private static void refreshMatchParameterDisplay() {
 		parametersPanel.refreshFromSettings();
 		teamController.writeHandicap();
 	}
@@ -1793,7 +1825,7 @@ public final class Main implements MatchObserver {
 		if (next == null || next == activeSession) return;
 		// 1. Preserve the outgoing table's command history / undo state.
 		activeSession.saveWorkingState(commandStack, codeStack, mementoStackTeam1, mementoStackTeam2,
-				mementoStackTeam3, mementoStackStats, mementoStackMatch, mementoStackGameClock, mementoStackHandicap, undoRedoPointer);
+				mementoStackTeam3, mementoStackStats, mementoStackMatch, mementoStackGameClock, undoRedoPointer);
 		// 2. The outgoing table becomes the secondary ("mini") table, writing its
 		//    subset to the prefixed OBS area; it keeps updating in the background.
 		//    Any table previously in the secondary slot is fully silenced (3+ tables).
@@ -1830,10 +1862,17 @@ public final class Main implements MatchObserver {
 		tournamentController.bindSession(next);
 		// 4. Restore the incoming table's command history / undo state.
 		undoRedoPointer = next.loadWorkingStateInto(commandStack, codeStack, mementoStackTeam1, mementoStackTeam2,
-				mementoStackTeam3, mementoStackStats, mementoStackMatch, mementoStackGameClock, mementoStackHandicap);
+				mementoStackTeam3, mementoStackStats, mementoStackMatch, mementoStackGameClock);
 		// 5. Republish the new table's state to the panels and live OBS, then push
 		//    the secondary table's subset to the prefixed area and swap cameras.
 		republishActiveSession();
+		// The game-count grid and the Parameters panel are singleton, active-table-only
+		// views; the incoming table's own Points to Win/Max Win/Win By/Games to Win/
+		// Handicap fields already have the right values (each table's Match carries its
+		// own), only the grid's SIZE and the panel's displayed fields need refreshing.
+		matchPanel.resizeGameTable(match.getMaxPossibleGames());
+		gameTableWindowPanel.resizeGameTable(match.getMaxPossibleGames());
+		parametersPanel.setActiveMatch(match);
 		publishSecondarySession();
 		applyCameraSwap();
 		// 6. Keep both table switchers (Tables menu + Table Name combo) and the
@@ -2026,20 +2065,20 @@ public final class Main implements MatchObserver {
 		return show;
 	}
 	public static boolean toggleHandicappedFromAPI(Boolean state) {
-		boolean handicapped = (state != null) ? state : !Settings.getControlParameter(SettingsKeys.CTRL_HANDICAPPED).equals(ON);
-		Settings.setControlParameter(SettingsKeys.CTRL_HANDICAPPED, handicapped ? ON : OFF);
-		persistControlConfigAndRefreshParameters();
+		boolean handicapped = (state != null) ? state : !match.isHandicapped();
+		match.setHandicapped(handicapped);
+		refreshMatchParameterDisplay();
 		return handicapped;
 	}
 	/**
 	 * Increases (positive delta) or decreases (negative delta) team teamNumber's
-	 * handicapped Points to Win by 1, floored at 1. Returns the new value.
+	 * handicapped Points to Win on the active table by 1, floored at 1. Returns
+	 * the new value.
 	 */
 	public static int adjustHandicappedPointsToWinFromAPI(int teamNumber, int delta) {
-		String key = Settings.getHandicappedPointsToWinKey(teamNumber);
-		int newValue = Math.max(1, Integer.parseInt(Settings.getControlParameter(key)) + delta);
-		Settings.setControlParameter(key, Integer.toString(newValue));
-		persistControlConfigAndRefreshParameters();
+		int newValue = Math.max(1, match.getTeamPointsToWin(teamNumber) + delta);
+		match.setTeamPointsToWin(teamNumber, newValue);
+		refreshMatchParameterDisplay();
 		return newValue;
 	}
 	public static void swapHandicappedPointsToWinFromAPI(int teamA, int teamB) {
@@ -2071,23 +2110,6 @@ public final class Main implements MatchObserver {
    		mementoStackStats.add(saveState(stats));
    		mementoStackMatch.add(saveState(match));
    		mementoStackGameClock.add(saveState(gameClock));
-   		mementoStackHandicap.add(currentHandicappedPointsToWin());
-	}
-	private static String[] currentHandicappedPointsToWin() {
-		return new String[] {
-			Settings.getControlParameter(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN),
-			Settings.getControlParameter(SettingsKeys.CTRL_TEAM2_POINTS_TO_WIN),
-			Settings.getControlParameter(SettingsKeys.CTRL_TEAM3_POINTS_TO_WIN)
-		};
-	}
-	/** No-op (and no disk write/UI refresh) unless the snapshot differs from the current values. */
-	private static void restoreHandicappedPointsToWin(String[] values) {
-		String[] current = currentHandicappedPointsToWin();
-		if (values[0].equals(current[0]) && values[1].equals(current[1]) && values[2].equals(current[2])) return;
-		Settings.setControlParameter(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN, values[0]);
-		Settings.setControlParameter(SettingsKeys.CTRL_TEAM2_POINTS_TO_WIN, values[1]);
-		Settings.setControlParameter(SettingsKeys.CTRL_TEAM3_POINTS_TO_WIN, values[2]);
-		persistControlConfigAndRefreshParameters();
 	}
 	private static Memento saveState(Object object) {
 		return new Memento(object);
@@ -2108,7 +2130,6 @@ public final class Main implements MatchObserver {
 	    match.restoreState(mementoMatch.getState());
 	    Memento mementoGameClock = mementoStackGameClock.get(undoRedoPointer);
 	    gameClock.restoreState(mementoGameClock.getState());
-	    restoreHandicappedPointsToWin(mementoStackHandicap.get(undoRedoPointer));
 	    undoRedoPointer--;
 	    statsEntryPanel.removeCodeHistory();
 	    stats.showParsed();
@@ -2159,7 +2180,6 @@ public final class Main implements MatchObserver {
 		        mementoStackStats.remove(i);
 		        mementoStackMatch.remove(i);
 		        mementoStackGameClock.remove(i);
-		        mementoStackHandicap.remove(i);
 		    }
 	    }
     }
@@ -2702,21 +2722,20 @@ public final class Main implements MatchObserver {
 		}
 	}
 	private static void saveParameterSettings() {
-		int oldGamesToWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_GAMES_TO_WIN)); //$NON-NLS-1$
+		int oldGamesToWin = match.getGamesToWin();
 		int oldCutthroatMode = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE)); //$NON-NLS-1$
 		parametersPanel.saveSettings(Settings.getInstance());
-		int newGamesToWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_GAMES_TO_WIN)); //$NON-NLS-1$
+		int newGamesToWin = match.getGamesToWin();
 		int newCutthroatMode = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE)); //$NON-NLS-1$
 		if (oldGamesToWin != newGamesToWin || oldCutthroatMode != newCutthroatMode) {
-			matchPanel.resizeGameTable();
-			gameTableWindowPanel.resizeGameTable();
-			match.setMaxPossibleGames(Settings.getMaxGameNumber());
+			match.setMaxPossibleGames(match.getMaxGameNumber());
+			matchPanel.resizeGameTable(match.getMaxPossibleGames());
+			gameTableWindowPanel.resizeGameTable(match.getMaxPossibleGames());
 		}
 		teamPanel1.setTitle();
 		teamPanel2.setTitle();
 		teamPanel3.setTitle();
 		teamController.displayAll();
-		teamController.writeHandicap();
 	}
 	private static class ScoreIncreaseListener implements ActionListener{
         @Override
@@ -3509,29 +3528,42 @@ public final class Main implements MatchObserver {
 		String rackModeFileName = Settings.getPartnerProgramParameter(SettingsKeys.PP_RACK_MODE_FILE);
 		String data = value.trim();
 		boolean gamesToWinChanged = false;
+		// Points to Win/Max Win/Win By/Games to Win are per-table (Match fields);
+		// apply to just the active table, or every table, per the user's checkbox.
+		// Rack Mode is a global setting, so it always applies to every table
+		// regardless of this checkbox.
+		boolean applyToAllTables = Settings.getControlParameter(SettingsKeys.CTRL_PARAMS_FROM_FILE_ALL_TABLES).equals(ON);
+		List<TableSession> targetSessions = applyToAllTables ? sessions : List.of(activeSession);
 		if (fileName.equals(pointsToWinFileName)) {
 			Integer pointsToWin = parsePartnerProgramInteger(fileName, data, 1);
 			if (pointsToWin == null) return true;
-			Settings.setControlParameter(SettingsKeys.CTRL_POINTS_TO_WIN, pointsToWin.toString());
-			// Max Win can never be less than Points to Win.
-			int maxWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_MAX_WIN));
-			if (maxWin < pointsToWin) {
-				Settings.setControlParameter(SettingsKeys.CTRL_MAX_WIN, pointsToWin.toString());
+			for (TableSession session : targetSessions) {
+				Match sessionMatch = session.getMatch();
+				sessionMatch.setPointsToWin(pointsToWin);
+				// Max Win can never be less than Points to Win.
+				if (sessionMatch.getMaxWin() < pointsToWin) {
+					sessionMatch.setMaxWin(pointsToWin);
+				}
 			}
 		} else if (fileName.equals(maxWinFileName)) {
 			if (Settings.isUnlimitedMaxWin(data)) {
-				Settings.setControlParameter(SettingsKeys.CTRL_MAX_WIN, Integer.toString(Settings.MAX_WIN_UNLIMITED));
+				for (TableSession session : targetSessions) {
+					session.getMatch().setMaxWin(Settings.MAX_WIN_UNLIMITED);
+				}
 			} else {
 				Integer maxWin = parsePartnerProgramInteger(fileName, data, 1);
 				if (maxWin == null) return true;
-				int pointsToWin = Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_POINTS_TO_WIN));
-				if (maxWin < pointsToWin) maxWin = pointsToWin;
-				Settings.setControlParameter(SettingsKeys.CTRL_MAX_WIN, maxWin.toString());
+				for (TableSession session : targetSessions) {
+					Match sessionMatch = session.getMatch();
+					sessionMatch.setMaxWin(Math.max(maxWin, sessionMatch.getPointsToWin()));
+				}
 			}
 		} else if (fileName.equals(winByFileName)) {
 			Integer winBy = parsePartnerProgramInteger(fileName, data, 1);
 			if (winBy == null) return true;
-			Settings.setControlParameter(SettingsKeys.CTRL_WIN_BY, winBy.toString());
+			for (TableSession session : targetSessions) {
+				session.getMatch().setWinBy(winBy);
+			}
 		} else if (fileName.equals(gamesToWinFileName)) {
 			Integer gamesToWin = parsePartnerProgramInteger(fileName, data, 1);
 			if (gamesToWin == null) return true;
@@ -3539,8 +3571,12 @@ public final class Main implements MatchObserver {
 				logger.warn("Partner program " + fileName + " requested " + gamesToWin + " games to win; capping at " + ParametersPanel.MAX_GAMES_TO_WIN + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				gamesToWin = ParametersPanel.MAX_GAMES_TO_WIN;
 			}
-			gamesToWinChanged = gamesToWin != Integer.parseInt(Settings.getControlParameter(SettingsKeys.CTRL_GAMES_TO_WIN));
-			Settings.setControlParameter(SettingsKeys.CTRL_GAMES_TO_WIN, gamesToWin.toString());
+			// Only the active table's grid is ever visible, so that's the only one
+			// that needs its display resized below.
+			gamesToWinChanged = gamesToWin != activeSession.getMatch().getGamesToWin();
+			for (TableSession session : targetSessions) {
+				session.getMatch().setGamesToWin(gamesToWin);
+			}
 		} else if (fileName.equals(rackModeFileName)) {
 			Boolean rackMode = parsePartnerProgramBoolean(fileName, data);
 			if (rackMode == null) return true;
@@ -3555,9 +3591,9 @@ public final class Main implements MatchObserver {
 			logger.error(e.toString());
 		}
 		if (gamesToWinChanged) {
-			matchPanel.resizeGameTable();
-			gameTableWindowPanel.resizeGameTable();
-			match.setMaxPossibleGames(Settings.getMaxGameNumber());
+			match.setMaxPossibleGames(match.getMaxGameNumber());
+			matchPanel.resizeGameTable(match.getMaxPossibleGames());
+			gameTableWindowPanel.resizeGameTable(match.getMaxPossibleGames());
 		}
 		parametersPanel.refreshFromSettings();
 		teamPanel1.setTitle();

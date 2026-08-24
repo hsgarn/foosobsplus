@@ -213,62 +213,45 @@ class TeamTest {
 	@Test
 	@DisplayName("writeHandicap writes the team's handicapped Points to Win when Handicapped is checked")
 	void writeHandicapWritesValueWhenHandicappedChecked() {
-		String originalHandicapped = Settings.getControlParameter(SettingsKeys.CTRL_HANDICAPPED);
-		String originalTeam1Ptw = Settings.getControlParameter(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN);
-		try {
-			Settings.setControlParameter(SettingsKeys.CTRL_HANDICAPPED, "1");
-			Settings.setControlParameter(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN, "7");
-			RecordingOBSInterface obs = new RecordingOBSInterface();
-			Team handicappedTeam = new Team(obs, 1, "Yellow");
+		RecordingOBSInterface obs = new RecordingOBSInterface();
+		Team handicappedTeam = new Team(obs, 1, "Yellow");
+		Match match = new Match(obs, handicappedTeam, new Team(obs, 2, "Black"), new Team(obs, 3, "Red"));
+		match.setHandicapped(true);
+		match.setTeamPointsToWin(1, 7);
 
-			handicappedTeam.writeHandicap();
+		handicappedTeam.writeHandicap();
 
-			assertEquals(Settings.getTeamSourceParameter("1", "Handicap"), obs.lastSource);
-			assertEquals("7", obs.lastData);
-		} finally {
-			Settings.setControlParameter(SettingsKeys.CTRL_HANDICAPPED, originalHandicapped);
-			Settings.setControlParameter(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN, originalTeam1Ptw);
-		}
+		assertEquals(Settings.getTeamSourceParameter("1", "Handicap"), obs.lastSource);
+		assertEquals("7", obs.lastData);
 	}
 
 	@Test
 	@DisplayName("writeHandicap re-sends the new value when the handicapped Points to Win changes")
 	void writeHandicapSendsUpdatedValue() {
-		String originalHandicapped = Settings.getControlParameter(SettingsKeys.CTRL_HANDICAPPED);
-		String originalTeam1Ptw = Settings.getControlParameter(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN);
-		try {
-			Settings.setControlParameter(SettingsKeys.CTRL_HANDICAPPED, "1");
-			Settings.setControlParameter(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN, "7");
-			RecordingOBSInterface obs = new RecordingOBSInterface();
-			Team handicappedTeam = new Team(obs, 1, "Yellow");
-			handicappedTeam.writeHandicap();
-			assertEquals("7", obs.lastData);
+		RecordingOBSInterface obs = new RecordingOBSInterface();
+		Team handicappedTeam = new Team(obs, 1, "Yellow");
+		Match match = new Match(obs, handicappedTeam, new Team(obs, 2, "Black"), new Team(obs, 3, "Red"));
+		match.setHandicapped(true);
+		match.setTeamPointsToWin(1, 7);
+		handicappedTeam.writeHandicap();
+		assertEquals("7", obs.lastData);
 
-			Settings.setControlParameter(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN, "9");
-			handicappedTeam.writeHandicap();
+		match.setTeamPointsToWin(1, 9);
+		handicappedTeam.writeHandicap();
 
-			assertEquals("9", obs.lastData);
-		} finally {
-			Settings.setControlParameter(SettingsKeys.CTRL_HANDICAPPED, originalHandicapped);
-			Settings.setControlParameter(SettingsKeys.CTRL_TEAM1_POINTS_TO_WIN, originalTeam1Ptw);
-		}
+		assertEquals("9", obs.lastData);
 	}
 
 	@Test
 	@DisplayName("writeHandicap clears the source when Handicapped is unchecked")
 	void writeHandicapClearsSourceWhenHandicappedUnchecked() {
-		String originalHandicapped = Settings.getControlParameter(SettingsKeys.CTRL_HANDICAPPED);
-		try {
-			Settings.setControlParameter(SettingsKeys.CTRL_HANDICAPPED, "0");
-			RecordingOBSInterface obs = new RecordingOBSInterface();
-			Team unhandicappedTeam = new Team(obs, 1, "Yellow");
+		RecordingOBSInterface obs = new RecordingOBSInterface();
+		Team unhandicappedTeam = new Team(obs, 1, "Yellow");
+		new Match(obs, unhandicappedTeam, new Team(obs, 2, "Black"), new Team(obs, 3, "Red"));
 
-			unhandicappedTeam.writeHandicap();
+		unhandicappedTeam.writeHandicap();
 
-			assertEquals("", obs.lastData);
-		} finally {
-			Settings.setControlParameter(SettingsKeys.CTRL_HANDICAPPED, originalHandicapped);
-		}
+		assertEquals("", obs.lastData);
 	}
 
 	private static class RecordingOBSInterface extends OBSInterface {

@@ -72,6 +72,10 @@ public final class SettingsKeys {
     public static final String CTRL_RACK_MODE           = "RackMode";
     // When off, game parameter files written by the partner program are ignored.
     public static final String CTRL_ALLOW_PARAMS_FROM_FILE = "AllowParametersFromFile";
+    // When on, a partner program parameter file (Points to Win/Max Win/Win By/
+    // Games to Win) applies to every table; when off (default), only the
+    // displayed table. Rack Mode always applies globally regardless.
+    public static final String CTRL_PARAMS_FROM_FILE_ALL_TABLES = "ParametersFromFileAllTables";
     public static final String CTRL_LOGO_IMAGE_URL      = "LogoImageURL";
     public static final String CTRL_LOGO_LINK_URI       = "LogoLinkURI";
 

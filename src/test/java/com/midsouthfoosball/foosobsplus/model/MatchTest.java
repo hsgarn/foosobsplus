@@ -118,7 +118,7 @@ class MatchTest {
 	@Test
 	@DisplayName("Win By prevents a one-point win and permits the required margin")
 	void winByRequiresConfiguredMargin() {
-		Settings.setControlParameter(SettingsKeys.CTRL_WIN_BY, "2");
+		match.setWinBy(2);
 		score(match, 1, 2);
 		score(match, 2, 2);
 
@@ -131,7 +131,7 @@ class MatchTest {
 	@Test
 	@DisplayName("Max Win ends a game even when Win By is not satisfied")
 	void maxWinCapsExtendedGame() {
-		Settings.setControlParameter(SettingsKeys.CTRL_WIN_BY, "2");
+		match.setWinBy(2);
 		for (int i = 0; i < 4; i++) {
 			match.incrementScore(1, "00:00:01");
 			match.incrementScore(2, "00:00:02");
