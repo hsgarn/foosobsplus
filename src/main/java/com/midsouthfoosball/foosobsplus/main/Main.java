@@ -1663,6 +1663,11 @@ public final class Main implements MatchObserver {
 			match.swapScoresTeam2Team3();
 			matchController.displayAllStats();
 			teamController.displayAll();
+			// restoreState()'s setGameCount() call fires the Game1/2/3 Show OBS sources
+			// through the unreliable property-change listener (see TeamController.bindSession()),
+			// so push visibility explicitly for the two teams that were swapped.
+			setTeamGameCountVisible("Team2", team2.getGameCount()); //$NON-NLS-1$
+			setTeamGameCountVisible("Team3", team3.getGameCount()); //$NON-NLS-1$
 		} else if (rotate ==2 ) {
 			Memento tmpTeam1 = saveState(team1);
 			Memento tmpTeam2 = saveState(team2);
@@ -1676,6 +1681,9 @@ public final class Main implements MatchObserver {
 			match.rotateAllTeamScores();
 			matchController.displayAllStats();
 			teamController.displayAll();
+			setTeamGameCountVisible("Team1", team1.getGameCount()); //$NON-NLS-1$
+			setTeamGameCountVisible("Team2", team2.getGameCount()); //$NON-NLS-1$
+			setTeamGameCountVisible("Team3", team3.getGameCount()); //$NON-NLS-1$
 		}
 	}
 	public static void startEvent() {
@@ -2027,8 +2035,14 @@ public final class Main implements MatchObserver {
 	    stats.showParsed();
 		teamController.displayAll();
 		statsController.displayAllStats();
-		setFocusOnCode();	
+		setFocusOnCode();
 		matchController.updateGameTables();
+		// restoreState() above fires the Game1/2/3 Show OBS sources through the
+		// unreliable property-change listener (see TeamController.bindSession()); push
+		// visibility explicitly so undo doesn't leave it stuck on the pre-undo count.
+		setTeamGameCountVisible("Team1", team1.getGameCount()); //$NON-NLS-1$
+		setTeamGameCountVisible("Team2", team2.getGameCount()); //$NON-NLS-1$
+		setTeamGameCountVisible("Team3", team3.getGameCount()); //$NON-NLS-1$
 	}
  	public static void redo() 	{
  		char commandChar = 'X';

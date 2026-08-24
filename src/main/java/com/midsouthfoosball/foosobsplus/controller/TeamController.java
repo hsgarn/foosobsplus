@@ -721,6 +721,12 @@ public class TeamController {
 	public void switchSides() {
 		team1.writeAll();
 		team2.writeAll();
+		// Main.switchSides() already swapped team1/team2's game counts (among other
+		// fields) via Team.restoreState() before calling this; that fires the Game1/2/3
+		// Show OBS sources through the unreliable property-change listener (see
+		// bindSession()), so push visibility explicitly here too.
+		pushGameCountVisibility(1, team1.getGameCount());
+		pushGameCountVisibility(2, team2.getGameCount());
 		int tmpSeconds = lastScored1Clock.getLastScoredSeconds();
 		int tmpMinutes = lastScored1Clock.getLastScoredMinutes();
 		int tmpHours = lastScored1Clock.getLastScoredHours();
