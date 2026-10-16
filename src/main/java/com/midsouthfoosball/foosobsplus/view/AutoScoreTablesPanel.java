@@ -94,7 +94,7 @@ public class AutoScoreTablesPanel extends JPanel {
 	private static final int COL_ACTION = 10;
 	private static final int COL_DISCOVERED = 11;
 	private static final String[] COLUMN_NAMES = {
-		"Label", "Address", "Port", "MAC Address", "Auto Connect", "Detail Log", "Camera Source", "Status", "", "", "", "Discovered Device" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$
+		"Label", "Address", "Port", "MAC Address", "<html><center>Auto<br>Connect</center></html>", "<html><center>Detail<br>Log</center></html>", "Camera Source", "Status", "", "", "", "Discovered Device" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$
 	};
 	// Options that flank the discovered-device list in the Discovered Device
 	// column's dropdown, rather than a device display() string.
@@ -148,6 +148,10 @@ public class AutoScoreTablesPanel extends JPanel {
 		tableModel = new ConnectionsTableModel();
 		table = new JTable(tableModel);
 		table.setRowHeight(22);
+		// The two-line HTML headers (Auto Connect / Detail Log) need room for two text lines.
+		javax.swing.table.JTableHeader header = table.getTableHeader();
+		header.setPreferredSize(new java.awt.Dimension(header.getPreferredSize().width,
+			2 * header.getFontMetrics(header.getFont()).getHeight() + 12));
 		table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 		table.getColumnModel().getColumn(COL_STATUS).setCellRenderer(new StatusCellRenderer());
 		table.getColumnModel().getColumn(COL_FLASH).setCellRenderer(new DeviceButtonRenderer("Flash")); //$NON-NLS-1$
@@ -171,8 +175,8 @@ public class AutoScoreTablesPanel extends JPanel {
 		setColumnWidth(COL_ADDRESS, 120);
 		setColumnWidth(COL_PORT, 60);
 		setColumnWidth(COL_MAC, 140);
-		setColumnWidth(COL_AUTO_CONNECT, 100);
-		setColumnWidth(COL_DETAIL_LOG, 90);
+		setColumnWidth(COL_AUTO_CONNECT, 65);
+		setColumnWidth(COL_DETAIL_LOG, 55);
 		setColumnWidth(COL_CAMERA_SOURCE, 160);
 		setColumnWidth(COL_STATUS, 130);
 		setColumnWidth(COL_FLASH, 70);
@@ -192,7 +196,7 @@ public class AutoScoreTablesPanel extends JPanel {
 		JButton btnSearch = new JButton(Messages.getString("AutoScoreSettingsPanel.Search")); //$NON-NLS-1$
 		btnSearch.addActionListener((ActionEvent e) -> search());
 		JButton btnConnectAll = new JButton("Connect All"); //$NON-NLS-1$
-		btnConnectAll.addActionListener((ActionEvent e) -> connectAllListener.run());
+		btnConnectAll.addActionListener((ActionEvent e) -> connectAll());
 		JButton btnDisconnectAll = new JButton("Disconnect All"); //$NON-NLS-1$
 		btnDisconnectAll.addActionListener((ActionEvent e) -> disconnectAllListener.run());
 		JPanel rowButtons = new JPanel(new MigLayout("insets 0")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -379,6 +383,44 @@ public class AutoScoreTablesPanel extends JPanel {
 	// writes address/port/MAC straight into the row (same as editing Address
 	// by hand) - Save/Apply still governs when that becomes persistent.
 	private void applyDiscoveredDevice(int row, PicoDiscovery.PicoInfo pico) {
+		if (!pico.isBusy()) {
+			finishApplyDiscoveredDevice(row, pico);
+			return;
+		}
+		// The busy status is from the last Search and may be stale (e.g. the table
+		// that was using this device has since disconnected), so ask the device
+		// again before bothering the user.
+		String wantedMac = TableConnection.normalizeMac(pico.macAddress());
+		addMessage("Rechecking " + pico.label() + " status..."); //$NON-NLS-1$ //$NON-NLS-2$
+		new SwingWorker<List<PicoDiscovery.PicoInfo>, Void>() {
+			@Override
+			protected List<PicoDiscovery.PicoInfo> doInBackground() throws Exception {
+				return PicoDiscovery.discoverPicos(5051, 300, msg -> {});
+			}
+			@Override
+			protected void done() {
+				PicoDiscovery.PicoInfo fresh = pico;
+				try {
+					for (PicoDiscovery.PicoInfo p : get()) {
+						if (wantedMac.equals(TableConnection.normalizeMac(p.macAddress()))) {
+							fresh = p;
+							List<PicoDiscovery.PicoInfo> updated = new ArrayList<>();
+							for (PicoDiscovery.PicoInfo old : lastDiscovered) {
+								updated.add(wantedMac.equals(TableConnection.normalizeMac(old.macAddress())) ? p : old);
+							}
+							lastDiscovered = updated;
+							break;
+						}
+					}
+				} catch (InterruptedException | ExecutionException e) {
+					logger.error("Recheck of discovered device failed: " + e); //$NON-NLS-1$
+				}
+				finishApplyDiscoveredDevice(row, fresh);
+			}
+		}.execute();
+	}
+	private void finishApplyDiscoveredDevice(int row, PicoDiscovery.PicoInfo pico) {
+		if (row < 0 || row >= connections.size()) return;
 		if (pico.isBusy()) {
 			String clientIp = pico.busyClientIp();
 			String busyDesc = clientIp.isEmpty()
@@ -397,14 +439,67 @@ public class AutoScoreTablesPanel extends JPanel {
 			}
 		}
 		String mac = TableConnection.normalizeMac(pico.macAddress());
-		int existing = findTableByMac(mac);
-		if (existing >= 0 && existing != row) {
-			addMessage("Device " + mac + " is already assigned to table " + (existing + 1) + "; assignment cancelled."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			tableModel.fireTableRowsUpdated(row, row);
-			return;
+		int existing = findConflictingRow(row, mac, pico.ipAddress(), pico.port());
+		if (existing >= 0) {
+			String from = connections.get(existing).getLabel();
+			String to = connections.get(row).getLabel();
+			if (tableConnected.test(existing)) {
+				addMessage(from + " is connected to this device; disconnect it first to move the device to " + to + ". Assignment cancelled."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				tableModel.fireTableRowsUpdated(row, row);
+				return;
+			}
+			int confirm = JOptionPane.showConfirmDialog(
+				this,
+				from + " is currently assigned to this device.\nMove the device to " + to + " and reset " + from + " to unassigned?", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				"Move Device?", //$NON-NLS-1$
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE
+			);
+			if (confirm != JOptionPane.YES_OPTION) {
+				tableModel.fireTableRowsUpdated(row, row);
+				return;
+			}
+			resetRowToUnassigned(existing, pico.ipAddress(), pico.port());
+			addMessage(from + " reset to unassigned (default address, no MAC)."); //$NON-NLS-1$
 		}
 		setTableAddress(row, pico.ipAddress(), pico.port(), mac);
 		addMessage("Assigned " + pico.display() + " to table " + (row + 1) + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
+	// Another row (not `row`) that already holds this device, by MAC or by the
+	// same address:port - either would fail validation on save, so assigning the
+	// device has to move it off that row first.
+	private int findConflictingRow(int row, String mac, String ip, String port) {
+		for (int i = 0; i < connections.size(); i++) {
+			if (i == row) continue;
+			TableConnection c = connections.get(i);
+			if (!mac.isEmpty() && mac.equals(c.getMacAddress())) return i;
+			if (c.getServerAddress().trim().equals(ip) && c.getServerPort().trim().equals(port)) return i;
+		}
+		return -1;
+	}
+	// Gives a row up its device: default address, no MAC. The port is bumped
+	// until the address:port is unique among all rows (and the device's own
+	// endpoint), since duplicate endpoints are rejected on save.
+	private void resetRowToUnassigned(int row, String deviceIp, String devicePort) {
+		TableConnection c = connections.get(row);
+		String address = Settings.getDefaultAutoScoreSettings(SettingsKeys.AS_SERVER_ADDRESS);
+		int port;
+		try { port = Integer.parseInt(Settings.getDefaultAutoScoreSettings(SettingsKeys.AS_SERVER_PORT).trim()); }
+		catch (NumberFormatException e) { port = 5050; }
+		while (endpointInUse(row, address, Integer.toString(port), deviceIp, devicePort)) port++;
+		c.setServerAddress(address);
+		c.setServerPort(Integer.toString(port));
+		c.setMacAddress(""); //$NON-NLS-1$
+		tableModel.fireTableRowsUpdated(row, row);
+	}
+	private boolean endpointInUse(int exceptRow, String address, String port, String deviceIp, String devicePort) {
+		if (address.equals(deviceIp) && port.equals(devicePort)) return true;
+		for (int i = 0; i < connections.size(); i++) {
+			if (i == exceptRow) continue;
+			TableConnection c = connections.get(i);
+			if (c.getServerAddress().trim().equals(address) && c.getServerPort().trim().equals(port)) return true;
+		}
+		return false;
 	}
 	// The Discovered Device combo's current display for a row: the discovered
 	// device whose MAC matches this row's, if any, else "None".
@@ -469,8 +564,11 @@ public class AutoScoreTablesPanel extends JPanel {
 		return !signature().equals(savedSignature);
 	}
 	private String signature() {
+		return signature(connections);
+	}
+	private static String signature(List<TableConnection> list) {
 		List<String> fields = new ArrayList<>();
-		for (TableConnection c : connections) {
+		for (TableConnection c : list) {
 			fields.add(c.getLabel());
 			fields.add(c.getServerAddress());
 			fields.add(c.getServerPort());
@@ -500,6 +598,88 @@ public class AutoScoreTablesPanel extends JPanel {
 			reload();
 			win.dispose();
 		}
+	}
+
+	// --- Connect with pending edits ---
+	// Connect / Connect All act on the saved settings (the runtime managers are
+	// rebuilt from them), so any pending grid edits to the table(s) being
+	// connected are committed first - otherwise a just-picked Discovered Device
+	// would still be dialed at its old address. Only the targeted row(s) are
+	// saved; other rows' pending edits stay pending (Cancel still discards them).
+	// A structural change (rows added/removed/reordered) can't be split by row,
+	// so it saves everything, same as Apply.
+	private void connectRow(int row) {
+		if (row < 0 || row >= connections.size()) return;
+		if (commitPending(List.of(row))) connectListener.accept(row);
+	}
+	private void connectAll() {
+		List<Integer> rows = new ArrayList<>();
+		for (int i = 0; i < connections.size(); i++) rows.add(i);
+		if (commitPending(rows)) connectAllListener.run();
+	}
+	private boolean commitPending(List<Integer> rows) {
+		if (table.isEditing()) table.getCellEditor().stopCellEditing();
+		if (!hasChanges()) return true;
+		List<TableConnection> saved = Settings.getTableConnections();
+		boolean structural = saved.size() != connections.size();
+		for (int i = 0; !structural && i < saved.size(); i++) {
+			structural = !saved.get(i).getId().equals(connections.get(i).getId());
+		}
+		List<TableConnection> toSave = buildToSave(rows, saved, structural, true);
+		if (!AutoScoreConnectionValidator.validate(toSave).isEmpty() && !structural) {
+			// The targeted rows alone conflict with other rows' saved values (e.g. a
+			// device moved from one table to another); commit every row's edits instead.
+			List<Integer> all = new ArrayList<>();
+			for (int i = 0; i < connections.size(); i++) all.add(i);
+			toSave = buildToSave(all, saved, false, false);
+		}
+		return saveForConnect(toSave, saved);
+	}
+	private List<TableConnection> buildToSave(List<Integer> rows, List<TableConnection> saved, boolean structural, boolean announce) {
+		List<TableConnection> toSave = new ArrayList<>();
+		for (int i = 0; i < connections.size(); i++) {
+			TableConnection live = connections.get(i);
+			if (structural) {
+				toSave.add(live.copy());
+				continue;
+			}
+			TableConnection old = saved.get(i);
+			boolean addressChanged = !old.getServerAddress().equals(live.getServerAddress())
+				|| !old.getServerPort().equals(live.getServerPort());
+			if (rows.contains(i) && tableConnected.test(i) && addressChanged) {
+				if (announce) addMessage(live.getLabel() + " is connected; disconnect it before changing its address - address change not applied."); //$NON-NLS-1$
+				toSave.add(old);
+			} else if (rows.contains(i)) {
+				toSave.add(live.copy());
+			} else {
+				toSave.add(old);
+			}
+		}
+		return toSave;
+	}
+	private boolean saveForConnect(List<TableConnection> toSave, List<TableConnection> saved) {
+		if (signature(toSave).equals(signature(saved))) return true;
+		List<String> errors = AutoScoreConnectionValidator.validate(toSave);
+		if (!errors.isEmpty()) {
+			JOptionPane.showMessageDialog(this, String.join("\n", errors), "Invalid Table Configuration", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
+			return false;
+		}
+		try {
+			Settings.saveTableConnections(toSave);
+		} catch (IOException ex) {
+			logger.error("Error saving AutoScore table connections before connect: " + ex); //$NON-NLS-1$
+			return false;
+		}
+		List<String> committed = new ArrayList<>();
+		for (int i = 0; i < toSave.size(); i++) {
+			if (i >= saved.size() || !signature(List.of(toSave.get(i))).equals(signature(List.of(saved.get(i))))) {
+				committed.add(toSave.get(i).getLabel());
+			}
+		}
+		savedSignature = signature(toSave);
+		addMessage("Saved pending changes to " + String.join(", ", committed) + " before connecting."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		afterSaveCallback.run();
+		return true;
 	}
 
 	// --- Status dots ---
@@ -732,7 +912,7 @@ public class AutoScoreTablesPanel extends JPanel {
 				if (tableConnected.test(editingRow)) {
 					disconnectListener.accept(editingRow);
 				} else {
-					connectListener.accept(editingRow);
+					connectRow(editingRow);
 				}
 			});
 		}

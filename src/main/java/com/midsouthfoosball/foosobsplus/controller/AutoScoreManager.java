@@ -211,8 +211,8 @@ public class AutoScoreManager {
 		} catch (IOException e) {
 			logger.error("Error closing socket on disconnect: " + e); //$NON-NLS-1$
 		}
-		notifyConnectionStateChanged(false);
 		connected = false;
+		notifyConnectionStateChanged(false);
 	}
 
 	/**
@@ -741,8 +741,8 @@ public class AutoScoreManager {
 						logger.error(e.toString());
 					}
 				}
-				notifyConnectionStateChanged(false);
 				connected = false;
+				notifyConnectionStateChanged(false);
 			}
 
 			@Override

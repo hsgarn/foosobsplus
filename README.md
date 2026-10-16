@@ -1794,6 +1794,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.132 10/16/2026</br>
+AutoScore Tables window: Auto Connect and Detail Log column headers now wrap to two lines so those columns are narrower. Connect and Connect All now save the pending edits for the table(s) being connected first (e.g. a just-picked Discovered Device), so they connect to the new address without needing Apply; other rows' pending edits stay pending and Cancel still discards them. Fixed the two-line headers being clipped, the Flash and Report Table Number buttons staying disabled after a disconnect (the connected state was cleared after the UI was notified), and a stale "device may be in use" warning when assigning a Discovered Device - the device's status is now rechecked first. Picking a Discovered Device that another table already holds (same MAC or same address and port) now asks whether to move it: the old table is reset to the default address with no MAC, and Connect saves both tables together so the swap no longer fails with duplicate MAC/address errors.</br>
+</br>
 v2.131 10/15/2026</br>
 Fix AutoScore (Pico) configuration being truncated at the first colon when read from the device, which cut IREF_URL and PUF_URL (e.g. https://ireffoos.com became https) and saved the truncated values back.</br>
 </br>
