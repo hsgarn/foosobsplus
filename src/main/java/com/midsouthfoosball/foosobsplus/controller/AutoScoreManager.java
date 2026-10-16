@@ -706,7 +706,7 @@ public class AutoScoreManager {
 							SwingUtilities.invokeLater(() -> clearConfigText());
 						}
 						if (cmd[0].equals("Line")) { //$NON-NLS-1$
-							final String line = cmd[1] + "\n"; //$NON-NLS-1$
+							final String line = raw.substring(raw.indexOf(':') + 1) + "\n"; //$NON-NLS-1$ // keep ':' in values such as IREF_URL/PUF_URL
 							SwingUtilities.invokeLater(() -> appendConfigText(line));
 						}
 					}
