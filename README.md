@@ -1794,6 +1794,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.131 10/15/2026</br>
+Fix AutoScore (Pico) configuration being truncated at the first colon when read from the device, which cut IREF_URL and PUF_URL (e.g. https://ireffoos.com became https) and saved the truncated values back.</br>
+</br>
 v2.130 08/24/2026</br>
 Make Points to Win, Max Win, Win By, Games to Win and Handicapped per-table settings instead of global, so different tables can run different point totals and one table can be handicapped while another isn't. Added an Apply to All Tables checkbox for Partner Program parameter files, and an Edit Parameters button to the Table Monitor windows for editing a background table's settings without switching to it.</br>
 </br>
