@@ -38,13 +38,19 @@ class TimerBehaviorTest {
 	}
 
 	@Test
-	@DisplayName("countdown clamps at zero and stops at exact expiration")
+	@DisplayName("countdown shows zero, then clamps and stops on the next tick")
 	void countdownStopsAtZero() {
 		MutableClock clock = new MutableClock(5_000);
 		timeClock = new TimeClock(new OBSInterface(), clock);
 		timeClock.setTimer(10);
 
 		clock.advance(1_000);
+		timeClock.updateTime();
+
+		assertEquals(0, timeClock.getTimeRemaining());
+		assertTrue(timeClock.getTimer().isRunning());
+
+		clock.advance(100);
 		timeClock.updateTime();
 
 		assertEquals(0, timeClock.getTimeRemaining());

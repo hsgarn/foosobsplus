@@ -70,7 +70,9 @@ public class TimeClock {
 		long checkTimeDiff = currentTime - startTime;
 		int checkTimeDiffTenthSeconds = (int) (checkTimeDiff / 100);
 		timeRemaining = nbrOfSeconds - checkTimeDiffTenthSeconds;
-		if (timeRemaining <= 0) {
+		// Stop only once past zero so the 0.0 tick is still delivered to (and shown by)
+		// the display listeners before the timer halts.
+		if (timeRemaining < 0) {
 			// Clamp so the model never holds a negative value - refreshDisplay
 			// reads timeRemaining directly after table switches/background events.
 			timeRemaining = 0;
