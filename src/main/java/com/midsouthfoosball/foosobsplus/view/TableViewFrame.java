@@ -93,9 +93,20 @@ public class TableViewFrame extends JFrame {
 				int team1PointsToWin, int team2PointsToWin, int team3PointsToWin);
 	}
 
+	/** The bulk clear/reset actions offered by the buttons on the right side of the window. */
+	public enum ClearAction { NAMES, SCORES, GAMES, MATCHES, TIMEOUTS, RESTART_MATCH, ALL }
+
+	/** Notified when the user presses one of the clear/reset buttons. */
+	public interface ClearListener {
+		void clear(ClearAction action);
+	}
+
 	private static final String PROGRAMNAME = AppConfig.PROGRAM_NAME;
 	private static final String ON = "1"; //$NON-NLS-1$
 	private static final int REFRESH_MS = 500;
+	/** MigLayout column of each team (column 2 holds the swap-teams button). */
+	private static final int SWAP_BUTTON_HEIGHT = 26;
+	private static final int[] TEAM_COLUMNS = { 1, 3, 4 };
 	private static final Color LIVE_GREEN = new Color(0, 170, 0);
 	private static final Color LIVE_YELLOW = new Color(220, 180, 0);
 	private static final Color LIVE_RED = new Color(200, 0, 0);
@@ -108,11 +119,16 @@ public class TableViewFrame extends JFrame {
 	private final FieldAdjustListener adjustListener;
 	private final NamesListener namesListener;
 	private final ParametersListener parametersListener;
+	private final ClearListener clearListener;
 	private final Timer refreshTimer;
 	private final JLabel[] teamNameLabels = new JLabel[3];
 	private final JLabel[] forwardLabels = new JLabel[3];
 	private final JLabel[] goalieLabels = new JLabel[3];
 	private final JButton[] editNamesButtons = new JButton[3];
+	private final JPanel[] nameCells = new JPanel[3];
+	private final JButton swapTeamsButton;
+	private final JButton swapForwardsButton;
+	private final JButton swapGoaliesButton;
 	private final JPanel[] scoreCells = new JPanel[3];
 	private final JPanel[] gamesCells = new JPanel[3];
 	private final JPanel[] matchesCells = new JPanel[3];
@@ -143,11 +159,12 @@ public class TableViewFrame extends JFrame {
 	 * @param namesListener              invoked when the user commits new names
 	 * @param parametersListener         invoked when the user commits new win-condition
 	 *                                   values from the Edit Parameters modal
+	 * @param clearListener              invoked when the user presses a clear/reset button
 	 */
 	public TableViewFrame(int tableIndex, String tableName, TableSession session, IntSupplier activeIndexSupplier,
 			BooleanSupplier obsConnectedSupplier, BooleanSupplier autoScoreConnectedSupplier,
 			IntConsumer sendToObsListener, FieldAdjustListener adjustListener, NamesListener namesListener,
-			ParametersListener parametersListener) {
+			ParametersListener parametersListener, ClearListener clearListener) {
 		super(buildTitle(tableName));
 		this.tableIndex = tableIndex;
 		this.session = session;
@@ -157,11 +174,12 @@ public class TableViewFrame extends JFrame {
 		this.adjustListener = adjustListener;
 		this.namesListener = namesListener;
 		this.parametersListener = parametersListener;
+		this.clearListener = clearListener;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationByPlatform(true);
 
 		// One column per team; the field labels sit in column 0.
-		JPanel panel = new JPanel(new MigLayout("insets 12, hidemode 3", "[70]16[120]14[120]14[120]")); //$NON-NLS-1$ //$NON-NLS-2$
+		JPanel panel = new JPanel(new MigLayout("insets 12, hidemode 3", "[70]16[120]6[]6[120]14[120]20[]")); //$NON-NLS-1$ //$NON-NLS-2$
 		Font headerFont = new Font("Tahoma", Font.BOLD, 14); //$NON-NLS-1$
 		Font cellFont = new Font("Tahoma", Font.PLAIN, 18); //$NON-NLS-1$
 		Font nameFont = new Font("Tahoma", Font.PLAIN, 11); //$NON-NLS-1$
@@ -170,23 +188,49 @@ public class TableViewFrame extends JFrame {
 		String teamPrefix = Messages.getString("TableViewFrame.Team"); //$NON-NLS-1$
 		for (int i = 0; i < 3; i++) {
 			int teamNumber = i + 1;
-			int col = i + 1;
+			int col = TEAM_COLUMNS[i];
 			teamNameLabels[i] = new JLabel(teamPrefix + " " + teamNumber); //$NON-NLS-1$
 			teamNameLabels[i].setFont(headerFont);
 			teamNameLabels[i].setHorizontalAlignment(SwingConstants.CENTER);
 			panel.add(teamNameLabels[i], "cell " + col + " 0,alignx center"); //$NON-NLS-1$ //$NON-NLS-2$
 			forwardLabels[i] = new JLabel(""); //$NON-NLS-1$
 			forwardLabels[i].setFont(nameFont);
-			panel.add(forwardLabels[i], "cell " + col + " 1,alignx center"); //$NON-NLS-1$ //$NON-NLS-2$
 			goalieLabels[i] = new JLabel(""); //$NON-NLS-1$
 			goalieLabels[i].setFont(nameFont);
-			panel.add(goalieLabels[i], "cell " + col + " 2,alignx center"); //$NON-NLS-1$ //$NON-NLS-2$
+			// Names stacked with a vertical double-headed arrow on the outside edge
+			// (left of team 1, right of the others) that swaps Forward and Goalie.
+			JButton swapFg = makeSwapButton("↕", Messages.getString("TableViewFrame.SwapForwardGoalie")); //$NON-NLS-1$ //$NON-NLS-2$
+			swapFg.addActionListener(e -> swapForwardGoalie(teamNumber));
+			JPanel names = new JPanel(new MigLayout("insets 0, gap 4, gapy 5, hidemode 3", "[][]", "[" + SWAP_BUTTON_HEIGHT + "!][" + SWAP_BUTTON_HEIGHT + "!]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			if (i == 0) {
+				names.add(swapFg, "cell 0 0 1 2,aligny center"); //$NON-NLS-1$
+				names.add(forwardLabels[i], "cell 1 0,alignx center"); //$NON-NLS-1$
+				names.add(goalieLabels[i], "cell 1 1,alignx center"); //$NON-NLS-1$
+			} else {
+				names.add(forwardLabels[i], "cell 0 0,alignx center"); //$NON-NLS-1$
+				names.add(goalieLabels[i], "cell 0 1,alignx center"); //$NON-NLS-1$
+				names.add(swapFg, "cell 1 0 1 2,aligny center"); //$NON-NLS-1$
+			}
+			nameCells[i] = names;
+			panel.add(names, "cell " + col + " 1 1 2,alignx center"); //$NON-NLS-1$ //$NON-NLS-2$
 			editNamesButtons[i] = new JButton(Messages.getString("TableViewFrame.EditNames")); //$NON-NLS-1$
 			editNamesButtons[i].setMargin(new Insets(1, 6, 1, 6));
 			editNamesButtons[i].setFocusable(false);
 			editNamesButtons[i].addActionListener(e -> openNamesDialog(teamNumber));
 			panel.add(editNamesButtons[i], "cell " + col + " 3,alignx center"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
+
+		// Horizontal double-headed arrows between team 1 and team 2: forwards, goalies, then whole teams.
+		swapForwardsButton = makeSwapButton("↔", Messages.getString("TableViewFrame.SwapForwards")); //$NON-NLS-1$ //$NON-NLS-2$
+		swapForwardsButton.addActionListener(e -> swapPosition(true));
+		panel.add(swapForwardsButton, "cell 2 1,aligny center"); //$NON-NLS-1$
+		swapGoaliesButton = makeSwapButton("↔", Messages.getString("TableViewFrame.SwapGoalies")); //$NON-NLS-1$ //$NON-NLS-2$
+		swapGoaliesButton.addActionListener(e -> swapPosition(false));
+		panel.add(swapGoaliesButton, "cell 2 2,aligny center"); //$NON-NLS-1$
+		swapTeamsButton = makeSwapButton("<html><center>↔<br>↔</center></html>", Messages.getString("TableViewFrame.SwapTeams")); //$NON-NLS-1$ //$NON-NLS-2$
+		swapTeamsButton.setPreferredSize(new java.awt.Dimension(swapTeamsButton.getPreferredSize().width, 2 * SWAP_BUTTON_HEIGHT - 6));
+		swapTeamsButton.addActionListener(e -> swapTeams());
+		panel.add(swapTeamsButton, "cell 2 3,aligny center"); //$NON-NLS-1$
 
 		addFieldRow(panel, Messages.getString("TableViewFrame.Score"), 4, Field.SCORE, scoreValues, scoreCells, cellFont, labelFont); //$NON-NLS-1$
 		addFieldRow(panel, Messages.getString("TableViewFrame.Games"), 5, Field.GAMES, gamesValues, gamesCells, cellFont, labelFont); //$NON-NLS-1$
@@ -201,17 +245,28 @@ public class TableViewFrame extends JFrame {
 		JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
 		statusPanel.add(autoScoreLabel);
 		statusPanel.add(obsLiveLabel);
-		panel.add(statusPanel, "cell 0 8 4 1,alignx center,gaptop 14"); //$NON-NLS-1$
+		panel.add(statusPanel, "cell 0 8 5 1,alignx center,gaptop 14"); //$NON-NLS-1$
 
 		sendToObsButton = new JButton(Messages.getString("TableViewFrame.SendToOBS")); //$NON-NLS-1$
 		sendToObsButton.addActionListener(e -> {
 			if (sendToObsListener != null) sendToObsListener.accept(this.tableIndex);
 		});
-		panel.add(sendToObsButton, "cell 0 9 4 1,alignx center,gaptop 6"); //$NON-NLS-1$
+		panel.add(sendToObsButton, "cell 0 9 5 1,alignx center,gaptop 6"); //$NON-NLS-1$
 
 		JButton editParametersButton = new JButton(Messages.getString("TableViewFrame.EditParameters")); //$NON-NLS-1$
 		editParametersButton.addActionListener(e -> openParametersDialog());
-		panel.add(editParametersButton, "cell 0 10 4 1,alignx center,gaptop 6"); //$NON-NLS-1$
+		panel.add(editParametersButton, "cell 0 10 5 1,alignx center,gaptop 6"); //$NON-NLS-1$
+
+		// Clear/reset buttons down the right-hand side.
+		JPanel clearPanel = new JPanel(new MigLayout("insets 0, wrap 1, gapy 4", "[grow,fill]")); //$NON-NLS-1$ //$NON-NLS-2$
+		addClearButton(clearPanel, "TableViewFrame.ClearNames", ClearAction.NAMES); //$NON-NLS-1$
+		addClearButton(clearPanel, "TableViewFrame.ClearScores", ClearAction.SCORES); //$NON-NLS-1$
+		addClearButton(clearPanel, "TableViewFrame.ClearGames", ClearAction.GAMES); //$NON-NLS-1$
+		addClearButton(clearPanel, "TableViewFrame.ClearMatches", ClearAction.MATCHES); //$NON-NLS-1$
+		addClearButton(clearPanel, "TableViewFrame.ClearTimeouts", ClearAction.TIMEOUTS); //$NON-NLS-1$
+		addClearButton(clearPanel, "TableViewFrame.RestartMatch", ClearAction.RESTART_MATCH); //$NON-NLS-1$
+		addClearButton(clearPanel, "TableViewFrame.ClearAll", ClearAction.ALL); //$NON-NLS-1$
+		panel.add(clearPanel, "cell 5 0 1 8,aligny top"); //$NON-NLS-1$
 
 		getContentPane().add(panel);
 		refresh();
@@ -222,6 +277,16 @@ public class TableViewFrame extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override public void windowClosed(WindowEvent e) { refreshTimer.stop(); }
 		});
+	}
+
+	private void addClearButton(JPanel target, String messageKey, ClearAction action) {
+		JButton button = new JButton(Messages.getString(messageKey));
+		button.setFocusable(false);
+		button.addActionListener(e -> {
+			if (clearListener != null) clearListener.clear(action);
+			refresh();
+		});
+		target.add(button);
 	}
 
 	private static String buildTitle(String tableName) {
@@ -237,7 +302,7 @@ public class TableViewFrame extends JFrame {
 		panel.add(lbl, "cell 0 " + row + ",aligny center"); //$NON-NLS-1$ //$NON-NLS-2$
 		for (int i = 0; i < 3; i++) {
 			int teamNumber = i + 1;
-			int col = i + 1;
+			int col = TEAM_COLUMNS[i];
 			valueLabels[i] = new JLabel("0"); //$NON-NLS-1$
 			cells[i] = buildValueEditor(valueLabels[i], cellFont, teamNumber, field);
 			panel.add(cells[i], "cell " + col + " " + row + ",alignx center"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -266,6 +331,53 @@ public class TableViewFrame extends JFrame {
 		button.setFocusable(false);
 		button.setToolTipText(tooltip);
 		return button;
+	}
+
+	private static JButton makeSwapButton(String text, String tooltip) {
+		JButton button = new JButton(text);
+		button.setFont(new Font("Dialog", Font.BOLD, 14)); //$NON-NLS-1$
+		button.setMargin(new Insets(1, 4, 1, 4));
+		button.setFocusable(false);
+		button.setToolTipText(tooltip);
+		button.setPreferredSize(new java.awt.Dimension(button.getPreferredSize().width, SWAP_BUTTON_HEIGHT));
+		return button;
+	}
+
+	/** Swaps team 1's and team 2's Forward (or Goalie) names. */
+	private void swapPosition(boolean forwards) {
+		if (namesListener == null) return;
+		Team t1 = session.getTeam1();
+		Team t2 = session.getTeam2();
+		String n1 = t1.getTeamName(), f1 = t1.getForwardName(), g1 = t1.getGoalieName();
+		String n2 = t2.getTeamName(), f2 = t2.getForwardName(), g2 = t2.getGoalieName();
+		if (forwards) {
+			namesListener.apply(1, n1, f2, g1);
+			namesListener.apply(2, n2, f1, g2);
+		} else {
+			namesListener.apply(1, n1, f1, g2);
+			namesListener.apply(2, n2, f2, g1);
+		}
+		refresh();
+	}
+
+	/** Swaps a team's Forward and Goalie names. */
+	private void swapForwardGoalie(int teamNumber) {
+		Team team = teamForNumber(teamNumber);
+		if (team == null || namesListener == null) return;
+		namesListener.apply(teamNumber, team.getTeamName(), team.getGoalieName(), team.getForwardName());
+		refresh();
+	}
+
+	/** Swaps team 1 and team 2 (team name, Forward and Goalie). */
+	private void swapTeams() {
+		if (namesListener == null) return;
+		Team t1 = session.getTeam1();
+		Team t2 = session.getTeam2();
+		String n1 = t1.getTeamName(), f1 = t1.getForwardName(), g1 = t1.getGoalieName();
+		String n2 = t2.getTeamName(), f2 = t2.getForwardName(), g2 = t2.getGoalieName();
+		namesListener.apply(1, n2, f2, g2);
+		namesListener.apply(2, n1, f1, g1);
+		refresh();
 	}
 
 	private void fireAdjust(int teamNumber, Field field, int delta) {
@@ -368,8 +480,7 @@ public class TableViewFrame extends JFrame {
 		for (int i = 0; i < 3; i++) {
 			boolean visible = i < 2 || cutThroat;
 			teamNameLabels[i].setVisible(visible);
-			forwardLabels[i].setVisible(visible);
-			goalieLabels[i].setVisible(visible);
+			nameCells[i].setVisible(visible);
 			editNamesButtons[i].setVisible(visible);
 			scoreCells[i].setVisible(visible);
 			gamesCells[i].setVisible(visible);

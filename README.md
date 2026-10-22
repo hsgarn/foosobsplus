@@ -1794,6 +1794,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.134 10/21/2026</br>
+Table View windows: added swap buttons for moving names around - a vertical double-headed arrow beside each team swaps its Forward and Goalie, and three horizontal double-headed arrows between Team 1 and Team 2 swap the forwards, the goalies, and the whole teams. Added a column of buttons on the right side: Clear Names, Clear Scores, Clear Games, Clear Matches, Clear Timeouts (resets to 0 or the maximum depending on the timeout setting), Restart Match (scores, games, matches and timeouts) and Clear ALL.</br>
+</br>
 v2.133 10/20/2206</br> 
 Fix timers stopping at .1 instead of 0.0.</br>
 </br>

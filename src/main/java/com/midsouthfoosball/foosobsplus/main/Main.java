@@ -1041,7 +1041,8 @@ public final class Main implements MatchObserver {
 				(teamNumber, field, delta) -> editTableField(index, teamNumber, field, delta),
 				(teamNumber, teamName, forwardName, goalieName) -> editTableNames(index, teamNumber, teamName, forwardName, goalieName),
 				(handicapped, pointsToWin, maxWin, winBy, gamesToWin, team1Ptw, team2Ptw, team3Ptw) ->
-						editTableParameters(index, handicapped, pointsToWin, maxWin, winBy, gamesToWin, team1Ptw, team2Ptw, team3Ptw));
+						editTableParameters(index, handicapped, pointsToWin, maxWin, winBy, gamesToWin, team1Ptw, team2Ptw, team3Ptw),
+				action -> clearTableFields(index, action));
 		frame.addWindowListener(new WindowAdapter() {
 			@Override public void windowClosed(WindowEvent e) { tableViewFrames.remove(index); }
 		});
@@ -1213,6 +1214,34 @@ public final class Main implements MatchObserver {
 				case GAMES:    teamController.adjustGameCount(teamNumber, delta); break;
 				case MATCHES:  teamController.adjustMatchCount(teamNumber, delta); break;
 				case TIMEOUTS: teamController.adjustTimeOutCount(teamNumber, delta); break;
+				default: break;
+			}
+		});
+	}
+	/**
+	 * Runs one of the Table View clear/reset buttons against any table. Timeouts
+	 * reset to 0 or the configured maximum depending on the "show timeouts used"
+	 * setting (see Team.resetTimeOuts). Clear ALL reuses {@link #clearTableData}.
+	 */
+	private static void clearTableFields(int tableIndex, TableViewFrame.ClearAction action) {
+		if (tableIndex < 0 || tableIndex >= sessions.size()) return;
+		if (action == TableViewFrame.ClearAction.ALL) {
+			clearTableData(tableIndex);
+			return;
+		}
+		withTableBound(tableIndex, () -> {
+			switch (action) {
+				case NAMES:    teamController.resetNames(); break;
+				case SCORES:   teamController.resetScoresFromButton(); break;
+				case GAMES:    teamController.resetGameCounts(); break;
+				case MATCHES:  teamController.resetMatchCounts(); break;
+				case TIMEOUTS: teamController.resetTimeOuts(); break;
+				case RESTART_MATCH:
+					teamController.resetScoresFromButton();
+					teamController.resetGameCounts();
+					teamController.resetMatchCounts();
+					teamController.resetTimeOuts();
+					break;
 				default: break;
 			}
 		});
