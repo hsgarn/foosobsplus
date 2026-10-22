@@ -105,7 +105,7 @@ public class TableViewFrame extends JFrame {
 	private static final String ON = "1"; //$NON-NLS-1$
 	private static final int REFRESH_MS = 500;
 	/** MigLayout column of each team (column 2 holds the swap-teams button). */
-	private static final int SWAP_BUTTON_HEIGHT = 26;
+	private static final int SWAP_BUTTON_HEIGHT = 20;
 	private static final int[] TEAM_COLUMNS = { 1, 3, 4 };
 	private static final Color LIVE_GREEN = new Color(0, 170, 0);
 	private static final Color LIVE_YELLOW = new Color(220, 180, 0);
@@ -126,6 +126,8 @@ public class TableViewFrame extends JFrame {
 	private final JLabel[] goalieLabels = new JLabel[3];
 	private final JButton[] editNamesButtons = new JButton[3];
 	private final JPanel[] nameCells = new JPanel[3];
+	private final MigLayout contentLayout;
+	private boolean team3ColumnShown = true;
 	private final JButton swapTeamsButton;
 	private final JButton swapForwardsButton;
 	private final JButton swapGoaliesButton;
@@ -179,11 +181,12 @@ public class TableViewFrame extends JFrame {
 		setLocationByPlatform(true);
 
 		// One column per team; the field labels sit in column 0.
-		JPanel panel = new JPanel(new MigLayout("insets 12, hidemode 3", "[70]16[120]6[]6[120]14[120]20[]")); //$NON-NLS-1$ //$NON-NLS-2$
-		Font headerFont = new Font("Tahoma", Font.BOLD, 14); //$NON-NLS-1$
-		Font cellFont = new Font("Tahoma", Font.PLAIN, 18); //$NON-NLS-1$
-		Font nameFont = new Font("Tahoma", Font.PLAIN, 11); //$NON-NLS-1$
-		Font labelFont = new Font("Tahoma", Font.BOLD, 13); //$NON-NLS-1$
+		contentLayout = new MigLayout("insets 4, gap 2 2, hidemode 3", columnConstraints(true)); //$NON-NLS-1$
+		JPanel panel = new JPanel(contentLayout);
+		Font headerFont = new Font("Tahoma", Font.BOLD, 12); //$NON-NLS-1$
+		Font cellFont = new Font("Tahoma", Font.PLAIN, 14); //$NON-NLS-1$
+		Font nameFont = new Font("Tahoma", Font.PLAIN, 10); //$NON-NLS-1$
+		Font labelFont = new Font("Tahoma", Font.BOLD, 11); //$NON-NLS-1$
 
 		String teamPrefix = Messages.getString("TableViewFrame.Team"); //$NON-NLS-1$
 		for (int i = 0; i < 3; i++) {
@@ -201,7 +204,7 @@ public class TableViewFrame extends JFrame {
 			// (left of team 1, right of the others) that swaps Forward and Goalie.
 			JButton swapFg = makeSwapButton("↕", Messages.getString("TableViewFrame.SwapForwardGoalie")); //$NON-NLS-1$ //$NON-NLS-2$
 			swapFg.addActionListener(e -> swapForwardGoalie(teamNumber));
-			JPanel names = new JPanel(new MigLayout("insets 0, gap 4, gapy 5, hidemode 3", "[][]", "[" + SWAP_BUTTON_HEIGHT + "!][" + SWAP_BUTTON_HEIGHT + "!]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			JPanel names = new JPanel(new MigLayout("insets 0, gap 2, gapy 2, hidemode 3", "[][]", "[" + SWAP_BUTTON_HEIGHT + "!][" + SWAP_BUTTON_HEIGHT + "!]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 			if (i == 0) {
 				names.add(swapFg, "cell 0 0 1 2,aligny center"); //$NON-NLS-1$
 				names.add(forwardLabels[i], "cell 1 0,alignx center"); //$NON-NLS-1$
@@ -214,7 +217,8 @@ public class TableViewFrame extends JFrame {
 			nameCells[i] = names;
 			panel.add(names, "cell " + col + " 1 1 2,alignx center"); //$NON-NLS-1$ //$NON-NLS-2$
 			editNamesButtons[i] = new JButton(Messages.getString("TableViewFrame.EditNames")); //$NON-NLS-1$
-			editNamesButtons[i].setMargin(new Insets(1, 6, 1, 6));
+			editNamesButtons[i].setMargin(new Insets(0, 4, 0, 4));
+			editNamesButtons[i].setFont(nameFont);
 			editNamesButtons[i].setFocusable(false);
 			editNamesButtons[i].addActionListener(e -> openNamesDialog(teamNumber));
 			panel.add(editNamesButtons[i], "cell " + col + " 3,alignx center"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -242,31 +246,29 @@ public class TableViewFrame extends JFrame {
 		// connected / yellow active+OBS disconnected / red background table).
 		autoScoreLabel = makeIndicatorLabel(Messages.getString("TableViewFrame.AutoScore"), labelFont); //$NON-NLS-1$
 		obsLiveLabel = makeIndicatorLabel(Messages.getString("TableViewFrame.OBSLive"), labelFont); //$NON-NLS-1$
-		JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
+		JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
 		statusPanel.add(autoScoreLabel);
 		statusPanel.add(obsLiveLabel);
-		panel.add(statusPanel, "cell 0 8 5 1,alignx center,gaptop 14"); //$NON-NLS-1$
+		panel.add(statusPanel, "cell 0 8 5 1,alignx center,gaptop 4"); //$NON-NLS-1$
 
 		sendToObsButton = new JButton(Messages.getString("TableViewFrame.SendToOBS")); //$NON-NLS-1$
 		sendToObsButton.addActionListener(e -> {
 			if (sendToObsListener != null) sendToObsListener.accept(this.tableIndex);
 		});
-		panel.add(sendToObsButton, "cell 0 9 5 1,alignx center,gaptop 6"); //$NON-NLS-1$
+		panel.add(sendToObsButton, "cell 0 9 5 1,alignx center,gaptop 2"); //$NON-NLS-1$
 
 		JButton editParametersButton = new JButton(Messages.getString("TableViewFrame.EditParameters")); //$NON-NLS-1$
 		editParametersButton.addActionListener(e -> openParametersDialog());
-		panel.add(editParametersButton, "cell 0 10 5 1,alignx center,gaptop 6"); //$NON-NLS-1$
+		panel.add(editParametersButton, "cell 0 10 5 1,alignx center,gaptop 2"); //$NON-NLS-1$
 
 		// Clear/reset buttons down the right-hand side.
-		JPanel clearPanel = new JPanel(new MigLayout("insets 0, wrap 1, gapy 4", "[grow,fill]")); //$NON-NLS-1$ //$NON-NLS-2$
-		addClearButton(clearPanel, "TableViewFrame.ClearNames", ClearAction.NAMES); //$NON-NLS-1$
-		addClearButton(clearPanel, "TableViewFrame.ClearScores", ClearAction.SCORES); //$NON-NLS-1$
-		addClearButton(clearPanel, "TableViewFrame.ClearGames", ClearAction.GAMES); //$NON-NLS-1$
-		addClearButton(clearPanel, "TableViewFrame.ClearMatches", ClearAction.MATCHES); //$NON-NLS-1$
-		addClearButton(clearPanel, "TableViewFrame.ClearTimeouts", ClearAction.TIMEOUTS); //$NON-NLS-1$
-		addClearButton(clearPanel, "TableViewFrame.RestartMatch", ClearAction.RESTART_MATCH); //$NON-NLS-1$
-		addClearButton(clearPanel, "TableViewFrame.ClearAll", ClearAction.ALL); //$NON-NLS-1$
-		panel.add(clearPanel, "cell 5 0 1 8,aligny top"); //$NON-NLS-1$
+		addClearButton(panel, 3, "TableViewFrame.ClearNames", ClearAction.NAMES); //$NON-NLS-1$
+		addClearButton(panel, 4, "TableViewFrame.ClearScores", ClearAction.SCORES); //$NON-NLS-1$
+		addClearButton(panel, 5, "TableViewFrame.ClearGames", ClearAction.GAMES); //$NON-NLS-1$
+		addClearButton(panel, 6, "TableViewFrame.ClearMatches", ClearAction.MATCHES); //$NON-NLS-1$
+		addClearButton(panel, 7, "TableViewFrame.ClearTimeouts", ClearAction.TIMEOUTS); //$NON-NLS-1$
+		addClearButton(panel, 9, "TableViewFrame.RestartMatch", ClearAction.RESTART_MATCH); //$NON-NLS-1$
+		addClearButton(panel, 10, "TableViewFrame.ClearAll", ClearAction.ALL); //$NON-NLS-1$
 
 		getContentPane().add(panel);
 		refresh();
@@ -279,14 +281,22 @@ public class TableViewFrame extends JFrame {
 		});
 	}
 
-	private void addClearButton(JPanel target, String messageKey, ClearAction action) {
+	/** Adds a clear button in the right-hand column, level with the row of the field it clears. */
+	private void addClearButton(JPanel target, int row, String messageKey, ClearAction action) {
 		JButton button = new JButton(Messages.getString(messageKey));
 		button.setFocusable(false);
+		button.setFont(new Font("Tahoma", Font.PLAIN, 11)); //$NON-NLS-1$
+		button.setMargin(new Insets(0, 4, 0, 4));
 		button.addActionListener(e -> {
 			if (clearListener != null) clearListener.clear(action);
 			refresh();
 		});
-		target.add(button);
+		target.add(button, "cell 5 " + row + ",growx,gapleft 4"); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	/** Column constraints; the team 3 column (and its gap) collapses unless cut-throat is on. */
+	private static String columnConstraints(boolean showTeam3) {
+		return showTeam3 ? "[46]6[84]2[]2[84]6[84]0[]" : "[46]6[84]2[]2[84]0[0!]0[]"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private static String buildTitle(String tableName) {
@@ -313,7 +323,7 @@ public class TableViewFrame extends JFrame {
 	private JPanel buildValueEditor(JLabel valueLabel, Font cellFont, int teamNumber, Field field) {
 		valueLabel.setFont(cellFont);
 		valueLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		JPanel cell = new JPanel(new MigLayout("insets 0, gap 4", "[]6[34!]6[]", "[]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		JPanel cell = new JPanel(new MigLayout("insets 0, gap 2", "[]3[26!]3[]", "[]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		JButton minus = makeStepButton("−", Messages.getString("TableViewFrame.Decrement")); //$NON-NLS-1$ //$NON-NLS-2$
 		JButton plus = makeStepButton("+", Messages.getString("TableViewFrame.Increment")); //$NON-NLS-1$ //$NON-NLS-2$
 		minus.addActionListener(e -> fireAdjust(teamNumber, field, -1));
@@ -326,8 +336,8 @@ public class TableViewFrame extends JFrame {
 
 	private static JButton makeStepButton(String text, String tooltip) {
 		JButton button = new JButton(text);
-		button.setFont(new Font("Tahoma", Font.BOLD, 13)); //$NON-NLS-1$
-		button.setMargin(new Insets(1, 7, 1, 7));
+		button.setFont(new Font("Tahoma", Font.BOLD, 11)); //$NON-NLS-1$
+		button.setMargin(new Insets(0, 4, 0, 4));
 		button.setFocusable(false);
 		button.setToolTipText(tooltip);
 		return button;
@@ -335,8 +345,8 @@ public class TableViewFrame extends JFrame {
 
 	private static JButton makeSwapButton(String text, String tooltip) {
 		JButton button = new JButton(text);
-		button.setFont(new Font("Dialog", Font.BOLD, 14)); //$NON-NLS-1$
-		button.setMargin(new Insets(1, 4, 1, 4));
+		button.setFont(new Font("Dialog", Font.BOLD, 11)); //$NON-NLS-1$
+		button.setMargin(new Insets(0, 3, 0, 3));
 		button.setFocusable(false);
 		button.setToolTipText(tooltip);
 		button.setPreferredSize(new java.awt.Dimension(button.getPreferredSize().width, SWAP_BUTTON_HEIGHT));
@@ -476,6 +486,11 @@ public class TableViewFrame extends JFrame {
 		boolean cutThroat = Settings.getControlParameter(SettingsKeys.CTRL_CUT_THROAT_MODE).equals(ON); //$NON-NLS-1$
 		String forwardPrefix = Messages.getString("TableViewFrame.ForwardShort"); //$NON-NLS-1$
 		String goaliePrefix = Messages.getString("TableViewFrame.GoalieShort"); //$NON-NLS-1$
+		boolean cutThroatChanged = cutThroat != team3ColumnShown;
+		if (cutThroatChanged) {
+			team3ColumnShown = cutThroat;
+			contentLayout.setColumnConstraints(columnConstraints(cutThroat));
+		}
 		Team[] teams = { session.getTeam1(), session.getTeam2(), session.getTeam3() };
 		for (int i = 0; i < 3; i++) {
 			boolean visible = i < 2 || cutThroat;
@@ -495,6 +510,12 @@ public class TableViewFrame extends JFrame {
 			gamesValues[i].setText(Integer.toString(team.getGameCount()));
 			matchesValues[i].setText(Integer.toString(team.getMatchCount()));
 			timeoutValues[i].setText(Integer.toString(team.getTimeOutCount()));
+		}
+		// Resize only after the team 3 components' visibility has been updated above,
+		// so pack() sees the new content size.
+		if (cutThroatChanged) {
+			revalidate();
+			pack();
 		}
 		// This table is "OBS live" when it is the currently displayed table. Green if
 		// OBS is actually connected, yellow if it is the active table but OBS is not

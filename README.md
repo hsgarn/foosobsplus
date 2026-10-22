@@ -1794,6 +1794,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.135 10/22/2026</br>
+Table View windows: made the window much more compact (smaller fonts, tighter spacing and narrower columns), moved the clear buttons next to the fields they clear (Restart Match and Clear ALL at the bottom), and the window now collapses the Team 3 column unless Cut Throat mode is on and automatically resizes when Cut Throat mode is turned on or off.</br>
+</br>
 v2.134 10/21/2026</br>
 Table View windows: added swap buttons for moving names around - a vertical double-headed arrow beside each team swaps its Forward and Goalie, and three horizontal double-headed arrows between Team 1 and Team 2 swap the forwards, the goalies, and the whole teams. Added a column of buttons on the right side: Clear Names, Clear Scores, Clear Games, Clear Matches, Clear Timeouts (resets to 0 or the maximum depending on the timeout setting), Restart Match (scores, games, matches and timeouts) and Clear ALL.</br>
 </br>
