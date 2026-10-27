@@ -26,6 +26,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,12 +41,17 @@ import com.midsouthfoosball.foosobsplus.model.TableConnection;
  * times if no matching reply arrives since a single UDP packet is sometimes
  * dropped. The Pico replies "FLASHING:&lt;mac&gt;" / "REPORTING:&lt;mac&gt;:&lt;table&gt;",
  * or "BUSY:&lt;mac&gt;" if it refuses because a game connection is active.
+ * ASSIGN:&lt;mac&gt;:&lt;table&gt; (saves the board's table number to its table.txt) is
+ * answered "ASSIGNED:&lt;mac&gt;:&lt;table&gt;" or "BUSY:&lt;mac&gt;".
  */
 public final class PicoCommand {
 	private static final Logger logger = LoggerFactory.getLogger(PicoCommand.class);
 	public static final int PICO_PORT = 5051;
 	private static final int RETRIES = 3;
 	private static final int RETRY_TIMEOUT_MS = 200;
+	// ASSIGN makes the Pico write table.txt before replying, so give it longer
+	// per attempt than FLASH / REPORT_TABLE (FoosTableManager waits 1s as well).
+	private static final int ASSIGN_RETRY_TIMEOUT_MS = 1000;
 
 	private PicoCommand() {}
 
@@ -62,9 +68,30 @@ public final class PicoCommand {
 		return send(ip, "REPORT_TABLE:" + mac, mac); //$NON-NLS-1$
 	}
 
+	/**
+	 * Asks the Pico at ip (identified by mac) to adopt the given table number, which it saves
+	 * to table.txt (overriding config.TABLE). Only an ASSIGNED reply naming that table, or BUSY,
+	 * counts as an answer. Blocks; call off the EDT.
+	 */
+	public static Result assignTable(String ip, String mac, int table) {
+		return send(ip, "ASSIGN:" + mac + ":" + table, mac, ASSIGN_RETRY_TIMEOUT_MS, parts -> isAssignAnswer(parts, table)); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	/** True when the reply fields are BUSY, or ASSIGNED for exactly the requested table. */
+	static boolean isAssignAnswer(String[] parts, int table) {
+		if (parts.length == 0) return false;
+		if (parts[0].equals("BUSY")) return true; //$NON-NLS-1$
+		if (!parts[0].equals("ASSIGNED") || parts.length < 3) return false; //$NON-NLS-1$
+		try { return Integer.parseInt(parts[2].trim()) == table; } catch (NumberFormatException e) { return false; }
+	}
+
 	private static Result send(String ip, String message, String mac) {
+		return send(ip, message, mac, RETRY_TIMEOUT_MS, parts -> true);
+	}
+
+	private static Result send(String ip, String message, String mac, int retryTimeoutMs, Predicate<String[]> accept) {
 		try (DatagramSocket socket = new DatagramSocket()) {
-			socket.setSoTimeout(RETRY_TIMEOUT_MS);
+			socket.setSoTimeout(retryTimeoutMs);
 			byte[] data = message.getBytes(StandardCharsets.UTF_8);
 			InetAddress address = InetAddress.getByName(ip);
 			DatagramPacket packet = new DatagramPacket(data, data.length, address, PICO_PORT);
@@ -81,7 +108,7 @@ public final class PicoCommand {
 					// names the device we actually addressed. The Pico replies with its
 					// mac lowercase and unseparated, so normalize it to the same
 					// dashed/lowercase form used for storing and sending the mac.
-					if (parts.length >= 2 && TableConnection.normalizeMac(parts[1].trim()).equals(mac)) {
+					if (parts.length >= 2 && TableConnection.normalizeMac(parts[1].trim()).equals(mac) && accept.test(parts)) {
 						return new Result(true, reply);
 					}
 					logger.info("PicoCommand ignoring reply not matching mac " + mac + ": " + reply); //$NON-NLS-1$ //$NON-NLS-2$

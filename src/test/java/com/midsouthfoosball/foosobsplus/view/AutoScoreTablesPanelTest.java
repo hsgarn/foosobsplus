@@ -2,6 +2,7 @@ package com.midsouthfoosball.foosobsplus.view;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -35,6 +36,21 @@ class AutoScoreTablesPanelTest {
 			assertEquals("", table.getModel().getValueAt(0, 3));
 			panel.setTableConnectedProvider(row -> row == 0);
 			assertFalse(panel.canDeleteRow(0));
+		});
+	}
+
+	@Test void setTableNumberButtonNeedsMacAndDisconnectedRow() throws Exception {
+		onEdt(() -> {
+			AutoScoreTablesPanel panel = new AutoScoreTablesPanel();
+			JTable table = panel.tableForTesting();
+			int assignCol = 10;
+			table.setRowSelectionInterval(0, 0);
+			panel.restoreSelectedRowDefaults();
+			assertFalse(table.getModel().isCellEditable(0, assignCol));
+			panel.setTableAddress(0, "10.0.0.1", "5051", "AA-BB-CC-DD-EE-01");
+			assertTrue(table.getModel().isCellEditable(0, assignCol));
+			panel.setTableConnectedProvider(row -> row == 0);
+			assertFalse(table.getModel().isCellEditable(0, assignCol));
 		});
 	}
 

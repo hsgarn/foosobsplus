@@ -694,6 +694,7 @@ public final class Main implements MatchObserver {
 		autoScoreTablesPanel.setDisconnectAllListener(Main::disconnectAllTables);
 		autoScoreTablesPanel.setFlashListener(Main::flashTable);
 		autoScoreTablesPanel.setReportTableListener(Main::reportTableNumber);
+		autoScoreTablesPanel.setAssignTableListener(Main::assignTableNumber);
 		mainFrame.setAutoScoreTableConnectListener(Main::connectTable);
 		mainFrame.setAutoScoreTableDisconnectListener(Main::disconnectTable);
 		mainFrame.setAutoScoreConnectAllListener(Main::connectAllTables);
@@ -841,7 +842,19 @@ public final class Main implements MatchObserver {
 	private static void reportTableNumber(int i) {
 		runPicoCommand(i, "Report Table Number", PicoCommand::reportTable); //$NON-NLS-1$
 	}
-	// Shared plumbing for Flash / Report Table Number: both need the row's
+	/** Sets the grid row's device to the table number matching the row's position (row 2 = table 2), after confirming; the Pico saves it to its table.txt. */
+	private static void assignTableNumber(int i) {
+		TableConnection connection = autoScoreTablesPanel.getLiveConnection(i);
+		if (connection == null) return;
+		int number = i + 1;
+		int confirm = JOptionPane.showConfirmDialog(autoScoreTablesPanel,
+			"Set the board at " + connection.getServerAddress() + " (MAC " + connection.getMacAddress() //$NON-NLS-1$ //$NON-NLS-2$
+				+ ") to Table " + number + "?\nIts LEDs will blink the number.", //$NON-NLS-1$ //$NON-NLS-2$
+			"Set Table Number", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); //$NON-NLS-1$
+		if (confirm != JOptionPane.YES_OPTION) return;
+		runPicoCommand(i, "Set Table Number", (ip, mac) -> PicoCommand.assignTable(ip, mac, number)); //$NON-NLS-1$
+	}
+	// Shared plumbing for Flash / Report / Set Table Number: all need the row's
 	// MAC address (learned from a prior Search/Assign, not always on file),
 	// and both talk to the Pico over UDP so the send+retry has to run off the
 	// EDT. actionLabel is only used for log messages. Reads the row's live
@@ -868,6 +881,9 @@ public final class Main implements MatchObserver {
 					PicoCommand.Result result = get();
 					autoScoreTablesPanel.addMessage(connection.getLabel() + ": " //$NON-NLS-1$
 						+ (result.acked() ? result.reply() : "no response to " + actionLabel + ".")); //$NON-NLS-1$ //$NON-NLS-2$
+						if (result.acked() && result.reply().startsWith("ASSIGNED")) { //$NON-NLS-1$
+							autoScoreTablesPanel.addMessage("Run Search again to refresh the discovered device list."); //$NON-NLS-1$
+						}
 				} catch (InterruptedException | ExecutionException e) {
 					logger.error(actionLabel + " on " + connection.getLabel() + " failed: " + e); //$NON-NLS-1$ //$NON-NLS-2$
 				}

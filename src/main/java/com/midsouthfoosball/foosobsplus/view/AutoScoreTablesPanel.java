@@ -91,10 +91,11 @@ public class AutoScoreTablesPanel extends JPanel {
 	private static final int COL_STATUS = 7;
 	private static final int COL_FLASH = 8;
 	private static final int COL_REPORT = 9;
-	private static final int COL_ACTION = 10;
-	private static final int COL_DISCOVERED = 11;
+	private static final int COL_ASSIGN = 10;
+	private static final int COL_ACTION = 11;
+	private static final int COL_DISCOVERED = 12;
 	private static final String[] COLUMN_NAMES = {
-		"Label", "Address", "Port", "MAC Address", "<html><center>Auto<br>Connect</center></html>", "<html><center>Detail<br>Log</center></html>", "Camera Source", "Status", "", "", "", "Discovered Device" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$
+		"Label", "Address", "Port", "MAC Address", "<html><center>Auto<br>Connect</center></html>", "<html><center>Detail<br>Log</center></html>", "Camera Source", "Status", "", "", "", "", "Discovered Device" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$
 	};
 	// Options that flank the discovered-device list in the Discovered Device
 	// column's dropdown, rather than a device display() string.
@@ -126,6 +127,7 @@ public class AutoScoreTablesPanel extends JPanel {
 	// a prior Search / Assign), so the buttons are disabled until then.
 	private IntConsumer flashListener = i -> {};
 	private IntConsumer reportTableListener = i -> {};
+	private IntConsumer assignTableListener = i -> {};
 	// Camera Source column editor: a single editable, filterable combo shared
 	// across all rows/edits (standard JTable cell-editor pattern), populated
 	// with OBS source names when available - same combo + filtering behavior
@@ -158,6 +160,8 @@ public class AutoScoreTablesPanel extends JPanel {
 		table.getColumnModel().getColumn(COL_FLASH).setCellEditor(new DeviceButtonEditor("Flash", i -> flashListener.accept(i))); //$NON-NLS-1$
 		table.getColumnModel().getColumn(COL_REPORT).setCellRenderer(new DeviceButtonRenderer("Report Table Number")); //$NON-NLS-1$
 		table.getColumnModel().getColumn(COL_REPORT).setCellEditor(new DeviceButtonEditor("Report Table Number", i -> reportTableListener.accept(i))); //$NON-NLS-1$
+		table.getColumnModel().getColumn(COL_ASSIGN).setCellRenderer(new DeviceButtonRenderer("Set Table Number")); //$NON-NLS-1$
+		table.getColumnModel().getColumn(COL_ASSIGN).setCellEditor(new DeviceButtonEditor("Set Table Number", i -> assignTableListener.accept(i))); //$NON-NLS-1$
 		table.getColumnModel().getColumn(COL_ACTION).setCellRenderer(new ActionButtonRenderer());
 		table.getColumnModel().getColumn(COL_ACTION).setCellEditor(new ActionButtonEditor());
 		cameraSourceCombo.setEditable(true);
@@ -181,6 +185,7 @@ public class AutoScoreTablesPanel extends JPanel {
 		setColumnWidth(COL_STATUS, 130);
 		setColumnWidth(COL_FLASH, 70);
 		setColumnWidth(COL_REPORT, 160);
+		setColumnWidth(COL_ASSIGN, 130);
 		setColumnWidth(COL_ACTION, 100);
 		setColumnWidth(COL_DISCOVERED, 260);
 
@@ -375,8 +380,19 @@ public class AutoScoreTablesPanel extends JPanel {
 			}
 		}
 		lastDiscovered = picos;
+		warnDuplicateReportedTables(picos);
 		addMessage("Pick a device from each table's Discovered Device column to assign it, or Delete to remove a row."); //$NON-NLS-1$
 		tableModel.fireTableDataChanged();
+	}
+	// Boards reporting the same "Table N" can't be told apart by number (Assign
+	// All would only place one of them); point the user at Set Table Number.
+	private void warnDuplicateReportedTables(List<PicoDiscovery.PicoInfo> picos) {
+		java.util.Map<Integer, Integer> counts = new java.util.TreeMap<>();
+		for (PicoDiscovery.PicoInfo pico : picos) counts.merge(pico.tableNumber(), 1, Integer::sum);
+		counts.forEach((number, count) -> {
+			if (count > 1) addMessage(count + " devices report Table " + number //$NON-NLS-1$
+				+ " - assign each to its own row, then use Set Table Number to give each a unique number."); //$NON-NLS-1$
+		});
 	}
 	// Applies a chosen discovered device to a row: confirms if it's reportedly
 	// busy, refuses if another row already has that MAC on file, otherwise
@@ -715,6 +731,9 @@ public class AutoScoreTablesPanel extends JPanel {
 	public void setReportTableListener(IntConsumer listener) {
 		this.reportTableListener = listener;
 	}
+	public void setAssignTableListener(IntConsumer listener) {
+		this.assignTableListener = listener;
+	}
 
 	// --- Camera Source combo (OBS sources) ---
 	// Populates the Camera Source combo with the fetched OBS source names,
@@ -943,7 +962,7 @@ public class AutoScoreTablesPanel extends JPanel {
 		@Override
 		public boolean isCellEditable(int row, int col) {
 			if (col == COL_STATUS || col == COL_MAC) return false;
-			if (col == COL_FLASH || col == COL_REPORT) {
+			if (col == COL_FLASH || col == COL_REPORT || col == COL_ASSIGN) {
 				// Both need the row's MAC on file, and the Pico refuses either
 				// command with BUSY while a game connection is active - so only
 				// allow them while disconnected.
@@ -967,6 +986,7 @@ public class AutoScoreTablesPanel extends JPanel {
 				case COL_STATUS -> ""; //$NON-NLS-1$
 				case COL_FLASH -> ""; //$NON-NLS-1$
 				case COL_REPORT -> ""; //$NON-NLS-1$
+				case COL_ASSIGN -> ""; //$NON-NLS-1$
 				case COL_ACTION -> ""; //$NON-NLS-1$
 				case COL_DISCOVERED -> discoveredDisplayFor(row);
 				default -> null;

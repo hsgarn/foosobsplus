@@ -46,7 +46,7 @@ import net.miginfocom.swing.MigLayout;
 public class AboutPanel extends JPanel {
 	private static final long serialVersionUID 	= 1L;
 	private static final Logger LOGGER          = Logger.getLogger(AboutPanel.class.getName());
-	private static final String VERSIONNUMBER 	= "2.135"; //$NON-NLS-1$
+	private static final String VERSIONNUMBER 	= "2.136"; //$NON-NLS-1$
 	private static final String RELEASEDATE 	= "10/22/2026"; //$NON-NLS-1$
 	private static final String AUTHOR          = "Hugh Garner"; //$NON-NLS-1$
 	private static final String COPYRIGHT 		= "2020-2026 Hugh Garner"; //$NON-NLS-1$

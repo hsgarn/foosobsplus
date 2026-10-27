@@ -1794,6 +1794,9 @@ As you can see by the revision history below, I have spent many hours working on
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MQLATTDXA7CPJ&no_recurring=0&currency_code=USD)
 
 ## Revision History</br>
+v2.136 10/27/2026</br>
+AutoScore Tables grid: added a Set Table Number button to each row. It sends ASSIGN to the row's board (the same command FoosTableManager uses), which saves the number matching the row's position (row 2 = table 2) to the board's table.txt, overriding config.py. This lets you fix boards that all identify as the same table without connecting to them directly. Search now also warns when several boards report the same table number.</br>
+</br>
 v2.135 10/22/2026</br>
 Table View windows: made the window much more compact (smaller fonts, tighter spacing and narrower columns), moved the clear buttons next to the fields they clear (Restart Match and Clear ALL at the bottom), and the window now collapses the Team 3 column unless Cut Throat mode is on and automatically resizes when Cut Throat mode is turned on or off.</br>
 </br>
